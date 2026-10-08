@@ -195,10 +195,10 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
 }
 </style>
-<script src="../assets/suggest.js?v=45"></script>
+<script src="../assets/suggest.js?v=47"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261008-2221";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261008-2238";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}location.replace("/app/?u="+j.v+location.hash);return}
@@ -263,7 +263,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
-    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 22:21 น.</small></span></a>
+    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 22:38 น.</small></span></a>
       <div class="side-links"><a href="/">🏠 หน้าร้าน</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></div></div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -410,9 +410,9 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=45"},stock:{src:"/stock/?v=45",sv:"home"},stockrep:{src:"/stock/?v=45",sv:"report"},stkitems:{src:"/stock/?v=45",sv:"items"},stkin:{src:"/stock/?v=45",sv:"in"},stkout:{src:"/stock/?v=45",sv:"out"},stkadj:{src:"/stock/?v=45",sv:"adj"},stkhist:{src:"/stock/?v=45",sv:"hist"},stkre:{src:"/stock/?v=45",sv:"reorder"},
-  ar:{src:"/account/?v=45",v:"ar"},tax:{src:"/account/?v=45",v:"tax"},buy:{src:"/account/?v=45",v:"buy"},cash:{src:"/account/?v=45",v:"cash"},pnl:{src:"/account/?v=45",v:"home"},
-  cost:{src:"/account/?v=45",v:"cost"},exp:{src:"/account/?v=45",v:"exp"},bank:{src:"/account/?v=45",v:"bank"},cashv:{src:"/account/?v=45",v:"cashv"},petty:{src:"/account/?v=45",v:"petty"},ap:{src:"/account/?v=45",v:"ap"}};
+const ROUTES={bill:{src:"/bill/?v=47"},stock:{src:"/stock/?v=47",sv:"home"},stockrep:{src:"/stock/?v=47",sv:"report"},stkitems:{src:"/stock/?v=47",sv:"items"},stkin:{src:"/stock/?v=47",sv:"in"},stkout:{src:"/stock/?v=47",sv:"out"},stkadj:{src:"/stock/?v=47",sv:"adj"},stkhist:{src:"/stock/?v=47",sv:"hist"},stkre:{src:"/stock/?v=47",sv:"reorder"},
+  ar:{src:"/account/?v=47",v:"ar"},tax:{src:"/account/?v=47",v:"tax"},buy:{src:"/account/?v=47",v:"buy"},cash:{src:"/account/?v=47",v:"cash"},pnl:{src:"/account/?v=47",v:"home"},
+  cost:{src:"/account/?v=47",v:"cost"},exp:{src:"/account/?v=47",v:"exp"},bank:{src:"/account/?v=47",v:"bank"},cashv:{src:"/account/?v=47",v:"cashv"},petty:{src:"/account/?v=47",v:"petty"},ap:{src:"/account/?v=47",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -531,7 +531,7 @@ function renderHome(){
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=45#demo&back=/app/"};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=47#demo&back=/app/"};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- ข้อมูลหลัก: ลูกค้า / เจ้าหนี้ / สินค้า-บริการ ---------- */
 const MD={
@@ -716,7 +716,7 @@ $("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
-<script src="reports.js?v=45"></script>
-<script src="../assets/member.js?v=46" defer></script>
+<script src="reports.js?v=47"></script>
+<script src="../assets/member.js?v=47" defer></script>
 </body>
 </html>

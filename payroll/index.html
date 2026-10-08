@@ -133,6 +133,7 @@ table.big th:nth-child(-n+2){text-align:left}
   .page{box-shadow:none;margin:0;break-after:page;page-break-after:always}
   .page:last-child{break-after:auto;page-break-after:auto}
 }
+.editor{counter-reset:stp}.editor>.card>h2:first-child{counter-increment:stp;position:relative;padding-left:34px;min-height:26px}.editor>.card>h2:first-child::before{content:counter(stp);position:absolute;left:0;top:50%;transform:translateY(-50%);width:25px;height:25px;border-radius:8px;background:color-mix(in srgb,var(--accent,#127A4B) 14%,transparent);color:var(--accent,#127A4B);font-size:.8rem;font-weight:800;display:grid;place-items:center}
 </style>
 </head>
 <body>
@@ -436,7 +437,7 @@ function renderPaper(){
   $$("#viewSeg button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.view));
   let html="";
   if(ui.view==="slip"){const e=empById(ui.sel)||emps.find(x=>recs[key()]&&recs[key()][x.id]);
-    html=e&&rec(e.id)?`<div class="page">${slipHTML(e)}</div>`:`<div class="page list"><div class="empty" style="margin:auto">เลือกพนักงานทางซ้ายเพื่อดูสลิป</div></div>`}
+    html=e&&rec(e.id)?`<div class="page">${slipHTML(e)}</div>`:`<div class="page list"><div class="empty" style="margin:auto;text-align:center;max-width:320px"><div style="font-size:2.6rem;margin-bottom:8px">🧾</div><b style="display:block;font-size:1.05rem;color:#222;margin-bottom:4px">สลิปเงินเดือนจะแสดงตรงนี้</b><span style="color:#777;font-size:.9rem;line-height:1.5">เพิ่มพนักงานและกรอกรายการเดือนนี้ทางซ้าย แล้วเลือกพนักงานเพื่อดูสลิป พิมพ์หรือบันทึก PDF ได้ทันที</span></div></div>`}
   else if(ui.view==="all"){const list=monthRows();if(!list.length)html=`<div class="page list"><div class="empty" style="margin:auto">ยังไม่มีพนักงานที่คิดเงินเดือนงวดนี้</div></div>`;
     for(let i=0;i<list.length;i+=2)html+=`<div class="page">${slipHTML(list[i].e)}${list[i+1]?slipHTML(list[i+1].e):""}</div>`}
   else if(ui.view==="month"){const list=monthRows();const T={earn:0,ded:0,sso:0,tax:0,net:0};
@@ -542,6 +543,7 @@ renderAll();
 window.__pay={pit,bahtText,calcMonth,calcUpTo,exportExcel,get emps(){return emps},get co(){return co}};
 })();
 </script>
-<script src="../assets/member.js?v=46" defer></script>
+<script src="../assets/tool-ui.js?v=2" defer></script>
+<script src="../assets/member.js?v=47" defer></script>
 </body>
 </html>

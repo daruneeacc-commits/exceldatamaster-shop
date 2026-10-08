@@ -132,8 +132,9 @@ table.p-items .c{text-align:center}
   .paper-scroll{background:none;padding:0;max-height:none;overflow:visible;border-radius:0}
   .paper{box-shadow:none;margin:0;transform:none!important;zoom:1!important;width:210mm;min-height:297mm}
 }
+.editor{counter-reset:stp}.editor>.card>h2:first-child{counter-increment:stp;position:relative;padding-left:34px;min-height:26px}.editor>.card>h2:first-child::before{content:counter(stp);position:absolute;left:0;top:50%;transform:translateY(-50%);width:25px;height:25px;border-radius:8px;background:color-mix(in srgb,var(--accent,#127A4B) 14%,transparent);color:var(--accent,#127A4B);font-size:.8rem;font-weight:800;display:grid;place-items:center}
 </style>
-<script src="../assets/suggest.js?v=45"></script>
+<script src="../assets/suggest.js?v=47"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -523,7 +524,7 @@ const DEMO={
       ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
 };
 function loadDemo(mode){
-  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=45#demo&back=/bill/";return}
+  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=47#demo&back=/bill/";return}
   const has=LS.get(K.docs,[]).length;
   if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
   const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);
@@ -591,6 +592,7 @@ window.__bill={calc,bahtText,exportExcel,loadDemo,get doc(){return doc}};
 renderAll();bindSuggest();
 })();
 </script>
-<script src="../assets/member.js?v=46" defer></script>
+<script src="../assets/tool-ui.js?v=2" defer></script>
+<script src="../assets/member.js?v=47" defer></script>
 </body>
 </html>
