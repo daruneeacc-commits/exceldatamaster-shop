@@ -479,56 +479,74 @@ function demo(){
   const items=PR.map(([sku,name,cat,unit,cost,price,min])=>({id:"p"+sku.replace(/\W/g,""),sku,name,cat,unit,cost,price,min,note:"",created:Date.now()}));const pid=k=>items[k].id;
   const acc=ACC_DEF();acc.accounts[0].open=20000;acc.accounts[1].name="กสิกรไทย ออมทรัพย์";acc.accounts[1].open=250000;
   const cnt={},bcnt={};const no=(t,d)=>{const k=t+d.slice(2,7).replace("-","");if(t==="PU"){cnt[k]=(cnt[k]||0)+1;return k+"-"+String(cnt[k]).padStart(3,"0")}bcnt[k]=(bcnt[k]||0)+1;return k+"-"+String(bcnt[k]).padStart(3,"0")};
-  const stx=[];
-  const pur=(dd,sup,tax,lines,o)=>{const d=day(dd);const p=Object.assign({id:uid("u"),no:no("PU",d),kind:"stock",status:"received",date:d,due:addDays(d,30),sup:{name:sup,tax},lines:lines.map(([k,q,pr])=>({pid:pid(k),d:items[k].name,u:items[k].unit,q,p:pr})),vat:"ex",taxInv:true,taxNo:"INV"+Math.floor(Math.random()*9000+1000),wht:0,cat:"",note:"",recvDate:d},o||{});acc.pur.push(p);
-    if(p.kind==="stock"&&p.status==="received")p.lines.forEach((l,j)=>stx.push({id:uid("t"),type:"in",date:p.recvDate,pid:l.pid,qty:l.q,cost:l.p,ref:p.no,party:sup,note:"",src:"acc",docId:p.id,ts:ts++}));return p};
-  const expn=(dd,sup,cat,desc,amt,o)=>pur(dd,sup,"",[],Object.assign({kind:"expense",cat,lines:[{pid:"",d:desc,q:1,p:amt}],taxInv:false,taxNo:"",vat:"none"},o||{}));
-  const payOut=(p,dd,accId,part)=>{const c=calcPur(p);const amt=part||c.net;acc.pay.push({id:uid("y"),dir:"out",purId:p.id,date:day(dd),amount:amt,wht:part?0:c.wht,accId,note:""})};
-  const docs=[];const sale=(dd,cust,lines,o)=>{const d=day(dd);const doc=Object.assign({id:uid("d"),mode:"goods",type:"IT",no:no("IT",d),date:d,due:addDays(d,15),ref:"",cust,items:lines.map(([k,q])=>({pid:pid(k),d:items[k].name,q,u:items[k].unit,p:items[k].price,disc:0})),vat:"ex",billDisc:0,wht:0,notes:"",saved:true,updated:ts++,term:"credit"},o||{});doc._total=calcDoc(doc).net;docs.unshift(doc);
-    doc.items.forEach((l,j)=>stx.push({id:uid("t"),type:"out",date:d,pid:l.pid,qty:l.q,cost:0,ref:doc.no,party:cust.name,note:"",src:"bill",docId:doc.id,ts:ts++}));return doc};
+  const stx=[];const ymNow=T0.slice(0,7),ymPrev=ymShift(ymNow,-1),tD=+T0.slice(8);
+  // วันที่ของเดือนย้อนหลัง m เดือน (0 = เดือนนี้ ไม่เกินวันนี้)
+  const md=(m,d)=>{const ym=ymShift(ymNow,m);const last=new Date(Date.UTC(+ym.slice(0,4),+ym.slice(5),0)).getUTCDate();d=Math.min(d,last);if(m===0)d=Math.min(d,tD);return ym+"-"+String(d).padStart(2,"0")};
+  let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;const ri=(a,b)=>a+Math.floor(rnd()*(b-a+1));
+  const pur=(d,sup,tax,lines,o)=>{const p=Object.assign({id:uid("u"),no:no("PU",d),kind:"stock",status:"received",date:d,due:addDays(d,30),sup:{name:sup,tax},lines:lines.map(([k,q,pr])=>({pid:pid(k),d:items[k].name,u:items[k].unit,q,p:pr})),vat:"ex",taxInv:true,taxNo:"INV"+ri(1000,9999),wht:0,cat:"",note:"",recvDate:d},o||{});acc.pur.push(p);
+    if(p.kind==="stock"&&p.status==="received")p.lines.forEach(l=>stx.push({id:uid("t"),type:"in",date:p.recvDate,pid:l.pid,qty:l.q,cost:l.p,ref:p.no,party:sup,note:"",src:"acc",docId:p.id,ts:ts++}));return p};
+  const expn=(d,sup,cat,desc,amt,o)=>pur(d,sup,"",[],Object.assign({kind:"expense",cat,lines:[{pid:"",d:desc,q:1,p:amt}],taxInv:false,taxNo:"",vat:"none"},o||{}));
+  const payOut=(p,d,accId,part)=>{if(d>T0)return;const c=calcPur(p);acc.pay.push({id:uid("y"),dir:"out",purId:p.id,date:d,amount:part||c.net,wht:part?0:c.wht,accId,note:""})};
+  const docs=[];
+  const sale=(d,cust,lines,o)=>{const doc=Object.assign({id:uid("d"),mode:"goods",type:"IT",no:no("IT",d),date:d,due:addDays(d,30),ref:"",cust,items:lines.map(([k,q])=>({pid:pid(k),d:items[k].name,q,u:items[k].unit,p:items[k].price,disc:0})),vat:"ex",billDisc:0,wht:0,notes:"",saved:true,updated:ts++,term:"credit"},o||{});doc._total=calcDoc(doc).net;docs.unshift(doc);
+    doc.items.forEach(l=>stx.push({id:uid("t"),type:"out",date:d,pid:l.pid,qty:l.q,cost:0,ref:doc.no,party:cust.name,note:"",src:"bill",docId:doc.id,ts:ts++}));return doc};
+  const quote=(d,cust,lines,note)=>{const doc={id:uid("d"),mode:"goods",type:"QT",no:no("QT",d),date:d,due:addDays(d,30),ref:"",cust,items:lines.map(([k,q])=>({pid:pid(k),d:items[k].name,q,u:items[k].unit,p:items[k].price,disc:0})),vat:"ex",billDisc:0,wht:0,notes:note||"",saved:true,updated:ts++};doc._total=calcDoc(doc).net;docs.unshift(doc);return doc};
+  const paidIn=(doc,d,accId,amt,m)=>{if(d>T0)return;acc.pay.push({id:uid("y"),dir:"in",docId:doc.id,date:d,amount:amt||calcDoc(doc).total,wht:0,accId,method:m||"โอนเงิน",note:amt?"แบ่งจ่ายงวดแรก":""})};
+  const cashSale=(d,cust,lines,m,accId)=>{const doc=sale(d,cust,lines,{term:"cash",due:"",payMeth:m,payAcc:accId});const c=calcDoc(doc);acc.pay.push({id:"yb"+doc.id,dir:"in",docId:doc.id,date:d,amount:c.net,wht:c.wht,accId,method:m,note:"ขายเงินสด",src:"bill"});return doc};
   const C1={name:"บริษัท ดีดี ออฟฟิศ จำกัด",addr:"55 ถ.ลาดพร้าว แขวงจอมพล เขตจตุจักร กรุงเทพฯ 10900",tax:"0105561111111",branch:"สำนักงานใหญ่",contact:""},C2={name:"ร้านกาแฟ บ้านสวน",addr:"19 ถ.นิมมานเหมินท์ ต.สุเทพ อ.เมือง จ.เชียงใหม่ 50200",tax:"3501200123456",branch:"",contact:""},C3={name:"โรงเรียนอนุบาลดวงดาว",addr:"201 ม.5 ต.บางเมือง อ.เมือง จ.สมุทรปราการ 10270",tax:"0994000333333",branch:"สำนักงานใหญ่",contact:""},C4={name:"ลูกค้าหน้าร้าน",addr:"",tax:"",branch:"",contact:""};
-  // ซื้อสินค้าเข้าสต๊อก
-  const p1=pur(-62,"บจก. เปเปอร์ไทย","0105550000111",[[0,600,98],[2,200,48]]);payOut(p1,-55,"bank1");
-  const p2=pur(-60,"บจก. ไอทีซัพพลาย","0105550000222",[[1,60,360]]);payOut(p2,-30,"bank1");
-  const p3=pur(-58,"บจก. อาร์ตแอนด์คราฟท์","0105550000333",[[5,250,70],[6,300,24],[7,200,15],[8,300,11]]);payOut(p3,-40,"bank1");
-  const p4=pur(-34,"บจก. แพ็คเกจจิ้งโปร","0105550000444",[[3,200,68],[4,150,42]],{due:day(-4)});
-  const p5=pur(-20,"บจก. ไอทีซัพพลาย","0105550000222",[[1,40,365]],{due:day(10)});
-  pur(-3,"บจก. เปเปอร์ไทย","0105550000111",[[0,300,100]],{status:"ordered",recvDate:"",due:day(7),note:"ส่งภายใน 7 วัน"});
-  // ค่าใช้จ่าย 2 เดือน
-  [-35,-5].forEach((dd,i)=>{const r=expn(dd,"คุณสมศรี (เจ้าของตึก)","ค่าเช่า","ค่าเช่าร้าน",8000,{wht:5});payOut(r,dd,"bank1");
-    const e=expn(dd+2,"การไฟฟ้านครหลวง","ค่าน้ำ-ไฟ","ค่าไฟฟ้า",i?2450:2310,{vat:"in",taxInv:true,taxNo:"MEA"+(7781+i),sup:{name:"การไฟฟ้านครหลวง",tax:"0994000165510"}});payOut(e,dd+2,"bank1");
-    const n=expn(dd+3,"บจก. เน็ตเร็ว","ค่าโทรศัพท์ / อินเทอร์เน็ต","อินเทอร์เน็ตร้าน",899,{vat:"in",taxInv:true,taxNo:"NT"+(552+i)});payOut(n,dd+3,"bank1");
-    const s=expn(dd+4,"ขนส่งด่วนพิเศษ","ค่าขนส่ง","ค่าส่งสินค้าให้ลูกค้า",i?1850:1200,{wht:1});payOut(s,dd+4,"cash")});
-  const ad=expn(-12,"บจก. โฆษณาดี","ค่าโฆษณา / การตลาด","ยิงโฆษณา Facebook",3000,{vat:"ex",taxInv:true,taxNo:"AD2091",wht:2});payOut(ad,-12,"bank1");
-  // ขาย
   const C5={name:"บริษัท ฟิตแอนด์เฟิร์ม จำกัด",addr:"99 ถ.สุขุมวิท 55 แขวงคลองตันเหนือ เขตวัฒนา กรุงเทพฯ 10110",tax:"0105565444444",branch:"สาขา 00002",contact:""};
-  const paidIn=(doc,dd,accId,amt,m)=>acc.pay.push({id:uid("y"),dir:"in",docId:doc.id,date:day(dd),amount:amt||calcDoc(doc).total,wht:0,accId,method:m||"โอนเงิน",note:amt?"แบ่งจ่ายงวดแรก":""});
-  paidIn(sale(-50,C1,[[0,120],[1,15],[2,60]]),-38,"bank1");
-  paidIn(sale(-44,C3,[[5,60],[6,80],[7,60],[8,80]],{billDisc:500}),-30,"bank1");
-  const cashSale=(dd,cust,lines,m,accId)=>{const doc=sale(dd,cust,lines,{term:"cash",due:"",payMeth:m,payAcc:accId});const c=calcDoc(doc);acc.pay.push({id:"yb"+doc.id,dir:"in",docId:doc.id,date:doc.date,amount:c.net,wht:c.wht,accId,method:m,note:"ขายเงินสด",src:"bill"});return doc};
-  cashSale(-36,C4,[[0,40],[2,20]],"เงินสด","cash");
-  paidIn(sale(-30,C5,[[0,100],[1,20],[3,40],[4,40]]),-16,"bank1");
-  paidIn(sale(-25,C3,[[5,80],[6,120],[7,80],[8,120]]),-12,"bank1");
-  sale(-18,C2,[[3,90],[4,90]]);
-  paidIn(sale(-14,C1,[[0,150],[1,20],[2,50]]),-4,"bank1",20000);
-  sale(-9,C5,[[0,30],[1,10],[3,40]]);
-  sale(-6,C3,[[5,50],[6,60],[8,60]]);
-  cashSale(-2,C4,[[0,40],[1,6]],"QR พร้อมเพย์","bank1");
-  cashSale(-1,C2,[[3,20],[4,20]],"เงินสด","cash");
+  // ลูกค้าแต่ละรายซื้ออะไรบ่อย [สินค้า, จำนวนปกติ]
+  const BUY=new Map([[C1,[[0,100],[1,12],[2,40]]],[C2,[[3,60],[4,60]]],[C3,[[5,50],[6,70],[7,50],[8,70]]],[C5,[[0,60],[1,10],[3,30],[4,30]]]]);
+  const ORDER=[C4,C1,C2,C4,C3,C5,C4,C2,C1,C4,C3,C5,C4];
+  // 3 เดือนย้อนหลังเต็มเดือน + เดือนนี้ถึงวันนี้ · ยอดขายโตขึ้นทุกเดือน
+  const PLAN=[[-3,9,.78],[-2,11,.86],[-1,13,.92],[0,Math.min(4,Math.max(0,Math.floor((tD-1)/2))),.9]];
+  const need={};let unpaidC2=0;
+  PLAN.forEach(([m,n,sc])=>{need[m]=PR.map(()=>0);const span=m===0?Math.max(1,tD-1):26;
+    for(let i=0;i<n;i++){const d=md(m,2+Math.floor((i+.5)*span/n)),cu=ORDER[i];let lines,doc;
+      if(cu===C4){const ks=[0,2,5,6,1].sort(()=>rnd()-.5).slice(0,ri(1,3));lines=ks.map(k=>[k,k===1?ri(1,3):ri(5,20)]);
+        doc=cashSale(d,cu,lines,i%2?"QR พร้อมเพย์":"เงินสด",i%2?"bank1":"cash")}
+      else{lines=BUY.get(cu).map(([k,q])=>[k,Math.max(1,Math.round(q*sc*(.8+rnd()*.4)/(q>=20?5:1))*(q>=20?5:1))]);
+        if(cu===C2&&i===7&&m===-1){doc=cashSale(d,cu,lines,"โอนเงิน","bank1")}
+        else{doc=sale(d,cu,lines,cu===C3?{billDisc:Math.round(calcDoc({items:lines.map(([k,q])=>({q,p:items[k].price})),vat:"none"}).base*.03/10)*10,notes:"ส่วนลดสถานศึกษา 3%"}:cu===C2?{due:addDays(d,15)}:{});
+          const pd=addDays(d,cu===C2?ri(8,14):ri(12,28));
+          if(cu===C2&&m===-2&&!unpaidC2++){/* ค้างชำระเกินกำหนด */}
+          else if(cu===C1&&m===-1&&i===8)paidIn(doc,pd,"bank1",r2(calcDoc(doc).total/2));
+          else paidIn(doc,pd,"bank1")}}
+      lines.forEach(([k,q])=>need[m][k]+=q)}});
+  // ซื้อสินค้าเข้าสต๊อกต้นเดือน (ราคาทุนขยับขึ้นเล็กน้อยทุกเดือน → เห็นต้นทุนเฉลี่ยเปลี่ยน)
+  const SUP=[["บจก. เปเปอร์ไทย","0105550000111",[0,2]],["บจก. ไอทีซัพพลาย","0105550000222",[1]],["บจก. แพ็คเกจจิ้งโปร","0105550000444",[3,4]],["บจก. อาร์ตแอนด์คราฟท์","0105550000333",[5,6,7,8]]];
+  [-3,-2,-1].forEach(m=>{SUP.forEach(([sup,tax,ks],si)=>{
+      const lines=ks.map(k=>{let q=need[m][k]*1.05+(m===-3?items[k].min*1.2:0)+(m===-1?need[0][k]+items[k].min*.4-({1:20,3:55,4:55}[k]||0):0);q=Math.max(0,Math.ceil(q/10)*10);return[k,q,r2(items[k].cost*(1+.02*(m+3)))]}).filter(l=>l[1]>0);
+      if(!lines.length)return;const d=md(m,1+(si%2));const p=pur(d,sup,tax,lines);
+      if(!(m===-1&&si===2))payOut(p,addDays(d,ri(14,28)),"bank1");})});
+  pur(md(0,Math.max(1,tD-2)),"บจก. เปเปอร์ไทย","0105550000111",[[0,300,r2(items[0].cost*1.06)],[2,100,r2(items[2].cost*1.06)]],{status:"ordered",recvDate:"",due:addDays(T0,7),note:"ส่งภายใน 7 วัน"});
+  // ค่าใช้จ่ายประจำเดือน
+  [-3,-2,-1,0].forEach(m=>{const ok=d=>d<=T0;
+    let d=md(m,1);if(ok(d)){const r=expn(d,"คุณสมศรี (เจ้าของตึก)","ค่าเช่า","ค่าเช่าร้าน",8000,{wht:5});payOut(r,d,"bank1")}
+    if(m===0)return;
+    d=md(m,5);const e=expn(d,"การไฟฟ้านครหลวง","ค่าน้ำ-ไฟ","ค่าไฟฟ้า",2100+ri(0,500),{vat:"in",taxInv:true,taxNo:"MEA"+ri(1000,9999),sup:{name:"การไฟฟ้านครหลวง",tax:"0994000165510"}});payOut(e,addDays(d,3),"bank1");
+    d=md(m,6);const n=expn(d,"บจก. เน็ตเร็ว","ค่าโทรศัพท์ / อินเทอร์เน็ต","อินเทอร์เน็ตร้าน",899,{vat:"in",taxInv:true,taxNo:"NT"+ri(100,999)});payOut(n,d,"bank1");
+    d=md(m,15);const v=expn(d,"ร้านวัสดุภัณฑ์","วัสดุสิ้นเปลือง","เทปกาว ถุง กล่องพัสดุ",300+ri(0,400));payOut(v,d,"cash");
+    d=md(m,22);const s=expn(d,"ขนส่งด่วนพิเศษ","ค่าขนส่ง","ค่าส่งสินค้าให้ลูกค้า",900+ri(0,900),{wht:1});payOut(s,d,"cash");
+    if(m>=-2){d=md(m,10);const ad=expn(d,"บจก. โฆษณาดี","ค่าโฆษณา / การตลาด","ยิงโฆษณา Facebook",m===-2?2500:3500,{vat:"ex",taxInv:true,taxNo:"AD"+ri(1000,9999),wht:2});payOut(ad,d,"bank1")}});
+  // ใบเสนอราคา
+  quote(md(-1,3),C3,[[5,60],[6,80],[7,60],[8,80]],"สำหรับภาคเรียนที่ 2/2569");
+  quote(md(0,Math.max(1,tD-1)),C5,[[0,80],[1,12],[3,40],[4,40]],"ราคานี้รวมค่าจัดส่งในกรุงเทพฯ");
   // ตรวจนับ
-  stx.push({id:uid("t"),type:"adj",date:day(-8),pid:pid(2),qty:-2,cost:0,note:"นับได้น้อยกว่าระบบ 2 เล่ม · แฟ้มชำรุด",ts:ts++});
-  // เงินเดือน (สรุปจากหน้าคำนวณเงินเดือน)
-  const ymNow=T0.slice(0,7),ymPrev=ymShift(ymNow,-1);const payroll={};payroll[ymPrev]={earn:15000,net:14250,sso:750,tax:0,n:1};payroll[ymNow]={earn:15000,net:14250,sso:750,tax:0,n:1};
-  acc.cash.push({id:uid("c"),dir:"out",date:addDays(ymNow+"-01",-1),accId:"bank1",cat:"จ่ายเงินเดือน",amount:14250,note:"เงินเดือน "+ymLabel(ymPrev)+" 1 คน",ym:ymPrev});
-  acc.cash.push({id:uid("c"),dir:"out",date:day(-9),accId:"cash",cat:"ถอนใช้ส่วนตัว",amount:5000,note:"",ym:""});
+  stx.push({id:uid("t"),type:"adj",date:md(-1,27),pid:pid(2),qty:-2,cost:0,note:"นับได้น้อยกว่าระบบ 2 เล่ม · แฟ้มชำรุด",ts:ts++});
+  // เงินเดือน (สรุปจากหน้าคำนวณเงินเดือน) และจ่ายจริงสิ้นเดือน
+  const payroll={},recs={};
+  [-3,-2,-1].forEach(m=>{const ym=ymShift(ymNow,m);payroll[ym]={earn:15000,net:14250,sso:750,tax:0,n:1};recs[ym]={edemo1:{rate:15000},_payDate:ym+"-25"};
+    acc.cash.push({id:uid("c"),dir:"out",date:md(m,31),accId:"bank1",cat:"จ่ายเงินเดือน",amount:14250,note:"เงินเดือน "+ymLabel(ym)+" 1 คน",ym})});
+  acc.cash.push({id:uid("c"),dir:"out",date:md(-1,28),accId:"cash",cat:"ถอนใช้ส่วนตัว",amount:5000,note:"",ym:""});
+  acc.cash.push({id:uid("c"),dir:"in",date:md(-2,18),accId:"cash",cat:"รายรับอื่น",amount:350,note:"ขายกล่องกระดาษเก่า",ym:""});
   acc.cnt=cnt;
-  LS.set(KEY.bseller,seller);LS.set(KEY.bdocs,docs);LS.set(KEY.bcnt,bcnt);LS.set(KEY.bcust,[C1,C2,C3]);LS.set(KEY.sitems,items);LS.set(KEY.stx,stx);LS.set(KEY.scfg,{name:seller.name});LS.set(KEY.pay,payroll);
+  LS.set(KEY.bseller,seller);LS.set(KEY.bdocs,docs);LS.set(KEY.bcnt,bcnt);LS.set(KEY.bcust,[C1,C2,C3,C5]);LS.set(KEY.sitems,items);LS.set(KEY.stx,stx);LS.set(KEY.scfg,{name:seller.name});LS.set(KEY.pay,payroll);
   // ข้อมูลเงินเดือนจริง (หน้าคำนวณเงินเดือนจะคำนวณสรุปเองเมื่อเปิด)
   const emp={id:"edemo1",code:"EMP001",name:"สมชาย ใจดี",pos:"พนักงานขาย",dept:"",idc:"",bank:"",type:"m",salary:15000,sso:true,tax:true,spouse:false,kids:0,parents:0,allow:0};
-  const recs={};recs[ymPrev]={edemo1:{rate:15000},_payDate:ymPrev+"-25"};recs[ymNow]={edemo1:{rate:15000}};
   LS.set("edm_pay_company",Object.assign(LS.get("edm_pay_company",{}),{name:seller.name,addr:seller.addr,tax:seller.tax}));LS.set("edm_pay_emps",[emp]);LS.set("edm_pay_records",recs);LS.set(KEY.acc,acc);
   try{localStorage.removeItem("edm_bill_draft")}catch(e){}
-  load();ui.v="home";ui.ym=ymPrev;svU();render();toast("ใส่ข้อมูลตัวอย่างแล้ว · แสดงเดือนที่แล้ว (ครบทั้งเดือน) เปลี่ยนเดือนได้ที่ช่องด้านบน");
+  load();ui.v="home";ui.ym=ymPrev;svU();render();toast("ใส่ข้อมูลตัวอย่าง 3 เดือนแล้ว · แสดงเดือนที่แล้ว เปลี่ยนเดือนได้ที่ช่องด้านบน");
 }
 
 /* ---------- events ---------- */
