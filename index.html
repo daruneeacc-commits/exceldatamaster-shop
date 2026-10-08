@@ -523,7 +523,7 @@ function render(){
         <span class="label">Excel · Google Sheets · Apps Script</span>
         <h1 style="margin-top:14px">แหล่งรวม<br>เทมเพลต Excel <em>ใช้ได้จริง</em></h1>
         <p>${esc(s.tagline)}</p>
-        <div class="cta"><a class="btn btn-main" href="#shop">ดูสินค้าทั้งหมด</a><a class="btn btn-dark" href="#tools">🧾 ระบบเปิดบิล / เงินเดือน</a><a class="btn btn-line" href="#how">วิธีสั่งซื้อ</a></div>
+        <div class="cta"><a class="btn btn-main" href="#shop">ดูสินค้าทั้งหมด</a><a class="btn btn-dark" href="#tools">🧾 ระบบออนไลน์ บิล · สต๊อก · เงินเดือน</a><a class="btn btn-line" href="#how">วิธีสั่งซื้อ</a></div>
         <div class="hero-types">${usedTypes.map(([k,t])=>`<span><i class="dot" style="background:${t.color}"></i>${t.label} ${counts(k)} ชิ้น</span>`).join("")}</div>
       </div>
       <div class="hero-art">${s.mascot?`<img class="mascot" src="${esc(s.mascot)}" alt="มาสคอต ${esc(s.name)}"><div class="bubble">กรอกแค่ตัวเลข<br>ที่เหลือ<b>สูตรทำให้</b>ค่ะ</div>`:""}</div>
@@ -551,12 +551,16 @@ function render(){
 
     ${(()=>{const own=/(^|\.)exceldatamaster\.com$|github\.io$/.test(location.hostname),base=own?"":"https://exceldatamaster.com/",tg=own?"":' target="_blank" rel="noopener"';
       return `<section id="tools" style="padding-top:8px"><div class="wrap">
-      <div class="sec-head"><div><span class="label">ใช้งานบนเว็บได้ทันที ไม่ต้องติดตั้ง</span><h2>ระบบออนไลน์เบื้องต้น</h2><p>เปิดบนมือถือหรือคอมก็ได้ ใส่โลโก้และข้อมูลร้านของคุณเอง พิมพ์เป็น PDF ได้เลย</p></div></div>
+      <div class="sec-head"><div><span class="label">ใช้งานบนเว็บได้ทันที ไม่ต้องติดตั้ง</span><h2>ระบบออนไลน์เบื้องต้น</h2><p>เปิดบนมือถือหรือคอมก็ได้ ใส่โลโก้และข้อมูลร้านของคุณเอง พิมพ์เป็น PDF ได้เลย · ทดลองใช้ฟรี 7 วัน แล้วใช้ครบทั้ง 3 ระบบเพียง 199 บาท/เดือน</p></div></div>
       <div class="tools">
         <a class="tool-card" href="${base}bill/"${tg}><span class="tool-free">ทดลองใช้ฟรี</span><span class="tool-ic">🧾</span>
           <h3>เปิดบิลออนไลน์</h3><p>ออกใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ และใบกำกับภาษี สำหรับร้านซื้อมาขายไปและงานบริการ</p>
           <div class="tool-chips"><span>VAT 7%</span><span>หัก ณ ที่จ่าย</span><span>ตัวหนังสือจำนวนเงิน</span><span>PDF A4</span></div>
           <div class="tool-go"><span class="btn btn-main btn-sm">เริ่มเปิดบิล →</span></div></a>
+        <a class="tool-card" href="${base}stock/"${tg}><span class="tool-free">ทดลองใช้ฟรี</span><span class="tool-ic">📦</span>
+          <h3>ระบบสต๊อกสินค้า</h3><p>รับเข้า เบิกออก ตรวจนับ รู้ยอดคงเหลือและต้นทุนทันที เชื่อมกับเปิดบิล ตัดสต๊อกให้อัตโนมัติ</p>
+          <div class="tool-chips"><span>ต้นทุนเฉลี่ย</span><span>แจ้งเตือนใกล้หมด</span><span>บัญชีคุมสต๊อก</span><span>รายงาน Excel</span></div>
+          <div class="tool-go"><span class="btn btn-main btn-sm">เริ่มจัดการสต๊อก →</span></div></a>
         <a class="tool-card" href="${base}payroll/"${tg}><span class="tool-free">ทดลองใช้ฟรี</span><span class="tool-ic">💰</span>
           <h3>คำนวณเงินเดือนพร้อมสลิป</h3><p>คิดเงินเดือนพนักงานรายเดือนและรายวัน พิมพ์สลิปได้ทันที พร้อมสรุปยอดสะสมทั้งปี</p>
           <div class="tool-chips"><span>ประกันสังคม 5%</span><span>ภาษีรายเดือน</span><span>OT เบี้ยขยัน ค่าคอม</span><span>ขาด ลา มาสาย</span></div>

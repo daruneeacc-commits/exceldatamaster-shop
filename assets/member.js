@@ -5,6 +5,7 @@
 (function () {
   "use strict";
   var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbyz6_ZopPRL_XG7q2rXNQSHtlDP7C2fcZT6vxtn_wI1xLUU7cHHcM6noL58q4rSpok9/exec";
+  var TOOLS = [["bill", "🧾 เปิดบิล"], ["stock", "📦 สต๊อกสินค้า"], ["payroll", "💰 คำนวณเงินเดือน"]];
   var PRICE = 199, DAYS = 30, TRIAL = 7, KEY = "edm_member";
   var BASE = (document.querySelector('script[src*="member.js"]') || {}).src || "";
   BASE = BASE.replace(/assets\/member\.js.*$/, "");
@@ -62,7 +63,7 @@
   }
   function closeGate() { if (gate) { gate.remove(); gate = null; } document.body.classList.remove("edm-locked"); }
   function renderGate() {
-    var tool = /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : "เปิดบิลออนไลน์";
+    var tool = /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : "เปิดบิลออนไลน์";
     var h = '<div class="edm-card">';
     if (mode === "sent") {
       h += '<div style="font-size:2.4rem;line-height:1">✅</div><h2>สมัครเรียบร้อย · รอร้านเปิดใช้งาน</h2><p>' + esc(note) + '</p>' +
@@ -77,7 +78,7 @@
       var su = mode === "signup";
       h += '<span class="edm-badge">ทดลองใช้ฟรี ' + TRIAL + ' วัน</span><h2>' + esc(tool) + '</h2>' +
         (note ? '<div class="edm-msg err">' + esc(note) + '</div>' : '') +
-        (su ? '<ul class="edm-perks"><li>ใช้ได้ทั้งเปิดบิลและคำนวณเงินเดือน</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดใช้งานให้หลังสมัคร</li><li>ใช้ต่อเดือนละ ' + PRICE + ' บาท ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
+        (su ? '<ul class="edm-perks"><li>ใช้ได้ครบ 3 ระบบ: เปิดบิล · สต๊อกสินค้า · คำนวณเงินเดือน</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดใช้งานให้หลังสมัคร</li><li>ใช้ต่อเดือนละ ' + PRICE + ' บาท ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
         '<div class="edm-tabs"><button data-go="signup" class="' + (su ? "on" : "") + '">สมัครใหม่</button><button data-go="login" class="' + (su ? "" : "on") + '">เข้าสู่ระบบ</button></div>' +
         (su ? '<input class="edm-in" id="edmN" autocomplete="off" placeholder="ชื่อร้าน / ชื่อของคุณ (ไม่บังคับ)">' : '') +
         '<input class="edm-in" id="edmE" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="email" placeholder="อีเมล">' +
@@ -164,7 +165,7 @@
       '<div class="edm-muted">' + esc(expired() ? "หมดอายุเมื่อ " : (me.status === "ทดลองใช้" ? "ทดลองใช้ถึง " : "ใช้งานได้ถึง ")) + thDate(me.exp) + '</div>' +
       '<a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">ต่ออายุ ' + PRICE + ' บาท / ' + DAYS + ' วัน</a>' +
       '<button class="edm-btn ghost" id="edmRe" type="button">↻ ตรวจสถานะล่าสุด</button>' +
-      '<a class="edm-btn ghost" href="' + BASE + (/payroll/.test(location.pathname) ? "bill/" : "payroll/") + '">' + (/payroll/.test(location.pathname) ? "🧾 ไปหน้าเปิดบิล" : "💰 ไปหน้าคำนวณเงินเดือน") + '</a>' +
+      TOOLS.filter(function (t) { return location.pathname.indexOf("/" + t[0] + "/") === -1; }).map(function (t) { return '<a class="edm-btn ghost" href="' + BASE + t[0] + '/">' + t[1] + '</a>'; }).join("") +
       '<button class="edm-link" id="edmOut" type="button" style="align-self:flex-start">ออกจากระบบ</button>' +
       '<p class="edm-muted" style="margin:0">โอนแล้วแนบสลิป ร้านตรวจแล้วจะต่ออายุให้และส่งอีเมลแจ้ง จากนั้นกด "ตรวจสถานะล่าสุด"</p>';
     chip.appendChild(menu);

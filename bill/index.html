@@ -119,6 +119,7 @@ table.p-items .c{text-align:center}
   <a class="brand" href="/">📊 Excel Data Master <small>· เปิดบิลออนไลน์</small></a>
   <nav class="nav">
     <button class="btn sm ghost" id="openList">📁 เอกสารของฉัน</button>
+    <a class="btn sm ghost" href="/stock/">📦 สต๊อก</a>
     <a class="btn sm ghost" href="/payroll/">💰 คำนวณเงินเดือน</a>
     <a class="btn sm ghost" href="/">🛒 ร้านเทมเพลต</a>
   </nav>
@@ -281,10 +282,28 @@ function renderTypes(){
   $("#typeWarn").innerHTML=w.map(x=>`<div class="warn">⚠️ ${esc(x)}</div>`).join("");
   $("#dueLabel").textContent=TYPES[doc.type].due||"ครบกำหนด (ไม่ใช้กับเอกสารนี้)";$("#docDue").disabled=!TYPES[doc.type].due;
 }
+/* ---------- เชื่อมระบบสต๊อก (หน้า /stock/ ใช้ข้อมูลในเครื่องเดียวกัน) ---------- */
+const SK={items:"edm_stock_items",tx:"edm_stock_tx"};
+let SI=LS.get(SK.items,[]);
+const stockItem=id=>SI.find(x=>x.id===id);
+function stockBal(id){let b=0;LS.get(SK.tx,[]).forEach(t=>{if(t.pid!==id)return;const q=num(t.qty);b+=t.type==="out"?-q:q});return Math.round(b*1000)/1000}
+function pickStock(i){SI=LS.get(SK.items,[]);
+  openDlg("เลือกสินค้าจากสต๊อก",`<input class="in-" id="sq" placeholder="ค้นหาชื่อหรือรหัส"><div class="list" id="sl"></div><p class="note">เลือกแล้วระบบใส่ชื่อ หน่วย และราคาขายให้ · เมื่อบันทึกเป็นใบแจ้งหนี้ / ใบกำกับภาษี จะตัดสต๊อกให้อัตโนมัติ</p>`);
+  const draw=q=>{const L=SI.filter(x=>!q||(x.name+" "+(x.sku||"")).toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name,"th"));
+    $("#sl").innerHTML=L.map(x=>{const bl=stockBal(x.id);return`<div class="li"><div><b>${esc(x.name)}</b><small>${esc(x.sku||"")} · คงเหลือ ${bl} ${esc(x.unit)} · ราคา ${fmt(x.price)}</small></div><div class="acts"><button class="btn sm main" data-sp="${x.id}">เลือก</button></div></div>`}).join("")||`<p class="note">ไม่พบสินค้า</p>`;
+    $$("[data-sp]").forEach(b=>b.onclick=()=>{const x=stockItem(b.dataset.sp);Object.assign(doc.items[i],{pid:x.id,d:x.name,u:x.unit,p:num(x.price)});if(!num(doc.items[i].q))doc.items[i].q=1;dlg.close();renderItems();update()})};
+  draw("");$("#sq").oninput=e=>draw(e.target.value.toLowerCase());setTimeout(()=>$("#sq").focus(),30)}
+function syncStock(d,remove){
+  if(!localStorage.getItem(SK.items))return 0;
+  let T=LS.get(SK.tx,[]);const before=T.length;T=T.filter(t=>t.docId!==d.id);let n=0;
+  if(!remove&&d.mode==="goods"&&d.type==="IT"){const now=Date.now();
+    d.items.forEach((l,k)=>{if(!l.pid||num(l.q)<=0||!stockItem(l.pid))return;T.push({id:"tb"+now.toString(36)+k,type:"out",date:d.date,pid:l.pid,qty:num(l.q),cost:0,ref:d.no,party:(d.cust&&d.cust.name)||"",note:"",src:"bill",docId:d.id,ts:now+k});n++})}
+  if(n||T.length!==before)LS.set(SK.tx,T);return n}
 function renderItems(){
   const g=doc.mode==="goods";$("#itemsTitle").textContent=g?"รายการสินค้า":"รายการบริการ";
   $("#items").innerHTML=doc.items.map((it,i)=>`<div class="item" data-i="${i}">
-    <div class="top"><span class="no">${i+1}</span><input class="in-" data-k="d" value="${esc(it.d)}" placeholder="${g?"ชื่อสินค้า":"รายละเอียดงานบริการ"}"><button class="x" data-del="${i}" title="ลบ">✕</button></div>
+    <div class="top"><span class="no">${i+1}</span><input class="in-" data-k="d" value="${esc(it.d)}" placeholder="${g?"ชื่อสินค้า":"รายละเอียดงานบริการ"}">${g&&SI.length?`<button class="btn sm ghost" data-pick="${i}" type="button" title="เลือกจากสต๊อก">📦</button>`:""}<button class="x" data-del="${i}" title="ลบ">✕</button></div>
+    ${g&&it.pid&&stockItem(it.pid)?`<div class="note">📦 เชื่อมสต๊อก · คงเหลือ ${stockBal(it.pid)} ${esc(stockItem(it.pid).unit)} · ตัดสต๊อกเมื่อบันทึกใบแจ้งหนี้</div>`:""}
     <div class="${g?"row3":"row"}">
       <div class="f"><label>จำนวน</label><input class="in-" data-k="q" type="number" step="any" inputmode="decimal" value="${esc(it.q)}"></div>
       ${g?`<div class="f"><label>หน่วย</label><input class="in-" data-k="u" value="${esc(it.u)}"></div>`:""}
@@ -292,7 +311,8 @@ function renderItems(){
       ${g?`<div class="f"><label>ส่วนลด (บาท)</label><input class="in-" data-k="disc" type="number" step="any" inputmode="decimal" value="${esc(it.disc||"")}"></div>`:""}
       <div class="f sum"><label>รวม</label><span data-amt>${fmt(num(it.q)*num(it.p)-num(it.disc))}</span></div>
     </div></div>`).join("");
-  $$("#items .item").forEach(el=>{const i=+el.dataset.i;el.querySelectorAll("[data-k]").forEach(inp=>inp.oninput=()=>{doc.items[i][inp.dataset.k]=inp.value;el.querySelector("[data-amt]").textContent=fmt(num(doc.items[i].q)*num(doc.items[i].p)-num(doc.items[i].disc));update()})});
+  $$("[data-pick]").forEach(b=>b.onclick=()=>pickStock(+b.dataset.pick));
+  $$("#items .item").forEach(el=>{const i=+el.dataset.i;el.querySelectorAll("[data-k]").forEach(inp=>inp.oninput=()=>{doc.items[i][inp.dataset.k]=inp.value;if(inp.dataset.k==="d"&&doc.items[i].pid&&stockItem(doc.items[i].pid)&&inp.value!==stockItem(doc.items[i].pid).name)delete doc.items[i].pid;el.querySelector("[data-amt]").textContent=fmt(num(doc.items[i].q)*num(doc.items[i].p)-num(doc.items[i].disc));update()})});
   $$("[data-del]").forEach(b=>b.onclick=()=>{doc.items.splice(+b.dataset.del,1);if(!doc.items.length)doc.items.push({d:"",q:1,u:"",p:0,disc:0});renderItems();update()});
 }
 function fillForm(){
@@ -360,7 +380,8 @@ function save(silent){
   const i=docs.findIndex(d=>d.id===doc.id);if(i>=0)docs[i]=JSON.parse(JSON.stringify(doc));else docs.unshift(JSON.parse(JSON.stringify(doc)));
   if(LS.set(K.docs,docs)){bumpNo(doc.no);
     if(doc.cust.name){const cs=LS.get(K.cust,[]);const j=cs.findIndex(x=>x.name===doc.cust.name);if(j>=0)cs[j]=doc.cust;else cs.unshift(doc.cust);LS.set(K.cust,cs.slice(0,200))}
-    if(!silent)toast("บันทึกแล้ว ✓");return true}return false;
+    const ns=syncStock(doc);
+    if(!silent)toast(ns?"บันทึกแล้ว ✓ ตัดสต๊อก "+ns+" รายการ":"บันทึกแล้ว ✓");return true}return false;
 }
 $("#saveBtn").onclick=()=>save();
 $("#printBtn").onclick=()=>{save(true);const pw=$("#previewWrap");pw.classList.add("show");setTimeout(()=>window.print(),80)};
@@ -438,7 +459,7 @@ $("#openList").onclick=()=>{
   openDlg("เอกสารของฉัน",`<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm main" id="xls">📊 ดาวน์โหลดเป็น Excel</button><button class="btn sm ghost" id="exp">⬇️ สำรองข้อมูล</button><label class="btn sm ghost">⬆️ นำเข้าข้อมูล<input type="file" id="imp" accept=".json" hidden></label></div><input class="in-" id="dq" placeholder="ค้นหาเลขที่หรือชื่อลูกค้า"><div class="list" id="dl"></div><p class="note">ข้อมูลเก็บในเบราว์เซอร์ของเครื่องนี้เท่านั้น ควรกด "สำรองข้อมูล" เก็บไว้เป็นระยะ · ไฟล์ Excel เปิดใน Google ชีตได้ (อัปโหลดไป Google Drive แล้วเปิดด้วย Google ชีต)</p>`);
   const draw=q=>{const L=docs.filter(d=>!q||(d.no+d.cust.name).toLowerCase().includes(q));$("#dl").innerHTML=L.length?L.map(d=>`<div class="li"><div><b>${esc(d.no)} · ${esc((TYPES[d.type]||TYPES.QT).name)}</b><small>${esc(d.cust.name||"-")} · ${thDate(d.date)} · ฿${fmt(d._total||0)}</small></div><div class="acts"><button class="btn sm main" data-op="${d.id}">เปิด</button><button class="btn sm ghost danger" data-dl="${d.id}">ลบ</button></div></div>`).join(""):`<p class="note">ยังไม่มีเอกสารที่บันทึกไว้</p>`;
     $$("[data-op]").forEach(b=>b.onclick=()=>{doc=JSON.parse(JSON.stringify(docs.find(d=>d.id===b.dataset.op)));dlg.close();renderAll()});
-    $$("[data-dl]").forEach(b=>b.onclick=()=>{if(!confirm("ลบเอกสารนี้?"))return;const i=docs.findIndex(d=>d.id===b.dataset.dl);docs.splice(i,1);LS.set(K.docs,docs);draw($("#dq").value.toLowerCase())})};
+    $$("[data-dl]").forEach(b=>b.onclick=()=>{if(!confirm("ลบเอกสารนี้?"))return;const i=docs.findIndex(d=>d.id===b.dataset.dl);if(i>=0)syncStock(docs[i],true);docs.splice(i,1);LS.set(K.docs,docs);draw($("#dq").value.toLowerCase())})};
   draw("");$("#dq").oninput=e=>draw(e.target.value.toLowerCase());
   $("#xls").onclick=()=>exportExcel();
   $("#exp").onclick=()=>{const data={v:1,app:"edm-bill",seller,docs:LS.get(K.docs,[]),customers:LS.get(K.cust,[]),counter:LS.get(K.cnt,{})};const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"}));a.download="สำรองข้อมูลบิล-"+today()+".json";a.click()};
@@ -449,10 +470,11 @@ function openDlg(t,h){$("#dlgTitle").textContent=t;$("#dlgBody").innerHTML=h;dlg
 $$(".mtabs button").forEach(b=>b.onclick=()=>{$$(".mtabs button").forEach(x=>x.classList.toggle("on",x===b));const v=b.dataset.mt==="view";$("#previewWrap").classList.toggle("show",v);$("#editor").classList.toggle("hide",v);if(v)fitPaper()});
 window.addEventListener("resize",fitPaper);
 window.addEventListener("afterprint",()=>{if(!$(".mtabs button.on")||$(".mtabs button.on").dataset.mt==="edit")$("#previewWrap").classList.remove("show")});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){SI=LS.get(SK.items,[]);renderItems()}});
 window.__bill={calc,bahtText,exportExcel,loadDemo,get doc(){return doc}};
 renderAll();
 })();
 </script>
-<script src="../assets/member.js?v=17" defer></script>
+<script src="../assets/member.js?v=18" defer></script>
 </body>
 </html>
