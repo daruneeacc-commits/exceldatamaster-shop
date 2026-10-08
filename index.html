@@ -404,6 +404,11 @@ textarea.in{resize:vertical;min-height:84px;line-height:1.6}
 .tool-card.all .tool-body{flex:1;min-width:min(100%,320px);display:flex;flex-direction:column;gap:10px}
 .tool-flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.82rem}.tool-flow span{background:color-mix(in srgb,var(--bg) 12%,transparent);border-radius:999px;padding:3px 12px}.tool-flow i{font-style:normal;opacity:.6}
 .tool-card.all .tool-go{margin:0;padding:0}
+.tool-card:not(.all){background:var(--ink);color:var(--bg);box-shadow:0 18px 40px -26px rgba(0,0,0,.55)}
+.tool-card:not(.all) p{color:color-mix(in srgb,var(--bg) 72%,transparent)}
+.tool-card:not(.all) .tool-ic{background:color-mix(in srgb,var(--bg) 12%,transparent);box-shadow:none}
+.tool-card:not(.all) .tool-chips span{background:color-mix(in srgb,var(--bg) 12%,transparent);color:color-mix(in srgb,var(--bg) 85%,transparent);box-shadow:none}
+.tool-card:not(.all):hover{box-shadow:0 22px 44px -22px rgba(0,0,0,.6),0 0 0 1.5px var(--accent)}
 .trial{display:flex;gap:18px 28px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--soft);border-radius:18px;padding:20px 24px;margin-bottom:20px;box-shadow:inset 0 0 0 1.5px var(--accent)}
 .trial-steps{display:flex;gap:10px 18px;flex-wrap:wrap;align-items:center;font-size:.92rem;margin:0;padding:0;list-style:none;counter-reset:t}
 .trial-steps li{display:flex;align-items:center;gap:8px;counter-increment:t}.trial-steps li::before{content:counter(t);width:24px;height:24px;border-radius:999px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:.78rem;font-weight:700;flex:none}
@@ -592,9 +597,9 @@ function render(){
       <div class="tools">
         <a class="tool-card all" href="${base}app/"${tg}><span class="tool-ic">🏪</span>
           <div class="tool-body"><h3>ระบบร้านค้า · รวมทุกระบบในที่เดียว</h3><p>เข้าที่เดียวใช้ครบ มีเมนูเรียงตามขั้นตอนการทำงานของร้าน หน้าหลักสรุปยอดขาย ภาษี ลูกหนี้ และสินค้าใกล้หมดให้ดูทุกวัน</p>
-          <div class="tool-flow"><span>🧾 เปิดบิล</span><i>→</i><span>📑 ภาษี</span><i>→</i><span>📦 สต๊อก</span><i>→</i><span>📒 บัญชี</span><i>→</i><span>📊 รายงาน</span></div></div>
+          <div class="tool-flow"><span>📄 เปิดบิล</span><i>→</i><span>📑 ภาษี</span><i>→</i><span>📦 สต๊อก</span><i>→</i><span>📒 บัญชี</span><i>→</i><span>📊 รายงาน</span></div></div>
           <div class="tool-go"><span class="btn btn-main">เข้าระบบร้านค้า →</span></div></a>
-        <a class="tool-card" href="${base}bill/"${tg}><span class="tool-free">ทดลองใช้ฟรี</span><span class="tool-ic">🧾</span>
+        <a class="tool-card" href="${base}bill/"${tg}><span class="tool-free">ทดลองใช้ฟรี</span><span class="tool-ic">📄</span>
           <h3>เปิดบิลออนไลน์</h3><p>ออกใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ และใบกำกับภาษี สำหรับร้านซื้อมาขายไปและงานบริการ</p>
           <div class="tool-chips"><span>VAT 7%</span><span>หัก ณ ที่จ่าย</span><span>ตัวหนังสือจำนวนเงิน</span><span>PDF A4</span></div>
           <div class="tool-go"><span class="btn btn-main btn-sm">เริ่มเปิดบิล →</span></div></a>
