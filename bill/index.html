@@ -127,6 +127,7 @@ table.p-items .c{text-align:center}
   .paper{box-shadow:none;margin:0;transform:none!important;zoom:1!important;width:210mm;min-height:297mm}
 }
 </style>
+<script src="../assets/suggest.js?v=33"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -350,7 +351,7 @@ function syncStock(d,remove){
   if(!remove&&d.mode==="goods"&&d.type==="IT"){const now=Date.now();
     d.items.forEach((l,k)=>{if(!l.pid||num(l.q)<=0||!stockItem(l.pid))return;T.push({id:"tb"+now.toString(36)+k,type:"out",date:d.date,pid:l.pid,qty:num(l.q),cost:0,ref:d.no,party:(d.cust&&d.cust.name)||"",note:"",src:"bill",docId:d.id,ts:now+k});n++})}
   if(n||T.length!==before)LS.set(SK.tx,T);return n}
-function renderItems(){
+function renderItems(){setTimeout(bindItemSuggest,0);
   const g=doc.mode==="goods";$("#itemsTitle").textContent=g?"รายการสินค้า":"รายการบริการ";
   $("#items").innerHTML=doc.items.map((it,i)=>`<div class="item" data-i="${i}">
     <div class="top"><span class="no">${i+1}</span><input class="in-" data-k="d" value="${esc(it.d)}" placeholder="${g?"ชื่อสินค้า":"รายละเอียดงานบริการ"}">${g&&SI.length?`<button class="btn sm ghost" data-pick="${i}" type="button" title="เลือกจากสต๊อก">📦</button>`:""}<button class="x" data-del="${i}" title="ลบ">✕</button></div>
@@ -424,6 +425,17 @@ function fitPaper(){const P=$("#paper");P.style.zoom="";fitTexts();const w=$(".p
 
 function update(){const c=calc(doc);renderTotals(c);renderPaper(c);LS.set(K.draft,doc)}
 function renderAll(){renderTypes();fillForm();renderItems();update()}
+/* ---------- พิมพ์ชื่อแล้วขึ้นรายการให้เลือก: ลูกค้า / สินค้า / บริการ ---------- */
+function bindSuggest(){if(!window.edmSuggest)return;
+  edmSuggest($("#cName"),{title:"ลูกค้าที่บันทึกไว้",source:q=>edmMatch(q,LS.get(K.cust,[]),["name","tax","contact"]).map(c=>({t:c.name,s:[c.tax,c.contact].filter(Boolean).join(" · "),v:c})),
+    pick:c=>{doc.cust=Object.assign({},c);renderAll()}});
+  bindItemSuggest()}
+function itemPool(){SI=LS.get(SK.items,[]);const sv=(LS.get("edm_services",[])||[]).map(x=>({t:x.name,s:"🧰 บริการ · "+fmt(x.price)+(x.unit?" / "+x.unit:""),v:{d:x.name,u:x.unit||"",p:num(x.price)},k:x.name+" "+(x.note||"")}));
+  const st=SI.map(x=>({t:x.name,s:"📦 "+(x.sku?x.sku+" · ":"")+"คงเหลือ "+stockBal(x.id)+" "+(x.unit||"")+" · "+fmt(x.price),v:{pid:x.id,d:x.name,u:x.unit||"",p:num(x.price)},k:x.name+" "+(x.sku||"")}));
+  return doc.mode==="service"?sv.concat(st):st.concat(sv)}
+function bindItemSuggest(){if(!window.edmSuggest)return;$$('#items [data-k="d"]').forEach(inp=>edmSuggest(inp,{title:"สินค้า / บริการที่บันทึกไว้",onFocus:false,max:10,
+  source:q=>q?edmMatch(q,itemPool(),["k"]):[],
+  pick:(v,el)=>{const i=+el.closest(".item").dataset.i;const it=doc.items[i];if(!it)return;Object.assign(it,{d:v.d,u:v.u,p:v.p});if(v.pid&&doc.mode==="goods")it.pid=v.pid;else delete it.pid;if(!num(it.q))it.q=1;renderItems();update()}}))}
 
 /* ---------- bindings ---------- */
 $$("#modeSeg button").forEach(b=>b.onclick=()=>{doc.mode=b.dataset.mode;doc.items.forEach(it=>{if(!it.d&&!num(it.p))it.u=doc.mode==="goods"?"ชิ้น":"งาน"});if(doc.mode==="service"&&!+doc.wht)doc.wht=3;if(doc.mode==="goods"&&+doc.wht===3)doc.wht=0;const nt=fitType(doc.mode,doc.type);if(nt!==doc.type){doc.type=nt;doc.no=nextNo(nt,doc.date);doc.due=TYPES[nt].due?(doc.due||addDays(doc.date,30)):"";if(TYPES[nt].tax&&seller.vat&&doc.vat==="none")doc.vat="ex"}renderAll()});
@@ -570,9 +582,9 @@ window.addEventListener("resize",fitPaper);
 window.addEventListener("afterprint",()=>{if(!$(".mtabs button.on")||$(".mtabs button.on").dataset.mt==="edit")$("#previewWrap").classList.remove("show")});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){SI=LS.get(SK.items,[]);renderItems()}});
 window.__bill={calc,bahtText,exportExcel,loadDemo,get doc(){return doc}};
-renderAll();
+renderAll();bindSuggest();
 })();
 </script>
-<script src="../assets/member.js?v=33" defer></script>
+<script src="../assets/member.js?v=34" defer></script>
 </body>
 </html>

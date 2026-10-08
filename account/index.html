@@ -115,6 +115,7 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
 .vat-act{display:flex;gap:6px;flex-wrap:wrap}
 @media print{@page{size:A4;margin:10mm}.page.rd .rd-pg{display:block}body{background:#fff}header.top,main,.toast,dialog,.edm-bar,.edm-gate{display:none!important}#printArea{display:block}}
 </style>
+<script src="../assets/suggest.js?v=33"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -171,7 +172,7 @@ let A,D;
 function load(){A=Object.assign(ACC_DEF(),LS.get(KEY.acc,{}));
   D={docs:LS.get(KEY.bdocs,[]),seller:LS.get(KEY.bseller,{}),items:LS.get(KEY.sitems,[]),tx:LS.get(KEY.stx,[]),payroll:LS.get(KEY.pay,{})}}
 const saveA=()=>LS.set(KEY.acc,A);
-let ui=Object.assign({v:"home",ym:today().slice(0,7),arf:"open",bf:"all"},LS.get(KEY.ui,{}));const svU=()=>LS.set(KEY.ui,ui);
+let ui=Object.assign({v:"home",ym:today().slice(0,7),arf:"open",bf:"all",bk:"",ck:""},LS.get(KEY.ui,{}));const svU=()=>LS.set(KEY.ui,ui);
 load();
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){load();render()}});
 window.addEventListener("storage",()=>{load();render()});
@@ -210,8 +211,10 @@ function syncPurStock(p,remove){let T=LS.get(KEY.stx,[]);T=T.filter(t=>t.docId!=
   LS.set(KEY.stx,T);D.tx=T}
 function apInfo(p){const c=calcPur(p);const paid=r2(A.pay.filter(x=>x.dir==="out"&&x.purId===p.id).reduce((a,x)=>a+num(x.amount)+num(x.wht),0));
   const left=Math.max(0,r2(c.total-paid));const st=p.status==="ordered"?"ordered":left<=0.009?"paid":paid>0?"part":"open";return{c,paid,left,st,late:st==="open"||st==="part"?dayDiff(today(),p.due||p.date):0}}
-const NOT_EXP=["จ่ายเงินเดือน","ถอนใช้ส่วนตัว","ชำระภาษี","คืนเงินกู้"],NOT_INC=["เงินลงทุนเพิ่ม","เงินกู้ยืม"];
-const EXP_CATS=["เงินเดือน / ค่าจ้าง","ประกันสังคม (ส่วนนายจ้าง)","ค่าเช่า","ค่าน้ำ-ไฟ","ค่าโทรศัพท์ / อินเทอร์เน็ต","ค่าขนส่ง","ค่าโฆษณา / การตลาด","วัสดุสิ้นเปลือง","ค่าซ่อมแซม","ค่าธรรมเนียม / บริการ","ค่าใช้จ่ายอื่น"];
+const NOT_EXP=["จ่ายเงินเดือน","ถอนใช้ส่วนตัว","ชำระภาษี","คืนเงินกู้","โอนระหว่างบัญชี"],NOT_INC=["เงินลงทุนเพิ่ม","เงินกู้ยืม","โอนระหว่างบัญชี"];
+const EXP_CATS=["เงินเดือน / ค่าจ้าง","ประกันสังคม (ส่วนนายจ้าง)","ค่าเช่า","ค่าน้ำ-ไฟ","ค่าโทรศัพท์ / อินเทอร์เน็ต","ค่าขนส่ง","ค่าโฆษณา / การตลาด","วัสดุสิ้นเปลือง","ค่าซ่อมแซม","ค่าธรรมเนียม / บริการ","ค่าเดินทาง","ค่ารับรอง","ค่าใช้จ่ายอื่น"];
+// หมวดที่นับเป็นต้นทุนขาย (ธุรกิจบริการ) ไม่ใช่ค่าใช้จ่ายดำเนินงาน
+const COST_CATS=["ต้นทุนบริการ / ค่าจ้างเหมาช่วง","วัตถุดิบ / วัสดุใช้ในงาน"];const isCostP=p=>p.kind==="stock"||(p.kind==="expense"&&COST_CATS.includes(p.cat));
 
 /* ---------- เงินสด-ธนาคาร ---------- */
 function cashMoves(){const L=[];
@@ -225,12 +228,12 @@ function balances(upto){const B={};A.accounts.forEach(a=>B[a.id]=num(a.open));ca
 /* ---------- กำไรขาดทุนรายเดือน ---------- */
 function pnl(ym,SC){SC=SC||stockCalc();
   let sales=0,salesN=0;salesDocs().forEach(d=>{if(String(d.date).startsWith(ym)){sales+=calcDoc(d).base;salesN++}});
-  const cogs=r2(SC.cogs[ym]||0);const exp={};
-  A.pur.forEach(p=>{if(p.kind!=="expense"||p.status==="ordered"||!String(p.date).startsWith(ym))return;exp[p.cat||"ค่าใช้จ่ายอื่น"]=r2((exp[p.cat||"ค่าใช้จ่ายอื่น"]||0)+calcPur(p).base)});
-  let other=0;A.cash.forEach(c=>{if(!String(c.date).startsWith(ym))return;if(c.dir==="out"&&c.cat==="จ่ายเงินเดือน"&&!D.payroll[ym])exp["เงินเดือน / ค่าจ้าง"]=r2((exp["เงินเดือน / ค่าจ้าง"]||0)+num(c.amount));if(c.dir==="out"&&!NOT_EXP.includes(c.cat))exp[c.cat||"ค่าใช้จ่ายอื่น"]=r2((exp[c.cat||"ค่าใช้จ่ายอื่น"]||0)+num(c.amount));if(c.dir==="in"&&!NOT_INC.includes(c.cat))other+=num(c.amount)});
+  let svc=0;const exp={};
+  A.pur.forEach(p=>{if(p.kind!=="expense"||p.status==="ordered"||!String(p.date).startsWith(ym))return;if(COST_CATS.includes(p.cat)){svc+=calcPur(p).base;return}exp[p.cat||"ค่าใช้จ่ายอื่น"]=r2((exp[p.cat||"ค่าใช้จ่ายอื่น"]||0)+calcPur(p).base)});
+  let other=0;A.cash.forEach(c=>{if(!String(c.date).startsWith(ym))return;if(c.dir==="out"&&c.cat==="จ่ายเงินเดือน"&&!D.payroll[ym])exp["เงินเดือน / ค่าจ้าง"]=r2((exp["เงินเดือน / ค่าจ้าง"]||0)+num(c.amount));if(c.dir==="out"&&COST_CATS.includes(c.cat))svc+=num(c.amount);else if(c.dir==="out"&&!NOT_EXP.includes(c.cat))exp[c.cat||"ค่าใช้จ่ายอื่น"]=r2((exp[c.cat||"ค่าใช้จ่ายอื่น"]||0)+num(c.amount));if(c.dir==="in"&&!NOT_INC.includes(c.cat))other+=num(c.amount)});
   const pr=D.payroll[ym];const payroll=pr?r2(num(pr.earn)+num(pr.sso)):0; // เงินเดือนรวม + ประกันสังคมส่วนนายจ้าง
   let expT=0;Object.values(exp).forEach(v=>expT+=v);
-  sales=r2(sales);const gross=r2(sales-cogs);const net=r2(gross+other-expT-payroll);
+  const cogs=r2((SC.cogs[ym]||0)+svc);sales=r2(sales);const gross=r2(sales-cogs);const net=r2(gross+other-expT-payroll);
   return{sales,salesN,cogs,gross,exp,expT:r2(expT),payroll,prN:pr?pr.n:0,other:r2(other),net}}
 
 /* ---------- views ---------- */
@@ -238,7 +241,7 @@ function render(){
   $$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));$("#ym").value=ui.ym;$("#ymNote").textContent=ymLabel(ui.ym);
   ({home:vHome,ar:vAR,buy:vBuy,cash:vCash,tax:vTax}[ui.v]||vHome)();
   $("#plist").innerHTML=D.items.map(i=>`<option value="${esc((i.sku?i.sku+" · ":"")+i.name)}">`).join("");
-  $("#suplist").innerHTML=[...new Set(A.pur.map(p=>p.sup.name).filter(Boolean))].map(n=>`<option value="${esc(n)}">`).join("");
+  $("#suplist").innerHTML=[...new Set(supAll().map(x=>x.name))].map(n=>`<option value="${esc(n)}">`).join("");
 }
 function noData(){return!D.docs.length&&!D.items.length&&!A.pur.length&&!A.pay.length&&!A.cash.length&&!Object.keys(D.payroll).length}
 function vHome(){
@@ -258,7 +261,7 @@ function vHome(){
   const expRows=Object.entries(P.exp).sort((a,b)=>b[1]-a[1]);
   $("#view").innerHTML=`<div class="kpis">
     <div class="kpi"><span>ยอดขาย (ก่อน VAT)</span><b>฿${fmt0(P.sales)}</b><span>💵 เงินสด ${fmt0(sCash)} · 📄 เชื่อ ${fmt0(sCredit)}</span></div>
-    <div class="kpi"><span>ต้นทุนขาย (จากสต๊อก)</span><b>฿${fmt0(P.cogs)}</b></div>
+    <div class="kpi"><span>ต้นทุนขาย / บริการ</span><b>฿${fmt0(P.cogs)}</b></div>
     <div class="kpi ${P.gross>=0?"pos":"neg"}"><span>กำไรขั้นต้น</span><b>฿${fmt0(P.gross)}</b><span>${P.sales?Math.round(P.gross/P.sales*100):0}% ของยอดขาย</span></div>
     <div class="kpi"><span>ค่าใช้จ่ายทั้งหมด</span><b>฿${fmt0(P.expT+P.payroll)}</b></div>
     <div class="kpi big"><span>กำไรสุทธิ ${MS[+ui.ym.slice(5)-1]}</span><b>฿${fmt0(P.net)}</b></div></div>
@@ -326,29 +329,36 @@ function makeReceipt(d,type,p){
   rc._total=calcDoc(rc).net;docs.unshift(rc);LS.set(KEY.bdocs,docs);LS.set(KEY.bcnt,cnt);D.docs=docs;return rc}
 
 function vBuy(){
-  const all=A.pur.map(p=>({p,a:apInfo(p)}));const f=ui.bf;
+  const k=ui.bk||"";const all=A.pur.filter(p=>!k||(k==="cost"?isCostP(p):!isCostP(p))).map(p=>({p,a:apInfo(p)}));
+  const segs=k==="exp"?[["all","ทั้งหมด"],["open","ค้างจ่าย"]]:k==="cost"?[["all","ทั้งหมด"],["ordered","รอรับของ"],["open","ค้างจ่าย"],["stock","สินค้า"],["expense","บริการ"]]:[["all","ทั้งหมด"],["ordered","รอรับของ"],["open","ค้างจ่าย"],["stock","สินค้า"],["expense","ค่าใช้จ่าย"]];
+  const f=segs.some(x=>x[0]===ui.bf)?ui.bf:"all";
+  const H={cost:["📦 ต้นทุนสินค้า / บริการ",`<button class="btn sm main edm-lock" data-newpur="stock">＋ ซื้อสินค้าเข้าสต๊อก</button><button class="btn sm ghost edm-lock" data-newpur="cost">＋ ต้นทุนบริการ / ค่าจ้างเหมา</button>`],
+    exp:["💸 ค่าใช้จ่าย",`<button class="btn sm main edm-lock" data-newpur="expense">＋ บันทึกค่าใช้จ่าย</button>`],
+    "":["🛒 ซื้อสินค้า / ค่าใช้จ่าย",`<button class="btn sm main edm-lock" data-newpur="stock">＋ ซื้อสินค้าเข้าสต๊อก</button><button class="btn sm ghost edm-lock" data-newpur="expense">＋ ค่าใช้จ่าย</button>`]}[k];
   const list=all.filter(x=>f==="all"||(f==="ordered"?x.a.st==="ordered":f==="open"?(x.a.st==="open"||x.a.st==="part"):f==="stock"?x.p.kind==="stock":x.p.kind==="expense")).sort((x,y)=>String(y.p.date).localeCompare(String(x.p.date)));
   let ap=0,ord=0;all.forEach(x=>{if(x.a.st==="ordered")ord+=x.a.c.total;else ap+=x.a.left});
   $("#view").innerHTML=`<div class="kpis k4"><div class="kpi"><span>ใบสั่งซื้อรอรับของ</span><b>฿${fmt0(ord)}</b></div><div class="kpi warn"><span>เจ้าหนี้ค้างจ่าย</span><b>฿${fmt0(ap)}</b></div><div class="kpi"><span>ซื้อสินค้าเดือนนี้</span><b>฿${fmt0(all.filter(x=>x.p.kind==="stock"&&x.p.status==="received"&&String(x.p.date).startsWith(ui.ym)).reduce((s,x)=>s+x.a.c.base,0))}</b></div><div class="kpi"><span>ค่าใช้จ่ายเดือนนี้</span><b>฿${fmt0(all.filter(x=>x.p.kind==="expense"&&String(x.p.date).startsWith(ui.ym)).reduce((s,x)=>s+x.a.c.base,0))}</b></div></div>
-  <div class="card"><h2>🛒 ซื้อสินค้า / ค่าใช้จ่าย <span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm main edm-lock" data-newpur="stock">＋ ซื้อสินค้าเข้าสต๊อก</button><button class="btn sm ghost edm-lock" data-newpur="expense">＋ ค่าใช้จ่าย</button></span></h2>
-    <div class="seg" id="bf">${[["all","ทั้งหมด"],["ordered","รอรับของ"],["open","ค้างจ่าย"],["stock","สินค้า"],["expense","ค่าใช้จ่าย"]].map(o=>`<button data-f="${o[0]}" class="${f===o[0]?"on":""}">${o[1]}</button>`).join("")}</div>
+  <div class="card"><h2>${H[0]} <span style="display:flex;gap:6px;flex-wrap:wrap">${H[1]}</span></h2>
+    <div class="seg" id="bf">${segs.map(o=>`<button data-f="${o[0]}" class="${f===o[0]?"on":""}">${o[1]}</button>`).join("")}</div>
     ${list.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>เลขที่ / ผู้ขาย</th><th>ประเภท</th><th>วันที่</th><th class="r">ยอดรวม</th><th class="r">คงค้าง</th><th>สถานะ</th><th></th></tr></thead><tbody>
-    ${list.map(({p,a})=>`<tr><td><b>${esc(p.no)}</b>${p.taxInv?` <span class="pill p-blue">ใบกำกับ</span>`:""}<br>${esc(p.sup.name||"-")}</td><td>${p.kind==="stock"?"📦 สินค้า "+p.lines.length+" รายการ":"💸 "+esc(p.cat||"ค่าใช้จ่าย")}</td><td>${thD(p.date)}</td><td class="r">${fmt(a.c.total)}</td><td class="r"><b>${a.st==="ordered"?"-":fmt(a.left)}</b></td>
+    ${list.map(({p,a})=>`<tr><td><b>${esc(p.no)}</b>${p.taxInv?` <span class="pill p-blue">ใบกำกับ</span>`:""}<br>${esc(p.sup.name||"-")}</td><td>${p.kind==="stock"?"📦 สินค้า "+p.lines.length+" รายการ":(isCostP(p)?"🧰 ":"💸 ")+esc(p.cat||"ค่าใช้จ่าย")}</td><td>${thD(p.date)}</td><td class="r">${fmt(a.c.total)}</td><td class="r"><b>${a.st==="ordered"?"-":fmt(a.left)}</b></td>
       <td>${a.st==="ordered"?`<span class="pill p-blue">สั่งซื้อแล้ว รอรับของ</span>`:a.st==="paid"?`<span class="pill p-ok">จ่ายแล้ว</span>`:a.late>0?`<span class="pill p-bad">เกิน ${a.late} วัน</span>`:a.st==="part"?`<span class="pill p-warn">จ่ายบางส่วน</span>`:`<span class="pill p-mute">ค้างจ่าย</span>`}</td>
       <td class="r"><div class="acts">${a.st==="ordered"?`<button class="btn sm main edm-lock" data-recvpur="${p.id}">รับของ</button><button class="btn sm ghost" data-prpo="${p.id}">พิมพ์ PO</button>`:""}${a.st==="open"||a.st==="part"?`<button class="btn sm main edm-lock" data-paypur="${p.id}">จ่ายเงิน</button>`:""}<button class="btn sm ghost edm-lock" data-editpur="${p.id}">แก้ไข</button></div></td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีรายการ · กด "ซื้อสินค้าเข้าสต๊อก" หรือ "ค่าใช้จ่าย" เพื่อเริ่ม</div>`}
     <div class="note">ซื้อสินค้า: สร้างเป็นใบสั่งซื้อ (PO) ก่อน หรือบันทึกว่ารับของแล้วเลยก็ได้ · เมื่อรับของ สินค้าจะเข้าหน้า 📦 สต๊อกพร้อมต้นทุนให้อัตโนมัติ</div></div>`;
   $$("#bf button").forEach(b=>b.onclick=()=>{ui.bf=b.dataset.f;svU();vBuy()});
 }
 let pd=null;
-function purDlg(id,kind){
+function purDlg(id,kind){const cc=kind==="cost";if(cc)kind="expense";
   const ex=id?A.pur.find(x=>x.id===id):null;
-  pd=ex?JSON.parse(JSON.stringify(ex)):{id:uid("u"),no:"",kind,status:kind==="stock"?"ordered":"received",date:today(),due:addDays(today(),30),sup:{name:"",tax:""},lines:[{pid:"",d:"",q:kind==="stock"?"":1,p:""}],vat:"ex",taxInv:true,taxNo:"",wht:0,cat:EXP_CATS[0],note:"",paidNow:kind==="expense",payAcc:"bank1"};
+  pd=ex?JSON.parse(JSON.stringify(ex)):{id:uid("u"),no:"",kind,status:kind==="stock"?"ordered":"received",date:today(),due:addDays(today(),30),sup:{name:"",tax:""},lines:[{pid:"",d:"",q:kind==="stock"?"":1,p:""}],vat:"ex",taxInv:true,taxNo:"",wht:0,cat:cc?COST_CATS[0]:EXP_CATS[0],note:"",paidNow:kind==="expense",payAcc:"bank1"};
   drawPur(!!ex);
 }
+function supAll(){const L=(LS.get("edm_suppliers",[])||[]).slice(),seen=new Set(L.map(x=>x.name));A.pur.slice().reverse().forEach(p=>{const n=p.sup&&p.sup.name;if(n&&!seen.has(n)){seen.add(n);L.push({name:n,tax:p.sup.tax||"",branch:p.sup.branch||""})}});return L}
+function supRemember(sp){if(!sp||!sp.name)return;const L=LS.get("edm_suppliers",[])||[];const i=L.findIndex(x=>x.name===sp.name);const v=Object.assign({},i>=0?L[i]:{id:uid("s")},{name:sp.name,tax:sp.tax||(i>=0?L[i].tax:""),branch:sp.branch||(i>=0?L[i].branch:"")});if(i>=0)L[i]=v;else L.unshift(v);LS.set("edm_suppliers",L)}
 function drawPur(isEdit){
   const p=pd,st=p.kind==="stock";
-  openDlg((isEdit?"แก้ไข ":"")+(st?"ซื้อสินค้าเข้าสต๊อก":"บันทึกค่าใช้จ่าย")+(p.no?" · "+p.no:""),`
-   ${st?`<div class="seg" id="pStat"><button data-s="ordered" class="${p.status==="ordered"?"on":""}">📝 ใบสั่งซื้อ (ยังไม่ได้รับของ)</button><button data-s="received" class="${p.status==="received"?"on":""}">📦 รับของแล้ว (เข้าสต๊อก)</button></div>`:`<div class="f"><label>หมวดค่าใช้จ่าย</label><select class="in-" id="pCat">${EXP_CATS.map(c=>`<option ${c===p.cat?"selected":""}>${c}</option>`).join("")}</select></div>`}
+  openDlg((isEdit?"แก้ไข ":"")+(st?"ซื้อสินค้าเข้าสต๊อก":COST_CATS.includes(p.cat)?"บันทึกต้นทุนบริการ":"บันทึกค่าใช้จ่าย")+(p.no?" · "+p.no:""),`
+   ${st?`<div class="seg" id="pStat"><button data-s="ordered" class="${p.status==="ordered"?"on":""}">📝 ใบสั่งซื้อ (ยังไม่ได้รับของ)</button><button data-s="received" class="${p.status==="received"?"on":""}">📦 รับของแล้ว (เข้าสต๊อก)</button></div>`:`<div class="f"><label>${COST_CATS.includes(p.cat)?"หมวดต้นทุน":"หมวดค่าใช้จ่าย"}</label><select class="in-" id="pCat">${(COST_CATS.includes(p.cat)?COST_CATS:EXP_CATS).map(c=>`<option ${c===p.cat?"selected":""}>${c}</option>`).join("")}</select></div>`}
    <div class="row3"><div class="f"><label>วันที่</label><input class="in-" type="date" id="pDate" value="${esc(p.date)}"></div><div class="f"><label>ครบกำหนดจ่าย</label><input class="in-" type="date" id="pDue" value="${esc(p.due)}"></div><div class="f"><label>ผู้ขาย / ผู้รับเงิน</label><input class="in-" id="pSup" list="suplist" value="${esc(p.sup.name)}"></div></div>
    <div class="lines" id="pLines">${p.lines.map((l,k)=>st?`<div class="line" data-k="${k}"><div class="f"><label>สินค้า ${k+1}</label><input class="in-" list="plist" data-l="pid" value="${esc(l.pid?plabel(l.pid):"")}" placeholder="${D.items.length?"พิมพ์ชื่อหรือรหัส":"ยังไม่มีสินค้า · เพิ่มที่หน้าสต๊อกก่อน"}"></div><div class="f"><label>จำนวน</label><input class="in-" type="number" step="any" data-l="q" value="${esc(l.q)}"></div><div class="f"><label>ราคา/หน่วย</label><input class="in-" type="number" step="any" data-l="p" value="${esc(l.p)}"></div><button class="x" data-rm="${k}" type="button">✕</button></div>`
      :`<div class="line" data-k="${k}" style="grid-template-columns:minmax(0,3fr) minmax(0,1.4fr) auto"><div class="f"><label>รายการ ${k+1}</label><input class="in-" data-l="d" value="${esc(l.d)}" placeholder="เช่น ค่าเช่าร้าน เดือน ต.ค."></div><div class="f"><label>จำนวนเงิน</label><input class="in-" type="number" step="any" data-l="p" value="${esc(l.p)}"></div><button class="x" data-rm="${k}" type="button">✕</button></div>`).join("")}</div>
@@ -372,6 +382,7 @@ function drawPur(isEdit){
   $$("[data-rm]").forEach(b=>b.onclick=()=>{sync();p.lines.splice(+b.dataset.rm,1);if(!p.lines.length)p.lines.push({pid:"",d:"",q:st?"":1,p:""});drawPur(isEdit)});
   sync();
   // ผู้ขายรายเดิม: เติมเลขผู้เสียภาษีและสาขาให้อัตโนมัติ
+  if(window.edmSuggest)edmSuggest($("#pSup"),{title:"เจ้าหนี้ / ผู้ขายที่บันทึกไว้",source:q=>edmMatch(q,supAll(),["name","tax"]).map(x=>({t:x.name,s:[x.tax,x.branch].filter(Boolean).join(" · "),v:x})),pick:x=>{$("#pSup").value=x.name;$("#pSupTax").value=x.tax||"";if($("#pSupBr"))$("#pSupBr").value=x.branch||""}});
   $("#pSup").addEventListener("change",()=>{const n=$("#pSup").value.trim(),prev=A.pur.slice().reverse().find(x=>x.sup&&x.sup.name===n&&x.sup.tax);if(!prev)return;if(!$("#pSupTax").value)$("#pSupTax").value=prev.sup.tax;if($("#pSupBr")&&!$("#pSupBr").value)$("#pSupBr").value=prev.sup.branch||""});
   $("#pSave").onclick=()=>{sync();
     p.lines=p.lines.filter(l=>st?(l.pid||(l._t||"").trim()):(String(l.d).trim()||num(l.p)));
@@ -383,7 +394,7 @@ function drawPur(isEdit){
     const ex=A.pur.findIndex(x=>x.id===p.id);const clean=JSON.parse(JSON.stringify(p));delete clean.paidNow;delete clean.payAcc;clean.lines.forEach(l=>delete l._t);
     if(ex>=0)A.pur[ex]=clean;else A.pur.push(clean);
     if(!isEdit&&p.paidNow&&p.status==="received"){const c=calcPur(p);A.pay.push({id:uid("y"),dir:"out",purId:p.id,date:p.date,amount:c.net,wht:c.wht,accId:p.payAcc,note:""})}
-    saveA();syncPurStock(clean);dlg.close();toast("บันทึก "+clean.no+" แล้ว ✓"+(st&&clean.status==="received"?" สินค้าเข้าสต๊อกแล้ว":""));render()};
+    saveA();supRemember(clean.sup);syncPurStock(clean);dlg.close();toast("บันทึก "+clean.no+" แล้ว ✓"+(st&&clean.status==="received"?" สินค้าเข้าสต๊อกแล้ว":""));render()};
   if(isEdit)$("#pDel").onclick=()=>{if(!confirm("ลบ "+p.no+"? (การจ่ายเงินและสินค้าที่เข้าสต๊อกจากใบนี้จะถูกลบด้วย)"))return;A.pur=A.pur.filter(x=>x.id!==p.id);A.pay=A.pay.filter(x=>x.purId!==p.id);saveA();syncPurStock(p,true);dlg.close();render()};
 }
 const plabel=id=>{const i=D.items.find(x=>x.id===id);return i?(i.sku?i.sku+" · ":"")+i.name:""};
@@ -397,23 +408,42 @@ function payPurDlg(id){const p=A.pur.find(x=>x.id===id),a=apInfo(p);const w=r2(a
 function recvPur(id){const p=A.pur.find(x=>x.id===id);if(!confirm("รับสินค้าตาม "+p.no+" ครบแล้ว?\nสินค้า "+p.lines.length+" รายการจะเข้าสต๊อกพร้อมต้นทุน และตั้งเป็นเจ้าหนี้ค้างจ่าย"))return;p.status="received";p.recvDate=today();saveA();syncPurStock(p);toast("รับของแล้ว ✓ สินค้าเข้าสต๊อกเรียบร้อย");render()}
 function accSel(id,sel){return`<select class="in-" id="${id}">${A.accounts.map(a=>`<option value="${a.id}" ${a.id===sel?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`}
 
+const ACC_T={bank:["🏦","ธนาคาร"],cash:["💵","เงินสด"],petty:["👛","เงินสดย่อย"]};
+function ensurePetty(){if(!A.accounts.some(a=>a.type==="petty")){A.accounts.push({id:"petty",name:"เงินสดย่อย",type:"petty",open:0,limit:5000});saveA()}}
 function vCash(){
-  const B=balances(),moves=cashMoves().filter(m=>String(m.date).startsWith(ui.ym));let tin=0,tout=0;moves.forEach(m=>m.amt>0?tin+=m.amt:tout-=m.amt);
-  const pr=D.payroll[ui.ym];const prPaid=A.cash.some(c=>c.cat==="จ่ายเงินเดือน"&&c.ym===ui.ym);
-  $("#view").innerHTML=`<div class="kpis k4">${A.accounts.map(a=>`<div class="kpi"><span>${a.type==="cash"?"💵":"🏦"} ${esc(a.name)}</span><b>฿${fmt(B[a.id])}</b></div>`).join("")}<div class="kpi pos"><span>รับเข้าเดือนนี้</span><b>฿${fmt0(tin)}</b></div><div class="kpi neg"><span>จ่ายออกเดือนนี้</span><b>฿${fmt0(tout)}</b></div></div>
-  <div class="card"><h2>🏦 รับ-จ่ายเงิน <small>${ymLabel(ui.ym)}</small><span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm ghost edm-lock" data-cashnew="in">＋ รายรับอื่น</button><button class="btn sm ghost edm-lock" data-cashnew="out">＋ รายจ่ายอื่น</button><button class="btn sm ghost edm-lock" id="accMgr">⚙️ บัญชีเงิน</button></span></h2>
+  const k=ui.ck||"";if(k==="petty")ensurePetty();
+  const accs=A.accounts.filter(a=>!k||a.type===k),ids=new Set(accs.map(a=>a.id)),def=(accs[0]||{}).id||"bank1";
+  const B=balances(),moves=cashMoves().filter(m=>ids.has(m.acc)&&String(m.date).startsWith(ui.ym));let tin=0,tout=0;moves.forEach(m=>m.amt>0?tin+=m.amt:tout-=m.amt);
+  const pr=!k&&D.payroll[ui.ym];const prPaid=A.cash.some(c=>c.cat==="จ่ายเงินเดือน"&&c.ym===ui.ym);
+  const T=k?ACC_T[k]:["🏦","รับ-จ่ายเงิน"];
+  const btns=k==="petty"?`<button class="btn sm main edm-lock" data-trnew="petty">＋ เบิกเติมเงินสดย่อย</button><button class="btn sm ghost edm-lock" data-cashnew="out" data-acc="${def}">＋ จ่ายเงินสดย่อย</button>`
+    :`<button class="btn sm ghost edm-lock" data-cashnew="in" data-acc="${def}">＋ รับเงินอื่น</button><button class="btn sm ghost edm-lock" data-cashnew="out" data-acc="${def}">＋ จ่ายเงินอื่น</button><button class="btn sm ghost edm-lock" data-trnew="${k==="petty"?"petty":""}">⇄ โอนเงิน</button>`;
+  const pa=k==="petty"?accs[0]:null,pl=pa?num(pa.limit):0,pb=pa?B[pa.id]:0;
+  $("#view").innerHTML=`<div class="kpis k4">${accs.map(a=>`<div class="kpi"><span>${(ACC_T[a.type]||ACC_T.bank)[0]} ${esc(a.name)}</span><b>฿${fmt(B[a.id])}</b></div>`).join("")}<div class="kpi pos"><span>รับเข้าเดือนนี้</span><b>฿${fmt0(tin)}</b></div><div class="kpi neg"><span>จ่ายออกเดือนนี้</span><b>฿${fmt0(tout)}</b></div></div>
+  ${pa?`<div class="card" style="padding:14px 16px"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between"><span>👛 วงเงินสดย่อย <b>฿${fmt0(pl)}</b> · คงเหลือ <b>฿${fmt(pb)}</b>${pl>pb?` · ควรเบิกเติม <b>฿${fmt(r2(pl-pb))}</b>`:""}</span><button class="btn sm ghost edm-lock" id="pLimit">ตั้งวงเงิน</button></div><div class="note" style="margin-top:6px">เงินสดย่อยใช้จ่ายเล็กๆ น้อยๆ ในร้าน เช่น ค่าวิน ค่าน้ำแข็ง ค่าส่งเอกสาร · เมื่อใกล้หมดให้กด "เบิกเติมเงินสดย่อย" จากเงินสดหรือธนาคาร</div></div>`:""}
+  <div class="card"><h2>${T[0]} ${T[1]} <small>${ymLabel(ui.ym)}</small><span style="display:flex;gap:6px;flex-wrap:wrap">${btns}<button class="btn sm ghost edm-lock" id="accMgr">⚙️ บัญชีเงิน</button></span></h2>
     ${pr&&!prPaid?`<div class="card" style="background:var(--warnbg);box-shadow:none;padding:12px"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between"><span>💰 เงินเดือน ${ymLabel(ui.ym)} จากหน้าคำนวณเงินเดือน: รับสุทธิรวม <b>฿${fmt(pr.net)}</b> (${pr.n} คน)</span><button class="btn sm main edm-lock" id="payPayroll">บันทึกจ่ายเงินเดือน</button></div></div>`:""}
-    ${moves.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>วันที่</th><th>รายการ</th><th>บัญชี</th><th class="r">รับเข้า</th><th class="r">จ่ายออก</th><th></th></tr></thead><tbody>${moves.map(m=>`<tr><td>${thD(m.date)}</td><td>${esc(m.label)}${m.party?" · "+esc(m.party):""}${m.note?`<br><span class="note">${esc(m.note)}</span>`:""}</td><td>${esc((A.accounts.find(a=>a.id===m.acc)||{}).name||"")}</td><td class="r pos">${m.amt>0?fmt(m.amt):""}</td><td class="r neg">${m.amt<0?fmt(-m.amt):""}</td><td class="r">${m.bill?`<span class="note" title="แก้ไขหรือลบที่หน้าเปิดบิล">จากบิล</span>`:`<button class="btn sm ghost danger edm-lock" data-delmove="${m.src}:${m.id}">ลบ</button>`}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ไม่มีรายการรับ-จ่ายเงินในเดือนนี้</div>`}
-    <div class="note">รายการรับชำระจากลูกหนี้และการจ่ายเจ้าหนี้จะขึ้นที่นี่อัตโนมัติ · ลบรายการรับชำระ ยอดลูกหนี้จะกลับมาเป็นค้างรับ</div></div>`;
+    ${moves.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>วันที่</th><th>รายการ</th><th>บัญชี</th><th class="r">รับเข้า</th><th class="r">จ่ายออก</th><th></th></tr></thead><tbody>${moves.map(m=>`<tr><td>${thD(m.date)}</td><td>${esc(m.label)}${m.party?" · "+esc(m.party):""}${m.note?`<br><span class="note">${esc(m.note)}</span>`:""}</td><td>${esc((A.accounts.find(a=>a.id===m.acc)||{}).name||"")}</td><td class="r pos">${m.amt>0?fmt(m.amt):""}</td><td class="r neg">${m.amt<0?fmt(-m.amt):""}</td><td class="r">${m.bill?`<span class="note" title="แก้ไขหรือลบที่หน้าเปิดบิล">จากบิล</span>`:`<button class="btn sm ghost danger edm-lock" data-delmove="${m.src}:${m.id}">ลบ</button>`}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ไม่มีรายการรับ-จ่ายในเดือนนี้</div>`}
+    <div class="note">${k==="petty"?"การเบิกเติมเงินสดย่อยเป็นการโอนระหว่างบัญชี ไม่นับเป็นค่าใช้จ่าย · รายการจ่ายจากเงินสดย่อยนับเป็นค่าใช้จ่ายตามหมวดที่เลือก":"รายการรับชำระจากลูกหนี้และการจ่ายเจ้าหนี้จะขึ้นที่นี่อัตโนมัติ · การโอนระหว่างบัญชีไม่นับเป็นรายรับหรือค่าใช้จ่าย"}</div></div>`;
   if($("#payPayroll"))$("#payPayroll").onclick=()=>cashDlg("out",{cat:"จ่ายเงินเดือน",amount:pr.net,note:"เงินเดือน "+ymLabel(ui.ym)+" "+pr.n+" คน",ym:ui.ym});
+  if($("#pLimit"))$("#pLimit").onclick=()=>{const v=prompt("วงเงินสดย่อย (บาท)",pl||5000);if(v==null)return;pa.limit=num(v);saveA();render()};
   $("#accMgr").onclick=accDlg;
 }
-function cashDlg(dir,pre){pre=pre||{};const cats=dir==="in"?["รายรับอื่น","ดอกเบี้ยรับ","เงินลงทุนเพิ่ม","เงินกู้ยืม"]:EXP_CATS.concat(["จ่ายเงินเดือน","ถอนใช้ส่วนตัว","ชำระภาษี","คืนเงินกู้"]);
-  openDlg(dir==="in"?"บันทึกรายรับอื่น":"บันทึกรายจ่ายอื่น",`<div class="row3"><div class="f"><label>วันที่</label><input class="in-" type="date" id="cDate" value="${today()}"></div><div class="f"><label>บัญชี</label>${accSel("cAcc","bank1")}</div><div class="f"><label>หมวด</label><select class="in-" id="cCat">${cats.map(c=>`<option ${c===pre.cat?"selected":""}>${c}</option>`).join("")}</select></div></div>
+function trDlg(to){const P=A.accounts.find(a=>a.type==="petty");const from=A.accounts.find(a=>a.type==="cash")||A.accounts[0];const toA=to==="petty"?P:A.accounts.find(a=>a.id!==from.id&&a.type!=="petty");
+  let amt="";if(to==="petty"&&P){const bal=balances()[P.id];if(num(P.limit)>bal)amt=r2(num(P.limit)-bal)}
+  openDlg(to==="petty"?"เบิกเติมเงินสดย่อย":"โอนเงินระหว่างบัญชี",`<div class="row3"><div class="f"><label>วันที่</label><input class="in-" type="date" id="tDate" value="${today()}"></div><div class="f"><label>จากบัญชี</label>${accSel("tFrom",from.id)}</div><div class="f"><label>เข้าบัญชี</label>${accSel("tTo",toA?toA.id:"")}</div></div>
+   <div class="row"><div class="f"><label>จำนวนเงิน</label><input class="in-" type="number" step="any" id="tAmt" value="${amt}"></div><div class="f"><label>หมายเหตุ</label><input class="in-" id="tNote" placeholder="${to==="petty"?"เช่น เบิกเติมรอบสัปดาห์":"เช่น ถอนเงินสดจากธนาคาร"}"></div></div>
+   <button class="btn main" id="tSave">⇄ บันทึก</button><p class="note" style="margin:0">การโอนระหว่างบัญชีของร้านเอง ไม่นับเป็นรายรับหรือค่าใช้จ่าย</p>`);
+  $("#tSave").onclick=()=>{const f=$("#tFrom").value,t=$("#tTo").value,a=num($("#tAmt").value);if(f===t)return toast("เลือกบัญชีต้นทางและปลายทางให้ต่างกัน");if(a<=0)return toast("ใส่จำนวนเงิน");
+    const d=$("#tDate").value||today(),tr=uid("tr"),nm=id=>(A.accounts.find(x=>x.id===id)||{}).name||"",n=$("#tNote").value.trim();
+    A.cash.push({id:uid("c"),dir:"out",date:d,accId:f,cat:"โอนระหว่างบัญชี",amount:a,note:"โอนไป "+nm(t)+(n?" · "+n:""),tr,ym:""},{id:uid("c"),dir:"in",date:d,accId:t,cat:"โอนระหว่างบัญชี",amount:a,note:"รับโอนจาก "+nm(f)+(n?" · "+n:""),tr,ym:""});
+    saveA();dlg.close();toast("บันทึกแล้ว ✓");render()}}
+function cashDlg(dir,pre){pre=pre||{};const cats=dir==="in"?["รายรับอื่น","ดอกเบี้ยรับ","เงินลงทุนเพิ่ม","เงินกู้ยืม"]:EXP_CATS.concat(COST_CATS,["จ่ายเงินเดือน","ถอนใช้ส่วนตัว","ชำระภาษี","คืนเงินกู้"]);
+  openDlg(dir==="in"?"บันทึกรายรับอื่น":"บันทึกรายจ่ายอื่น",`<div class="row3"><div class="f"><label>วันที่</label><input class="in-" type="date" id="cDate" value="${today()}"></div><div class="f"><label>บัญชี</label>${accSel("cAcc",pre.acc||"bank1")}</div><div class="f"><label>หมวด</label><select class="in-" id="cCat">${cats.map(c=>`<option ${c===pre.cat?"selected":""}>${c}</option>`).join("")}</select></div></div>
    <div class="row"><div class="f"><label>จำนวนเงิน</label><input class="in-" type="number" step="any" id="cAmt" value="${esc(pre.amount||"")}"></div><div class="f"><label>รายละเอียด</label><input class="in-" id="cNote" value="${esc(pre.note||"")}"></div></div>
    <button class="btn main" id="cSave">💾 บันทึก</button><p class="note" style="margin:0">${dir==="out"?"รายจ่ายหมวดค่าใช้จ่ายจะนับในงบกำไรขาดทุน · ถอนใช้ส่วนตัว / ชำระภาษี / คืนเงินกู้ ไม่นับเป็นค่าใช้จ่าย · ค่าใช้จ่ายที่มีใบกำกับภาษี ให้บันทึกที่แท็บซื้อ / ค่าใช้จ่าย":"รายรับอื่นจะนับในงบกำไรขาดทุน ยกเว้นเงินลงทุนเพิ่มและเงินกู้ยืม"}</p>`);
   $("#cSave").onclick=()=>{const amt=num($("#cAmt").value);if(amt<=0)return toast("ใส่จำนวนเงิน");A.cash.push({id:uid("c"),dir,date:$("#cDate").value||today(),accId:$("#cAcc").value,cat:$("#cCat").value,amount:amt,note:$("#cNote").value.trim(),ym:pre.ym||""});saveA();dlg.close();toast("บันทึกแล้ว ✓");render()}}
-function accDlg(){openDlg("บัญชีเงิน",`<div class="lines">${A.accounts.map((a,k)=>`<div class="line" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1.2fr) auto" data-k="${k}"><div class="f"><label>ชื่อบัญชี</label><input class="in-" data-a="name" value="${esc(a.name)}"></div><div class="f"><label>ประเภท</label><select class="in-" data-a="type"><option value="cash" ${a.type==="cash"?"selected":""}>เงินสด</option><option value="bank" ${a.type==="bank"?"selected":""}>ธนาคาร</option></select></div><div class="f"><label>ยอดยกมา</label><input class="in-" type="number" step="any" data-a="open" value="${esc(a.open)}"></div><button class="x" data-arm="${k}" ${A.accounts.length<2?"disabled":""}>✕</button></div>`).join("")}</div>
+function accDlg(){openDlg("บัญชีเงิน",`<div class="lines">${A.accounts.map((a,k)=>`<div class="line" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1.2fr) auto" data-k="${k}"><div class="f"><label>ชื่อบัญชี</label><input class="in-" data-a="name" value="${esc(a.name)}"></div><div class="f"><label>ประเภท</label><select class="in-" data-a="type"><option value="cash" ${a.type==="cash"?"selected":""}>เงินสด</option><option value="bank" ${a.type==="bank"?"selected":""}>ธนาคาร</option><option value="petty" ${a.type==="petty"?"selected":""}>เงินสดย่อย</option></select></div><div class="f"><label>ยอดยกมา</label><input class="in-" type="number" step="any" data-a="open" value="${esc(a.open)}"></div><button class="x" data-arm="${k}" ${A.accounts.length<2?"disabled":""}>✕</button></div>`).join("")}</div>
   <button class="btn ghost sm" id="aAdd" style="align-self:flex-start">＋ เพิ่มบัญชี</button><button class="btn main" id="aSave">💾 บันทึก</button>`);
   const sync=()=>$$("#dlgBody .line").forEach(el=>{const a=A.accounts[+el.dataset.k];el.querySelectorAll("[data-a]").forEach(i=>a[i.dataset.a]=i.dataset.a==="open"?num(i.value):i.value)});
   $("#aAdd").onclick=()=>{sync();A.accounts.push({id:uid("a"),name:"บัญชีธนาคาร "+A.accounts.length,type:"bank",open:0});accDlg()};
@@ -593,12 +623,18 @@ function demo(ok){
     const w=expn(d,"สมชาย ใจดี (พนักงานขาย)","เงินเดือน / ค่าจ้าง","เงินเดือน "+ymLabel(ymShift(ymNow,m)),15000);payOut(w,d,"bank1");
     const so=expn(d,"สำนักงานประกันสังคม","ประกันสังคม (ส่วนนายจ้าง)","เงินสมทบส่วนนายจ้าง 5%",750);payOut(so,d,"bank1")});
   acc.cash.push({id:uid("c"),dir:"out",date:md(-1,28),accId:"cash",cat:"ถอนใช้ส่วนตัว",amount:5000,note:"",ym:""});
+  // เงินสดย่อย: เบิกเติมจากเงินสดต้นเดือน แล้วจ่ายเล็กๆ น้อยๆ
+  acc.accounts.push({id:"petty",name:"เงินสดย่อย",type:"petty",open:0,limit:3000});
+  let pSpent=0;[-3,-2,-1,0].forEach(m=>{const d=md(m,2);if(d>T0)return;const tr=uid("tr"),amt=m===-3?3000:pSpent;pSpent=0;
+    acc.cash.push({id:uid("c"),dir:"out",date:d,accId:"cash",cat:"โอนระหว่างบัญชี",amount:amt,note:"โอนไป เงินสดย่อย · เบิกเติมเงินสดย่อย",tr,ym:""},{id:uid("c"),dir:"in",date:d,accId:"petty",cat:"โอนระหว่างบัญชี",amount:amt,note:"รับโอนจาก เงินสด · เบิกเติมเงินสดย่อย",tr,ym:""});
+    [[8,"ค่าเดินทาง","ค่าวินส่งเอกสารให้ลูกค้า",120+ri(0,80)],[14,"ค่ารับรอง","กาแฟ-ขนมรับรองลูกค้า",180+ri(0,150)],[20,"วัสดุสิ้นเปลือง","น้ำดื่ม น้ำแข็ง ของใช้ในร้าน",250+ri(0,200)],[26,"ค่าเดินทาง","ค่าทางด่วน-จอดรถ",90+ri(0,60)]].forEach(([dd,cat,note,a])=>{const x=md(m,dd);if(x<=T0){pSpent+=a;acc.cash.push({id:uid("c"),dir:"out",date:x,accId:"petty",cat,amount:a,note,ym:""})}})});
+  {const d=md(-1,18);const sv=expn(d,"ช่างเอก รับเหมา","ต้นทุนบริการ / ค่าจ้างเหมาช่วง","ค่าจ้างประกอบชั้นวางเอกสารให้ลูกค้า",1500,{wht:3});payOut(sv,d,"cash")}
   acc.cash.push({id:uid("c"),dir:"in",date:md(-2,18),accId:"cash",cat:"รายรับอื่น",amount:350,note:"ขายกล่องกระดาษเก่า",ym:""});
   // เรียงเลขที่ใบซื้อ/ค่าใช้จ่ายตามวันที่
   const rn={},pc={};acc.pur.slice().sort((x,y)=>x.date.localeCompare(y.date)).forEach(p=>{const k="PU"+p.date.slice(2,7).replace("-","");pc[k]=(pc[k]||0)+1;const n=k+"-"+String(pc[k]).padStart(3,"0");rn[p.no]=n;p.no=n});
   stx.forEach(t=>{if(t.src==="acc"&&rn[t.ref])t.ref=rn[t.ref]});Object.assign(cnt,pc);
   acc.cnt=cnt;
-  LS.set(KEY.bseller,seller);LS.set(KEY.bdocs,docs);LS.set(KEY.bcnt,bcnt);LS.set(KEY.bcust,[C1,C2,C3,C5]);LS.set(KEY.sitems,items);LS.set(KEY.stx,stx);LS.set(KEY.scfg,{name:seller.name});LS.set(KEY.pay,{});
+  LS.set(KEY.bseller,seller);LS.set(KEY.bdocs,docs);LS.set(KEY.bcnt,bcnt);LS.set(KEY.bcust,[C1,C2,C3,C5]);LS.set("edm_suppliers",[]);LS.set("edm_services",[{id:"sv1",name:"ค่าจัดส่งด่วนในกรุงเทพฯ",unit:"เที่ยว",price:150,note:""},{id:"sv2",name:"ค่าประกอบ / ติดตั้งชั้นวาง",unit:"งาน",price:2500,note:""},{id:"sv3",name:"บริการพิมพ์-เข้าเล่มเอกสาร",unit:"เล่ม",price:35,note:""}]);LS.set(KEY.sitems,items);LS.set(KEY.stx,stx);LS.set(KEY.scfg,{name:seller.name});LS.set(KEY.pay,{});
   LS.set("edm_pay_company",Object.assign(LS.get("edm_pay_company",{}),{name:seller.name,addr:seller.addr,tax:seller.tax}));try{["edm_pay_emps","edm_pay_records"].forEach(k=>localStorage.removeItem(k))}catch(e){}LS.set(KEY.acc,acc);
   try{localStorage.removeItem("edm_bill_draft")}catch(e){}
   load();ui.v="home";ui.ym=ymPrev;svU();render();toast("ใส่ข้อมูลตัวอย่าง 3 เดือนแล้ว · แสดงเดือนที่แล้ว เปลี่ยนเดือนได้ที่ช่องด้านบน");
@@ -609,26 +645,26 @@ function demo(ok){
 const EMB=(()=>{try{return top!==self&&top.location.origin===location.origin}catch(e){return false}})();
 if(EMB)$("#tabs").style.display="none";
 window.edmDemo=()=>demo();window.edmExcel=()=>exportExcel();
-window.edmView=v=>{if(!["home","ar","buy","cash","tax"].includes(v))return;load();ui.v=v;svU();render();scrollTo(0,0)};
+window.edmView=v=>{const M={cost:["buy","cost"],exp:["buy","exp"],buy:["buy",""],bank:["cash","bank"],cashv:["cash","cash"],petty:["cash","petty"],cash:["cash",""]};let sub=null;if(M[v]){sub=M[v][1];v=M[v][0]}if(!["home","ar","buy","cash","tax"].includes(v))return;load();ui.v=v;if(sub!=null){if(v==="buy")ui.bk=sub;else ui.ck=sub}svU();render();scrollTo(0,0)};
 const fromHash=()=>{if(/^#demo/.test(location.hash)){const back=(/back=([\w\/]+)/.exec(location.hash)||[])[1];history.replaceState(null,"",location.pathname);demo(true);if(back&&/^\/(bill|stock|payroll|app)\/$/.test(back))location.replace(back);return}
   const pu=/pur=([\w-]+)/.exec(location.hash);if(pu){history.replaceState(null,"",location.pathname+location.search);edmView("buy");if(A.pur.some(p=>p.id===pu[1]))purDlg(pu[1]);return}
   const m=/v=(\w+)/.exec(location.hash);if(m)edmView(m[1])};
 window.addEventListener("hashchange",fromHash);fromHash();
-$("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;svU();render();scrollTo(0,0)};
+$("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;ui.bk="";ui.ck="";svU();render();scrollTo(0,0)};
 $("#ym").onchange=e=>{ui.ym=e.target.value||today().slice(0,7);svU();render()};
 let dlgOpen=false;function openDlg(t,h){$("#dlgTitle").textContent=t;$("#dlgBody").oninput=null;$("#dlgBody").onchange=null;$("#dlgBody").innerHTML=h;if(!dlg.open)dlg.showModal()}
-document.addEventListener("click",e=>{const b=e.target.closest("[data-act],[data-recv],[data-hist],[data-newpur],[data-editpur],[data-paypur],[data-recvpur],[data-prpo],[data-cashnew],[data-delmove]");if(!b)return;const s=b.dataset;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-act],[data-recv],[data-hist],[data-newpur],[data-editpur],[data-paypur],[data-recvpur],[data-prpo],[data-cashnew],[data-trnew],[data-delmove]");if(!b)return;const s=b.dataset;
   if(s.act==="demo")return demo();if(s.act==="xlsx")return exportExcel();
   if(s.recv)return receiveDlg(s.recv);
   if(s.hist){const d=D.docs.find(x=>x.id===s.hist),a=arInfo(d);return openDlg("ประวัติรับชำระ · "+d.no,simpleTable(["วันที่","บัญชี","ใบเสร็จ","รับ + หัก ณ ที่จ่าย"],a.pays.map(p=>[thD(p.date),(A.accounts.find(x=>x.id===p.accId)||{}).name||"",(D.docs.find(x=>x.id===p.rcDocId)||{}).no||"-",fmt(num(p.amount)+num(p.wht))])))}
   if(s.newpur)return purDlg(null,s.newpur);if(s.editpur)return purDlg(s.editpur);if(s.paypur)return payPurDlg(s.paypur);if(s.recvpur)return recvPur(s.recvpur);if(s.prpo)return printPO(s.prpo);
-  if(s.cashnew)return cashDlg(s.cashnew);
-  if(s.delmove){const[src,id]=s.delmove.split(":");if(!confirm("ลบรายการนี้?"))return;if(src==="pay"){const p=A.pay.find(x=>x.id===id);if(p&&p.rcDocId&&confirm("ลบใบเสร็จที่ระบบออกให้ในหน้าเปิดบิลด้วยไหม?")){const docs=LS.get(KEY.bdocs,[]).filter(x=>x.id!==p.rcDocId);LS.set(KEY.bdocs,docs);D.docs=docs}A.pay=A.pay.filter(x=>x.id!==id)}else A.cash=A.cash.filter(x=>x.id!==id);saveA();render()}
+  if(s.cashnew)return cashDlg(s.cashnew,{acc:s.acc});if(s.trnew!=null)return trDlg(s.trnew);
+  if(s.delmove){const[src,id]=s.delmove.split(":");if(!confirm("ลบรายการนี้?"))return;if(src==="pay"){const p=A.pay.find(x=>x.id===id);if(p&&p.rcDocId&&confirm("ลบใบเสร็จที่ระบบออกให้ในหน้าเปิดบิลด้วยไหม?")){const docs=LS.get(KEY.bdocs,[]).filter(x=>x.id!==p.rcDocId);LS.set(KEY.bdocs,docs);D.docs=docs}A.pay=A.pay.filter(x=>x.id!==id)}else{const c=A.cash.find(x=>x.id===id);A.cash=A.cash.filter(x=>x.id!==id&&!(c&&c.tr&&x.tr===c.tr))}saveA();render()}
 });
 $("#dataBtn").onclick=()=>{openDlg("ข้อมูลบัญชี",`<p class="note" style="margin:0">บัญชีใช้ข้อมูลร่วมกับหน้าเปิดบิล สต๊อก และเงินเดือน ในเครื่องเดียวกัน · ควรดาวน์โหลดไฟล์สำรองทุกสัปดาห์</p>
   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" data-act="xlsx">📊 ดาวน์โหลด Excel ทุกระบบ</button><button class="btn ghost" id="bk">⬇️ ไฟล์สำรองทั้งหมด (.json)</button><label class="btn ghost">⬆️ นำเข้าไฟล์สำรอง<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
   <button class="btn ghost edm-lock" data-act="demo" style="align-self:flex-start">✨ ใส่ข้อมูลตัวอย่าง (ทุกระบบ)</button>`);
-  const KS=["edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
+  const KS=["edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_suppliers","edm_services","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
   $("#bk").onclick=()=>{const o={app:"edm-all",v:1};KS.forEach(k=>o[k]=LS.get(k,null));const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="สำรองทุกระบบ-"+today()+".json";a.click()};
   $("#imp").onchange=ev=>{const f=ev.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-all")throw 0;if(!confirm("แทนที่ข้อมูลทุกระบบในเครื่องนี้ด้วยไฟล์สำรอง?"))return;KS.forEach(k=>{if(o[k]!=null)LS.set(k,o[k])});load();dlg.close();render();toast("นำเข้าเรียบร้อย ✓")}).catch(()=>toast("ไฟล์ไม่ถูกต้อง (ใช้ไฟล์สำรองทุกระบบจากหน้านี้)"))};
 };
@@ -637,6 +673,6 @@ render();
 window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get A(){return A},get D(){return D}};
 })();
 </script>
-<script src="../assets/member.js?v=33" defer></script>
+<script src="../assets/member.js?v=34" defer></script>
 </body>
 </html>

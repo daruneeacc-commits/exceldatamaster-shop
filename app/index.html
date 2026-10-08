@@ -64,6 +64,8 @@ textarea.in{min-height:70px;resize:vertical}
 .wipe{margin-top:12px;border-radius:12px;padding:14px 16px;background:color-mix(in srgb,#B3261E 8%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,#B3261E 35%,transparent)}
 .wipe-h{margin:0 0 6px;font-weight:600;color:#B3261E}.wipe-code{font-size:1.15rem;letter-spacing:.2em;padding:2px 8px;border-radius:6px;background:var(--soft);color:var(--ink)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wipe-h{color:#F2867E}}
+.md-seg{display:inline-flex;gap:4px;background:var(--soft);padding:4px;border-radius:12px;margin-bottom:12px}.md-seg button{border:0;background:none;font:inherit;padding:7px 14px;border-radius:9px;cursor:pointer;color:var(--ink)}.md-seg button.on{background:var(--card);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+table.rb td .sub{display:block;color:var(--muted);font-size:.78rem}
 .modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
 .modal-c{background:var(--card);border-radius:16px;padding:18px;width:100%;max-width:560px;max-height:90vh;overflow:auto;box-shadow:0 30px 60px -20px rgba(0,0,0,.4)}
 .modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.modal-h b{font-size:1.1rem}
@@ -165,6 +167,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
 }
 </style>
+<script src="../assets/suggest.js?v=33"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -180,6 +183,11 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     <div class="grp">เริ่มต้น</div>
     <a href="#/home" data-r="home"><span class="step">🏠</span>หน้าหลัก</a>
     <a href="#/setup" data-r="setup"><span class="step">⚙️</span>ตั้งค่าร้าน</a>
+    <div class="mg" data-g="mst"><button class="mg-h" type="button"><span class="step">🗂️</span>ข้อมูลหลัก<i>▾</i></button><div class="mg-b">
+      <a href="#/cust" data-r="cust"><span class="no">1</span>ข้อมูลลูกค้า</a>
+      <a href="#/sup" data-r="sup"><span class="no">2</span>ข้อมูลเจ้าหนี้</a>
+      <a href="#/prod" data-r="prod"><span class="no">3</span>ข้อมูลสินค้า / บริการ</a>
+    </div></div>
     <div class="mg" data-g="inc"><button class="mg-h" type="button"><span class="step">💰</span>รายรับ<i>▾</i></button><div class="mg-b">
       <a href="#/quotes" data-r="quotes"><span class="no">1</span>ใบเสนอราคา</a>
       <a href="#/invoices" data-r="invoices"><span class="no">2</span>ใบแจ้งหนี้</a>
@@ -188,8 +196,13 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
       <a href="#/ar" data-r="ar"><span class="no">5</span>ลูกหนี้ / รับเงิน<span class="n" id="nAr" hidden></span></a>
     </div></div>
     <div class="mg" data-g="exp"><button class="mg-h" type="button"><span class="step">🛒</span>รายจ่าย<i>▾</i></button><div class="mg-b">
-      <a href="#/buy" data-r="buy"><span class="no">1</span>ซื้อสินค้า / ค่าใช้จ่าย</a>
-      <a href="#/cash" data-r="cash"><span class="no">2</span>เงินสด-ธนาคาร</a>
+      <a href="#/cost" data-r="cost"><span class="no">1</span>ต้นทุนสินค้า / บริการ</a>
+      <a href="#/exp" data-r="exp"><span class="no">2</span>ค่าใช้จ่าย</a>
+    </div></div>
+    <div class="mg" data-g="fin"><button class="mg-h" type="button"><span class="step">🏦</span>การเงิน<i>▾</i></button><div class="mg-b">
+      <a href="#/bank" data-r="bank"><span class="no">1</span>ธนาคาร</a>
+      <a href="#/cashv" data-r="cashv"><span class="no">2</span>เงินสด</a>
+      <a href="#/petty" data-r="petty"><span class="no">3</span>เงินสดย่อย</a>
     </div></div>
     <a href="#/stock" data-r="stock"><span class="step">📦</span>สต๊อกสินค้า<span class="n" id="nLow" hidden></span></a>
     <div class="mg" data-g="rep"><button class="mg-h" type="button"><span class="step">📊</span>รายงาน<i>▾</i></button><div class="mg-b">
@@ -220,6 +233,13 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
         <div class="fl"><label>สีของเอกสาร</label><input class="in" type="color" id="stColor" style="height:44px;padding:4px"></div>
       </div>
       <div class="acts"><button class="btn main" id="stSave">💾 บันทึกข้อมูลร้าน</button><span class="help" id="stMsg"></span></div></div>
+    </div></section>
+    <section id="master" class="pane"><div class="wrap">
+      <div class="hello rb-head"><div><h1 id="mdTitle"></h1><p id="mdSub"></p></div><div class="acts" style="margin:0"><button class="btn main" id="mdNew">＋ เพิ่ม</button></div></div>
+      <div class="seg md-seg" id="mdSeg" hidden><button data-s="goods" class="on">📦 สินค้า</button><button data-s="svc">🧰 บริการ</button></div>
+      <div class="card rb-f" style="grid-template-columns:1fr"><input class="in" id="mdQ" type="search" placeholder="🔍 พิมพ์ชื่อ รหัส หรือเลขผู้เสียภาษี"></div>
+      <div class="stats" id="mdSum"></div>
+      <div class="card" style="padding:0"><div class="rb-wrap"><table class="rb" id="mdTbl"></table></div></div>
     </div></section>
     <section id="bills" class="pane"><div class="wrap">
       <div class="hello rb-head"><div><h1 id="rbTitle">📋 รายงานบิลทั้งหมด</h1><p id="rbSub">บิลทั้งหมดที่บันทึกไว้ ดู แก้ไข หรือลบได้จากที่นี่</p></div><div class="acts" style="margin:0"><button class="btn main" id="rbNew">＋ เปิดบิลใหม่</button><button class="btn ghost" id="rbNew2" hidden></button><button class="btn ghost" id="rbXls">📊 Excel</button></div></div>
@@ -267,7 +287,8 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
           <div class="qa">
             <button data-go="bill">🧾 เปิดบิลขาย</button>
             <button data-go="ar">💳 รับเงินจากลูกค้า</button>
-            <button data-go="buy">🛒 บันทึกซื้อ / ค่าใช้จ่าย</button>
+            <button data-go="cost">🛒 ซื้อสินค้า / ต้นทุน</button>
+            <button data-go="exp">💸 บันทึกค่าใช้จ่าย</button>
             <button data-go="stock">📦 ดูสต๊อก / ตรวจนับ</button>
             <button data-go="tax">📑 ดูภาษีเดือนนี้</button>
             <button data-go="pnl">📊 ดูกำไรขาดทุน</button>
@@ -279,6 +300,11 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   </div>
 </div>
 
+<div class="modal" id="mdm" hidden><div class="modal-c">
+  <div class="modal-h"><b id="mdmT"></b><button class="btn sm ghost" id="mdmX" type="button">✕</button></div>
+  <div class="form" id="mdF" style="margin-top:8px"></div>
+  <div class="acts" style="justify-content:space-between;align-items:center;margin-top:14px"><button class="btn ghost" id="mdDel" type="button" style="color:#B3261E">ลบ</button><span class="help" id="mdMsg"></span><button class="btn main" id="mdSave" type="button">💾 บันทึก</button></div>
+</div></div>
 <div class="modal" id="bnm" hidden><div class="modal-c">
   <div class="modal-h"><b>สร้างใบวางบิล</b><button class="btn sm ghost" id="bnX" type="button">✕</button></div>
   <p class="help">เลือกลูกค้า แล้วติ๊กใบแจ้งหนี้ที่ค้างชำระที่จะรวมในใบวางบิล</p>
@@ -311,12 +337,13 @@ const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" 
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
 const ROUTES={bill:{src:"/bill/?v=33"},stock:{src:"/stock/?v=33",sv:"home"},stockrep:{src:"/stock/?v=33",sv:"report"},
-  ar:{src:"/account/?v=33",v:"ar"},tax:{src:"/account/?v=33",v:"tax"},buy:{src:"/account/?v=33",v:"buy"},cash:{src:"/account/?v=33",v:"cash"},pnl:{src:"/account/?v=33",v:"home"}};
+  ar:{src:"/account/?v=33",v:"ar"},tax:{src:"/account/?v=33",v:"tax"},buy:{src:"/account/?v=33",v:"buy"},cash:{src:"/account/?v=33",v:"cash"},pnl:{src:"/account/?v=33",v:"home"},
+  cost:{src:"/account/?v=33",v:"cost"},exp:{src:"/account/?v=33",v:"exp"},bank:{src:"/account/?v=33",v:"bank"},cashv:{src:"/account/?v=33",v:"cashv"},petty:{src:"/account/?v=33",v:"petty"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
 let cur="";
-const PANES=["home","setup","data","bills","quotes","invoices","billing","receipts"];
+const PANES=["home","setup","data","bills","quotes","invoices","billing","receipts","cust","sup","prod"];
 // รายการเอกสารแยกตามประเภท (เมนูรายรับ) ใช้หน้าเดียวกับรายงานบิล
 const VIEWS={
   bills:{t:"📋 รายงานบิลทั้งหมด",s:"เอกสารขายทั้งหมดที่บันทึกไว้ ดู แก้ไข หรือลบได้จากที่นี่",f:null,nw:["＋ เปิดบิลใหม่","INV"]},
@@ -335,6 +362,7 @@ function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0]
   if(r==="home"){renderHome();document.title="ระบบร้านค้า · Excel Data Master";return}
   if(r==="setup"){renderSetup();document.title="ตั้งค่าร้าน · ระบบร้านค้า";return}
   if(r==="data"){renderData();document.title="สำรองข้อมูล · ระบบร้านค้า";return}
+  if(MD[r]){md=r;$("#master").classList.add("show");renderMaster();document.title=MD[r].t.replace(/^\S+ /,"")+" · ระบบร้านค้า";return}
   if(VIEWS[r]){view=r;$("#bills").classList.add("show");setView();renderBills();document.title=VIEWS[r].t.replace(/^[^ ]+ (· )?/,"")+" · ระบบร้านค้า";return}
   const R=ROUTES[r],f=frameFor(R.src);
   if(f.dataset.ready)f.classList.add("show");else f.addEventListener("load",()=>{if(cur===r)f.classList.add("show")},{once:true});
@@ -385,7 +413,7 @@ try{const st=JSON.parse(localStorage.getItem("edm_menu")||"{}");$$(".mg").forEac
 $("#burger").onclick=()=>document.body.classList.toggle("menu");$("#scrim").onclick=()=>document.body.classList.remove("menu");
 // ลิงก์ข้ามระบบจากในหน้าย่อย (เช่น ปุ่ม "ไปหน้าสต๊อก") ให้เปลี่ยนเมนูแทนการเปิดหน้าใหม่
 window.addEventListener("message",e=>{if(e.origin!==location.origin||!e.data||e.data.edm!=="go")return;const t=e.data.tool,v=(/v=(\w+)/.exec(e.data.hash||"")||[])[1];
-  if(t==="account"){go(v==="ar"||v==="tax"||v==="buy"||v==="cash"?v:"pnl")}else if(ROUTES[t])go(t);else go("home")});
+  if(t==="account"){go(v==="ar"||v==="tax"?v:v==="buy"?"cost":v==="cash"?"bank":"pnl")}else if(ROUTES[t])go(t);else go("home")});
 
 /* ---------- หน้าหลัก ---------- */
 function calcDoc(d){const sub=r2((d.items||[]).reduce((a,it)=>a+r2(num(it.q)*num(it.p)-num(it.disc)),0));const after=r2(Math.max(0,sub-num(d.billDisc)));
@@ -427,7 +455,66 @@ function renderHome(){
 }
 $("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=33#demo&back=/app/"};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
-function renderBadges(){renderHome();if(VIEWS[cur])renderBills()}
+/* ---------- ข้อมูลหลัก: ลูกค้า / เจ้าหนี้ / สินค้า-บริการ ---------- */
+const MD={
+  cust:{t:"👥 ข้อมูลลูกค้า",s:"รายชื่อลูกค้า เวลาเปิดบิลพิมพ์ชื่อไม่กี่ตัวอักษรก็ขึ้นให้เลือก · ลูกค้าใหม่จะถูกจำไว้อัตโนมัติเมื่อบันทึกบิล",k:"edm_bill_customers",
+    F:[["name","ชื่อลูกค้า / บริษัท",1],["tax","เลขประจำตัวผู้เสียภาษี (13 หลัก)"],["branch","สาขา (เช่น สำนักงานใหญ่)"],["contact","ผู้ติดต่อ / โทร",1],["addr","ที่อยู่",1,"area"]]},
+  sup:{t:"🏭 ข้อมูลเจ้าหนี้",s:"ผู้ขาย / ซัพพลายเออร์ เวลาบันทึกซื้อหรือค่าใช้จ่าย พิมพ์ชื่อแล้วเลือก ระบบเติมเลขผู้เสียภาษีและสาขาให้",k:"edm_suppliers",
+    F:[["name","ชื่อผู้ขาย / บริษัท",1],["tax","เลขประจำตัวผู้เสียภาษี (13 หลัก)"],["branch","สาขา (เช่น สำนักงานใหญ่)"],["contact","ผู้ติดต่อ / โทร",1],["bank","บัญชีรับโอน (ธนาคาร / เลขที่)",1],["addr","ที่อยู่",1,"area"]]},
+  prod:{t:"📦 ข้อมูลสินค้า / บริการ",s:"รายการที่ขาย เวลาเปิดบิลพิมพ์ชื่อแล้วเลือก ระบบใส่หน่วยและราคาให้ · สินค้าเชื่อมกับสต๊อก",
+    goods:{k:"edm_stock_items",F:[["sku","รหัสสินค้า"],["name","ชื่อสินค้า",0],["cat","หมวดหมู่"],["unit","หน่วย (เช่น ชิ้น กล่อง)"],["cost","ต้นทุนต่อหน่วย",0,"num"],["price","ราคาขาย",0,"num"],["min","จุดสั่งซื้อ (เหลือต่ำกว่านี้เตือน)",0,"num"],["note","หมายเหตุ",1]]},
+    svc:{k:"edm_services",F:[["name","ชื่องานบริการ",1],["unit","หน่วย (เช่น ครั้ง งาน ชั่วโมง)"],["price","ราคา",0,"num"],["note","รายละเอียด",1,"area"]]}}};
+let md="cust",mdSeg="goods",mdEdit=null;
+const mdDef=()=>md==="prod"?MD.prod[mdSeg]:MD[md];
+const n2=v=>{v=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(v)?v:0};
+function purTotal(p){let t=0;(p.lines||[]).forEach(l=>t+=n2(l.q)*n2(l.p));if(p.vat==="ex")t*=1.07;return Math.round(t*100)/100}
+function supRows(){const L=(LS.get("edm_suppliers",[])||[]).map(x=>Object.assign({},x)),A=LS.get("edm_acc",{})||{},seen=new Set(L.map(x=>x.name));
+  (A.pur||[]).slice().reverse().forEach(p=>{const n=p.sup&&p.sup.name;if(n&&!seen.has(n)){seen.add(n);L.push({name:n,tax:p.sup.tax||"",branch:p.sup.branch||"",_auto:1})}});return L}
+function mdRows(){if(md==="sup")return supRows();return LS.get(mdDef().k,[])||[]}
+function renderMaster(){const D=MD[md],def=mdDef();$("#mdTitle").textContent=D.t;$("#mdSub").textContent=D.s;$("#mdSeg").hidden=md!=="prod";
+  $$("#mdSeg button").forEach(b=>b.classList.toggle("on",b.dataset.s===mdSeg));
+  $("#mdNew").textContent="＋ เพิ่ม"+(md==="cust"?"ลูกค้า":md==="sup"?"เจ้าหนี้":mdSeg==="goods"?"สินค้า":"บริการ");
+  const q=$("#mdQ").value,all=mdRows(),docs=LS.get("edm_bill_docs",[]),A=LS.get("edm_acc",{})||{},pays=A.pay||[];
+  const L=window.edmMatch?edmMatch(q,all,["name","sku","tax","contact","cat"]):all;let head="",body="",sum=[];
+  if(md==="cust"){let tS=0,tL=0;const pin=pays.filter(p=>p.dir==="in");
+    body=L.map(c=>{const ds=docs.filter(d=>d.cust&&d.cust.name===c.name&&d.type!=="QT"&&d.type!=="BN");let s=0,left=0;ds.forEach(d=>{const st=docStatus(d,docs,pin);if(d.type==="IV"||d.type==="IT"||!(d.ref))s+=calcDoc(d).net;if(d.type==="IV"||d.type==="IT")left+=st.left||0});tS+=s;tL+=left;
+      return`<tr><td><b>${esc(c.name)}</b><span class="sub">${esc([c.tax,c.branch].filter(Boolean).join(" · ")||"-")}</span></td><td>${esc(c.contact||"-")}</td><td class="r">${fmt(s)}<span class="sub">${ds.length} เอกสาร</span></td><td class="r">${left>0.009?`<b style="color:#B3261E">${fmt(left)}</b>`:"-"}</td><td class="r"><div class="acts" style="margin:0;justify-content:flex-end"><button class="btn sm ghost" data-mdv="${esc(c.name)}">ดูบิล</button><button class="btn sm ghost" data-mde="${all.indexOf(c)}">แก้ไข</button></div></td></tr>`}).join("");
+    head="<tr><th>ลูกค้า</th><th>ผู้ติดต่อ</th><th class=r>ยอดขายรวม</th><th class=r>ค้างรับ</th><th></th></tr>";sum=[[all.length+" ราย","ลูกค้าทั้งหมด"],["฿"+fmt(tS),"ยอดขายรวม"],["฿"+fmt(tL),"ค้างรับ"]]}
+  else if(md==="sup"){let tB=0,tL=0;const pout=pays.filter(p=>p.dir==="out");
+    body=L.map(c=>{const ps=(A.pur||[]).filter(p=>p.sup&&p.sup.name===c.name&&p.status!=="ordered");let b=0,left=0;ps.forEach(p=>{const t=purTotal(p);b+=t;const pd=pout.filter(y=>y.purId===p.id).reduce((a,y)=>a+n2(y.amount)+n2(y.wht),0);if(t-pd>1)left+=t-pd});tB+=b;tL+=left;
+      return`<tr><td><b>${esc(c.name)}</b><span class="sub">${esc([c.tax,c.branch].filter(Boolean).join(" · ")||"-")}</span></td><td>${esc(c.contact||"-")}${c.bank?`<span class="sub">${esc(c.bank)}</span>`:""}</td><td class="r">${fmt(b)}<span class="sub">${ps.length} รายการ</span></td><td class="r">${left>0.009?`<b style="color:#B3261E">${fmt(left)}</b>`:"-"}</td><td class="r"><div class="acts" style="margin:0;justify-content:flex-end"><button class="btn sm ghost" data-mde="${all.indexOf(c)}">แก้ไข</button></div></td></tr>`}).join("");
+    head="<tr><th>เจ้าหนี้ / ผู้ขาย</th><th>ผู้ติดต่อ</th><th class=r>ยอดซื้อรวม</th><th class=r>ค้างจ่าย</th><th></th></tr>";sum=[[all.length+" ราย","เจ้าหนี้ทั้งหมด"],["฿"+fmt(tB),"ยอดซื้อรวม"],["฿"+fmt(tL),"ค้างจ่าย"]]}
+  else if(mdSeg==="goods"){const B={};(LS.get("edm_stock_tx",[])||[]).forEach(t=>{const q=n2(t.qty);B[t.pid]=(B[t.pid]||0)+(t.type==="out"?-q:q)});let val=0,low=0;
+    body=L.map(i=>{const b=Math.round((B[i.id]||0)*1000)/1000;val+=Math.max(b,0)*n2(i.cost);if(n2(i.min)>0&&b<=n2(i.min))low++;
+      return`<tr><td><b>${esc(i.name)}</b><span class="sub">${esc([i.sku,i.cat].filter(Boolean).join(" · ")||"-")}</span></td><td class="r">${fmt(i.cost)}</td><td class="r"><b>${fmt(i.price)}</b></td><td class="r">${fmt0(b)} ${esc(i.unit||"")}${n2(i.min)>0&&b<=n2(i.min)?`<span class="sub" style="color:#B3261E">ใกล้หมด</span>`:""}</td><td class="r"><button class="btn sm ghost" data-mde="${all.indexOf(i)}">แก้ไข</button></td></tr>`}).join("");
+    head="<tr><th>สินค้า</th><th class=r>ต้นทุน</th><th class=r>ราคาขาย</th><th class=r>คงเหลือ</th><th></th></tr>";sum=[[all.length+" รายการ","สินค้าทั้งหมด"],["฿"+fmt(val),"มูลค่าสต๊อก (ทุน)"],[low+" รายการ","ใกล้หมด"]]}
+  else{body=L.map(i=>`<tr><td><b>${esc(i.name)}</b>${i.note?`<span class="sub">${esc(i.note)}</span>`:""}</td><td>${esc(i.unit||"-")}</td><td class="r"><b>${fmt(i.price)}</b></td><td class="r"><button class="btn sm ghost" data-mde="${all.indexOf(i)}">แก้ไข</button></td></tr>`).join("");
+    head="<tr><th>งานบริการ</th><th>หน่วย</th><th class=r>ราคา</th><th></th></tr>";sum=[[all.length+" รายการ","บริการทั้งหมด"]]}
+  $("#mdSum").innerHTML=sum.map(x=>`<div class="stat"><b>${x[0]}</b><span>${x[1]}</span></div>`).join("");
+  $("#mdTbl").innerHTML=`<thead>${head}</thead><tbody>${body||`<tr><td colspan="5"><div class="empty">${q?"ไม่พบรายการที่ค้นหา":"ยังไม่มีข้อมูล · กด \"＋ เพิ่ม\" ด้านบน"}</div></td></tr>`}</tbody>`;
+  $$("[data-mde]").forEach(b=>b.onclick=()=>mdOpen(+b.dataset.mde));
+  $$("[data-mdv]").forEach(b=>b.onclick=()=>{$("#rbQ").value=b.dataset.mdv;go("bills")});
+}
+function mdOpen(i){const def=mdDef(),all=mdRows(),x=i>=0?all[i]:{};mdEdit={i,x};
+  $("#mdmT").textContent=(i>=0?"แก้ไข":"เพิ่ม")+(md==="cust"?"ลูกค้า":md==="sup"?"เจ้าหนี้":mdSeg==="goods"?"สินค้า":"บริการ");
+  $("#mdF").innerHTML=def.F.map(([k,l,full,t])=>`<div class="fl${full?" full":""}"><label>${l}</label>${t==="area"?`<textarea class="in" data-f="${k}">${esc(x[k]||"")}</textarea>`:`<input class="in" data-f="${k}" ${t==="num"?'type="number" step="any" inputmode="decimal"':""} value="${esc(x[k]==null?"":x[k])}">`}</div>`).join("");
+  $("#mdDel").hidden=!(i>=0)||!!x._auto;$("#mdMsg").textContent=x._auto?"รายชื่อนี้มาจากใบซื้อ กดบันทึกเพื่อเก็บเป็นข้อมูลเจ้าหนี้":"";$("#mdm").hidden=false;setTimeout(()=>{const f=$("#mdF [data-f=name]");if(f)f.focus()},30)}
+function mdClose(){$("#mdm").hidden=true;mdEdit=null}
+$("#mdmX").onclick=mdClose;$("#mdm").addEventListener("click",e=>{if(e.target.id==="mdm")mdClose()});
+$("#mdNew").onclick=()=>mdOpen(-1);
+$("#mdQ").addEventListener("input",renderMaster);
+$$("#mdSeg button").forEach(b=>b.onclick=()=>{mdSeg=b.dataset.s;$("#mdQ").value="";renderMaster()});
+$("#mdSave").onclick=()=>{const def=mdDef(),E=mdEdit;if(!E)return;const v={};$$("#mdF [data-f]").forEach(el=>{const F=def.F.find(f=>f[0]===el.dataset.f);v[el.dataset.f]=F&&F[3]==="num"?n2(el.value):el.value.trim()});
+  if(!v.name)return $("#mdMsg").textContent="กรอกชื่อก่อน";if(v.tax)v.tax=v.tax.replace(/\D/g,"");if(v.tax&&v.tax.length!==13&&!confirm("เลขผู้เสียภาษีไม่ครบ 13 หลัก บันทึกต่อไหม?"))return;
+  let L=LS.get(def.k,[])||[];const dup=L.findIndex(y=>y.name===v.name);
+  if(md==="sup"){const old=E.x&&E.x.name;const j=old?L.findIndex(y=>y.name===old):-1;if(dup>=0&&dup!==j)return $("#mdMsg").textContent="มีชื่อนี้อยู่แล้ว";if(j>=0)L[j]=Object.assign(L[j],v);else L.unshift(Object.assign({id:"s"+Date.now().toString(36)},v))}
+  else{const j=E.i;if(dup>=0&&dup!==j)return $("#mdMsg").textContent="มีชื่อนี้อยู่แล้ว";
+    if(j>=0)L[j]=Object.assign(L[j],v);else L.unshift(Object.assign(md==="prod"?{id:(mdSeg==="goods"?"p":"sv")+Date.now().toString(36),created:Date.now()}:{},v))}
+  if(!LSset(def.k,L))return;mdClose();renderMaster();if(window.edmCloudDirty)edmCloudDirty()};
+$("#mdDel").onclick=()=>{const def=mdDef(),E=mdEdit;if(!E||E.i<0)return;let L=LS.get(def.k,[])||[];const x=md==="sup"?L.find(y=>y.name===E.x.name):L[E.i];if(!x)return mdClose();
+  if(md==="prod"&&mdSeg==="goods"&&(LS.get("edm_stock_tx",[])||[]).some(t=>t.pid===x.id))return $("#mdMsg").textContent="สินค้านี้มีความเคลื่อนไหวในสต๊อกแล้ว ลบไม่ได้";
+  if(!confirm("ลบ "+x.name+"?\n(เอกสารเก่าที่ใช้ชื่อนี้ยังอยู่ครบ)"))return;LSset(def.k,L.filter(y=>y!==x));mdClose();renderMaster()};
+function renderBadges(){renderHome();if(VIEWS[cur])renderBills();if(MD[cur])renderMaster()}
 /* ---------- ใบวางบิล: รวมใบแจ้งหนี้ค้างชำระของลูกค้า 1 ราย ---------- */
 let bnOpen=[];
 function bnMaker(){const docs=LS.get("edm_bill_docs",[]),A=LS.get("edm_acc",{})||{},pays=(A.pay||[]).filter(p=>p.dir==="in");
@@ -510,7 +597,7 @@ $("#stSave").onclick=()=>{const name=$("#stName").value.trim();if(!name){$("#stM
   if(!ok)return;reloadFrames();$("#stMsg").textContent="บันทึกแล้ว ✓ ใช้กับทุกระบบแล้ว";toast("บันทึกข้อมูลร้านแล้ว ✓");setTimeout(()=>go("home"),900)};
 
 /* ---------- สำรอง / กู้คืน / ล้างข้อมูล ---------- */
-const KS=["edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
+const KS=["edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_suppliers","edm_services","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
 const KS_UI=["edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_pay_ui","edm_bill_term"];
 function renderData(){wipeClose();const A=LS.get("edm_acc",{})||{};const n=(k)=>(LS.get(k,[])||[]).length;
   $("#dtStats").innerHTML=[["เอกสารขาย",n("edm_bill_docs")],["สินค้า",n("edm_stock_items")],["ซื้อ / ค่าใช้จ่าย",(A.pur||[]).length],["ลูกค้า",n("edm_bill_customers")]].map(([t,v])=>`<div><b>${v}</b><span>${t}</span></div>`).join("");
@@ -541,6 +628,6 @@ $("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
-<script src="../assets/member.js?v=33" defer></script>
+<script src="../assets/member.js?v=34" defer></script>
 </body>
 </html>
