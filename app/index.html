@@ -51,6 +51,10 @@ textarea.in{min-height:70px;resize:vertical}
 .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .help{color:var(--muted);font-size:.84rem;margin:0}
 .btn.danger{color:#B3261E;box-shadow:inset 0 0 0 1px #E8B4B0;background:transparent}
+.btn.danger-solid{background:#B3261E;color:#fff}.btn.danger-solid:disabled{opacity:.4;cursor:not-allowed}
+.wipe{margin-top:12px;border-radius:12px;padding:14px 16px;background:color-mix(in srgb,#B3261E 8%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,#B3261E 35%,transparent)}
+.wipe-h{margin:0 0 6px;font-weight:600;color:#B3261E}.wipe-code{font-size:1.15rem;letter-spacing:.2em;padding:2px 8px;border-radius:6px;background:var(--soft);color:var(--ink)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wipe-h{color:#F2867E}}
 .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:6px 0 2px}.stats div{background:var(--soft);border-radius:12px;padding:10px 12px}.stats b{display:block;font-size:1.15rem}.stats span{font-size:.78rem;color:var(--muted)}
 @media(max-width:700px){.form{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .wrap{max-width:1080px;margin:0 auto;padding:20px 16px 90px;display:flex;flex-direction:column;gap:16px}
@@ -185,7 +189,14 @@ textarea.in{min-height:70px;resize:vertical}
       <div class="card"><h2>ข้อมูลตัวอย่าง</h2><p class="help">ใส่ข้อมูลร้านขายเครื่องเขียนย้อนหลัง 3 เดือน เพื่อลองใช้ทุกเมนู (ข้อมูลในเครื่องนี้จะถูกแทนที่)</p><div class="acts"><button class="btn ghost" id="dtDemo">✨ ใส่ข้อมูลตัวอย่าง 3 เดือน</button></div></div>
       <div class="card"><h2>เริ่มใช้งานจริง</h2><p class="help">ลองข้อมูลตัวอย่างเสร็จแล้ว กดล้างข้อมูลทั้งหมด แล้วเริ่มกรอกข้อมูลร้านจริง</p>
         <label class="chk" style="margin-top:8px"><input type="checkbox" id="dtKeep"> เก็บข้อมูลร้าน (ชื่อ ที่อยู่ เลขผู้เสียภาษี โลโก้) ไว้</label>
-        <div class="acts"><button class="btn danger" id="dtClear">🧹 ล้างข้อมูลทั้งหมดในเครื่องนี้</button></div></div>
+        <div class="acts"><button class="btn danger" id="dtClear">🧹 ล้างข้อมูลทั้งหมดในเครื่องนี้</button></div>
+        <div class="wipe" id="dtWipe" hidden>
+          <p class="wipe-h">⚠️ กำลังจะลบข้อมูลทั้งหมด กู้คืนไม่ได้ถ้าไม่มีไฟล์สำรอง</p>
+          <p class="help" id="dtWipeWhat"></p>
+          <p class="help">ข้อมูลสำรองบนระบบร้านของบัญชีนี้จะถูกล้างด้วย · ถ้ามีข้อมูลจริง ให้กด "ดาวน์โหลดไฟล์สำรองทั้งหมด" ด้านบนก่อน</p>
+          <label class="fl" style="margin-top:8px"><span>พิมพ์รหัส <b class="wipe-code" id="dtCode"></b> เพื่อยืนยันการล้างข้อมูล</span><input class="in" id="dtCodeIn" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="รหัส 4 หลัก" style="max-width:180px;font-size:1.1rem;letter-spacing:.2em"></label>
+          <div class="acts"><button class="btn danger-solid" id="dtWipeGo" disabled>ลบข้อมูลทั้งหมด</button><button class="btn ghost" id="dtWipeNo">ยกเลิก</button></div>
+        </div></div>
     </div></section>
     <section id="home" class="pane"><div class="wrap">
       <div class="hello"><h1 id="hi">สวัสดีค่ะ</h1><p id="hiSub">ระบบร้านค้าครบในที่เดียว เปิดบิล → ภาษี → สต๊อก → บัญชี ข้อมูลเชื่อมกันอัตโนมัติ</p></div>
@@ -364,7 +375,7 @@ $("#stSave").onclick=()=>{const name=$("#stName").value.trim();if(!name){$("#stM
 /* ---------- สำรอง / กู้คืน / ล้างข้อมูล ---------- */
 const KS=["edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
 const KS_UI=["edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_pay_ui","edm_bill_term"];
-function renderData(){const A=LS.get("edm_acc",{})||{};const n=(k)=>(LS.get(k,[])||[]).length;
+function renderData(){wipeClose();const A=LS.get("edm_acc",{})||{};const n=(k)=>(LS.get(k,[])||[]).length;
   $("#dtStats").innerHTML=[["เอกสารขาย",n("edm_bill_docs")],["สินค้า",n("edm_stock_items")],["ซื้อ / ค่าใช้จ่าย",(A.pur||[]).length],["พนักงาน",n("edm_pay_emps")]].map(([t,v])=>`<div><b>${v}</b><span>${t}</span></div>`).join("");
   const last=LS.get("edm_last_backup","");$("#dtLast").textContent=last?"ดาวน์โหลดไฟล์สำรองล่าสุด "+thD(last):"";
   const s=LS.get("edm_bill_seller",{});$("#dtKeep").checked=!!s.name&&!/ตัวอย่าง/.test(s.name);
@@ -375,7 +386,17 @@ $("#dtBk").onclick=()=>{const o={app:"edm-all",v:1};KS.forEach(k=>o[k]=LS.get(k,
 $("#dtImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-all")throw 0;if(!confirm("กู้คืนข้อมูลจากไฟล์? ข้อมูลทุกระบบในเครื่องนี้จะถูกแทนที่"))return;KS.forEach(k=>{if(o[k]!=null)LSset(k,o[k])});KS_UI.forEach(k=>localStorage.removeItem(k));reloadFrames();renderData();toast("กู้คืนข้อมูลแล้ว ✓")}).catch(()=>toast("ไฟล์ไม่ถูกต้อง ต้องเป็นไฟล์สำรองทุกระบบ (.json)"));e.target.value=""};
 $("#dtXls").onclick=()=>{const f=frameFor(ROUTES.pnl.src);const run=()=>{try{f.contentWindow.edmExcel()}catch(e){toast("ลองใหม่อีกครั้ง")}};toast("กำลังสร้างไฟล์ Excel...");f.dataset.ready?run():f.addEventListener("load",()=>setTimeout(run,100),{once:true})};
 $("#dtDemo").onclick=()=>$("#demoBtn").click();
-$("#dtClear").onclick=()=>{if(!confirm("ล้างข้อมูลทั้งหมด? (บิล สต๊อก บัญชี เงินเดือน)\nข้อมูลสำรองบนระบบร้านของบัญชีนี้จะถูกล้างด้วย\n\nถ้ามีข้อมูลจริง ให้ดาวน์โหลดไฟล์สำรองก่อน"))return;if(!confirm("ยืนยันอีกครั้ง: ลบแล้วกู้คืนไม่ได้ ถ้าไม่มีไฟล์สำรอง"))return;
+// ล้างข้อมูล: ต้องพิมพ์รหัส 4 หลักที่สุ่มขึ้นมาก่อน กันกดพลาด
+var wipeCode="";
+$("#dtClear").onclick=()=>{wipeCode=String(Math.floor(1000+Math.random()*9000));$("#dtCode").textContent=wipeCode;$("#dtCodeIn").value="";$("#dtWipeGo").disabled=true;
+  const A=LS.get("edm_acc",{})||{},n=k=>(LS.get(k,[])||[]).length;
+  $("#dtWipeWhat").textContent=`จะลบ: เอกสารขาย ${n("edm_bill_docs")} ใบ · สินค้า ${n("edm_stock_items")} รายการ · ซื้อ/ค่าใช้จ่าย ${(A.pur||[]).length} รายการ · พนักงาน ${n("edm_pay_emps")} คน`+($("#dtKeep").checked?" (เก็บข้อมูลร้านไว้)":"");
+  $("#dtWipe").hidden=false;$("#dtClear").hidden=true;setTimeout(()=>$("#dtCodeIn").focus(),30)};
+$("#dtCodeIn").oninput=e=>{e.target.value=e.target.value.replace(/\D/g,"");$("#dtWipeGo").disabled=e.target.value!==wipeCode};
+$("#dtCodeIn").onkeydown=e=>{if(e.key==="Enter"&&!$("#dtWipeGo").disabled)$("#dtWipeGo").click()};
+function wipeClose(){$("#dtWipe").hidden=true;$("#dtClear").hidden=false;wipeCode=""}
+$("#dtWipeNo").onclick=wipeClose;
+$("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return;wipeClose();
   const keep=$("#dtKeep").checked,s=LS.get("edm_bill_seller",null);KS.concat(KS_UI).forEach(k=>localStorage.removeItem(k));try{localStorage.setItem("edm_sync_wipe","1")}catch(e){}
   if(keep&&s){LSset("edm_bill_seller",s);LSset("edm_pay_company",{name:s.name,addr:s.addr,tax:s.tax,logo:s.logo||"",color:s.color||"#127A4B"});LSset("edm_stock_cfg",{name:s.name})}
   reloadFrames();if(window.EDM_MEMBER&&EDM_MEMBER.push)EDM_MEMBER.push(true);toast("ล้างข้อมูลแล้ว พร้อมเริ่มใช้งานจริง");go(keep?"home":"setup")};
