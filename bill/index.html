@@ -134,6 +134,40 @@ table.p-items .c{text-align:center}
   .paper{box-shadow:none;margin:0;transform:none!important;zoom:1!important;width:210mm;min-height:297mm}
 }
 .editor{counter-reset:stp}.editor>.card>h2:first-child{counter-increment:stp;position:relative;padding-left:34px;min-height:26px}.editor>.card>h2:first-child::before{content:counter(stp);position:absolute;left:0;top:50%;transform:translateY(-50%);width:25px;height:25px;border-radius:8px;background:color-mix(in srgb,var(--accent,#127A4B) 14%,transparent);color:var(--accent,#127A4B);font-size:.8rem;font-weight:800;display:grid;place-items:center}
+
+/* ---------- โหมดกะทัดรัด: ช่องกรอกเล็กลง อ่านง่าย ไม่ล้นสายตา ---------- */
+body{font-size:14px}
+main{gap:16px;padding-top:12px}
+.editor{gap:10px}
+.card{padding:14px 14px 12px;gap:9px;border-radius:14px}
+.card h2{font-size:.95rem}
+.row,.row3{gap:8px}
+.f{gap:2px}.f label{font-size:.74rem;font-weight:600;letter-spacing:.01em}
+.in-{padding:6px 10px;border-radius:8px;font-size:.9rem;line-height:1.45}
+select.in-{padding-right:6px}
+textarea.in-{min-height:48px}
+.seg{padding:2px;gap:2px}.seg button{padding:5px 6px;font-size:.82rem}
+.doctypes{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.doctypes button{padding:6px 8px;font-size:.8rem;line-height:1.3;border-radius:10px}
+.doctypes button small{font-size:.66rem;letter-spacing:.02em}
+.warn{padding:6px 10px;font-size:.78rem;line-height:1.45}
+.note{font-size:.76rem}
+#termBox{margin:6px 0 0}#termBox .row{margin-top:6px}.cdays{margin-top:6px;font-size:.78rem}
+.item{padding:8px 9px;gap:6px;border-radius:10px}
+.item .top .in-{font-weight:500}
+.item>.row3{grid-template-columns:.75fr .75fr 1.05fr .9fr 1fr}
+.item>.row{grid-template-columns:.8fr 1.2fr 1fr}
+.item .f.sum{justify-content:flex-end}.item .f.sum span{padding:6px 0;font-size:.9rem}
+.totals{font-size:.86rem;gap:2px 12px}.totals .big{font-size:1rem}
+details.more summary{font-size:.86rem}
+.logo-pick .pv{width:44px;height:44px}
+#actBar{padding:8px!important;gap:6px!important;flex-wrap:nowrap!important}
+#actBar .btn{padding:7px 12px;font-size:.82rem;white-space:nowrap}
+#actBar .lg{display:none}#actBar .sh{display:inline}
+.mtabs{margin-top:8px}.mtabs button{padding:7px;font-size:.86rem}
+@media(max-width:520px){.item>.row3{grid-template-columns:.9fr .8fr 1.1fr .9fr}.item>.row{grid-template-columns:1fr 1.3fr}.item .f.sum{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:baseline;border-top:1px dashed var(--line);padding-top:4px}.item .f.sum span{padding:0}.item .f label{font-size:.7rem}.item .in-{padding:5px 8px}.doctypes button small{display:none}.card{padding:12px}}
+@media(min-width:981px){main{grid-template-columns:minmax(0,500px) minmax(0,1fr)}}
+.edm-embed header.top{background:transparent!important;border:0!important}.edm-embed header.top .in{padding:8px 16px 0!important}
 </style>
 <script src="../assets/suggest.js?v=48"></script>
 </head>
@@ -363,7 +397,7 @@ function renderItems(){setTimeout(bindItemSuggest,0);
   const g=doc.mode==="goods";$("#itemsTitle").textContent=g?"รายการสินค้า":"รายการบริการ";
   $("#items").innerHTML=doc.items.map((it,i)=>`<div class="item" data-i="${i}">
     <div class="top"><span class="no">${i+1}</span><input class="in-" data-k="d" value="${esc(it.d)}" placeholder="${g?"ชื่อสินค้า":"รายละเอียดงานบริการ"}">${g&&SI.length?`<button class="btn sm ghost" data-pick="${i}" type="button" title="เลือกจากสต๊อก">📦</button>`:""}<button class="x" data-del="${i}" title="ลบ">✕</button></div>
-    ${it.brand?`<div class="note">🏷️ แบรนด์ ${esc(it.brand)}</div>`:""}${g&&it.pid&&stockItem(it.pid)?`<div class="note">📦 เชื่อมสต๊อก · คงเหลือ ${stockBal(it.pid)} ${esc(stockItem(it.pid).unit)} · ตัดสต๊อกเมื่อบันทึกใบแจ้งหนี้</div>`:""}
+    ${it.brand?`<div class="note">🏷️ แบรนด์ ${esc(it.brand)}</div>`:""}${g&&it.pid&&stockItem(it.pid)?`<div class="note" title="ตัดสต๊อกเมื่อบันทึกใบแจ้งหนี้">📦 สต๊อกคงเหลือ ${stockBal(it.pid)} ${esc(stockItem(it.pid).unit)}</div>`:""}
     <div class="${g?"row3":"row"}">
       <div class="f"><label>จำนวน</label><input class="in-" data-k="q" type="number" step="any" inputmode="decimal" value="${esc(it.q)}"></div>
       ${g?`<div class="f"><label>หน่วย</label><input class="in-" data-k="u" value="${esc(it.u)}"></div>`:""}

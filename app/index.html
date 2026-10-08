@@ -224,7 +224,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 <script src="../assets/suggest.js?v=48"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261008-2305";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261008-2323";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -289,7 +289,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
-    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 23:05 น.</small></span></a>
+    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 23:23 น.</small></span></a>
       <div class="side-links"><a href="/">🏠 หน้าร้าน</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></div></div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -437,7 +437,7 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=48"},stock:{src:"/stock/?v=48",sv:"home"},stockrep:{src:"/stock/?v=48",sv:"report"},stkitems:{src:"/stock/?v=48",sv:"items"},stkin:{src:"/stock/?v=48",sv:"in"},stkout:{src:"/stock/?v=48",sv:"out"},stkadj:{src:"/stock/?v=48",sv:"adj"},stkhist:{src:"/stock/?v=48",sv:"hist"},stkre:{src:"/stock/?v=48",sv:"reorder"},
+const ROUTES={bill:{src:"/bill/?v=49"},stock:{src:"/stock/?v=48",sv:"home"},stockrep:{src:"/stock/?v=48",sv:"report"},stkitems:{src:"/stock/?v=48",sv:"items"},stkin:{src:"/stock/?v=48",sv:"in"},stkout:{src:"/stock/?v=48",sv:"out"},stkadj:{src:"/stock/?v=48",sv:"adj"},stkhist:{src:"/stock/?v=48",sv:"hist"},stkre:{src:"/stock/?v=48",sv:"reorder"},
   ar:{src:"/account/?v=48",v:"ar"},tax:{src:"/account/?v=48",v:"tax"},buy:{src:"/account/?v=48",v:"buy"},cash:{src:"/account/?v=48",v:"cash"},pnl:{src:"/account/?v=48",v:"home"},
   cost:{src:"/account/?v=48",v:"cost"},exp:{src:"/account/?v=48",v:"exp"},bank:{src:"/account/?v=48",v:"bank"},cashv:{src:"/account/?v=48",v:"cashv"},petty:{src:"/account/?v=48",v:"petty"},ap:{src:"/account/?v=48",v:"ap"}};
 const frames={};
