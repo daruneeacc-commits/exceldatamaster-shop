@@ -129,7 +129,7 @@ table.p-items .c{text-align:center}
 <main>
   <section class="editor" id="editor">
     <div class="card">
-      <h2>ประเภทธุรกิจ</h2>
+      <h2>ประเภทธุรกิจ <button class="btn sm ghost" id="demoBtn" type="button">✨ ลองใส่ข้อมูลตัวอย่าง</button></h2>
       <div class="seg" id="modeSeg"><button data-mode="goods">🛍️ ซื้อมาขายไป</button><button data-mode="service">🧰 บริการ</button></div>
       <h2 style="margin-top:4px">เอกสาร</h2>
       <div class="doctypes" id="docTypes"></div>
@@ -398,6 +398,41 @@ function exportExcel(){
     toast("ดาวน์โหลดไฟล์ Excel แล้ว ✓");
   }).catch(()=>toast("สร้างไฟล์ไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง"));
 }
+/* ---------- ข้อมูลตัวอย่าง (แยก 2 ธุรกิจ) ---------- */
+const DEMO={
+  goods:{seller:{name:"ร้าน สมใจการค้า (ตัวอย่าง)",addr:"88/9 ถ.รัชดาภิเษก แขวงดินแดง เขตดินแดง กรุงเทพฯ 10400",tax:"0105569012345",branch:"สำนักงานใหญ่",phone:"02-123-4567",contact:"คุณสมใจ",vat:true,pay:"โอนเข้าบัญชี กสิกรไทย 123-4-56789-0 ชื่อบัญชี ร้าน สมใจการค้า",color:"#127A4B"},
+    cust:[{name:"บริษัท ดีดี ออฟฟิศ จำกัด",addr:"55 ถ.ลาดพร้าว แขวงจอมพล เขตจตุจักร กรุงเทพฯ 10900",tax:"0105561111111",branch:"สำนักงานใหญ่",contact:"คุณวิภา"},
+      {name:"ร้านกาแฟ บ้านสวน",addr:"19 ถ.นิมมานเหมินท์ ต.สุเทพ อ.เมือง จ.เชียงใหม่ 50200",tax:"3501200123456",branch:"",contact:"คุณต้น"},
+      {name:"โรงเรียนอนุบาลดวงดาว",addr:"201 ม.5 ต.บางเมือง อ.เมือง จ.สมุทรปราการ 10270",tax:"0994000333333",branch:"สำนักงานใหญ่",contact:"ฝ่ายจัดซื้อ"}],
+    docs:[["QT",0,-12,[["กระดาษ A4 80 แกรม",20,"รีม",125,0],["หมึกพิมพ์ HP 682 สีดำ",4,"ตลับ",450,0],["แฟ้มสันกว้าง 3 นิ้ว",30,"เล่ม",65,0]],0,"ราคานี้รวมค่าจัดส่งในกรุงเทพฯ"],
+      ["IT",0,-8,[["กระดาษ A4 80 แกรม",20,"รีม",125,0],["หมึกพิมพ์ HP 682 สีดำ",4,"ตลับ",450,0],["แฟ้มสันกว้าง 3 นิ้ว",30,"เล่ม",65,0]],0,"",0],
+      ["IT",1,-5,[["แก้วกระดาษ 8 ออนซ์",20,"แพ็ก",89,0],["ฝาโดม",20,"แพ็ก",59,0],["หลอดกระดาษ",10,"แพ็ก",45,50],["ถุงหิ้ว 2 ใบ",5,"กก.",120,0]],100,"ส่วนลดลูกค้าประจำ 100 บาท"],
+      ["QT",2,-2,[["สีไม้ 24 สี",40,"กล่อง",95,0],["สมุดวาดเขียน A4",40,"เล่ม",35,0],["กรรไกรปลายมน",40,"อัน",25,0],["กาวแท่ง",40,"แท่ง",18,0]],200,"สำหรับภาคเรียนที่ 2/2569"],
+      ["IT",2,0,[["สีไม้ 24 สี",40,"กล่อง",95,0],["สมุดวาดเขียน A4",40,"เล่ม",35,0],["กรรไกรปลายมน",40,"อัน",25,0],["กาวแท่ง",40,"แท่ง",18,0]],200,"",3]]},
+  service:{seller:{name:"สตูดิโอ ดีไซน์ดี (ตัวอย่าง)",addr:"12 ซ.อารีย์ 4 แขวงพญาไท เขตพญาไท กรุงเทพฯ 10400",tax:"0105570054321",branch:"สำนักงานใหญ่",phone:"089-555-1234",contact:"คุณดีไซน์",vat:true,pay:"โอนเข้าบัญชี ไทยพาณิชย์ 987-6-54321-0 ชื่อบัญชี บจก. ดีไซน์ดี",color:"#1F4FA3"},
+    cust:[{name:"ห้างหุ้นส่วนจำกัด บ้านสวยการช่าง",addr:"12/3 ม.4 ต.บางพูด อ.ปากเกร็ด จ.นนทบุรี 11120",tax:"0123562222222",branch:"สำนักงานใหญ่",contact:"คุณสมศักดิ์"},
+      {name:"บริษัท ฟิตแอนด์เฟิร์ม จำกัด",addr:"99 ถ.สุขุมวิท 55 แขวงคลองตันเหนือ เขตวัฒนา กรุงเทพฯ 10110",tax:"0105565444444",branch:"สาขา 00002",contact:"ฝ่ายการตลาด"}],
+    docs:[["QT",0,-20,[["ออกแบบโลโก้และอัตลักษณ์แบรนด์",1,"งาน",15000,0],["ออกแบบนามบัตรและหัวจดหมาย",1,"งาน",3500,0]],1000,"แก้ไขแบบได้ 3 ครั้ง · ส่งงานภายใน 14 วัน"],
+      ["IV",0,-6,[["ออกแบบโลโก้และอัตลักษณ์แบรนด์",1,"งาน",15000,0],["ออกแบบนามบัตรและหัวจดหมาย",1,"งาน",3500,0]],1000,"ชำระภายใน 30 วันนับจากวันที่วางบิล",0],
+      ["TX",0,-1,[["ออกแบบโลโก้และอัตลักษณ์แบรนด์",1,"งาน",15000,0],["ออกแบบนามบัตรและหัวจดหมาย",1,"งาน",3500,0]],1000,"ได้รับชำระโดยการโอนเงินเรียบร้อยแล้ว",1],
+      ["IV",1,-3,[["บริหารเพจ Facebook รายเดือน (ต.ค.)",1,"เดือน",12000,0],["ถ่ายภาพสินค้า 30 ภาพ",30,"ภาพ",250,0],["ยิงโฆษณา (ค่าบริการจัดการ)",1,"งาน",3000,0]],0,"ชำระภายใน 15 วัน"],
+      ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
+};
+function loadDemo(mode){
+  const has=LS.get(K.docs,[]).length;
+  if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
+  const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);
+  LS.set(K.cust,D.cust);LS.set(K.cnt,{});
+  const docs=[],nos=[];
+  D.docs.forEach((x,i)=>{const[type,ci,dd,items,billDisc,notes,refIdx]=x;const date=addDays(today(),dd);
+    const d={id:"demo"+i+Date.now().toString(36),mode,type,no:nextNo(type,date),date,due:TYPES[type].due?addDays(date,type==="QT"?30:mode==="service"?30:15):"",ref:refIdx!=null?nos[refIdx]:"",
+      cust:Object.assign({},D.cust[ci]),items:items.map(([d,q,u,p,disc])=>({d,q,u,p,disc})),vat:"ex",billDisc,wht:mode==="service"&&type!=="RC"?3:0,notes,saved:true,updated:Date.now()+i};
+    if(type==="RC")d.vat="none";
+    d._total=calc(d).net;bumpNo(d.no);nos.push(d.no);docs.unshift(d)});
+  LS.set(K.docs,docs);doc=JSON.parse(JSON.stringify(docs[0]));LS.set(K.draft,doc);renderAll();sv();
+  toast("ใส่ข้อมูลตัวอย่างแล้ว · ดูทั้งหมดที่ 📁 เอกสารของฉัน");
+}
+$("#demoBtn").onclick=()=>loadDemo(doc.mode);
 $("#openList").onclick=()=>{
   const docs=LS.get(K.docs,[]);
   openDlg("เอกสารของฉัน",`<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm main" id="xls">📊 ดาวน์โหลดเป็น Excel</button><button class="btn sm ghost" id="exp">⬇️ สำรองข้อมูล</button><label class="btn sm ghost">⬆️ นำเข้าข้อมูล<input type="file" id="imp" accept=".json" hidden></label></div><input class="in-" id="dq" placeholder="ค้นหาเลขที่หรือชื่อลูกค้า"><div class="list" id="dl"></div><p class="note">ข้อมูลเก็บในเบราว์เซอร์ของเครื่องนี้เท่านั้น ควรกด "สำรองข้อมูล" เก็บไว้เป็นระยะ · ไฟล์ Excel เปิดใน Google ชีตได้ (อัปโหลดไป Google Drive แล้วเปิดด้วย Google ชีต)</p>`);
@@ -414,7 +449,7 @@ function openDlg(t,h){$("#dlgTitle").textContent=t;$("#dlgBody").innerHTML=h;dlg
 $$(".mtabs button").forEach(b=>b.onclick=()=>{$$(".mtabs button").forEach(x=>x.classList.toggle("on",x===b));const v=b.dataset.mt==="view";$("#previewWrap").classList.toggle("show",v);$("#editor").classList.toggle("hide",v);if(v)fitPaper()});
 window.addEventListener("resize",fitPaper);
 window.addEventListener("afterprint",()=>{if(!$(".mtabs button.on")||$(".mtabs button.on").dataset.mt==="edit")$("#previewWrap").classList.remove("show")});
-window.__bill={calc,bahtText,exportExcel,get doc(){return doc}};
+window.__bill={calc,bahtText,exportExcel,loadDemo,get doc(){return doc}};
 renderAll();
 })();
 </script>
