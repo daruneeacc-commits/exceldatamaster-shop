@@ -119,7 +119,7 @@
         if (mode === "signup") { mode = "sent"; note = r.msg; renderGate(); return; }
         if (mode === "forgot") { M.className = "edm-msg ok"; M.textContent = r.msg; return; }
         me = { email: r.email, token: r.token, name: r.name, exp: r.exp, status: r.status, paid: r.paid, ts: Date.now() };
-        LS.set(me); closeGate(); apply(); toast(expired() ? "บัญชีหมดอายุแล้ว ต่ออายุเพื่อใช้งานต่อ" : "ยินดีต้อนรับ ใช้งานได้ถึง " + thDate(me.exp));
+        LS.set(me); closeGate(); apply(); cloudInit(); toast(expired() ? "บัญชีหมดอายุแล้ว ต่ออายุเพื่อใช้งานต่อ" : "ยินดีต้อนรับ ใช้งานได้ถึง " + thDate(me.exp));
       }).catch(function () { go.disabled = false; go.textContent = t0; M.className = "edm-msg err"; M.textContent = "เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง"; });
     };
   }
@@ -173,16 +173,18 @@
       '<div class="edm-muted">' + esc(expired() ? "หมดอายุเมื่อ " : (me.status === "ทดลองใช้" ? "ทดลองใช้ถึง " : "ใช้งานได้ถึง ")) + thDate(me.exp) + '</div>' +
       '<a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">ต่ออายุ ' + PRICE + ' บาท / ' + DAYS + ' วัน</a>' +
       '<button class="edm-btn ghost" id="edmRe" type="button">↻ ตรวจสถานะล่าสุด</button>' +
+      '<div class="edm-muted" id="edmCl">' + esc(cloudLine()) + ' <button class="edm-link" id="edmPush" type="button">สำรองตอนนี้</button></div>' +
       TOOLS.filter(function (t) { return location.pathname.indexOf("/" + t[0] + "/") === -1; }).map(function (t) { return '<a class="edm-btn ghost" href="' + BASE + t[0] + '/">' + t[1] + '</a>'; }).join("") +
       '<button class="edm-link" id="edmOut" type="button" style="align-self:flex-start">ออกจากระบบ</button>' +
       '<p class="edm-muted" style="margin:0">โอนแล้วแนบสลิป ร้านตรวจแล้วจะต่ออายุให้และส่งอีเมลแจ้ง จากนั้นกด "ตรวจสถานะล่าสุด"</p>';
     chip.appendChild(menu);
     menu.onclick = function (e) { e.stopPropagation(); };
     menu.querySelector("#edmRe").onclick = function () { var b = this; b.disabled = true; b.textContent = "กำลังตรวจ..."; check(true).then(function () { if (menu) { menu.remove(); menu = null; } }); };
+    menu.querySelector("#edmPush").onclick = function () { var b = this; b.textContent = "กำลังสำรอง..."; cloudPush(true).then(function (ok) { var c = menu && menu.querySelector("#edmCl"); if (c) c.firstChild.textContent = ok ? cloudLine() + " " : "สำรองไม่สำเร็จ ลองใหม่อีกครั้ง "; b.textContent = "สำรองตอนนี้"; }); };
     menu.querySelector("#edmOut").onclick = function () {
       if (!confirm("ออกจากระบบ? (ข้อมูลในเครื่องนี้ยังอยู่ครบ)")) return;
       call({ a: "logout", email: me.email, token: me.token }).catch(function () {});
-      me = null; LS.set(null); menu.remove(); menu = null; apply(); openGate("login");
+      cloudPush(); cloudStop(); me = null; LS.set(null); menu.remove(); menu = null; apply(); openGate("login");
     };
   }
   document.addEventListener("click", function () { if (menu) { menu.remove(); menu = null; } });
@@ -201,6 +203,65 @@
       else if (was && !expired()) toast("ต่ออายุแล้ว ใช้งานได้ถึง " + thDate(me.exp));
     }).catch(function () { if (loud) toast("เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง"); });
   }
+
+  /* ---------- สำรองข้อมูลขึ้นระบบร้าน (Google Drive ของร้าน) ----------
+   * เข้าสู่ระบบแล้ว: ดึงข้อมูลล่าสุดจากระบบ (ถ้าใหม่กว่า) แล้วสำรองให้อัตโนมัติทุกครั้งที่ข้อมูลเปลี่ยน
+   * ใช้เปลี่ยนเครื่องได้ และข้อมูลไม่หายแม้ล้างเบราว์เซอร์ */
+  var CK = ["edm_acc", "edm_bill_docs", "edm_bill_seller", "edm_bill_counter", "edm_bill_customers", "edm_stock_items", "edm_stock_tx", "edm_stock_cfg", "edm_pay_company", "edm_pay_emps", "edm_pay_records", "edm_pay_summary"];
+  var SK = "edm_sync", cloudTimer = null, dirtySince = 0, pushing = false, cloudOn = false;
+  function cGet() { try { return JSON.parse(localStorage.getItem(SK) || "{}") || {}; } catch (e) { return {}; } }
+  function cSet(o) { try { localStorage.setItem(SK, JSON.stringify(o)); } catch (e) {} }
+  function snap() { var o = {}; CK.forEach(function (k) { var v = null; try { v = localStorage.getItem(k); } catch (e) {} if (v != null) o[k] = v; }); return JSON.stringify({ v: 1, keys: o }); }
+  function hashOf(str) { var h = 5381; for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return String(h >>> 0) + ":" + str.length; }
+  function emptyLocal() { return ["edm_bill_docs", "edm_stock_items", "edm_pay_emps"].every(function (k) { var v = localStorage.getItem(k); return !v || v === "[]"; }) && !/"pur":\[\{|"cash":\[\{/.test(localStorage.getItem("edm_acc") || ""); }
+  function timeTh(ts) { var d = new Date(ts); return thDate(ts) + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
+  function cloudPush(force) {
+    if (!me || !me.token || pushing) return Promise.resolve(false);
+    var data = snap(), h = hashOf(data), S = cGet(), wipe = localStorage.getItem("edm_sync_wipe") === "1";
+    if (!force && h === S.h) return Promise.resolve(true);
+    if (emptyLocal() && !wipe) { S.h = h; cSet(S); return Promise.resolve(true); } // ไม่สำรองทับด้วยข้อมูลว่าง (เช่น เครื่องใหม่)
+    pushing = true; var em = me.email;
+    return call({ a: "push", email: em, token: me.token, data: data }).then(function (r) {
+      pushing = false; if (!r || !r.ok) return false;
+      cSet({ email: em, h: h, at: r.ts, ok: Date.now() }); dirtySince = 0;
+      if (wipe) try { localStorage.removeItem("edm_sync_wipe"); } catch (e) {}
+      return true;
+    }).catch(function () { pushing = false; return false; });
+  }
+  function cloudRestore(r) {
+    var o; try { o = JSON.parse(r.data); } catch (e) { return; }
+    if (!o || !o.keys) return;
+    CK.forEach(function (k) { try { if (o.keys[k] != null) localStorage.setItem(k, o.keys[k]); else localStorage.removeItem(k); } catch (e) {} });
+    try { localStorage.removeItem("edm_bill_draft"); } catch (e) {}
+    cSet({ email: me.email, h: hashOf(snap()), at: r.ts, ok: Date.now() });
+    toast("ดึงข้อมูลล่าสุดจากระบบแล้ว (บันทึกเมื่อ " + timeTh(r.ts) + ")");
+    setTimeout(function () { location.reload(); }, 900);
+  }
+  function cloudTick() {
+    if (!me || !me.token) return;
+    var h = hashOf(snap()), S = cGet();
+    if (h === S.h) { dirtySince = 0; return; }
+    if (!dirtySince) dirtySince = Date.now();
+    if (Date.now() - dirtySince > 20000) cloudPush();
+  }
+  function cloudInit() {
+    if (cloudOn || !me || !me.token) return; cloudOn = true;
+    var S = cGet(), mine = S.email === me.email;
+    if (!mine) S = { email: me.email, h: "", at: 0 };
+    var wipe = localStorage.getItem("edm_sync_wipe") === "1";
+    var begin = function () { if (!cloudTimer) cloudTimer = setInterval(cloudTick, 15000); if (!cGet().h) cloudPush(); else cloudTick(); };
+    if (wipe) { cloudPush(true).then(begin); return; }
+    call({ a: "pull", email: me.email, token: me.token, since: mine ? S.at || 0 : 0 }).then(function (r) {
+      if (!r || !r.ok || r.none || r.same || !r.data) { if (r && r.ok && (r.same || r.none) && !mine) cSet(S); begin(); return; }
+      var local = snap();
+      if (emptyLocal() || (mine && hashOf(local) === S.h)) return cloudRestore(r); // เครื่องนี้ไม่มีอะไรใหม่ → ใช้ข้อมูลจากระบบ
+      if (confirm("พบข้อมูลที่บันทึกจากอีกเครื่องเมื่อ " + timeTh(r.ts) + "\n\nตกลง = ใช้ข้อมูลล่าสุดจากระบบ (แทนข้อมูลในเครื่องนี้)\nยกเลิก = ใช้ข้อมูลในเครื่องนี้ แล้วสำรองทับข้อมูลในระบบ")) return cloudRestore(r);
+      cSet(S); cloudPush(true).then(begin);
+    }).catch(begin);
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") cloudPush(); });
+  }
+  function cloudStop() { cloudOn = false; if (cloudTimer) clearInterval(cloudTimer); cloudTimer = null; }
+  function cloudLine() { var S = cGet(); return S.email && me && S.email === me.email && S.ok ? "☁️ สำรองขึ้นระบบแล้ว · " + timeTh(S.ok) : "☁️ ยังไม่ได้สำรองขึ้นระบบ"; }
 
   function startEmbed() {
     document.documentElement.classList.add("edm-embed");
@@ -227,9 +288,9 @@
       call({ a: "ping" }).then(function (r) { if (r && r.ok && !me) openGate(want); }).catch(function () {});
       return;
     }
-    apply(); check(false);
+    apply(); check(false); cloudInit();
     document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && me && Date.now() - (me.ts || 0) > 30 * 60e3) check(false); });
   }
-  window.EDM_MEMBER = { get me() { return me; }, check: check, openGate: openGate };
+  window.EDM_MEMBER = { get me() { return me; }, check: check, openGate: openGate, push: cloudPush, cloud: cGet };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();

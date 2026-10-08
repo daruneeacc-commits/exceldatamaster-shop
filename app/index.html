@@ -181,7 +181,7 @@ textarea.in{min-height:70px;resize:vertical}
       <div class="hello"><h1>💾 สำรอง / กู้คืนข้อมูล</h1><p>ข้อมูลทุกระบบเก็บอยู่ในเบราว์เซอร์ของเครื่องนี้ ไม่ได้อยู่บนเซิร์ฟเวอร์ ถ้าล้างเบราว์เซอร์หรือเปลี่ยนเครื่อง ข้อมูลจะไม่ตามไป</p></div>
       <div class="card"><h2>ข้อมูลในเครื่องนี้ <small id="dtLast"></small></h2><div class="stats" id="dtStats"></div>
         <div class="acts"><button class="btn main" id="dtBk">⬇️ ดาวน์โหลดไฟล์สำรองทั้งหมด</button><label class="btn ghost">⬆️ กู้คืนจากไฟล์สำรอง<input type="file" id="dtImp" accept=".json" hidden></label><button class="btn ghost" id="dtXls">📊 ดาวน์โหลด Excel ทุกระบบ</button></div>
-        <p class="help" style="margin-top:8px">ไฟล์สำรองเก็บได้ครบทุกระบบในไฟล์เดียว ใช้ย้ายไปเครื่องใหม่ได้ · ไฟล์ Excel ใช้ส่งผู้ทำบัญชีหรือเปิดใน Google ชีต</p></div>
+        <p class="help" id="dtCloud" style="margin-top:10px"></p><p class="help" style="margin-top:8px">ไฟล์สำรองเก็บได้ครบทุกระบบในไฟล์เดียว ใช้ย้ายไปเครื่องใหม่ได้ · ไฟล์ Excel ใช้ส่งผู้ทำบัญชีหรือเปิดใน Google ชีต</p></div>
       <div class="card"><h2>ข้อมูลตัวอย่าง</h2><p class="help">ใส่ข้อมูลร้านขายเครื่องเขียนย้อนหลัง 3 เดือน เพื่อลองใช้ทุกเมนู (ข้อมูลในเครื่องนี้จะถูกแทนที่)</p><div class="acts"><button class="btn ghost" id="dtDemo">✨ ใส่ข้อมูลตัวอย่าง 3 เดือน</button></div></div>
       <div class="card"><h2>เริ่มใช้งานจริง</h2><p class="help">ลองข้อมูลตัวอย่างเสร็จแล้ว กดล้างข้อมูลทั้งหมด แล้วเริ่มกรอกข้อมูลร้านจริง</p>
         <label class="chk" style="margin-top:8px"><input type="checkbox" id="dtKeep"> เก็บข้อมูลร้าน (ชื่อ ที่อยู่ เลขผู้เสียภาษี โลโก้) ไว้</label>
@@ -367,20 +367,22 @@ const KS_UI=["edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_pay_ui","edm_bill
 function renderData(){const A=LS.get("edm_acc",{})||{};const n=(k)=>(LS.get(k,[])||[]).length;
   $("#dtStats").innerHTML=[["เอกสารขาย",n("edm_bill_docs")],["สินค้า",n("edm_stock_items")],["ซื้อ / ค่าใช้จ่าย",(A.pur||[]).length],["พนักงาน",n("edm_pay_emps")]].map(([t,v])=>`<div><b>${v}</b><span>${t}</span></div>`).join("");
   const last=LS.get("edm_last_backup","");$("#dtLast").textContent=last?"สำรองล่าสุด "+thD(last):"ยังไม่เคยสำรอง";
-  const s=LS.get("edm_bill_seller",{});$("#dtKeep").checked=!!s.name&&!/ตัวอย่าง/.test(s.name)}
+  const s=LS.get("edm_bill_seller",{});$("#dtKeep").checked=!!s.name&&!/ตัวอย่าง/.test(s.name);
+  const M=window.EDM_MEMBER,me=M&&M.me,C=LS.get("edm_sync",{})||{};
+  $("#dtCloud").innerHTML=me&&me.token?(C.email===me.email&&C.ok?`☁️ <b>สำรองขึ้นระบบร้านอัตโนมัติ</b> · ล่าสุด ${thD(new Date(C.ok).toISOString().slice(0,10))} ${new Date(C.ok).toTimeString().slice(0,5)} · เข้าสู่ระบบจากเครื่องอื่นได้ ข้อมูลตามไปด้วย`:"☁️ <b>สำรองขึ้นระบบร้านอัตโนมัติ</b> · กำลังรอสำรองครั้งแรก"):"⚠️ ยังไม่ได้เข้าสู่ระบบ ข้อมูลอยู่แค่ในเครื่องนี้ ควรดาวน์โหลดไฟล์สำรองเก็บไว้"}
 function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,3000)}
 $("#dtBk").onclick=()=>{const o={app:"edm-all",v:1};KS.forEach(k=>o[k]=LS.get(k,null));const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="สำรองระบบร้านค้า-"+today()+".json";a.click();LSset("edm_last_backup",today());renderData();toast("ดาวน์โหลดไฟล์สำรองแล้ว ✓")};
 $("#dtImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-all")throw 0;if(!confirm("กู้คืนข้อมูลจากไฟล์? ข้อมูลทุกระบบในเครื่องนี้จะถูกแทนที่"))return;KS.forEach(k=>{if(o[k]!=null)LSset(k,o[k])});KS_UI.forEach(k=>localStorage.removeItem(k));reloadFrames();renderData();toast("กู้คืนข้อมูลแล้ว ✓")}).catch(()=>toast("ไฟล์ไม่ถูกต้อง ต้องเป็นไฟล์สำรองทุกระบบ (.json)"));e.target.value=""};
 $("#dtXls").onclick=()=>{const f=frameFor(ROUTES.pnl.src);const run=()=>{try{f.contentWindow.edmExcel()}catch(e){toast("ลองใหม่อีกครั้ง")}};toast("กำลังสร้างไฟล์ Excel...");f.dataset.ready?run():f.addEventListener("load",()=>setTimeout(run,100),{once:true})};
 $("#dtDemo").onclick=()=>$("#demoBtn").click();
-$("#dtClear").onclick=()=>{if(!confirm("ล้างข้อมูลทั้งหมดในเครื่องนี้? (บิล สต๊อก บัญชี เงินเดือน)\n\nถ้ามีข้อมูลจริง ให้ดาวน์โหลดไฟล์สำรองก่อน"))return;if(!confirm("ยืนยันอีกครั้ง: ลบแล้วกู้คืนไม่ได้ ถ้าไม่มีไฟล์สำรอง"))return;
-  const keep=$("#dtKeep").checked,s=LS.get("edm_bill_seller",null);KS.concat(KS_UI).forEach(k=>localStorage.removeItem(k));
+$("#dtClear").onclick=()=>{if(!confirm("ล้างข้อมูลทั้งหมด? (บิล สต๊อก บัญชี เงินเดือน)\nข้อมูลสำรองบนระบบร้านของบัญชีนี้จะถูกล้างด้วย\n\nถ้ามีข้อมูลจริง ให้ดาวน์โหลดไฟล์สำรองก่อน"))return;if(!confirm("ยืนยันอีกครั้ง: ลบแล้วกู้คืนไม่ได้ ถ้าไม่มีไฟล์สำรอง"))return;
+  const keep=$("#dtKeep").checked,s=LS.get("edm_bill_seller",null);KS.concat(KS_UI).forEach(k=>localStorage.removeItem(k));try{localStorage.setItem("edm_sync_wipe","1")}catch(e){}
   if(keep&&s){LSset("edm_bill_seller",s);LSset("edm_pay_company",{name:s.name,addr:s.addr,tax:s.tax,logo:s.logo||"",color:s.color||"#127A4B"});LSset("edm_stock_cfg",{name:s.name})}
-  reloadFrames();toast("ล้างข้อมูลแล้ว พร้อมเริ่มใช้งานจริง");go(keep?"home":"setup")};
+  reloadFrames();if(window.EDM_MEMBER&&EDM_MEMBER.push)EDM_MEMBER.push(true);toast("ล้างข้อมูลแล้ว พร้อมเริ่มใช้งานจริง");go(keep?"home":"setup")};
 // จำว่าหน้าย่อยโหลดเสร็จแล้ว
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
-<script src="../assets/member.js?v=26" defer></script>
+<script src="../assets/member.js?v=27" defer></script>
 </body>
 </html>
