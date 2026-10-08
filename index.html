@@ -523,7 +523,7 @@ function render(){
         <span class="label">Excel · Google Sheets · Apps Script</span>
         <h1 style="margin-top:14px">แหล่งรวม<br>เทมเพลต Excel <em>ใช้ได้จริง</em></h1>
         <p>${esc(s.tagline)}</p>
-        <div class="cta"><a class="btn btn-main" href="#shop">ดูสินค้าทั้งหมด</a><a class="btn btn-line" href="#how">วิธีสั่งซื้อ</a></div>
+        <div class="cta"><a class="btn btn-main" href="#shop">ดูสินค้าทั้งหมด</a><a class="btn btn-dark" href="#tools">🧾 ระบบเปิดบิล / เงินเดือน</a><a class="btn btn-line" href="#how">วิธีสั่งซื้อ</a></div>
         <div class="hero-types">${usedTypes.map(([k,t])=>`<span><i class="dot" style="background:${t.color}"></i>${t.label} ${counts(k)} ชิ้น</span>`).join("")}</div>
       </div>
       <div class="hero-art">${s.mascot?`<img class="mascot" src="${esc(s.mascot)}" alt="มาสคอต ${esc(s.name)}"><div class="bubble">กรอกแค่ตัวเลข<br>ที่เหลือ<b>สูตรทำให้</b>ค่ะ</div>`:""}</div>
