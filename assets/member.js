@@ -65,9 +65,10 @@
     var tool = /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : "เปิดบิลออนไลน์";
     var h = '<div class="edm-card">';
     if (mode === "sent") {
-      h += '<div style="font-size:2.4rem;line-height:1">📩</div><h2>เช็กอีเมลของคุณ</h2><p>' + esc(note) + '</p>' +
-        '<p class="edm-muted">กดปุ่ม "ยืนยันอีเมล" ในอีเมล แล้วกลับมาเข้าสู่ระบบที่หน้านี้</p>' +
-        '<button class="edm-btn" data-go="login">ยืนยันแล้ว · เข้าสู่ระบบ</button><button class="edm-link" data-go="signup">ไม่ได้รับอีเมล? ส่งอีกครั้ง</button>';
+      h += '<div style="font-size:2.4rem;line-height:1">✅</div><h2>สมัครเรียบร้อย · รอร้านเปิดใช้งาน</h2><p>' + esc(note) + '</p>' +
+        '<p class="edm-muted">ร้านจะตรวจและเปิดใช้งานให้โดยเร็ว เมื่อได้อีเมลแจ้งแล้ว กลับมาเข้าสู่ระบบที่หน้านี้ได้เลย</p>' +
+        '<a class="edm-btn" href="https://line.me/R/ti/p/%40856tvnxs" target="_blank" rel="noopener" style="background:#06C755;color:#fff">💬 แจ้งร้านทาง LINE ให้เปิดเร็วขึ้น</a>' +
+        '<button class="edm-btn ghost" data-go="login">เปิดใช้งานแล้ว · เข้าสู่ระบบ</button>';
     } else if (mode === "forgot") {
       h += '<h2>ลืมรหัสผ่าน</h2><p class="edm-muted">ใส่อีเมลที่สมัครไว้ ระบบจะส่งลิงก์ตั้งรหัสผ่านใหม่ให้</p>' +
         '<input class="edm-in" id="edmE" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="อีเมล">' +
@@ -76,12 +77,12 @@
       var su = mode === "signup";
       h += '<span class="edm-badge">ทดลองใช้ฟรี ' + TRIAL + ' วัน</span><h2>' + esc(tool) + '</h2>' +
         (note ? '<div class="edm-msg err">' + esc(note) + '</div>' : '') +
-        (su ? '<ul class="edm-perks"><li>ใช้ได้ทั้งเปิดบิลและคำนวณเงินเดือน</li><li>ไม่ต้องใส่บัตรเครดิต</li><li>ใช้ต่อเดือนละ ' + PRICE + ' บาท ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
+        (su ? '<ul class="edm-perks"><li>ใช้ได้ทั้งเปิดบิลและคำนวณเงินเดือน</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดใช้งานให้หลังสมัคร</li><li>ใช้ต่อเดือนละ ' + PRICE + ' บาท ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
         '<div class="edm-tabs"><button data-go="signup" class="' + (su ? "on" : "") + '">สมัครใหม่</button><button data-go="login" class="' + (su ? "" : "on") + '">เข้าสู่ระบบ</button></div>' +
         (su ? '<input class="edm-in" id="edmN" autocomplete="off" placeholder="ชื่อร้าน / ชื่อของคุณ (ไม่บังคับ)">' : '') +
         '<input class="edm-in" id="edmE" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="email" placeholder="อีเมล">' +
         '<input class="edm-in" id="edmP" type="password" autocomplete="new-password" placeholder="' + (su ? "ตั้งรหัสผ่าน (อย่างน้อย 6 ตัว)" : "รหัสผ่าน") + '">' +
-        '<button class="edm-btn" id="edmGo">' + (su ? "สมัครและเริ่มทดลองใช้ฟรี" : "เข้าสู่ระบบ") + '</button><div class="edm-msg" id="edmM"></div>' +
+        '<button class="edm-btn" id="edmGo">' + (su ? "สมัครทดลองใช้ฟรี" : "เข้าสู่ระบบ") + '</button><div class="edm-msg" id="edmM"></div>' +
         (su ? '' : '<button class="edm-link" data-go="forgot" style="align-self:flex-start">ลืมรหัสผ่าน?</button>') +
         '<p class="edm-muted">เราเก็บเฉพาะอีเมลเพื่อจัดการบัญชี ข้อมูลบิลและเงินเดือนของคุณอยู่ในเครื่องนี้เท่านั้น · <a href="' + BASE + 'privacy/" target="_blank" style="color:inherit">นโยบายความเป็นส่วนตัว</a></p>' +
         '<a class="edm-link" href="' + BASE + '" style="align-self:center;color:var(--muted,#66706B)">← กลับไปร้าน Excel Data Master</a>';
