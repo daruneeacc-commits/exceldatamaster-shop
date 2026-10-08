@@ -82,6 +82,7 @@ textarea.in{min-height:70px;resize:vertical}
 .rp-h{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:16px 0 10px}.rp-h h2{margin:8px 0 2px;font-size:1.3rem}.rp-h p{margin:0;color:var(--muted);font-size:.86rem}.rp-h p b{color:var(--ink)}
 table.rp-t td,table.rp-t th{white-space:nowrap}table.rp-t tr.rb-b td{font-weight:700;background:var(--soft)}table.rp-t tfoot td{font-weight:700;background:var(--soft);border-top:2px solid var(--line)}table.rp-t td.neg{color:#B3261E}
 @media(max-width:760px){.rp-bar{grid-template-columns:1fr 1fr}.rp-bar .fl:first-child,.rp-bar [data-only]{grid-column:1/-1}.rp-home{grid-template-columns:1fr}}
+.upd-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:84px;z-index:90;background:#111;color:#fff;padding:10px 12px 10px 16px;border-radius:999px;font-size:.9rem;display:flex;gap:10px;align-items:center;box-shadow:0 10px 30px -8px rgba(0,0,0,.4)}.upd-bar[hidden]{display:none}.upd-bar button{border:0;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:600;padding:6px 14px;border-radius:999px;cursor:pointer}
 .md-seg{display:inline-flex;gap:4px;background:var(--soft);padding:4px;border-radius:12px;margin-bottom:12px}.md-seg button{border:0;background:none;font:inherit;padding:7px 14px;border-radius:9px;cursor:pointer;color:var(--ink)}.md-seg button.on{background:var(--card);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 table.rb td .sub{display:block;color:var(--muted);font-size:.78rem}
 .modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
@@ -186,6 +187,15 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 }
 </style>
 <script src="../assets/suggest.js?v=38"></script>
+<script>
+/* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
+(function(){var APP_V="20261008-2051";window.EDM_APP_V=APP_V;
+  function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
+    var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
+    if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}location.replace("/app/?u="+j.v+location.hash);return}
+    var b=document.getElementById("updBar");if(b){b.hidden=false;b.querySelector("button").onclick=function(){location.replace("/app/?u="+j.v+location.hash)}}}).catch(function(){})}
+  check(true);setInterval(function(){check(false)},5*60*1000);document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")check(false)});})();
+</script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -235,7 +245,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
-    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small></span></a>
+    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8 ต.ค. 69 · 20:51 น.</small></span></a>
       <div class="side-links"><a href="/">🏠 หน้าร้าน</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></div></div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -351,6 +361,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   <div class="bn-list" id="bnL"></div>
   <div class="acts" style="justify-content:space-between;align-items:center"><span class="help" id="bnSum"></span><button class="btn main" id="bnGo" type="button">สร้างใบวางบิล</button></div>
 </div></div>
+<div class="upd-bar" id="updBar" hidden>✨ มีเวอร์ชันใหม่ของระบบ <button type="button">อัปเดตเลย</button></div>
 <nav class="tabbar" id="tabbar">
   <button data-go="home"><i>🏠</i>หน้าหลัก</button>
   <button data-go="bill"><i>🧾</i>เปิดบิล</button>
