@@ -220,7 +220,8 @@
     if (!me || !me.token) {
       // เปิดหน้าสมัคร/เข้าสู่ระบบ เมื่อระบบหลังร้านพร้อมแล้วเท่านั้น
       // (ถ้ายังไม่ได้ติดตั้งโค้ดสมาชิก จะไม่ขึ้นหน้าต่างเลย และใช้งานได้ตามปกติ — ไม่มีหน้าต่างขึ้นแล้วเด้งหาย)
-      call({ a: "ping" }).then(function (r) { if (r && r.ok && !me) openGate(); }).catch(function () {});
+      var want = (/[?&]start=(signup|login)/.exec(location.search) || [])[1]; // ลิงก์จากหน้าร้าน: ?start=signup (ทดลองใช้) / ?start=login
+      call({ a: "ping" }).then(function (r) { if (r && r.ok && !me) openGate(want); }).catch(function () {});
       return;
     }
     apply(); check(false);
