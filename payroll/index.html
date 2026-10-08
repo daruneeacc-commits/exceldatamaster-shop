@@ -144,7 +144,15 @@ html{overscroll-behavior-y:contain}
 dialog.wide{max-width:min(1100px,96vw);width:96vw}
 .kgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 12px}.kgrid div{border:1px solid #ddd;border-radius:8px;padding:8px 10px}.kgrid span{display:block;font-size:8pt;color:#666}.kgrid b{font-size:12.5pt}
 .dl{margin:4px 0 10px;padding-left:18px;font-size:9pt}.dl li{margin:2px 0}
-.cert{border:1.5px solid #222;padding:14px 16px;font-size:9.5pt}.cert h1{text-align:center;font-size:13pt;margin:0}.cert .c-sub{text-align:center;font-size:8.5pt;color:#444;margin-bottom:10px}.cert .c-box{border:1px solid #999;padding:8px 10px;margin:6px 0}.cert .c-box b{font-size:10pt}.cert table{width:100%;border-collapse:collapse;margin:8px 0}.cert th,.cert td{border:1px solid #999;padding:5px 7px;font-size:9pt}.cert .r{text-align:right}.cert .sig{display:flex;justify-content:flex-end;margin-top:26px;text-align:center}.cert .sig div{width:240px;border-top:1px solid #333;padding-top:4px}
+.c50{padding:8mm 10mm 7mm;font-size:8.4pt;line-height:1.38;color:#000}.c50 .cf{border:1.2px solid #000;flex:1;display:flex;flex-direction:column}
+.c50 .cp{display:flex;justify-content:space-between;align-items:flex-start;font-size:7.6pt;margin-bottom:2mm}.c50 .cp b{font-size:8.4pt}
+.c50 .hd{position:relative;text-align:center;padding:2.2mm 3mm 1.6mm;border-bottom:1px solid #000}.c50 .hd h1{font-size:13.5pt;margin:0;line-height:1.25}.c50 .hd .no{position:absolute;right:3mm;top:2mm;text-align:left;font-size:8pt;line-height:1.6}
+.c50 .sec{padding:1.6mm 3mm;border-bottom:1px solid #000}.c50 .ln{display:flex;gap:2mm;align-items:baseline;flex-wrap:wrap}.c50 .ln .v{flex:1;border-bottom:1px dotted #555;min-width:40mm;font-weight:600;padding:0 1mm}
+.c50 .hint{font-size:6.8pt;color:#333}.c50 .idb{display:inline-flex;gap:.6mm;align-items:center}.c50 .idb i{display:inline-block;width:3.6mm;height:4.4mm;border:1px solid #000;text-align:center;font-style:normal;font-weight:700;line-height:4.3mm;font-size:8pt}.c50 .idb s{text-decoration:none;width:1.2mm;border-top:1px solid #000}
+.c50 .ck{display:inline-flex;align-items:center;gap:1mm;margin-right:2.6mm;white-space:nowrap}.c50 .ck i{width:3.2mm;height:3.2mm;border:1px solid #000;display:inline-grid;place-items:center;font-style:normal;font-size:8pt;line-height:1}.c50 .seq{display:inline-block;min-width:9mm;border:1px solid #000;text-align:center;font-weight:700;padding:0 1mm}
+.c50 table{width:100%;border-collapse:collapse}.c50 th,.c50 td{border:1px solid #000;padding:.7mm 1.6mm;vertical-align:top;font-size:7.9pt}.c50 thead th{text-align:center;font-weight:600}.c50 td.n{text-align:right;white-space:nowrap;width:24mm}.c50 td.d{text-align:center;width:22mm}.c50 tr.s td{font-size:7.1pt;padding-top:.2mm;padding-bottom:.2mm}.c50 tr.s td:first-child{padding-left:6mm}.c50 tr.s2 td:first-child{padding-left:10mm}.c50 tbody td{border-top:0;border-bottom:0}.c50 tfoot td{font-weight:700}
+.c50 .ft{display:grid;grid-template-columns:1fr 1.35fr;border-top:1px solid #000;margin-top:auto}.c50 .ft>div{padding:2mm 3mm}.c50 .ft>div+div{border-left:1px solid #000;text-align:center}.c50 .seal{width:17mm;height:17mm;border:1px dashed #555;border-radius:50%;display:grid;place-items:center;font-size:6.4pt;color:#444;float:right;text-align:center;line-height:1.2}
+.c50 .rm{font-size:6.7pt;margin-top:1.6mm;line-height:1.35}
 </style>
 </head>
 <body>
@@ -229,7 +237,9 @@ dialog.wide{max-width:min(1100px,96vw);width:96vw}
             <div class="f"><label>เลขบัตรประชาชน</label><input class="in-" data-e="idc" inputmode="numeric" maxlength="17"></div>
             <div class="f"><label>เลขบัญชีธนาคาร</label><input class="in-" data-e="bank" placeholder="เช่น กสิกร 123-4-56789-0"></div>
             <div class="f"><label>วันเริ่มงาน</label><input class="in-" data-e="start" type="date"></div>
+            <div class="f" id="fIncF"><label>ประเภทเงินได้ (ใบ 50 ทวิ)</label><select class="in-" data-e="fInc"><option value="5">ค่าจ้างทำของ / ค่าบริการ (ม.3 เตรส · ข้อ 5)</option><option value="2">ค่าธรรมเนียม ค่านายหน้า ฯลฯ 40(2) (ข้อ 2)</option><option value="3">ค่าลิขสิทธิ์ ฯลฯ 40(3) (ข้อ 3)</option></select></div>
           </div>
+          <div class="f"><label>ที่อยู่ผู้ถูกหักภาษี (ใช้ในใบ 50 ทวิ)</label><textarea class="in-" data-e="eaddr" rows="2" placeholder="บ้านเลขที่ หมู่ ซอย ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด รหัสไปรษณีย์"></textarea></div>
           <p class="note" style="margin:0">ถ้ายังไม่ได้กรอกเงินเดือนของเดือนก่อน ๆ ในปีนี้ ระบบจะถือว่าได้เท่าเดือนนี้ (นับตั้งแต่วันเริ่มงาน) เพื่อคิดภาษีให้ใกล้เคียงทั้งปี</p>
           <div class="f"><label>รูปแบบค่าจ้าง</label><div class="seg wrap" id="typeSeg"><button data-type="m">รายเดือน</button><button data-type="d">รายวัน</button><button data-type="h">รายชั่วโมง</button><button data-type="p">ตามชิ้นงาน</button><button data-type="f">ฟรีแลนซ์</button></div><div class="note" id="typeNote"></div></div>
           <div class="f"><label id="baseLabel">เงินเดือนประจำ (ใช้เป็นค่าเริ่มต้นทุกเดือน)</label><input class="in-" data-e="salary" type="number" min="0" step="0.01" inputmode="decimal"></div>
@@ -267,6 +277,10 @@ dialog.wide{max-width:min(1100px,96vw);width:96vw}
           <div class="row">
             <div class="f"><label>เลขผู้เสียภาษี</label><input class="in-" data-c="tax" inputmode="numeric"></div>
             <div class="f"><label>เลขบัญชีนายจ้าง (สปส.)</label><input class="in-" data-c="ssoNo"></div>
+          </div>
+          <div class="row">
+            <div class="f"><label>ผู้มีอำนาจลงนาม (ใบ 50 ทวิ)</label><input class="in-" data-c="signer" placeholder="ชื่อ-นามสกุล ผู้จ่ายเงิน"></div>
+            <div class="f"><label>สถานะผู้หักภาษี</label><select class="in-" data-c="payerKind"><option value="บริษัท">บริษัท</option><option value="นิติบุคคล">นิติบุคคล (หจก. ฯลฯ)</option><option value="บุคคล">บุคคลธรรมดา</option><option value="สมาคม">สมาคม</option><option value="คณะบุคคล">คณะบุคคล</option></select></div>
           </div>
           <div class="row">
             <div class="f"><label>สีสลิป</label><input class="in-" data-c="color" type="color" style="height:42px;padding:4px"></div>
@@ -344,7 +358,7 @@ function pit(net){let tax=0,lo=0;for(const[hi,r]of BRACKETS){if(net>lo)tax+=(Mat
 
 /* ---------- state ---------- */
 const now=new Date();
-const CO_DEF={name:"",addr:"",tax:"",ssoNo:"",logo:"",color:"#127A4B",payDay:25,dpm:30,hpd:8,ssoRate:5,ssoMax:17500,ssoMin:1650,biz:"",minWage:0,whtF:3};
+const CO_DEF={name:"",addr:"",tax:"",ssoNo:"",logo:"",color:"#127A4B",payDay:25,dpm:30,hpd:8,ssoRate:5,ssoMax:17500,ssoMin:1650,biz:"",minWage:0,whtF:3,signer:"",payerKind:"บริษัท"};
 const TYPES={m:"รายเดือน",d:"รายวัน",h:"รายชั่วโมง",p:"ตามชิ้นงาน",f:"ฟรีแลนซ์ / ผู้รับจ้าง"};
 // ประเภทธุรกิจ: ตั้งค่าเริ่มต้นที่เหมาะกับแต่ละแบบ (แก้เองได้ทุกค่า)
 const BIZ={
@@ -431,7 +445,7 @@ function renderEmpCard(){
   $("#rateLabel").textContent={m:"เงินเดือน (บาท)",d:"ค่าจ้างต่อวัน (บาท)",h:"ค่าจ้างต่อชั่วโมง (บาท)",p:"ค่าจ้างต่อชิ้น / งาน (บาท)",f:"ค่าจ้างงวดนี้ (บาท)"}[t];
   $("#daysF").style.display=t==="d"?"":"none";$("#hrsF").style.display=t==="h"?"":"none";$("#pcsF").style.display=t==="p"?"":"none";
   $$("#empCard .otf").forEach(x=>x.style.display=t==="m"||t==="d"||t==="h"?"":"none");$$("#empCard .mf").forEach(x=>x.style.display=t==="m"?"":"none");$$("#empCard .nf").forEach(x=>x.style.display=t==="f"?"none":"");
-  $("#salesF").style.display=num(e.comPct)>0?"":"none";$("#salesLabel").textContent="ยอดขาย (คิดคอม "+fmt0(e.comPct)+"%)";
+  $("#fIncF").style.display=t==="f"?"":"none";$("#salesF").style.display=num(e.comPct)>0?"":"none";$("#salesLabel").textContent="ยอดขาย (คิดคอม "+fmt0(e.comPct)+"%)";
   $("#hwLabel").textContent=t==="m"?"ทำงานวันหยุด ×1 (ชม.)":"ทำงานวันหยุด ×2 (ชม.)";
   $("#baseLabel").textContent={m:"เงินเดือนประจำ",d:"ค่าจ้างต่อวันประจำ",h:"ค่าจ้างต่อชั่วโมงประจำ",p:"ค่าจ้างต่อชิ้นประจำ",f:"ค่าจ้างต่องวด (ค่าเริ่มต้น)"}[t]+" (ใช้เป็นค่าเริ่มต้นทุกเดือน)";
   $("#typeNote").textContent={m:"ได้เงินเดือนเท่ากันทุกเดือน หักขาด/ลาไม่รับค่าจ้างเป็นรายวัน · ทำงานวันหยุดได้เพิ่ม 1 เท่า",d:"ได้ตามวันที่มาทำงานจริง · ทำงานวันหยุดได้ 2 เท่า",h:"พาร์ทไทม์ ได้ตามชั่วโมงที่ทำงาน",p:"ได้ตามจำนวนชิ้น/งานที่ทำได้ เช่น ช่างเย็บ แพ็กของ",f:"จ้างทำของ/ฟรีแลนซ์ หัก ณ ที่จ่าย "+(num(co.whtF)||3)+"% (ภ.ง.ด.3) ไม่หักประกันสังคม"}[t];
@@ -490,6 +504,55 @@ function slipHTML(e){
       <div class="s-sign"><div class="ln"></div>ผู้รับเงิน</div></div>
   </div>`;
 }
+/* ---------- หนังสือรับรองการหักภาษี ณ ที่จ่าย (50 ทวิ) ตามแบบกรมสรรพากร ---------- */
+function idBox(v){const d=String(v||"").replace(/\D/g,"").slice(0,13).padEnd(13," ").split("");const g=[1,4,5,2,1];let i=0,o="";g.forEach((n,k)=>{if(k)o+="<s></s>";for(let j=0;j<n;j++)o+=`<i>${d[i++].trim()}</i>`});return`<span class="idb">${o}</span>`}
+const ck=(on,t)=>`<span class="ck"><i>${on?"✓":""}</i>${t}</span>`;
+const thFull=d=>{const x=new Date(d+"T00:00:00");return isNaN(x)?"":x.getDate()+" "+MONTHS[x.getMonth()]+" "+(x.getFullYear()+543)};
+// ออก 50 ทวิ: ลูกจ้าง = รายปี (แนบ ภ.ง.ด.1ก) · ฟรีแลนซ์ = ทุกครั้งที่จ่าย (ภ.ง.ด.3) · พิมพ์ ฉบับที่ 1 และ 2
+function cert50Pages(){
+  const one=ui.sel&&empById(ui.sel),out=[];
+  const staff=emps.filter(e=>(e.type||"m")!=="f").map(e=>({e,u:calcUpTo(e,ui.y,11)})).filter(x=>x.u.months.length&&x.u.ytd.income>0);
+  staff.forEach((x,i)=>{if(one&&x.e.id!==one.id)return;out.push({e:x.e,form:1,seq:i+1,no:`${ui.y+543}/${pad(i+1).padStart(3,"0")}`,when:"ปีภาษี "+(ui.y+543),amt:x.u.ytd.income,tax:x.u.ytd.tax,sso:x.u.ytd.sso,pvd:x.u.ytd.pvd,date:new Date().toISOString().slice(0,10),row:1})});
+  const fl=emps.filter(e=>e.type==="f");
+  for(let m=0;m<12;m++){const k=ymKey(ui.y,m),R=recs[k]||{};let n=0;fl.forEach(e=>{if(!R[e.id])return;const c=calcUpTo(e,ui.y,m).res;if(!c||c.earn<=0)return;n++;
+    if(one&&e.id!==one.id)return;if(!one&&m!==ui.m)return;          // ไม่เลือกคน = แสดงเฉพาะงวดที่เลือก
+    const pd=R._payDate||defaultPayDate(ui.y,m);out.push({e,form:4,seq:n,no:`${ui.y+543}-${pad(m+1)}/${pad(n).padStart(3,"0")}`,when:thFull(pd),amt:c.earn,tax:c.wht,sso:0,pvd:0,date:pd,row:+(e.fInc||5)})})}
+  return out.map(x=>[1,2].map(cp=>cert50(x,cp)).join("")).join("");
+}
+function cert50(x,cp){const e=x.e,row=x.row,A=n=>n===row?fmt(x.amt):"",T=n=>n===row?fmt(x.tax):"",D=n=>n===row?esc(x.when):"";
+  const tr=(n,txt,cls)=>`<tr class="${cls||""}"><td>${txt}</td><td class="d">${D(n)}</td><td class="n">${A(n)}</td><td class="n">${T(n)}</td></tr>`;
+  const sub=t=>`<tr class="s"><td>${t}</td><td class="d"></td><td class="n"></td><td class="n"></td></tr>`,sub2=t=>sub(t).replace('class="s"','class="s s2"');
+  const forms=[[1,"ภ.ง.ด.1ก"],[2,"ภ.ง.ด.1ก พิเศษ"],[3,"ภ.ง.ด.2"],[4,"ภ.ง.ด.3"],[5,"ภ.ง.ด.2ก"],[6,"ภ.ง.ด.3ก"],[7,"ภ.ง.ด.53"]];
+  return`<div class="page c50"><div class="cp"><div><b>ฉบับที่ ${cp}</b> ${cp===1?"(สำหรับผู้ถูกหักภาษี ณ ที่จ่าย ใช้แนบพร้อมกับแบบแสดงรายการภาษี)":"(สำหรับผู้ถูกหักภาษี ณ ที่จ่าย เก็บไว้เป็นหลักฐาน)"}</div></div>
+  <div class="cf"><div class="hd"><h1>หนังสือรับรองการหักภาษี ณ ที่จ่าย</h1><div>ตามมาตรา 50 ทวิ แห่งประมวลรัษฎากร</div><div class="no">เล่มที่ <b>${ui.y+543}</b><br>เลขที่ <b>${x.no}</b></div></div>
+   <div class="sec"><b>ผู้มีหน้าที่หักภาษี ณ ที่จ่าย :-</b>
+    <div class="ln"><span>ชื่อ</span><span class="v">${esc(co.name||"")}</span><span>เลขประจำตัวผู้เสียภาษีอากร (13 หลัก)*</span>${idBox(co.tax)}</div>
+    <div class="hint">(ให้ระบุว่าเป็น บุคคล นิติบุคคล บริษัท สมาคม หรือคณะบุคคล) ${co.payerKind?"· <b>"+esc(co.payerKind)+"</b>":""}</div>
+    <div class="ln"><span>ที่อยู่</span><span class="v">${esc((co.addr||"").replace(/\s*\n\s*/g," "))}</span></div>
+    <div class="hint">(ให้ระบุ ชื่ออาคาร/หมู่บ้าน ห้องเลขที่ ชั้นที่ เลขที่ ตรอก/ซอย หมู่ที่ ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด)</div></div>
+   <div class="sec"><b>ผู้ถูกหักภาษี ณ ที่จ่าย :-</b>
+    <div class="ln"><span>ชื่อ</span><span class="v">${esc(e.name||"")}</span><span>เลขประจำตัวผู้เสียภาษีอากร (13 หลัก)*</span>${idBox(e.idc)}</div>
+    <div class="hint">(ให้ระบุว่าเป็น บุคคล นิติบุคคล บริษัท สมาคม หรือคณะบุคคล) · <b>บุคคล</b></div>
+    <div class="ln"><span>ที่อยู่</span><span class="v">${esc((e.eaddr||"").replace(/\s*\n\s*/g," "))}</span></div>
+    <div class="hint">(ให้ระบุ ชื่ออาคาร/หมู่บ้าน ห้องเลขที่ ชั้นที่ เลขที่ ตรอก/ซอย หมู่ที่ ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด)</div>
+    <div class="ln" style="margin-top:1.2mm"><span>ลำดับที่</span><span class="seq">${x.seq}</span><span>ในแบบ</span>${forms.map(([n,t])=>ck(n===x.form,`(${n}) ${t}`)).join("")}</div>
+    <div class="hint">(ให้สามารถอ้างอิงหรือสอบยันกันได้ระหว่างลำดับที่ตามหนังสือรับรองฯ กับแบบยื่นรายการภาษีหักที่จ่าย)</div></div>
+   <table><thead><tr><th>ประเภทเงินได้พึงประเมินที่จ่าย</th><th>วัน เดือน<br>หรือปีภาษี ที่จ่าย</th><th>จำนวนเงินที่จ่าย</th><th>ภาษีที่หัก<br>และนำส่งไว้</th></tr></thead><tbody>
+    ${tr(1,"1. เงินเดือน ค่าจ้าง เบี้ยเลี้ยง โบนัส ฯลฯ ตามมาตรา 40 (1)")}${tr(2,"2. ค่าธรรมเนียม ค่านายหน้า ฯลฯ ตามมาตรา 40 (2)")}${tr(3,"3. ค่าแห่งลิขสิทธิ์ ฯลฯ ตามมาตรา 40 (3)")}
+    ${tr(41,"4. (ก) ดอกเบี้ย ฯลฯ ตามมาตรา 40 (4) (ก)")}${sub("(ข) เงินปันผล เงินส่วนแบ่งกำไร ฯลฯ ตามมาตรา 40 (4) (ข)")}
+    ${sub2("(1) กรณีผู้ได้รับเงินปันผลได้รับเครดิตภาษี โดยจ่ายจากกำไรสุทธิของกิจการที่ต้องเสียภาษีเงินได้นิติบุคคลในอัตราดังนี้")}${sub2("&nbsp;&nbsp;(1.1) อัตราร้อยละ 30 ของกำไรสุทธิ &nbsp; (1.2) อัตราร้อยละ 25 ของกำไรสุทธิ")}${sub2("&nbsp;&nbsp;(1.3) อัตราร้อยละ 20 ของกำไรสุทธิ &nbsp; (1.4) อัตราอื่น ๆ (ระบุ) ......... ของกำไรสุทธิ")}
+    ${sub2("(2) กรณีผู้ได้รับเงินปันผลไม่ได้รับเครดิตภาษี เนื่องจากจ่ายจาก")}${sub2("&nbsp;&nbsp;(2.1) กำไรสุทธิของกิจการที่ได้รับยกเว้นภาษีเงินได้นิติบุคคล")}${sub2("&nbsp;&nbsp;(2.2) เงินปันผลหรือเงินส่วนแบ่งของกำไรที่ได้รับยกเว้นไม่ต้องนำมารวมคำนวณเป็นรายได้เพื่อเสียภาษีเงินได้นิติบุคคล")}${sub2("&nbsp;&nbsp;(2.3) กำไรสุทธิส่วนที่ได้หักผลขาดทุนสุทธิยกมาไม่เกิน 5 ปี ก่อนรอบระยะเวลาบัญชีปีปัจจุบัน")}${sub2("&nbsp;&nbsp;(2.4) กำไรที่รับรู้ทางบัญชีโดยวิธีส่วนได้เสีย (equity method)")}${sub2("&nbsp;&nbsp;(2.5) อื่น ๆ (ระบุ) .........................")}
+    ${tr(5,"5. การจ่ายเงินได้ที่ต้องหักภาษี ณ ที่จ่าย ตามคำสั่งกรมสรรพากรที่ออกตามมาตรา 3 เตรส เช่น รางวัล ส่วนลดหรือประโยชน์ใด ๆ เนื่องจากการส่งเสริมการขาย รางวัลในการประกวด การแข่งขัน การชิงโชค ค่าแสดงของนักแสดงสาธารณะ ค่าจ้างทำของ ค่าโฆษณา ค่าเช่า ค่าขนส่ง ค่าบริการ ค่าเบี้ยประกันวินาศภัย ฯลฯ"+(row===5?` <b>(ระบุ) ค่าจ้างทำของ / ค่าบริการ</b>`:""))}
+    ${tr(6,"6. อื่น ๆ (ระบุ) .........................")}</tbody>
+    <tfoot><tr><td colspan="2" style="text-align:right">รวมเงินที่จ่ายและภาษีที่หักนำส่ง</td><td class="n">${fmt(x.amt)}</td><td class="n">${fmt(x.tax)}</td></tr>
+    <tr><td colspan="4" style="font-weight:400">รวมเงินภาษีที่หักนำส่ง (ตัวอักษร) <b style="margin-left:3mm">( ${bahtText(x.tax)} )</b></td></tr></tfoot></table>
+   <div class="sec" style="border-bottom:0">เงินที่จ่ายเข้า กบข./กสจ./กองทุนสงเคราะห์ครูโรงเรียนเอกชน <b>${x.form===1?"-":""}</b> บาท &nbsp; กองทุนประกันสังคม <b>${x.form===1?fmt(x.sso):"-"}</b> บาท &nbsp; กองทุนสำรองเลี้ยงชีพ <b>${x.form===1?fmt(x.pvd):"-"}</b> บาท</div>
+   <div class="sec" style="border-top:1px solid #000;border-bottom:0"><b>ผู้จ่ายเงิน</b> &nbsp; ${ck(1,"(1) หัก ณ ที่จ่าย")}${ck(0,"(2) ออกให้ตลอดไป")}${ck(0,"(3) ออกให้ครั้งเดียว")}${ck(0,"(4) อื่น ๆ (ระบุ) ..............")}</div>
+   <div class="ft"><div><b>คำเตือน</b> ผู้มีหน้าที่ออกหนังสือรับรองการหักภาษี ณ ที่จ่าย ฝ่าฝืนไม่ปฏิบัติตามมาตรา 50 ทวิ แห่งประมวลรัษฎากร ต้องรับโทษทางอาญาตามมาตรา 35 แห่งประมวลรัษฎากร</div>
+    <div><div class="seal">ประทับตรา<br>นิติบุคคล<br>(ถ้ามี)</div>ขอรับรองว่าข้อความและตัวเลขดังกล่าวข้างต้นถูกต้องตรงกับความจริงทุกประการ
+     <div style="margin-top:7mm">ลงชื่อ ....................................................... ผู้จ่ายเงิน</div><div>( ${esc(co.signer||"...................................................")} )</div>
+     <div style="margin-top:1mm"><b>${thFull(x.date)}</b></div><div class="hint">(วัน เดือน ปี ที่ออกหนังสือรับรองฯ)</div></div></div></div>
+  <div class="rm"><b>หมายเหตุ</b> เลขประจำตัวผู้เสียภาษีอากร (13 หลัก)* หมายถึง 1. กรณีบุคคลธรรมดาไทย ให้ใช้เลขประจำตัวประชาชนของกรมการปกครอง 2. กรณีนิติบุคคล ให้ใช้เลขทะเบียนนิติบุคคลของกรมพัฒนาธุรกิจการค้า 3. กรณีอื่น ๆ นอกเหนือจาก 1. และ 2. ให้ใช้เลขประจำตัวผู้เสียภาษีอากร (13 หลัก) ของกรมสรรพากร</div></div>`}
 function monthRows(){const R=recs[key()]||{};return emps.filter(e=>R[e.id]).map(e=>({e,c:calcUpTo(e,ui.y,ui.m).res}))}
 function listPage(title,sub,head,rows,foot){
   return`<div class="page list"><div class="l-head">${coHead()}<div class="s-title"><h1>${title}</h1><div>${sub}</div></div></div>
@@ -549,20 +612,7 @@ function renderPaper(){
   else if(ui.view==="dept"){const D={};list.forEach(({e,c})=>{const k=e.dept||"ไม่ระบุแผนก";const d=D[k]||(D[k]={n:0,earn:0,er:0,cost:0,net:0});d.n++;d.earn+=c.income;d.er+=c.sso+c.erPvd;d.cost+=c.cost;d.net+=c.net});
     const T={n:0,earn:0,er:0,cost:0};const rows=Object.entries(D).sort((a,b)=>b[1].cost-a[1].cost).map(([k,d])=>{T.n+=d.n;T.earn+=d.earn;T.er+=d.er;T.cost+=d.cost;return`<tr><td>${esc(k)}</td><td class="r">${d.n}</td><td class="r">${fmt(d.earn)}</td><td class="r">${fmt(d.er)}</td><td class="r"><b>${fmt(d.cost)}</b></td><td class="r">${fmt(r2(d.cost/d.n))}</td><td class="r">${T.cost?"":""}</td></tr>`});
     html=listPage("ต้นทุนค่าแรงตามแผนก",per,["แผนก","คน","ค่าจ้าง/เงินได้","นายจ้างสมทบ","ต้นทุนรวม","เฉลี่ยต่อคน",""],rows,`<tr><td>รวม</td><td class="r">${T.n}</td><td class="r">${fmt(T.earn)}</td><td class="r">${fmt(T.er)}</td><td class="r">${fmt(T.cost)}</td><td class="r">${T.n?fmt(r2(T.cost/T.n)):"-"}</td><td></td></tr>`)}
-  else if(ui.view==="cert"){const L=(ui.sel&&empById(ui.sel)?[empById(ui.sel)]:emps);const pages=L.map(e=>{const{ytd,months}=calcUpTo(e,ui.y,11);if(!months.length)return"";const fr=(e.type||"m")==="f";
-      return`<div class="page"><div class="cert"><h1>หนังสือรับรองการหักภาษี ณ ที่จ่าย</h1><div class="c-sub">ตามมาตรา 50 ทวิ แห่งประมวลรัษฎากร · ปีภาษี ${ui.y+543}</div>
-        <div class="c-box"><div>ผู้มีหน้าที่หักภาษี ณ ที่จ่าย</div><b>${esc(co.name||"-")}</b><div>เลขประจำตัวผู้เสียภาษีอากร ${esc(co.tax||"-")}</div><div style="white-space:pre-line">${esc(co.addr||"")}</div></div>
-        <div class="c-box"><div>ผู้ถูกหักภาษี ณ ที่จ่าย</div><b>${esc(e.name||"-")}</b><div>เลขประจำตัวผู้เสียภาษีอากร ${esc(e.idc||"-")}</div></div>
-        <div>ลำดับที่ในแบบ: ${fr?"(7) ภ.ง.ด.3":"(1) ภ.ง.ด.1ก"}</div>
-        <table><thead><tr><th>ประเภทเงินได้ที่จ่าย</th><th>ปีภาษีที่จ่าย</th><th class="r">จำนวนเงินที่จ่าย</th><th class="r">ภาษีที่หักและนำส่งไว้</th></tr></thead>
-        <tbody><tr><td>${fr?"5. ค่าจ้างทำของ ค่าบริการ ตามมาตรา 3 เตรส":"1. เงินเดือน ค่าจ้าง เบี้ยเลี้ยง โบนัส ฯลฯ ตามมาตรา 40(1)"}</td><td>${ui.y+543}</td><td class="r">${fmt(fr?ytd.earn:ytd.income)}</td><td class="r">${fmt(fr?ytd.wht:ytd.tax)}</td></tr></tbody>
-        <tfoot><tr><td colspan="2">รวมเงินที่จ่ายและภาษีที่หักนำส่ง</td><td class="r">${fmt(fr?ytd.earn:ytd.income)}</td><td class="r">${fmt(fr?ytd.wht:ytd.tax)}</td></tr></tfoot></table>
-        <div>รวมเงินภาษีที่หักนำส่ง (ตัวอักษร): ${bahtText(fr?ytd.wht:ytd.tax)}</div>
-        ${fr?"":`<div style="margin-top:6px">เงินที่จ่ายเข้า กองทุนประกันสังคม ${fmt(ytd.sso)} บาท · กองทุนสำรองเลี้ยงชีพ ${fmt(ytd.pvd)} บาท</div>`}
-        <div style="margin-top:6px">ผู้จ่ายเงิน: ☑ หัก ณ ที่จ่าย</div>
-        <div class="sig"><div>ลงชื่อ ผู้มีหน้าที่หักภาษี ณ ที่จ่าย<br>วันที่ ........................................</div></div></div>
-        <div class="l-foot">ตรวจสอบรูปแบบกับแบบฟอร์มของกรมสรรพากรก่อนใช้งานจริง · exceldatamaster.com</div></div>`}).join("");
-    html=pages||empty("ยังไม่มีข้อมูลเงินเดือนในปีนี้")}
+  else if(ui.view==="cert"){html=cert50Pages();if(!html)html=empty("ยังไม่มีข้อมูลสำหรับออกใบ 50 ทวิ")}
   else{const rows=[],T={inc:0,sso:0,tax:0,net:0},M=Array.from({length:12},()=>({inc:0,sso:0,tax:0,net:0,n:0}));
     emps.forEach(e=>{const{ytd,months}=calcUpTo(e,ui.y,11);if(!months.length)return;const tx=r2(ytd.tax+ytd.wht);T.inc+=ytd.income;T.sso+=ytd.sso;T.tax+=tx;T.net+=ytd.net;
       months.forEach(({m,c})=>{M[m].inc+=c.income;M[m].sso+=c.sso;M[m].tax+=c.tax+c.wht;M[m].net+=c.net;M[m].n++});
@@ -686,15 +736,15 @@ function bizNote(){const b=BIZ[co.biz];$("#bizSel").value=co.biz||"";$("#bizNote
 $("#bizSel").onchange=e=>{co.biz=e.target.value;const b=BIZ[co.biz];if(b){co.hpd=b.hpd;co.dpm=b.dpm}svCo();renderCo();bizNote();toast(b?"ตั้งค่าเริ่มต้นสำหรับ "+b.n.replace(/^\S+ /,"")+" แล้ว":"")};
 bizNote();
 function demo(){
-  if(!co.name){co.name="บริษัท ตัวอย่าง จำกัด";co.addr="99 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110";co.tax="0105500000000";co.ssoNo="1000000000";svCo()}
+  if(!co.name){co.name="บริษัท ตัวอย่าง จำกัด";co.addr="99 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110";co.tax="0105500000000";co.ssoNo="1000000000";co.signer="นางสมหญิง รักงาน";svCo()}
   if(!co.biz){co.biz="retail";svCo();bizNote()}
   const A=[
-    newEmp({code:"EMP001",name:"สมชาย ใจดี",pos:"พนักงานขาย",dept:"ขาย",bank:"กสิกรไทย 123-4-56789-0",salary:18000,fixA:1000,comPct:2,pvd:3,pvdEr:3,kids:1}),
+    newEmp({code:"EMP001",name:"สมชาย ใจดี",pos:"พนักงานขาย",dept:"ขาย",bank:"กสิกรไทย 123-4-56789-0",salary:18000,fixA:1000,comPct:2,idc:"1100100123456",eaddr:"12/3 หมู่ 4 ซ.สุขุมวิท 50 แขวงพระโขนง เขตคลองเตย กรุงเทพฯ 10110",pvd:3,pvdEr:3,kids:1}),
     newEmp({code:"EMP002",name:"สมหญิง รักงาน",pos:"ผู้จัดการ",dept:"บัญชี",bank:"ไทยพาณิชย์ 987-6-54321-0",salary:55000,posA:5000,pvd:5,pvdEr:5,spouse:true,kids:1,kids2:1,parents:2}),
     newEmp({code:"EMP003",name:"มานะ ขยันดี",pos:"พนักงานคลังสินค้า",dept:"คลังสินค้า",bank:"กรุงไทย 111-2-33333-4",type:"d",salary:400,tax:false}),
     newEmp({code:"EMP004",name:"น้องฝน พาร์ทไทม์",pos:"พนักงานหน้าร้าน (พาร์ทไทม์)",dept:"ขาย",bank:"ออมสิน 0200-1234-5678",type:"h",salary:60,tax:false}),
     newEmp({code:"EMP005",name:"ช่างแดง ฝีมือดี",pos:"ช่างเย็บ",dept:"ผลิต",bank:"กรุงเทพ 222-3-44444-5",type:"p",salary:25,tax:false,slf:1500}),
-    newEmp({code:"FL001",name:"คุณบอล ครีเอทีฟ",pos:"ออกแบบกราฟิก (ฟรีแลนซ์)",dept:"การตลาด",bank:"กสิกรไทย 555-6-77777-8",type:"f",salary:12000,sso:false})];
+    newEmp({code:"FL001",name:"คุณบอล ครีเอทีฟ",pos:"ออกแบบกราฟิก (ฟรีแลนซ์)",dept:"การตลาด",bank:"กสิกรไทย 555-6-77777-8",type:"f",salary:12000,sso:false,idc:"3101400765432",eaddr:"88 ถ.นิมมานเหมินท์ ต.สุเทพ อ.เมือง จ.เชียงใหม่ 50200",fInc:"5"})];
   A.forEach(e=>emps.push(e));svEmps();
   const D=[ // ข้อมูลเดือนนี้ เดือนก่อน และ 2 เดือนก่อน
     [{rate:18000,sales:420000,ot15:8,dil:500,late:10},{rate:55000,bonus:30000,oth:2000,othL:"ค่าเดินทาง"},{rate:400,days:26,ot15:12,ot2:8,dil:300,adv:1000},{rate:60,hrs:96},{rate:25,pcs:820},{rate:15000}],
@@ -709,7 +759,7 @@ renderAll();
 window.__pay={pit,bahtText,calcMonth,calcUpTo,exportExcel,get emps(){return emps},get co(){return co}};
 })();
 </script>
-<script src="../assets/tool-ui.js?v=2" defer></script>
+<script src="../assets/tool-ui.js?v=3" defer></script>
 <script src="../assets/member.js?v=50" defer></script>
 </body>
 </html>
