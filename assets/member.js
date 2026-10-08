@@ -93,11 +93,19 @@
         '<input class="edm-in" id="edmP" type="password" autocomplete="new-password" placeholder="' + (su ? "ตั้งรหัสผ่าน (อย่างน้อย 6 ตัว)" : "รหัสผ่าน") + '">' +
         '<button class="edm-btn" id="edmGo">' + (su ? "สมัครทดลองใช้ฟรี" : "เข้าสู่ระบบ") + '</button><div class="edm-msg" id="edmM"></div>' +
         (su ? '' : '<button class="edm-link" data-go="forgot" style="align-self:flex-start">ลืมรหัสผ่าน?</button>') +
-        '<p class="edm-muted">เราเก็บเฉพาะอีเมลเพื่อจัดการบัญชี ข้อมูลบิลและเงินเดือนของคุณอยู่ในเครื่องนี้เท่านั้น · <a href="' + BASE + 'privacy/" target="_blank" style="color:inherit">นโยบายความเป็นส่วนตัว</a></p>' +
+        '<p class="edm-muted">ข้อมูลของคุณบันทึกในเครื่องนี้ และสำรองไว้ในระบบของร้าน (เฉพาะคุณที่เรียกกลับได้) เพื่อใช้ต่อจากเครื่องอื่น · <a href="' + BASE + 'privacy/" target="_blank" style="color:inherit">นโยบายความเป็นส่วนตัว</a></p>' +
         '<a class="edm-link" href="' + BASE + '" style="align-self:center;color:var(--muted,#66706B)">← กลับไปร้าน Excel Data Master</a>';
     }
     h += '</div>';
     gate.innerHTML = h;
+    // ไม่ให้เบราว์เซอร์ขึ้นป๊อปอัป "บันทึกรหัสผ่าน?" / "รหัสผ่านรั่วไหล" (ร้านตั้งใจไม่ให้เครื่องจำรหัสอยู่แล้ว)
+    // ช่องรหัสเป็นช่องข้อความธรรมดาที่แสดงเป็นจุด เบราว์เซอร์จึงไม่มองว่าเป็นฟอร์มรหัสผ่าน
+    var pw = gate.querySelector("#edmP");
+    if (pw && window.CSS && CSS.supports && CSS.supports("-webkit-text-security", "disc")) {
+      pw.type = "text"; pw.style.webkitTextSecurity = "disc"; pw.setAttribute("autocomplete", "off");
+      pw.setAttribute("autocapitalize", "off"); pw.setAttribute("autocorrect", "off"); pw.setAttribute("spellcheck", "false");
+      pw.setAttribute("data-lpignore", "true"); pw.setAttribute("data-1p-ignore", "true"); pw.setAttribute("data-form-type", "other");
+    }
     gate.querySelectorAll("[data-go]").forEach(function (b) { b.onclick = function () { mode = b.dataset.go; note = ""; renderGate(); }; });
     var go = gate.querySelector("#edmGo"), M = gate.querySelector("#edmM");
     if (!go) return;
