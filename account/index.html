@@ -114,8 +114,9 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
 .rd-note{margin-top:6px;font-size:7.4pt;color:#444}
 .vat-act{display:flex;gap:6px;flex-wrap:wrap}
 @media print{@page{size:A4;margin:10mm}.page.rd .rd-pg{display:block}body{background:#fff}header.top,main,.toast,dialog,.edm-bar,.edm-gate{display:none!important}#printArea{display:block}}
+.ap-seg{width:auto;max-width:none;display:inline-flex}.ap-seg button{white-space:nowrap;padding-left:14px;padding-right:14px;flex:none}
 </style>
-<script src="../assets/suggest.js?v=35"></script>
+<script src="../assets/suggest.js?v=38"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -172,7 +173,7 @@ let A,D;
 function load(){A=Object.assign(ACC_DEF(),LS.get(KEY.acc,{}));
   D={docs:LS.get(KEY.bdocs,[]),seller:LS.get(KEY.bseller,{}),items:LS.get(KEY.sitems,[]),tx:LS.get(KEY.stx,[]),payroll:LS.get(KEY.pay,{})}}
 const saveA=()=>LS.set(KEY.acc,A);
-let ui=Object.assign({v:"home",ym:today().slice(0,7),arf:"open",bf:"all",bk:"",ck:""},LS.get(KEY.ui,{}));const svU=()=>LS.set(KEY.ui,ui);
+let ui=Object.assign({v:"home",ym:today().slice(0,7),arf:"open",bf:"all",bk:"",ck:"",apf:"open",apg:"doc"},LS.get(KEY.ui,{}));const svU=()=>LS.set(KEY.ui,ui);
 load();
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){load();render()}});
 window.addEventListener("storage",()=>{load();render()});
@@ -239,7 +240,7 @@ function pnl(ym,SC){SC=SC||stockCalc();
 /* ---------- views ---------- */
 function render(){
   $$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));$("#ym").value=ui.ym;$("#ymNote").textContent=ymLabel(ui.ym);
-  ({home:vHome,ar:vAR,buy:vBuy,cash:vCash,tax:vTax}[ui.v]||vHome)();
+  ({home:vHome,ar:vAR,ap:vAP,buy:vBuy,cash:vCash,tax:vTax}[ui.v]||vHome)();
   $("#plist").innerHTML=D.items.map(i=>`<option value="${esc((i.sku?i.sku+" · ":"")+i.name)}">`).join("");
   $("#suplist").innerHTML=[...new Set(supAll().map(x=>x.name))].map(n=>`<option value="${esc(n)}">`).join("");
 }
@@ -291,6 +292,35 @@ function vHome(){
   $("#prPnl").onclick=()=>{printPnl(P);setTimeout(()=>window.print(),80)};
 }
 
+/* ---------- เจ้าหนี้ / จ่ายชำระ: ดูยอดหนี้ที่ต้องจ่าย และยอดที่จ่ายไปแล้ว ---------- */
+function vAP(){
+  const all=A.pur.filter(p=>p.status!=="ordered").map(p=>({p,a:apInfo(p)}));const f=ui.apf,g=ui.apg;
+  const ag=[0,0,0,0,0];let owe=0,dueSoon=0;all.forEach(({p,a})=>{if(a.left<=0.009)return;owe+=a.left;const l=a.late;ag[l<=0?0:l<=30?1:l<=60?2:l<=90?3:4]+=a.left;if(l<=0&&dayDiff(p.due||p.date,today())<=7)dueSoon+=a.left});
+  const paidM=A.pay.filter(x=>x.dir==="out"&&String(x.date).startsWith(ui.ym));let pm=0,pw=0;paidM.forEach(x=>{pm+=num(x.amount);pw+=num(x.wht)});
+  const list=all.filter(x=>f==="all"||(f==="open"?x.a.left>0.009:x.a.left<=0.009)).sort((x,y)=>(y.a.late-x.a.late)||String(y.p.date).localeCompare(String(x.p.date)));
+  const S={};all.forEach(({p,a})=>{const k=p.sup&&p.sup.name||"-";const m=S[k]||(S[k]={n:k,cnt:0,tot:0,paid:0,left:0,late:0,open:0});m.cnt++;m.tot+=a.c.total;m.paid+=a.paid;m.left+=a.left;if(a.left>0.009){m.open++;if(a.late>m.late)m.late=a.late}});
+  const sups=Object.values(S).filter(m=>f==="all"||(f==="open"?m.left>0.009:m.left<=0.009)).sort((a,b)=>b.left-a.left||b.tot-a.tot);
+  const pill=a=>a.left<=0.009?`<span class="pill p-ok">จ่ายครบ</span>`:a.late>0?`<span class="pill p-bad">เกิน ${a.late} วัน</span>`:a.st==="part"?`<span class="pill p-warn">จ่ายบางส่วน</span>`:`<span class="pill p-mute">ค้างจ่าย</span>`;
+  $("#view").innerHTML=`<div class="kpis k4"><div class="kpi warn"><span>ยอดหนี้ค้างจ่ายทั้งหมด</span><b>฿${fmt0(owe)}</b></div><div class="kpi neg"><span>เกินกำหนดแล้ว</span><b>฿${fmt0(ag[1]+ag[2]+ag[3]+ag[4])}</b></div><div class="kpi"><span>ครบกำหนดใน 7 วัน</span><b>฿${fmt0(dueSoon)}</b></div><div class="kpi pos"><span>จ่ายแล้ว ${ymLabel(ui.ym)}</span><b>฿${fmt0(pm)}</b></div></div>
+  <div class="card"><h2>🏭 เจ้าหนี้ / จ่ายชำระ <small>${g==="sup"?sups.length+" ราย":list.length+" รายการ"}</small><span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm ghost edm-lock" data-newpur="stock">＋ ซื้อสินค้า</button><button class="btn sm ghost edm-lock" data-newpur="expense">＋ ค่าใช้จ่าย</button></span></h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><div class="seg ap-seg" id="apg"><button data-g="doc">รายเอกสาร</button><button data-g="sup">รายเจ้าหนี้</button></div>
+    <div class="seg ap-seg" id="apf"><button data-f="open">ค้างจ่าย</button><button data-f="paid">จ่ายครบแล้ว</button><button data-f="all">ทั้งหมด</button></div></div>
+    ${g==="sup"?(sups.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>เจ้าหนี้ / ผู้ขาย</th><th class="r">จำนวนเอกสาร</th><th class="r">ยอดหนี้รวม</th><th class="r">จ่ายแล้ว</th><th class="r">คงค้าง</th><th>สถานะ</th><th></th></tr></thead><tbody>
+      ${sups.map(m=>`<tr><td><b>${esc(m.n)}</b></td><td class="r">${m.cnt}${m.open?` <span class="note">(ค้าง ${m.open})</span>`:""}</td><td class="r">${fmt(m.tot)}</td><td class="r">${fmt(m.paid)}</td><td class="r"><b>${fmt(m.left)}</b></td><td>${m.left<=0.009?`<span class="pill p-ok">จ่ายครบ</span>`:m.late>0?`<span class="pill p-bad">เกิน ${m.late} วัน</span>`:`<span class="pill p-mute">ค้างจ่าย</span>`}</td><td class="r"><button class="btn sm ghost" data-apsup="${esc(m.n)}">ดูรายการ</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ไม่มีรายการในหมวดนี้</div>`)
+    :(list.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>เลขที่ / เจ้าหนี้</th><th>ประเภท</th><th>วันที่</th><th>ครบกำหนด</th><th class="r">ยอดหนี้</th><th class="r">จ่ายแล้ว</th><th class="r">คงค้าง</th><th>สถานะ</th><th></th></tr></thead><tbody>
+      ${list.map(({p,a})=>`<tr><td><b>${esc(p.no)}</b><br>${esc(p.sup.name||"-")}</td><td>${p.kind==="stock"?"📦 สินค้า":(isCostP(p)?"🧰 ":"💸 ")+esc(p.cat||"ค่าใช้จ่าย")}</td><td>${thD(p.date)}</td><td>${thD(p.due||p.date)}</td><td class="r">${fmt(a.c.total)}</td><td class="r">${fmt(a.paid)}</td><td class="r"><b>${fmt(a.left)}</b></td><td>${pill(a)}</td>
+      <td class="r"><div class="acts">${a.left>0.009?`<button class="btn sm main edm-lock" data-paypur="${p.id}">จ่ายเงิน</button>`:""}${a.paid>0?`<button class="btn sm ghost" data-aphist="${p.id}">ประวัติ</button>`:""}</div></td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">${all.length?"ไม่มีรายการในหมวดนี้":"ยังไม่มีหนี้ค้างจ่าย · บันทึกซื้อสินค้าหรือค่าใช้จ่ายแบบยังไม่จ่าย ระบบจะตั้งเป็นเจ้าหนี้ให้"}</div>`)}
+    <div class="note">ซื้อสินค้า / ค่าใช้จ่ายที่ยังไม่ได้จ่าย จะขึ้นที่นี่อัตโนมัติ · กด "จ่ายเงิน" เพื่อเลือกบัญชีที่จ่าย และหักภาษี ณ ที่จ่าย</div></div>
+  <div class="card"><h2>💸 การจ่ายชำระ ${ymLabel(ui.ym)} <small>${paidM.length} รายการ · หัก ณ ที่จ่าย ฿${fmt(pw)}</small></h2>
+    ${paidM.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>วันที่</th><th>เจ้าหนี้</th><th>เอกสาร</th><th>จากบัญชี</th><th class="r">หัก ณ ที่จ่าย</th><th class="r">จ่ายจริง</th><th></th></tr></thead><tbody>
+    ${paidM.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(x=>{const p=A.pur.find(u=>u.id===x.purId);return`<tr><td>${thD(x.date)}</td><td>${esc(p&&p.sup.name||"-")}</td><td>${esc(p?p.no:"-")}</td><td>${esc((A.accounts.find(a=>a.id===x.accId)||{}).name||"")}</td><td class="r">${num(x.wht)?fmt(x.wht):"-"}</td><td class="r"><b>${fmt(x.amount)}</b></td><td class="r"><button class="btn sm ghost danger edm-lock" data-delmove="pay:${x.id}">ลบ</button></td></tr>`}).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีการจ่ายชำระในเดือนนี้ · เปลี่ยนเดือนได้ที่ช่องด้านบน</div>`}</div>`;
+  $$("#apf button").forEach(b=>{b.classList.toggle("on",b.dataset.f===f);b.onclick=()=>{ui.apf=b.dataset.f;svU();vAP()}});
+  $$("#apg button").forEach(b=>{b.classList.toggle("on",b.dataset.g===g);b.onclick=()=>{ui.apg=b.dataset.g;svU();vAP()}});
+  $$("[data-apsup]").forEach(b=>b.onclick=()=>{const n=b.dataset.apsup,L=all.filter(x=>(x.p.sup&&x.p.sup.name||"-")===n);
+    openDlg("เจ้าหนี้ · "+n,simpleTable(["เลขที่","วันที่","ครบกำหนด","ยอดหนี้","จ่ายแล้ว","คงค้าง"],L.map(({p,a})=>[esc(p.no),thD(p.date),thD(p.due||p.date),fmt(a.c.total),fmt(a.paid),fmt(a.left)])))});
+  $$("[data-aphist]").forEach(b=>b.onclick=()=>{const p=A.pur.find(x=>x.id===b.dataset.aphist);
+    openDlg("ประวัติการจ่าย · "+p.no,simpleTable(["วันที่","จากบัญชี","หัก ณ ที่จ่าย","จ่าย + หัก ณ ที่จ่าย"],A.pay.filter(x=>x.dir==="out"&&x.purId===p.id).map(x=>[thD(x.date),esc((A.accounts.find(a=>a.id===x.accId)||{}).name||""),fmt(x.wht||0),fmt(num(x.amount)+num(x.wht))])))});
+}
 function vAR(){
   const inv=D.docs.filter(isInvoice).map(d=>({d,a:arInfo(d)}));
   const list=inv.filter(x=>ui.arf==="all"||(ui.arf==="open"?x.a.st!=="paid":x.a.st==="paid")).sort((x,y)=>(y.a.late-x.a.late)||String(y.d.date).localeCompare(String(x.d.date)));
@@ -645,7 +675,7 @@ function demo(ok){
 const EMB=(()=>{try{return top!==self&&top.location.origin===location.origin}catch(e){return false}})();
 if(EMB)$("#tabs").style.display="none";
 window.edmDemo=()=>demo();window.edmExcel=()=>exportExcel();
-window.edmView=v=>{const M={cost:["buy","cost"],exp:["buy","exp"],buy:["buy",""],bank:["cash","bank"],cashv:["cash","cash"],petty:["cash","petty"],cash:["cash",""]};let sub=null;if(M[v]){sub=M[v][1];v=M[v][0]}if(!["home","ar","buy","cash","tax"].includes(v))return;load();ui.v=v;if(sub!=null){if(v==="buy")ui.bk=sub;else ui.ck=sub}svU();render();scrollTo(0,0)};
+window.edmView=v=>{const M={cost:["buy","cost"],exp:["buy","exp"],buy:["buy",""],bank:["cash","bank"],cashv:["cash","cash"],petty:["cash","petty"],cash:["cash",""]};let sub=null;if(M[v]){sub=M[v][1];v=M[v][0]}if(!["home","ar","ap","buy","cash","tax"].includes(v))return;load();ui.v=v;if(sub!=null){if(v==="buy")ui.bk=sub;else ui.ck=sub}svU();render();scrollTo(0,0)};
 const fromHash=()=>{if(/^#demo/.test(location.hash)){const back=(/back=([\w\/]+)/.exec(location.hash)||[])[1];history.replaceState(null,"",location.pathname);demo(true);if(back&&/^\/(bill|stock|payroll|app)\/$/.test(back))location.replace(back);return}
   const pu=/pur=([\w-]+)/.exec(location.hash);if(pu){history.replaceState(null,"",location.pathname+location.search);edmView("buy");if(A.pur.some(p=>p.id===pu[1]))purDlg(pu[1]);return}
   const m=/v=(\w+)/.exec(location.hash);if(m)edmView(m[1])};
@@ -673,6 +703,6 @@ render();
 window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get A(){return A},get D(){return D}};
 })();
 </script>
-<script src="../assets/member.js?v=35" defer></script>
+<script src="../assets/member.js?v=38" defer></script>
 </body>
 </html>

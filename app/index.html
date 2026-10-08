@@ -179,7 +179,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
 }
 </style>
-<script src="../assets/suggest.js?v=35"></script>
+<script src="../assets/suggest.js?v=38"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -210,6 +210,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     <div class="mg" data-g="exp"><button class="mg-h" type="button"><span class="step">🛒</span>รายจ่าย<i>▾</i></button><div class="mg-b">
       <a href="#/cost" data-r="cost"><span class="no">1</span>ต้นทุนสินค้า / บริการ</a>
       <a href="#/exp" data-r="exp"><span class="no">2</span>ค่าใช้จ่าย</a>
+      <a href="#/ap" data-r="ap"><span class="no">3</span>เจ้าหนี้ / จ่ายชำระ<span class="n" id="nAp" hidden></span></a>
     </div></div>
     <div class="mg" data-g="fin"><button class="mg-h" type="button"><span class="step">🏦</span>การเงิน<i>▾</i></button><div class="mg-b">
       <a href="#/bank" data-r="bank"><span class="no">1</span>ธนาคาร</a>
@@ -366,9 +367,9 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=35"},stock:{src:"/stock/?v=35",sv:"home"},stockrep:{src:"/stock/?v=35",sv:"report"},
-  ar:{src:"/account/?v=35",v:"ar"},tax:{src:"/account/?v=35",v:"tax"},buy:{src:"/account/?v=35",v:"buy"},cash:{src:"/account/?v=35",v:"cash"},pnl:{src:"/account/?v=35",v:"home"},
-  cost:{src:"/account/?v=35",v:"cost"},exp:{src:"/account/?v=35",v:"exp"},bank:{src:"/account/?v=35",v:"bank"},cashv:{src:"/account/?v=35",v:"cashv"},petty:{src:"/account/?v=35",v:"petty"}};
+const ROUTES={bill:{src:"/bill/?v=38"},stock:{src:"/stock/?v=38",sv:"home"},stockrep:{src:"/stock/?v=38",sv:"report"},
+  ar:{src:"/account/?v=38",v:"ar"},tax:{src:"/account/?v=38",v:"tax"},buy:{src:"/account/?v=38",v:"buy"},cash:{src:"/account/?v=38",v:"cash"},pnl:{src:"/account/?v=38",v:"home"},
+  cost:{src:"/account/?v=38",v:"cost"},exp:{src:"/account/?v=38",v:"exp"},bank:{src:"/account/?v=38",v:"bank"},cashv:{src:"/account/?v=38",v:"cashv"},petty:{src:"/account/?v=38",v:"petty"},ap:{src:"/account/?v=38",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -444,7 +445,7 @@ try{const st=JSON.parse(localStorage.getItem("edm_menu")||"{}");$$(".mg").forEac
 $("#burger").onclick=()=>document.body.classList.toggle("menu");$("#scrim").onclick=()=>document.body.classList.remove("menu");
 // ลิงก์ข้ามระบบจากในหน้าย่อย (เช่น ปุ่ม "ไปหน้าสต๊อก") ให้เปลี่ยนเมนูแทนการเปิดหน้าใหม่
 window.addEventListener("message",e=>{if(e.origin!==location.origin||!e.data||e.data.edm!=="go")return;const t=e.data.tool,v=(/v=(\w+)/.exec(e.data.hash||"")||[])[1];
-  if(t==="account"){go(v==="ar"||v==="tax"?v:v==="buy"?"cost":v==="cash"?"bank":"pnl")}else if(ROUTES[t])go(t);else go("home")});
+  if(t==="account"){go(v==="ar"||v==="tax"||v==="ap"?v:v==="buy"?"cost":v==="cash"?"bank":"pnl")}else if(ROUTES[t])go(t);else go("home")});
 
 /* ---------- หน้าหลัก ---------- */
 function calcDoc(d){const sub=r2((d.items||[]).reduce((a,it)=>a+r2(num(it.q)*num(it.p)-num(it.disc)),0));const after=r2(Math.max(0,sub-num(d.billDisc)));
@@ -463,7 +464,8 @@ function renderHome(){
   docs.filter(d=>d.type==="IV"||d.type==="IT").forEach(d=>{const c=calcDoc(d);let got=pays.filter(p=>p.docId===d.id).reduce((a,p)=>a+num(p.amount)+num(p.wht),0);
     docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!pays.some(p=>p.rcDocId===x.id))got+=calcDoc(x).total});const left=r2(c.total-got);if(left>0.009){ar+=left;arN++}});
   const B=stockBal();const low=items.filter(i=>num(i.min)>0&&(B[i.id]||0)<=num(i.min));
-  $("#nAr").hidden=!arN;$("#nAr").textContent=arN;$("#nLow").hidden=!low.length;$("#nLow").textContent=low.length;
+  $("#nAr").hidden=!arN;$("#nAr").textContent=arN;
+  {const po=(A.pay||[]).filter(p=>p.dir==="out");let apN=0;(A.pur||[]).forEach(p=>{if(p.status==="ordered")return;const c=calcDoc({items:(p.lines||[]).map(l=>({q:l.q,p:l.p})),vat:p.vat,wht:p.wht,billDisc:0});const pd=po.filter(y=>y.purId===p.id).reduce((a,y)=>a+num(y.amount)+num(y.wht),0);if(c.total-pd>0.009)apN++});$("#nAp").hidden=!apN;$("#nAp").textContent=apN}$("#nLow").hidden=!low.length;$("#nLow").textContent=low.length;
   $("#shopName").textContent=seller.name?"· "+seller.name:"· Excel Data Master";
   $("#hi").textContent=seller.name?"สวัสดีค่ะ "+seller.name:"สวัสดีค่ะ 👋";
   const m=MS[+ym.slice(5)-1];
@@ -484,7 +486,7 @@ function renderHome(){
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=35#demo&back=/app/"};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=38#demo&back=/app/"};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- ข้อมูลหลัก: ลูกค้า / เจ้าหนี้ / สินค้า-บริการ ---------- */
 const MD={
@@ -660,6 +662,6 @@ new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.ad
 route();
 </script>
 <script src="reports.js?v=37"></script>
-<script src="../assets/member.js?v=35" defer></script>
+<script src="../assets/member.js?v=38" defer></script>
 </body>
 </html>
