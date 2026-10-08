@@ -91,12 +91,36 @@ aside .foot a{display:inline;padding:0;color:var(--side-ink);text-decoration:und
   .fs::after{display:none}
 }
 .edm-chip button{white-space:nowrap}
+.search{position:relative;flex:1;max-width:520px;margin-left:12px}
+.search input{width:100%;border:1px solid var(--line);background:var(--soft);border-radius:999px;padding:9px 14px 9px 38px;font:inherit;font-size:.92rem;color:inherit;outline:none}
+.search input:focus{border-color:var(--accent);background:var(--card)}
+.search .ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:.6}
+.search kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font:600 .72rem/1 inherit;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:3px 6px}
+.sr{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--card);border-radius:14px;box-shadow:0 0 0 1px var(--line),0 24px 48px -20px rgba(0,0,0,.35);max-height:min(70vh,560px);overflow-y:auto;padding:6px;z-index:60}
+.sr .g{font-size:.74rem;font-weight:700;color:var(--muted);padding:10px 10px 4px;letter-spacing:.03em}
+.sr button{display:flex;width:100%;border:0;background:none;text-align:left;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;cursor:pointer;font:inherit;color:inherit}
+.sr button:hover,.sr button.act{background:var(--soft)}
+.sr .ic2{width:30px;height:30px;flex:none;border-radius:8px;background:var(--soft);display:grid;place-items:center;font-size:.95rem}
+.sr button:hover .ic2,.sr button.act .ic2{background:var(--card)}
+.sr .t{flex:1;min-width:0}.sr .t b{display:block;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sr .t small{display:block;color:var(--muted);font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr .v{text-align:right;font-size:.85rem;white-space:nowrap;font-variant-numeric:tabular-nums}.sr .v small{display:block;font-size:.72rem}
+.sr .none{padding:18px 12px;color:var(--muted);font-size:.9rem;text-align:center}
+.sr mark{background:color-mix(in srgb,var(--accent) 22%,transparent);color:inherit;border-radius:3px}
+.sbtn{display:none;border:0;background:var(--soft);border-radius:10px;width:38px;height:38px;cursor:pointer;font-size:1rem;margin-left:auto}
+@media(max-width:760px){
+  .sbtn{display:inline-grid;place-items:center}.nav{margin-left:6px}
+  .search{display:none;position:fixed;left:0;right:0;top:56px;max-width:none;margin:0;padding:10px 12px;background:var(--card);border-bottom:1px solid var(--line);z-index:40}
+  body.srch .search{display:block}.search .ic{left:26px;top:31px}.search kbd{display:none}
+  .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
+}
 </style>
 </head>
 <body>
 <header class="top"><div class="in">
   <button class="burger" id="burger" aria-label="เมนู">☰</button>
   <a class="brand" href="#/home">🏪 ระบบร้านค้า <small id="shopName">· Excel Data Master</small></a>
+  <div class="search" id="search"><span class="ic">🔍</span><input id="q" type="search" autocomplete="off" placeholder="ค้นหาเลขที่บิล ลูกค้า สินค้า ผู้ขาย..." aria-label="ค้นหา"><kbd>/</kbd><div class="sr" id="sr" hidden></div></div>
+  <button class="sbtn" id="sbtn" aria-label="ค้นหา">🔍</button>
   <nav class="nav"></nav>
 </div></header>
 
@@ -174,8 +198,8 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=23"},stock:{src:"/stock/?v=23"},payroll:{src:"/payroll/?v=23"},
-  ar:{src:"/account/?v=23",v:"ar"},tax:{src:"/account/?v=23",v:"tax"},buy:{src:"/account/?v=23",v:"buy"},cash:{src:"/account/?v=23",v:"cash"},pnl:{src:"/account/?v=23",v:"home"}};
+const ROUTES={bill:{src:"/bill/?v=25"},stock:{src:"/stock/?v=25"},payroll:{src:"/payroll/?v=25"},
+  ar:{src:"/account/?v=25",v:"ar"},tax:{src:"/account/?v=25",v:"tax"},buy:{src:"/account/?v=25",v:"buy"},cash:{src:"/account/?v=25",v:"cash"},pnl:{src:"/account/?v=25",v:"home"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -194,6 +218,41 @@ function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0]
 }
 window.addEventListener("hashchange",route);
 const go=r=>{if(r==="more"){document.body.classList.add("menu");return}location.hash="#/"+r};
+// เปิดรายการที่เลือกในหน้าย่อย (เช่น เปิดบิลใบนั้น / บัญชีคุมสต๊อกของสินค้านั้น)
+function openIn(r,hash){const R=ROUTES[r];let f=frames[R.src];
+  if(!f){f=frameFor(R.src);f.src=R.src+"#"+hash}else{const set=()=>{try{f.contentWindow.location.hash=hash}catch(e){}};f.dataset.ready?set():f.addEventListener("load",set,{once:true})}
+  go(r)}
+
+/* ---------- ค้นหาทุกระบบ ---------- */
+const TN={QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับภาษี",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับภาษี/ใบเสร็จ"};
+const hl=(t,q)=>{t=esc(t);if(!q)return t;const i=t.toLowerCase().indexOf(esc(q).toLowerCase());return i<0?t:t.slice(0,i)+"<mark>"+t.slice(i,i+q.length)+"</mark>"+t.slice(i+q.length)};
+let hits=[],hi=0;
+function search(raw){const q=raw.trim().toLowerCase();const docs=LS.get("edm_bill_docs",[]),items=LS.get("edm_stock_items",[]),A=LS.get("edm_acc",{})||{},B=stockBal();
+  const pays=(A.pay||[]).filter(p=>p.dir==="in");
+  const paid=d=>{if(d.type==="IT"&&d.term==="cash")return["เงินสด",""];if(d.type!=="IV"&&d.type!=="IT")return["",""];const c=calcDoc(d);let got=pays.filter(p=>p.docId===d.id).reduce((a,p)=>a+num(p.amount)+num(p.wht),0);docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!pays.some(p=>p.rcDocId===x.id))got+=calcDoc(x).total});return got>=c.total-.01?["รับครบ",""]:got>0?["รับบางส่วน","cr"]:["ค้างชำระ","cr"]};
+  const G=[];const m=s=>!q||String(s||"").toLowerCase().includes(q);
+  const D=docs.filter(d=>m(d.no)||m(d.cust&&d.cust.name)||m(d.cust&&d.cust.tax)||m(d.ref)||(q&&(d.items||[]).some(it=>m(it.d)))).sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.updated||0)-(a.updated||0)).slice(0,q?8:6);
+  if(D.length)G.push({g:q?"เอกสารขาย":"เอกสารล่าสุด",L:D.map(d=>{const c=calcDoc(d),st=paid(d);return{ic:"🧾",t:hl(d.no,q)+" · "+esc(TN[d.type]||""),s:hl(d.cust&&d.cust.name||"-",q)+" · "+thD(d.date),v:"฿"+fmt(c.net)+(st[0]?`<small class="tag ${st[1]}">${st[0]}</small>`:""),go:()=>openIn("bill","open="+d.id)}})});
+  if(q){const cs=[...new Set(docs.map(d=>d.cust&&d.cust.name).filter(n=>n&&m(n)))].slice(0,4);
+    if(cs.length)G.push({g:"ลูกค้า",L:cs.map(n=>{const ds=docs.filter(d=>d.cust&&d.cust.name===n&&d.type!=="QT");let tot=0;ds.forEach(d=>tot+=calcDoc(d).base);return{ic:"👤",t:hl(n,q),s:ds.length+" เอกสาร · ยอดขายรวม ฿"+fmt0(tot),v:"ดูบิล →",go:()=>{$("#q").value=n;run(true)},keep:1}})});
+    const I=items.filter(i=>m(i.name)||m(i.sku)||m(i.cat)).slice(0,6);
+    if(I.length)G.push({g:"สินค้า",L:I.map(i=>{const b=B[i.id]||0,low=num(i.min)>0&&b<=num(i.min);return{ic:"📦",t:hl(i.name,q),s:hl(i.sku||"",q)+(i.cat?" · "+esc(i.cat):""),v:`คงเหลือ ${fmt0(b)} ${esc(i.unit||"")}${low?'<small class="tag cr">ใกล้หมด</small>':""}`,go:()=>openIn("stock","card="+i.id)}})});
+    const P=(A.pur||[]).filter(p=>m(p.no)||m(p.sup&&p.sup.name)||m(p.taxNo)||m(p.cat)||(p.lines||[]).some(l=>m(l.d))).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,6);
+    if(P.length)G.push({g:"ซื้อสินค้า / ค่าใช้จ่าย",L:P.map(p=>{let t=0;(p.lines||[]).forEach(l=>t+=num(l.q)*num(l.p));if(p.vat==="ex")t*=1.07;return{ic:p.kind==="stock"?"🛒":"💸",t:hl(p.no,q)+" · "+(p.kind==="stock"?"ซื้อสินค้า":esc(p.cat||"ค่าใช้จ่าย")),s:hl(p.sup&&p.sup.name||"",q)+" · "+thD(p.date),v:"฿"+fmt(t),go:()=>openIn("buy","pur="+p.id)}})})}
+  return G}
+function run(focusFirst){const q=$("#q").value;const G=search(q);hits=G.flatMap(g=>g.L);hi=0;
+  $("#sr").innerHTML=G.length?G.map(g=>`<div class="g">${g.g}</div>`+g.L.map(x=>`<button type="button" data-h="${hits.indexOf(x)}"><span class="ic2">${x.ic}</span><span class="t"><b>${x.t}</b><small>${x.s}</small></span><span class="v">${x.v}</span></button>`).join("")).join(""):`<div class="none">${q.trim()?"ไม่พบ \""+esc(q.trim())+"\" ลองค้นด้วยเลขที่ ชื่อลูกค้า หรือชื่อสินค้า":"ยังไม่มีข้อมูล"}</div>`;
+  $("#sr").hidden=false;mark()}
+function mark(){$$("#sr [data-h]").forEach(b=>b.classList.toggle("act",+b.dataset.h===hi))}
+function pick(i){const x=hits[i];if(!x)return;x.go();if(!x.keep)closeSearch()}
+function closeSearch(){$("#sr").hidden=true;document.body.classList.remove("srch");$("#q").blur()}
+$("#q").addEventListener("input",()=>run());$("#q").addEventListener("focus",()=>run());
+$("#q").addEventListener("keydown",e=>{if(e.key==="ArrowDown"){hi=Math.min(hits.length-1,hi+1);mark();e.preventDefault()}else if(e.key==="ArrowUp"){hi=Math.max(0,hi-1);mark();e.preventDefault()}else if(e.key==="Enter"){pick(hi);e.preventDefault()}else if(e.key==="Escape")closeSearch()});
+$("#sr").addEventListener("mousedown",e=>e.preventDefault());
+$("#sr").addEventListener("click",e=>{const b=e.target.closest("[data-h]");if(b)pick(+b.dataset.h)});
+document.addEventListener("click",e=>{if(!e.target.closest("#search")&&!e.target.closest("#sbtn"))$("#sr").hidden=true});
+$("#sbtn").onclick=()=>{const on=document.body.classList.toggle("srch");if(on)setTimeout(()=>$("#q").focus(),30);else closeSearch()};
+document.addEventListener("keydown",e=>{if(e.key==="/"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$("#q").focus()}});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(b){e.preventDefault();go(b.dataset.go)}});
 $("#burger").onclick=()=>document.body.classList.toggle("menu");$("#scrim").onclick=()=>document.body.classList.remove("menu");
 // ลิงก์ข้ามระบบจากในหน้าย่อย (เช่น ปุ่ม "ไปหน้าสต๊อก") ให้เปลี่ยนเมนูแทนการเปิดหน้าใหม่
@@ -238,13 +297,13 @@ function renderHome(){
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=23#demo&back=/app/"};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=25#demo&back=/app/"};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 function renderBadges(){const h=$("#home").classList.contains("show");renderHome();$("#home").classList.toggle("show",h)}
 // จำว่าหน้าย่อยโหลดเสร็จแล้ว
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
-<script src="../assets/member.js?v=24" defer></script>
+<script src="../assets/member.js?v=25" defer></script>
 </body>
 </html>

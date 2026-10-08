@@ -45,6 +45,7 @@ main{max-width:1400px;margin:0 auto;padding:16px;display:grid;grid-template-colu
 textarea.in-{resize:vertical;min-height:60px}
 .seg{display:flex;background:var(--soft);border-radius:999px;padding:3px;gap:3px}
 .seg button{flex:1;border:0;background:none;border-radius:999px;padding:8px 6px;cursor:pointer;font-weight:600;font-size:.86rem;color:var(--muted)}
+.dflt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.dflt .in-{padding:7px 8px;font-size:.84rem}
 .seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 #termBox{margin:10px 0 2px}#termBox[hidden],#termBox [hidden]{display:none!important}#termBox .row{margin-top:8px}.cdays{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;font-size:.84rem;color:var(--muted)}
 #termSeg button.on[data-term=cash]{color:#127A4B}#termSeg button.on[data-term=credit]{color:#B4570B}
@@ -480,7 +481,7 @@ const DEMO={
       ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
 };
 function loadDemo(mode){
-  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=23#demo&back=/bill/";return}
+  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=25#demo&back=/bill/";return}
   const has=LS.get(K.docs,[]).length;
   if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
   const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);
@@ -501,13 +502,22 @@ function payTag(d,docs){if(d.type==="IT"&&d.term==="cash")return" · 💵 ขา
   const total=r2(calc(d).total);let got=0;(A&&A.pay||[]).forEach(p=>{if(p.dir==="in"&&p.docId===d.id)got+=num(p.amount)+num(p.wht)});
   docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!(A&&A.pay||[]).some(p=>p.rcDocId===x.id))got+=calc(x).total});
   return got>=total-0.01?" · ✅ รับชำระแล้ว":got>0?" · 🟡 รับบางส่วน":" · ⏳ ค้างชำระ"}
+// เปิดเอกสารจากการค้นหาในระบบร้านค้า (#open=<id>)
+function openFromHash(){const m=/open=([\w-]+)/.exec(location.hash);if(!m)return;history.replaceState(null,"",location.pathname+location.search);
+  const d=LS.get(K.docs,[]).find(x=>x.id===m[1]);if(!d)return toast("ไม่พบเอกสาร");doc=JSON.parse(JSON.stringify(d));renderAll();
+  const mt=document.querySelector(".mtabs");if(mt&&getComputedStyle(mt).display!=="none")document.querySelector('.mtabs button[data-mt="view"]').click();scrollTo(0,0);toast("เปิด "+d.no)}
+window.addEventListener("hashchange",openFromHash);setTimeout(openFromHash,0);
 $("#openList").onclick=()=>{
   const docs=LS.get(K.docs,[]);
-  openDlg("เอกสารของฉัน",`<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm main" id="xls">📊 ดาวน์โหลดเป็น Excel</button><button class="btn sm ghost" id="exp">⬇️ สำรองข้อมูล</button><label class="btn sm ghost">⬆️ นำเข้าข้อมูล<input type="file" id="imp" accept=".json" hidden></label></div><input class="in-" id="dq" placeholder="ค้นหาเลขที่หรือชื่อลูกค้า"><div class="list" id="dl"></div><p class="note">ข้อมูลเก็บในเบราว์เซอร์ของเครื่องนี้เท่านั้น ควรกด "สำรองข้อมูล" เก็บไว้เป็นระยะ · ไฟล์ Excel เปิดใน Google ชีตได้ (อัปโหลดไป Google Drive แล้วเปิดด้วย Google ชีต)</p>`);
-  const draw=q=>{const L=docs.filter(d=>!q||(d.no+d.cust.name).toLowerCase().includes(q));$("#dl").innerHTML=L.length?L.map(d=>`<div class="li"><div><b>${esc(d.no)} · ${esc(tName(d.type,d))}</b><small>${esc(d.cust.name||"-")} · ${thDate(d.date)} · ฿${fmt(d._total||0)}${payTag(d,docs)}</small></div><div class="acts"><button class="btn sm main" data-op="${d.id}">เปิด</button><button class="btn sm ghost danger" data-dl="${d.id}">ลบ</button></div></div>`).join(""):`<p class="note">ยังไม่มีเอกสารที่บันทึกไว้</p>`;
+  openDlg("เอกสารของฉัน",`<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm main" id="xls">📊 ดาวน์โหลดเป็น Excel</button><button class="btn sm ghost" id="exp">⬇️ สำรองข้อมูล</button><label class="btn sm ghost">⬆️ นำเข้าข้อมูล<input type="file" id="imp" accept=".json" hidden></label></div><input class="in-" id="dq" type="search" placeholder="🔍 ค้นหาเลขที่ ชื่อลูกค้า เลขผู้เสียภาษี หรือชื่อสินค้า"><div class="dflt"><select class="in-" id="dt"><option value="">ทุกประเภท</option>${Object.keys(TYPES).map(k=>`<option value="${k}">${esc(TYPES[k].name)}</option>`).join("")}</select><select class="in-" id="ds"><option value="">ทุกสถานะ</option><option value="cash">💵 ขายเงินสด</option><option value="open">⏳ ค้างชำระ</option><option value="part">🟡 รับบางส่วน</option><option value="paid">✅ รับชำระแล้ว</option></select><select class="in-" id="dm"><option value="">ทุกเดือน</option>${[...new Set(docs.map(d=>String(d.date).slice(0,7)))].sort().reverse().map(m=>`<option value="${m}">${thDate(m+"-01").replace(/^1 /,"")}</option>`).join("")}</select></div><div class="note" id="dsum"></div><div class="list" id="dl"></div><p class="note">ข้อมูลเก็บในเบราว์เซอร์ของเครื่องนี้เท่านั้น ควรกด "สำรองข้อมูล" เก็บไว้เป็นระยะ · ไฟล์ Excel เปิดใน Google ชีตได้ (อัปโหลดไป Google Drive แล้วเปิดด้วย Google ชีต)</p>`);
+  const stOf=d=>{const t=payTag(d,docs);return/เงินสด/.test(t)?"cash":/✅/.test(t)?"paid":/🟡/.test(t)?"part":/⏳/.test(t)?"open":""};
+  const draw=q=>{q=$("#dq").value.trim().toLowerCase();const ft=$("#dt").value,fs=$("#ds").value,fm=$("#dm").value;
+    const L=docs.filter(d=>(!q||(d.no+" "+d.cust.name+" "+(d.cust.tax||"")+" "+(d.ref||"")+" "+d.items.map(i=>i.d).join(" ")).toLowerCase().includes(q))&&(!ft||d.type===ft)&&(!fs||stOf(d)===fs)&&(!fm||String(d.date).startsWith(fm)))
+      .sort((a,b)=>String(b.date).localeCompare(String(a.date))||String(b.no).localeCompare(String(a.no)));
+    $("#dsum").textContent=L.length?"พบ "+L.length+" รายการ · รวม ฿"+fmt(L.reduce((s,d)=>s+(d._total||0),0)):"";$("#dl").innerHTML=L.length?L.map(d=>`<div class="li"><div><b>${esc(d.no)} · ${esc(tName(d.type,d))}</b><small>${esc(d.cust.name||"-")} · ${thDate(d.date)} · ฿${fmt(d._total||0)}${payTag(d,docs)}</small></div><div class="acts"><button class="btn sm main" data-op="${d.id}">เปิด</button><button class="btn sm ghost danger" data-dl="${d.id}">ลบ</button></div></div>`).join(""):`<p class="note">ยังไม่มีเอกสารที่บันทึกไว้</p>`;
     $$("[data-op]").forEach(b=>b.onclick=()=>{doc=JSON.parse(JSON.stringify(docs.find(d=>d.id===b.dataset.op)));dlg.close();renderAll()});
     $$("[data-dl]").forEach(b=>b.onclick=()=>{if(!confirm("ลบเอกสารนี้?"))return;const i=docs.findIndex(d=>d.id===b.dataset.dl);if(i>=0){syncStock(docs[i],true);syncPay(docs[i],true)}docs.splice(i,1);LS.set(K.docs,docs);draw($("#dq").value.toLowerCase())})};
-  draw("");$("#dq").oninput=e=>draw(e.target.value.toLowerCase());
+  draw();["#dq","#dt","#ds","#dm"].forEach(s=>$(s).addEventListener(s==="#dq"?"input":"change",()=>draw()));
   $("#xls").onclick=()=>exportExcel();
   $("#exp").onclick=()=>{const data={v:1,app:"edm-bill",seller,docs:LS.get(K.docs,[]),customers:LS.get(K.cust,[]),counter:LS.get(K.cnt,{})};const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"}));a.download="สำรองข้อมูลบิล-"+today()+".json";a.click()};
   $("#imp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const d=JSON.parse(t);if(d.app!=="edm-bill")throw 0;if(!confirm("นำเข้าข้อมูลจากไฟล์? ข้อมูลเดิมในเครื่องนี้จะถูกแทนที่"))return;seller=d.seller||seller;LS.set(K.seller,seller);LS.set(K.docs,d.docs||[]);LS.set(K.cust,d.customers||[]);LS.set(K.cnt,d.counter||{});dlg.close();renderAll();toast("นำเข้าข้อมูลแล้ว ✓")}).catch(()=>toast("ไฟล์ไม่ถูกต้อง"))};
@@ -522,6 +532,6 @@ window.__bill={calc,bahtText,exportExcel,loadDemo,get doc(){return doc}};
 renderAll();
 })();
 </script>
-<script src="../assets/member.js?v=24" defer></script>
+<script src="../assets/member.js?v=25" defer></script>
 </body>
 </html>

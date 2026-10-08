@@ -396,10 +396,13 @@ function demo(){
 }
 
 /* ---------- events ---------- */
+// เปิดบัญชีคุมสต๊อกของสินค้าจากการค้นหาในระบบร้านค้า (#card=<id>)
+const cardFromHash=()=>{const m=/card=([\w-]+)/.exec(location.hash);if(!m)return;history.replaceState(null,"",location.pathname+location.search);if(items.some(i=>i.id===m[1]))stockCard(m[1])};
+window.addEventListener("hashchange",cardFromHash);setTimeout(cardFromHash,0);
 $("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;svU();render();scrollTo(0,0)};
 document.addEventListener("click",e=>{const b=e.target.closest("[data-act],[data-card],[data-in],[data-outq],[data-adjq],[data-edit],[data-deltx],[data-go]");if(!b)return;
   if(b.dataset.act==="add")return itemForm();
-  if(b.dataset.act==="demo"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=23#demo&back=/stock/";return}
+  if(b.dataset.act==="demo"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=25#demo&back=/stock/";return}
   if(b.dataset.go){ui.v=b.dataset.go;svU();render();return}
   if(b.dataset.card)return stockCard(b.dataset.card);
   if(b.dataset.edit)return itemForm(b.dataset.edit);
@@ -423,6 +426,6 @@ render();
 window.__stock={compute,period,demo,exportExcel,get items(){return items},get tx(){return tx}};
 })();
 </script>
-<script src="../assets/member.js?v=24" defer></script>
+<script src="../assets/member.js?v=25" defer></script>
 </body>
 </html>
