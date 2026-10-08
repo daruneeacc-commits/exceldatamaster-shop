@@ -103,7 +103,17 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
 .page .r{text-align:right}
 .page tfoot td{font-weight:700;border-top:1.2px solid #111}
 .page .pf{margin-top:10px;font-size:7.5pt;color:#888;text-align:center}
-@media print{@page{size:A4;margin:10mm}body{background:#fff}header.top,main,.toast,dialog,.edm-bar,.edm-gate{display:none!important}#printArea{display:block}}
+.page.rd{font-size:8.6pt;color:#000;break-after:page;page-break-after:always}.page.rd:last-child{break-after:auto;page-break-after:auto}
+.rd-h{position:relative;text-align:center;margin-bottom:4px}.rd-h h1{color:#000;font-size:14pt}.rd-pg{position:absolute;right:0;top:4px;font-size:8.5pt}
+.rd-m{display:flex;justify-content:space-between;gap:16px;margin:3px 0;align-items:center}.rd-m u{text-decoration:none;border-bottom:1px dotted #000;padding:0 6px;display:inline-block;min-width:60px}
+.rd-c{text-align:center}.rd-c span{margin:0 16px}
+.tin{display:inline-flex;gap:0;vertical-align:middle}.tin i{font-style:normal;display:inline-block;width:14px;height:17px;border:1px solid #000;margin-left:-1px;text-align:center;line-height:16px;font-size:8.5pt}.tin i.g{margin-left:5px}
+.ck{display:inline-block;width:12px;height:12px;border:1px solid #000;text-align:center;line-height:11px;font-size:9pt;vertical-align:-1px;margin-right:3px}
+.page table.rdt{margin-top:6px;table-layout:fixed;width:100%}.page .rdt td{overflow-wrap:anywhere}.page .rdt th,.page .rdt td{border:1px solid #000;color:#000;padding:3px 4px;vertical-align:middle}.page .rdt th{text-align:center;font-weight:600;font-size:8pt;line-height:1.3;background:#f1f3f2}
+.page .rdt td.c{text-align:center}.page .rdt tfoot td{border-top:1.5px solid #000}
+.rd-note{margin-top:6px;font-size:7.4pt;color:#444}
+.vat-act{display:flex;gap:6px;flex-wrap:wrap}
+@media print{@page{size:A4;margin:10mm}.page.rd .rd-pg{display:block}body{background:#fff}header.top,main,.toast,dialog,.edm-bar,.edm-gate{display:none!important}#printArea{display:block}}
 </style>
 </head>
 <body>
@@ -347,12 +357,13 @@ function drawPur(isEdit){
    <div class="row3"><div class="f"><label>VAT</label><select class="in-" id="pVat"><option value="ex" ${p.vat==="ex"?"selected":""}>ราคายังไม่รวม VAT 7%</option><option value="in" ${p.vat==="in"?"selected":""}>ราคารวม VAT แล้ว</option><option value="none" ${p.vat==="none"?"selected":""}>ไม่มี VAT</option></select></div>
      <div class="f"><label>เราหัก ณ ที่จ่าย</label><select class="in-" id="pWht">${[0,1,2,3,5].map(w=>`<option value="${w}" ${num(p.wht)===w?"selected":""}>${w?w+"%":"ไม่หัก"}</option>`).join("")}</select></div>
      <div class="f"><label>เลขที่ใบกำกับภาษีของผู้ขาย</label><input class="in-" id="pTaxNo" value="${esc(p.taxNo)}"></div></div>
-   <div class="row"><label class="chk"><input type="checkbox" id="pTaxInv" ${p.taxInv?"checked":""}> ได้รับใบกำกับภาษี (ใช้เป็นภาษีซื้อ)</label><div class="f"><label>เลขผู้เสียภาษีผู้ขาย</label><input class="in-" id="pSupTax" value="${esc(p.sup.tax||"")}"></div></div>
+   <div class="row"><label class="chk"><input type="checkbox" id="pTaxInv" ${p.taxInv?"checked":""}> ได้รับใบกำกับภาษี (ใช้เป็นภาษีซื้อ)</label><div class="f"><label>เลขผู้เสียภาษีผู้ขาย</label><input class="in-" id="pSupTax" inputmode="numeric" maxlength="13" value="${esc(p.sup.tax||"")}"></div></div>
+   <div class="row"><div class="f"><label>สถานประกอบการของผู้ขาย</label><input class="in-" id="pSupBr" list="brlist" placeholder="สำนักงานใหญ่ หรือ สาขา 00001" value="${esc(p.sup.branch||"")}"><datalist id="brlist"><option>สำนักงานใหญ่</option><option>สาขา 00001</option></datalist></div><div class="f"></div></div>
    ${isEdit?"":`<div class="row"><label class="chk"><input type="checkbox" id="pPaid" ${p.paidNow?"checked":""}> จ่ายเงินแล้ว</label><div class="f"><label>จ่ายจากบัญชี</label>${accSel("pAcc",p.payAcc)}</div></div>`}
    <div class="f"><label>หมายเหตุ</label><input class="in-" id="pNote" value="${esc(p.note)}"></div>
    <div class="totals" id="pTot"></div>
    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="pSave">💾 บันทึก</button>${isEdit?`<button class="btn ghost danger" id="pDel">ลบ</button>`:""}</div>`);
-  const sync=()=>{p.date=$("#pDate").value;p.due=$("#pDue").value;p.sup.name=$("#pSup").value;p.sup.tax=$("#pSupTax").value;p.vat=$("#pVat").value;p.wht=num($("#pWht").value);p.taxInv=$("#pTaxInv").checked;p.taxNo=$("#pTaxNo").value;p.note=$("#pNote").value;if($("#pCat"))p.cat=$("#pCat").value;
+  const sync=()=>{p.date=$("#pDate").value;p.due=$("#pDue").value;p.sup.name=$("#pSup").value;p.sup.tax=$("#pSupTax").value.replace(/\D/g,"");p.sup.branch=$("#pSupBr").value.trim();p.vat=$("#pVat").value;p.wht=num($("#pWht").value);p.taxInv=$("#pTaxInv").checked;p.taxNo=$("#pTaxNo").value;p.note=$("#pNote").value;if($("#pCat"))p.cat=$("#pCat").value;
     if($("#pPaid")){p.paidNow=$("#pPaid").checked;p.payAcc=$("#pAcc").value}
     $$("#pLines .line").forEach(el=>{const l=p.lines[+el.dataset.k];el.querySelectorAll("[data-l]").forEach(i=>{const k=i.dataset.l;if(k==="pid"){const it=findItem(i.value);l.pid=it?it.id:"";l._t=i.value;if(it){l.d=it.name;l.u=it.unit}}else l[k]=i.value})});
     const c=calcPur(p);$("#pTot").innerHTML=`<span>มูลค่าก่อน VAT</span><span>${fmt(c.base)}</span><span>VAT</span><span>${fmt(c.vat)}</span><span class="big">ยอดรวม</span><span class="big">${fmt(c.total)}</span>${c.wht?`<span>หัก ณ ที่จ่าย ${p.wht}%</span><span>-${fmt(c.wht)}</span><span class="big">จ่ายจริง</span><span class="big">${fmt(c.net)}</span>`:""}`};
@@ -415,21 +426,30 @@ function taxData(ym){
   const whtOut=A.pay.filter(p=>p.dir==="out"&&num(p.wht)>0&&String(p.date).startsWith(ym)).map(p=>({p,u:A.pur.find(x=>x.id===p.purId)}));
   let ov=0,ob=0,iv=0,ib=0;out.forEach(x=>{ov+=x.c.vat;ob+=x.c.base});inp.forEach(x=>{iv+=x.c.vat;ib+=x.c.base});
   return{out,inp,whtIn,whtOut,ov:r2(ov),ob:r2(ob),iv:r2(iv),ib:r2(ib),net:r2(ov-iv)}}
+// แถวรายงานภาษีตามแบบกรมสรรพากร (เรียงตามวันที่ใบกำกับภาษี)
+function vatRows(T,kind){const L=kind==="out"
+    ?T.out.map(x=>({date:x.d.date,no:x.d.no,book:"",name:x.d.cust.name||"ขายเงินสด (ไม่ระบุชื่อผู้ซื้อ)",tax:x.d.cust.tax||"",br:x.d.cust.branch||"",base:x.c.base,vat:x.c.vat,note:x.d.type==="IT"&&x.d.term==="cash"?"ขายเงินสด":""}))
+    :T.inp.map(x=>({date:x.p.date,no:x.p.taxNo||"",book:"",name:x.p.sup.name,tax:x.p.sup.tax||"",br:x.p.sup.branch||"",base:x.c.base,vat:x.c.vat,note:x.p.kind==="expense"?(x.p.cat||"ค่าใช้จ่าย"):"ซื้อสินค้า"}));
+  return L.sort((a,b)=>String(a.date).localeCompare(String(b.date))||String(a.no).localeCompare(String(b.no)))}
+// สถานประกอบการ: สำนักงานใหญ่ ✓ หรือ สาขาที่ 5 หลัก (ตามที่ระบุใน ภ.พ.20)
+function brCode(tax,br){if(!tax)return{hq:"",br:""};const m=/(\d{1,5})/.exec(br||"");if(m&&!/ใหญ่/.test(br)&&+m[1]>0)return{hq:"",br:m[1].padStart(5,"0")};return{hq:"✓",br:""}}
+const dTH=s=>{if(!s)return"";const[y,m,d]=s.split("-");return d+"/"+m+"/"+(+y+543)};
 function vTax(){
   const T=taxData(ui.ym);
   $("#view").innerHTML=`<div class="kpis k4"><div class="kpi"><span>ภาษีขาย</span><b>฿${fmt(T.ov)}</b><span>${T.out.length} ใบ</span></div><div class="kpi"><span>ภาษีซื้อ</span><b>฿${fmt(T.iv)}</b><span>${T.inp.length} ใบ</span></div>
     <div class="kpi ${T.net>0?"warn":"pos"}"><span>${T.net>=0?"ภ.พ.30 ต้องชำระ":"ภ.พ.30 ภาษีซื้อเกิน (ขอคืน/ยกไป)"}</span><b>฿${fmt(Math.abs(T.net))}</b><span>ยื่นภายใน 15 ${MS[+ymShift(ui.ym,1).slice(5)-1]} (ออนไลน์ 23)</span></div>
     <div class="kpi"><span>ถูกหัก ณ ที่จ่ายไว้ / เราหักไว้</span><b>฿${fmt(T.whtIn.reduce((s,x)=>s+num(x.p.wht),0))} / ฿${fmt(T.whtOut.reduce((s,x)=>s+num(x.p.wht),0))}</b></div></div>
-  <div class="card"><h2>📑 รายงานภาษีขาย <small>${ymLabel(ui.ym)}</small><span style="display:flex;gap:6px"><button class="btn sm main" id="taxPr">🖨️ พิมพ์รายงานภาษี</button></span></h2>${vatTable(T.out.map(x=>[x.d.date,x.d.no,x.d.cust.name,x.d.cust.tax,x.d.cust.branch,x.c.base,x.c.vat]))}
+  <div class="card"><h2>📑 รายงานภาษีขาย <small>${ymLabel(ui.ym)} · รูปแบบตามกรมสรรพากร</small><span class="vat-act"><button class="btn sm main" data-tp="out">🖨️ พิมพ์รายงานภาษีขาย</button><button class="btn sm ghost" data-tp="inp">🖨️ รายงานภาษีซื้อ</button><button class="btn sm ghost" data-tp="all">🖨️ พิมพ์ทั้งหมด + สรุป ภ.พ.30</button></span></h2>${vatTable(vatRows(T,"out"),"out")}
     ${D.seller.vat?"":`<div class="note">⚠️ ข้อมูลกิจการในหน้าเปิดบิลยังไม่ได้ติ๊ก "จดทะเบียนภาษีมูลค่าเพิ่ม" ใบแจ้งหนี้ขายสินค้าจะไม่ถูกนับเป็นภาษีขาย</div>`}</div>
-  <div class="card"><h2>📑 รายงานภาษีซื้อ</h2>${vatTable(T.inp.map(x=>[x.p.date,x.p.taxNo||x.p.no,x.p.sup.name,x.p.sup.tax,"",x.c.base,x.c.vat]))}<div class="note">นับเฉพาะรายการซื้อ/ค่าใช้จ่ายที่ติ๊ก "ได้รับใบกำกับภาษี"</div></div>
+  <div class="card"><h2>📑 รายงานภาษีซื้อ <small>${ymLabel(ui.ym)}</small></h2>${vatTable(vatRows(T,"inp"),"inp")}<div class="note">นับเฉพาะรายการซื้อ/ค่าใช้จ่ายที่ติ๊ก "ได้รับใบกำกับภาษี" · ใส่เลขที่ใบกำกับภาษี เลขผู้เสียภาษี และสาขาของผู้ขายให้ครบ</div></div>
   <div class="grid2"><div class="card"><h2>ลูกค้าหัก ณ ที่จ่ายเรา <small>เก็บหนังสือรับรอง 50 ทวิ ไว้ใช้ยื่นภาษีสิ้นปี</small></h2>${simpleTable(["วันที่","ลูกค้า","เอกสาร","หักไว้"],T.whtIn.map(x=>[thD(x.p.date),x.d?x.d.cust.name:"",x.d?x.d.no:"",fmt(x.p.wht)]))}</div>
     <div class="card"><h2>เราหัก ณ ที่จ่ายผู้อื่น <small>ต้องนำส่ง ภ.ง.ด.3 / 53 ภายใน 7 ${MS[+ymShift(ui.ym,1).slice(5)-1]}</small></h2>${simpleTable(["วันที่","ผู้รับเงิน","เอกสาร","หักไว้"],T.whtOut.map(x=>[thD(x.p.date),x.u?x.u.sup.name:"",x.u?x.u.no:"",fmt(x.p.wht)]))}</div></div>
   <p class="note">ตัวเลขเป็นการสรุปจากข้อมูลที่บันทึกในระบบ ใช้ประกอบการยื่นแบบ ควรให้ผู้ทำบัญชีตรวจสอบก่อนยื่นจริง</p>`;
-  $("#taxPr").onclick=()=>{printTax(T);setTimeout(()=>window.print(),80)};
+  $$("[data-tp]").forEach(b=>b.onclick=()=>{printTax(T,b.dataset.tp);setTimeout(()=>window.print(),80)});
 }
-function vatTable(rows){if(!rows.length)return`<div class="empty" style="padding:12px">ไม่มีรายการเดือนนี้</div>`;let b=0,v=0;rows.forEach(r=>{b+=r[5];v+=r[6]});
-  return`<div class="tbl-wrap"><table class="t"><thead><tr><th>วันที่</th><th>เลขที่ใบกำกับ</th><th>ชื่อ</th><th>เลขผู้เสียภาษี</th><th class="r">มูลค่า</th><th class="r">VAT</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${thD(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2]||"")}${r[4]?` <span class="note">${esc(r[4])}</span>`:""}</td><td class="sku">${esc(r[3]||"")}</td><td class="r">${fmt(r[5])}</td><td class="r">${fmt(r[6])}</td></tr>`).join("")}</tbody><tfoot><tr><td colspan="4">รวม ${rows.length} ใบ</td><td class="r">${fmt(b)}</td><td class="r">${fmt(v)}</td></tr></tfoot></table></div>`}
+function vatTable(rows,kind){if(!rows.length)return`<div class="empty" style="padding:12px">ไม่มีรายการเดือนนี้</div>`;let b=0,v=0;rows.forEach(r=>{b+=r.base;v+=r.vat});
+  const miss=r=>kind==="inp"&&(!r.no||!/^\d{13}$/.test(r.tax));
+  return`<div class="tbl-wrap"><table class="t"><thead><tr><th>ลำดับ</th><th>วันที่</th><th>เลขที่ใบกำกับ</th><th>ชื่อ${kind==="out"?"ผู้ซื้อ":"ผู้ขาย"}</th><th>เลขผู้เสียภาษี</th><th>สนญ. / สาขา</th><th class="r">มูลค่า</th><th class="r">VAT</th><th class="r">รวม</th></tr></thead><tbody>${rows.map((r,i)=>{const bc=brCode(r.tax,r.br);return`<tr><td>${i+1}</td><td>${thD(r.date)}</td><td>${esc(r.no)||'<span class="neg">ยังไม่ใส่</span>'}</td><td>${esc(r.name)}${miss(r)?' <span class="neg" title="ข้อมูลไม่ครบตามแบบรายงาน">⚠️</span>':""}</td><td class="sku">${esc(r.tax)}</td><td>${bc.hq?"สำนักงานใหญ่":bc.br?"สาขา "+bc.br:"-"}</td><td class="r">${fmt(r.base)}</td><td class="r">${fmt(r.vat)}</td><td class="r">${fmt(r2(r.base+r.vat))}</td></tr>`}).join("")}</tbody><tfoot><tr><td colspan="6">รวม ${rows.length} ใบ</td><td class="r">${fmt(b)}</td><td class="r">${fmt(v)}</td><td class="r">${fmt(r2(b+v))}</td></tr></tfoot></table></div>`}
 function simpleTable(h,rows){if(!rows.length)return`<div class="empty" style="padding:12px">ไม่มีรายการเดือนนี้</div>`;return`<div class="tbl-wrap"><table class="t"><thead><tr>${h.map((x,i)=>`<th${i===h.length-1?' class="r"':""}>${x}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td${i===r.length-1?' class="r"':""}>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`}
 
 /* ---------- print ---------- */
@@ -438,10 +458,37 @@ function printPnl(P){$("#printArea").innerHTML=`<div class="page"><div class="ph
   <table><tbody><tr><td><b>รายได้จากการขาย</b></td><td class="r"><b>${fmt(P.sales)}</b></td></tr><tr><td>หัก ต้นทุนขาย</td><td class="r">(${fmt(P.cogs)})</td></tr><tr><td><b>กำไรขั้นต้น</b></td><td class="r"><b>${fmt(P.gross)}</b></td></tr>
   ${P.other?`<tr><td>บวก รายได้อื่น</td><td class="r">${fmt(P.other)}</td></tr>`:""}<tr><td>หัก เงินเดือนและประกันสังคม</td><td class="r">(${fmt(P.payroll)})</td></tr>${Object.entries(P.exp).map(([k,v])=>`<tr><td>หัก ${esc(k)}</td><td class="r">(${fmt(v)})</td></tr>`).join("")}</tbody>
   <tfoot><tr><td>กำไร (ขาดทุน) สุทธิ</td><td class="r">${fmt(P.net)}</td></tr></tfoot></table><div class="pf">สร้างด้วย exceldatamaster.com · งบสำหรับใช้ภายในกิจการ</div></div>`}
-function printTax(T){const t=(title,rows)=>`<h3>${title}</h3><table><thead><tr><th>ลำดับ</th><th>วันที่</th><th>เลขที่ใบกำกับ</th><th>ชื่อผู้ซื้อ/ผู้ขาย</th><th>เลขผู้เสียภาษี</th><th class="r">มูลค่า</th><th class="r">ภาษี</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${thD(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2]||"")}</td><td>${esc(r[3]||"")}</td><td class="r">${fmt(r[5])}</td><td class="r">${fmt(r[6])}</td></tr>`).join("")||`<tr><td colspan="7">ไม่มีรายการ</td></tr>`}</tbody><tfoot><tr><td colspan="5">รวม</td><td class="r">${fmt(rows.reduce((s,r)=>s+r[5],0))}</td><td class="r">${fmt(rows.reduce((s,r)=>s+r[6],0))}</td></tr></tfoot></table>`;
-  $("#printArea").innerHTML=`<div class="page"><div class="ph"><div><b style="font-size:11pt">${esc(shopName())}</b>${D.seller.tax?`<div>เลขผู้เสียภาษี ${esc(D.seller.tax)} ${esc(D.seller.branch||"")}</div>`:""}</div><div style="text-align:right"><h1>รายงานภาษีซื้อ-ภาษีขาย</h1><div>เดือนภาษี ${ymLabel(ui.ym)}</div></div></div>
-  ${t("รายงานภาษีขาย",T.out.map(x=>[x.d.date,x.d.no,x.d.cust.name,x.d.cust.tax,"",x.c.base,x.c.vat]))}${t("รายงานภาษีซื้อ",T.inp.map(x=>[x.p.date,x.p.taxNo||x.p.no,x.p.sup.name,x.p.sup.tax,"",x.c.base,x.c.vat]))}
-  <h3>สรุป</h3><table><tbody><tr><td>ภาษีขาย</td><td class="r">${fmt(T.ov)}</td></tr><tr><td>หัก ภาษีซื้อ</td><td class="r">${fmt(T.iv)}</td></tr></tbody><tfoot><tr><td>${T.net>=0?"ภาษีที่ต้องชำระ":"ภาษีซื้อเกินภาษีขาย"}</td><td class="r">${fmt(Math.abs(T.net))}</td></tr></tfoot></table><div class="pf">สร้างด้วย exceldatamaster.com · ใช้ประกอบการยื่น ภ.พ.30</div></div>`}
+function tinBoxes(t){t=String(t||"").replace(/\D/g,"");const g=[1,5,10,12];return Array.from({length:13},(_,k)=>`<i${g.includes(k)?' class="g"':""}>${t[k]||""}</i>`).join("")}
+function rdReport(kind,rows){const out=kind==="out",title=out?"รายงานภาษีขาย":"รายงานภาษีซื้อ",who=out?"ผู้ซื้อสินค้า/ผู้รับบริการ":"ผู้ขายสินค้า/ผู้ให้บริการ";
+  const per=15,pages=Math.max(1,Math.ceil(rows.length/per)),[y,m]=ui.ym.split("-"),sb=brCode("x",D.seller.branch),ck=v=>`<span class="ck">${v?"✓":""}</span>`;
+  let html="",cb=0,cv=0;
+  for(let pg=0;pg<pages;pg++){const R=rows.slice(pg*per,pg*per+per),last=pg===pages-1,fb=cb,fv=cv;
+    R.forEach(r=>{cb=r2(cb+r.base);cv=r2(cv+r.vat)});
+    html+=`<div class="page rd"><div class="rd-h"><h1>${title}</h1><div class="rd-pg">หน้า ${pg+1}/${pages}</div></div>
+    <div class="rd-c"><span>เดือนภาษี <u>${MONTHS[+m-1]}</u></span><span>ปี <u>${+y+543}</u></span></div>
+    <div class="rd-m"><span>ชื่อผู้ประกอบการ <u>${esc(shopName())}</u></span><span>เลขประจำตัวผู้เสียภาษีอากร <span class="tin">${tinBoxes(D.seller.tax)}</span></span></div>
+    <div class="rd-m"><span>ชื่อสถานประกอบการ <u>${esc(shopName())}</u></span><span>${ck(sb.hq)}สำนักงานใหญ่ &nbsp;&nbsp; ${ck(sb.br)}สาขาที่ <u style="min-width:50px">${sb.br||""}</u></span></div>
+    <table class="rdt"><colgroup><col style="width:4%"><col style="width:8%"><col style="width:10%"><col style="width:5%"><col><col style="width:12%"><col style="width:6%"><col style="width:6%"><col style="width:10%"><col style="width:9%"><col style="width:10%"><col style="width:8%"></colgroup>
+    <thead><tr><th rowspan="2">ลำดับที่</th><th colspan="3">ใบกำกับภาษี</th><th rowspan="2">ชื่อ${who}</th><th rowspan="2">เลขประจำตัวผู้เสียภาษีอากร<br>ของ${who}</th><th colspan="2">สถานประกอบการ</th><th rowspan="2">มูลค่าสินค้า<br>หรือบริการ</th><th rowspan="2">จำนวนเงิน<br>ภาษีมูลค่าเพิ่ม</th><th rowspan="2">รวม</th><th rowspan="2">หมายเหตุ</th></tr>
+    <tr><th>วัน เดือน ปี</th><th>เลขที่</th><th>เล่มที่</th><th>สำนักงาน<br>ใหญ่</th><th>สาขาที่</th></tr></thead><tbody>
+    ${pg?`<tr><td colspan="8" class="r">ยอดยกมา</td><td class="r">${fmt(fb)}</td><td class="r">${fmt(fv)}</td><td class="r">${fmt(r2(fb+fv))}</td><td></td></tr>`:""}
+    ${R.map((r,i)=>{const bc=brCode(r.tax,r.br);return`<tr><td class="c">${pg*per+i+1}</td><td class="c">${dTH(r.date)}</td><td>${esc(r.no)}</td><td class="c">${esc(r.book)}</td><td>${esc(r.name)}</td><td class="c">${esc(r.tax)}</td><td class="c">${bc.hq}</td><td class="c">${bc.br}</td><td class="r">${fmt(r.base)}</td><td class="r">${fmt(r.vat)}</td><td class="r">${fmt(r2(r.base+r.vat))}</td><td>${esc(r.note)}</td></tr>`}).join("")}
+    ${rows.length?"":`<tr><td colspan="12" class="c" style="padding:14px">ไม่มีรายการในเดือนภาษีนี้</td></tr>`}
+    </tbody><tfoot><tr><td colspan="8" class="r">${last?"รวมทั้งสิ้น":"ยอดยกไป"}</td><td class="r">${fmt(cb)}</td><td class="r">${fmt(cv)}</td><td class="r">${fmt(r2(cb+cv))}</td><td></td></tr></tfoot></table>
+    ${last?`<div class="rd-note">จัดทำตามแบบรายงานภาษี${out?"ขาย":"ซื้อ"}ของกรมสรรพากร (ประกาศอธิบดีกรมสรรพากรเกี่ยวกับภาษีมูลค่าเพิ่ม ฉบับที่ 89) · สถานประกอบการ: สำนักงานใหญ่ทำเครื่องหมาย ✓ สาขาใส่เลขสาขา 5 หลักตาม ภ.พ.20 · ต้องลงรายการภายใน 3 วันทำการนับแต่วันที่${out?"ขายสินค้าหรือให้บริการ":"ได้รับสินค้าหรือบริการ"} และเก็บรักษาไว้ ณ สถานประกอบการ</div>`:""}
+    <div class="pf">สร้างด้วย exceldatamaster.com</div></div>`}
+  return html}
+function rdSummary(T){const nx=ymShift(ui.ym,1);return`<div class="page rd"><div class="rd-h"><h1>สรุปภาษีมูลค่าเพิ่มเพื่อยื่น ภ.พ.30</h1></div>
+  <div class="rd-c"><span>เดือนภาษี <u>${MONTHS[+ui.ym.slice(5)-1]}</u></span><span>ปี <u>${+ui.ym.slice(0,4)+543}</u></span></div>
+  <div class="rd-m"><span>ชื่อผู้ประกอบการ <u>${esc(shopName())}</u></span><span>เลขประจำตัวผู้เสียภาษีอากร <span class="tin">${tinBoxes(D.seller.tax)}</span></span></div>
+  <table class="rdt" style="max-width:640px;margin:12px auto 0"><thead><tr><th style="text-align:left">รายการ</th><th>มูลค่า</th><th>ภาษีมูลค่าเพิ่ม</th></tr></thead><tbody>
+  <tr><td>ยอดขายที่ต้องเสียภาษี (ตามรายงานภาษีขาย ${T.out.length} ใบ)</td><td class="r">${fmt(T.ob)}</td><td class="r">${fmt(T.ov)}</td></tr>
+  <tr><td>ยอดซื้อที่มีสิทธินำภาษีซื้อมาหักได้ (ตามรายงานภาษีซื้อ ${T.inp.length} ใบ)</td><td class="r">${fmt(T.ib)}</td><td class="r">${fmt(T.iv)}</td></tr></tbody>
+  <tfoot><tr><td>${T.net>=0?"ภาษีที่ต้องชำระเพิ่มเติม":"ภาษีที่ชำระเกิน (ขอคืน / ยกไปเดือนถัดไป)"}</td><td></td><td class="r">${fmt(Math.abs(T.net))}</td></tr></tfoot></table>
+  <p class="rd-c" style="margin-top:12px">กำหนดยื่นแบบ ภ.พ.30 ภายในวันที่ 15 ${MONTHS[+nx.slice(5)-1]} ${+nx.slice(0,4)+543} (ยื่นทางอินเทอร์เน็ตได้ถึงวันที่ 23)</p>
+  <div class="rd-note" style="text-align:center">ตัวเลขสรุปจากข้อมูลที่บันทึกในระบบ ควรตรวจสอบกับเอกสารจริงก่อนยื่นแบบ</div><div class="pf">สร้างด้วย exceldatamaster.com</div></div>`}
+function printTax(T,what){what=what||"all";
+  $("#printArea").innerHTML=`<style>@page{size:A4 landscape;margin:10mm}</style>`+(what!=="inp"?rdReport("out",vatRows(T,"out")):"")+(what!=="out"?rdReport("inp",vatRows(T,"inp")):"")+(what==="all"?rdSummary(T):"")}
 function printPO(id){const p=A.pur.find(x=>x.id===id),c=calcPur(p);
   $("#printArea").innerHTML=`<div class="page" style="font-size:10pt"><div class="ph"><div><b style="font-size:12pt">${esc(shopName())}</b><div style="white-space:pre-line">${esc(D.seller.addr||"")}</div>${D.seller.tax?`<div>เลขผู้เสียภาษี ${esc(D.seller.tax)}</div>`:""}${D.seller.phone?`<div>โทร ${esc(D.seller.phone)}</div>`:""}</div><div style="text-align:right"><h1>ใบสั่งซื้อ</h1><div>PURCHASE ORDER</div><div>เลขที่ <b>${esc(p.no)}</b></div><div>วันที่ ${thD(p.date)}</div></div></div>
   <p><b>ผู้ขาย:</b> ${esc(p.sup.name)}${p.sup.tax?" · เลขผู้เสียภาษี "+esc(p.sup.tax):""}</p>
@@ -466,8 +513,14 @@ function exportExcel(){toast("กำลังสร้างไฟล์ Excel..
   X.utils.book_append_sheet(wb,mk(B,[13,11,10,11,11,26,36,13,11,13,11,13,13,14],[7,8,9,10,11,12],[3,4]),"ซื้อ-ค่าใช้จ่าย");
   const C=[["วันที่","รายการ","คู่ค้า","บัญชี","รับเข้า","จ่ายออก","หมายเหตุ"]];cashMoves().slice().reverse().forEach(m=>C.push([D0(m.date),m.label,m.party,(A.accounts.find(a=>a.id===m.acc)||{}).name||"",m.amt>0?m.amt:"",m.amt<0?-m.amt:"",m.note]));
   X.utils.book_append_sheet(wb,mk(C,[11,26,26,16,13,13,28],[4,5],[0]),"เงินสด-ธนาคาร");
-  const T=taxData(ui.ym);const V=[["ประเภท","วันที่","เลขที่ใบกำกับ","ชื่อ","เลขผู้เสียภาษี","มูลค่า","VAT"]];T.out.forEach(x=>V.push(["ภาษีขาย",D0(x.d.date),x.d.no,x.d.cust.name,x.d.cust.tax||"",x.c.base,x.c.vat]));T.inp.forEach(x=>V.push(["ภาษีซื้อ",D0(x.p.date),x.p.taxNo||x.p.no,x.p.sup.name,x.p.sup.tax||"",x.c.base,x.c.vat]));
-  X.utils.book_append_sheet(wb,mk(V,[10,11,16,28,16,13,12],[5,6],[1]),"ภาษี "+MS[+ui.ym.slice(5)-1]);
+  const T=taxData(ui.ym),[ty,tm]=ui.ym.split("-");
+  ["out","inp"].forEach(k=>{const out=k==="out",who=out?"ผู้ซื้อสินค้า/ผู้รับบริการ":"ผู้ขายสินค้า/ผู้ให้บริการ",rows=vatRows(T,k),sb=brCode("x",D.seller.branch);
+    const V=[[out?"รายงานภาษีขาย":"รายงานภาษีซื้อ"],["เดือนภาษี "+MONTHS[+tm-1]+"  ปี "+(+ty+543)],["ชื่อผู้ประกอบการ: "+shopName(),"","","","","เลขประจำตัวผู้เสียภาษีอากร: "+(D.seller.tax||"")],["ชื่อสถานประกอบการ: "+shopName(),"","","","",sb.hq?"สำนักงานใหญ่":"สาขาที่ "+sb.br],[],
+      ["ลำดับที่","วัน เดือน ปี","เลขที่","เล่มที่","ชื่อ"+who,"เลขประจำตัวผู้เสียภาษีอากรของ"+who,"สำนักงานใหญ่","สาขาที่","มูลค่าสินค้าหรือบริการ","จำนวนเงินภาษีมูลค่าเพิ่ม","รวม","หมายเหตุ"]];
+    let b=0,v=0;rows.forEach((r,i)=>{const bc=brCode(r.tax,r.br);b+=r.base;v+=r.vat;V.push([i+1,dTH(r.date),r.no,r.book,r.name,r.tax,bc.hq,bc.br,r.base,r.vat,r2(r.base+r.vat),r.note])});
+    V.push(["","","","","รวมทั้งสิ้น","","","",r2(b),r2(v),r2(b+v),""]);
+    const ws=mk(V,[7,11,15,7,34,18,9,8,15,14,15,16],[8,9,10]);ws["!merges"]=[{s:{r:0,c:0},e:{r:0,c:11}},{s:{r:1,c:0},e:{r:1,c:11}}];
+    X.utils.book_append_sheet(wb,ws,(out?"ภาษีขาย ":"ภาษีซื้อ ")+MS[+tm-1])});
   X.writeFile(wb,"บัญชีร้านค้า-"+ui.ym+".xlsx");toast("ดาวน์โหลดไฟล์ Excel แล้ว ✓")}).catch(()=>toast("สร้างไฟล์ไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง"))}
 
 /* ---------- ข้อมูลตัวอย่าง (ทุกระบบเชื่อมกัน) ---------- */
@@ -483,7 +536,7 @@ function demo(ok){
   // วันที่ของเดือนย้อนหลัง m เดือน (0 = เดือนนี้ ไม่เกินวันนี้)
   const md=(m,d)=>{const ym=ymShift(ymNow,m);const last=new Date(Date.UTC(+ym.slice(0,4),+ym.slice(5),0)).getUTCDate();d=Math.min(d,last);if(m===0)d=Math.min(d,tD);return ym+"-"+String(d).padStart(2,"0")};
   let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;const ri=(a,b)=>a+Math.floor(rnd()*(b-a+1));
-  const pur=(d,sup,tax,lines,o)=>{const p=Object.assign({id:uid("u"),no:no("PU",d),kind:"stock",status:"received",date:d,due:addDays(d,30),sup:{name:sup,tax},lines:lines.map(([k,q,pr])=>({pid:pid(k),d:items[k].name,u:items[k].unit,q,p:pr})),vat:"ex",taxInv:true,taxNo:"INV"+ri(1000,9999),wht:0,cat:"",note:"",recvDate:d},o||{});acc.pur.push(p);
+  const pur=(d,sup,tax,lines,o)=>{const p=Object.assign({id:uid("u"),no:no("PU",d),kind:"stock",status:"received",date:d,due:addDays(d,30),sup:{name:sup,tax,branch:tax?"สำนักงานใหญ่":""},lines:lines.map(([k,q,pr])=>({pid:pid(k),d:items[k].name,u:items[k].unit,q,p:pr})),vat:"ex",taxInv:true,taxNo:"INV"+ri(1000,9999),wht:0,cat:"",note:"",recvDate:d},o||{});acc.pur.push(p);
     if(p.kind==="stock"&&p.status==="received")p.lines.forEach(l=>stx.push({id:uid("t"),type:"in",date:p.recvDate,pid:l.pid,qty:l.q,cost:l.p,ref:p.no,party:sup,note:"",src:"acc",docId:p.id,ts:ts++}));return p};
   const expn=(d,sup,cat,desc,amt,o)=>pur(d,sup,"",[],Object.assign({kind:"expense",cat,lines:[{pid:"",d:desc,q:1,p:amt}],taxInv:false,taxNo:"",vat:"none"},o||{}));
   const payOut=(p,d,accId,part)=>{if(d>T0)return;const c=calcPur(p);acc.pay.push({id:uid("y"),dir:"out",purId:p.id,date:d,amount:part||c.net,wht:part?0:c.wht,accId,note:""})};
@@ -524,11 +577,11 @@ function demo(ok){
   [-3,-2,-1,0].forEach(m=>{const ok=d=>d<=T0;
     let d=md(m,1);if(ok(d)){const r=expn(d,"คุณสมศรี (เจ้าของตึก)","ค่าเช่า","ค่าเช่าร้าน",8000,{wht:5});payOut(r,d,"bank1")}
     if(m===0)return;
-    d=md(m,5);const e=expn(d,"การไฟฟ้านครหลวง","ค่าน้ำ-ไฟ","ค่าไฟฟ้า",2100+ri(0,500),{vat:"in",taxInv:true,taxNo:"MEA"+ri(1000,9999),sup:{name:"การไฟฟ้านครหลวง",tax:"0994000165510"}});payOut(e,addDays(d,3),"bank1");
-    d=md(m,6);const n=expn(d,"บจก. เน็ตเร็ว","ค่าโทรศัพท์ / อินเทอร์เน็ต","อินเทอร์เน็ตร้าน",899,{vat:"in",taxInv:true,taxNo:"NT"+ri(100,999)});payOut(n,d,"bank1");
+    d=md(m,5);const e=expn(d,"การไฟฟ้านครหลวง","ค่าน้ำ-ไฟ","ค่าไฟฟ้า",2100+ri(0,500),{vat:"in",taxInv:true,taxNo:"MEA"+ri(1000,9999),sup:{name:"การไฟฟ้านครหลวง",tax:"0994000165510",branch:"สาขา 00012"}});payOut(e,addDays(d,3),"bank1");
+    d=md(m,6);const n=expn(d,"บจก. เน็ตเร็ว","ค่าโทรศัพท์ / อินเทอร์เน็ต","อินเทอร์เน็ตร้าน",899,{vat:"in",taxInv:true,taxNo:"NT"+ri(100,999),sup:{name:"บจก. เน็ตเร็ว",tax:"0105551234567",branch:"สำนักงานใหญ่"}});payOut(n,d,"bank1");
     d=md(m,15);const v=expn(d,"ร้านวัสดุภัณฑ์","วัสดุสิ้นเปลือง","เทปกาว ถุง กล่องพัสดุ",300+ri(0,400));payOut(v,d,"cash");
     d=md(m,22);const s=expn(d,"ขนส่งด่วนพิเศษ","ค่าขนส่ง","ค่าส่งสินค้าให้ลูกค้า",900+ri(0,900),{wht:1});payOut(s,d,"cash");
-    if(m>=-2){d=md(m,10);const ad=expn(d,"บจก. โฆษณาดี","ค่าโฆษณา / การตลาด","ยิงโฆษณา Facebook",m===-2?2500:3500,{vat:"ex",taxInv:true,taxNo:"AD"+ri(1000,9999),wht:2});payOut(ad,d,"bank1")}});
+    if(m>=-2){d=md(m,10);const ad=expn(d,"บจก. โฆษณาดี","ค่าโฆษณา / การตลาด","ยิงโฆษณา Facebook",m===-2?2500:3500,{vat:"ex",taxInv:true,taxNo:"AD"+ri(1000,9999),wht:2,sup:{name:"บจก. โฆษณาดี",tax:"0105559876543",branch:"สำนักงานใหญ่"}});payOut(ad,d,"bank1")}});
   // ใบเสนอราคา
   quote(md(-1,3),C3,[[5,60],[6,80],[7,60],[8,80]],"สำหรับภาคเรียนที่ 2/2569");
   quote(md(0,Math.max(1,tD-1)),C5,[[0,80],[1,12],[3,40],[4,40]],"ราคานี้รวมค่าจัดส่งในกรุงเทพฯ");
@@ -584,6 +637,6 @@ render();
 window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get A(){return A},get D(){return D}};
 })();
 </script>
-<script src="../assets/member.js?v=22" defer></script>
+<script src="../assets/member.js?v=23" defer></script>
 </body>
 </html>
