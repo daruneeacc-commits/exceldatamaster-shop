@@ -110,6 +110,8 @@ const G=[
   {id:"pnl",t:"กำไรขาดทุนรายเดือน (กราฟ)",d:"เปิดหน้าภาพรวมกำไรขาดทุนแบบเปรียบเทียบรายเดือน",link:"pnl"},
   {id:"wht",t:"ภาษีหัก ณ ที่จ่าย",d:"ภาษีที่เราหักผู้ขาย (ต้องนำส่ง) และที่ลูกค้าหักเรา (เครดิตภาษี)",run:(X,f,t)=>({cols:[["วันที่","date","d"],["ประเภท","k"],["คู่ค้า","who"],["เอกสาร","doc"],["ยอดที่จ่าย/รับ","amt","n"],["ภาษีหัก ณ ที่จ่าย","wht","n",1]],
     rows:X.pay.filter(p=>n(p.wht)>0&&p.date>=f&&p.date<=t).map(p=>{if(p.dir==="out"){const u=X.pu(p.purId);return{date:p.date,k:"เราหัก (ภ.ง.ด.3/53 ต้องนำส่ง)",who:u&&u.sup&&u.sup.name,doc:u?u.no:"",amt:n(p.amount),wht:n(p.wht)}}const d=X.docs.find(x=>x.id===p.docId);return{date:p.date,k:"ลูกค้าหักเรา (เครดิตภาษี)",who:d&&d.cust&&d.cust.name,doc:d?d.no:"",amt:n(p.amount),wht:n(p.wht)}})})}]}];
+const EDF=()=>window.EDM_ED;const gOk=g=>!EDF()||EDF().rptOk(g.k);const rOk=r=>!EDF()||EDF().rptOk(r.gk,r.id);
+const gName=g=>(EDF()&&EDF().groups&&EDF().groups[g.k])||g.g;
 const ALL={},GK={};G.forEach(g=>{GK[g.k]=g;g.L.forEach(r=>{r.g=g.g;r.gk=g.k;r.ic=g.ic;ALL[r.id]=r})});
 // สมุดบัญชี (ธนาคาร / เงินสด / เงินสดย่อย) พร้อมยอดคงเหลือสะสม
 function book(X,type,f,t){const M=moves(X),rows=[];X.accs.filter(a=>a.type===type).forEach(a=>{let b=n(a.open);M.forEach(m=>{if(m.acc===a.id&&m.date<f)b+=m.amt});
@@ -132,16 +134,16 @@ let cur=null,last=null;
 function run(r){const X=data(),t=r.asof&&st.t>today()?today():st.t;const R=r.book?book(X,r.book,st.f,t):r.run(X,st.f,t);R.rows=R.rows||[];return R}
 const cell=(v,ty)=>v===""||v==null?"":ty==="n"?fmt(v):ty==="q"?(+v).toLocaleString("th-TH",{maximumFractionDigits:3}):ty==="d"?thD(v):String(v);
 function totals(R){const T={};R.cols.forEach(c=>{if(c[3])T[c[1]]=r2(R.rows.reduce((a,x)=>a+n(x[c[1]]),0))});return T}
-function renderRpt(){const id=(/[?&]r=([\w-]+)/.exec(location.hash)||[])[1],gk=(/[?&]g=(\w+)/.exec(location.hash)||[])[1];cur=id&&ALL[id]?ALL[id]:null;if(cur&&cur.link){const l=cur.link;cur=null;return go(l)}const grp=cur?GK[cur.gk]:GK[gk]||null;
+function renderRpt(){const id=(/[?&]r=([\w-]+)/.exec(location.hash)||[])[1],gk=(/[?&]g=(\w+)/.exec(location.hash)||[])[1];cur=id&&ALL[id]&&rOk(ALL[id])?ALL[id]:null;if(cur&&cur.link){const l=cur.link;cur=null;return go(l)}const grp=cur?GK[cur.gk]:(GK[gk]&&gOk(GK[gk])?GK[gk]:null);
   $("#rpHome").hidden=!!cur;$("#rpView").hidden=!cur;$("#rpPer").textContent=perTxt(cur);
   $("#rpP").value=st.p;$("#rpF").value=st.f;$("#rpT").value=st.t;$("#rpCustom").hidden=st.p!=="cu";
   $$("#rpBar [data-only]").forEach(e=>e.hidden=!cur);$("#rpBar").classList.toggle("nod",!!(cur&&cur.nodate));
   $$('aside a[data-r="rpt"]').forEach(a=>a.classList.toggle("on",a.dataset.g===(grp?grp.k:"all")));
   $("#rpH1").textContent=grp?grp.ic+" รายงาน"+(grp.k==="tax"?"ภาษีและงบการเงิน":grp.g):"📊 รายงานทั้งหมด";
-  $("#rpBack").textContent="← รายงาน"+(grp?(grp.k==="tax"?"ภาษีและงบ":grp.g):"ทั้งหมด");
+  $("#rpBack").textContent="← รายงาน"+(grp?(grp.k==="tax"?"ภาษีและงบ":gName(grp)):"ทั้งหมด");
   if(!cur){const tile=(r,i)=>`<button class="rp-tile" data-rp="${r.id}"><span class="rp-n">${i+1}</span><b>${r.t}${r.link?" ↗":""}</b><span>${r.d}</span></button>`;
-    $("#rpHome").innerHTML=(grp?[grp]:G).map(g=>`${grp?"":`<h2 class="rp-gh"><a href="#/rpt?g=${g.k}">${g.ic} ${g.g} <small>${g.L.length} รายงาน →</small></a></h2>`}<div class="rp-tiles">${g.L.map(tile).join("")}</div>`).join("");
-    document.title=(grp?"รายงาน"+grp.g:"รายงานทั้งหมด")+" · ระบบร้านค้า";return}
+    $("#rpHome").innerHTML=(grp?[grp]:G.filter(gOk)).map(g=>{const L=g.L.filter(rOk);return`${grp?"":`<h2 class="rp-gh"><a href="#/rpt?g=${g.k}">${g.ic} ${gName(g)} <small>${L.length} รายงาน →</small></a></h2>`}<div class="rp-tiles">${L.map(tile).join("")}</div>`}).join("");
+    document.title=(grp?"รายงาน"+gName(grp):"รายงานทั้งหมด")+" · ระบบร้านค้า";return}
   document.title=cur.t+" · ระบบร้านค้า";$("#rpTitle").textContent=cur.ic+" "+cur.t;$("#rpDesc").textContent=cur.d;
   const R=last=run(cur),q=$("#rpQ").value.trim().toLowerCase();const rows=q?R.rows.filter(x=>Object.values(x).some(v=>String(v==null?"":v).toLowerCase().includes(q))):R.rows;
   const RR=Object.assign({},R,{rows});const T=R.nototal?{}:totals(RR);last.view=RR;last.T=T;

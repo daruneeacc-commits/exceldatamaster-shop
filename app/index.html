@@ -195,14 +195,14 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
 }
 </style>
-<script src="../assets/suggest.js?v=47"></script>
+<script src="../assets/suggest.js?v=48"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261008-2238";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261008-2248";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
-    if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}location.replace("/app/?u="+j.v+location.hash);return}
-    var b=document.getElementById("updBar");if(b){b.hidden=false;b.querySelector("button").onclick=function(){location.replace("/app/?u="+j.v+location.hash)}}}).catch(function(){})}
+    if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
+    var b=document.getElementById("updBar");if(b){b.hidden=false;b.querySelector("button").onclick=function(){var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash)}}}).catch(function(){})}
   check(true);setInterval(function(){check(false)},5*60*1000);document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")check(false)});})();
 </script>
 </head>
@@ -263,7 +263,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
-    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 22:38 น.</small></span></a>
+    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 22:48 น.</small></span></a>
       <div class="side-links"><a href="/">🏠 หน้าร้าน</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></div></div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -396,6 +396,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 </nav>
 <div id="toast" hidden style="position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:90;font-size:.9rem"></div>
 
+<script src="edition.js?v=2"></script>
 <script>
 "use strict";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -410,14 +411,14 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=47"},stock:{src:"/stock/?v=47",sv:"home"},stockrep:{src:"/stock/?v=47",sv:"report"},stkitems:{src:"/stock/?v=47",sv:"items"},stkin:{src:"/stock/?v=47",sv:"in"},stkout:{src:"/stock/?v=47",sv:"out"},stkadj:{src:"/stock/?v=47",sv:"adj"},stkhist:{src:"/stock/?v=47",sv:"hist"},stkre:{src:"/stock/?v=47",sv:"reorder"},
-  ar:{src:"/account/?v=47",v:"ar"},tax:{src:"/account/?v=47",v:"tax"},buy:{src:"/account/?v=47",v:"buy"},cash:{src:"/account/?v=47",v:"cash"},pnl:{src:"/account/?v=47",v:"home"},
-  cost:{src:"/account/?v=47",v:"cost"},exp:{src:"/account/?v=47",v:"exp"},bank:{src:"/account/?v=47",v:"bank"},cashv:{src:"/account/?v=47",v:"cashv"},petty:{src:"/account/?v=47",v:"petty"},ap:{src:"/account/?v=47",v:"ap"}};
+const ROUTES={bill:{src:"/bill/?v=48"},stock:{src:"/stock/?v=48",sv:"home"},stockrep:{src:"/stock/?v=48",sv:"report"},stkitems:{src:"/stock/?v=48",sv:"items"},stkin:{src:"/stock/?v=48",sv:"in"},stkout:{src:"/stock/?v=48",sv:"out"},stkadj:{src:"/stock/?v=48",sv:"adj"},stkhist:{src:"/stock/?v=48",sv:"hist"},stkre:{src:"/stock/?v=48",sv:"reorder"},
+  ar:{src:"/account/?v=48",v:"ar"},tax:{src:"/account/?v=48",v:"tax"},buy:{src:"/account/?v=48",v:"buy"},cash:{src:"/account/?v=48",v:"cash"},pnl:{src:"/account/?v=48",v:"home"},
+  cost:{src:"/account/?v=48",v:"cost"},exp:{src:"/account/?v=48",v:"exp"},bank:{src:"/account/?v=48",v:"bank"},cashv:{src:"/account/?v=48",v:"cashv"},petty:{src:"/account/?v=48",v:"petty"},ap:{src:"/account/?v=48",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
 let cur="";
-const PANES=["home","setup","data","bills","quotes","invoices","billing","receipts","cust","sup","prod","rpt"];
+const PANES=["home","setup","data","bills","quotes","invoices","billing","receipts","cust","sup","prod","rpt","upg"];
 // รายการเอกสารแยกตามประเภท (เมนูรายรับ) ใช้หน้าเดียวกับรายงานบิล
 const VIEWS={
   bills:{t:"📋 รายงานบิลทั้งหมด",s:"เอกสารขายทั้งหมดที่บันทึกไว้ ดู แก้ไข หรือลบได้จากที่นี่",f:null,nw:["＋ เปิดบิลใหม่","INV"]},
@@ -427,13 +428,14 @@ const VIEWS={
   receipts:{t:"4 · ใบเสร็จรับเงิน / ขายเงินสด",s:"ใบเสร็จจากการรับชำระ และบิลขายเงินสด",f:d=>d.type==="RC"||d.type==="TX"||(d.type==="IT"&&d.term==="cash"),nw:["＋ ขายเงินสด / ออกใบเสร็จ","CASH"],nw2:["💳 รับชำระตามใบแจ้งหนี้","AR"]}};
 let view="bills";
 let quietNav=0;
-function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0];if(!PANES.includes(r)&&!ROUTES[r])r="home";cur=r;
+function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0];if(!PANES.includes(r)&&!ROUTES[r])r="home";if(window.EDM_ED&&!EDM_ED.ok(r))r="upg";cur=r;
   document.body.classList.remove("menu");
   $$("aside a").forEach(a=>a.classList.toggle("on",a.dataset.r===r));
   const tr=/^stk|^stock/.test(r)?"stock":r;$$("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.go===tr||(b.dataset.go==="more"&&!["home","bill","stock","rpt"].includes(tr))));
   $$(".pane").forEach(x=>x.classList.toggle("show",x.id===r));
   $$(".mg").forEach(g=>{const on=!!g.querySelector(`a[data-r="${r}"]`);g.classList.toggle("has-on",on);if(on)g.classList.remove("closed")});
   Object.values(frames).forEach(f=>f.classList.remove("show"));
+  if(r==="upg"){document.title="อัปเกรดเป็นตัวเต็ม · ระบบร้านค้า";return}
   if(r==="home"){renderHome();document.title="ระบบร้านค้า · Excel Data Master";return}
   if(r==="setup"){renderSetup();document.title="ตั้งค่าร้าน · ระบบร้านค้า";return}
   if(r==="data"){renderData();document.title="สำรองข้อมูล · ระบบร้านค้า";return}
@@ -509,8 +511,8 @@ function renderHome(){
   docs.filter(d=>d.type==="IV"||d.type==="IT").forEach(d=>{const c=calcDoc(d);let got=pays.filter(p=>p.docId===d.id).reduce((a,p)=>a+num(p.amount)+num(p.wht),0);
     docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!pays.some(p=>p.rcDocId===x.id))got+=calcDoc(x).total});const left=r2(c.total-got);if(left>0.009){ar+=left;arN++}});
   const B=stockBal();const low=items.filter(i=>num(i.min)>0&&(B[i.id]||0)<=num(i.min));
-  $("#nAr").hidden=!arN;$("#nAr").textContent=arN;
-  {const po=(A.pay||[]).filter(p=>p.dir==="out");let apN=0;(A.pur||[]).forEach(p=>{if(p.status==="ordered")return;const c=calcDoc({items:(p.lines||[]).map(l=>({q:l.q,p:l.p})),vat:p.vat,wht:p.wht,billDisc:0});const pd=po.filter(y=>y.purId===p.id).reduce((a,y)=>a+num(y.amount)+num(y.wht),0);if(c.total-pd>0.009)apN++});$("#nAp").hidden=!apN;$("#nAp").textContent=apN}$("#nLow").hidden=!low.length;$("#nLow").textContent=low.length;
+  ($("#nAr")||{}).hidden=!arN;($("#nAr")||{}).textContent=arN;
+  {const po=(A.pay||[]).filter(p=>p.dir==="out");let apN=0;(A.pur||[]).forEach(p=>{if(p.status==="ordered")return;const c=calcDoc({items:(p.lines||[]).map(l=>({q:l.q,p:l.p})),vat:p.vat,wht:p.wht,billDisc:0});const pd=po.filter(y=>y.purId===p.id).reduce((a,y)=>a+num(y.amount)+num(y.wht),0);if(c.total-pd>0.009)apN++});($("#nAp")||{}).hidden=!apN;($("#nAp")||{}).textContent=apN}($("#nLow")||{}).hidden=!low.length;($("#nLow")||{}).textContent=low.length;
   $("#shopName").textContent=seller.name?"· "+seller.name:"· Excel Data Master";
   $("#hi").textContent=seller.name?"สวัสดีค่ะ "+seller.name:"สวัสดีค่ะ 👋";
   const m=MS[+ym.slice(5)-1];
@@ -530,8 +532,9 @@ function renderHome(){
   const rec=docs.filter(d=>d.type!=="QT"&&d.type!=="BN").slice().sort((a,b)=>(b.updated||0)-(a.updated||0)||String(b.date).localeCompare(String(a.date))).slice(0,6);
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
+  if(window.EDM_ED&&EDM_ED.home)EDM_ED.home({docs,seller,items,A,ym,sales,s,sc,n,vat,ar,arN,B,low,m});
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=47#demo&back=/app/"};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=48#demo&back=/app/"+(window.EDM_ED?"&ed="+EDM_ED.key:"")};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- ข้อมูลหลัก: ลูกค้า / เจ้าหนี้ / สินค้า-บริการ ---------- */
 const MD={
@@ -715,8 +718,10 @@ $("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return
 // จำว่าหน้าย่อยโหลดเสร็จแล้ว
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
+// เปิดเอกสาร/บัตรสินค้าที่ส่งต่อมาจากลิงก์เดิม (/bill/#open=... · /stock/#card=...)
+try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h))openIn(P.t==="stock"?"stock":"bill",P.h)}catch(e){}
 </script>
-<script src="reports.js?v=47"></script>
-<script src="../assets/member.js?v=47" defer></script>
+<script src="reports.js?v=49"></script>
+<script src="../assets/member.js?v=48" defer></script>
 </body>
 </html>

@@ -120,7 +120,7 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
 @media print{@page{size:A4;margin:10mm}.page.rd .rd-pg{display:block}body{background:#fff}header.top,main,.toast,dialog,.edm-bar,.edm-gate{display:none!important}#printArea{display:block}}
 .ap-seg{width:auto;max-width:none;display:inline-flex}.ap-seg button{white-space:nowrap;padding-left:14px;padding-right:14px;flex:none}
 </style>
-<script src="../assets/suggest.js?v=47"></script>
+<script src="../assets/suggest.js?v=48"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -680,7 +680,7 @@ const EMB=(()=>{try{return top!==self&&top.location.origin===location.origin}cat
 if(EMB)$("#tabs").style.display="none";
 window.edmDemo=()=>demo();window.edmExcel=()=>exportExcel();
 window.edmView=v=>{const M={cost:["buy","cost"],exp:["buy","exp"],buy:["buy",""],bank:["cash","bank"],cashv:["cash","cash"],petty:["cash","petty"],cash:["cash",""]};let sub=null;if(M[v]){sub=M[v][1];v=M[v][0]}if(!["home","ar","ap","buy","cash","tax"].includes(v))return;load();ui.v=v;if(sub!=null){if(v==="buy")ui.bk=sub;else ui.ck=sub}svU();render();scrollTo(0,0)};
-const fromHash=()=>{if(/^#demo/.test(location.hash)){const back=(/back=([\w\/]+)/.exec(location.hash)||[])[1];history.replaceState(null,"",location.pathname);demo(true);if(back&&/^\/(bill|stock|payroll|app)\/$/.test(back))location.replace(back);return}
+const fromHash=()=>{if(/^#demo/.test(location.hash)){const back=(/back=([\w\/]+)/.exec(location.hash)||[])[1];const edq=(/ed=(bill|stock)/.exec(location.hash)||[])[1];history.replaceState(null,"",location.pathname);demo(true);if(back&&/^\/(bill|stock|payroll|app)\/$/.test(back)){location.replace(back+(edq?"?ed="+edq:""))}return}
   const pu=/pur=([\w-]+)/.exec(location.hash);if(pu){history.replaceState(null,"",location.pathname+location.search);edmView("buy");if(A.pur.some(p=>p.id===pu[1]))purDlg(pu[1]);return}
   const m=/v=(\w+)/.exec(location.hash);if(m)edmView(m[1])};
 window.addEventListener("hashchange",fromHash);fromHash();
@@ -708,6 +708,6 @@ window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get 
 })();
 </script>
 <script src="../assets/tool-ui.js?v=2" defer></script>
-<script src="../assets/member.js?v=47" defer></script>
+<script src="../assets/member.js?v=48" defer></script>
 </body>
 </html>
