@@ -124,7 +124,6 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
     <a class="btn sm main" href="/app/">🏪 ระบบร้านค้า</a>
     <a class="btn sm ghost" href="/bill/">🧾 เปิดบิล</a>
     <a class="btn sm ghost" href="/stock/">📦 สต๊อก</a>
-    <a class="btn sm ghost" href="/payroll/">💰 เงินเดือน</a>
   </nav>
 </div></header>
 
@@ -212,7 +211,7 @@ function syncPurStock(p,remove){let T=LS.get(KEY.stx,[]);T=T.filter(t=>t.docId!=
 function apInfo(p){const c=calcPur(p);const paid=r2(A.pay.filter(x=>x.dir==="out"&&x.purId===p.id).reduce((a,x)=>a+num(x.amount)+num(x.wht),0));
   const left=Math.max(0,r2(c.total-paid));const st=p.status==="ordered"?"ordered":left<=0.009?"paid":paid>0?"part":"open";return{c,paid,left,st,late:st==="open"||st==="part"?dayDiff(today(),p.due||p.date):0}}
 const NOT_EXP=["จ่ายเงินเดือน","ถอนใช้ส่วนตัว","ชำระภาษี","คืนเงินกู้"],NOT_INC=["เงินลงทุนเพิ่ม","เงินกู้ยืม"];
-const EXP_CATS=["ค่าเช่า","ค่าน้ำ-ไฟ","ค่าโทรศัพท์ / อินเทอร์เน็ต","ค่าขนส่ง","ค่าโฆษณา / การตลาด","วัสดุสิ้นเปลือง","ค่าซ่อมแซม","ค่าธรรมเนียม / บริการ","ค่าใช้จ่ายอื่น"];
+const EXP_CATS=["เงินเดือน / ค่าจ้าง","ประกันสังคม (ส่วนนายจ้าง)","ค่าเช่า","ค่าน้ำ-ไฟ","ค่าโทรศัพท์ / อินเทอร์เน็ต","ค่าขนส่ง","ค่าโฆษณา / การตลาด","วัสดุสิ้นเปลือง","ค่าซ่อมแซม","ค่าธรรมเนียม / บริการ","ค่าใช้จ่ายอื่น"];
 
 /* ---------- เงินสด-ธนาคาร ---------- */
 function cashMoves(){const L=[];
@@ -228,7 +227,7 @@ function pnl(ym,SC){SC=SC||stockCalc();
   let sales=0,salesN=0;salesDocs().forEach(d=>{if(String(d.date).startsWith(ym)){sales+=calcDoc(d).base;salesN++}});
   const cogs=r2(SC.cogs[ym]||0);const exp={};
   A.pur.forEach(p=>{if(p.kind!=="expense"||p.status==="ordered"||!String(p.date).startsWith(ym))return;exp[p.cat||"ค่าใช้จ่ายอื่น"]=r2((exp[p.cat||"ค่าใช้จ่ายอื่น"]||0)+calcPur(p).base)});
-  let other=0;A.cash.forEach(c=>{if(!String(c.date).startsWith(ym))return;if(c.dir==="out"&&!NOT_EXP.includes(c.cat))exp[c.cat||"ค่าใช้จ่ายอื่น"]=r2((exp[c.cat||"ค่าใช้จ่ายอื่น"]||0)+num(c.amount));if(c.dir==="in"&&!NOT_INC.includes(c.cat))other+=num(c.amount)});
+  let other=0;A.cash.forEach(c=>{if(!String(c.date).startsWith(ym))return;if(c.dir==="out"&&c.cat==="จ่ายเงินเดือน"&&!D.payroll[ym])exp["เงินเดือน / ค่าจ้าง"]=r2((exp["เงินเดือน / ค่าจ้าง"]||0)+num(c.amount));if(c.dir==="out"&&!NOT_EXP.includes(c.cat))exp[c.cat||"ค่าใช้จ่ายอื่น"]=r2((exp[c.cat||"ค่าใช้จ่ายอื่น"]||0)+num(c.amount));if(c.dir==="in"&&!NOT_INC.includes(c.cat))other+=num(c.amount)});
   const pr=D.payroll[ym];const payroll=pr?r2(num(pr.earn)+num(pr.sso)):0; // เงินเดือนรวม + ประกันสังคมส่วนนายจ้าง
   let expT=0;Object.values(exp).forEach(v=>expT+=v);
   sales=r2(sales);const gross=r2(sales-cogs);const net=r2(gross+other-expT-payroll);
@@ -261,7 +260,7 @@ function vHome(){
     <div class="kpi"><span>ยอดขาย (ก่อน VAT)</span><b>฿${fmt0(P.sales)}</b><span>💵 เงินสด ${fmt0(sCash)} · 📄 เชื่อ ${fmt0(sCredit)}</span></div>
     <div class="kpi"><span>ต้นทุนขาย (จากสต๊อก)</span><b>฿${fmt0(P.cogs)}</b></div>
     <div class="kpi ${P.gross>=0?"pos":"neg"}"><span>กำไรขั้นต้น</span><b>฿${fmt0(P.gross)}</b><span>${P.sales?Math.round(P.gross/P.sales*100):0}% ของยอดขาย</span></div>
-    <div class="kpi"><span>ค่าใช้จ่าย + เงินเดือน</span><b>฿${fmt0(P.expT+P.payroll)}</b></div>
+    <div class="kpi"><span>ค่าใช้จ่ายทั้งหมด</span><b>฿${fmt0(P.expT+P.payroll)}</b></div>
     <div class="kpi big"><span>กำไรสุทธิ ${MS[+ui.ym.slice(5)-1]}</span><b>฿${fmt0(P.net)}</b></div></div>
   <div class="kpis k4">
     <div class="kpi ${arLate>0?"warn":""}"><span>ลูกหนี้ค้างรับ</span><b>฿${fmt0(ar)}</b><span>${arLate>0?"เกินกำหนด ฿"+fmt0(arLate):"ไม่มีเกินกำหนด"}</span></div>
@@ -284,7 +283,7 @@ function vHome(){
       <h2 style="margin-top:6px">🏆 ลูกค้ายอดซื้อสูงสุดเดือนนี้</h2>
       ${topC.length?`<div class="pl">${topC.map(([n,v])=>`<span>${esc(n)}</span><span>${fmt(v)}</span>`).join("")}</div>`:`<div class="note">ยังไม่มียอดขายเดือนนี้</div>`}</div></div>
   <div class="card"><h2>🔗 ระบบที่เชื่อมกัน</h2><div class="flow"><b>🧾 ${D.docs.filter(isInvoice).length} ใบแจ้งหนี้</b>→<b>${A.pay.filter(p=>p.dir==="in").length} รายการรับชำระ</b>→<b>🏦 ${A.accounts.length} บัญชีเงิน</b></div>
-    <div class="flow"><b>🛒 ${A.pur.filter(p=>p.kind==="stock").length} ใบซื้อสินค้า</b>→<b>📦 ${D.items.length} สินค้าในสต๊อก</b>→<b>ต้นทุนขาย</b>·<b>💰 เงินเดือน ${Object.keys(D.payroll).length} เดือน</b>→<b>📊 กำไรขาดทุน</b></div>
+    <div class="flow"><b>🛒 ${A.pur.filter(p=>p.kind==="stock").length} ใบซื้อสินค้า</b>→<b>📦 ${D.items.length} สินค้าในสต๊อก</b>→<b>ต้นทุนขาย</b>→<b>📊 กำไรขาดทุน</b></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm main" id="prPnl">🖨️ พิมพ์งบกำไรขาดทุน</button><button class="btn sm ghost" data-act="xlsx">📊 ดาวน์โหลด Excel ทุกระบบ</button></div></div>`;
   $("#prPnl").onclick=()=>{printPnl(P);setTimeout(()=>window.print(),80)};
 }
@@ -527,7 +526,7 @@ function exportExcel(){toast("กำลังสร้างไฟล์ Excel..
 
 /* ---------- ข้อมูลตัวอย่าง (ทุกระบบเชื่อมกัน) ---------- */
 function demo(ok){
-  if(!ok&&!confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))return;
+  if(!ok&&!confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))return;
   const T0=today(),day=n=>addDays(T0,n);let ts=Date.now()-1e8;
   const seller={name:"ร้าน สมใจการค้า (ตัวอย่าง)",addr:"88/9 ถ.รัชดาภิเษก แขวงดินแดง เขตดินแดง กรุงเทพฯ 10400",tax:"0105569012345",branch:"สำนักงานใหญ่",phone:"02-123-4567",contact:"คุณสมใจ",vat:true,pay:"โอนเข้าบัญชี กสิกรไทย 123-4-56789-0",color:"#127A4B",logo:""};
   const PR=[["A4-80","กระดาษ A4 80 แกรม","กระดาษ","รีม",98,139,60],["INK-682","หมึกพิมพ์ HP 682 สีดำ","หมึกพิมพ์","ตลับ",360,540,10],["FILE-3","แฟ้มสันกว้าง 3 นิ้ว","แฟ้ม","เล่ม",48,79,30],["CUP-8","แก้วกระดาษ 8 ออนซ์","บรรจุภัณฑ์","แพ็ก",68,109,30],["LID-D","ฝาโดม","บรรจุภัณฑ์","แพ็ก",42,69,30],["CP-24","สีไม้ 24 สี","อุปกรณ์ศิลปะ","กล่อง",70,119,30],["SK-A4","สมุดวาดเขียน A4","อุปกรณ์ศิลปะ","เล่ม",24,45,40],["SC-K","กรรไกรปลายมน","อุปกรณ์ศิลปะ","อัน",15,32,30],["GL-S","กาวแท่ง","อุปกรณ์ศิลปะ","แท่ง",11,22,40]];
@@ -589,20 +588,18 @@ function demo(ok){
   quote(md(0,Math.max(1,tD-1)),C5,[[0,80],[1,12],[3,40],[4,40]],"ราคานี้รวมค่าจัดส่งในกรุงเทพฯ");
   // ตรวจนับ
   stx.push({id:uid("t"),type:"adj",date:md(-1,27),pid:pid(2),qty:-2,cost:0,note:"นับได้น้อยกว่าระบบ 2 เล่ม · แฟ้มชำรุด",ts:ts++});
-  // เงินเดือน (สรุปจากหน้าคำนวณเงินเดือน) และจ่ายจริงสิ้นเดือน
-  const payroll={},recs={};
-  [-3,-2,-1].forEach(m=>{const ym=ymShift(ymNow,m);payroll[ym]={earn:15000,net:14250,sso:750,tax:0,n:1};recs[ym]={edemo1:{rate:15000},_payDate:ym+"-25"};
-    acc.cash.push({id:uid("c"),dir:"out",date:md(m,31),accId:"bank1",cat:"จ่ายเงินเดือน",amount:14250,note:"เงินเดือน "+ymLabel(ym)+" 1 คน",ym})});
+  // เงินเดือนพนักงาน 1 คน + ประกันสังคมส่วนนายจ้าง (บันทึกเป็นค่าใช้จ่าย)
+  [-3,-2,-1].forEach(m=>{const d=md(m,31);
+    const w=expn(d,"สมชาย ใจดี (พนักงานขาย)","เงินเดือน / ค่าจ้าง","เงินเดือน "+ymLabel(ymShift(ymNow,m)),15000);payOut(w,d,"bank1");
+    const so=expn(d,"สำนักงานประกันสังคม","ประกันสังคม (ส่วนนายจ้าง)","เงินสมทบส่วนนายจ้าง 5%",750);payOut(so,d,"bank1")});
   acc.cash.push({id:uid("c"),dir:"out",date:md(-1,28),accId:"cash",cat:"ถอนใช้ส่วนตัว",amount:5000,note:"",ym:""});
   acc.cash.push({id:uid("c"),dir:"in",date:md(-2,18),accId:"cash",cat:"รายรับอื่น",amount:350,note:"ขายกล่องกระดาษเก่า",ym:""});
   // เรียงเลขที่ใบซื้อ/ค่าใช้จ่ายตามวันที่
   const rn={},pc={};acc.pur.slice().sort((x,y)=>x.date.localeCompare(y.date)).forEach(p=>{const k="PU"+p.date.slice(2,7).replace("-","");pc[k]=(pc[k]||0)+1;const n=k+"-"+String(pc[k]).padStart(3,"0");rn[p.no]=n;p.no=n});
   stx.forEach(t=>{if(t.src==="acc"&&rn[t.ref])t.ref=rn[t.ref]});Object.assign(cnt,pc);
   acc.cnt=cnt;
-  LS.set(KEY.bseller,seller);LS.set(KEY.bdocs,docs);LS.set(KEY.bcnt,bcnt);LS.set(KEY.bcust,[C1,C2,C3,C5]);LS.set(KEY.sitems,items);LS.set(KEY.stx,stx);LS.set(KEY.scfg,{name:seller.name});LS.set(KEY.pay,payroll);
-  // ข้อมูลเงินเดือนจริง (หน้าคำนวณเงินเดือนจะคำนวณสรุปเองเมื่อเปิด)
-  const emp={id:"edemo1",code:"EMP001",name:"สมชาย ใจดี",pos:"พนักงานขาย",dept:"",idc:"",bank:"",type:"m",salary:15000,sso:true,tax:true,spouse:false,kids:0,parents:0,allow:0};
-  LS.set("edm_pay_company",Object.assign(LS.get("edm_pay_company",{}),{name:seller.name,addr:seller.addr,tax:seller.tax}));LS.set("edm_pay_emps",[emp]);LS.set("edm_pay_records",recs);LS.set(KEY.acc,acc);
+  LS.set(KEY.bseller,seller);LS.set(KEY.bdocs,docs);LS.set(KEY.bcnt,bcnt);LS.set(KEY.bcust,[C1,C2,C3,C5]);LS.set(KEY.sitems,items);LS.set(KEY.stx,stx);LS.set(KEY.scfg,{name:seller.name});LS.set(KEY.pay,{});
+  LS.set("edm_pay_company",Object.assign(LS.get("edm_pay_company",{}),{name:seller.name,addr:seller.addr,tax:seller.tax}));try{["edm_pay_emps","edm_pay_records"].forEach(k=>localStorage.removeItem(k))}catch(e){}LS.set(KEY.acc,acc);
   try{localStorage.removeItem("edm_bill_draft")}catch(e){}
   load();ui.v="home";ui.ym=ymPrev;svU();render();toast("ใส่ข้อมูลตัวอย่าง 3 เดือนแล้ว · แสดงเดือนที่แล้ว เปลี่ยนเดือนได้ที่ช่องด้านบน");
 }
@@ -640,6 +637,6 @@ render();
 window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get A(){return A},get D(){return D}};
 })();
 </script>
-<script src="../assets/member.js?v=31" defer></script>
+<script src="../assets/member.js?v=32" defer></script>
 </body>
 </html>

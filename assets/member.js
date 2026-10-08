@@ -5,7 +5,7 @@
 (function () {
   "use strict";
   var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbzQsMaqyTsenNm4XIIPFJRm4pcGFycMyLZQesGhIsFfHGjDb0WhvBPvPvRLEuvL5ibE/exec";
-  var TOOLS = [["app", "🏪 ระบบร้านค้า (รวมทุกระบบ)"], ["bill", "🧾 เปิดบิล"], ["stock", "📦 สต๊อกสินค้า"], ["account", "📒 บัญชีร้านค้า"], ["payroll", "💰 คำนวณเงินเดือน"]];
+  var TOOLS = [["app", "🏪 ระบบร้านค้า (รวมทุกระบบ)"], ["bill", "🧾 เปิดบิล"], ["stock", "📦 สต๊อกสินค้า"], ["account", "📒 บัญชีร้านค้า"]];
   var PRICE = 199, DAYS = 30, TRIAL = 7, KEY = "edm_member";
   var BASE = (document.querySelector('script[src*="member.js"]') || {}).src || "";
   BASE = BASE.replace(/assets\/member\.js.*$/, "");
@@ -99,7 +99,7 @@
       var su = mode === "signup";
       h += '<span class="edm-badge">ทดลองใช้ฟรี ' + TRIAL + ' วัน</span><h2>' + esc(tool) + '</h2>' +
         (note ? '<div class="edm-msg err">' + esc(note) + '</div>' : '') +
-        (su ? '<ul class="edm-perks"><li>ใช้ได้ครบ 4 ระบบที่เชื่อมกัน: เปิดบิล · สต๊อก · บัญชี · เงินเดือน</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดใช้งานให้หลังสมัคร</li><li>ใช้ต่อเดือนละ ' + PRICE + ' บาท ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
+        (su ? '<ul class="edm-perks"><li>ครบในระบบเดียว: เปิดบิล · ภาษี · สต๊อก · บัญชี</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดใช้งานให้หลังสมัคร</li><li>ใช้ต่อเดือนละ ' + PRICE + ' บาท ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
         '<div class="edm-tabs"><button data-go="signup" class="' + (su ? "on" : "") + '">สมัครใหม่</button><button data-go="login" class="' + (su ? "" : "on") + '">เข้าสู่ระบบ</button></div>' +
         (su ? '<input class="edm-in" id="edmN" autocomplete="off" placeholder="ชื่อร้าน / ชื่อของคุณ (ไม่บังคับ)">' : '') +
         '<input class="edm-in" id="edmE" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="email" placeholder="อีเมล">' +
