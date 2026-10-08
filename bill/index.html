@@ -373,13 +373,39 @@ $("#pickCust").onclick=()=>{const cs=LS.get(K.cust,[]);openDlg("เลือก�
   const draw=q=>{$("#cl").innerHTML=cs.filter(c=>!q||(c.name+c.tax).toLowerCase().includes(q)).map((c,i)=>`<div class="li"><div><b>${esc(c.name)}</b><small>${esc(c.tax||"")}</small></div><div class="acts"><button class="btn sm main" data-cp="${cs.indexOf(c)}">เลือก</button></div></div>`).join("");
     $$("[data-cp]").forEach(b=>b.onclick=()=>{doc.cust=Object.assign({},cs[+b.dataset.cp]);dlg.close();renderAll()})};
   if(cs.length){draw("");$("#cq").oninput=e=>draw(e.target.value.toLowerCase())}};
+/* ---------- ดาวน์โหลดเป็น Excel (เปิดใน Google ชีตได้) ---------- */
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+function exportExcel(){
+  const docs=LS.get(K.docs,[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))||String(a.no).localeCompare(String(b.no)));
+  if(!docs.length)return toast("ยังไม่มีเอกสารที่บันทึกไว้");
+  toast("กำลังสร้างไฟล์ Excel...");
+  loadXLSX().then(X=>{
+    const VAT={none:"ไม่มี VAT",ex:"แยก VAT 7%",in:"รวม VAT แล้ว"};
+    const sum=[["เลขที่","ประเภทเอกสาร","ธุรกิจ","วันที่","ครบกำหนด / ยืนราคาถึง","อ้างอิง","ลูกค้า","ที่อยู่ลูกค้า","เลขผู้เสียภาษีลูกค้า","สาขา","มูลค่าก่อนส่วนลด","ส่วนลดท้ายบิล","มูลค่าสินค้า/บริการ","VAT","ยอดรวม","หัก ณ ที่จ่าย %","หัก ณ ที่จ่าย","ยอดสุทธิ","การคิด VAT","หมายเหตุ"]];
+    const items=[["เลขที่","ประเภทเอกสาร","วันที่","ลูกค้า","ลำดับ","รายการ","จำนวน","หน่วย","ราคา/หน่วย","ส่วนลด","จำนวนเงิน"]];
+    docs.forEach(d=>{const c=calc(d),cu=d.cust||{},tn=(TYPES[d.type]||TYPES.QT).name;
+      sum.push([d.no,tn,d.mode==="service"?"บริการ":"ซื้อมาขายไป",d.date?new Date(d.date+"T00:00:00"):"",d.due?new Date(d.due+"T00:00:00"):"",d.ref||"",cu.name||"",cu.addr||"",cu.tax||"",cu.branch||"",c.sub,c.disc,c.base,c.vat,c.total,num(d.wht),c.wht,c.net,VAT[d.vat]||"",d.notes||""]);
+      c.lines.filter(l=>l.d||num(l.p)).forEach((l,i)=>items.push([d.no,tn,d.date?new Date(d.date+"T00:00:00"):"",cu.name||"",i+1,l.d||"",num(l.q),l.u||"",num(l.p),num(l.disc),l.amt]))});
+    const cust=[["ชื่อลูกค้า","ที่อยู่","เลขผู้เสียภาษี","สาขา","ผู้ติดต่อ"]].concat(LS.get(K.cust,[]).map(x=>[x.name||"",x.addr||"",x.tax||"",x.branch||"",x.contact||""]));
+    const wb=X.utils.book_new();
+    const mk=(rows,widths,money,dates)=>{const ws=X.utils.aoa_to_sheet(rows,{cellDates:true});ws["!cols"]=widths.map(w=>({wch:w}));
+      const R=X.utils.decode_range(ws["!ref"]);for(let r=1;r<=R.e.r;r++){money.forEach(ci=>{const a=X.utils.encode_cell({r,c:ci});if(ws[a]&&ws[a].t==="n")ws[a].z="#,##0.00"});dates.forEach(ci=>{const a=X.utils.encode_cell({r,c:ci});if(ws[a])ws[a].z="d/m/yyyy"})}
+      ws["!autofilter"]={ref:ws["!ref"]};return ws};
+    X.utils.book_append_sheet(wb,mk(sum,[13,26,12,11,14,12,26,30,16,12,14,12,14,12,14,10,12,14,13,24],[10,11,12,13,14,16,17],[3,4]),"สรุปเอกสาร");
+    X.utils.book_append_sheet(wb,mk(items,[13,26,11,26,6,34,9,8,12,10,14],[8,9,10],[2]),"รายการสินค้า");
+    X.utils.book_append_sheet(wb,mk(cust,[28,40,16,12,20],[],[]),"ลูกค้า");
+    X.writeFile(wb,"บิลทั้งหมด-"+(seller.name?seller.name.replace(/[\\/:*?"<>|]/g,"")+"-":"")+today()+".xlsx");
+    toast("ดาวน์โหลดไฟล์ Excel แล้ว ✓");
+  }).catch(()=>toast("สร้างไฟล์ไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง"));
+}
 $("#openList").onclick=()=>{
   const docs=LS.get(K.docs,[]);
-  openDlg("เอกสารของฉัน",`<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm ghost" id="exp">⬇️ สำรองข้อมูล</button><label class="btn sm ghost">⬆️ นำเข้าข้อมูล<input type="file" id="imp" accept=".json" hidden></label></div><input class="in-" id="dq" placeholder="ค้นหาเลขที่หรือชื่อลูกค้า"><div class="list" id="dl"></div><p class="note">ข้อมูลเก็บในเบราว์เซอร์ของเครื่องนี้เท่านั้น ควรกด "สำรองข้อมูล" เก็บไว้เป็นระยะ</p>`);
+  openDlg("เอกสารของฉัน",`<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm main" id="xls">📊 ดาวน์โหลดเป็น Excel</button><button class="btn sm ghost" id="exp">⬇️ สำรองข้อมูล</button><label class="btn sm ghost">⬆️ นำเข้าข้อมูล<input type="file" id="imp" accept=".json" hidden></label></div><input class="in-" id="dq" placeholder="ค้นหาเลขที่หรือชื่อลูกค้า"><div class="list" id="dl"></div><p class="note">ข้อมูลเก็บในเบราว์เซอร์ของเครื่องนี้เท่านั้น ควรกด "สำรองข้อมูล" เก็บไว้เป็นระยะ · ไฟล์ Excel เปิดใน Google ชีตได้ (อัปโหลดไป Google Drive แล้วเปิดด้วย Google ชีต)</p>`);
   const draw=q=>{const L=docs.filter(d=>!q||(d.no+d.cust.name).toLowerCase().includes(q));$("#dl").innerHTML=L.length?L.map(d=>`<div class="li"><div><b>${esc(d.no)} · ${esc((TYPES[d.type]||TYPES.QT).name)}</b><small>${esc(d.cust.name||"-")} · ${thDate(d.date)} · ฿${fmt(d._total||0)}</small></div><div class="acts"><button class="btn sm main" data-op="${d.id}">เปิด</button><button class="btn sm ghost danger" data-dl="${d.id}">ลบ</button></div></div>`).join(""):`<p class="note">ยังไม่มีเอกสารที่บันทึกไว้</p>`;
     $$("[data-op]").forEach(b=>b.onclick=()=>{doc=JSON.parse(JSON.stringify(docs.find(d=>d.id===b.dataset.op)));dlg.close();renderAll()});
     $$("[data-dl]").forEach(b=>b.onclick=()=>{if(!confirm("ลบเอกสารนี้?"))return;const i=docs.findIndex(d=>d.id===b.dataset.dl);docs.splice(i,1);LS.set(K.docs,docs);draw($("#dq").value.toLowerCase())})};
   draw("");$("#dq").oninput=e=>draw(e.target.value.toLowerCase());
+  $("#xls").onclick=()=>exportExcel();
   $("#exp").onclick=()=>{const data={v:1,app:"edm-bill",seller,docs:LS.get(K.docs,[]),customers:LS.get(K.cust,[]),counter:LS.get(K.cnt,{})};const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"}));a.download="สำรองข้อมูลบิล-"+today()+".json";a.click()};
   $("#imp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const d=JSON.parse(t);if(d.app!=="edm-bill")throw 0;if(!confirm("นำเข้าข้อมูลจากไฟล์? ข้อมูลเดิมในเครื่องนี้จะถูกแทนที่"))return;seller=d.seller||seller;LS.set(K.seller,seller);LS.set(K.docs,d.docs||[]);LS.set(K.cust,d.customers||[]);LS.set(K.cnt,d.counter||{});dlg.close();renderAll();toast("นำเข้าข้อมูลแล้ว ✓")}).catch(()=>toast("ไฟล์ไม่ถูกต้อง"))};
 };
@@ -388,7 +414,7 @@ function openDlg(t,h){$("#dlgTitle").textContent=t;$("#dlgBody").innerHTML=h;dlg
 $$(".mtabs button").forEach(b=>b.onclick=()=>{$$(".mtabs button").forEach(x=>x.classList.toggle("on",x===b));const v=b.dataset.mt==="view";$("#previewWrap").classList.toggle("show",v);$("#editor").classList.toggle("hide",v);if(v)fitPaper()});
 window.addEventListener("resize",fitPaper);
 window.addEventListener("afterprint",()=>{if(!$(".mtabs button.on")||$(".mtabs button.on").dataset.mt==="edit")$("#previewWrap").classList.remove("show")});
-window.__bill={calc,bahtText,get doc(){return doc}};
+window.__bill={calc,bahtText,exportExcel,get doc(){return doc}};
 renderAll();
 })();
 </script>

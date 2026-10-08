@@ -259,7 +259,7 @@ table.big th:nth-child(-n+2){text-align:left}
     <div class="vtabs no-print">
       <div class="seg" id="viewSeg"><button data-v="slip">สลิปคนนี้</button><button data-v="all">สลิปทุกคน</button><button data-v="month">สรุปเดือน</button><button data-v="year">สะสมทั้งปี</button></div>
       <button class="btn sm main" id="printBtn">🖨️ พิมพ์ / PDF</button>
-      <button class="btn sm ghost" id="csvBtn">⬇️ CSV</button>
+      <button class="btn sm ghost" id="csvBtn">📊 Excel</button>
     </div>
     <div class="paper-scroll"><div id="pages"></div></div>
   </section>
@@ -472,11 +472,39 @@ $("#delEmp").onclick=()=>{const e=empById(ui.sel);if(!e)return;if(!confirm(`ล�
   emps=emps.filter(x=>x.id!==e.id);Object.values(recs).forEach(R=>delete R[e.id]);svEmps();svRecs();ui.sel=emps[0]?emps[0].id:null;svUi();renderAll();toast("ลบแล้ว")};
 $$("#viewSeg button").forEach(b=>b.onclick=()=>{ui.view=b.dataset.v;svUi();renderPaper()});
 $("#printBtn").onclick=()=>{if(!$("#pages .page"))return;const wasHidden=!$("#previewWrap").classList.contains("show");$("#previewWrap").classList.add("show");setTimeout(()=>{window.print();if(wasHidden&&innerWidth<980&&$(".mtabs .on").dataset.mt==="edit")$("#previewWrap").classList.remove("show")},60)};
-$("#csvBtn").onclick=()=>{const list=monthRows();if(!list.length)return toast("ยังไม่มีข้อมูลงวดนี้");
-  const H=["รหัส","ชื่อ","ตำแหน่ง","เลขบัตรประชาชน","บัญชี","เงินเดือน/ค่าจ้าง","OT","เบี้ยขยัน","ค่าคอม","รายได้อื่น","รวมรายได้","หักขาด/ลา/สาย","ประกันสังคม","ภาษี","เบิก/หักอื่น","รับสุทธิ"];
-  const q=v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`;
-  const lines=[H.map(q).join(",")].concat(list.map(({e,c})=>[e.code,e.name,e.pos,e.idc?"\t"+e.idc:"",e.bank,c.base,r2(c.ot15+c.ot2+c.ot3),c.dil,c.com,c.oth,c.earn,r2(c.absD+c.leaveD+c.lateD),c.sso,c.tax,r2(c.adv+c.ded),c.net].map(q).join(",")));
-  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["﻿"+lines.join("\r\n")],{type:"text/csv"}));a.download=`เงินเดือน-${key()}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+// ดาวน์โหลดเป็น Excel: เงินเดือนงวดนี้ + สะสมทั้งปี + รายชื่อพนักงาน (เปิดใน Google ชีตได้)
+function exportExcel(){
+  if(!emps.length)return toast("ยังไม่มีพนักงาน");
+  toast("กำลังสร้างไฟล์ Excel...");
+  return loadXLSX().then(X=>{
+    const wb=X.utils.book_new();
+    const mk=(rows,widths,money,skip)=>{const ws=X.utils.aoa_to_sheet(rows);ws["!cols"]=widths.map(w=>({wch:w}));const R=X.utils.decode_range(ws["!ref"]);
+      for(let r=1;r<=R.e.r;r++)for(let c=0;c<=R.e.c;c++){if(c<money||(skip&&skip.includes(c)))continue;const a=X.utils.encode_cell({r,c});if(ws[a]&&ws[a].t==="n")ws[a].z="#,##0.00"}return ws};
+    const per=MONTHS[ui.m]+" "+(ui.y+543);
+    // 1) งวดนี้
+    const H=["รหัส","ชื่อ-นามสกุล","ตำแหน่ง","แผนก","เลขบัตรประชาชน","บัญชีธนาคาร","เงินเดือน/ค่าจ้าง","OT ×1.5","ทำงานวันหยุด ×2","OT วันหยุด ×3","เบี้ยขยัน","ค่าคอม","รายได้อื่น","รวมรายได้","หักขาดงาน","หักลาไม่รับค่าจ้าง","หักมาสาย","ประกันสังคม","ภาษีหัก ณ ที่จ่าย","เบิกล่วงหน้า","หักอื่น","รวมรายการหัก","รับสุทธิ"];
+    const rows=[["สรุปเงินเดือน งวด "+per+(co.name?" · "+co.name:"")],H];const T=new Array(H.length).fill(0);
+    monthRows().forEach(({e,c})=>{const v=[c.base,c.ot15,c.ot2,c.ot3,c.dil,c.com,c.oth,c.earn,c.absD,c.leaveD,c.lateD,c.sso,c.tax,c.adv,c.ded,c.dedTotal,c.net];v.forEach((x,i)=>T[6+i]+=x);
+      rows.push([e.code,e.name,e.pos,e.dept,e.idc||"",e.bank||""].concat(v))});
+    rows.push(["","รวม","","","",""].concat(T.slice(6).map(r2)));
+    const w1=mk(rows,[9,24,16,12,16,22].concat(new Array(17).fill(13)),6);w1["!merges"]=[{s:{r:0,c:0},e:{r:0,c:8}}];
+    X.utils.book_append_sheet(wb,w1,("งวด "+MS[ui.m]+" "+String(ui.y+543).slice(2)).replace(/[\\/?*\[\]:]/g,""));
+    // 2) สะสมทั้งปี (แยกเดือน)
+    const Y=[["สรุปยอดสะสมทั้งปี "+(ui.y+543)+(co.name?" · "+co.name:"")],["รหัส","ชื่อ-นามสกุล","เลขบัตรประชาชน"].concat(MS.map(m=>"เงินได้ "+m)).concat(["เงินได้รวม","ประกันสังคมรวม","ภาษีหักรวม","รับสุทธิรวม"])];
+    emps.forEach(e=>{const{ytd,months}=calcUpTo(e,ui.y,11);if(!months.length)return;const byM=new Array(12).fill("");months.forEach(({m,c})=>byM[m]=c.income);
+      Y.push([e.code,e.name,e.idc||""].concat(byM).concat([ytd.income,ytd.sso,ytd.tax,ytd.net]))});
+    const w2=mk(Y,[9,24,16].concat(new Array(16).fill(13)),3);w2["!merges"]=[{s:{r:0,c:0},e:{r:0,c:8}}];
+    X.utils.book_append_sheet(wb,w2,"สะสมปี "+(ui.y+543));
+    // 3) พนักงาน
+    const E=[["รหัส","ชื่อ-นามสกุล","ตำแหน่ง","แผนก","เลขบัตรประชาชน","บัญชีธนาคาร","รูปแบบค่าจ้าง","เงินเดือน/ค่าจ้างประจำ","วันเริ่มงาน","หักประกันสังคม","หักภาษี","คู่สมรสไม่มีเงินได้","บุตร (คน)","บิดามารดา (คน)","ลดหย่อนอื่นต่อปี"]];
+    emps.forEach(e=>E.push([e.code,e.name,e.pos,e.dept,e.idc||"",e.bank||"",e.type==="d"?"รายวัน":"รายเดือน",num(e.salary),e.start||"",e.sso?"ใช่":"ไม่",e.tax?"ใช่":"ไม่",e.spouse?"ใช่":"ไม่",num(e.kids),num(e.parents),num(e.allow)]));
+    X.utils.book_append_sheet(wb,mk(E,[9,24,16,12,16,22,11,14,12,10,8,10,8,10,12],7,[12,13]),"พนักงาน");
+    X.writeFile(wb,"เงินเดือน-"+key()+(co.name?"-"+co.name.replace(/[\\/:*?"<>|]/g,""):"")+".xlsx");
+    toast("ดาวน์โหลดไฟล์ Excel แล้ว ✓");
+  }).catch(()=>toast("สร้างไฟล์ไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง"));
+}
+$("#csvBtn").onclick=()=>exportExcel();
 $("#dataBtn").onclick=()=>{$("#dlgTitle").textContent="สำรอง / นำเข้าข้อมูล";
   $("#dlgBody").innerHTML=`<p class="note" style="margin:0">ข้อมูลเงินเดือนเก็บในเบราว์เซอร์ของเครื่องนี้เท่านั้น ถ้าล้างประวัติเบราว์เซอร์หรือเปลี่ยนเครื่อง ข้อมูลจะหาย ควรกดสำรองเก็บไว้ทุกเดือน</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="exp">⬇️ ดาวน์โหลดไฟล์สำรอง</button><label class="btn ghost">⬆️ นำเข้าไฟล์สำรอง<input type="file" id="imp" accept=".json,application/json" hidden></label></div>`;
@@ -500,7 +528,7 @@ function demo(){
 
 if(ui.sel&&!empById(ui.sel))ui.sel=emps[0]?emps[0].id:null;
 renderAll();
-window.__pay={pit,bahtText,calcMonth,calcUpTo,get emps(){return emps},get co(){return co}};
+window.__pay={pit,bahtText,calcMonth,calcUpTo,exportExcel,get emps(){return emps},get co(){return co}};
 })();
 </script>
 <script src="../assets/member.js?v=17" defer></script>
