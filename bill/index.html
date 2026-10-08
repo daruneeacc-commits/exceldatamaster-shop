@@ -120,6 +120,7 @@ table.p-items .c{text-align:center}
   <nav class="nav">
     <button class="btn sm ghost" id="openList">📁 เอกสารของฉัน</button>
     <a class="btn sm ghost" href="/stock/">📦 สต๊อก</a>
+    <a class="btn sm ghost" href="/account/">📒 บัญชี</a>
     <a class="btn sm ghost" href="/payroll/">💰 คำนวณเงินเดือน</a>
     <a class="btn sm ghost" href="/">🛒 ร้านเทมเพลต</a>
   </nav>
@@ -454,10 +455,15 @@ function loadDemo(mode){
   toast("ใส่ข้อมูลตัวอย่างแล้ว · ดูทั้งหมดที่ 📁 เอกสารของฉัน");
 }
 $("#demoBtn").onclick=()=>loadDemo(doc.mode);
+// สถานะรับชำระ (จากหน้าบัญชีร้านค้า)
+function payTag(d,docs){if(d.type!=="IV"&&d.type!=="IT")return"";const A=LS.get("edm_acc",null);
+  const total=r2(calc(d).total);let got=0;(A&&A.pay||[]).forEach(p=>{if(p.dir==="in"&&p.docId===d.id)got+=num(p.amount)+num(p.wht)});
+  docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!(A&&A.pay||[]).some(p=>p.rcDocId===x.id))got+=calc(x).total});
+  return got>=total-0.01?" · ✅ รับชำระแล้ว":got>0?" · 🟡 รับบางส่วน":" · ⏳ ค้างชำระ"}
 $("#openList").onclick=()=>{
   const docs=LS.get(K.docs,[]);
   openDlg("เอกสารของฉัน",`<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm main" id="xls">📊 ดาวน์โหลดเป็น Excel</button><button class="btn sm ghost" id="exp">⬇️ สำรองข้อมูล</button><label class="btn sm ghost">⬆️ นำเข้าข้อมูล<input type="file" id="imp" accept=".json" hidden></label></div><input class="in-" id="dq" placeholder="ค้นหาเลขที่หรือชื่อลูกค้า"><div class="list" id="dl"></div><p class="note">ข้อมูลเก็บในเบราว์เซอร์ของเครื่องนี้เท่านั้น ควรกด "สำรองข้อมูล" เก็บไว้เป็นระยะ · ไฟล์ Excel เปิดใน Google ชีตได้ (อัปโหลดไป Google Drive แล้วเปิดด้วย Google ชีต)</p>`);
-  const draw=q=>{const L=docs.filter(d=>!q||(d.no+d.cust.name).toLowerCase().includes(q));$("#dl").innerHTML=L.length?L.map(d=>`<div class="li"><div><b>${esc(d.no)} · ${esc((TYPES[d.type]||TYPES.QT).name)}</b><small>${esc(d.cust.name||"-")} · ${thDate(d.date)} · ฿${fmt(d._total||0)}</small></div><div class="acts"><button class="btn sm main" data-op="${d.id}">เปิด</button><button class="btn sm ghost danger" data-dl="${d.id}">ลบ</button></div></div>`).join(""):`<p class="note">ยังไม่มีเอกสารที่บันทึกไว้</p>`;
+  const draw=q=>{const L=docs.filter(d=>!q||(d.no+d.cust.name).toLowerCase().includes(q));$("#dl").innerHTML=L.length?L.map(d=>`<div class="li"><div><b>${esc(d.no)} · ${esc((TYPES[d.type]||TYPES.QT).name)}</b><small>${esc(d.cust.name||"-")} · ${thDate(d.date)} · ฿${fmt(d._total||0)}${payTag(d,docs)}</small></div><div class="acts"><button class="btn sm main" data-op="${d.id}">เปิด</button><button class="btn sm ghost danger" data-dl="${d.id}">ลบ</button></div></div>`).join(""):`<p class="note">ยังไม่มีเอกสารที่บันทึกไว้</p>`;
     $$("[data-op]").forEach(b=>b.onclick=()=>{doc=JSON.parse(JSON.stringify(docs.find(d=>d.id===b.dataset.op)));dlg.close();renderAll()});
     $$("[data-dl]").forEach(b=>b.onclick=()=>{if(!confirm("ลบเอกสารนี้?"))return;const i=docs.findIndex(d=>d.id===b.dataset.dl);if(i>=0)syncStock(docs[i],true);docs.splice(i,1);LS.set(K.docs,docs);draw($("#dq").value.toLowerCase())})};
   draw("");$("#dq").oninput=e=>draw(e.target.value.toLowerCase());
@@ -475,6 +481,6 @@ window.__bill={calc,bahtText,exportExcel,loadDemo,get doc(){return doc}};
 renderAll();
 })();
 </script>
-<script src="../assets/member.js?v=18" defer></script>
+<script src="../assets/member.js?v=19" defer></script>
 </body>
 </html>

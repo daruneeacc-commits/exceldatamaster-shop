@@ -113,6 +113,7 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
     <button class="btn sm ghost" id="dataBtn">💾 สำรอง / นำเข้า</button>
     <a class="btn sm ghost" href="/bill/">🧾 เปิดบิล</a>
     <a class="btn sm ghost" href="/payroll/">💰 เงินเดือน</a>
+    <a class="btn sm ghost" href="/account/">📒 บัญชี</a>
     <a class="btn sm ghost" href="/">🛒 ร้านเทมเพลต</a>
   </nav>
 </div></header>
@@ -222,7 +223,7 @@ function vHome(){
 function txTable(list,withDel){
   if(!list.length)return`<div class="empty" style="padding:14px">ยังไม่มีรายการ</div>`;
   return`<div class="tbl-wrap"><table class="t"><thead><tr><th>วันที่</th><th>ประเภท</th><th>สินค้า</th><th class="r">จำนวน</th><th class="r">ทุน/หน่วย</th><th>คู่ค้า / อ้างอิง</th>${withDel?"<th></th>":""}</tr></thead><tbody>${list.map(t=>{const i=byId(t.pid)||{name:"(ลบแล้ว)",unit:""},T=TY[t.type];const q=num(t.qty);
-    return`<tr><td style="white-space:nowrap">${thD(t.date)}</td><td><span class="pill ${T[1]}">${T[0]}</span></td><td>${esc(i.name)}</td><td class="r ${T[2]}">${t.type==="adj"?(q>0?"+":""):T[3]}${fq(q)} ${esc(i.unit)}</td><td class="r">${t.type==="in"?fmt(t.cost):""}</td><td>${esc(t.party||"")}${t.ref?` <span class="sku">${esc(t.ref)}</span>`:""}${t.src==="bill"?` <span class="pill p-adj">จากบิล</span>`:""}${t.note?`<br><span class="note">${esc(t.note)}</span>`:""}</td>${withDel?`<td class="r">${t.src==="bill"?`<span class="note">แก้ที่หน้าเปิดบิล</span>`:`<button class="btn sm ghost danger edm-lock" data-deltx="${t.id}">ลบ</button>`}</td>`:""}</tr>`}).join("")}</tbody></table></div>`;
+    return`<tr><td style="white-space:nowrap">${thD(t.date)}</td><td><span class="pill ${T[1]}">${T[0]}</span></td><td>${esc(i.name)}</td><td class="r ${T[2]}">${t.type==="adj"?(q>0?"+":""):T[3]}${fq(q)} ${esc(i.unit)}</td><td class="r">${t.type==="in"?fmt(t.cost):""}</td><td>${esc(t.party||"")}${t.ref?` <span class="sku">${esc(t.ref)}</span>`:""}${t.src==="bill"?` <span class="pill p-adj">จากบิล</span>`:t.src==="acc"?` <span class="pill p-adj">จากใบซื้อ</span>`:""}${t.note?`<br><span class="note">${esc(t.note)}</span>`:""}</td>${withDel?`<td class="r">${t.src==="bill"?`<span class="note">แก้ที่หน้าเปิดบิล</span>`:t.src==="acc"?`<span class="note">แก้ที่หน้าบัญชี</span>`:`<button class="btn sm ghost danger edm-lock" data-deltx="${t.id}">ลบ</button>`}</td>`:""}</tr>`}).join("")}</tbody></table></div>`;
 }
 
 function vItems(){
@@ -367,7 +368,7 @@ function exportExcel(){
     list.forEach(i=>{const p=P[i.id];B.push([i.sku||"",i.name,i.unit,p.open,p.inQ,p.outQ,p.adjQ,p.close,p.avg,p.value,r2(p.inV)])});
     X.utils.book_append_sheet(wb,mk(B,[12,30,8,10,10,10,10,10,12,14,14],[8,9,10],[3,4,5,6,7]),"รายงาน "+MS[+ui.rm.slice(5)-1]+" "+String(+ui.rm.slice(0,4)+543).slice(2));
     const C=[["วันที่","ประเภท","รหัส","สินค้า","จำนวน","หน่วย","ทุน/หน่วย","มูลค่า","คู่ค้า","เอกสารอ้างอิง","ที่มา","หมายเหตุ"]];
-    sortTx(tx).forEach(tt=>{const i=byId(tt.pid)||{};const q=num(tt.qty)*(tt.type==="out"?-1:1);C.push([new Date(tt.date+"T00:00:00"),TY[tt.type][0],i.sku||"",i.name||"",q,i.unit||"",tt.type==="in"?num(tt.cost):"",tt.type==="in"?r2(q*num(tt.cost)):"",tt.party||"",tt.ref||"",tt.src==="bill"?"หน้าเปิดบิล":"บันทึกเอง",tt.note||""])});
+    sortTx(tx).forEach(tt=>{const i=byId(tt.pid)||{};const q=num(tt.qty)*(tt.type==="out"?-1:1);C.push([new Date(tt.date+"T00:00:00"),TY[tt.type][0],i.sku||"",i.name||"",q,i.unit||"",tt.type==="in"?num(tt.cost):"",tt.type==="in"?r2(q*num(tt.cost)):"",tt.party||"",tt.ref||"",tt.src==="bill"?"หน้าเปิดบิล":tt.src==="acc"?"ใบซื้อ (บัญชี)":"บันทึกเอง",tt.note||""])});
     const wc=mk(C,[11,12,12,30,10,8,12,12,22,14,12,28],[6,7],[4]);const RC=X.utils.decode_range(wc["!ref"]);for(let r=1;r<=RC.e.r;r++){const a=X.utils.encode_cell({r,c:0});if(wc[a])wc[a].z="d/m/yyyy"}
     X.utils.book_append_sheet(wb,wc,"ความเคลื่อนไหว");
     X.writeFile(wb,"สต๊อกสินค้า-"+(cfg.name?cfg.name.replace(/[\\/:*?"<>|]/g,"")+"-":"")+today()+".xlsx");toast("ดาวน์โหลดไฟล์ Excel แล้ว ✓");
@@ -421,6 +422,6 @@ render();
 window.__stock={compute,period,demo,exportExcel,get items(){return items},get tx(){return tx}};
 })();
 </script>
-<script src="../assets/member.js?v=18" defer></script>
+<script src="../assets/member.js?v=19" defer></script>
 </body>
 </html>

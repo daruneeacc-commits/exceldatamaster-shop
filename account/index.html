@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>บัญชีร้านค้า · Excel Data Master</title>
+<meta name="description" content="ระบบบัญชีร้านค้าออนไลน์ เชื่อมเปิดบิล สต๊อก และเงินเดือน: ลูกหนี้ รับชำระ ใบสั่งซื้อ ค่าใช้จ่าย เจ้าหนี้ เงินสด-ธนาคาร ภาษีซื้อ-ขาย และกำไรขาดทุนรายเดือน">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#F4F6F5;--accent:#127A4B;--accent-ink:#fff;--warn:#8A5A00;--warnbg:#FFF4DC;--danger:#B3261E;--dangerbg:#FDE8E7;--okbg:#E3F4EA;--blue:#1F4FA3;--bluebg:#E6EEFB;--c1:#127A4B;--c2:#C56A12;--c3:#1F4FA3}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--warn:#F0C27A;--warnbg:#2A2416;--danger:#F2867E;--dangerbg:#2C1A19;--okbg:#14261C;--blue:#8AB4F8;--bluebg:#16223A;--c1:#4CC48A;--c2:#F0A04B;--c3:#8AB4F8}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px}
+.brand small{font-weight:500;color:var(--muted)}
+.nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.btn{border:0;border-radius:999px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:var(--soft);color:var(--ink);font-size:.9rem;justify-content:center}
+.btn:hover{filter:brightness(.97)}
+.btn.main{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.btn.sm{padding:6px 12px;font-size:.84rem}
+.btn.danger{color:var(--danger)}
+main{max-width:1200px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+.tabs{display:flex;gap:6px;background:var(--card);border-radius:999px;padding:4px;box-shadow:0 0 0 1px var(--line);position:sticky;top:62px;z-index:15;overflow-x:auto}
+.tabs button{flex:1;border:0;background:none;border-radius:999px;padding:9px 12px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabs button.on{background:var(--ink);color:var(--bg)}
+.bar-top{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.bar-top .in-{max-width:200px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}
+.card h2{font-size:1.05rem;margin:0;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.card h2 small{font-weight:400;color:var(--muted);font-size:.82rem}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.kpis.k4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:900px){.kpis,.kpis.k4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:0 0 0 1px var(--line);min-width:0}
+.kpi span{font-size:.8rem;color:var(--muted);display:block}
+.kpi b{font-size:1.3rem;font-variant-numeric:tabular-nums;line-height:1.35;display:block;overflow-wrap:anywhere}
+.kpi.pos b{color:var(--accent)}.kpi.neg b{color:var(--danger)}.kpi.warn b{color:var(--warn)}
+.kpi.big{background:var(--ink);color:var(--bg)}.kpi.big span{color:inherit;opacity:.75}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.pl{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-variant-numeric:tabular-nums}
+.pl .h{font-weight:700;border-top:1px solid var(--line);padding-top:6px}
+.pl .sub{padding-left:14px;color:var(--muted);font-size:.9rem}
+.pl .tot{font-weight:700;font-size:1.1rem;border-top:2px solid var(--ink);padding-top:6px}
+.chart{display:flex;align-items:flex-end;gap:10px;height:180px;padding:8px 4px 0;border-bottom:1px solid var(--line)}
+.chart .m{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;min-width:0}
+.chart .bs{display:flex;gap:3px;align-items:flex-end;height:100%;width:100%;justify-content:center}
+.chart .bs i{display:block;width:30%;max-width:18px;border-radius:4px 4px 0 0;min-height:2px}
+.chart .lbl{font-size:.72rem;color:var(--muted)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:620px){.row3{grid-template-columns:1fr 1fr}}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f label{font-size:.8rem;font-weight:600;color:var(--muted)}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 11px;outline:none}
+.in-:focus{border-color:var(--accent)}
+.chk{display:flex;align-items:center;gap:8px;font-size:.9rem;cursor:pointer}.chk input{width:18px;height:18px;accent-color:var(--accent)}
+.seg{display:flex;background:var(--soft);border-radius:999px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:none;border-radius:999px;padding:8px 6px;cursor:pointer;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.tbl-wrap{overflow-x:auto;margin:0 -4px}
+table.t{width:100%;min-width:560px;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.9rem}
+table.t th{text-align:left;font-size:.76rem;color:var(--muted);font-weight:600;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.t td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.t .r{text-align:right;white-space:nowrap}
+table.t tfoot td{font-weight:700;border-top:1.5px solid var(--ink);border-bottom:0}
+.sku{font-family:ui-monospace,Menlo,monospace;font-size:.8rem;color:var(--muted)}
+.pill{font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap;display:inline-block}
+.p-ok{background:var(--okbg);color:var(--accent)}.p-warn{background:var(--warnbg);color:var(--warn)}.p-bad{background:var(--dangerbg);color:var(--danger)}.p-blue{background:var(--bluebg);color:var(--blue)}.p-mute{background:var(--soft);color:var(--muted)}
+.pos{color:var(--accent);font-weight:600}.neg{color:var(--danger);font-weight:600}
+.note{font-size:.8rem;color:var(--muted)}
+.empty{text-align:center;padding:22px 10px;color:var(--muted);display:flex;flex-direction:column;gap:10px;align-items:center}
+.lines{display:flex;flex-direction:column;gap:8px}
+.line{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr) minmax(0,1.2fr) auto;gap:8px;align-items:end;border:1px solid var(--line);border-radius:12px;padding:10px}
+@media(max-width:620px){.line{grid-template-columns:1fr 1fr}.line .f:first-child{grid-column:1/-1}}
+.line .x{border:0;background:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:8px}
+.acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.flow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:.82rem;color:var(--muted)}
+.flow b{background:var(--soft);color:var(--ink);border-radius:999px;padding:3px 10px;font-weight:600}
+dialog{border:0;border-radius:18px;padding:0;max-width:min(760px,calc(100% - 24px));width:100%;background:var(--card);color:var(--ink);max-height:calc(100% - 24px)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog .dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);z-index:1}
+dialog .db{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.totals{display:grid;grid-template-columns:1fr auto;gap:3px 12px;font-variant-numeric:tabular-nums;font-size:.92rem;background:var(--soft);border-radius:12px;padding:10px 12px}
+.totals .big{font-weight:700}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:150;font-size:.9rem;max-width:calc(100% - 32px);text-align:center}
+body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
+#printArea{display:none}
+.page{background:#fff;color:#111;font-size:8.8pt;line-height:1.45}
+.page h1{font-size:14pt;margin:0;color:#127A4B}.page h3{font-size:10.5pt;margin:14px 0 4px}
+.page .ph{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:8px;gap:12px}
+.page table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.page th{color:#127A4B;border-bottom:1.5px solid #127A4B;padding:4px 6px;text-align:left;font-weight:700}
+.page td{padding:3px 6px;border-bottom:1px solid #e6e9e7}
+.page .r{text-align:right}
+.page tfoot td{font-weight:700;border-top:1.2px solid #111}
+.page .pf{margin-top:10px;font-size:7.5pt;color:#888;text-align:center}
+@media print{@page{size:A4;margin:10mm}body{background:#fff}header.top,main,.toast,dialog,.edm-bar,.edm-gate{display:none!important}#printArea{display:block}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="/">📊 Excel Data Master <small>· บัญชีร้านค้า</small></a>
+  <nav class="nav">
+    <button class="btn sm ghost" id="dataBtn">💾 ข้อมูล</button>
+    <a class="btn sm ghost" href="/bill/">🧾 เปิดบิล</a>
+    <a class="btn sm ghost" href="/stock/">📦 สต๊อก</a>
+    <a class="btn sm ghost" href="/payroll/">💰 เงินเดือน</a>
+  </nav>
+</div></header>
+
+<main>
+  <div class="tabs" id="tabs">
+    <button data-v="home">📊 ภาพรวม</button>
+    <button data-v="ar">🧾 ลูกหนี้</button>
+    <button data-v="buy">🛒 ซื้อ / ค่าใช้จ่าย</button>
+    <button data-v="cash">🏦 เงินสด-ธนาคาร</button>
+    <button data-v="tax">📑 ภาษี</button>
+  </div>
+  <div class="bar-top"><label class="note" for="ym">เดือน</label><input class="in-" type="month" id="ym"><span class="note" id="ymNote"></span></div>
+  <div id="view"></div>
+</main>
+<div id="printArea"></div>
+<dialog id="dlg"><div class="dh"><b id="dlgTitle"></b><button class="btn sm ghost" onclick="dlg.close()" aria-label="ปิด">✕</button></div><div class="db" id="dlgBody"></div></dialog>
+<div class="toast" id="toast" hidden></div>
+<datalist id="plist"></datalist><datalist id="suplist"></datalist>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,3000)}
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast("บันทึกไม่ได้: พื้นที่ในเครื่องเต็ม");return false}}};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0};
+const r2=n=>Math.round((n+Number.EPSILON)*100)/100, r4=n=>Math.round((n+Number.EPSILON)*10000)/10000;
+const fmt=n=>r2(n).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmt0=n=>Math.round(n).toLocaleString("th-TH");
+const fq=n=>(+n||0).toLocaleString("th-TH",{maximumFractionDigits:3});
+const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+const addDays=(d,n)=>{const x=new Date(d+"T00:00:00Z");x.setUTCDate(x.getUTCDate()+n);return x.toISOString().slice(0,10)};
+const dayDiff=(a,b)=>Math.round((new Date(a+"T00:00:00Z")-new Date(b+"T00:00:00Z"))/864e5);
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const MONTHS=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+const thD=d=>{if(!d)return"";const[y,m,dd]=d.split("-");return +dd+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
+const ymLabel=ym=>{const[y,m]=ym.split("-").map(Number);return MONTHS[m-1]+" "+(y+543)};
+const ymShift=(ym,n)=>{let[y,m]=ym.split("-").map(Number);m+=n;while(m<1){m+=12;y--}while(m>12){m-=12;y++}return y+"-"+String(m).padStart(2,"0")};
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+/* ---------- ข้อมูลจากทุกระบบ (เก็บในเบราว์เซอร์เครื่องเดียวกัน) ---------- */
+const KEY={acc:"edm_acc",bdocs:"edm_bill_docs",bseller:"edm_bill_seller",bcnt:"edm_bill_counter",bcust:"edm_bill_customers",sitems:"edm_stock_items",stx:"edm_stock_tx",scfg:"edm_stock_cfg",pay:"edm_pay_summary",ui:"edm_acc_ui"};
+const ACC_DEF=()=>({accounts:[{id:"cash",name:"เงินสด",type:"cash",open:0},{id:"bank1",name:"บัญชีธนาคาร",type:"bank",open:0}],pay:[],pur:[],cash:[],cnt:{}});
+let A,D;
+function load(){A=Object.assign(ACC_DEF(),LS.get(KEY.acc,{}));
+  D={docs:LS.get(KEY.bdocs,[]),seller:LS.get(KEY.bseller,{}),items:LS.get(KEY.sitems,[]),tx:LS.get(KEY.stx,[]),payroll:LS.get(KEY.pay,{})}}
+const saveA=()=>LS.set(KEY.acc,A);
+let ui=Object.assign({v:"home",ym:today().slice(0,7),arf:"open",bf:"all"},LS.get(KEY.ui,{}));const svU=()=>LS.set(KEY.ui,ui);
+load();
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){load();render()}});
+window.addEventListener("storage",()=>{load();render()});
+
+/* ---------- คำนวณเอกสาร (สูตรเดียวกับหน้าเปิดบิล) ---------- */
+function calcDoc(d){const sub=r2((d.items||[]).reduce((a,it)=>a+r2(num(it.q)*num(it.p)-num(it.disc)),0));const after=r2(Math.max(0,sub-num(d.billDisc)));
+  let vat=0,total=after,base=after;if(d.vat==="ex"){vat=r2(after*.07);total=r2(after+vat)}else if(d.vat==="in"){base=r2(after/1.07);vat=r2(after-base);total=after}
+  const wht=r2(base*num(d.wht)/100);return{sub,base,vat,total,wht,net:r2(total-wht)}}
+const calcPur=p=>calcDoc({items:(p.lines||[]).map(l=>({q:l.q,p:l.p})),vat:p.vat,wht:p.wht,billDisc:0});
+const BT={QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับภาษี",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับภาษี/ใบเสร็จ"};
+const isInvoice=d=>d.type==="IV"||d.type==="IT";
+// เอกสารรับเงินที่อ้างถึงใบแจ้งหนี้ (เช่น แปลง IV → TX ในหน้าเปิดบิล)
+function receiptsFor(d){return D.docs.filter(x=>(x.type==="RC"||x.type==="TX")&&x.ref&&x.ref===d.no)}
+function arInfo(d){const c=calcDoc(d);const pays=A.pay.filter(p=>p.dir==="in"&&p.docId===d.id);let got=r2(pays.reduce((a,p)=>a+num(p.amount)+num(p.wht),0));
+  const rcs=receiptsFor(d).filter(r=>!pays.some(p=>p.rcDocId===r.id));let byDoc=0;rcs.forEach(r=>byDoc+=calcDoc(r).total);got=r2(Math.min(c.total,got+byDoc));
+  const due=d.due||d.date,left=r2(c.total-got);const st=left<=0.009?"paid":got>0?"part":"open";const late=st!=="paid"?dayDiff(today(),due):0;
+  return{c,got,left:Math.max(0,left),st,late,due,pays,rcs}}
+// รายได้ที่รับรู้ = ใบแจ้งหนี้ + ใบเสร็จที่ไม่ได้อ้างถึงใบแจ้งหนี้ (ขายเงินสด)
+function salesDocs(){const inv=new Set(D.docs.filter(isInvoice).map(d=>d.no));return D.docs.filter(d=>isInvoice(d)||((d.type==="RC"||d.type==="TX")&&!(d.ref&&inv.has(d.ref))))}
+// ภาษีขาย: ใบกำกับภาษีที่ออกจริง (IT ของผู้จด VAT, TX)
+function outputVatDocs(){return D.docs.filter(d=>(d.type==="TX"||(d.type==="IT"&&D.seller.vat))&&d.vat!=="none")}
+
+/* ---------- สต๊อก: ต้นทุนขายตามต้นทุนถัวเฉลี่ย ---------- */
+function stockCalc(){const S={};D.items.forEach(i=>S[i.id]={bal:0,avg:num(i.cost)});const cogs={};const sorted=D.tx.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))||(a.ts||0)-(b.ts||0));
+  sorted.forEach(t=>{const s=S[t.pid];if(!s)return;const q=num(t.qty);const ym=String(t.date).slice(0,7);
+    if(t.type==="in"){const c=num(t.cost)||s.avg;const nb=s.bal+q;s.avg=nb>0?r4((Math.max(s.bal,0)*s.avg+q*c)/(Math.max(s.bal,0)+q)):c;s.bal=r4(nb)}
+    else if(t.type==="out"){cogs[ym]=(cogs[ym]||0)+q*s.avg;s.bal=r4(s.bal-q)}else s.bal=r4(s.bal+q)});
+  let value=0;Object.values(S).forEach(s=>value+=Math.max(s.bal,0)*s.avg);return{S,cogs,value:r2(value)}}
+
+/* ---------- ซื้อ: เข้าสต๊อก / ตั้งเจ้าหนี้ ---------- */
+function purNo(date){const ym=(date||today()).slice(2,7).replace("-","");const k="PU"+ym;A.cnt[k]=(A.cnt[k]||0)+1;return k+"-"+String(A.cnt[k]).padStart(3,"0")}
+function syncPurStock(p,remove){let T=LS.get(KEY.stx,[]);T=T.filter(t=>t.docId!==p.id);
+  if(!remove&&p.kind==="stock"&&p.status==="received"){const now=Date.now();(p.lines||[]).forEach((l,k)=>{if(!l.pid||num(l.q)<=0)return;const cost=p.vat==="in"?r4(num(l.p)/1.07):num(l.p);
+    T.push({id:"ta"+now.toString(36)+k,type:"in",date:p.recvDate||p.date,pid:l.pid,qty:num(l.q),cost,ref:p.no,party:p.sup.name,note:"",src:"acc",docId:p.id,ts:now+k})})}
+  LS.set(KEY.stx,T);D.tx=T}
+function apInfo(p){const c=calcPur(p);const paid=r2(A.pay.filter(x=>x.dir==="out"&&x.purId===p.id).reduce((a,x)=>a+num(x.amount)+num(x.wht),0));
+  const left=Math.max(0,r2(c.total-paid));const st=p.status==="ordered"?"ordered":left<=0.009?"paid":paid>0?"part":"open";return{c,paid,left,st,late:st==="open"||st==="part"?dayDiff(today(),p.due||p.date):0}}
+const NOT_EXP=["จ่ายเงินเดือน","ถอนใช้ส่วนตัว","ชำระภาษี","คืนเงินกู้"],NOT_INC=["เงินลงทุนเพิ่ม","เงินกู้ยืม"];
+const EXP_CATS=["ค่าเช่า","ค่าน้ำ-ไฟ","ค่าโทรศัพท์ / อินเทอร์เน็ต","ค่าขนส่ง","ค่าโฆษณา / การตลาด","วัสดุสิ้นเปลือง","ค่าซ่อมแซม","ค่าธรรมเนียม / บริการ","ค่าใช้จ่ายอื่น"];
+
+/* ---------- เงินสด-ธนาคาร ---------- */
+function cashMoves(){const L=[];
+  A.pay.forEach(p=>{let label="",party="";if(p.dir==="in"){const d=D.docs.find(x=>x.id===p.docId);label="รับชำระ "+(d?d.no:"");party=d?d.cust.name:""}else{const pu=A.pur.find(x=>x.id===p.purId);label="จ่าย "+(pu?pu.no:"");party=pu?pu.sup.name:""}
+    L.push({id:p.id,src:"pay",date:p.date,acc:p.accId,amt:p.dir==="in"?num(p.amount):-num(p.amount),label,party,note:p.note||""})});
+  A.cash.forEach(c=>L.push({id:c.id,src:"cash",date:c.date,acc:c.accId,amt:c.dir==="in"?num(c.amount):-num(c.amount),label:c.cat||(c.dir==="in"?"รายรับอื่น":"รายจ่ายอื่น"),party:"",note:c.note||""}));
+  // ขายเงินสด (ใบเสร็จที่ไม่ได้อ้างใบแจ้งหนี้) ถือว่ารับเงินเข้าบัญชีเงินสดแล้ว ถ้ายังไม่ได้บันทึก
+  return L.sort((a,b)=>String(b.date).localeCompare(String(a.date)))}
+function balances(upto){const B={};A.accounts.forEach(a=>B[a.id]=num(a.open));cashMoves().forEach(m=>{if(upto&&m.date>upto)return;if(B[m.acc]!=null)B[m.acc]=r2(B[m.acc]+m.amt)});return B}
+
+/* ---------- กำไรขาดทุนรายเดือน ---------- */
+function pnl(ym,SC){SC=SC||stockCalc();
+  let sales=0,salesN=0;salesDocs().forEach(d=>{if(String(d.date).startsWith(ym)){sales+=calcDoc(d).base;salesN++}});
+  const cogs=r2(SC.cogs[ym]||0);const exp={};
+  A.pur.forEach(p=>{if(p.kind!=="expense"||p.status==="ordered"||!String(p.date).startsWith(ym))return;exp[p.cat||"ค่าใช้จ่ายอื่น"]=r2((exp[p.cat||"ค่าใช้จ่ายอื่น"]||0)+calcPur(p).base)});
+  let other=0;A.cash.forEach(c=>{if(!String(c.date).startsWith(ym))return;if(c.dir==="out"&&!NOT_EXP.includes(c.cat))exp[c.cat||"ค่าใช้จ่ายอื่น"]=r2((exp[c.cat||"ค่าใช้จ่ายอื่น"]||0)+num(c.amount));if(c.dir==="in"&&!NOT_INC.includes(c.cat))other+=num(c.amount)});
+  const pr=D.payroll[ym];const payroll=pr?r2(num(pr.earn)+num(pr.sso)):0; // เงินเดือนรวม + ประกันสังคมส่วนนายจ้าง
+  let expT=0;Object.values(exp).forEach(v=>expT+=v);
+  sales=r2(sales);const gross=r2(sales-cogs);const net=r2(gross+other-expT-payroll);
+  return{sales,salesN,cogs,gross,exp,expT:r2(expT),payroll,prN:pr?pr.n:0,other:r2(other),net}}
+
+/* ---------- views ---------- */
+function render(){
+  $$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));$("#ym").value=ui.ym;$("#ymNote").textContent=ymLabel(ui.ym);
+  ({home:vHome,ar:vAR,buy:vBuy,cash:vCash,tax:vTax}[ui.v]||vHome)();
+  $("#plist").innerHTML=D.items.map(i=>`<option value="${esc((i.sku?i.sku+" · ":"")+i.name)}">`).join("");
+  $("#suplist").innerHTML=[...new Set(A.pur.map(p=>p.sup.name).filter(Boolean))].map(n=>`<option value="${esc(n)}">`).join("");
+}
+function noData(){return!D.docs.length&&!D.items.length&&!A.pur.length&&!A.pay.length&&!A.cash.length&&!Object.keys(D.payroll).length}
+function vHome(){
+  if(noData()){$("#view").innerHTML=`<div class="card"><div class="empty"><div style="font-size:2rem">📒</div><b>บัญชีร้านค้า เชื่อมทุกระบบให้อัตโนมัติ</b>
+    <div class="flow"><b>🧾 เปิดบิล</b>→ ลูกหนี้ → รับชำระ →<b>🏦 เงินเข้าบัญชี</b></div><div class="flow"><b>🛒 ซื้อสินค้า</b>→<b>📦 สต๊อก</b>→ ต้นทุนขาย →<b>📊 กำไร-ขาดทุน</b>←<b>💰 เงินเดือน</b></div>
+    <div>ยังไม่มีข้อมูลในเครื่องนี้ เริ่มจากเปิดบิลหรือบันทึกการซื้อ หรือลองดูทั้งระบบด้วยข้อมูลตัวอย่าง</div>
+    <button class="btn main edm-lock" data-act="demo">✨ ลองใส่ข้อมูลตัวอย่าง (ทุกระบบ)</button></div></div>`;return}
+  const SC=stockCalc(),P=pnl(ui.ym,SC);let ar=0,arLate=0,ap=0,apLate=0;
+  D.docs.filter(isInvoice).forEach(d=>{const a=arInfo(d);ar+=a.left;if(a.late>0)arLate+=a.left});
+  A.pur.forEach(p=>{const a=apInfo(p);if(a.st==="ordered")return;ap+=a.left;if(a.late>0)apLate+=a.left});
+  const B=balances();let money=0;Object.values(B).forEach(v=>money+=v);
+  const months=[];for(let k=5;k>=0;k--)months.push(ymShift(ui.ym,-k));const PS=months.map(m=>({m,p:pnl(m,SC)}));
+  const mx=Math.max(1,...PS.map(x=>Math.max(x.p.sales,x.p.cogs+x.p.expT+x.p.payroll)));
+  const cust={};salesDocs().forEach(d=>{if(!String(d.date).startsWith(ui.ym))return;const n=d.cust.name||"ลูกค้าทั่วไป";cust[n]=(cust[n]||0)+calcDoc(d).base});
+  const topC=Object.entries(cust).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const expRows=Object.entries(P.exp).sort((a,b)=>b[1]-a[1]);
+  $("#view").innerHTML=`<div class="kpis">
+    <div class="kpi"><span>ยอดขาย (ก่อน VAT)</span><b>฿${fmt0(P.sales)}</b><span>${P.salesN} เอกสาร</span></div>
+    <div class="kpi"><span>ต้นทุนขาย (จากสต๊อก)</span><b>฿${fmt0(P.cogs)}</b></div>
+    <div class="kpi ${P.gross>=0?"pos":"neg"}"><span>กำไรขั้นต้น</span><b>฿${fmt0(P.gross)}</b><span>${P.sales?Math.round(P.gross/P.sales*100):0}% ของยอดขาย</span></div>
+    <div class="kpi"><span>ค่าใช้จ่าย + เงินเดือน</span><b>฿${fmt0(P.expT+P.payroll)}</b></div>
+    <div class="kpi big"><span>กำไรสุทธิ ${MS[+ui.ym.slice(5)-1]}</span><b>฿${fmt0(P.net)}</b></div></div>
+  <div class="kpis k4">
+    <div class="kpi ${arLate>0?"warn":""}"><span>ลูกหนี้ค้างรับ</span><b>฿${fmt0(ar)}</b><span>${arLate>0?"เกินกำหนด ฿"+fmt0(arLate):"ไม่มีเกินกำหนด"}</span></div>
+    <div class="kpi ${apLate>0?"neg":""}"><span>เจ้าหนี้ค้างจ่าย</span><b>฿${fmt0(ap)}</b><span>${apLate>0?"เกินกำหนด ฿"+fmt0(apLate):"ไม่มีเกินกำหนด"}</span></div>
+    <div class="kpi"><span>เงินสด + ธนาคาร</span><b>฿${fmt0(money)}</b></div>
+    <div class="kpi"><span>มูลค่าสต๊อก (ทุน)</span><b>฿${fmt0(SC.value)}</b></div></div>
+  <div class="grid2">
+    <div class="card"><h2>📊 งบกำไรขาดทุน <small>${ymLabel(ui.ym)}</small></h2><div class="pl">
+      <span class="h">รายได้จากการขาย</span><span class="h">${fmt(P.sales)}</span>
+      <span class="sub">หัก ต้นทุนขาย</span><span class="sub">(${fmt(P.cogs)})</span>
+      <span class="h">กำไรขั้นต้น</span><span class="h">${fmt(P.gross)}</span>
+      ${P.other?`<span class="sub">บวก รายได้อื่น</span><span class="sub">${fmt(P.other)}</span>`:""}
+      <span class="sub">หัก เงินเดือนและประกันสังคม${P.prN?" ("+P.prN+" คน)":""}</span><span class="sub">(${fmt(P.payroll)})</span>
+      ${expRows.map(([k,v])=>`<span class="sub">หัก ${esc(k)}</span><span class="sub">(${fmt(v)})</span>`).join("")}
+      <span class="tot">กำไร (ขาดทุน) สุทธิ</span><span class="tot ${P.net>=0?"pos":"neg"}">${fmt(P.net)}</span></div>
+      <div class="note">รายได้นับจากวันที่ในใบแจ้งหนี้ · ต้นทุนขายจากการตัดสต๊อก (ต้นทุนถัวเฉลี่ย) · เงินเดือนจากหน้าคำนวณเงินเดือน</div></div>
+    <div class="card"><h2>📈 6 เดือนล่าสุด</h2>
+      <div class="chart">${PS.map(x=>{const c=x.p.cogs+x.p.expT+x.p.payroll;return`<div class="m" title="${ymLabel(x.m)}: ขาย ${fmt0(x.p.sales)} · ต้นทุน+ค่าใช้จ่าย ${fmt0(c)} · กำไร ${fmt0(x.p.net)}"><div class="bs"><i style="height:${x.p.sales/mx*100}%;background:var(--c1)"></i><i style="height:${c/mx*100}%;background:var(--c2)"></i><i style="height:${Math.max(0,x.p.net)/mx*100}%;background:var(--c3)"></i></div><span class="lbl">${MS[+x.m.slice(5)-1]}</span></div>`}).join("")}</div>
+      <div class="legend"><span><i style="background:var(--c1)"></i>ยอดขาย</span><span><i style="background:var(--c2)"></i>ต้นทุน + ค่าใช้จ่าย</span><span><i style="background:var(--c3)"></i>กำไรสุทธิ</span></div>
+      <h2 style="margin-top:6px">🏆 ลูกค้ายอดซื้อสูงสุดเดือนนี้</h2>
+      ${topC.length?`<div class="pl">${topC.map(([n,v])=>`<span>${esc(n)}</span><span>${fmt(v)}</span>`).join("")}</div>`:`<div class="note">ยังไม่มียอดขายเดือนนี้</div>`}</div></div>
+  <div class="card"><h2>🔗 ระบบที่เชื่อมกัน</h2><div class="flow"><b>🧾 ${D.docs.filter(isInvoice).length} ใบแจ้งหนี้</b>→<b>${A.pay.filter(p=>p.dir==="in").length} รายการรับชำระ</b>→<b>🏦 ${A.accounts.length} บัญชีเงิน</b></div>
+    <div class="flow"><b>🛒 ${A.pur.filter(p=>p.kind==="stock").length} ใบซื้อสินค้า</b>→<b>📦 ${D.items.length} สินค้าในสต๊อก</b>→<b>ต้นทุนขาย</b>·<b>💰 เงินเดือน ${Object.keys(D.payroll).length} เดือน</b>→<b>📊 กำไรขาดทุน</b></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm main" id="prPnl">🖨️ พิมพ์งบกำไรขาดทุน</button><button class="btn sm ghost" data-act="xlsx">📊 ดาวน์โหลด Excel ทุกระบบ</button></div></div>`;
+  $("#prPnl").onclick=()=>{printPnl(P);setTimeout(()=>window.print(),80)};
+}
+
+function vAR(){
+  const inv=D.docs.filter(isInvoice).map(d=>({d,a:arInfo(d)}));
+  const list=inv.filter(x=>ui.arf==="all"||(ui.arf==="open"?x.a.st!=="paid":x.a.st==="paid")).sort((x,y)=>(y.a.late-x.a.late)||String(y.d.date).localeCompare(String(x.d.date)));
+  const ag=[0,0,0,0,0];inv.forEach(x=>{if(x.a.st==="paid")return;const l=x.a.late;ag[l<=0?0:l<=30?1:l<=60?2:l<=90?3:4]+=x.a.left});
+  $("#view").innerHTML=`<div class="kpis"><div class="kpi"><span>ยังไม่ถึงกำหนด</span><b>฿${fmt0(ag[0])}</b></div><div class="kpi warn"><span>เกิน 1–30 วัน</span><b>฿${fmt0(ag[1])}</b></div><div class="kpi warn"><span>เกิน 31–60 วัน</span><b>฿${fmt0(ag[2])}</b></div><div class="kpi neg"><span>เกิน 61–90 วัน</span><b>฿${fmt0(ag[3])}</b></div><div class="kpi neg"><span>เกิน 90 วัน</span><b>฿${fmt0(ag[4])}</b></div></div>
+  <div class="card"><h2>🧾 ลูกหนี้ (ใบแจ้งหนี้จากหน้าเปิดบิล) <small>${list.length} ใบ</small></h2>
+    <div class="seg" id="arf" style="max-width:420px"><button data-f="open">ค้างรับ</button><button data-f="paid">รับครบแล้ว</button><button data-f="all">ทั้งหมด</button></div>
+    ${list.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>เลขที่ / ลูกค้า</th><th>วันที่</th><th>ครบกำหนด</th><th class="r">ยอดรวม</th><th class="r">รับแล้ว</th><th class="r">คงค้าง</th><th>สถานะ</th><th></th></tr></thead><tbody>
+    ${list.map(({d,a})=>`<tr><td><b>${esc(d.no)}</b> <span class="note">${BT[d.type]}</span><br>${esc(d.cust.name||"-")}</td><td>${thD(d.date)}</td><td>${thD(a.due)}</td><td class="r">${fmt(a.c.total)}</td><td class="r">${fmt(a.got)}</td><td class="r"><b>${fmt(a.left)}</b></td>
+      <td>${a.st==="paid"?`<span class="pill p-ok">รับครบ</span>`:a.late>0?`<span class="pill p-bad">เกิน ${a.late} วัน</span>`:a.st==="part"?`<span class="pill p-warn">รับบางส่วน</span>`:`<span class="pill p-mute">รอรับ</span>`}</td>
+      <td class="r">${a.st!=="paid"?`<button class="btn sm main edm-lock" data-recv="${d.id}">รับชำระ</button>`:""}${a.pays.length?` <button class="btn sm ghost" data-hist="${d.id}">ประวัติ</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">${inv.length?"ไม่มีรายการในหมวดนี้":"ยังไม่มีใบแจ้งหนี้ · ออกใบแจ้งหนี้ได้ที่หน้า 🧾 เปิดบิล"}</div>`}
+    <div class="note">กด "รับชำระ" เพื่อบันทึกเงินเข้าบัญชี ระบบออกใบเสร็จ (หรือใบกำกับภาษี/ใบเสร็จ สำหรับงานบริการ) ให้อัตโนมัติในหน้าเปิดบิล</div></div>`;
+  $$("#arf button").forEach(b=>{b.classList.toggle("on",b.dataset.f===ui.arf);b.onclick=()=>{ui.arf=b.dataset.f;svU();vAR()}});
+}
+function receiveDlg(id){
+  const d=D.docs.find(x=>x.id===id),a=arInfo(d);const ratio=a.c.total?a.left/a.c.total:0;const wht=r2(a.c.wht*ratio);
+  const rcType=d.type==="IV"?(D.seller.vat&&d.vat!=="none"?"TX":"RC"):"RC";
+  openDlg("รับชำระ · "+d.no,`<div class="totals"><span>${esc(d.cust.name||"-")} · ${BT[d.type]}</span><span></span><span>ยอดรวม</span><span>${fmt(a.c.total)}</span><span>รับแล้ว</span><span>${fmt(a.got)}</span><span class="big">คงค้าง</span><span class="big">${fmt(a.left)}</span></div>
+   <div class="row3"><div class="f"><label>วันที่รับเงิน</label><input class="in-" type="date" id="rDate" value="${today()}"></div><div class="f"><label>เข้าบัญชี</label>${accSel("rAcc","bank1")}</div><div class="f"><label>วิธีรับ</label><select class="in-" id="rMeth"><option>โอนเงิน</option><option>เงินสด</option><option>เช็ค</option><option>บัตรเครดิต</option></select></div></div>
+   <div class="row"><div class="f"><label>จำนวนเงินที่ได้รับจริง</label><input class="in-" type="number" step="any" id="rAmt" value="${r2(a.left-wht)}"></div><div class="f"><label>ลูกค้าหัก ณ ที่จ่าย</label><input class="in-" type="number" step="any" id="rWht" value="${wht}"></div></div>
+   <label class="chk"><input type="checkbox" id="rDoc" checked> ออก${BT[rcType]}ให้อัตโนมัติ (อ้างอิง ${esc(d.no)})</label>
+   <div class="f"><label>หมายเหตุ</label><input class="in-" id="rNote"></div>
+   <button class="btn main" id="rSave">✓ บันทึกรับชำระ</button><p class="note" style="margin:0">ยอดที่ได้รับ + หัก ณ ที่จ่าย = ยอดที่ตัดลูกหนี้ · เงินจะเข้าบัญชีที่เลือกในแท็บเงินสด-ธนาคาร</p>`);
+  $("#rMeth").onchange=e=>{if(e.target.value==="เงินสด")$("#rAcc").value="cash"};
+  $("#rSave").onclick=()=>{const amt=num($("#rAmt").value),w=num($("#rWht").value);if(amt+w<=0)return toast("ใส่จำนวนเงิน");if(amt+w>a.left+0.01&&!confirm("ยอดรับมากกว่ายอดคงค้าง บันทึกต่อ?"))return;
+    const p={id:uid("y"),dir:"in",docId:d.id,date:$("#rDate").value||today(),amount:amt,wht:w,accId:$("#rAcc").value,method:$("#rMeth").value,note:$("#rNote").value.trim()};
+    if($("#rDoc").checked){const rc=makeReceipt(d,rcType,p);p.rcDocId=rc.id}
+    A.pay.push(p);saveA();dlg.close();toast("บันทึกรับชำระแล้ว ✓"+(p.rcDocId?" ออกใบเสร็จในหน้าเปิดบิลแล้ว":""));render()};
+}
+function makeReceipt(d,type,p){
+  const docs=LS.get(KEY.bdocs,[]),cnt=LS.get(KEY.bcnt,{});const ym=p.date.slice(2,7).replace("-","");const k=type+ym;cnt[k]=(cnt[k]||0)+1;
+  const c=calcDoc(d),part=r2(num(p.amount)+num(p.wht));const full=part>=calcDoc(d).total-0.01&&!A.pay.some(x=>x.docId===d.id);
+  let items=JSON.parse(JSON.stringify(d.items||[]));let billDisc=d.billDisc;
+  if(!full){const base=d.vat==="ex"?r2(part/1.07):part;items=[{d:"รับชำระตาม "+BT[d.type]+" เลขที่ "+d.no,q:1,u:"งาน",p:d.vat==="ex"?base:part,disc:0}];billDisc=0}
+  const rc={id:"d"+Date.now().toString(36)+"r",mode:d.mode,type,no:k+"-"+String(cnt[k]).padStart(3,"0"),date:p.date,due:"",ref:d.no,cust:JSON.parse(JSON.stringify(d.cust)),items,vat:d.vat,billDisc,wht:full?d.wht:(num(p.wht)>0?d.wht:0),notes:"รับชำระโดย"+(p.method||"โอนเงิน")+(p.note?" · "+p.note:""),saved:true,updated:Date.now(),auto:"acc"};
+  rc._total=calcDoc(rc).net;docs.unshift(rc);LS.set(KEY.bdocs,docs);LS.set(KEY.bcnt,cnt);D.docs=docs;return rc}
+
+function vBuy(){
+  const all=A.pur.map(p=>({p,a:apInfo(p)}));const f=ui.bf;
+  const list=all.filter(x=>f==="all"||(f==="ordered"?x.a.st==="ordered":f==="open"?(x.a.st==="open"||x.a.st==="part"):f==="stock"?x.p.kind==="stock":x.p.kind==="expense")).sort((x,y)=>String(y.p.date).localeCompare(String(x.p.date)));
+  let ap=0,ord=0;all.forEach(x=>{if(x.a.st==="ordered")ord+=x.a.c.total;else ap+=x.a.left});
+  $("#view").innerHTML=`<div class="kpis k4"><div class="kpi"><span>ใบสั่งซื้อรอรับของ</span><b>฿${fmt0(ord)}</b></div><div class="kpi warn"><span>เจ้าหนี้ค้างจ่าย</span><b>฿${fmt0(ap)}</b></div><div class="kpi"><span>ซื้อสินค้าเดือนนี้</span><b>฿${fmt0(all.filter(x=>x.p.kind==="stock"&&x.p.status==="received"&&String(x.p.date).startsWith(ui.ym)).reduce((s,x)=>s+x.a.c.base,0))}</b></div><div class="kpi"><span>ค่าใช้จ่ายเดือนนี้</span><b>฿${fmt0(all.filter(x=>x.p.kind==="expense"&&String(x.p.date).startsWith(ui.ym)).reduce((s,x)=>s+x.a.c.base,0))}</b></div></div>
+  <div class="card"><h2>🛒 ซื้อสินค้า / ค่าใช้จ่าย <span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm main edm-lock" data-newpur="stock">＋ ซื้อสินค้าเข้าสต๊อก</button><button class="btn sm ghost edm-lock" data-newpur="expense">＋ ค่าใช้จ่าย</button></span></h2>
+    <div class="seg" id="bf">${[["all","ทั้งหมด"],["ordered","รอรับของ"],["open","ค้างจ่าย"],["stock","สินค้า"],["expense","ค่าใช้จ่าย"]].map(o=>`<button data-f="${o[0]}" class="${f===o[0]?"on":""}">${o[1]}</button>`).join("")}</div>
+    ${list.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>เลขที่ / ผู้ขาย</th><th>ประเภท</th><th>วันที่</th><th class="r">ยอดรวม</th><th class="r">คงค้าง</th><th>สถานะ</th><th></th></tr></thead><tbody>
+    ${list.map(({p,a})=>`<tr><td><b>${esc(p.no)}</b>${p.taxInv?` <span class="pill p-blue">ใบกำกับ</span>`:""}<br>${esc(p.sup.name||"-")}</td><td>${p.kind==="stock"?"📦 สินค้า "+p.lines.length+" รายการ":"💸 "+esc(p.cat||"ค่าใช้จ่าย")}</td><td>${thD(p.date)}</td><td class="r">${fmt(a.c.total)}</td><td class="r"><b>${a.st==="ordered"?"-":fmt(a.left)}</b></td>
+      <td>${a.st==="ordered"?`<span class="pill p-blue">สั่งซื้อแล้ว รอรับของ</span>`:a.st==="paid"?`<span class="pill p-ok">จ่ายแล้ว</span>`:a.late>0?`<span class="pill p-bad">เกิน ${a.late} วัน</span>`:a.st==="part"?`<span class="pill p-warn">จ่ายบางส่วน</span>`:`<span class="pill p-mute">ค้างจ่าย</span>`}</td>
+      <td class="r"><div class="acts">${a.st==="ordered"?`<button class="btn sm main edm-lock" data-recvpur="${p.id}">รับของ</button><button class="btn sm ghost" data-prpo="${p.id}">พิมพ์ PO</button>`:""}${a.st==="open"||a.st==="part"?`<button class="btn sm main edm-lock" data-paypur="${p.id}">จ่ายเงิน</button>`:""}<button class="btn sm ghost edm-lock" data-editpur="${p.id}">แก้ไข</button></div></td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีรายการ · กด "ซื้อสินค้าเข้าสต๊อก" หรือ "ค่าใช้จ่าย" เพื่อเริ่ม</div>`}
+    <div class="note">ซื้อสินค้า: สร้างเป็นใบสั่งซื้อ (PO) ก่อน หรือบันทึกว่ารับของแล้วเลยก็ได้ · เมื่อรับของ สินค้าจะเข้าหน้า 📦 สต๊อกพร้อมต้นทุนให้อัตโนมัติ</div></div>`;
+  $$("#bf button").forEach(b=>b.onclick=()=>{ui.bf=b.dataset.f;svU();vBuy()});
+}
+let pd=null;
+function purDlg(id,kind){
+  const ex=id?A.pur.find(x=>x.id===id):null;
+  pd=ex?JSON.parse(JSON.stringify(ex)):{id:uid("u"),no:"",kind,status:kind==="stock"?"ordered":"received",date:today(),due:addDays(today(),30),sup:{name:"",tax:""},lines:[{pid:"",d:"",q:kind==="stock"?"":1,p:""}],vat:"ex",taxInv:true,taxNo:"",wht:0,cat:EXP_CATS[0],note:"",paidNow:kind==="expense",payAcc:"bank1"};
+  drawPur(!!ex);
+}
+function drawPur(isEdit){
+  const p=pd,st=p.kind==="stock";
+  openDlg((isEdit?"แก้ไข ":"")+(st?"ซื้อสินค้าเข้าสต๊อก":"บันทึกค่าใช้จ่าย")+(p.no?" · "+p.no:""),`
+   ${st?`<div class="seg" id="pStat"><button data-s="ordered" class="${p.status==="ordered"?"on":""}">📝 ใบสั่งซื้อ (ยังไม่ได้รับของ)</button><button data-s="received" class="${p.status==="received"?"on":""}">📦 รับของแล้ว (เข้าสต๊อก)</button></div>`:`<div class="f"><label>หมวดค่าใช้จ่าย</label><select class="in-" id="pCat">${EXP_CATS.map(c=>`<option ${c===p.cat?"selected":""}>${c}</option>`).join("")}</select></div>`}
+   <div class="row3"><div class="f"><label>วันที่</label><input class="in-" type="date" id="pDate" value="${esc(p.date)}"></div><div class="f"><label>ครบกำหนดจ่าย</label><input class="in-" type="date" id="pDue" value="${esc(p.due)}"></div><div class="f"><label>ผู้ขาย / ผู้รับเงิน</label><input class="in-" id="pSup" list="suplist" value="${esc(p.sup.name)}"></div></div>
+   <div class="lines" id="pLines">${p.lines.map((l,k)=>st?`<div class="line" data-k="${k}"><div class="f"><label>สินค้า ${k+1}</label><input class="in-" list="plist" data-l="pid" value="${esc(l.pid?plabel(l.pid):"")}" placeholder="${D.items.length?"พิมพ์ชื่อหรือรหัส":"ยังไม่มีสินค้า · เพิ่มที่หน้าสต๊อกก่อน"}"></div><div class="f"><label>จำนวน</label><input class="in-" type="number" step="any" data-l="q" value="${esc(l.q)}"></div><div class="f"><label>ราคา/หน่วย</label><input class="in-" type="number" step="any" data-l="p" value="${esc(l.p)}"></div><button class="x" data-rm="${k}" type="button">✕</button></div>`
+     :`<div class="line" data-k="${k}" style="grid-template-columns:minmax(0,3fr) minmax(0,1.4fr) auto"><div class="f"><label>รายการ ${k+1}</label><input class="in-" data-l="d" value="${esc(l.d)}" placeholder="เช่น ค่าเช่าร้าน เดือน ต.ค."></div><div class="f"><label>จำนวนเงิน</label><input class="in-" type="number" step="any" data-l="p" value="${esc(l.p)}"></div><button class="x" data-rm="${k}" type="button">✕</button></div>`).join("")}</div>
+   <button class="btn ghost sm" id="pAdd" type="button" style="align-self:flex-start">＋ เพิ่มบรรทัด</button>
+   <div class="row3"><div class="f"><label>VAT</label><select class="in-" id="pVat"><option value="ex" ${p.vat==="ex"?"selected":""}>ราคายังไม่รวม VAT 7%</option><option value="in" ${p.vat==="in"?"selected":""}>ราคารวม VAT แล้ว</option><option value="none" ${p.vat==="none"?"selected":""}>ไม่มี VAT</option></select></div>
+     <div class="f"><label>เราหัก ณ ที่จ่าย</label><select class="in-" id="pWht">${[0,1,2,3,5].map(w=>`<option value="${w}" ${num(p.wht)===w?"selected":""}>${w?w+"%":"ไม่หัก"}</option>`).join("")}</select></div>
+     <div class="f"><label>เลขที่ใบกำกับภาษีของผู้ขาย</label><input class="in-" id="pTaxNo" value="${esc(p.taxNo)}"></div></div>
+   <div class="row"><label class="chk"><input type="checkbox" id="pTaxInv" ${p.taxInv?"checked":""}> ได้รับใบกำกับภาษี (ใช้เป็นภาษีซื้อ)</label><div class="f"><label>เลขผู้เสียภาษีผู้ขาย</label><input class="in-" id="pSupTax" value="${esc(p.sup.tax||"")}"></div></div>
+   ${isEdit?"":`<div class="row"><label class="chk"><input type="checkbox" id="pPaid" ${p.paidNow?"checked":""}> จ่ายเงินแล้ว</label><div class="f"><label>จ่ายจากบัญชี</label>${accSel("pAcc",p.payAcc)}</div></div>`}
+   <div class="f"><label>หมายเหตุ</label><input class="in-" id="pNote" value="${esc(p.note)}"></div>
+   <div class="totals" id="pTot"></div>
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="pSave">💾 บันทึก</button>${isEdit?`<button class="btn ghost danger" id="pDel">ลบ</button>`:""}</div>`);
+  const sync=()=>{p.date=$("#pDate").value;p.due=$("#pDue").value;p.sup.name=$("#pSup").value;p.sup.tax=$("#pSupTax").value;p.vat=$("#pVat").value;p.wht=num($("#pWht").value);p.taxInv=$("#pTaxInv").checked;p.taxNo=$("#pTaxNo").value;p.note=$("#pNote").value;if($("#pCat"))p.cat=$("#pCat").value;
+    if($("#pPaid")){p.paidNow=$("#pPaid").checked;p.payAcc=$("#pAcc").value}
+    $$("#pLines .line").forEach(el=>{const l=p.lines[+el.dataset.k];el.querySelectorAll("[data-l]").forEach(i=>{const k=i.dataset.l;if(k==="pid"){const it=findItem(i.value);l.pid=it?it.id:"";l._t=i.value;if(it){l.d=it.name;l.u=it.unit}}else l[k]=i.value})});
+    const c=calcPur(p);$("#pTot").innerHTML=`<span>มูลค่าก่อน VAT</span><span>${fmt(c.base)}</span><span>VAT</span><span>${fmt(c.vat)}</span><span class="big">ยอดรวม</span><span class="big">${fmt(c.total)}</span>${c.wht?`<span>หัก ณ ที่จ่าย ${p.wht}%</span><span>-${fmt(c.wht)}</span><span class="big">จ่ายจริง</span><span class="big">${fmt(c.net)}</span>`:""}`};
+  $("#dlgBody").oninput=sync;$("#dlgBody").onchange=e=>{sync();if(e.target.dataset.l==="pid"){const l=p.lines[+e.target.closest(".line").dataset.k];const it=D.items.find(i=>i.id===l.pid);if(it&&!num(l.p)){l.p=num(it.cost);e.target.closest(".line").querySelector('[data-l="p"]').value=l.p;sync()}}};
+  if($("#pStat"))$$("#pStat button").forEach(b=>b.onclick=()=>{sync();p.status=b.dataset.s;drawPur(isEdit)});
+  $("#pAdd").onclick=()=>{sync();p.lines.push({pid:"",d:"",q:st?"":1,p:""});drawPur(isEdit)};
+  $$("[data-rm]").forEach(b=>b.onclick=()=>{sync();p.lines.splice(+b.dataset.rm,1);if(!p.lines.length)p.lines.push({pid:"",d:"",q:st?"":1,p:""});drawPur(isEdit)});
+  sync();
+  $("#pSave").onclick=()=>{sync();
+    p.lines=p.lines.filter(l=>st?(l.pid||(l._t||"").trim()):(String(l.d).trim()||num(l.p)));
+    if(!p.lines.length)return toast(st?"เลือกสินค้าอย่างน้อย 1 รายการ":"ใส่รายการค่าใช้จ่าย");
+    if(st){for(const l of p.lines){if(!l.pid)return toast("ไม่พบสินค้า \""+(l._t||"")+"\" · เพิ่มสินค้าที่หน้า 📦 สต๊อก ก่อน");if(num(l.q)<=0)return toast("ใส่จำนวนของ "+l.d)}}
+    else p.lines.forEach(l=>{l.q=1;if(!String(l.d).trim())l.d=p.cat});
+    if(!p.sup.name.trim())return toast("ใส่ชื่อผู้ขาย / ผู้รับเงิน");
+    if(!p.no)p.no=purNo(p.date);if(st&&p.status==="received"&&!p.recvDate)p.recvDate=p.date;
+    const ex=A.pur.findIndex(x=>x.id===p.id);const clean=JSON.parse(JSON.stringify(p));delete clean.paidNow;delete clean.payAcc;clean.lines.forEach(l=>delete l._t);
+    if(ex>=0)A.pur[ex]=clean;else A.pur.push(clean);
+    if(!isEdit&&p.paidNow&&p.status==="received"){const c=calcPur(p);A.pay.push({id:uid("y"),dir:"out",purId:p.id,date:p.date,amount:c.net,wht:c.wht,accId:p.payAcc,note:""})}
+    saveA();syncPurStock(clean);dlg.close();toast("บันทึก "+clean.no+" แล้ว ✓"+(st&&clean.status==="received"?" สินค้าเข้าสต๊อกแล้ว":""));render()};
+  if(isEdit)$("#pDel").onclick=()=>{if(!confirm("ลบ "+p.no+"? (การจ่ายเงินและสินค้าที่เข้าสต๊อกจากใบนี้จะถูกลบด้วย)"))return;A.pur=A.pur.filter(x=>x.id!==p.id);A.pay=A.pay.filter(x=>x.purId!==p.id);saveA();syncPurStock(p,true);dlg.close();render()};
+}
+const plabel=id=>{const i=D.items.find(x=>x.id===id);return i?(i.sku?i.sku+" · ":"")+i.name:""};
+const findItem=v=>{v=String(v||"").trim();return D.items.find(i=>((i.sku?i.sku+" · ":"")+i.name)===v)||D.items.find(i=>i.sku&&i.sku.toLowerCase()===v.toLowerCase())||D.items.find(i=>i.name===v)};
+function payPurDlg(id){const p=A.pur.find(x=>x.id===id),a=apInfo(p);const w=r2(a.c.wht*(a.c.total?a.left/a.c.total:0));
+  openDlg("จ่ายเงิน · "+p.no,`<div class="totals"><span>${esc(p.sup.name)}</span><span></span><span>ยอดรวม</span><span>${fmt(a.c.total)}</span><span>จ่ายแล้ว</span><span>${fmt(a.paid)}</span><span class="big">คงค้าง</span><span class="big">${fmt(a.left)}</span></div>
+   <div class="row3"><div class="f"><label>วันที่จ่าย</label><input class="in-" type="date" id="yDate" value="${today()}"></div><div class="f"><label>จ่ายจากบัญชี</label>${accSel("yAcc","bank1")}</div><div class="f"><label>หัก ณ ที่จ่าย</label><input class="in-" type="number" step="any" id="yWht" value="${w}"></div></div>
+   <div class="f"><label>จำนวนเงินที่จ่ายจริง</label><input class="in-" type="number" step="any" id="yAmt" value="${r2(a.left-w)}"></div>
+   <button class="btn main" id="ySave">✓ บันทึกการจ่าย</button>`);
+  $("#ySave").onclick=()=>{const amt=num($("#yAmt").value),wh=num($("#yWht").value);if(amt+wh<=0)return toast("ใส่จำนวนเงิน");A.pay.push({id:uid("y"),dir:"out",purId:p.id,date:$("#yDate").value||today(),amount:amt,wht:wh,accId:$("#yAcc").value,note:""});saveA();dlg.close();toast("บันทึกการจ่ายแล้ว ✓");render()}}
+function recvPur(id){const p=A.pur.find(x=>x.id===id);if(!confirm("รับสินค้าตาม "+p.no+" ครบแล้ว?\nสินค้า "+p.lines.length+" รายการจะเข้าสต๊อกพร้อมต้นทุน และตั้งเป็นเจ้าหนี้ค้างจ่าย"))return;p.status="received";p.recvDate=today();saveA();syncPurStock(p);toast("รับของแล้ว ✓ สินค้าเข้าสต๊อกเรียบร้อย");render()}
+function accSel(id,sel){return`<select class="in-" id="${id}">${A.accounts.map(a=>`<option value="${a.id}" ${a.id===sel?"selected":""}>${esc(a.name)}</option>`).join("")}</select>`}
+
+function vCash(){
+  const B=balances(),moves=cashMoves().filter(m=>String(m.date).startsWith(ui.ym));let tin=0,tout=0;moves.forEach(m=>m.amt>0?tin+=m.amt:tout-=m.amt);
+  const pr=D.payroll[ui.ym];const prPaid=A.cash.some(c=>c.cat==="จ่ายเงินเดือน"&&c.ym===ui.ym);
+  $("#view").innerHTML=`<div class="kpis k4">${A.accounts.map(a=>`<div class="kpi"><span>${a.type==="cash"?"💵":"🏦"} ${esc(a.name)}</span><b>฿${fmt(B[a.id])}</b></div>`).join("")}<div class="kpi pos"><span>รับเข้าเดือนนี้</span><b>฿${fmt0(tin)}</b></div><div class="kpi neg"><span>จ่ายออกเดือนนี้</span><b>฿${fmt0(tout)}</b></div></div>
+  <div class="card"><h2>🏦 รับ-จ่ายเงิน <small>${ymLabel(ui.ym)}</small><span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm ghost edm-lock" data-cashnew="in">＋ รายรับอื่น</button><button class="btn sm ghost edm-lock" data-cashnew="out">＋ รายจ่ายอื่น</button><button class="btn sm ghost edm-lock" id="accMgr">⚙️ บัญชีเงิน</button></span></h2>
+    ${pr&&!prPaid?`<div class="card" style="background:var(--warnbg);box-shadow:none;padding:12px"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between"><span>💰 เงินเดือน ${ymLabel(ui.ym)} จากหน้าคำนวณเงินเดือน: รับสุทธิรวม <b>฿${fmt(pr.net)}</b> (${pr.n} คน)</span><button class="btn sm main edm-lock" id="payPayroll">บันทึกจ่ายเงินเดือน</button></div></div>`:""}
+    ${moves.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>วันที่</th><th>รายการ</th><th>บัญชี</th><th class="r">รับเข้า</th><th class="r">จ่ายออก</th><th></th></tr></thead><tbody>${moves.map(m=>`<tr><td>${thD(m.date)}</td><td>${esc(m.label)}${m.party?" · "+esc(m.party):""}${m.note?`<br><span class="note">${esc(m.note)}</span>`:""}</td><td>${esc((A.accounts.find(a=>a.id===m.acc)||{}).name||"")}</td><td class="r pos">${m.amt>0?fmt(m.amt):""}</td><td class="r neg">${m.amt<0?fmt(-m.amt):""}</td><td class="r"><button class="btn sm ghost danger edm-lock" data-delmove="${m.src}:${m.id}">ลบ</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ไม่มีรายการรับ-จ่ายเงินในเดือนนี้</div>`}
+    <div class="note">รายการรับชำระจากลูกหนี้และการจ่ายเจ้าหนี้จะขึ้นที่นี่อัตโนมัติ · ลบรายการรับชำระ ยอดลูกหนี้จะกลับมาเป็นค้างรับ</div></div>`;
+  if($("#payPayroll"))$("#payPayroll").onclick=()=>cashDlg("out",{cat:"จ่ายเงินเดือน",amount:pr.net,note:"เงินเดือน "+ymLabel(ui.ym)+" "+pr.n+" คน",ym:ui.ym});
+  $("#accMgr").onclick=accDlg;
+}
+function cashDlg(dir,pre){pre=pre||{};const cats=dir==="in"?["รายรับอื่น","ดอกเบี้ยรับ","เงินลงทุนเพิ่ม","เงินกู้ยืม"]:EXP_CATS.concat(["จ่ายเงินเดือน","ถอนใช้ส่วนตัว","ชำระภาษี","คืนเงินกู้"]);
+  openDlg(dir==="in"?"บันทึกรายรับอื่น":"บันทึกรายจ่ายอื่น",`<div class="row3"><div class="f"><label>วันที่</label><input class="in-" type="date" id="cDate" value="${today()}"></div><div class="f"><label>บัญชี</label>${accSel("cAcc","bank1")}</div><div class="f"><label>หมวด</label><select class="in-" id="cCat">${cats.map(c=>`<option ${c===pre.cat?"selected":""}>${c}</option>`).join("")}</select></div></div>
+   <div class="row"><div class="f"><label>จำนวนเงิน</label><input class="in-" type="number" step="any" id="cAmt" value="${esc(pre.amount||"")}"></div><div class="f"><label>รายละเอียด</label><input class="in-" id="cNote" value="${esc(pre.note||"")}"></div></div>
+   <button class="btn main" id="cSave">💾 บันทึก</button><p class="note" style="margin:0">${dir==="out"?"รายจ่ายหมวดค่าใช้จ่ายจะนับในงบกำไรขาดทุน · ถอนใช้ส่วนตัว / ชำระภาษี / คืนเงินกู้ ไม่นับเป็นค่าใช้จ่าย · ค่าใช้จ่ายที่มีใบกำกับภาษี ให้บันทึกที่แท็บซื้อ / ค่าใช้จ่าย":"รายรับอื่นจะนับในงบกำไรขาดทุน ยกเว้นเงินลงทุนเพิ่มและเงินกู้ยืม"}</p>`);
+  $("#cSave").onclick=()=>{const amt=num($("#cAmt").value);if(amt<=0)return toast("ใส่จำนวนเงิน");A.cash.push({id:uid("c"),dir,date:$("#cDate").value||today(),accId:$("#cAcc").value,cat:$("#cCat").value,amount:amt,note:$("#cNote").value.trim(),ym:pre.ym||""});saveA();dlg.close();toast("บันทึกแล้ว ✓");render()}}
+function accDlg(){openDlg("บัญชีเงิน",`<div class="lines">${A.accounts.map((a,k)=>`<div class="line" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1.2fr) auto" data-k="${k}"><div class="f"><label>ชื่อบัญชี</label><input class="in-" data-a="name" value="${esc(a.name)}"></div><div class="f"><label>ประเภท</label><select class="in-" data-a="type"><option value="cash" ${a.type==="cash"?"selected":""}>เงินสด</option><option value="bank" ${a.type==="bank"?"selected":""}>ธนาคาร</option></select></div><div class="f"><label>ยอดยกมา</label><input class="in-" type="number" step="any" data-a="open" value="${esc(a.open)}"></div><button class="x" data-arm="${k}" ${A.accounts.length<2?"disabled":""}>✕</button></div>`).join("")}</div>
+  <button class="btn ghost sm" id="aAdd" style="align-self:flex-start">＋ เพิ่มบัญชี</button><button class="btn main" id="aSave">💾 บันทึก</button>`);
+  const sync=()=>$$("#dlgBody .line").forEach(el=>{const a=A.accounts[+el.dataset.k];el.querySelectorAll("[data-a]").forEach(i=>a[i.dataset.a]=i.dataset.a==="open"?num(i.value):i.value)});
+  $("#aAdd").onclick=()=>{sync();A.accounts.push({id:uid("a"),name:"บัญชีธนาคาร "+A.accounts.length,type:"bank",open:0});accDlg()};
+  $$("[data-arm]").forEach(b=>b.onclick=()=>{sync();const a=A.accounts[+b.dataset.arm];if(cashMoves().some(m=>m.acc===a.id))return toast("บัญชีนี้มีรายการแล้ว ลบไม่ได้");A.accounts.splice(+b.dataset.arm,1);accDlg()});
+  $("#aSave").onclick=()=>{sync();saveA();dlg.close();render()}}
+
+function taxData(ym){
+  const out=outputVatDocs().filter(d=>String(d.date).startsWith(ym)).map(d=>({d,c:calcDoc(d)}));
+  const inp=A.pur.filter(p=>p.taxInv&&p.vat!=="none"&&p.status==="received"&&String(p.date).startsWith(ym)).map(p=>({p,c:calcPur(p)}));
+  const whtIn=A.pay.filter(p=>p.dir==="in"&&num(p.wht)>0&&String(p.date).startsWith(ym)).map(p=>({p,d:D.docs.find(x=>x.id===p.docId)}));
+  const whtOut=A.pay.filter(p=>p.dir==="out"&&num(p.wht)>0&&String(p.date).startsWith(ym)).map(p=>({p,u:A.pur.find(x=>x.id===p.purId)}));
+  let ov=0,ob=0,iv=0,ib=0;out.forEach(x=>{ov+=x.c.vat;ob+=x.c.base});inp.forEach(x=>{iv+=x.c.vat;ib+=x.c.base});
+  return{out,inp,whtIn,whtOut,ov:r2(ov),ob:r2(ob),iv:r2(iv),ib:r2(ib),net:r2(ov-iv)}}
+function vTax(){
+  const T=taxData(ui.ym);
+  $("#view").innerHTML=`<div class="kpis k4"><div class="kpi"><span>ภาษีขาย</span><b>฿${fmt(T.ov)}</b><span>${T.out.length} ใบ</span></div><div class="kpi"><span>ภาษีซื้อ</span><b>฿${fmt(T.iv)}</b><span>${T.inp.length} ใบ</span></div>
+    <div class="kpi ${T.net>0?"warn":"pos"}"><span>${T.net>=0?"ภ.พ.30 ต้องชำระ":"ภ.พ.30 ภาษีซื้อเกิน (ขอคืน/ยกไป)"}</span><b>฿${fmt(Math.abs(T.net))}</b><span>ยื่นภายใน 15 ${MS[+ymShift(ui.ym,1).slice(5)-1]} (ออนไลน์ 23)</span></div>
+    <div class="kpi"><span>ถูกหัก ณ ที่จ่ายไว้ / เราหักไว้</span><b>฿${fmt(T.whtIn.reduce((s,x)=>s+num(x.p.wht),0))} / ฿${fmt(T.whtOut.reduce((s,x)=>s+num(x.p.wht),0))}</b></div></div>
+  <div class="card"><h2>📑 รายงานภาษีขาย <small>${ymLabel(ui.ym)}</small><span style="display:flex;gap:6px"><button class="btn sm main" id="taxPr">🖨️ พิมพ์รายงานภาษี</button></span></h2>${vatTable(T.out.map(x=>[x.d.date,x.d.no,x.d.cust.name,x.d.cust.tax,x.d.cust.branch,x.c.base,x.c.vat]))}
+    ${D.seller.vat?"":`<div class="note">⚠️ ข้อมูลกิจการในหน้าเปิดบิลยังไม่ได้ติ๊ก "จดทะเบียนภาษีมูลค่าเพิ่ม" ใบแจ้งหนี้ขายสินค้าจะไม่ถูกนับเป็นภาษีขาย</div>`}</div>
+  <div class="card"><h2>📑 รายงานภาษีซื้อ</h2>${vatTable(T.inp.map(x=>[x.p.date,x.p.taxNo||x.p.no,x.p.sup.name,x.p.sup.tax,"",x.c.base,x.c.vat]))}<div class="note">นับเฉพาะรายการซื้อ/ค่าใช้จ่ายที่ติ๊ก "ได้รับใบกำกับภาษี"</div></div>
+  <div class="grid2"><div class="card"><h2>ลูกค้าหัก ณ ที่จ่ายเรา <small>เก็บหนังสือรับรอง 50 ทวิ ไว้ใช้ยื่นภาษีสิ้นปี</small></h2>${simpleTable(["วันที่","ลูกค้า","เอกสาร","หักไว้"],T.whtIn.map(x=>[thD(x.p.date),x.d?x.d.cust.name:"",x.d?x.d.no:"",fmt(x.p.wht)]))}</div>
+    <div class="card"><h2>เราหัก ณ ที่จ่ายผู้อื่น <small>ต้องนำส่ง ภ.ง.ด.3 / 53 ภายใน 7 ${MS[+ymShift(ui.ym,1).slice(5)-1]}</small></h2>${simpleTable(["วันที่","ผู้รับเงิน","เอกสาร","หักไว้"],T.whtOut.map(x=>[thD(x.p.date),x.u?x.u.sup.name:"",x.u?x.u.no:"",fmt(x.p.wht)]))}</div></div>
+  <p class="note">ตัวเลขเป็นการสรุปจากข้อมูลที่บันทึกในระบบ ใช้ประกอบการยื่นแบบ ควรให้ผู้ทำบัญชีตรวจสอบก่อนยื่นจริง</p>`;
+  $("#taxPr").onclick=()=>{printTax(T);setTimeout(()=>window.print(),80)};
+}
+function vatTable(rows){if(!rows.length)return`<div class="empty" style="padding:12px">ไม่มีรายการเดือนนี้</div>`;let b=0,v=0;rows.forEach(r=>{b+=r[5];v+=r[6]});
+  return`<div class="tbl-wrap"><table class="t"><thead><tr><th>วันที่</th><th>เลขที่ใบกำกับ</th><th>ชื่อ</th><th>เลขผู้เสียภาษี</th><th class="r">มูลค่า</th><th class="r">VAT</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${thD(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2]||"")}${r[4]?` <span class="note">${esc(r[4])}</span>`:""}</td><td class="sku">${esc(r[3]||"")}</td><td class="r">${fmt(r[5])}</td><td class="r">${fmt(r[6])}</td></tr>`).join("")}</tbody><tfoot><tr><td colspan="4">รวม ${rows.length} ใบ</td><td class="r">${fmt(b)}</td><td class="r">${fmt(v)}</td></tr></tfoot></table></div>`}
+function simpleTable(h,rows){if(!rows.length)return`<div class="empty" style="padding:12px">ไม่มีรายการเดือนนี้</div>`;return`<div class="tbl-wrap"><table class="t"><thead><tr>${h.map((x,i)=>`<th${i===h.length-1?' class="r"':""}>${x}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td${i===r.length-1?' class="r"':""}>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`}
+
+/* ---------- print ---------- */
+const shopName=()=>D.seller.name||(LS.get(KEY.scfg,{}).name)||"กิจการของคุณ";
+function printPnl(P){$("#printArea").innerHTML=`<div class="page"><div class="ph"><div><b style="font-size:11pt">${esc(shopName())}</b>${D.seller.tax?`<div>เลขผู้เสียภาษี ${esc(D.seller.tax)}</div>`:""}</div><div style="text-align:right"><h1>งบกำไรขาดทุน</h1><div>ประจำเดือน ${ymLabel(ui.ym)}</div></div></div>
+  <table><tbody><tr><td><b>รายได้จากการขาย</b></td><td class="r"><b>${fmt(P.sales)}</b></td></tr><tr><td>หัก ต้นทุนขาย</td><td class="r">(${fmt(P.cogs)})</td></tr><tr><td><b>กำไรขั้นต้น</b></td><td class="r"><b>${fmt(P.gross)}</b></td></tr>
+  ${P.other?`<tr><td>บวก รายได้อื่น</td><td class="r">${fmt(P.other)}</td></tr>`:""}<tr><td>หัก เงินเดือนและประกันสังคม</td><td class="r">(${fmt(P.payroll)})</td></tr>${Object.entries(P.exp).map(([k,v])=>`<tr><td>หัก ${esc(k)}</td><td class="r">(${fmt(v)})</td></tr>`).join("")}</tbody>
+  <tfoot><tr><td>กำไร (ขาดทุน) สุทธิ</td><td class="r">${fmt(P.net)}</td></tr></tfoot></table><div class="pf">สร้างด้วย exceldatamaster.com · งบสำหรับใช้ภายในกิจการ</div></div>`}
+function printTax(T){const t=(title,rows)=>`<h3>${title}</h3><table><thead><tr><th>ลำดับ</th><th>วันที่</th><th>เลขที่ใบกำกับ</th><th>ชื่อผู้ซื้อ/ผู้ขาย</th><th>เลขผู้เสียภาษี</th><th class="r">มูลค่า</th><th class="r">ภาษี</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${thD(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2]||"")}</td><td>${esc(r[3]||"")}</td><td class="r">${fmt(r[5])}</td><td class="r">${fmt(r[6])}</td></tr>`).join("")||`<tr><td colspan="7">ไม่มีรายการ</td></tr>`}</tbody><tfoot><tr><td colspan="5">รวม</td><td class="r">${fmt(rows.reduce((s,r)=>s+r[5],0))}</td><td class="r">${fmt(rows.reduce((s,r)=>s+r[6],0))}</td></tr></tfoot></table>`;
+  $("#printArea").innerHTML=`<div class="page"><div class="ph"><div><b style="font-size:11pt">${esc(shopName())}</b>${D.seller.tax?`<div>เลขผู้เสียภาษี ${esc(D.seller.tax)} ${esc(D.seller.branch||"")}</div>`:""}</div><div style="text-align:right"><h1>รายงานภาษีซื้อ-ภาษีขาย</h1><div>เดือนภาษี ${ymLabel(ui.ym)}</div></div></div>
+  ${t("รายงานภาษีขาย",T.out.map(x=>[x.d.date,x.d.no,x.d.cust.name,x.d.cust.tax,"",x.c.base,x.c.vat]))}${t("รายงานภาษีซื้อ",T.inp.map(x=>[x.p.date,x.p.taxNo||x.p.no,x.p.sup.name,x.p.sup.tax,"",x.c.base,x.c.vat]))}
+  <h3>สรุป</h3><table><tbody><tr><td>ภาษีขาย</td><td class="r">${fmt(T.ov)}</td></tr><tr><td>หัก ภาษีซื้อ</td><td class="r">${fmt(T.iv)}</td></tr></tbody><tfoot><tr><td>${T.net>=0?"ภาษีที่ต้องชำระ":"ภาษีซื้อเกินภาษีขาย"}</td><td class="r">${fmt(Math.abs(T.net))}</td></tr></tfoot></table><div class="pf">สร้างด้วย exceldatamaster.com · ใช้ประกอบการยื่น ภ.พ.30</div></div>`}
+function printPO(id){const p=A.pur.find(x=>x.id===id),c=calcPur(p);
+  $("#printArea").innerHTML=`<div class="page" style="font-size:10pt"><div class="ph"><div><b style="font-size:12pt">${esc(shopName())}</b><div style="white-space:pre-line">${esc(D.seller.addr||"")}</div>${D.seller.tax?`<div>เลขผู้เสียภาษี ${esc(D.seller.tax)}</div>`:""}${D.seller.phone?`<div>โทร ${esc(D.seller.phone)}</div>`:""}</div><div style="text-align:right"><h1>ใบสั่งซื้อ</h1><div>PURCHASE ORDER</div><div>เลขที่ <b>${esc(p.no)}</b></div><div>วันที่ ${thD(p.date)}</div></div></div>
+  <p><b>ผู้ขาย:</b> ${esc(p.sup.name)}${p.sup.tax?" · เลขผู้เสียภาษี "+esc(p.sup.tax):""}</p>
+  <table><thead><tr><th>#</th><th>รายการ</th><th class="r">จำนวน</th><th class="r">ราคา/หน่วย</th><th class="r">จำนวนเงิน</th></tr></thead><tbody>${p.lines.map((l,i)=>`<tr><td>${i+1}</td><td>${esc(l.d)}</td><td class="r">${fq(l.q)} ${esc(l.u||"")}</td><td class="r">${fmt(l.p)}</td><td class="r">${fmt(num(l.q)*num(l.p))}</td></tr>`).join("")}</tbody>
+  <tfoot><tr><td colspan="4" class="r">มูลค่าก่อน VAT</td><td class="r">${fmt(c.base)}</td></tr>${c.vat?`<tr><td colspan="4" class="r">VAT 7%</td><td class="r">${fmt(c.vat)}</td></tr>`:""}<tr><td colspan="4" class="r">ยอดรวม</td><td class="r">${fmt(c.total)}</td></tr></tfoot></table>
+  ${p.note?`<p><b>หมายเหตุ</b> ${esc(p.note)}</p>`:""}<p>กำหนดส่งของ / ชำระเงิน: ${thD(p.due)}</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:60px;text-align:center"><div>________________________<br>ผู้สั่งซื้อ</div><div>________________________<br>ผู้อนุมัติ</div></div><div class="pf">สร้างด้วย exceldatamaster.com</div></div>`;setTimeout(()=>window.print(),80)}
+window.addEventListener("afterprint",()=>$("#printArea").innerHTML="");
+
+/* ---------- Excel รวมทุกระบบ ---------- */
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+function exportExcel(){toast("กำลังสร้างไฟล์ Excel...");return loadXLSX().then(X=>{const wb=X.utils.book_new();const D0=v=>v?new Date(v+"T00:00:00"):"";
+  const mk=(rows,w,money,dates)=>{const ws=X.utils.aoa_to_sheet(rows);ws["!cols"]=w.map(x=>({wch:x}));const R=X.utils.decode_range(ws["!ref"]);for(let r=1;r<=R.e.r;r++){(money||[]).forEach(c=>{const a=X.utils.encode_cell({r,c});if(ws[a]&&ws[a].t==="n")ws[a].z="#,##0.00"});(dates||[]).forEach(c=>{const a=X.utils.encode_cell({r,c});if(ws[a])ws[a].z="d/m/yyyy"})}return ws};
+  const SC=stockCalc();const ms=[];for(let k=11;k>=0;k--)ms.push(ymShift(ui.ym,-k));
+  const P=[["รายการ"].concat(ms.map(m=>MS[+m.slice(5)-1]+" "+String(+m.slice(0,4)+543).slice(2)))];const PS=ms.map(m=>pnl(m,SC));const cats=[...new Set(PS.flatMap(p=>Object.keys(p.exp)))];
+  P.push(["รายได้จากการขาย"].concat(PS.map(p=>p.sales)),["ต้นทุนขาย"].concat(PS.map(p=>p.cogs)),["กำไรขั้นต้น"].concat(PS.map(p=>p.gross)),["รายได้อื่น"].concat(PS.map(p=>p.other)),["เงินเดือน + ประกันสังคม"].concat(PS.map(p=>p.payroll)));
+  cats.forEach(c=>P.push([c].concat(PS.map(p=>p.exp[c]||0))));P.push(["กำไร (ขาดทุน) สุทธิ"].concat(PS.map(p=>p.net)));
+  X.utils.book_append_sheet(wb,mk(P,[26].concat(ms.map(()=>13)),ms.map((_,i)=>i+1)),"กำไรขาดทุน 12 เดือน");
+  const R=[["เลขที่","ประเภท","วันที่","ครบกำหนด","ลูกค้า","ยอดรวม","รับแล้ว","คงค้าง","สถานะ","เกินกำหนด (วัน)"]];D.docs.filter(isInvoice).forEach(d=>{const a=arInfo(d);R.push([d.no,BT[d.type],D0(d.date),D0(a.due),d.cust.name||"",a.c.total,a.got,a.left,a.st==="paid"?"รับครบ":a.st==="part"?"รับบางส่วน":"ค้างรับ",Math.max(0,a.late)])});
+  X.utils.book_append_sheet(wb,mk(R,[14,20,11,11,28,13,13,13,11,10],[5,6,7],[2,3]),"ลูกหนี้");
+  const B=[["เลขที่","ประเภท","สถานะ","วันที่","ครบกำหนด","ผู้ขาย","หมวด / รายการ","มูลค่าก่อน VAT","VAT","ยอดรวม","หัก ณ ที่จ่าย","จ่ายแล้ว","คงค้าง","เลขที่ใบกำกับ"]];A.pur.forEach(p=>{const a=apInfo(p);B.push([p.no,p.kind==="stock"?"ซื้อสินค้า":"ค่าใช้จ่าย",p.status==="ordered"?"สั่งซื้อ":a.st==="paid"?"จ่ายแล้ว":"ค้างจ่าย",D0(p.date),D0(p.due),p.sup.name,p.kind==="stock"?p.lines.map(l=>l.d+" x"+l.q).join(", "):p.cat,a.c.base,a.c.vat,a.c.total,a.c.wht,a.paid,a.left,p.taxNo||""])});
+  X.utils.book_append_sheet(wb,mk(B,[13,11,10,11,11,26,36,13,11,13,11,13,13,14],[7,8,9,10,11,12],[3,4]),"ซื้อ-ค่าใช้จ่าย");
+  const C=[["วันที่","รายการ","คู่ค้า","บัญชี","รับเข้า","จ่ายออก","หมายเหตุ"]];cashMoves().slice().reverse().forEach(m=>C.push([D0(m.date),m.label,m.party,(A.accounts.find(a=>a.id===m.acc)||{}).name||"",m.amt>0?m.amt:"",m.amt<0?-m.amt:"",m.note]));
+  X.utils.book_append_sheet(wb,mk(C,[11,26,26,16,13,13,28],[4,5],[0]),"เงินสด-ธนาคาร");
+  const T=taxData(ui.ym);const V=[["ประเภท","วันที่","เลขที่ใบกำกับ","ชื่อ","เลขผู้เสียภาษี","มูลค่า","VAT"]];T.out.forEach(x=>V.push(["ภาษีขาย",D0(x.d.date),x.d.no,x.d.cust.name,x.d.cust.tax||"",x.c.base,x.c.vat]));T.inp.forEach(x=>V.push(["ภาษีซื้อ",D0(x.p.date),x.p.taxNo||x.p.no,x.p.sup.name,x.p.sup.tax||"",x.c.base,x.c.vat]));
+  X.utils.book_append_sheet(wb,mk(V,[10,11,16,28,16,13,12],[5,6],[1]),"ภาษี "+MS[+ui.ym.slice(5)-1]);
+  X.writeFile(wb,"บัญชีร้านค้า-"+ui.ym+".xlsx");toast("ดาวน์โหลดไฟล์ Excel แล้ว ✓")}).catch(()=>toast("สร้างไฟล์ไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง"))}
+
+/* ---------- ข้อมูลตัวอย่าง (ทุกระบบเชื่อมกัน) ---------- */
+function demo(){
+  if(!confirm("ใส่ข้อมูลตัวอย่างให้ทุกระบบ (เปิดบิล · สต๊อก · บัญชี · สรุปเงินเดือน)?\n\nข้อมูลเดิมในเครื่องนี้ของทั้ง 4 ระบบจะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))return;
+  const T0=today(),day=n=>addDays(T0,n);let ts=Date.now()-1e8;
+  const seller={name:"ร้าน สมใจการค้า (ตัวอย่าง)",addr:"88/9 ถ.รัชดาภิเษก แขวงดินแดง เขตดินแดง กรุงเทพฯ 10400",tax:"0105569012345",branch:"สำนักงานใหญ่",phone:"02-123-4567",contact:"คุณสมใจ",vat:true,pay:"โอนเข้าบัญชี กสิกรไทย 123-4-56789-0",color:"#127A4B",logo:""};
+  const PR=[["A4-80","กระดาษ A4 80 แกรม","กระดาษ","รีม",98,139,60],["INK-682","หมึกพิมพ์ HP 682 สีดำ","หมึกพิมพ์","ตลับ",360,540,10],["FILE-3","แฟ้มสันกว้าง 3 นิ้ว","แฟ้ม","เล่ม",48,79,30],["CUP-8","แก้วกระดาษ 8 ออนซ์","บรรจุภัณฑ์","แพ็ก",68,109,30],["LID-D","ฝาโดม","บรรจุภัณฑ์","แพ็ก",42,69,30],["CP-24","สีไม้ 24 สี","อุปกรณ์ศิลปะ","กล่อง",70,119,30],["SK-A4","สมุดวาดเขียน A4","อุปกรณ์ศิลปะ","เล่ม",24,45,40],["SC-K","กรรไกรปลายมน","อุปกรณ์ศิลปะ","อัน",15,32,30],["GL-S","กาวแท่ง","อุปกรณ์ศิลปะ","แท่ง",11,22,40]];
+  const items=PR.map(([sku,name,cat,unit,cost,price,min])=>({id:"p"+sku.replace(/\W/g,""),sku,name,cat,unit,cost,price,min,note:"",created:Date.now()}));const pid=k=>items[k].id;
+  const acc=ACC_DEF();acc.accounts[0].open=20000;acc.accounts[1].name="กสิกรไทย ออมทรัพย์";acc.accounts[1].open=250000;
+  const cnt={},bcnt={};const no=(t,d)=>{const k=t+d.slice(2,7).replace("-","");if(t==="PU"){cnt[k]=(cnt[k]||0)+1;return k+"-"+String(cnt[k]).padStart(3,"0")}bcnt[k]=(bcnt[k]||0)+1;return k+"-"+String(bcnt[k]).padStart(3,"0")};
+  const stx=[];
+  const pur=(dd,sup,tax,lines,o)=>{const d=day(dd);const p=Object.assign({id:uid("u"),no:no("PU",d),kind:"stock",status:"received",date:d,due:addDays(d,30),sup:{name:sup,tax},lines:lines.map(([k,q,pr])=>({pid:pid(k),d:items[k].name,u:items[k].unit,q,p:pr})),vat:"ex",taxInv:true,taxNo:"INV"+Math.floor(Math.random()*9000+1000),wht:0,cat:"",note:"",recvDate:d},o||{});acc.pur.push(p);
+    if(p.kind==="stock"&&p.status==="received")p.lines.forEach((l,j)=>stx.push({id:uid("t"),type:"in",date:p.recvDate,pid:l.pid,qty:l.q,cost:l.p,ref:p.no,party:sup,note:"",src:"acc",docId:p.id,ts:ts++}));return p};
+  const expn=(dd,sup,cat,desc,amt,o)=>pur(dd,sup,"",[],Object.assign({kind:"expense",cat,lines:[{pid:"",d:desc,q:1,p:amt}],taxInv:false,taxNo:"",vat:"none"},o||{}));
+  const payOut=(p,dd,accId,part)=>{const c=calcPur(p);const amt=part||c.net;acc.pay.push({id:uid("y"),dir:"out",purId:p.id,date:day(dd),amount:amt,wht:part?0:c.wht,accId,note:""})};
+  const docs=[];const sale=(dd,cust,lines,o)=>{const d=day(dd);const doc=Object.assign({id:uid("d"),mode:"goods",type:"IT",no:no("IT",d),date:d,due:addDays(d,15),ref:"",cust,items:lines.map(([k,q])=>({pid:pid(k),d:items[k].name,q,u:items[k].unit,p:items[k].price,disc:0})),vat:"ex",billDisc:0,wht:0,notes:"",saved:true,updated:ts++},o||{});doc._total=calcDoc(doc).net;docs.unshift(doc);
+    doc.items.forEach((l,j)=>stx.push({id:uid("t"),type:"out",date:d,pid:l.pid,qty:l.q,cost:0,ref:doc.no,party:cust.name,note:"",src:"bill",docId:doc.id,ts:ts++}));return doc};
+  const C1={name:"บริษัท ดีดี ออฟฟิศ จำกัด",addr:"55 ถ.ลาดพร้าว แขวงจอมพล เขตจตุจักร กรุงเทพฯ 10900",tax:"0105561111111",branch:"สำนักงานใหญ่",contact:""},C2={name:"ร้านกาแฟ บ้านสวน",addr:"19 ถ.นิมมานเหมินท์ ต.สุเทพ อ.เมือง จ.เชียงใหม่ 50200",tax:"3501200123456",branch:"",contact:""},C3={name:"โรงเรียนอนุบาลดวงดาว",addr:"201 ม.5 ต.บางเมือง อ.เมือง จ.สมุทรปราการ 10270",tax:"0994000333333",branch:"สำนักงานใหญ่",contact:""},C4={name:"ลูกค้าหน้าร้าน",addr:"",tax:"",branch:"",contact:""};
+  // ซื้อสินค้าเข้าสต๊อก
+  const p1=pur(-62,"บจก. เปเปอร์ไทย","0105550000111",[[0,600,98],[2,200,48]]);payOut(p1,-55,"bank1");
+  const p2=pur(-60,"บจก. ไอทีซัพพลาย","0105550000222",[[1,60,360]]);payOut(p2,-30,"bank1");
+  const p3=pur(-58,"บจก. อาร์ตแอนด์คราฟท์","0105550000333",[[5,250,70],[6,300,24],[7,200,15],[8,300,11]]);payOut(p3,-40,"bank1");
+  const p4=pur(-34,"บจก. แพ็คเกจจิ้งโปร","0105550000444",[[3,200,68],[4,150,42]],{due:day(-4)});
+  const p5=pur(-20,"บจก. ไอทีซัพพลาย","0105550000222",[[1,40,365]],{due:day(10)});
+  pur(-3,"บจก. เปเปอร์ไทย","0105550000111",[[0,300,100]],{status:"ordered",recvDate:"",due:day(7),note:"ส่งภายใน 7 วัน"});
+  // ค่าใช้จ่าย 2 เดือน
+  [-35,-5].forEach((dd,i)=>{const r=expn(dd,"คุณสมศรี (เจ้าของตึก)","ค่าเช่า","ค่าเช่าร้าน",8000,{wht:5});payOut(r,dd,"bank1");
+    const e=expn(dd+2,"การไฟฟ้านครหลวง","ค่าน้ำ-ไฟ","ค่าไฟฟ้า",i?2450:2310,{vat:"in",taxInv:true,taxNo:"MEA"+(7781+i),sup:{name:"การไฟฟ้านครหลวง",tax:"0994000165510"}});payOut(e,dd+2,"bank1");
+    const n=expn(dd+3,"บจก. เน็ตเร็ว","ค่าโทรศัพท์ / อินเทอร์เน็ต","อินเทอร์เน็ตร้าน",899,{vat:"in",taxInv:true,taxNo:"NT"+(552+i)});payOut(n,dd+3,"bank1");
+    const s=expn(dd+4,"ขนส่งด่วนพิเศษ","ค่าขนส่ง","ค่าส่งสินค้าให้ลูกค้า",i?1850:1200,{wht:1});payOut(s,dd+4,"cash")});
+  const ad=expn(-12,"บจก. โฆษณาดี","ค่าโฆษณา / การตลาด","ยิงโฆษณา Facebook",3000,{vat:"ex",taxInv:true,taxNo:"AD2091",wht:2});payOut(ad,-12,"bank1");
+  // ขาย
+  const C5={name:"บริษัท ฟิตแอนด์เฟิร์ม จำกัด",addr:"99 ถ.สุขุมวิท 55 แขวงคลองตันเหนือ เขตวัฒนา กรุงเทพฯ 10110",tax:"0105565444444",branch:"สาขา 00002",contact:""};
+  const paidIn=(doc,dd,accId,amt,m)=>acc.pay.push({id:uid("y"),dir:"in",docId:doc.id,date:day(dd),amount:amt||calcDoc(doc).total,wht:0,accId,method:m||"โอนเงิน",note:amt?"แบ่งจ่ายงวดแรก":""});
+  paidIn(sale(-50,C1,[[0,120],[1,15],[2,60]]),-38,"bank1");
+  paidIn(sale(-44,C3,[[5,60],[6,80],[7,60],[8,80]],{billDisc:500}),-30,"bank1");
+  paidIn(sale(-36,C4,[[0,40],[2,20]],{due:day(-36)}),-36,"cash",0,"เงินสด");
+  paidIn(sale(-30,C5,[[0,100],[1,20],[3,40],[4,40]]),-16,"bank1");
+  paidIn(sale(-25,C3,[[5,80],[6,120],[7,80],[8,120]]),-12,"bank1");
+  sale(-18,C2,[[3,90],[4,90]]);
+  paidIn(sale(-14,C1,[[0,150],[1,20],[2,50]]),-4,"bank1",20000);
+  sale(-9,C5,[[0,30],[1,10],[3,40]]);
+  sale(-6,C3,[[5,50],[6,60],[8,60]]);
+  paidIn(sale(-2,C4,[[0,40],[1,6]],{due:day(-2)}),-2,"cash",0,"เงินสด");
+  // ตรวจนับ
+  stx.push({id:uid("t"),type:"adj",date:day(-8),pid:pid(2),qty:-2,cost:0,note:"นับได้น้อยกว่าระบบ 2 เล่ม · แฟ้มชำรุด",ts:ts++});
+  // เงินเดือน (สรุปจากหน้าคำนวณเงินเดือน)
+  const ymNow=T0.slice(0,7),ymPrev=ymShift(ymNow,-1);const payroll={};payroll[ymPrev]={earn:15000,net:14250,sso:750,tax:0,n:1};payroll[ymNow]={earn:15000,net:14250,sso:750,tax:0,n:1};
+  acc.cash.push({id:uid("c"),dir:"out",date:addDays(ymNow+"-01",-1),accId:"bank1",cat:"จ่ายเงินเดือน",amount:14250,note:"เงินเดือน "+ymLabel(ymPrev)+" 1 คน",ym:ymPrev});
+  acc.cash.push({id:uid("c"),dir:"out",date:day(-9),accId:"cash",cat:"ถอนใช้ส่วนตัว",amount:5000,note:"",ym:""});
+  acc.cnt=cnt;
+  LS.set(KEY.bseller,seller);LS.set(KEY.bdocs,docs);LS.set(KEY.bcnt,bcnt);LS.set(KEY.bcust,[C1,C2,C3]);LS.set(KEY.sitems,items);LS.set(KEY.stx,stx);LS.set(KEY.scfg,{name:seller.name});LS.set(KEY.pay,payroll);
+  // ข้อมูลเงินเดือนจริง (หน้าคำนวณเงินเดือนจะคำนวณสรุปเองเมื่อเปิด)
+  const emp={id:"edemo1",code:"EMP001",name:"สมชาย ใจดี",pos:"พนักงานขาย",dept:"",idc:"",bank:"",type:"m",salary:15000,sso:true,tax:true,spouse:false,kids:0,parents:0,allow:0};
+  const recs={};recs[ymPrev]={edemo1:{rate:15000},_payDate:ymPrev+"-25"};recs[ymNow]={edemo1:{rate:15000}};
+  LS.set("edm_pay_company",Object.assign(LS.get("edm_pay_company",{}),{name:seller.name,addr:seller.addr,tax:seller.tax}));LS.set("edm_pay_emps",[emp]);LS.set("edm_pay_records",recs);LS.set(KEY.acc,acc);
+  try{localStorage.removeItem("edm_bill_draft")}catch(e){}
+  load();ui.v="home";ui.ym=ymPrev;svU();render();toast("ใส่ข้อมูลตัวอย่างแล้ว · แสดงเดือนที่แล้ว (ครบทั้งเดือน) เปลี่ยนเดือนได้ที่ช่องด้านบน");
+}
+
+/* ---------- events ---------- */
+$("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;svU();render();scrollTo(0,0)};
+$("#ym").onchange=e=>{ui.ym=e.target.value||today().slice(0,7);svU();render()};
+let dlgOpen=false;function openDlg(t,h){$("#dlgTitle").textContent=t;$("#dlgBody").oninput=null;$("#dlgBody").onchange=null;$("#dlgBody").innerHTML=h;if(!dlg.open)dlg.showModal()}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-act],[data-recv],[data-hist],[data-newpur],[data-editpur],[data-paypur],[data-recvpur],[data-prpo],[data-cashnew],[data-delmove]");if(!b)return;const s=b.dataset;
+  if(s.act==="demo")return demo();if(s.act==="xlsx")return exportExcel();
+  if(s.recv)return receiveDlg(s.recv);
+  if(s.hist){const d=D.docs.find(x=>x.id===s.hist),a=arInfo(d);return openDlg("ประวัติรับชำระ · "+d.no,simpleTable(["วันที่","บัญชี","ใบเสร็จ","รับ + หัก ณ ที่จ่าย"],a.pays.map(p=>[thD(p.date),(A.accounts.find(x=>x.id===p.accId)||{}).name||"",(D.docs.find(x=>x.id===p.rcDocId)||{}).no||"-",fmt(num(p.amount)+num(p.wht))])))}
+  if(s.newpur)return purDlg(null,s.newpur);if(s.editpur)return purDlg(s.editpur);if(s.paypur)return payPurDlg(s.paypur);if(s.recvpur)return recvPur(s.recvpur);if(s.prpo)return printPO(s.prpo);
+  if(s.cashnew)return cashDlg(s.cashnew);
+  if(s.delmove){const[src,id]=s.delmove.split(":");if(!confirm("ลบรายการนี้?"))return;if(src==="pay"){const p=A.pay.find(x=>x.id===id);if(p&&p.rcDocId&&confirm("ลบใบเสร็จที่ระบบออกให้ในหน้าเปิดบิลด้วยไหม?")){const docs=LS.get(KEY.bdocs,[]).filter(x=>x.id!==p.rcDocId);LS.set(KEY.bdocs,docs);D.docs=docs}A.pay=A.pay.filter(x=>x.id!==id)}else A.cash=A.cash.filter(x=>x.id!==id);saveA();render()}
+});
+$("#dataBtn").onclick=()=>{openDlg("ข้อมูลบัญชี",`<p class="note" style="margin:0">บัญชีใช้ข้อมูลร่วมกับหน้าเปิดบิล สต๊อก และเงินเดือน ในเครื่องเดียวกัน · ควรดาวน์โหลดไฟล์สำรองทุกสัปดาห์</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" data-act="xlsx">📊 ดาวน์โหลด Excel ทุกระบบ</button><button class="btn ghost" id="bk">⬇️ ไฟล์สำรองทั้งหมด (.json)</button><label class="btn ghost">⬆️ นำเข้าไฟล์สำรอง<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
+  <button class="btn ghost edm-lock" data-act="demo" style="align-self:flex-start">✨ ใส่ข้อมูลตัวอย่าง (ทุกระบบ)</button>`);
+  const KS=["edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
+  $("#bk").onclick=()=>{const o={app:"edm-all",v:1};KS.forEach(k=>o[k]=LS.get(k,null));const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="สำรองทุกระบบ-"+today()+".json";a.click()};
+  $("#imp").onchange=ev=>{const f=ev.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-all")throw 0;if(!confirm("แทนที่ข้อมูลทุกระบบในเครื่องนี้ด้วยไฟล์สำรอง?"))return;KS.forEach(k=>{if(o[k]!=null)LS.set(k,o[k])});load();dlg.close();render();toast("นำเข้าเรียบร้อย ✓")}).catch(()=>toast("ไฟล์ไม่ถูกต้อง (ใช้ไฟล์สำรองทุกระบบจากหน้านี้)"))};
+};
+
+render();
+window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get A(){return A},get D(){return D}};
+})();
+</script>
+<script src="../assets/member.js?v=19" defer></script>
+</body>
+</html>
