@@ -110,6 +110,7 @@ table.p-items th{background:var(--paper-accent,#127A4B);color:#fff;font-weight:6
 table.p-items td{padding:6px 8px;border-bottom:1px solid #e6e9e7;vertical-align:top}
 table.p-items .r{text-align:right;white-space:nowrap}
 table.p-items .c{text-align:center}
+.p-brand{font-size:8pt;color:#666;margin-top:1px}
 .p-sum{display:grid;grid-template-columns:1fr 260px;gap:16px;margin-top:10px}
 .p-words{border:1px solid #d6dbd8;border-radius:8px;padding:8px 10px;align-self:start;font-weight:600}
 .p-tot{display:grid;grid-template-columns:1fr auto;gap:3px 10px;font-variant-numeric:tabular-nums}
@@ -128,7 +129,7 @@ table.p-items .c{text-align:center}
   .paper{box-shadow:none;margin:0;transform:none!important;zoom:1!important;width:210mm;min-height:297mm}
 }
 </style>
-<script src="../assets/suggest.js?v=39"></script>
+<script src="../assets/suggest.js?v=42"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -342,9 +343,9 @@ const stockItem=id=>SI.find(x=>x.id===id);
 function stockBal(id){let b=0;LS.get(SK.tx,[]).forEach(t=>{if(t.pid!==id)return;const q=num(t.qty);b+=t.type==="out"?-q:q});return Math.round(b*1000)/1000}
 function pickStock(i){SI=LS.get(SK.items,[]);
   openDlg("เลือกสินค้าจากสต๊อก",`<input class="in-" id="sq" placeholder="ค้นหาชื่อหรือรหัส"><div class="list" id="sl"></div><p class="note">เลือกแล้วระบบใส่ชื่อ หน่วย และราคาขายให้ · เมื่อบันทึกเป็นใบแจ้งหนี้ / ใบกำกับภาษี จะตัดสต๊อกให้อัตโนมัติ</p>`);
-  const draw=q=>{const L=SI.filter(x=>!q||(x.name+" "+(x.sku||"")).toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name,"th"));
-    $("#sl").innerHTML=L.map(x=>{const bl=stockBal(x.id);return`<div class="li"><div><b>${esc(x.name)}</b><small>${esc(x.sku||"")} · คงเหลือ ${bl} ${esc(x.unit)} · ราคา ${fmt(x.price)}</small></div><div class="acts"><button class="btn sm main" data-sp="${x.id}">เลือก</button></div></div>`}).join("")||`<p class="note">ไม่พบสินค้า</p>`;
-    $$("[data-sp]").forEach(b=>b.onclick=()=>{const x=stockItem(b.dataset.sp);Object.assign(doc.items[i],{pid:x.id,d:x.name,u:x.unit,p:num(x.price)});if(!num(doc.items[i].q))doc.items[i].q=1;dlg.close();renderItems();update()})};
+  const draw=q=>{const L=SI.filter(x=>!q||(x.name+" "+(x.sku||"")+" "+(x.brand||"")).toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name,"th"));
+    $("#sl").innerHTML=L.map(x=>{const bl=stockBal(x.id);return`<div class="li"><div><b>${esc(x.name)}</b><small>${x.brand?esc(x.brand)+" · ":""}${esc(x.sku||"")} · คงเหลือ ${bl} ${esc(x.unit)} · ราคา ${fmt(x.price)}</small></div><div class="acts"><button class="btn sm main" data-sp="${x.id}">เลือก</button></div></div>`}).join("")||`<p class="note">ไม่พบสินค้า</p>`;
+    $$("[data-sp]").forEach(b=>b.onclick=()=>{const x=stockItem(b.dataset.sp);Object.assign(doc.items[i],{pid:x.id,d:x.name,u:x.unit,p:num(x.price)});if(x.brand)doc.items[i].brand=x.brand;else delete doc.items[i].brand;if(!num(doc.items[i].q))doc.items[i].q=1;dlg.close();renderItems();update()})};
   draw("");$("#sq").oninput=e=>draw(e.target.value.toLowerCase());setTimeout(()=>$("#sq").focus(),30)}
 function syncStock(d,remove){
   if(!localStorage.getItem(SK.items))return 0;
@@ -356,7 +357,7 @@ function renderItems(){setTimeout(bindItemSuggest,0);
   const g=doc.mode==="goods";$("#itemsTitle").textContent=g?"รายการสินค้า":"รายการบริการ";
   $("#items").innerHTML=doc.items.map((it,i)=>`<div class="item" data-i="${i}">
     <div class="top"><span class="no">${i+1}</span><input class="in-" data-k="d" value="${esc(it.d)}" placeholder="${g?"ชื่อสินค้า":"รายละเอียดงานบริการ"}">${g&&SI.length?`<button class="btn sm ghost" data-pick="${i}" type="button" title="เลือกจากสต๊อก">📦</button>`:""}<button class="x" data-del="${i}" title="ลบ">✕</button></div>
-    ${g&&it.pid&&stockItem(it.pid)?`<div class="note">📦 เชื่อมสต๊อก · คงเหลือ ${stockBal(it.pid)} ${esc(stockItem(it.pid).unit)} · ตัดสต๊อกเมื่อบันทึกใบแจ้งหนี้</div>`:""}
+    ${it.brand?`<div class="note">🏷️ แบรนด์ ${esc(it.brand)}</div>`:""}${g&&it.pid&&stockItem(it.pid)?`<div class="note">📦 เชื่อมสต๊อก · คงเหลือ ${stockBal(it.pid)} ${esc(stockItem(it.pid).unit)} · ตัดสต๊อกเมื่อบันทึกใบแจ้งหนี้</div>`:""}
     <div class="${g?"row3":"row"}">
       <div class="f"><label>จำนวน</label><input class="in-" data-k="q" type="number" step="any" inputmode="decimal" value="${esc(it.q)}"></div>
       ${g?`<div class="f"><label>หน่วย</label><input class="in-" data-k="u" value="${esc(it.u)}"></div>`:""}
@@ -390,7 +391,7 @@ function renderPaper(c){
   const cdays=tm==="credit"&&doc.due?Math.round((new Date(doc.due+"T00:00:00")-new Date(doc.date+"T00:00:00"))/864e5):0;
   const p=$("#paper");p.style.setProperty("--paper-accent",col);
   const bn=doc.type==="BN";
-  const rows=bn?(c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}</td><td class="c">${l.idate?thDate(l.idate):"-"}</td><td class="c">${l.idue?thDate(l.idue):"-"}</td><td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="5" style="color:#999;text-align:center;padding:18px">ยังไม่มีรายการ</td></tr>`):c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}</td><td class="r">${(+num(l.q)).toLocaleString("th-TH")}${g&&l.u?" "+esc(l.u):""}</td><td class="r">${fmt(num(l.p))}</td>${g?`<td class="r">${num(l.disc)?fmt(num(l.disc)):"-"}</td>`:""}<td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="${g?6:5}" style="color:#999;text-align:center;padding:18px">ยังไม่มีรายการ</td></tr>`;
+  const rows=bn?(c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}</td><td class="c">${l.idate?thDate(l.idate):"-"}</td><td class="c">${l.idue?thDate(l.idue):"-"}</td><td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="5" style="color:#999;text-align:center;padding:18px">ยังไม่มีรายการ</td></tr>`):c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}${l.brand?`<div class="p-brand">แบรนด์ ${esc(l.brand)}</div>`:""}</td><td class="r">${(+num(l.q)).toLocaleString("th-TH")}${g&&l.u?" "+esc(l.u):""}</td><td class="r">${fmt(num(l.p))}</td>${g?`<td class="r">${num(l.disc)?fmt(num(l.disc)):"-"}</td>`:""}<td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="${g?6:5}" style="color:#999;text-align:center;padding:18px">ยังไม่มีรายการ</td></tr>`;
   p.innerHTML=`<div class="p-head">
     <div class="p-brand">${seller.logo?`<img src="${seller.logo}" alt="" onload="logoShape(this)">`:""}<b class="p-name" data-fit="15,9,2">${esc(seller.name||"ชื่อกิจการของคุณ")}</b></div>
     <div class="p-row"><div class="p-seller">${seller.addr?`<div class="p-addr" data-fit="9,7.5,3">${esc(oneLine(seller.addr))}</div>`:""}
@@ -432,11 +433,11 @@ function bindSuggest(){if(!window.edmSuggest)return;
     pick:c=>{doc.cust=Object.assign({},c);renderAll()}});
   bindItemSuggest()}
 function itemPool(){SI=LS.get(SK.items,[]);const sv=(LS.get("edm_services",[])||[]).map(x=>({t:x.name,s:"🧰 บริการ · "+fmt(x.price)+(x.unit?" / "+x.unit:""),v:{d:x.name,u:x.unit||"",p:num(x.price)},k:x.name+" "+(x.note||"")}));
-  const st=SI.map(x=>({t:x.name,s:"📦 "+(x.sku?x.sku+" · ":"")+"คงเหลือ "+stockBal(x.id)+" "+(x.unit||"")+" · "+fmt(x.price),v:{pid:x.id,d:x.name,u:x.unit||"",p:num(x.price)},k:x.name+" "+(x.sku||"")}));
+  const st=SI.map(x=>({t:x.name,s:"📦 "+(x.brand?x.brand+" · ":"")+(x.sku?x.sku+" · ":"")+"คงเหลือ "+stockBal(x.id)+" "+(x.unit||"")+" · "+fmt(x.price),v:{pid:x.id,d:x.name,u:x.unit||"",p:num(x.price),brand:x.brand||""},k:x.name+" "+(x.sku||"")+" "+(x.brand||"")}));
   return doc.mode==="service"?sv.concat(st):st.concat(sv)}
 function bindItemSuggest(){if(!window.edmSuggest)return;$$('#items [data-k="d"]').forEach(inp=>edmSuggest(inp,{title:"สินค้า / บริการที่บันทึกไว้",onFocus:false,max:10,
   source:q=>q?edmMatch(q,itemPool(),["k"]):[],
-  pick:(v,el)=>{const i=+el.closest(".item").dataset.i;const it=doc.items[i];if(!it)return;Object.assign(it,{d:v.d,u:v.u,p:v.p});if(v.pid&&doc.mode==="goods")it.pid=v.pid;else delete it.pid;if(!num(it.q))it.q=1;renderItems();update()}}))}
+  pick:(v,el)=>{const i=+el.closest(".item").dataset.i;const it=doc.items[i];if(!it)return;Object.assign(it,{d:v.d,u:v.u,p:v.p});if(v.brand)it.brand=v.brand;else delete it.brand;if(v.pid&&doc.mode==="goods")it.pid=v.pid;else delete it.pid;if(!num(it.q))it.q=1;renderItems();update()}}))}
 
 /* ---------- bindings ---------- */
 $$("#modeSeg button").forEach(b=>b.onclick=()=>{doc.mode=b.dataset.mode;doc.items.forEach(it=>{if(!it.d&&!num(it.p))it.u=doc.mode==="goods"?"ชิ้น":"งาน"});if(doc.mode==="service"&&!+doc.wht)doc.wht=3;if(doc.mode==="goods"&&+doc.wht===3)doc.wht=0;const nt=fitType(doc.mode,doc.type);if(nt!==doc.type){doc.type=nt;doc.no=nextNo(nt,doc.date);doc.due=TYPES[nt].due?(doc.due||addDays(doc.date,30)):"";if(TYPES[nt].tax&&seller.vat&&doc.vat==="none")doc.vat="ex"}renderAll()});
@@ -481,17 +482,17 @@ function exportExcel(){
   loadXLSX().then(X=>{
     const VAT={none:"ไม่มี VAT",ex:"แยก VAT 7%",in:"รวม VAT แล้ว"};
     const sum=[["เลขที่","ประเภทเอกสาร","ธุรกิจ","วันที่","ครบกำหนด / ยืนราคาถึง","อ้างอิง","ลูกค้า","ที่อยู่ลูกค้า","เลขผู้เสียภาษีลูกค้า","สาขา","มูลค่าก่อนส่วนลด","ส่วนลดท้ายบิล","มูลค่าสินค้า/บริการ","VAT","ยอดรวม","หัก ณ ที่จ่าย %","หัก ณ ที่จ่าย","ยอดสุทธิ","การคิด VAT","การขาย","รับเงินโดย","หมายเหตุ"]];
-    const items=[["เลขที่","ประเภทเอกสาร","วันที่","ลูกค้า","ลำดับ","รายการ","จำนวน","หน่วย","ราคา/หน่วย","ส่วนลด","จำนวนเงิน"]];
+    const items=[["เลขที่","ประเภทเอกสาร","วันที่","ลูกค้า","ลำดับ","รายการ","แบรนด์","จำนวน","หน่วย","ราคา/หน่วย","ส่วนลด","จำนวนเงิน"]];
     docs.forEach(d=>{const c=calc(d),cu=d.cust||{},tn=tName(d.type,d);
       sum.push([d.no,tn,d.mode==="service"?"บริการ":"ซื้อมาขายไป",d.date?new Date(d.date+"T00:00:00"):"",d.due?new Date(d.due+"T00:00:00"):"",d.ref||"",cu.name||"",cu.addr||"",cu.tax||"",cu.branch||"",c.sub,c.disc,c.base,c.vat,c.total,num(d.wht),c.wht,c.net,VAT[d.vat]||"",TERM_LB[termOf(d)]||"",termOf(d)==="cash"?(d.payMeth||"เงินสด"):"",d.notes||""]);
-      c.lines.filter(l=>l.d||num(l.p)).forEach((l,i)=>items.push([d.no,tn,d.date?new Date(d.date+"T00:00:00"):"",cu.name||"",i+1,l.d||"",num(l.q),l.u||"",num(l.p),num(l.disc),l.amt]))});
+      c.lines.filter(l=>l.d||num(l.p)).forEach((l,i)=>items.push([d.no,tn,d.date?new Date(d.date+"T00:00:00"):"",cu.name||"",i+1,l.d||"",l.brand||(l.pid&&stockItem(l.pid)||{}).brand||"",num(l.q),l.u||"",num(l.p),num(l.disc),l.amt]))});
     const cust=[["ชื่อลูกค้า","ที่อยู่","เลขผู้เสียภาษี","สาขา","ผู้ติดต่อ"]].concat(LS.get(K.cust,[]).map(x=>[x.name||"",x.addr||"",x.tax||"",x.branch||"",x.contact||""]));
     const wb=X.utils.book_new();
     const mk=(rows,widths,money,dates)=>{const ws=X.utils.aoa_to_sheet(rows,{cellDates:true});ws["!cols"]=widths.map(w=>({wch:w}));
       const R=X.utils.decode_range(ws["!ref"]);for(let r=1;r<=R.e.r;r++){money.forEach(ci=>{const a=X.utils.encode_cell({r,c:ci});if(ws[a]&&ws[a].t==="n")ws[a].z="#,##0.00"});dates.forEach(ci=>{const a=X.utils.encode_cell({r,c:ci});if(ws[a])ws[a].z="d/m/yyyy"})}
       ws["!autofilter"]={ref:ws["!ref"]};return ws};
     X.utils.book_append_sheet(wb,mk(sum,[13,26,12,11,14,12,26,30,16,12,14,12,14,12,14,10,12,14,13,24],[10,11,12,13,14,16,17],[3,4]),"สรุปเอกสาร");
-    X.utils.book_append_sheet(wb,mk(items,[13,26,11,26,6,34,9,8,12,10,14],[8,9,10],[2]),"รายการสินค้า");
+    X.utils.book_append_sheet(wb,mk(items,[13,26,11,26,6,34,14,9,8,12,10,14],[9,10,11],[2]),"รายการสินค้า");
     X.utils.book_append_sheet(wb,mk(cust,[28,40,16,12,20],[],[]),"ลูกค้า");
     X.writeFile(wb,"บิลทั้งหมด-"+(seller.name?seller.name.replace(/[\\/:*?"<>|]/g,"")+"-":"")+today()+".xlsx");
     toast("ดาวน์โหลดไฟล์ Excel แล้ว ✓");
@@ -518,7 +519,7 @@ const DEMO={
       ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
 };
 function loadDemo(mode){
-  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=39#demo&back=/bill/";return}
+  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=42#demo&back=/bill/";return}
   const has=LS.get(K.docs,[]).length;
   if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
   const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);
@@ -586,6 +587,6 @@ window.__bill={calc,bahtText,exportExcel,loadDemo,get doc(){return doc}};
 renderAll();bindSuggest();
 })();
 </script>
-<script src="../assets/member.js?v=41" defer></script>
+<script src="../assets/member.js?v=42" defer></script>
 </body>
 </html>

@@ -116,7 +116,7 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
 @media print{@page{size:A4;margin:10mm}.page.rd .rd-pg{display:block}body{background:#fff}header.top,main,.toast,dialog,.edm-bar,.edm-gate{display:none!important}#printArea{display:block}}
 .ap-seg{width:auto;max-width:none;display:inline-flex}.ap-seg button{white-space:nowrap;padding-left:14px;padding-right:14px;flex:none}
 </style>
-<script src="../assets/suggest.js?v=39"></script>
+<script src="../assets/suggest.js?v=42"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -241,7 +241,7 @@ function pnl(ym,SC){SC=SC||stockCalc();
 function render(){
   $$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));$("#ym").value=ui.ym;$("#ymNote").textContent=ymLabel(ui.ym);
   ({home:vHome,ar:vAR,ap:vAP,buy:vBuy,cash:vCash,tax:vTax}[ui.v]||vHome)();
-  $("#plist").innerHTML=D.items.map(i=>`<option value="${esc((i.sku?i.sku+" · ":"")+i.name)}">`).join("");
+  $("#plist").innerHTML=D.items.map(i=>`<option value="${esc((i.sku?i.sku+" · ":"")+i.name)}"${i.brand?` label="${esc(i.brand)}"`:""}>`).join("");
   $("#suplist").innerHTML=[...new Set(supAll().map(x=>x.name))].map(n=>`<option value="${esc(n)}">`).join("");
 }
 function noData(){return!D.docs.length&&!D.items.length&&!A.pur.length&&!A.pay.length&&!A.cash.length&&!Object.keys(D.payroll).length}
@@ -590,7 +590,7 @@ function demo(ok){
   const T0=today(),day=n=>addDays(T0,n);let ts=Date.now()-1e8;
   const seller={name:"ร้าน สมใจการค้า (ตัวอย่าง)",addr:"88/9 ถ.รัชดาภิเษก แขวงดินแดง เขตดินแดง กรุงเทพฯ 10400",tax:"0105569012345",branch:"สำนักงานใหญ่",phone:"02-123-4567",contact:"คุณสมใจ",vat:true,pay:"โอนเข้าบัญชี กสิกรไทย 123-4-56789-0",color:"#127A4B",logo:""};
   const PR=[["A4-80","กระดาษ A4 80 แกรม","กระดาษ","รีม",98,139,60],["INK-682","หมึกพิมพ์ HP 682 สีดำ","หมึกพิมพ์","ตลับ",360,540,10],["FILE-3","แฟ้มสันกว้าง 3 นิ้ว","แฟ้ม","เล่ม",48,79,30],["CUP-8","แก้วกระดาษ 8 ออนซ์","บรรจุภัณฑ์","แพ็ก",68,109,30],["LID-D","ฝาโดม","บรรจุภัณฑ์","แพ็ก",42,69,30],["CP-24","สีไม้ 24 สี","อุปกรณ์ศิลปะ","กล่อง",70,119,30],["SK-A4","สมุดวาดเขียน A4","อุปกรณ์ศิลปะ","เล่ม",24,45,40],["SC-K","กรรไกรปลายมน","อุปกรณ์ศิลปะ","อัน",15,32,30],["GL-S","กาวแท่ง","อุปกรณ์ศิลปะ","แท่ง",11,22,40]];
-  const items=PR.map(([sku,name,cat,unit,cost,price,min])=>({id:"p"+sku.replace(/\W/g,""),sku,name,cat,unit,cost,price,min,note:"",created:Date.now()}));const pid=k=>items[k].id;
+  const BR={"A4-80":"Double A","INK-682":"HP","FILE-3":"ตราช้าง","CUP-8":"Fest","LID-D":"Fest","STRAW-P":"Fest","CP-24":"Master Art","SK-A4":"Master Art","SC-K":"Deli","GL-S":"UHU"};const items=PR.map(([sku,name,cat,unit,cost,price,min])=>({id:"p"+sku.replace(/\W/g,""),sku,name,brand:BR[sku]||"",cat,unit,cost,price,min,note:"",created:Date.now()}));const pid=k=>items[k].id;
   const acc=ACC_DEF();acc.accounts[0].open=20000;acc.accounts[1].name="กสิกรไทย ออมทรัพย์";acc.accounts[1].open=250000;
   const cnt={},bcnt={};const no=(t,d)=>{const k=t+d.slice(2,7).replace("-","");if(t==="PU"){cnt[k]=(cnt[k]||0)+1;return k+"-"+String(cnt[k]).padStart(3,"0")}bcnt[k]=(bcnt[k]||0)+1;return k+"-"+String(bcnt[k]).padStart(3,"0")};
   const stx=[];const ymNow=T0.slice(0,7),ymPrev=ymShift(ymNow,-1),tD=+T0.slice(8);
@@ -703,6 +703,6 @@ render();
 window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get A(){return A},get D(){return D}};
 })();
 </script>
-<script src="../assets/member.js?v=41" defer></script>
+<script src="../assets/member.js?v=42" defer></script>
 </body>
 </html>

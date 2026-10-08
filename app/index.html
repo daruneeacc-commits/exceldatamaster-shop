@@ -191,10 +191,10 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
 }
 </style>
-<script src="../assets/suggest.js?v=39"></script>
+<script src="../assets/suggest.js?v=42"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261008-2058";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261008-2122";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}location.replace("/app/?u="+j.v+location.hash);return}
@@ -250,7 +250,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
-    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 20:58 น.</small></span></a>
+    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 21:22 น.</small></span></a>
       <div class="side-links"><a href="/">🏠 หน้าร้าน</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></div></div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -290,7 +290,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     <section id="master" class="pane"><div class="wrap">
       <div class="hello rb-head"><div><h1 id="mdTitle"></h1><p id="mdSub"></p></div><div class="acts" style="margin:0"><button class="btn main" id="mdNew">＋ เพิ่ม</button></div></div>
       <div class="seg md-seg" id="mdSeg" hidden><button data-s="goods" class="on">📦 สินค้า</button><button data-s="svc">🧰 บริการ</button></div>
-      <div class="card rb-f" style="grid-template-columns:1fr"><input class="in" id="mdQ" type="search" placeholder="🔍 พิมพ์ชื่อ รหัส หรือเลขผู้เสียภาษี"></div>
+      <div class="card rb-f" style="grid-template-columns:1fr"><input class="in" id="mdQ" type="search" placeholder="🔍 พิมพ์ชื่อ รหัส แบรนด์ หรือเลขผู้เสียภาษี"></div>
       <div class="stats" id="mdSum"></div>
       <div class="card" style="padding:0"><div class="rb-wrap"><table class="rb" id="mdTbl"></table></div></div>
     </div></section>
@@ -390,9 +390,9 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=39"},stock:{src:"/stock/?v=39",sv:"home"},stockrep:{src:"/stock/?v=39",sv:"report"},
-  ar:{src:"/account/?v=39",v:"ar"},tax:{src:"/account/?v=39",v:"tax"},buy:{src:"/account/?v=39",v:"buy"},cash:{src:"/account/?v=39",v:"cash"},pnl:{src:"/account/?v=39",v:"home"},
-  cost:{src:"/account/?v=39",v:"cost"},exp:{src:"/account/?v=39",v:"exp"},bank:{src:"/account/?v=39",v:"bank"},cashv:{src:"/account/?v=39",v:"cashv"},petty:{src:"/account/?v=39",v:"petty"},ap:{src:"/account/?v=39",v:"ap"}};
+const ROUTES={bill:{src:"/bill/?v=42"},stock:{src:"/stock/?v=42",sv:"home"},stockrep:{src:"/stock/?v=42",sv:"report"},
+  ar:{src:"/account/?v=42",v:"ar"},tax:{src:"/account/?v=42",v:"tax"},buy:{src:"/account/?v=42",v:"buy"},cash:{src:"/account/?v=42",v:"cash"},pnl:{src:"/account/?v=42",v:"home"},
+  cost:{src:"/account/?v=42",v:"cost"},exp:{src:"/account/?v=42",v:"exp"},bank:{src:"/account/?v=42",v:"bank"},cashv:{src:"/account/?v=42",v:"cashv"},petty:{src:"/account/?v=42",v:"petty"},ap:{src:"/account/?v=42",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -444,8 +444,8 @@ function search(raw){const q=raw.trim().toLowerCase();const docs=LS.get("edm_bil
   if(D.length)G.push({g:q?"เอกสารขาย":"เอกสารล่าสุด",L:D.map(d=>{const c=calcDoc(d),st=paid(d);return{ic:"🧾",t:hl(d.no,q)+" · "+esc(TN[d.type]||""),s:hl(d.cust&&d.cust.name||"-",q)+" · "+thD(d.date),v:"฿"+fmt(c.net)+(st[0]?`<small class="tag ${st[1]}">${st[0]}</small>`:""),go:()=>openIn("bill","open="+d.id)}})});
   if(q){const cs=[...new Set(docs.map(d=>d.cust&&d.cust.name).filter(n=>n&&m(n)))].slice(0,4);
     if(cs.length)G.push({g:"ลูกค้า",L:cs.map(n=>{const ds=docs.filter(d=>d.cust&&d.cust.name===n&&d.type!=="QT"&&d.type!=="BN");let tot=0;ds.forEach(d=>tot+=calcDoc(d).base);return{ic:"👤",t:hl(n,q),s:ds.length+" เอกสาร · ยอดขายรวม ฿"+fmt0(tot),v:"ดูบิล →",go:()=>{$("#q").value=n;run(true)},keep:1}})});
-    const I=items.filter(i=>m(i.name)||m(i.sku)||m(i.cat)).slice(0,6);
-    if(I.length)G.push({g:"สินค้า",L:I.map(i=>{const b=B[i.id]||0,low=num(i.min)>0&&b<=num(i.min);return{ic:"📦",t:hl(i.name,q),s:hl(i.sku||"",q)+(i.cat?" · "+esc(i.cat):""),v:`คงเหลือ ${fmt0(b)} ${esc(i.unit||"")}${low?'<small class="tag cr">ใกล้หมด</small>':""}`,go:()=>openIn("stock","card="+i.id)}})});
+    const I=items.filter(i=>m(i.name)||m(i.sku)||m(i.cat)||m(i.brand)).slice(0,6);
+    if(I.length)G.push({g:"สินค้า",L:I.map(i=>{const b=B[i.id]||0,low=num(i.min)>0&&b<=num(i.min);return{ic:"📦",t:hl(i.name,q),s:(i.brand?hl(i.brand,q)+" · ":"")+hl(i.sku||"",q)+(i.cat?" · "+esc(i.cat):""),v:`คงเหลือ ${fmt0(b)} ${esc(i.unit||"")}${low?'<small class="tag cr">ใกล้หมด</small>':""}`,go:()=>openIn("stock","card="+i.id)}})});
     const P=(A.pur||[]).filter(p=>m(p.no)||m(p.sup&&p.sup.name)||m(p.taxNo)||m(p.cat)||(p.lines||[]).some(l=>m(l.d))).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,6);
     if(P.length)G.push({g:"ซื้อสินค้า / ค่าใช้จ่าย",L:P.map(p=>{let t=0;(p.lines||[]).forEach(l=>t+=num(l.q)*num(l.p));if(p.vat==="ex")t*=1.07;return{ic:p.kind==="stock"?"🛒":"💸",t:hl(p.no,q)+" · "+(p.kind==="stock"?"ซื้อสินค้า":esc(p.cat||"ค่าใช้จ่าย")),s:hl(p.sup&&p.sup.name||"",q)+" · "+thD(p.date),v:"฿"+fmt(t),go:()=>openIn("buy","pur="+p.id)}})})}
   return G}
@@ -509,7 +509,7 @@ function renderHome(){
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=39#demo&back=/app/"};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=42#demo&back=/app/"};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- ข้อมูลหลัก: ลูกค้า / เจ้าหนี้ / สินค้า-บริการ ---------- */
 const MD={
@@ -518,7 +518,7 @@ const MD={
   sup:{t:"🏭 ข้อมูลเจ้าหนี้",s:"ผู้ขาย / ซัพพลายเออร์ เวลาบันทึกซื้อหรือค่าใช้จ่าย พิมพ์ชื่อแล้วเลือก ระบบเติมเลขผู้เสียภาษีและสาขาให้",k:"edm_suppliers",
     F:[["name","ชื่อผู้ขาย / บริษัท",1],["tax","เลขประจำตัวผู้เสียภาษี (13 หลัก)"],["branch","สาขา (เช่น สำนักงานใหญ่)"],["contact","ผู้ติดต่อ / โทร",1],["bank","บัญชีรับโอน (ธนาคาร / เลขที่)",1],["addr","ที่อยู่",1,"area"]]},
   prod:{t:"📦 ข้อมูลสินค้า / บริการ",s:"รายการที่ขาย เวลาเปิดบิลพิมพ์ชื่อแล้วเลือก ระบบใส่หน่วยและราคาให้ · สินค้าเชื่อมกับสต๊อก",
-    goods:{k:"edm_stock_items",F:[["sku","รหัสสินค้า"],["name","ชื่อสินค้า",0],["cat","หมวดหมู่"],["unit","หน่วย (เช่น ชิ้น กล่อง)"],["cost","ต้นทุนต่อหน่วย",0,"num"],["price","ราคาขาย",0,"num"],["min","จุดสั่งซื้อ (เหลือต่ำกว่านี้เตือน)",0,"num"],["note","หมายเหตุ",1]]},
+    goods:{k:"edm_stock_items",F:[["sku","รหัสสินค้า"],["name","ชื่อสินค้า",0],["brand","แบรนด์ / ยี่ห้อ"],["cat","หมวดหมู่"],["unit","หน่วย (เช่น ชิ้น กล่อง)"],["cost","ต้นทุนต่อหน่วย",0,"num"],["price","ราคาขาย",0,"num"],["min","จุดสั่งซื้อ (เหลือต่ำกว่านี้เตือน)",0,"num"],["note","หมายเหตุ",1]]},
     svc:{k:"edm_services",F:[["name","ชื่องานบริการ",1],["unit","หน่วย (เช่น ครั้ง งาน ชั่วโมง)"],["price","ราคา",0,"num"],["note","รายละเอียด",1,"area"]]}}};
 let md="cust",mdSeg="goods",mdEdit=null;
 const mdDef=()=>md==="prod"?MD.prod[mdSeg]:MD[md];
@@ -531,7 +531,7 @@ function renderMaster(){const D=MD[md],def=mdDef();$("#mdTitle").textContent=D.t
   $$("#mdSeg button").forEach(b=>b.classList.toggle("on",b.dataset.s===mdSeg));
   $("#mdNew").textContent="＋ เพิ่ม"+(md==="cust"?"ลูกค้า":md==="sup"?"เจ้าหนี้":mdSeg==="goods"?"สินค้า":"บริการ");
   const q=$("#mdQ").value,all=mdRows(),docs=LS.get("edm_bill_docs",[]),A=LS.get("edm_acc",{})||{},pays=A.pay||[];
-  const L=window.edmMatch?edmMatch(q,all,["name","sku","tax","contact","cat"]):all;let head="",body="",sum=[];
+  const L=window.edmMatch?edmMatch(q,all,["name","sku","brand","tax","contact","cat"]):all;let head="",body="",sum=[];
   if(md==="cust"){let tS=0,tL=0;const pin=pays.filter(p=>p.dir==="in");
     body=L.map(c=>{const ds=docs.filter(d=>d.cust&&d.cust.name===c.name&&d.type!=="QT"&&d.type!=="BN");let s=0,left=0;ds.forEach(d=>{const st=docStatus(d,docs,pin);if(d.type==="IV"||d.type==="IT"||!(d.ref))s+=calcDoc(d).net;if(d.type==="IV"||d.type==="IT")left+=st.left||0});tS+=s;tL+=left;
       return`<tr><td><b>${esc(c.name)}</b><span class="sub">${esc([c.tax,c.branch].filter(Boolean).join(" · ")||"-")}</span></td><td>${esc(c.contact||"-")}</td><td class="r">${fmt(s)}<span class="sub">${ds.length} เอกสาร</span></td><td class="r">${left>0.009?`<b style="color:#B3261E">${fmt(left)}</b>`:"-"}</td><td class="r"><div class="acts" style="margin:0;justify-content:flex-end"><button class="btn sm ghost" data-mdv="${esc(c.name)}">ดูบิล</button><button class="btn sm ghost" data-mde="${all.indexOf(c)}">แก้ไข</button></div></td></tr>`}).join("");
@@ -542,7 +542,7 @@ function renderMaster(){const D=MD[md],def=mdDef();$("#mdTitle").textContent=D.t
     head="<tr><th>เจ้าหนี้ / ผู้ขาย</th><th>ผู้ติดต่อ</th><th class=r>ยอดซื้อรวม</th><th class=r>ค้างจ่าย</th><th></th></tr>";sum=[[all.length+" ราย","เจ้าหนี้ทั้งหมด"],["฿"+fmt(tB),"ยอดซื้อรวม"],["฿"+fmt(tL),"ค้างจ่าย"]]}
   else if(mdSeg==="goods"){const B={};(LS.get("edm_stock_tx",[])||[]).forEach(t=>{const q=n2(t.qty);B[t.pid]=(B[t.pid]||0)+(t.type==="out"?-q:q)});let val=0,low=0;
     body=L.map(i=>{const b=Math.round((B[i.id]||0)*1000)/1000;val+=Math.max(b,0)*n2(i.cost);if(n2(i.min)>0&&b<=n2(i.min))low++;
-      return`<tr><td><b>${esc(i.name)}</b><span class="sub">${esc([i.sku,i.cat].filter(Boolean).join(" · ")||"-")}</span></td><td class="r">${fmt(i.cost)}</td><td class="r"><b>${fmt(i.price)}</b></td><td class="r">${fmt0(b)} ${esc(i.unit||"")}${n2(i.min)>0&&b<=n2(i.min)?`<span class="sub" style="color:#B3261E">ใกล้หมด</span>`:""}</td><td class="r"><button class="btn sm ghost" data-mde="${all.indexOf(i)}">แก้ไข</button></td></tr>`}).join("");
+      return`<tr><td><b>${esc(i.name)}</b><span class="sub">${esc([i.brand,i.sku,i.cat].filter(Boolean).join(" · ")||"-")}</span></td><td class="r">${fmt(i.cost)}</td><td class="r"><b>${fmt(i.price)}</b></td><td class="r">${fmt0(b)} ${esc(i.unit||"")}${n2(i.min)>0&&b<=n2(i.min)?`<span class="sub" style="color:#B3261E">ใกล้หมด</span>`:""}</td><td class="r"><button class="btn sm ghost" data-mde="${all.indexOf(i)}">แก้ไข</button></td></tr>`}).join("");
     head="<tr><th>สินค้า</th><th class=r>ต้นทุน</th><th class=r>ราคาขาย</th><th class=r>คงเหลือ</th><th></th></tr>";sum=[[all.length+" รายการ","สินค้าทั้งหมด"],["฿"+fmt(val),"มูลค่าสต๊อก (ทุน)"],[low+" รายการ","ใกล้หมด"]]}
   else{body=L.map(i=>`<tr><td><b>${esc(i.name)}</b>${i.note?`<span class="sub">${esc(i.note)}</span>`:""}</td><td>${esc(i.unit||"-")}</td><td class="r"><b>${fmt(i.price)}</b></td><td class="r"><button class="btn sm ghost" data-mde="${all.indexOf(i)}">แก้ไข</button></td></tr>`).join("");
     head="<tr><th>งานบริการ</th><th>หน่วย</th><th class=r>ราคา</th><th></th></tr>";sum=[[all.length+" รายการ","บริการทั้งหมด"]]}
@@ -685,7 +685,7 @@ $("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
-<script src="reports.js?v=37"></script>
-<script src="../assets/member.js?v=41" defer></script>
+<script src="reports.js?v=40"></script>
+<script src="../assets/member.js?v=42" defer></script>
 </body>
 </html>
