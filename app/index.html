@@ -64,6 +64,13 @@ textarea.in{min-height:70px;resize:vertical}
 .wipe{margin-top:12px;border-radius:12px;padding:14px 16px;background:color-mix(in srgb,#B3261E 8%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,#B3261E 35%,transparent)}
 .wipe-h{margin:0 0 6px;font-weight:600;color:#B3261E}.wipe-code{font-size:1.15rem;letter-spacing:.2em;padding:2px 8px;border-radius:6px;background:var(--soft);color:var(--ink)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wipe-h{color:#F2867E}}
+.rp-bar{display:grid;grid-template-columns:1.1fr 1fr 1fr 1.6fr;gap:10px;padding:12px;align-items:end}.rp-bar.nod .rp-d{opacity:.45}
+.rp-home{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}.rp-g h2{margin:0 0 8px;font-size:1.05rem}
+.rp-l{display:flex;flex-direction:column;gap:2px}.rp-l button{display:block;text-align:left;border:0;background:none;font:inherit;color:var(--ink);padding:9px 10px;border-radius:10px;cursor:pointer}
+.rp-l button:hover{background:var(--soft)}.rp-l b{display:block;font-weight:600;font-size:.93rem}.rp-l span{display:block;color:var(--muted);font-size:.8rem;margin-top:1px}
+.rp-h{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:16px 0 10px}.rp-h h2{margin:8px 0 2px;font-size:1.3rem}.rp-h p{margin:0;color:var(--muted);font-size:.86rem}.rp-h p b{color:var(--ink)}
+table.rp-t td,table.rp-t th{white-space:nowrap}table.rp-t tr.rb-b td{font-weight:700;background:var(--soft)}table.rp-t tfoot td{font-weight:700;background:var(--soft);border-top:2px solid var(--line)}table.rp-t td.neg{color:#B3261E}
+@media(max-width:760px){.rp-bar{grid-template-columns:1fr 1fr}.rp-bar .fl:first-child,.rp-bar [data-only]{grid-column:1/-1}.rp-home{grid-template-columns:1fr}}
 .md-seg{display:inline-flex;gap:4px;background:var(--soft);padding:4px;border-radius:12px;margin-bottom:12px}.md-seg button{border:0;background:none;font:inherit;padding:7px 14px;border-radius:9px;cursor:pointer;color:var(--ink)}.md-seg button.on{background:var(--card);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 table.rb td .sub{display:block;color:var(--muted);font-size:.78rem}
 .modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
@@ -206,6 +213,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <a href="#/stock" data-r="stock"><span class="step">📦</span>สต๊อกสินค้า<span class="n" id="nLow" hidden></span></a>
     <div class="mg" data-g="rep"><button class="mg-h" type="button"><span class="step">📊</span>รายงาน<i>▾</i></button><div class="mg-b">
+      <a href="#/rpt" data-r="rpt"><span class="no">★</span>ศูนย์รายงาน (ทั้งหมด)</a>
       <a href="#/bills" data-r="bills"><span class="no">1</span>รายงานบิลทั้งหมด</a>
       <a href="#/tax" data-r="tax"><span class="no">2</span>รายงานภาษีซื้อ-ขาย</a>
       <a href="#/pnl" data-r="pnl"><span class="no">3</span>กำไรขาดทุน</a>
@@ -233,6 +241,21 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
         <div class="fl"><label>สีของเอกสาร</label><input class="in" type="color" id="stColor" style="height:44px;padding:4px"></div>
       </div>
       <div class="acts"><button class="btn main" id="stSave">💾 บันทึกข้อมูลร้าน</button><span class="help" id="stMsg"></span></div></div>
+    </div></section>
+    <section id="rpt" class="pane"><div class="wrap">
+      <div class="hello rb-head"><div><h1>📊 ศูนย์รายงาน</h1><p>รายงานของทุกเมนูในที่เดียว เลือกช่วงวันที่ แล้วพิมพ์ / บันทึก PDF หรือดาวน์โหลด Excel ได้ทุกรายงาน</p></div></div>
+      <div class="card rp-bar" id="rpBar">
+        <div class="fl"><label>ช่วงเวลา</label><select class="in" id="rpP"><option value="tm">เดือนนี้</option><option value="lm">เดือนที่แล้ว</option><option value="l3">3 เดือนล่าสุด</option><option value="tq">ไตรมาสนี้</option><option value="ty">ปีนี้</option><option value="ly">ปีที่แล้ว</option><option value="all">ทั้งหมด</option><option value="cu">กำหนดเอง</option></select></div>
+        <div class="fl rp-d"><label>ตั้งแต่</label><input class="in" type="date" id="rpF"></div><div class="fl rp-d"><label>ถึง</label><input class="in" type="date" id="rpT"></div>
+        <div class="fl" data-only><label>ค้นหาในรายงาน</label><input class="in" id="rpQ" type="search" placeholder="🔍 ชื่อ เลขที่ ..."></div>
+        <span id="rpCustom" hidden></span>
+      </div>
+      <div id="rpHome" class="rp-home"></div>
+      <div id="rpView" hidden>
+        <div class="rp-h"><div><button class="btn sm ghost" id="rpBack">← รายงานทั้งหมด</button><h2 id="rpTitle"></h2><p><span id="rpDesc"></span><br><b id="rpPer"></b> · <span id="rpCount"></span></p></div>
+          <div class="acts" style="margin:0"><button class="btn main" id="rpPrint">🖨️ พิมพ์ / PDF</button><button class="btn ghost" id="rpXls">📊 Excel</button></div></div>
+        <div class="card" style="padding:0"><div class="rb-wrap"><table class="rb rp-t" id="rpTbl"></table></div></div>
+      </div>
     </div></section>
     <section id="master" class="pane"><div class="wrap">
       <div class="hello rb-head"><div><h1 id="mdTitle"></h1><p id="mdSub"></p></div><div class="acts" style="margin:0"><button class="btn main" id="mdNew">＋ เพิ่ม</button></div></div>
@@ -343,7 +366,7 @@ const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
 let cur="";
-const PANES=["home","setup","data","bills","quotes","invoices","billing","receipts","cust","sup","prod"];
+const PANES=["home","setup","data","bills","quotes","invoices","billing","receipts","cust","sup","prod","rpt"];
 // รายการเอกสารแยกตามประเภท (เมนูรายรับ) ใช้หน้าเดียวกับรายงานบิล
 const VIEWS={
   bills:{t:"📋 รายงานบิลทั้งหมด",s:"เอกสารขายทั้งหมดที่บันทึกไว้ ดู แก้ไข หรือลบได้จากที่นี่",f:null,nw:["＋ เปิดบิลใหม่","INV"]},
@@ -362,6 +385,7 @@ function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0]
   if(r==="home"){renderHome();document.title="ระบบร้านค้า · Excel Data Master";return}
   if(r==="setup"){renderSetup();document.title="ตั้งค่าร้าน · ระบบร้านค้า";return}
   if(r==="data"){renderData();document.title="สำรองข้อมูล · ระบบร้านค้า";return}
+  if(r==="rpt"){if(window.renderRpt)renderRpt();return}
   if(MD[r]){md=r;$("#master").classList.add("show");renderMaster();document.title=MD[r].t.replace(/^\S+ /,"")+" · ระบบร้านค้า";return}
   if(VIEWS[r]){view=r;$("#bills").classList.add("show");setView();renderBills();document.title=VIEWS[r].t.replace(/^[^ ]+ (· )?/,"")+" · ระบบร้านค้า";return}
   const R=ROUTES[r],f=frameFor(R.src);
@@ -628,6 +652,7 @@ $("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
+<script src="reports.js?v=36"></script>
 <script src="../assets/member.js?v=35" defer></script>
 </body>
 </html>
