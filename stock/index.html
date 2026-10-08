@@ -30,6 +30,10 @@ main{max-width:1200px;margin:0 auto;padding:16px;display:flex;flex-direction:col
 .tabs{display:flex;gap:6px;background:var(--card);border-radius:999px;padding:4px;box-shadow:0 0 0 1px var(--line);position:sticky;top:62px;z-index:15;overflow-x:auto}
 .tabs button{flex:1;border:0;background:none;border-radius:999px;padding:9px 12px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
 .tabs button.on{background:var(--ink);color:var(--bg)}
+.edm-embed #tabs{display:none!important}
+.qa-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}.qa-row button{border:0;background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:14px;padding:14px 8px;font:inherit;font-weight:600;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.88rem}.qa-row button:hover{box-shadow:0 0 0 1.5px var(--accent,#127A4B)}.qa-row i{font-style:normal;font-size:1.4rem}.qa-row b{background:#B3261E;color:#fff;border-radius:999px;padding:0 7px;font-size:.75rem}
+@media(max-width:600px){.qa-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+table.ro td{vertical-align:middle}
 @media(max-width:520px){.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;border-radius:16px}.tabs button{padding:8px 2px!important;font-size:.76rem!important;white-space:normal!important;line-height:1.2;border-radius:12px!important}}
 .card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}
 .card h2{font-size:1.05rem;margin:0;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
@@ -125,7 +129,11 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
   <div class="tabs" id="tabs">
     <button data-v="home">📊 ภาพรวม</button>
     <button data-v="items">📦 สินค้า</button>
-    <button data-v="move">⇄ รับเข้า / เบิกออก</button>
+    <button data-v="in">⬇️ รับเข้า</button>
+    <button data-v="out">⬆️ เบิกออก</button>
+    <button data-v="adj">🔍 ตรวจนับ</button>
+    <button data-v="hist">🕘 ประวัติ</button>
+    <button data-v="reorder">🛒 ต้องสั่งซื้อ</button>
     <button data-v="report">📄 รายงาน</button>
   </div>
   <div id="view"></div>
@@ -188,7 +196,8 @@ const ymLabel=ym=>{const[y,m]=ym.split("-").map(Number);return MONTHS[m-1]+" "+(
 /* ---------- views ---------- */
 function render(){
   $$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));
-  ({home:vHome,items:vItems,move:vMove,report:vReport}[ui.v]||vHome)();
+  if(ui.v==="move")ui.v=ui.mtype||"in";if(["in","out","adj"].includes(ui.v))ui.mtype=ui.v;
+  ({home:vHome,items:vItems,in:vMove,out:vMove,adj:vMove,hist:vHist,reorder:vReorder,report:vReport}[ui.v]||vHome)();
   refreshList();
 }
 function refreshList(){$("#plist").innerHTML=items.slice().sort((a,b)=>a.name.localeCompare(b.name,"th")).map(i=>`<option value="${esc(label(i))}"></option>`).join("")}
@@ -211,6 +220,7 @@ function vHome(){
     <div class="kpi"><span>มูลค่าสต๊อก (ทุน)</span><b>฿${fmt(val)}</b></div>
     <div class="kpi warn"><span>ใกล้หมด</span><b>${low.length}</b> <span>รายการ</span></div>
     <div class="kpi bad"><span>หมดสต๊อก</span><b>${out.length}</b> <span>รายการ</span></div></div>
+  <div class="qa-row edm-lock"><button data-go="in"><i>⬇️</i>รับสินค้าเข้า</button><button data-go="out"><i>⬆️</i>เบิก / จ่ายออก</button><button data-go="adj"><i>🔍</i>ตรวจนับสต๊อก</button><button data-go="reorder"><i>🛒</i>ต้องสั่งซื้อ${alert.length?` <b>${alert.length}</b>`:""}</button></div>
   <div class="grid2">
     <div class="card"><h2>⚠️ ต้องสั่งเพิ่ม <small>${alert.length?alert.length+" รายการ":""}</small></h2>
       ${alert.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>สินค้า</th><th class="r">คงเหลือ</th><th class="r">ขั้นต่ำ</th><th></th></tr></thead><tbody>${alert.map(i=>{const s=S[i.id],st=status(i,s);return`<tr><td><b>${esc(i.name)}</b><br><span class="sku">${esc(i.sku||"")}</span></td><td class="r">${fq(s.bal)} ${esc(i.unit)}</td><td class="r">${fq(i.min)}</td><td class="r"><span class="pill ${st[1]}">${st[0]}</span> <button class="btn sm ghost edm-lock" data-in="${i.id}">รับเข้า</button></td></tr>`}).join("")}</tbody></table></div>`:`<div class="empty" style="padding:14px">ไม่มีสินค้าใกล้หมด 🎉</div>`}
@@ -220,7 +230,7 @@ function vHome(){
       <div class="note">เดือนนี้รับเข้า ฿${fmt(mIn)} · จ่ายออก (ต้นทุน) ฿${fmt(mOut)}</div>
     </div>
   </div>
-  <div class="card"><h2>🕘 ความเคลื่อนไหวล่าสุด <button class="btn sm ghost" data-go="move">ดูทั้งหมด →</button></h2>${txTable(recent,false)}</div>`;
+  <div class="card"><h2>🕘 ความเคลื่อนไหวล่าสุด <button class="btn sm ghost" data-go="hist">ดูทั้งหมด →</button></h2>${txTable(recent,false)}</div>`;
 }
 
 function txTable(list,withDel){
@@ -251,9 +261,9 @@ function vMove(){
   if(!items.length){$("#view").innerHTML=emptyState();return}
   if(!draft||draft.type!==ui.mtype)draft=newDraft(ui.mtype);
   const S=compute();const d=draft,isIn=d.type==="in",isAdj=d.type==="adj";
-  const hist=sortTx(tx).reverse().filter(t=>(ui.hf==="all"||t.type===ui.hf)&&(!ui.hm||String(t.date).startsWith(ui.hm)));
-  $("#view").innerHTML=`<div class="card edm-lock"><h2>บันทึกรายการ</h2>
-    <div class="seg" id="mseg"><button data-t="in" class="${isIn?"on":""}">⬇️ รับเข้า</button><button data-t="out" class="${d.type==="out"?"on":""}">⬆️ เบิกออก</button><button data-t="adj" class="${isAdj?"on":""}">🔍 ตรวจนับ / ปรับยอด</button></div>
+  const hist=sortTx(tx).reverse().filter(t=>t.type===d.type&&(!ui.hm||String(t.date).startsWith(ui.hm)));const TT={in:["⬇️ รับสินค้าเข้า","ประวัติรับเข้า"],out:["⬆️ เบิก / จ่ายออก","ประวัติเบิก / ขายออก"],adj:["🔍 ตรวจนับ / ปรับยอด","ประวัติปรับยอด"]}[d.type];
+  $("#view").innerHTML=`<div class="card edm-lock"><h2>${TT[0]}${isAdj?`<button class="btn sm ghost" id="adjAll" type="button">📋 ใส่สินค้าทั้งหมดเพื่อนับ</button>`:""}</h2>
+    ${d.type==="out"?`<div class="hint">💡 ขายสินค้าให้เปิดบิลที่ 🧾 เปิดบิล ระบบตัดสต๊อกให้อัตโนมัติ · หน้านี้ใช้สำหรับ <b>เบิกใช้เองในร้าน ของเสีย/ชำรุด แจกตัวอย่าง หรือคืนผู้ขาย</b></div>`:""}${isAdj?`<div class="hint">💡 นับของจริงบนชั้น แล้วใส่จำนวนที่นับได้ ระบบจะเทียบกับยอดในระบบและปรับให้ตรง พร้อมเก็บส่วนต่างไว้ตรวจสอบ</div>`:""}
     ${isIn?`<div class="hint">💡 ซื้อสินค้าจากผู้ขาย ให้บันทึกที่ <a href="/account/#v=buy">🛒 ซื้อสินค้า / ค่าใช้จ่าย</a> ระบบจะรับเข้าสต๊อก ตั้งเจ้าหนี้ และลงภาษีซื้อให้ในครั้งเดียว · ช่องนี้ใช้กับการรับเข้าอื่น เช่น ยอดยกมา ของแถม ลูกค้าคืนสินค้า</div>`:isAdj?"":`<div class="hint">💡 ขายสินค้า ให้เปิดบิลที่ <a href="/bill/">🧾 เปิดบิล</a> ระบบตัดสต๊อกให้อัตโนมัติ · ช่องนี้ใช้กับการเบิกที่ไม่ใช่การขาย เช่น เบิกใช้ในร้าน ของเสีย ของหาย</div>`}
     <div class="row3"><div class="f"><label>วันที่</label><input class="in-" type="date" id="mDate" value="${esc(d.date)}"></div>
       <div class="f"><label>${isIn?"ผู้ขาย / ซัพพลายเออร์":isAdj?"ผู้ตรวจนับ":"ลูกค้า / ผู้เบิก"}</label><input class="in-" id="mParty" value="${esc(d.party)}"></div>
@@ -269,8 +279,8 @@ function vMove(){
     <button class="btn main" id="mSave" style="padding:12px">💾 บันทึก${isIn?"รับเข้า":isAdj?"การตรวจนับ":"เบิกออก"}</button>
     ${isAdj?`<div class="note">ใส่จำนวนที่นับได้จริง ระบบจะปรับยอดคงเหลือให้ตรงและบันทึกส่วนต่างไว้ให้ตรวจสอบย้อนหลัง</div>`:""}
   </div>
-  <div class="card"><h2>ประวัติรับ-จ่าย <small>${hist.length} รายการ</small></h2>
-    <div class="tools"><select class="in-" id="hf" style="max-width:200px">${[["all","ทุกประเภท"],["in","รับเข้า"],["out","เบิก/ขายออก"],["adj","ปรับยอด"]].map(o=>`<option value="${o[0]}" ${ui.hf===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select><input class="in-" type="month" id="hm" value="${esc(ui.hm)}" style="max-width:200px"></div>
+  <div class="card"><h2>${TT[1]} <small>${hist.length} รายการ</small></h2>
+    <div class="tools"><input class="in-" type="month" id="hm" value="${esc(ui.hm)}" style="max-width:200px"></div>
     ${txTable(hist,true)}</div>`;
   const sync=()=>{d.date=$("#mDate").value;d.party=$("#mParty").value;d.ref=$("#mRef").value;d.note=$("#mNote").value;
     $$("#lines .line").forEach(el=>{const l=d.lines[+el.dataset.k];el.querySelectorAll("[data-l]").forEach(inp=>{const k=inp.dataset.l;if(k==="pid"){const it=findByLabel(inp.value);l.pid=it?it.id:"";l._txt=inp.value}else l[k]=inp.value})})};
@@ -281,9 +291,59 @@ function vMove(){
   ["#mDate","#mParty","#mRef","#mNote"].forEach(s=>$(s).oninput=sync);
   $$('#lines [data-l="qty"],#lines [data-l="cost"],#lines [data-l="count"]').forEach(i=>i.oninput=sync);
   $("#mSave").onclick=()=>{sync();saveMove()};
-  $("#hf").onchange=e=>{ui.hf=e.target.value;svU();vMove()};
+  if($("#adjAll"))$("#adjAll").onclick=()=>{sync();const have=new Set(d.lines.map(l=>l.pid).filter(Boolean));items.slice().sort((a,b)=>(a.cat||"").localeCompare(b.cat||"","th")||a.name.localeCompare(b.name,"th")).forEach(i=>{if(!have.has(i.id))d.lines.push({pid:i.id,qty:"",cost:"",count:""})});d.lines=d.lines.filter(l=>l.pid||(l._txt||"").trim());vMove()};
   $("#hm").onchange=e=>{ui.hm=e.target.value;svU();vMove()};
 }
+/* ---------- ประวัติความเคลื่อนไหวทั้งหมด ---------- */
+function vHist(){
+  if(!items.length){$("#view").innerHTML=emptyState();return}
+  const q=(ui.hq||"").toLowerCase();const list=sortTx(tx).reverse().filter(t=>(ui.hf==="all"||t.type===ui.hf)&&(!ui.hm||String(t.date).startsWith(ui.hm))&&(!q||(()=>{const i=byId(t.pid)||{};return(i.name+" "+(i.sku||"")+" "+(i.brand||"")+" "+(t.party||"")+" "+(t.ref||"")).toLowerCase().includes(q)})()));
+  let nIn=0,nOut=0,nAdj=0;list.forEach(t=>{if(t.type==="in")nIn++;else if(t.type==="out")nOut++;else nAdj++});
+  $("#view").innerHTML=`<div class="kpis"><div class="kpi"><span>รายการทั้งหมด</span><b>${list.length}</b></div><div class="kpi"><span>รับเข้า</span><b>${nIn}</b></div><div class="kpi"><span>เบิก / ขายออก</span><b>${nOut}</b></div><div class="kpi"><span>ปรับยอด</span><b>${nAdj}</b></div></div>
+  <div class="card"><h2>🕘 ประวัติความเคลื่อนไหวสต๊อก <small>${ui.hm?ymLabel(ui.hm):"ทุกเดือน"}</small></h2>
+    <div class="tools"><input class="in-" id="hq" placeholder="ค้นหาสินค้า แบรนด์ คู่ค้า เลขที่" value="${esc(ui.hq||"")}"><select class="in-" id="hf" style="max-width:180px">${[["all","ทุกประเภท"],["in","รับเข้า"],["out","เบิก/ขายออก"],["adj","ปรับยอด"]].map(o=>`<option value="${o[0]}" ${ui.hf===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select><input class="in-" type="month" id="hm" value="${esc(ui.hm)}" style="max-width:190px"></div>
+    ${txTable(list,true)}<div class="note">รายการจากบิลขายและใบซื้อ แก้ไขหรือลบได้ที่เอกสารต้นทาง · รายการที่บันทึกเองในหน้าสต๊อกลบได้ที่นี่</div></div>`;
+  $("#hq").oninput=e=>{ui.hq=e.target.value;svU();const p=e.target.selectionStart;vHist();const n=$("#hq");n.focus();n.setSelectionRange(p,p)};
+  $("#hf").onchange=e=>{ui.hf=e.target.value;svU();vHist()};$("#hm").onchange=e=>{ui.hm=e.target.value;svU();vHist()};
+}
+/* ---------- สินค้าที่ต้องสั่งซื้อ → สร้างใบสั่งซื้อ (PO) ---------- */
+function reorderList(){const S=compute(),A=LS.get("edm_acc",{})||{},pur=(A.pur||[]).slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const onOrder={};pur.filter(p=>p.status==="ordered"&&p.kind==="stock").forEach(p=>(p.lines||[]).forEach(l=>{if(l.pid)onOrder[l.pid]=(onOrder[l.pid]||0)+num(l.q)}));
+  return items.map(i=>{const s=S[i.id],min=num(i.min);if(!(s.bal<=0||(min>0&&s.bal<=min)))return null;
+    let sup=null,price=0,vat="ex";for(const p of pur){if(p.kind!=="stock")continue;const l=(p.lines||[]).find(x=>x.pid===i.id);if(l){sup=p.sup;price=num(l.p);vat=p.vat||"ex";break}}
+    if(!sup){const t=sortTx(tx).reverse().find(x=>x.pid===i.id&&x.type==="in"&&x.party);if(t){sup={name:t.party,tax:"",branch:""};price=num(t.cost)}}
+    if(!price)price=num(i.cost);const oo=onOrder[i.id]||0;const target=Math.max(min*2,min+1,1);const sug=Math.max(0,Math.ceil(target-s.bal-oo));
+    return{i,s,min,oo,sug,sup:sup||{name:"",tax:"",branch:""},price,vat}}).filter(Boolean).sort((a,b)=>(a.s.bal>0)-(b.s.bal>0)||String(a.sup.name).localeCompare(String(b.sup.name),"th"))}
+function vReorder(){
+  if(!items.length){$("#view").innerHTML=emptyState();return}
+  const L=reorderList();window._ro=L;let est=0;L.forEach(x=>est+=x.sug*x.price);
+  $("#view").innerHTML=`<div class="kpis"><div class="kpi bad"><span>หมดสต๊อก</span><b>${L.filter(x=>x.s.bal<=0).length}</b> <span>รายการ</span></div><div class="kpi warn"><span>ใกล้หมด</span><b>${L.filter(x=>x.s.bal>0).length}</b> <span>รายการ</span></div><div class="kpi"><span>สั่งแล้ว รอรับของ</span><b>${L.filter(x=>x.oo>0).length}</b> <span>รายการ</span></div><div class="kpi"><span>ประมาณการสั่งซื้อ</span><b>฿${fmt(est)}</b></div></div>
+  <div class="card edm-lock"><h2>🛒 สินค้าที่ต้องสั่งซื้อ <small>${L.length} รายการ</small></h2>
+    ${L.length?`<div class="hint">💡 ระบบแนะนำจำนวนสั่ง = เติมให้ถึง 2 เท่าของจุดสั่งซื้อ (หักของที่สั่งไว้แล้ว) · แก้จำนวน ผู้ขาย และราคาได้ แล้วกด "สร้างใบสั่งซื้อ" ระบบแยกใบตามผู้ขายให้</div>
+    <div class="tbl-wrap"><table class="t ro"><thead><tr><th><input type="checkbox" id="roAll" checked></th><th>สินค้า</th><th class="r">คงเหลือ</th><th class="r">จุดสั่งซื้อ</th><th class="r">สั่งแล้วรอรับ</th><th>จำนวนสั่ง</th><th>ผู้ขาย</th><th>ราคา/หน่วย</th></tr></thead><tbody>
+    ${L.map((x,k)=>`<tr data-k="${k}"><td><input type="checkbox" class="roC" ${x.sug>0?"checked":""}></td><td><b>${esc(x.i.name)}</b><br><span class="sku">${esc(x.i.sku||"")}</span>${x.i.brand?` <span class="brand">${esc(x.i.brand)}</span>`:""}</td><td class="r"><span class="pill ${x.s.bal<=0?"p-out":"p-low"}">${fq(x.s.bal)} ${esc(x.i.unit)}</span></td><td class="r">${fq(x.min)}</td><td class="r">${x.oo?fq(x.oo):"-"}</td>
+      <td><input class="in- roQ" type="number" min="0" step="any" inputmode="decimal" value="${x.sug}" style="max-width:100px"></td><td><input class="in- roS" list="supl" value="${esc(x.sup.name)}" placeholder="ชื่อผู้ขาย" style="min-width:150px"></td><td><input class="in- roP" type="number" min="0" step="any" inputmode="decimal" value="${x.price}" style="max-width:110px"></td></tr>`).join("")}</tbody></table></div>
+    <datalist id="supl">${[...new Set(L.map(x=>x.sup.name).filter(Boolean).concat((LS.get("edm_suppliers",[])||[]).map(s=>s.name)))].map(n=>`<option value="${esc(n)}">`).join("")}</datalist>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px"><button class="btn main" id="roGo">📝 สร้างใบสั่งซื้อ (PO)</button><span class="note" id="roSum"></span></div>`
+    :`<div class="empty" style="padding:22px">👍 ยังไม่มีสินค้าที่ต้องสั่งซื้อ · ตั้ง "จุดสั่งซื้อ" ให้สินค้าแต่ละตัว ระบบจะเตือนเมื่อเหลือน้อย</div>`}</div>`;
+  const sum=()=>{let n=0,v=0;$$("#view tr[data-k]").forEach(tr=>{if(tr.querySelector(".roC").checked&&num(tr.querySelector(".roQ").value)>0){n++;v+=num(tr.querySelector(".roQ").value)*num(tr.querySelector(".roP").value)}});if($("#roSum"))$("#roSum").textContent=`เลือก ${n} รายการ · ประมาณ ฿${fmt(v)} (ก่อน VAT)`};sum();
+  $$("#view .roC,#view .roQ,#view .roP").forEach(e=>e.oninput=sum);if($("#roAll"))$("#roAll").onchange=e=>{$$("#view .roC").forEach(c=>c.checked=e.target.checked);sum()};
+  if($("#roGo"))$("#roGo").onclick=makePO;
+}
+function makePO(){const L=window._ro||[],G={};let miss=0;
+  $$("#view tr[data-k]").forEach(tr=>{const x=L[+tr.dataset.k],q=num(tr.querySelector(".roQ").value);if(!tr.querySelector(".roC").checked||q<=0)return;const sn=tr.querySelector(".roS").value.trim();if(!sn){miss++;return}
+    const g=G[sn]||(G[sn]={sup:x.sup.name===sn?x.sup:{name:sn,tax:"",branch:""},vat:x.vat,lines:[]});g.lines.push({pid:x.i.id,d:x.i.name,q,p:num(tr.querySelector(".roP").value)})});
+  if(miss)return toast("ใส่ชื่อผู้ขายให้ครบทุกรายการที่เลือก");const gs=Object.values(G);if(!gs.length)return toast("เลือกสินค้าและใส่จำนวนที่จะสั่ง");
+  if(!confirm("สร้างใบสั่งซื้อ "+gs.length+" ใบ (แยกตามผู้ขาย)?\n\n"+gs.map(g=>"• "+g.sup.name+" · "+g.lines.length+" รายการ").join("\n")))return;
+  const A=LS.get("edm_acc",null)||{accounts:[{id:"cash",name:"เงินสด",type:"cash",open:0},{id:"bank1",name:"บัญชีธนาคาร",type:"bank",open:0}],pay:[],pur:[],cash:[],cnt:{}};A.pur=A.pur||[];A.cnt=A.cnt||{};
+  const d=today(),k="PU"+d.slice(2,7).replace("-",""),nos=[];
+  gs.forEach(g=>{A.cnt[k]=(A.cnt[k]||0)+1;const no=k+"-"+String(A.cnt[k]).padStart(3,"0");nos.push(no);
+    A.pur.push({id:uid("u"),no,kind:"stock",status:"ordered",date:d,due:addDays(d,7),sup:{name:g.sup.name,tax:g.sup.tax||"",branch:g.sup.branch||""},lines:g.lines,vat:g.vat||"ex",taxInv:true,taxNo:"",wht:0,cat:"",note:"สร้างจากหน้าสินค้าต้องสั่งซื้อ",paidNow:false,payAcc:"bank1",recvDate:""})});
+  LS.set("edm_acc",A);toast("สร้างใบสั่งซื้อแล้ว "+nos.join(", ")+" ✓");
+  openDlg("สร้างใบสั่งซื้อแล้ว ✓",`<p>สร้าง ${nos.length} ใบ: <b>${nos.join(", ")}</b></p><p class="note">ใบสั่งซื้ออยู่ที่เมนู 🛒 รายจ่าย → ต้นทุนสินค้า / บริการ (สถานะ "รอรับของ") · พิมพ์ PO ส่งผู้ขายได้ที่นั่น · เมื่อของมาถึงกด "รับของ" สินค้าจะเข้าสต๊อกและตั้งเจ้าหนี้ให้อัตโนมัติ</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="roView">ดูใบสั่งซื้อ / พิมพ์ PO</button><button class="btn ghost" id="roClose">ปิด</button></div>`);
+  $("#roClose").onclick=()=>dlg.close();$("#roView").onclick=()=>{dlg.close();if(window.top!==window){try{window.parent.postMessage({edm:"go",tool:"account",hash:"v=buy"},location.origin)}catch(e){}}else location.href="/account/#v=buy"};
+  vReorder()}
 function saveMove(){
   const d=draft,S=compute(),w=[];
   const lines=d.lines.filter(l=>l.pid||(l._txt||"").trim());
@@ -402,17 +462,18 @@ function demo(){
 
 /* ---------- events ---------- */
 // เปิดบัญชีคุมสต๊อกของสินค้าจากการค้นหาในระบบร้านค้า (#card=<id>)
-window.edmStockView=v=>{if(!["home","items","move","report"].includes(v))return;ui.v=v;svU();render();scrollTo(0,0)};
+function tellShell(v){if(window.top!==window){try{window.parent.postMessage({edm:"go",tool:"stock",hash:"v="+v,quiet:1},location.origin)}catch(e){}}}
+window.edmStockView=v=>{if(!["home","items","move","in","out","adj","hist","reorder","report"].includes(v))return;ui.v=v;svU();render();scrollTo(0,0)};
 const cardFromHash=()=>{const m=/card=([\w-]+)/.exec(location.hash);if(!m)return;history.replaceState(null,"",location.pathname+location.search);if(items.some(i=>i.id===m[1]))stockCard(m[1])};
 window.addEventListener("hashchange",cardFromHash);setTimeout(cardFromHash,0);
 $("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;svU();render();scrollTo(0,0)};
 document.addEventListener("click",e=>{const b=e.target.closest("[data-act],[data-card],[data-in],[data-outq],[data-adjq],[data-edit],[data-deltx],[data-go]");if(!b)return;
   if(b.dataset.act==="add")return itemForm();
-  if(b.dataset.act==="demo"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=42#demo&back=/stock/";return}
-  if(b.dataset.go){ui.v=b.dataset.go;svU();render();return}
+  if(b.dataset.act==="demo"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=43#demo&back=/stock/";return}
+  if(b.dataset.go){ui.v=b.dataset.go;svU();render();tellShell(ui.v);return}
   if(b.dataset.card)return stockCard(b.dataset.card);
   if(b.dataset.edit)return itemForm(b.dataset.edit);
-  const go=(t,pid)=>{if(dlg.open)dlg.close();ui.v="move";ui.mtype=t;svU();draft=newDraft(t,pid);if(t==="in"){const S=compute();draft.lines[0].cost=r2(S[pid].avg||num(byId(pid).cost))}render();scrollTo(0,0);const f=$(`#lines [data-l="${t==="adj"?"count":"qty"}"]`);f&&f.focus()};
+  const go=(t,pid)=>{if(dlg.open)dlg.close();ui.v=t;ui.mtype=t;svU();draft=newDraft(t,pid);tellShell(t);if(t==="in"){const S=compute();draft.lines[0].cost=r2(S[pid].avg||num(byId(pid).cost))}render();scrollTo(0,0);const f=$(`#lines [data-l="${t==="adj"?"count":"qty"}"]`);f&&f.focus()};
   if(b.dataset.in)return go("in",b.dataset.in);
   if(b.dataset.outq)return go("out",b.dataset.outq);
   if(b.dataset.adjq)return go("adj",b.dataset.adjq);
@@ -432,6 +493,6 @@ render();
 window.__stock={compute,period,demo,exportExcel,get items(){return items},get tx(){return tx}};
 })();
 </script>
-<script src="../assets/member.js?v=42" defer></script>
+<script src="../assets/member.js?v=43" defer></script>
 </body>
 </html>
