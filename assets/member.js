@@ -194,9 +194,9 @@
 
   function start() {
     if (!me || !me.token) {
-      openGate();
-      // ระบบหลังร้านยังไม่พร้อม (เช่น ยังไม่ได้ติดตั้งโค้ดสมาชิก) → เปิดให้ใช้ได้ตามปกติ ไม่ล็อกหน้า
-      call({ a: "ping" }).then(function (r) { if (!r || !r.ok) closeGate(); }).catch(function () { closeGate(); });
+      // เปิดหน้าสมัคร/เข้าสู่ระบบ เมื่อระบบหลังร้านพร้อมแล้วเท่านั้น
+      // (ถ้ายังไม่ได้ติดตั้งโค้ดสมาชิก จะไม่ขึ้นหน้าต่างเลย และใช้งานได้ตามปกติ — ไม่มีหน้าต่างขึ้นแล้วเด้งหาย)
+      call({ a: "ping" }).then(function (r) { if (r && r.ok && !me) openGate(); }).catch(function () {});
       return;
     }
     apply(); check(false);
