@@ -471,8 +471,8 @@ function exportExcel(){toast("กำลังสร้างไฟล์ Excel..
   X.writeFile(wb,"บัญชีร้านค้า-"+ui.ym+".xlsx");toast("ดาวน์โหลดไฟล์ Excel แล้ว ✓")}).catch(()=>toast("สร้างไฟล์ไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง"))}
 
 /* ---------- ข้อมูลตัวอย่าง (ทุกระบบเชื่อมกัน) ---------- */
-function demo(){
-  if(!confirm("ใส่ข้อมูลตัวอย่างให้ทุกระบบ (เปิดบิล · สต๊อก · บัญชี · สรุปเงินเดือน)?\n\nข้อมูลเดิมในเครื่องนี้ของทั้ง 4 ระบบจะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))return;
+function demo(ok){
+  if(!ok&&!confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))return;
   const T0=today(),day=n=>addDays(T0,n);let ts=Date.now()-1e8;
   const seller={name:"ร้าน สมใจการค้า (ตัวอย่าง)",addr:"88/9 ถ.รัชดาภิเษก แขวงดินแดง เขตดินแดง กรุงเทพฯ 10400",tax:"0105569012345",branch:"สำนักงานใหญ่",phone:"02-123-4567",contact:"คุณสมใจ",vat:true,pay:"โอนเข้าบัญชี กสิกรไทย 123-4-56789-0",color:"#127A4B",logo:""};
   const PR=[["A4-80","กระดาษ A4 80 แกรม","กระดาษ","รีม",98,139,60],["INK-682","หมึกพิมพ์ HP 682 สีดำ","หมึกพิมพ์","ตลับ",360,540,10],["FILE-3","แฟ้มสันกว้าง 3 นิ้ว","แฟ้ม","เล่ม",48,79,30],["CUP-8","แก้วกระดาษ 8 ออนซ์","บรรจุภัณฑ์","แพ็ก",68,109,30],["LID-D","ฝาโดม","บรรจุภัณฑ์","แพ็ก",42,69,30],["CP-24","สีไม้ 24 สี","อุปกรณ์ศิลปะ","กล่อง",70,119,30],["SK-A4","สมุดวาดเขียน A4","อุปกรณ์ศิลปะ","เล่ม",24,45,40],["SC-K","กรรไกรปลายมน","อุปกรณ์ศิลปะ","อัน",15,32,30],["GL-S","กาวแท่ง","อุปกรณ์ศิลปะ","แท่ง",11,22,40]];
@@ -540,6 +540,9 @@ function demo(){
     acc.cash.push({id:uid("c"),dir:"out",date:md(m,31),accId:"bank1",cat:"จ่ายเงินเดือน",amount:14250,note:"เงินเดือน "+ymLabel(ym)+" 1 คน",ym})});
   acc.cash.push({id:uid("c"),dir:"out",date:md(-1,28),accId:"cash",cat:"ถอนใช้ส่วนตัว",amount:5000,note:"",ym:""});
   acc.cash.push({id:uid("c"),dir:"in",date:md(-2,18),accId:"cash",cat:"รายรับอื่น",amount:350,note:"ขายกล่องกระดาษเก่า",ym:""});
+  // เรียงเลขที่ใบซื้อ/ค่าใช้จ่ายตามวันที่
+  const rn={},pc={};acc.pur.slice().sort((x,y)=>x.date.localeCompare(y.date)).forEach(p=>{const k="PU"+p.date.slice(2,7).replace("-","");pc[k]=(pc[k]||0)+1;const n=k+"-"+String(pc[k]).padStart(3,"0");rn[p.no]=n;p.no=n});
+  stx.forEach(t=>{if(t.src==="acc"&&rn[t.ref])t.ref=rn[t.ref]});Object.assign(cnt,pc);
   acc.cnt=cnt;
   LS.set(KEY.bseller,seller);LS.set(KEY.bdocs,docs);LS.set(KEY.bcnt,bcnt);LS.set(KEY.bcust,[C1,C2,C3,C5]);LS.set(KEY.sitems,items);LS.set(KEY.stx,stx);LS.set(KEY.scfg,{name:seller.name});LS.set(KEY.pay,payroll);
   // ข้อมูลเงินเดือนจริง (หน้าคำนวณเงินเดือนจะคำนวณสรุปเองเมื่อเปิด)
@@ -555,7 +558,8 @@ const EMB=(()=>{try{return top!==self&&top.location.origin===location.origin}cat
 if(EMB)$("#tabs").style.display="none";
 window.edmDemo=()=>demo();
 window.edmView=v=>{if(!["home","ar","buy","cash","tax"].includes(v))return;load();ui.v=v;svU();render();scrollTo(0,0)};
-const fromHash=()=>{const m=/v=(\w+)/.exec(location.hash);if(m)edmView(m[1])};
+const fromHash=()=>{if(/^#demo/.test(location.hash)){const back=(/back=([\w\/]+)/.exec(location.hash)||[])[1];history.replaceState(null,"",location.pathname);demo(true);if(back&&/^\/(bill|stock|payroll)\/$/.test(back))location.replace(back);return}
+  const m=/v=(\w+)/.exec(location.hash);if(m)edmView(m[1])};
 window.addEventListener("hashchange",fromHash);fromHash();
 $("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;svU();render();scrollTo(0,0)};
 $("#ym").onchange=e=>{ui.ym=e.target.value||today().slice(0,7);svU();render()};

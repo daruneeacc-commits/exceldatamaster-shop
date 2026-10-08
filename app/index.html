@@ -70,7 +70,7 @@ aside .foot a{display:inline;padding:0;color:var(--side-ink);text-decoration:und
 .tag.cr{background:var(--warnbg);color:var(--warn)}
 .empty{color:var(--muted);font-size:.9rem;padding:8px 0}
 .demo{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--accent-soft);border-radius:16px;padding:14px 16px}
-.demo p{margin:0;font-size:.9rem}
+.demo p{margin:0;font-size:.9rem}.demo.sm{background:var(--soft);padding:10px 14px}.demo.sm .btn{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
 .tabbar{display:none}
 .scrim{display:none}
 @media(max-width:900px){
@@ -131,7 +131,7 @@ aside .foot a{display:inline;padding:0;color:var(--side-ink);text-decoration:und
         <div class="flow" id="flow"></div>
       </div>
 
-      <div class="demo" id="demoBox" hidden><p><b>ยังไม่มีข้อมูล?</b> ลองใส่ข้อมูลตัวอย่างร้านขายเครื่องเขียนย้อนหลัง 3 เดือน (บิล ภาษี สต๊อก บัญชี เงินเดือน) เห็นภาพการทำงานเชื่อมกันทันที</p><button class="btn main" id="demoBtn">✨ ใส่ข้อมูลตัวอย่าง 3 เดือน</button></div>
+      <div class="demo" id="demoBox"><p id="demoMsg"><b>ยังไม่มีข้อมูล?</b> ลองใส่ข้อมูลตัวอย่างร้านขายเครื่องเขียนย้อนหลัง 3 เดือน (บิล ภาษี สต๊อก บัญชี เงินเดือน) เห็นภาพการทำงานเชื่อมกันทันที</p><button class="btn main" id="demoBtn">✨ ใส่ข้อมูลตัวอย่าง 3 เดือน</button></div>
 
       <div class="grid2">
         <div class="card"><h2>บิลล่าสุด <button class="btn sm ghost" data-go="bill">ดูทั้งหมด →</button></h2><div class="list" id="recent"></div></div>
@@ -232,12 +232,13 @@ function renderHome(){
     {done:sales.length>0&&!!seller.vat,t:"ดูภาษีสิ้นเดือน",d:"ภาษีขาย ภาษีซื้อ ยอดยื่น ภ.พ.30 และหัก ณ ที่จ่าย",go:"tax",cta:"ดูรายงานภาษี"}];
   $("#flow").innerHTML=st.map((x,i)=>`<button class="fs ${x.done?"done":""}" data-go="${x.go}"><span class="no">${x.done?"✓":i+1}</span><b>${x.t}</b><span>${x.d}</span><em>${x.cta} →</em></button>`).join("");
   $("#flowNote").textContent=st.filter(x=>x.done).length+"/4 ขั้นตอน";
-  $("#demoBox").hidden=docs.length>0||items.length>0;
+  const has=docs.length>0||items.length>0;$("#demoBox").classList.toggle("sm",has);
+  $("#demoMsg").innerHTML=has?"อยากดูตัวอย่างร้านที่ใช้งานครบ 3 เดือน? <span style=\"color:var(--muted)\">(ข้อมูลในเครื่องนี้จะถูกแทนที่)</span>":"<b>ยังไม่มีข้อมูล?</b> ลองใส่ข้อมูลตัวอย่างร้านขายเครื่องเขียนย้อนหลัง 3 เดือน (บิล ภาษี สต๊อก ซื้อสินค้า ค่าใช้จ่าย เงินเดือน) เห็นภาพการทำงานเชื่อมกันทันที";
   const rec=docs.filter(d=>d.type!=="QT").slice().sort((a,b)=>(b.updated||0)-(a.updated||0)||String(b.date).localeCompare(String(a.date))).slice(0,6);
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
 }
-$("#demoBtn").onclick=()=>{const f=frameFor("/account/");const run=()=>{try{f.contentWindow.edmDemo();setTimeout(()=>{Object.values(frames).forEach(x=>{if(x!==f)try{x.contentWindow.location.reload()}catch(e){}});renderHome()},300)}catch(e){}};
+$("#demoBtn").onclick=()=>{const f=frameFor("/account/");const run=()=>{try{f.contentWindow.edmDemo&&f.contentWindow.edmDemo();setTimeout(()=>{Object.values(frames).forEach(x=>{if(x!==f)try{x.contentWindow.location.reload()}catch(e){}});renderHome()},300)}catch(e){}};
   if(f.dataset.ready)run();else f.addEventListener("load",run,{once:true})};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 function renderBadges(){const h=$("#home").classList.contains("show");renderHome();$("#home").classList.toggle("show",h)}
