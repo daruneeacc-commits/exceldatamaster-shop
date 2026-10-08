@@ -526,9 +526,20 @@ function payTag(d,docs){if(d.type==="IT"&&d.term==="cash")return" · 💵 ขา
   docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!(A&&A.pay||[]).some(p=>p.rcDocId===x.id))got+=calc(x).total});
   return got>=total-0.01?" · ✅ รับชำระแล้ว":got>0?" · 🟡 รับบางส่วน":" · ⏳ ค้างชำระ"}
 // เปิดเอกสารจากการค้นหาในระบบร้านค้า (#open=<id>)
-function openFromHash(){const m=/open=([\w-]+)/.exec(location.hash);if(!m)return;history.replaceState(null,"",location.pathname+location.search);
-  const d=LS.get(K.docs,[]).find(x=>x.id===m[1]);if(!d)return toast("ไม่พบเอกสาร");doc=JSON.parse(JSON.stringify(d));renderAll();
-  const mt=document.querySelector(".mtabs");if(mt&&getComputedStyle(mt).display!=="none")document.querySelector('.mtabs button[data-mt="view"]').click();scrollTo(0,0);toast("เปิด "+d.no)}
+// #open=<id> = เปิดดู · #edit=<id> = เปิดแก้ไข · #new = เอกสารใหม่ (จากหน้ารายงานบิลในระบบร้านค้า)
+function openFromHash(){const h=location.hash;if(/^#new/.test(h)){history.replaceState(null,"",location.pathname+location.search);doc=blank(doc.mode||"goods",doc.mode==="service"?"IV":"IT");doc.no=nextNo(doc.type,doc.date);renderAll();const e=document.querySelector('.mtabs button[data-mt="edit"]');if(e)e.click();scrollTo(0,0);return}
+  const m=/(open|edit)=([\w-]+)/.exec(h);if(!m)return;history.replaceState(null,"",location.pathname+location.search);
+  const d=LS.get(K.docs,[]).find(x=>x.id===m[2]);if(!d)return toast("ไม่พบเอกสาร");doc=JSON.parse(JSON.stringify(d));renderAll();
+  const mt=document.querySelector(".mtabs");if(mt&&getComputedStyle(mt).display!=="none")document.querySelector(`.mtabs button[data-mt="${m[1]==="edit"?"edit":"view"}"]`).click();scrollTo(0,0);toast((m[1]==="edit"?"แก้ไข ":"เปิด ")+d.no)}
+// ลบเอกสาร + ล้างสิ่งที่ผูกกัน: การตัดสต๊อก รายการรับเงิน และใบเสร็จที่ระบบออกให้อัตโนมัติ
+function deleteDoc(id){const docs=LS.get(K.docs,[]);const d=docs.find(x=>x.id===id);if(!d)return false;
+  syncStock(d,true);syncPay(d,true);
+  const A=LS.get("edm_acc",null),rmRc=[];
+  if(A&&A.pay){A.pay=A.pay.filter(p=>{if(p.docId===id){if(p.rcDocId)rmRc.push(p.rcDocId);return false}if(p.rcDocId===id)p.rcDocId="";return true});LS.set("edm_acc",A)}
+  LS.set(K.docs,docs.filter(x=>x.id!==id&&!rmRc.includes(x.id)));
+  if(doc.id===id||rmRc.includes(doc.id)){doc=blank(doc.mode,doc.type);doc.no=nextNo(doc.type,doc.date);renderAll()}
+  return true}
+window.edmDeleteDoc=deleteDoc;window.edmBillExcel=()=>exportExcel();
 window.addEventListener("hashchange",openFromHash);setTimeout(openFromHash,0);
 $("#openList").onclick=()=>{
   const docs=LS.get(K.docs,[]);
@@ -539,7 +550,7 @@ $("#openList").onclick=()=>{
       .sort((a,b)=>String(b.date).localeCompare(String(a.date))||String(b.no).localeCompare(String(a.no)));
     $("#dsum").textContent=L.length?"พบ "+L.length+" รายการ · รวม ฿"+fmt(L.reduce((s,d)=>s+(d._total||0),0)):"";$("#dl").innerHTML=L.length?L.map(d=>`<div class="li"><div><b>${esc(d.no)} · ${esc(tName(d.type,d))}</b><small>${esc(d.cust.name||"-")} · ${thDate(d.date)} · ฿${fmt(d._total||0)}${payTag(d,docs)}</small></div><div class="acts"><button class="btn sm main" data-op="${d.id}">เปิด</button><button class="btn sm ghost danger" data-dl="${d.id}">ลบ</button></div></div>`).join(""):`<p class="note">ยังไม่มีเอกสารที่บันทึกไว้</p>`;
     $$("[data-op]").forEach(b=>b.onclick=()=>{doc=JSON.parse(JSON.stringify(docs.find(d=>d.id===b.dataset.op)));dlg.close();renderAll()});
-    $$("[data-dl]").forEach(b=>b.onclick=()=>{if(!confirm("ลบเอกสารนี้?"))return;const i=docs.findIndex(d=>d.id===b.dataset.dl);if(i>=0){syncStock(docs[i],true);syncPay(docs[i],true)}docs.splice(i,1);LS.set(K.docs,docs);draw($("#dq").value.toLowerCase())})};
+    $$("[data-dl]").forEach(b=>b.onclick=()=>{if(!confirm("ลบเอกสารนี้?\nการตัดสต๊อกและรายการรับเงินของเอกสารนี้จะถูกลบด้วย"))return;deleteDoc(b.dataset.dl);const nd=LS.get(K.docs,[]);docs.length=0;nd.forEach(x=>docs.push(x));draw()})};
   draw();["#dq","#dt","#ds","#dm"].forEach(s=>$(s).addEventListener(s==="#dq"?"input":"change",()=>draw()));
   $("#xls").onclick=()=>exportExcel();
   $("#exp").onclick=()=>{const data={v:1,app:"edm-bill",seller,docs:LS.get(K.docs,[]),customers:LS.get(K.cust,[]),counter:LS.get(K.cnt,{})};const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"}));a.download="สำรองข้อมูลบิล-"+today()+".json";a.click()};
