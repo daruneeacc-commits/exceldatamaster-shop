@@ -83,6 +83,11 @@ textarea.in{min-height:70px;resize:vertical}
 table.rp-t td,table.rp-t th{white-space:nowrap}table.rp-t tr.rb-b td{font-weight:700;background:var(--soft)}table.rp-t tfoot td{font-weight:700;background:var(--soft);border-top:2px solid var(--line)}table.rp-t td.neg{color:#B3261E}
 @media(max-width:760px){.rp-bar{grid-template-columns:1fr 1fr}.rp-bar .fl:first-child,.rp-bar [data-only]{grid-column:1/-1}.rp-home{grid-template-columns:1fr}}
 .upd-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:84px;z-index:90;background:#111;color:#fff;padding:10px 12px 10px 16px;border-radius:999px;font-size:.9rem;display:flex;gap:10px;align-items:center;box-shadow:0 10px 30px -8px rgba(0,0,0,.4)}.upd-bar[hidden]{display:none}.upd-bar button{border:0;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:600;padding:6px 14px;border-radius:999px;cursor:pointer}
+@media(max-width:760px){#mdTbl thead{display:none}#mdTbl tbody tr{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-bottom:1px solid var(--line)}
+#mdTbl tbody td{display:block;border:0;padding:0;text-align:left}#mdTbl tbody td[data-l]{display:flex;justify-content:space-between;gap:10px;font-size:.9rem}
+#mdTbl tbody td[data-l]::before{content:attr(data-l);color:var(--muted);font-size:.82rem}#mdTbl tbody td[data-l] .sub{display:inline;margin-left:6px}
+#mdTbl tbody td:last-child .acts,#mdTbl tbody td:last-child{justify-content:flex-end;display:flex;margin-top:4px}#mdTbl tbody td:first-child b{font-size:1rem}}
+aside .foot .side-links a{padding:7px 9px!important}
 .md-seg{display:inline-flex;gap:4px;background:var(--soft);padding:4px;border-radius:12px;margin-bottom:12px}.md-seg button{border:0;background:none;font:inherit;padding:7px 14px;border-radius:9px;cursor:pointer;color:var(--ink)}.md-seg button.on{background:var(--card);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 table.rb td .sub{display:block;color:var(--muted);font-size:.78rem}
 .modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
@@ -186,10 +191,10 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
 }
 </style>
-<script src="../assets/suggest.js?v=38"></script>
+<script src="../assets/suggest.js?v=39"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261008-2051";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261008-2058";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}location.replace("/app/?u="+j.v+location.hash);return}
@@ -245,7 +250,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
-    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8 ต.ค. 69 · 20:51 น.</small></span></a>
+    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 20:58 น.</small></span></a>
       <div class="side-links"><a href="/">🏠 หน้าร้าน</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></div></div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -385,9 +390,9 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=38"},stock:{src:"/stock/?v=38",sv:"home"},stockrep:{src:"/stock/?v=38",sv:"report"},
-  ar:{src:"/account/?v=38",v:"ar"},tax:{src:"/account/?v=38",v:"tax"},buy:{src:"/account/?v=38",v:"buy"},cash:{src:"/account/?v=38",v:"cash"},pnl:{src:"/account/?v=38",v:"home"},
-  cost:{src:"/account/?v=38",v:"cost"},exp:{src:"/account/?v=38",v:"exp"},bank:{src:"/account/?v=38",v:"bank"},cashv:{src:"/account/?v=38",v:"cashv"},petty:{src:"/account/?v=38",v:"petty"},ap:{src:"/account/?v=38",v:"ap"}};
+const ROUTES={bill:{src:"/bill/?v=39"},stock:{src:"/stock/?v=39",sv:"home"},stockrep:{src:"/stock/?v=39",sv:"report"},
+  ar:{src:"/account/?v=39",v:"ar"},tax:{src:"/account/?v=39",v:"tax"},buy:{src:"/account/?v=39",v:"buy"},cash:{src:"/account/?v=39",v:"cash"},pnl:{src:"/account/?v=39",v:"home"},
+  cost:{src:"/account/?v=39",v:"cost"},exp:{src:"/account/?v=39",v:"exp"},bank:{src:"/account/?v=39",v:"bank"},cashv:{src:"/account/?v=39",v:"cashv"},petty:{src:"/account/?v=39",v:"petty"},ap:{src:"/account/?v=39",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -504,7 +509,7 @@ function renderHome(){
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=38#demo&back=/app/"};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=39#demo&back=/app/"};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- ข้อมูลหลัก: ลูกค้า / เจ้าหนี้ / สินค้า-บริการ ---------- */
 const MD={
@@ -543,6 +548,7 @@ function renderMaster(){const D=MD[md],def=mdDef();$("#mdTitle").textContent=D.t
     head="<tr><th>งานบริการ</th><th>หน่วย</th><th class=r>ราคา</th><th></th></tr>";sum=[[all.length+" รายการ","บริการทั้งหมด"]]}
   $("#mdSum").innerHTML=sum.map(x=>`<div class="stat"><b>${x[0]}</b><span>${x[1]}</span></div>`).join("");
   $("#mdTbl").innerHTML=`<thead>${head}</thead><tbody>${body||`<tr><td colspan="5"><div class="empty">${q?"ไม่พบรายการที่ค้นหา":"ยังไม่มีข้อมูล · กด \"＋ เพิ่ม\" ด้านบน"}</div></td></tr>`}</tbody>`;
+  {const hs=[...$$("#mdTbl thead th")].map(t=>t.textContent);$$("#mdTbl tbody tr").forEach(tr=>[...tr.children].forEach((td,i)=>{if(i>0&&i<tr.children.length-1&&hs[i])td.dataset.l=hs[i]}))}
   $$("[data-mde]").forEach(b=>b.onclick=()=>mdOpen(+b.dataset.mde));
   $$("[data-mdv]").forEach(b=>b.onclick=()=>{$("#rbQ").value=b.dataset.mdv;go("bills")});
 }
@@ -680,6 +686,6 @@ new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.ad
 route();
 </script>
 <script src="reports.js?v=37"></script>
-<script src="../assets/member.js?v=38" defer></script>
+<script src="../assets/member.js?v=41" defer></script>
 </body>
 </html>

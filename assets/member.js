@@ -317,3 +317,21 @@
   window.EDM_MEMBER = { get me() { return me; }, check: check, openGate: openGate, push: cloudPush, cloud: cGet };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
+
+/* มือถือ: ช่องกรอกตัวอักษร 16px กัน iPhone ซูมจอตอนแตะช่อง · ตารางกว้างเลื่อนซ้าย-ขวาได้แทนการบีบ */
+(function () {
+  var st = document.createElement("style");
+  st.textContent = "@media (max-width:760px){input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{font-size:16px!important}" +
+    "}@media (max-width:600px){.tbl-wrap{margin:0!important;overflow:visible!important}.tbl-wrap>table.t{min-width:0!important}.tbl-wrap>table.t,.tbl-wrap>table.t>tbody,.tbl-wrap>table.t>tfoot{display:block;width:100%}.tbl-wrap>table.t>thead{display:none}" +
+    ".tbl-wrap>table.t tr{display:block;padding:10px 2px;border-bottom:1px solid var(--line,#e5e5e5)}.tbl-wrap>table.t td{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border:0!important;padding:3px 0!important;text-align:right!important;white-space:normal!important}" +
+    ".tbl-wrap>table.t td::before{content:attr(data-l);color:var(--muted,#777);font-size:.8rem;font-weight:400;text-align:left;flex:none;max-width:48%}.tbl-wrap>table.t td:not([data-l])::before{content:none}.tbl-wrap>table.t td:not([data-l]):not(:first-child){justify-content:flex-end}" +
+    ".tbl-wrap>table.t td:first-child{display:block;text-align:left!important;font-size:.98rem;padding-bottom:4px!important}.tbl-wrap>table.t td:first-child::before{content:none}.tbl-wrap>table.t td:empty{display:none}" +
+    ".tbl-wrap>table.t td .acts{justify-content:flex-end;margin-left:auto}.tbl-wrap>table.t td[colspan]{display:block;text-align:center!important}}";
+  (document.head || document.documentElement).appendChild(st);
+  // ใส่ชื่อคอลัมน์ให้ทุกช่อง เพื่อแสดงเป็นการ์ดบนมือถือ
+  function label() { document.querySelectorAll(".tbl-wrap>table.t").forEach(function (t) { var hs = [].map.call(t.querySelectorAll("thead th"), function (h) { return h.textContent.trim(); }); if (!hs.length) return;
+    t.querySelectorAll("tbody tr,tfoot tr").forEach(function (tr) { var i = 0; [].forEach.call(tr.children, function (td) { if (i > 0 && hs[i] && !td.hasAttribute("data-l") && td.textContent.trim()) td.setAttribute("data-l", hs[i]); i += td.colSpan || 1; }); }); }); }
+  var tm = 0; function sched() { if (tm) return; tm = setTimeout(function () { tm = 0; label(); }, 30); }
+  function go() { label(); new MutationObserver(sched).observe(document.body, { childList: true, subtree: true }); }
+  if (document.body) go(); else document.addEventListener("DOMContentLoaded", go);
+})();

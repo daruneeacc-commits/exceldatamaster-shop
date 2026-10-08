@@ -30,6 +30,7 @@ main{max-width:1200px;margin:0 auto;padding:16px;display:flex;flex-direction:col
 .tabs{display:flex;gap:6px;background:var(--card);border-radius:999px;padding:4px;box-shadow:0 0 0 1px var(--line);position:sticky;top:62px;z-index:15;overflow-x:auto}
 .tabs button{flex:1;border:0;background:none;border-radius:999px;padding:9px 12px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
 .tabs button.on{background:var(--ink);color:var(--bg)}
+@media(max-width:520px){.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;border-radius:16px}.tabs button{padding:8px 2px!important;font-size:.76rem!important;white-space:normal!important;line-height:1.2;border-radius:12px!important}}
 .card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}
 .card h2{font-size:1.05rem;margin:0;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .card h2 small{font-weight:400;color:var(--muted);font-size:.82rem}
@@ -404,7 +405,7 @@ window.addEventListener("hashchange",cardFromHash);setTimeout(cardFromHash,0);
 $("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;svU();render();scrollTo(0,0)};
 document.addEventListener("click",e=>{const b=e.target.closest("[data-act],[data-card],[data-in],[data-outq],[data-adjq],[data-edit],[data-deltx],[data-go]");if(!b)return;
   if(b.dataset.act==="add")return itemForm();
-  if(b.dataset.act==="demo"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=38#demo&back=/stock/";return}
+  if(b.dataset.act==="demo"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=39#demo&back=/stock/";return}
   if(b.dataset.go){ui.v=b.dataset.go;svU();render();return}
   if(b.dataset.card)return stockCard(b.dataset.card);
   if(b.dataset.edit)return itemForm(b.dataset.edit);
@@ -428,6 +429,6 @@ render();
 window.__stock={compute,period,demo,exportExcel,get items(){return items},get tx(){return tx}};
 })();
 </script>
-<script src="../assets/member.js?v=38" defer></script>
+<script src="../assets/member.js?v=41" defer></script>
 </body>
 </html>
