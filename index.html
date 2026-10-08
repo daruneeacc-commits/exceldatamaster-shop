@@ -389,7 +389,12 @@ textarea.in{resize:vertical;min-height:84px;line-height:1.6}
 .pill.warn{background:color-mix(in srgb,var(--t-script) 18%,transparent);color:var(--ink)}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;z-index:70;font-size:.92rem;max-width:calc(100% - 32px);text-align:center}
 /* online tools */
-.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px}
+.tools{display:grid;grid-template-columns:1fr;gap:14px}
+.tool-tag{display:inline-block;vertical-align:3px;margin-left:8px;font-size:.72rem;font-weight:600;padding:3px 11px;border-radius:999px;background:var(--accent);color:var(--accent-ink);letter-spacing:0}.tool-tag.gold{background:#F4B740;color:#2B1A00}
+.tool-card.all .tool-chips span{background:color-mix(in srgb,var(--bg) 12%,transparent);color:color-mix(in srgb,var(--bg) 85%,transparent);box-shadow:none}
+.tool-card.solo{padding:22px 26px}.tool-card.solo:hover{box-shadow:0 22px 44px -22px rgba(0,0,0,.6),0 0 0 1.5px var(--accent)}
+.tool-card.all .tool-go .btn{white-space:nowrap}
+@media (max-width:640px){.tool-card.all{padding:20px}.tool-card.all .tool-go{width:100%}.tool-card.all .tool-go .btn{width:100%;justify-content:center}}
 .tool-card{background:var(--soft);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit;transition:transform .2s;position:relative;overflow:hidden}
 .tool-card:hover{transform:translateY(-3px)}
 .tool-ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:1.6rem;background:var(--bg);box-shadow:0 0 0 1px var(--line)}
@@ -596,25 +601,25 @@ function render(){
       </div>
       <div class="tools">
         <a class="tool-card all" href="${base}app/"${tg}><span class="tool-ic">🏪</span>
-          <div class="tool-body"><h3>ระบบร้านค้า · รวมทุกระบบในที่เดียว</h3><p>เข้าที่เดียวใช้ครบ มีเมนูเรียงตามขั้นตอนการทำงานของร้าน หน้าหลักสรุปยอดขาย ภาษี ลูกหนี้ และสินค้าใกล้หมดให้ดูทุกวัน</p>
+          <div class="tool-body"><h3>ระบบร้านค้า · รวมทุกระบบในที่เดียว <span class="tool-tag gold">⭐ ตัวเต็ม คุ้มที่สุด</span></h3><p>เข้าที่เดียวใช้ครบ มีเมนูเรียงตามขั้นตอนการทำงานของร้าน หน้าหลักสรุปยอดขาย ภาษี ลูกหนี้ และสินค้าใกล้หมดให้ดูทุกวัน</p>
           <div class="tool-flow"><span>📄 เปิดบิล</span><i>→</i><span>📑 ภาษี</span><i>→</i><span>📦 สต๊อก</span><i>→</i><span>📒 บัญชี</span><i>→</i><span>📊 รายงาน</span></div></div>
           <div class="tool-go"><span class="btn btn-main">เข้าระบบร้านค้า →</span></div></a>
-        <a class="tool-card" href="${base}bill/"${tg}><span class="tool-free">ทดลองใช้ฟรี</span><span class="tool-ic">📄</span>
-          <h3>เปิดบิลออนไลน์</h3><p>ออกใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ และใบกำกับภาษี สำหรับร้านซื้อมาขายไปและงานบริการ</p>
-          <div class="tool-chips"><span>VAT 7%</span><span>หัก ณ ที่จ่าย</span><span>ตัวหนังสือจำนวนเงิน</span><span>PDF A4</span></div>
-          <div class="tool-go"><span class="btn btn-main btn-sm">เริ่มเปิดบิล →</span></div></a>
-        <a class="tool-card" href="${base}stock/"${tg}><span class="tool-free">ทดลองใช้ฟรี</span><span class="tool-ic">📦</span>
-          <h3>ระบบสต๊อกสินค้า</h3><p>รับเข้า เบิกออก ตรวจนับ รู้ยอดคงเหลือและต้นทุนทันที เชื่อมกับเปิดบิล ตัดสต๊อกให้อัตโนมัติ</p>
-          <div class="tool-chips"><span>ต้นทุนเฉลี่ย</span><span>แจ้งเตือนใกล้หมด</span><span>บัญชีคุมสต๊อก</span><span>รายงาน Excel</span></div>
-          <div class="tool-go"><span class="btn btn-main btn-sm">เริ่มจัดการสต๊อก →</span></div></a>
-        <a class="tool-card" href="${base}account/"${tg}><span class="tool-free">ทดลองใช้ฟรี</span><span class="tool-ic">📒</span>
-          <h3>บัญชีร้านค้า</h3><p>เชื่อมบิลและสต๊อกให้อัตโนมัติ รู้กำไรขาดทุน ลูกหนี้ เจ้าหนี้ เงินในบัญชี และภาษีที่ต้องยื่นทุกเดือน</p>
-          <div class="tool-chips"><span>กำไรขาดทุนรายเดือน</span><span>ลูกหนี้ / เจ้าหนี้</span><span>ใบสั่งซื้อ → สต๊อก</span><span>ภาษีซื้อ-ขาย ภ.พ.30</span></div>
-          <div class="tool-go"><span class="btn btn-main btn-sm">ดูบัญชีร้าน →</span></div></a>
-        <a class="tool-card" href="${base}payroll/"${tg}><span class="tool-free">ทดลองใช้ฟรี</span><span class="tool-ic">💰</span>
-          <h3>คำนวณเงินเดือนพร้อมสลิป</h3><p>คิดเงินเดือนพนักงานรายเดือนและรายวัน พิมพ์สลิปได้ทันที พร้อมสรุปยอดสะสมทั้งปี</p>
-          <div class="tool-chips"><span>ประกันสังคม 5%</span><span>ภาษีรายเดือน</span><span>OT เบี้ยขยัน ค่าคอม</span><span>ขาด ลา มาสาย</span></div>
-          <div class="tool-go"><span class="btn btn-main btn-sm">เริ่มคำนวณ →</span></div></a>
+        <a class="tool-card all solo" href="${base}bill/"${tg}><span class="tool-ic">📄</span>
+          <div class="tool-body"><h3>เปิดบิลออนไลน์ <span class="tool-tag">ทดลองใช้ฟรี</span></h3><p>ออกใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ และใบกำกับภาษี สำหรับร้านซื้อมาขายไปและงานบริการ</p>
+          <div class="tool-chips"><span>VAT 7%</span><span>หัก ณ ที่จ่าย</span><span>ตัวหนังสือจำนวนเงิน</span><span>PDF A4</span></div></div>
+          <div class="tool-go"><span class="btn btn-main">เริ่มเปิดบิล →</span></div></a>
+        <a class="tool-card all solo" href="${base}stock/"${tg}><span class="tool-ic">📦</span>
+          <div class="tool-body"><h3>ระบบสต๊อกสินค้า <span class="tool-tag">ทดลองใช้ฟรี</span></h3><p>รับเข้า เบิกออก ตรวจนับ รู้ยอดคงเหลือและต้นทุนทันที เชื่อมกับเปิดบิล ตัดสต๊อกให้อัตโนมัติ</p>
+          <div class="tool-chips"><span>ต้นทุนเฉลี่ย</span><span>แจ้งเตือนใกล้หมด</span><span>บัญชีคุมสต๊อก</span><span>รายงาน Excel</span></div></div>
+          <div class="tool-go"><span class="btn btn-main">เริ่มจัดการสต๊อก →</span></div></a>
+        <a class="tool-card all solo" href="${base}account/"${tg}><span class="tool-ic">📒</span>
+          <div class="tool-body"><h3>บัญชีร้านค้า <span class="tool-tag">ทดลองใช้ฟรี</span></h3><p>เชื่อมบิลและสต๊อกให้อัตโนมัติ รู้กำไรขาดทุน ลูกหนี้ เจ้าหนี้ เงินในบัญชี และภาษีที่ต้องยื่นทุกเดือน</p>
+          <div class="tool-chips"><span>กำไรขาดทุนรายเดือน</span><span>ลูกหนี้ / เจ้าหนี้</span><span>ใบสั่งซื้อ → สต๊อก</span><span>ภาษีซื้อ-ขาย ภ.พ.30</span></div></div>
+          <div class="tool-go"><span class="btn btn-main">ดูบัญชีร้าน →</span></div></a>
+        <a class="tool-card all solo" href="${base}payroll/"${tg}><span class="tool-ic">💰</span>
+          <div class="tool-body"><h3>คำนวณเงินเดือนพร้อมสลิป <span class="tool-tag">ทดลองใช้ฟรี</span></h3><p>คิดเงินเดือนพนักงานรายเดือนและรายวัน พิมพ์สลิปได้ทันที พร้อมสรุปยอดสะสมทั้งปี</p>
+          <div class="tool-chips"><span>ประกันสังคม 5%</span><span>ภาษีรายเดือน</span><span>OT เบี้ยขยัน ค่าคอม</span><span>ขาด ลา มาสาย</span></div></div>
+          <div class="tool-go"><span class="btn btn-main">เริ่มคำนวณ →</span></div></a>
       </div>
     </div></section>
     <section id="pricing" style="padding-top:8px"><div class="wrap">
