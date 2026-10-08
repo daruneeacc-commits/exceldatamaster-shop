@@ -34,7 +34,7 @@ function stockRun(X,upto){const S={};X.items.forEach(i=>S[i.id]={bal:0,avg:n(i.c
 
 /* ---------- นิยามรายงาน: cols [หัว, คีย์, ชนิด d=วันที่ n=เงิน q=จำนวน s=ข้อความ, รวม?] ---------- */
 const G=[
- {g:"ข้อมูลหลัก",ic:"🗂️",L:[
+ {k:"mst",g:"ข้อมูลหลัก",ic:"🗂️",L:[
   {id:"custlist",t:"ทะเบียนลูกค้า",d:"รายชื่อลูกค้า เลขผู้เสียภาษี ที่อยู่ ยอดขาย และยอดค้างรับ",nodate:1,run:X=>({cols:[["ลูกค้า","name"],["เลขผู้เสียภาษี","tax"],["สาขา","branch"],["ผู้ติดต่อ","contact"],["ที่อยู่","addr"],["ยอดขายรวม","sale","n",1],["ค้างรับ","left","n",1]],
     rows:X.custs.map(c=>{const ds=X.sales.filter(d=>d.cust&&d.cust.name===c.name);let left=0;ds.filter(isInv).forEach(d=>left+=Math.max(0,calcDoc(d).total-arGot(X,d)));return Object.assign({},c,{sale:ds.reduce((a,d)=>a+calcDoc(d).net,0),left:r2(left)})})})},
   {id:"suplist",t:"ทะเบียนเจ้าหนี้",d:"รายชื่อผู้ขาย เลขผู้เสียภาษี ยอดซื้อ และยอดค้างจ่าย",nodate:1,run:X=>{const seen=new Set(X.sups.map(s=>s.name)),L=X.sups.slice();X.pur.forEach(p=>{const nm=p.sup&&p.sup.name;if(nm&&!seen.has(nm)){seen.add(nm);L.push({name:nm,tax:p.sup.tax||"",branch:p.sup.branch||""})}});
@@ -42,7 +42,8 @@ const G=[
     rows:L.map(s=>{const ps=X.pur.filter(p=>p.sup&&p.sup.name===s.name&&p.status!=="ordered");let b=0,l=0;ps.forEach(p=>{const t=calcPur(p).total;b+=t;l+=Math.max(0,t-apPaid(X,p))});return Object.assign({},s,{buy:r2(b),left:r2(l)})})}}},
   {id:"pricelist",t:"รายการสินค้า / บริการ และราคา",d:"ราคาขาย ต้นทุน หน่วย ของสินค้าและบริการทั้งหมด",nodate:1,run:X=>({cols:[["ประเภท","k"],["รหัส","sku"],["ชื่อ","name"],["หมวด","cat"],["หน่วย","unit"],["ต้นทุน","cost","n"],["ราคาขาย","price","n"],["กำไรต่อหน่วย","gp","n"]],
     rows:X.items.map(i=>({k:"สินค้า",sku:i.sku,name:i.name,cat:i.cat,unit:i.unit,cost:n(i.cost),price:n(i.price),gp:r2(n(i.price)-n(i.cost))})).concat(X.svcs.map(s=>({k:"บริการ",name:s.name,unit:s.unit,cat:s.note,price:n(s.price),cost:"",gp:""})))})}]},
- {g:"รายรับ",ic:"💰",L:[
+ {k:"inc",g:"รายรับ",ic:"💰",L:[
+  {id:"bills",t:"รายงานบิลทั้งหมด",d:"บิลทุกใบ ค้นหา ดู แก้ไข หรือลบบิลได้",link:"bills"},
   {id:"qt",t:"รายงานใบเสนอราคา",d:"ใบเสนอราคาที่ออก และสถานะว่าแปลงเป็นใบแจ้งหนี้แล้วหรือยัง",run:(X,f,t)=>({cols:[["วันที่","date","d"],["เลขที่","no"],["ลูกค้า","cust"],["ยืนราคาถึง","due","d"],["สถานะ","st"],["มูลค่ารวม","net","n",1]],
     rows:X.docs.filter(d=>d.type==="QT"&&d.date>=f&&d.date<=t).map(d=>{const cv=X.docs.find(x=>x.ref===d.no&&x.type!=="QT");return{date:d.date,no:d.no,cust:d.cust&&d.cust.name,due:d.due,st:cv?"แปลงเป็น "+cv.no:(d.due&&d.due<today()?"หมดอายุ":"รอตอบรับ"),net:calcDoc(d).net}})})},
   {id:"inv",t:"รายงานใบแจ้งหนี้ / ขายเชื่อ",d:"ใบแจ้งหนี้ทั้งหมด ยอดก่อน VAT ภาษี ยอดรับแล้ว และค้างชำระ",run:(X,f,t)=>({cols:[["วันที่","date","d"],["เลขที่","no"],["ลูกค้า","cust"],["ครบกำหนด","due","d"],["ก่อน VAT","base","n",1],["VAT","vat","n",1],["ยอดสุทธิ","net","n",1],["รับแล้ว","got","n",1],["ค้างชำระ","left","n",1],["สถานะ","st"]],
@@ -59,7 +60,7 @@ const G=[
     const L=Object.values(M).sort((a,b)=>b.base-a.base),T=L.reduce((a,x)=>a+x.base,0);L.forEach(x=>x.pc=T?r2(x.base/T*100):0);return{cols:[["ลูกค้า","cust"],["จำนวนเอกสาร","cnt","q",1],["ก่อน VAT","base","n",1],["VAT","vat","n",1],["รวม","net","n",1],["สัดส่วน %","pc","q"]],rows:L}}},
   {id:"saleitem",t:"ยอดขายตามสินค้า / บริการ",d:"ขายอะไรไปเท่าไร จำนวนและมูลค่าแต่ละรายการ",run:(X,f,t)=>{const M={};X.sales.filter(d=>d.date>=f&&d.date<=t).forEach(d=>(d.items||[]).forEach(i=>{if(!i.d)return;const k=i.d;const m=M[k]||(M[k]={item:k,unit:i.u||"",q:0,amt:0});m.q+=n(i.q);m.amt+=r2(n(i.q)*n(i.p)-n(i.disc))}));
     const L=Object.values(M).sort((a,b)=>b.amt-a.amt),T=L.reduce((a,x)=>a+x.amt,0);L.forEach(x=>{x.avg=x.q?r2(x.amt/x.q):0;x.pc=T?r2(x.amt/T*100):0});return{cols:[["สินค้า / บริการ","item"],["จำนวน","q","q",1],["หน่วย","unit"],["ราคาเฉลี่ย","avg","n"],["มูลค่าขาย","amt","n",1],["สัดส่วน %","pc","q"]],rows:L,note:"มูลค่าตามราคาในบิล ก่อนหักส่วนลดท้ายบิล"}}}]},
- {g:"รายจ่าย",ic:"🛒",L:[
+ {k:"exp",g:"รายจ่าย",ic:"🛒",L:[
   {id:"cost",t:"รายงานต้นทุนสินค้า / บริการ",d:"ซื้อสินค้าเข้าสต๊อก และต้นทุนบริการ / ค่าจ้างเหมา",run:(X,f,t)=>({cols:[["วันที่","date","d"],["เลขที่","no"],["ผู้ขาย","sup"],["ประเภท","k"],["ก่อน VAT","base","n",1],["VAT","vat","n",1],["รวม","total","n",1],["ค้างจ่าย","left","n",1]],
     rows:X.pur.filter(p=>isCostP(p)&&p.status!=="ordered"&&p.date>=f&&p.date<=t).map(p=>{const c=calcPur(p);return{date:p.date,no:p.no,sup:p.sup&&p.sup.name,k:p.kind==="stock"?"ซื้อสินค้า "+(p.lines||[]).length+" รายการ":p.cat,base:c.base,vat:c.vat,total:c.total,left:Math.max(0,r2(c.total-apPaid(X,p)))}})
       .concat(X.cash.filter(c=>c.dir==="out"&&COST_CATS.includes(c.cat)&&c.date>=f&&c.date<=t).map(c=>({date:c.date,no:"-",sup:c.note,k:c.cat+" ("+X.acc(c.accId)+")",base:n(c.amount),vat:0,total:n(c.amount),left:0}))).sort((a,b)=>a.date.localeCompare(b.date))})},
@@ -76,19 +77,19 @@ const G=[
     rows:X.pout.filter(p=>p.date>=f&&p.date<=t).map(p=>{const u=X.pu(p.purId);return{date:p.date,sup:u&&u.sup&&u.sup.name,doc:u?u.no:"",acc:X.acc(p.accId),wht:n(p.wht),amt:n(p.amount)}})})},
   {id:"pursup",t:"ยอดซื้อตามผู้ขาย",d:"สรุปยอดซื้อสินค้าและค่าใช้จ่ายแยกตามผู้ขาย",run:(X,f,t)=>{const M={};X.pur.filter(p=>p.status!=="ordered"&&p.date>=f&&p.date<=t).forEach(p=>{const k=p.sup&&p.sup.name||"-",c=calcPur(p);const m=M[k]||(M[k]={sup:k,cnt:0,base:0,vat:0,total:0});m.cnt++;m.base+=c.base;m.vat+=c.vat;m.total+=c.total});
     return{cols:[["ผู้ขาย","sup"],["จำนวนรายการ","cnt","q",1],["ก่อน VAT","base","n",1],["VAT","vat","n",1],["รวม","total","n",1]],rows:Object.values(M).sort((a,b)=>b.total-a.total)}}}]},
- {g:"การเงิน",ic:"🏦",L:[
+ {k:"fin",g:"การเงิน",ic:"🏦",L:[
   {id:"bank",t:"สมุดบัญชีธนาคาร",d:"ยอดยกมา รายการฝาก-ถอน และยอดคงเหลือทุกวัน",book:"bank"},
   {id:"cashbook",t:"สมุดเงินสด",d:"ยอดยกมา รับ-จ่ายเงินสด และยอดคงเหลือ",book:"cash"},
   {id:"petty",t:"รายงานเงินสดย่อย",d:"เบิกเติม จ่ายเงินสดย่อย และยอดคงเหลือ",book:"petty"},
   {id:"cashsum",t:"สรุปเงินคงเหลือทุกบัญชี",d:"ยกมา รับ จ่าย คงเหลือ ของธนาคาร เงินสด และเงินสดย่อย",run:(X,f,t)=>{const M=moves(X);return{cols:[["บัญชี","acc"],["ประเภท","k"],["ยอดยกมา","open","n",1],["รับเข้า","in","n",1],["จ่ายออก","out","n",1],["คงเหลือ","bal","n",1]],
     rows:X.accs.map(a=>{let o=n(a.open),i=0,u=0;M.forEach(m=>{if(m.acc!==a.id||m.date>t)return;if(m.date<f)o+=m.amt;else if(m.amt>0)i+=m.amt;else u-=m.amt});return{acc:a.name,k:{bank:"ธนาคาร",cash:"เงินสด",petty:"เงินสดย่อย"}[a.type]||a.type,open:r2(o),in:r2(i),out:r2(u),bal:r2(o+i-u)}})}}}]},
- {g:"สต๊อก",ic:"📦",L:[
+ {k:"stk",g:"สต๊อก",ic:"📦",L:[
   {id:"stockbal",t:"สินค้าคงเหลือ ณ วันที่",d:"จำนวนคงเหลือ ต้นทุนเฉลี่ย และมูลค่าสต๊อก ณ วันสิ้นงวด",asof:1,run:(X,f,t)=>{const R=stockRun(X,t);return{cols:[["รหัส","sku"],["สินค้า","name"],["หน่วย","unit"],["คงเหลือ","bal","q"],["ต้นทุนเฉลี่ย","avg","n"],["มูลค่า","val","n",1],["จุดสั่งซื้อ","min","q"],["สถานะ","st"]],
     rows:X.items.map(i=>{const s=R.S[i.id]||{bal:0,avg:0};return{sku:i.sku,name:i.name,unit:i.unit,bal:s.bal,avg:r2(s.avg),val:r2(Math.max(s.bal,0)*s.avg),min:n(i.min),st:n(i.min)>0&&s.bal<=n(i.min)?"ใกล้หมด / ควรสั่ง":""}}),note:"มูลค่าตามต้นทุนถัวเฉลี่ย"}}},
   {id:"stockmove",t:"ความเคลื่อนไหวสินค้า",d:"ยกมา รับเข้า จ่ายออก ปรับปรุง และคงเหลือ ของแต่ละสินค้าในช่วงที่เลือก",run:(X,f,t)=>({cols:[["รหัส","sku"],["สินค้า","name"],["หน่วย","unit"],["ยกมา","o","q"],["รับเข้า","i","q",1],["จ่ายออก","u","q",1],["ปรับปรุง","a","q"],["คงเหลือ","b","q"]],
     rows:X.items.map(it=>{let o=0,i=0,u=0,a=0;X.tx.forEach(x=>{if(x.pid!==it.id||x.date>t)return;const q=n(x.qty),v=x.type==="out"?-q:q;if(x.date<f)o+=v;else if(x.type==="in")i+=q;else if(x.type==="out")u+=q;else a+=q});return{sku:it.sku,name:it.name,unit:it.unit,o:r4(o),i:r4(i),u:r4(u),a:r4(a),b:r4(o+i-u+a)}})})},
   {id:"stockrep",t:"รายงานสต๊อกแบบละเอียด",d:"เปิดหน้ารายงานในระบบสต๊อก (บัตรสินค้า / ตรวจนับ)",link:"stockrep"}]},
- {g:"ภาษีและงบการเงิน",ic:"📑",L:[
+ {k:"tax",g:"ภาษีและงบการเงิน",ic:"📑",L:[
   {id:"pnlr",t:"งบกำไรขาดทุน (ตามช่วงวันที่)",d:"รายได้ ต้นทุนขาย กำไรขั้นต้น ค่าใช้จ่าย และกำไรสุทธิ",run:(X,f,t)=>{const inR=d=>d>=f&&d<=t;let sales=0;X.sales.forEach(d=>{if(inR(d.date))sales+=calcDoc(d).base});
     let cogs=0;stockRun(X).cogs.forEach(c=>{if(inR(c.date))cogs+=c.v});let svc=0;const E={};
     X.pur.forEach(p=>{if(p.kind!=="expense"||p.status==="ordered"||!inR(p.date))return;const b=calcPur(p).base;if(COST_CATS.includes(p.cat))svc+=b;else E[p.cat||"ค่าใช้จ่ายอื่น"]=(E[p.cat||"ค่าใช้จ่ายอื่น"]||0)+b});
@@ -101,7 +102,7 @@ const G=[
   {id:"pnl",t:"กำไรขาดทุนรายเดือน (กราฟ)",d:"เปิดหน้าภาพรวมกำไรขาดทุนแบบเปรียบเทียบรายเดือน",link:"pnl"},
   {id:"wht",t:"ภาษีหัก ณ ที่จ่าย",d:"ภาษีที่เราหักผู้ขาย (ต้องนำส่ง) และที่ลูกค้าหักเรา (เครดิตภาษี)",run:(X,f,t)=>({cols:[["วันที่","date","d"],["ประเภท","k"],["คู่ค้า","who"],["เอกสาร","doc"],["ยอดที่จ่าย/รับ","amt","n"],["ภาษีหัก ณ ที่จ่าย","wht","n",1]],
     rows:X.pay.filter(p=>n(p.wht)>0&&p.date>=f&&p.date<=t).map(p=>{if(p.dir==="out"){const u=X.pu(p.purId);return{date:p.date,k:"เราหัก (ภ.ง.ด.3/53 ต้องนำส่ง)",who:u&&u.sup&&u.sup.name,doc:u?u.no:"",amt:n(p.amount),wht:n(p.wht)}}const d=X.docs.find(x=>x.id===p.docId);return{date:p.date,k:"ลูกค้าหักเรา (เครดิตภาษี)",who:d&&d.cust&&d.cust.name,doc:d?d.no:"",amt:n(p.amount),wht:n(p.wht)}})})}]}];
-const ALL={};G.forEach(g=>g.L.forEach(r=>{r.g=g.g;r.ic=g.ic;ALL[r.id]=r}));
+const ALL={},GK={};G.forEach(g=>{GK[g.k]=g;g.L.forEach(r=>{r.g=g.g;r.gk=g.k;r.ic=g.ic;ALL[r.id]=r})});
 // สมุดบัญชี (ธนาคาร / เงินสด / เงินสดย่อย) พร้อมยอดคงเหลือสะสม
 function book(X,type,f,t){const M=moves(X),rows=[];X.accs.filter(a=>a.type===type).forEach(a=>{let b=n(a.open);M.forEach(m=>{if(m.acc===a.id&&m.date<f)b+=m.amt});
   rows.push({date:f,acc:a.name,l:"ยอดยกมา",in:"",out:"",bal:r2(b),b:1});M.forEach(m=>{if(m.acc!==a.id||m.date<f||m.date>t)return;b+=m.amt;rows.push({date:m.date,acc:a.name,l:m.label+(m.party?" · "+m.party:""),note:m.note,in:m.amt>0?m.amt:"",out:m.amt<0?-m.amt:"",bal:r2(b)})});
@@ -123,11 +124,16 @@ let cur=null,last=null;
 function run(r){const X=data(),t=r.asof&&st.t>today()?today():st.t;const R=r.book?book(X,r.book,st.f,t):r.run(X,st.f,t);R.rows=R.rows||[];return R}
 const cell=(v,ty)=>v===""||v==null?"":ty==="n"?fmt(v):ty==="q"?(+v).toLocaleString("th-TH",{maximumFractionDigits:3}):ty==="d"?thD(v):String(v);
 function totals(R){const T={};R.cols.forEach(c=>{if(c[3])T[c[1]]=r2(R.rows.reduce((a,x)=>a+n(x[c[1]]),0))});return T}
-function renderRpt(){const id=(/[?&]r=([\w-]+)/.exec(location.hash)||[])[1];cur=id&&ALL[id]?ALL[id]:null;
+function renderRpt(){const id=(/[?&]r=([\w-]+)/.exec(location.hash)||[])[1],gk=(/[?&]g=(\w+)/.exec(location.hash)||[])[1];cur=id&&ALL[id]?ALL[id]:null;const grp=cur?GK[cur.gk]:GK[gk]||null;
   $("#rpHome").hidden=!!cur;$("#rpView").hidden=!cur;$("#rpPer").textContent=perTxt(cur);
   $("#rpP").value=st.p;$("#rpF").value=st.f;$("#rpT").value=st.t;$("#rpCustom").hidden=st.p!=="cu";
   $$("#rpBar [data-only]").forEach(e=>e.hidden=!cur);$("#rpBar").classList.toggle("nod",!!(cur&&cur.nodate));
-  if(!cur){$("#rpHome").innerHTML=G.map(g=>`<div class="card rp-g"><h2>${g.ic} ${g.g}</h2><div class="rp-l">${g.L.map(r=>`<button data-rp="${r.id}"><b>${r.t}${r.link?" ↗":""}</b><span>${r.d}</span></button>`).join("")}</div></div>`).join("");document.title="ศูนย์รายงาน · ระบบร้านค้า";return}
+  $$('aside a[data-r="rpt"]').forEach(a=>a.classList.toggle("on",a.dataset.g===(grp?grp.k:"all")));
+  $("#rpH1").textContent=grp?grp.ic+" รายงาน"+(grp.k==="tax"?"ภาษีและงบการเงิน":grp.g):"📊 รายงานทั้งหมด";
+  $("#rpBack").textContent="← รายงาน"+(grp?(grp.k==="tax"?"ภาษีและงบ":grp.g):"ทั้งหมด");
+  if(!cur){const tile=(r,i)=>`<button class="rp-tile" data-rp="${r.id}"><span class="rp-n">${i+1}</span><b>${r.t}${r.link?" ↗":""}</b><span>${r.d}</span></button>`;
+    $("#rpHome").innerHTML=(grp?[grp]:G).map(g=>`${grp?"":`<h2 class="rp-gh"><a href="#/rpt?g=${g.k}">${g.ic} ${g.g} <small>${g.L.length} รายงาน →</small></a></h2>`}<div class="rp-tiles">${g.L.map(tile).join("")}</div>`).join("");
+    document.title=(grp?"รายงาน"+grp.g:"รายงานทั้งหมด")+" · ระบบร้านค้า";return}
   document.title=cur.t+" · ระบบร้านค้า";$("#rpTitle").textContent=cur.ic+" "+cur.t;$("#rpDesc").textContent=cur.d;
   const R=last=run(cur),q=$("#rpQ").value.trim().toLowerCase();const rows=q?R.rows.filter(x=>Object.values(x).some(v=>String(v==null?"":v).toLowerCase().includes(q))):R.rows;
   const RR=Object.assign({},R,{rows});const T=R.nototal?{}:totals(RR);last.view=RR;last.T=T;
@@ -136,7 +142,7 @@ function renderRpt(){const id=(/[?&]r=([\w-]+)/.exec(location.hash)||[])[1];cur=
     ${Object.keys(T).length&&rows.length?`<tfoot><tr>${R.cols.map((c,i)=>`<td class="${c[3]?"r":""}">${i===0?"รวม":c[3]?fmt(T[c[1]]):""}</td>`).join("")}</tr></tfoot>`:""}`}
 window.renderRpt=renderRpt;
 $("#rpHome").addEventListener("click",e=>{const b=e.target.closest("[data-rp]");if(!b)return;const r=ALL[b.dataset.rp];if(r.link)return go(r.link);$("#rpQ").value="";location.hash="#/rpt?r="+r.id});
-$("#rpBack").onclick=()=>{location.hash="#/rpt"};
+$("#rpBack").onclick=()=>{location.hash=cur?"#/rpt?g="+cur.gk:"#/rpt"};
 $("#rpP").onchange=e=>{st.p=e.target.value;if(st.p!=="cu"){const P=preset(st.p);st.f=P[0];st.t=P[1]}saveSt();renderRpt()};
 ["#rpF","#rpT"].forEach(s=>$(s).onchange=()=>{st.p="cu";st.f=$("#rpF").value||st.f;st.t=$("#rpT").value||st.t;if(st.f>st.t)[st.f,st.t]=[st.t,st.f];saveSt();renderRpt()});
 $("#rpQ").addEventListener("input",renderRpt);

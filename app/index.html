@@ -65,8 +65,13 @@ textarea.in{min-height:70px;resize:vertical}
 .wipe-h{margin:0 0 6px;font-weight:600;color:#B3261E}.wipe-code{font-size:1.15rem;letter-spacing:.2em;padding:2px 8px;border-radius:6px;background:var(--soft);color:var(--ink)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wipe-h{color:#F2867E}}
 .rp-bar{display:grid;grid-template-columns:1.1fr 1fr 1fr 1.6fr;gap:10px;padding:12px;align-items:end}.rp-bar.nod .rp-d{opacity:.45}
-.rp-home{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}.rp-g h2{margin:0 0 8px;font-size:1.05rem}
-.rp-l{display:flex;flex-direction:column;gap:2px}.rp-l button{display:block;text-align:left;border:0;background:none;font:inherit;color:var(--ink);padding:9px 10px;border-radius:10px;cursor:pointer}
+.rp-home{margin-top:6px}.rp-gh{margin:20px 0 10px;font-size:1.05rem}.rp-gh a{color:var(--ink);text-decoration:none}.rp-gh small{color:var(--accent);font-weight:500;font-size:.8rem;margin-left:6px}
+.rp-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:12px}
+.rp-tile{position:relative;display:flex;flex-direction:column;gap:4px;text-align:left;border:0;font:inherit;color:var(--ink);background:var(--card);border-radius:14px;padding:16px 16px 16px 58px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06),0 0 0 1px var(--line);transition:transform .12s,box-shadow .12s;min-height:92px}
+.rp-tile:hover{transform:translateY(-2px);box-shadow:0 8px 20px -10px rgba(0,0,0,.25),0 0 0 1.5px var(--accent)}
+.rp-tile .rp-n{position:absolute;left:14px;top:15px;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:700;font-size:.9rem;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.rp-tile b{font-size:.96rem;font-weight:600;line-height:1.35}.rp-tile span:last-child{color:var(--muted);font-size:.8rem;line-height:1.4}.rp-g h2{margin:0 0 8px;font-size:1.05rem}
+.rp-x{display:flex;flex-direction:column;gap:2px}.rp-l button{display:block;text-align:left;border:0;background:none;font:inherit;color:var(--ink);padding:9px 10px;border-radius:10px;cursor:pointer}
 .rp-l button:hover{background:var(--soft)}.rp-l b{display:block;font-weight:600;font-size:.93rem}.rp-l span{display:block;color:var(--muted);font-size:.8rem;margin-top:1px}
 .rp-h{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:16px 0 10px}.rp-h h2{margin:8px 0 2px;font-size:1.3rem}.rp-h p{margin:0;color:var(--muted);font-size:.86rem}.rp-h p b{color:var(--ink)}
 table.rp-t td,table.rp-t th{white-space:nowrap}table.rp-t tr.rb-b td{font-weight:700;background:var(--soft)}table.rp-t tfoot td{font-weight:700;background:var(--soft);border-top:2px solid var(--line)}table.rp-t td.neg{color:#B3261E}
@@ -213,11 +218,13 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <a href="#/stock" data-r="stock"><span class="step">📦</span>สต๊อกสินค้า<span class="n" id="nLow" hidden></span></a>
     <div class="mg" data-g="rep"><button class="mg-h" type="button"><span class="step">📊</span>รายงาน<i>▾</i></button><div class="mg-b">
-      <a href="#/rpt" data-r="rpt"><span class="no">★</span>ศูนย์รายงาน (ทั้งหมด)</a>
-      <a href="#/bills" data-r="bills"><span class="no">1</span>รายงานบิลทั้งหมด</a>
-      <a href="#/tax" data-r="tax"><span class="no">2</span>รายงานภาษีซื้อ-ขาย</a>
-      <a href="#/pnl" data-r="pnl"><span class="no">3</span>กำไรขาดทุน</a>
-      <a href="#/stockrep" data-r="stockrep"><span class="no">4</span>รายงานสต๊อก</a>
+      <a href="#/rpt?g=inc" data-r="rpt" data-g="inc"><span class="no">1</span>รายงานรายรับ</a>
+      <a href="#/rpt?g=exp" data-r="rpt" data-g="exp"><span class="no">2</span>รายงานรายจ่าย</a>
+      <a href="#/rpt?g=fin" data-r="rpt" data-g="fin"><span class="no">3</span>รายงานการเงิน</a>
+      <a href="#/rpt?g=stk" data-r="rpt" data-g="stk"><span class="no">4</span>รายงานสต๊อก</a>
+      <a href="#/rpt?g=tax" data-r="rpt" data-g="tax"><span class="no">5</span>ภาษี / กำไรขาดทุน</a>
+      <a href="#/rpt?g=mst" data-r="rpt" data-g="mst"><span class="no">6</span>รายงานข้อมูลหลัก</a>
+      <a href="#/rpt" data-r="rpt" data-g="all"><span class="no">★</span>รายงานทั้งหมด</a>
     </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
@@ -243,7 +250,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
       <div class="acts"><button class="btn main" id="stSave">💾 บันทึกข้อมูลร้าน</button><span class="help" id="stMsg"></span></div></div>
     </div></section>
     <section id="rpt" class="pane"><div class="wrap">
-      <div class="hello rb-head"><div><h1>📊 ศูนย์รายงาน</h1><p>รายงานของทุกเมนูในที่เดียว เลือกช่วงวันที่ แล้วพิมพ์ / บันทึก PDF หรือดาวน์โหลด Excel ได้ทุกรายงาน</p></div></div>
+      <div class="hello rb-head"><div><h1 id="rpH1">📊 รายงานทั้งหมด</h1><p>กดเลือกรายงาน · เลือกช่วงวันที่ แล้วพิมพ์ / บันทึก PDF หรือดาวน์โหลด Excel ได้ทุกรายงาน</p></div></div>
       <div class="card rp-bar" id="rpBar">
         <div class="fl"><label>ช่วงเวลา</label><select class="in" id="rpP"><option value="tm">เดือนนี้</option><option value="lm">เดือนที่แล้ว</option><option value="l3">3 เดือนล่าสุด</option><option value="tq">ไตรมาสนี้</option><option value="ty">ปีนี้</option><option value="ly">ปีที่แล้ว</option><option value="all">ทั้งหมด</option><option value="cu">กำหนดเอง</option></select></div>
         <div class="fl rp-d"><label>ตั้งแต่</label><input class="in" type="date" id="rpF"></div><div class="fl rp-d"><label>ถึง</label><input class="in" type="date" id="rpT"></div>
@@ -340,7 +347,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   <button data-go="home"><i>🏠</i>หน้าหลัก</button>
   <button data-go="bill"><i>🧾</i>เปิดบิล</button>
   <button data-go="stock"><i>📦</i>สต๊อก</button>
-  <button data-go="bills"><i>📋</i>รายงาน</button>
+  <button data-go="rpt"><i>📋</i>รายงาน</button>
   <button data-go="more"><i>☰</i>เพิ่มเติม</button>
 </nav>
 <div id="toast" hidden style="position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:90;font-size:.9rem"></div>
@@ -378,7 +385,7 @@ let view="bills";
 function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0];if(!PANES.includes(r)&&!ROUTES[r])r="home";cur=r;
   document.body.classList.remove("menu");
   $$("aside a").forEach(a=>a.classList.toggle("on",a.dataset.r===r));
-  $$("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.go===r||(b.dataset.go==="more"&&!["home","bill","stock","bills"].includes(r))));
+  $$("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.go===r||(b.dataset.go==="more"&&!["home","bill","stock","rpt"].includes(r))));
   $$(".pane").forEach(x=>x.classList.toggle("show",x.id===r));
   $$(".mg").forEach(g=>{const on=!!g.querySelector(`a[data-r="${r}"]`);g.classList.toggle("has-on",on);if(on)g.classList.remove("closed")});
   Object.values(frames).forEach(f=>f.classList.remove("show"));
@@ -652,7 +659,7 @@ $("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
-<script src="reports.js?v=36"></script>
+<script src="reports.js?v=37"></script>
 <script src="../assets/member.js?v=35" defer></script>
 </body>
 </html>
