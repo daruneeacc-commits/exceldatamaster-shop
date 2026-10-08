@@ -2,6 +2,10 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<script src="../assets/lock.js?v=2"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ระบบร้านค้า · Excel Data Master</title>
 <meta name="description" content="ระบบร้านค้าออนไลน์ครบในที่เดียว: เปิดบิล ใบกำกับภาษี ขายเงินสด/ขายเชื่อ ภาษีซื้อ-ขาย สต๊อกสินค้า ซื้อสินค้า ลูกหนี้ เงินสด-ธนาคาร และกำไรขาดทุน">
@@ -191,10 +195,10 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
 }
 </style>
-<script src="../assets/suggest.js?v=43"></script>
+<script src="../assets/suggest.js?v=45"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261008-2130";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261008-2144";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}location.replace("/app/?u="+j.v+location.hash);return}
@@ -259,7 +263,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
-    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 21:30 น.</small></span></a>
+    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 21:44 น.</small></span></a>
       <div class="side-links"><a href="/">🏠 หน้าร้าน</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></div></div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -319,6 +323,13 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
       <div class="card"><h2>ข้อมูลในเครื่องนี้ <small id="dtLast"></small></h2><div class="stats" id="dtStats"></div>
         <div class="acts"><button class="btn main" id="dtBk">⬇️ ดาวน์โหลดไฟล์สำรองทั้งหมด</button><label class="btn ghost">⬆️ กู้คืนจากไฟล์สำรอง<input type="file" id="dtImp" accept=".json" hidden></label><button class="btn ghost" id="dtXls">📊 ดาวน์โหลด Excel ทุกระบบ</button></div>
         <p class="help" id="dtCloud" style="margin-top:10px"></p><p class="help" style="margin-top:8px">ไฟล์สำรองเก็บได้ครบทุกระบบในไฟล์เดียว ใช้ย้ายไปเครื่องใหม่ได้ · ไฟล์ Excel ใช้ส่งผู้ทำบัญชีหรือเปิดใน Google ชีต</p></div>
+      <div class="card"><h2>🔒 ล็อกหน้าจอด้วย PIN <small id="lkState"></small></h2>
+        <p class="help">กันคนอื่นเปิดดูข้อมูลร้านจากเครื่องนี้ เช่น คอมที่ใช้ร่วมกันหน้าร้าน · ระบบจะล็อกเมื่อเปิดเบราว์เซอร์ใหม่ และเมื่อไม่ได้ใช้งานตามเวลาที่ตั้ง · เก็บเฉพาะค่าเข้ารหัสของ PIN ไม่เก็บ PIN จริง</p>
+        <div class="form" style="margin-top:10px"><div class="fl"><label id="lkL1">ตั้ง PIN (ตัวเลข 4–12 หลัก)</label><input class="in" id="lkPin" inputmode="numeric" maxlength="12" autocomplete="off" style="-webkit-text-security:disc"></div>
+          <div class="fl"><label>ยืนยัน PIN อีกครั้ง</label><input class="in" id="lkPin2" inputmode="numeric" maxlength="12" autocomplete="off" style="-webkit-text-security:disc"></div>
+          <div class="fl"><label>ล็อกอัตโนมัติเมื่อไม่ได้ใช้งาน</label><select class="in" id="lkIdle"><option value="5">5 นาที</option><option value="10">10 นาที</option><option value="15" selected>15 นาที</option><option value="30">30 นาที</option><option value="60">1 ชั่วโมง</option><option value="0">ไม่ล็อกอัตโนมัติ (ล็อกเมื่อเปิดเบราว์เซอร์ใหม่)</option></select></div>
+          <div class="fl" id="lkOldBox" hidden><label>PIN ปัจจุบัน (เพื่อยืนยัน)</label><input class="in" id="lkOld" inputmode="numeric" maxlength="12" autocomplete="off" style="-webkit-text-security:disc"></div></div>
+        <div class="acts"><button class="btn main" id="lkSet">🔒 ตั้ง PIN</button><button class="btn ghost" id="lkNow" hidden>ล็อกเดี๋ยวนี้</button><button class="btn ghost" id="lkOff" hidden>ยกเลิก PIN</button><span class="help" id="lkMsg"></span></div></div>
       <div class="card"><h2>ข้อมูลตัวอย่าง</h2><p class="help">ใส่ข้อมูลร้านขายเครื่องเขียนย้อนหลัง 3 เดือน เพื่อลองใช้ทุกเมนู (ข้อมูลในเครื่องนี้จะถูกแทนที่)</p><div class="acts"><button class="btn ghost" id="dtDemo">✨ ใส่ข้อมูลตัวอย่าง 3 เดือน</button></div></div>
       <div class="card"><h2>เริ่มใช้งานจริง</h2><p class="help">ลองข้อมูลตัวอย่างเสร็จแล้ว กดล้างข้อมูลทั้งหมด แล้วเริ่มกรอกข้อมูลร้านจริง</p>
         <label class="chk" style="margin-top:8px"><input type="checkbox" id="dtKeep"> เก็บข้อมูลร้าน (ชื่อ ที่อยู่ เลขผู้เสียภาษี โลโก้) ไว้</label>
@@ -399,9 +410,9 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=43"},stock:{src:"/stock/?v=43",sv:"home"},stockrep:{src:"/stock/?v=43",sv:"report"},stkitems:{src:"/stock/?v=43",sv:"items"},stkin:{src:"/stock/?v=43",sv:"in"},stkout:{src:"/stock/?v=43",sv:"out"},stkadj:{src:"/stock/?v=43",sv:"adj"},stkhist:{src:"/stock/?v=43",sv:"hist"},stkre:{src:"/stock/?v=43",sv:"reorder"},
-  ar:{src:"/account/?v=43",v:"ar"},tax:{src:"/account/?v=43",v:"tax"},buy:{src:"/account/?v=43",v:"buy"},cash:{src:"/account/?v=43",v:"cash"},pnl:{src:"/account/?v=43",v:"home"},
-  cost:{src:"/account/?v=43",v:"cost"},exp:{src:"/account/?v=43",v:"exp"},bank:{src:"/account/?v=43",v:"bank"},cashv:{src:"/account/?v=43",v:"cashv"},petty:{src:"/account/?v=43",v:"petty"},ap:{src:"/account/?v=43",v:"ap"}};
+const ROUTES={bill:{src:"/bill/?v=45"},stock:{src:"/stock/?v=45",sv:"home"},stockrep:{src:"/stock/?v=45",sv:"report"},stkitems:{src:"/stock/?v=45",sv:"items"},stkin:{src:"/stock/?v=45",sv:"in"},stkout:{src:"/stock/?v=45",sv:"out"},stkadj:{src:"/stock/?v=45",sv:"adj"},stkhist:{src:"/stock/?v=45",sv:"hist"},stkre:{src:"/stock/?v=45",sv:"reorder"},
+  ar:{src:"/account/?v=45",v:"ar"},tax:{src:"/account/?v=45",v:"tax"},buy:{src:"/account/?v=45",v:"buy"},cash:{src:"/account/?v=45",v:"cash"},pnl:{src:"/account/?v=45",v:"home"},
+  cost:{src:"/account/?v=45",v:"cost"},exp:{src:"/account/?v=45",v:"exp"},bank:{src:"/account/?v=45",v:"bank"},cashv:{src:"/account/?v=45",v:"cashv"},petty:{src:"/account/?v=45",v:"petty"},ap:{src:"/account/?v=45",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -520,7 +531,7 @@ function renderHome(){
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=43#demo&back=/app/"};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=45#demo&back=/app/"};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- ข้อมูลหลัก: ลูกค้า / เจ้าหนี้ / สินค้า-บริการ ---------- */
 const MD={
@@ -667,7 +678,15 @@ $("#stSave").onclick=()=>{const name=$("#stName").value.trim();if(!name){$("#stM
 /* ---------- สำรอง / กู้คืน / ล้างข้อมูล ---------- */
 const KS=["edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_suppliers","edm_services","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
 const KS_UI=["edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_pay_ui","edm_bill_term"];
-function renderData(){wipeClose();const A=LS.get("edm_acc",{})||{};const n=(k)=>(LS.get(k,[])||[]).length;
+function renderLock(){const L=window.EDM_LOCK,c=L&&L.get();$("#lkState").textContent=c?"เปิดใช้อยู่":"ยังไม่ได้ตั้ง";$("#lkSet").textContent=c?"เปลี่ยน PIN":"🔒 ตั้ง PIN";$("#lkL1").textContent=c?"PIN ใหม่ (ตัวเลข 4–12 หลัก)":"ตั้ง PIN (ตัวเลข 4–12 หลัก)";
+  $("#lkNow").hidden=!c;$("#lkOff").hidden=!c;$("#lkOldBox").hidden=!c;if(c)$("#lkIdle").value=String(c.idle||0);["#lkPin","#lkPin2","#lkOld"].forEach(s=>$(s).value="");$("#lkMsg").textContent=""}
+$("#lkSet").onclick=async()=>{const L=window.EDM_LOCK;if(!L)return;const a=$("#lkPin").value.trim(),b2=$("#lkPin2").value.trim(),m=$("#lkMsg");
+  if(!/^\d{4,12}$/.test(a))return m.textContent="PIN ต้องเป็นตัวเลข 4–12 หลัก";if(a!==b2)return m.textContent="PIN สองช่องไม่ตรงกัน";if(/^(\d)\1+$/.test(a)||"0123456789012".includes(a)||"9876543210987".includes(a))return m.textContent="PIN ง่ายเกินไป (เลขซ้ำหรือเรียงกัน)";
+  if(L.get()&&!(await L.check($("#lkOld").value.trim())))return m.textContent="PIN ปัจจุบันไม่ถูกต้อง";
+  await L.set(a,$("#lkIdle").value);renderLock();$("#lkMsg").textContent="ตั้ง PIN แล้ว ✓";toast("เปิดล็อกหน้าจอด้วย PIN แล้ว")};
+$("#lkOff").onclick=async()=>{const L=window.EDM_LOCK;if(!(await L.check($("#lkOld").value.trim())))return $("#lkMsg").textContent="ใส่ PIN ปัจจุบันเพื่อยกเลิก";L.clear();renderLock();toast("ยกเลิก PIN แล้ว")};
+$("#lkNow").onclick=()=>window.EDM_LOCK&&EDM_LOCK.lockNow();
+function renderData(){wipeClose();renderLock();const A=LS.get("edm_acc",{})||{};const n=(k)=>(LS.get(k,[])||[]).length;
   $("#dtStats").innerHTML=[["เอกสารขาย",n("edm_bill_docs")],["สินค้า",n("edm_stock_items")],["ซื้อ / ค่าใช้จ่าย",(A.pur||[]).length],["ลูกค้า",n("edm_bill_customers")]].map(([t,v])=>`<div><b>${v}</b><span>${t}</span></div>`).join("");
   const last=LS.get("edm_last_backup","");$("#dtLast").textContent=last?"ดาวน์โหลดไฟล์สำรองล่าสุด "+thD(last):"";
   const s=LS.get("edm_bill_seller",{});$("#dtKeep").checked=!!s.name&&!/ตัวอย่าง/.test(s.name);
@@ -696,7 +715,7 @@ $("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
-<script src="reports.js?v=40"></script>
-<script src="../assets/member.js?v=43" defer></script>
+<script src="reports.js?v=45"></script>
+<script src="../assets/member.js?v=45" defer></script>
 </body>
 </html>

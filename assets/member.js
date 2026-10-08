@@ -103,10 +103,10 @@
         '<div class="edm-tabs"><button data-go="signup" class="' + (su ? "on" : "") + '">สมัครใหม่</button><button data-go="login" class="' + (su ? "" : "on") + '">เข้าสู่ระบบ</button></div>' +
         (su ? '<input class="edm-in" id="edmN" autocomplete="off" placeholder="ชื่อร้าน / ชื่อของคุณ (ไม่บังคับ)">' : '') +
         '<input class="edm-in" id="edmE" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="email" placeholder="อีเมล">' +
-        '<input class="edm-in" id="edmP" type="password" autocomplete="new-password" placeholder="' + (su ? "ตั้งรหัสผ่าน (อย่างน้อย 6 ตัว)" : "รหัสผ่าน") + '">' +
+        '<input class="edm-in" id="edmP" type="password" autocomplete="new-password" placeholder="' + (su ? "ตั้งรหัสผ่าน (อย่างน้อย 8 ตัว)" : "รหัสผ่าน") + '">' +
         '<button class="edm-btn" id="edmGo">' + (su ? "สมัครทดลองใช้ฟรี" : "เข้าสู่ระบบ") + '</button><div class="edm-msg" id="edmM"></div>' +
         (su ? '' : '<button class="edm-link" data-go="forgot" style="align-self:flex-start">ลืมรหัสผ่าน?</button>') +
-        '<p class="edm-muted">ข้อมูลของคุณบันทึกในเครื่องนี้ และสำรองไว้ในระบบของร้าน (เฉพาะคุณที่เรียกกลับได้) เพื่อใช้ต่อจากเครื่องอื่น · <a href="' + BASE + 'privacy/" target="_blank" style="color:inherit">นโยบายความเป็นส่วนตัว</a></p>' +
+        '<p class="edm-muted">ข้อมูลของคุณบันทึกในเครื่องนี้ และสำรองไว้ในระบบของร้าน (เฉพาะคุณที่เรียกกลับได้) เพื่อใช้ต่อจากเครื่องอื่น · <a href="' + BASE + 'privacy/" target="_blank" rel="noopener" style="color:inherit">นโยบายความเป็นส่วนตัว</a></p>' +
         '<a class="edm-link" href="' + BASE + '" style="align-self:center;color:var(--muted,#66706B)">← กลับไปร้าน Excel Data Master</a>';
     }
     h += '</div>';
@@ -130,7 +130,7 @@
       Ei.value = E;
       var bad = emailProblem(E);
       if (bad) { M.className = "edm-msg err"; M.textContent = bad; Ei.focus(); return; }
-      if (P && P.value.length < (mode === "signup" ? 6 : 1)) { M.className = "edm-msg err"; M.textContent = mode === "signup" ? "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร" : "กรอกรหัสผ่าน"; return; }
+      if (P && P.value.length < (mode === "signup" ? 8 : 1)) { M.className = "edm-msg err"; M.textContent = mode === "signup" ? "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร" : "กรอกรหัสผ่าน"; return; }
       go.disabled = true; var t0 = go.textContent; go.textContent = "กำลังดำเนินการ..."; M.className = "edm-msg"; M.textContent = "";
       var req = mode === "signup" ? { a: "signup", email: E, pass: P.value, name: N ? N.value : "" }
         : mode === "forgot" ? { a: "forgot", email: E }

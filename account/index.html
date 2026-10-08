@@ -2,6 +2,10 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<script src="../assets/lock.js?v=2"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>บัญชีร้านค้า · Excel Data Master</title>
 <meta name="description" content="ระบบบัญชีร้านค้าออนไลน์ เชื่อมเปิดบิล สต๊อก และเงินเดือน: ลูกหนี้ รับชำระ ใบสั่งซื้อ ค่าใช้จ่าย เจ้าหนี้ เงินสด-ธนาคาร ภาษีซื้อ-ขาย และกำไรขาดทุนรายเดือน">
@@ -116,7 +120,7 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
 @media print{@page{size:A4;margin:10mm}.page.rd .rd-pg{display:block}body{background:#fff}header.top,main,.toast,dialog,.edm-bar,.edm-gate{display:none!important}#printArea{display:block}}
 .ap-seg{width:auto;max-width:none;display:inline-flex}.ap-seg button{white-space:nowrap;padding-left:14px;padding-right:14px;flex:none}
 </style>
-<script src="../assets/suggest.js?v=43"></script>
+<script src="../assets/suggest.js?v=45"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -560,7 +564,7 @@ function printPO(id){const p=A.pur.find(x=>x.id===id),c=calcPur(p);
 window.addEventListener("afterprint",()=>$("#printArea").innerHTML="");
 
 /* ---------- Excel รวมทุกระบบ ---------- */
-function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="/assets/vendor/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
 function exportExcel(){toast("กำลังสร้างไฟล์ Excel...");return loadXLSX().then(X=>{const wb=X.utils.book_new();const D0=v=>v?new Date(v+"T00:00:00"):"";
   const mk=(rows,w,money,dates)=>{const ws=X.utils.aoa_to_sheet(rows);ws["!cols"]=w.map(x=>({wch:x}));const R=X.utils.decode_range(ws["!ref"]);for(let r=1;r<=R.e.r;r++){(money||[]).forEach(c=>{const a=X.utils.encode_cell({r,c});if(ws[a]&&ws[a].t==="n")ws[a].z="#,##0.00"});(dates||[]).forEach(c=>{const a=X.utils.encode_cell({r,c});if(ws[a])ws[a].z="d/m/yyyy"})}return ws};
   const SC=stockCalc();const ms=[];for(let k=11;k>=0;k--)ms.push(ymShift(ui.ym,-k));
@@ -703,6 +707,6 @@ render();
 window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get A(){return A},get D(){return D}};
 })();
 </script>
-<script src="../assets/member.js?v=43" defer></script>
+<script src="../assets/member.js?v=45" defer></script>
 </body>
 </html>

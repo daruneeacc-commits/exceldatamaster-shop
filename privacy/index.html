@@ -2,6 +2,9 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>นโยบายความเป็นส่วนตัว · Excel Data Master</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,10 +53,20 @@ a{color:var(--accent)}ul{padding-left:20px;margin:6px 0}
 <h2>4. ที่เก็บข้อมูลและระยะเวลา</h2>
 <p>ข้อมูลบัญชี คำสั่งซื้อ และไฟล์สำรองข้อมูลของสมาชิก เก็บใน Google Sheets และ Google Drive ของร้าน ซึ่งเข้าถึงได้เฉพาะเจ้าของร้าน เราเก็บข้อมูลไว้ตลอดระยะเวลาที่คุณใช้บริการ และตามที่กฎหมายภาษีและบัญชีกำหนดสำหรับหลักฐานการชำระเงิน</p>
 
-<h2>5. สิทธิของคุณ</h2>
+<h2>5. การรักษาความปลอดภัย</h2>
+<ul>
+<li>รหัสผ่านเก็บแบบเข้ารหัสทางเดียว (hash + salt) ร้านเองก็มองไม่เห็นรหัสผ่านของคุณ</li>
+<li>ใส่รหัสผ่านผิดหลายครั้ง ระบบพักการเข้าสู่ระบบของบัญชีนั้นชั่วคราว · การเข้าสู่ระบบมีอายุ 30 วัน และใช้ได้พร้อมกันไม่เกิน 2 เครื่อง</li>
+<li>ไฟล์สำรองข้อมูลของแต่ละร้านแยกไฟล์กัน ดึงได้เฉพาะเมื่อเข้าสู่ระบบด้วยบัญชีของร้านนั้น</li>
+<li>หน้าเว็บตั้งค่าความปลอดภัย (Content Security Policy) ไม่ให้ส่งข้อมูลไปเว็บไซต์อื่น และไม่ให้เว็บอื่นนำหน้าระบบไปซ้อน</li>
+<li>ตั้ง PIN ล็อกหน้าจอได้ที่ "สำรอง / กู้คืนข้อมูล" เหมาะกับคอมที่ใช้ร่วมกัน</li>
+<li>คำแนะนำ: ใช้รหัสผ่านที่ไม่ซ้ำกับเว็บอื่น ออกจากระบบเมื่อใช้เครื่องสาธารณะ และสำรองข้อมูลเป็นระยะ</li>
+</ul>
+
+<h2>6. สิทธิของคุณ</h2>
 <p>คุณขอดู แก้ไข หรือลบข้อมูลบัญชีของคุณได้ทุกเมื่อ โดยติดต่อร้านทาง LINE <a href="https://line.me/R/ti/p/%40856tvnxs" target="_blank" rel="noopener">@856tvnxs</a> หรือเพจ <a href="https://www.facebook.com/Exceldatamaster" target="_blank" rel="noopener">Excel Data Master</a> โดยแจ้งอีเมลที่ใช้สมัคร</p>
 
-<h2>6. การคำนวณในเครื่องมือ</h2>
+<h2>7. การคำนวณในเครื่องมือ</h2>
 <p class="muted">ผลคำนวณภาษี ประกันสังคม และยอดต่าง ๆ เป็นการคำนวณตามอัตราทั่วไปเพื่อช่วยอำนวยความสะดวก ผู้ใช้ควรตรวจสอบความถูกต้องก่อนนำไปใช้ยื่นภาษีหรือออกเอกสารทางกฎหมาย</p>
 </div>
 </main>

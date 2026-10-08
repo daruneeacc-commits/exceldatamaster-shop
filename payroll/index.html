@@ -2,6 +2,10 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<script src="../assets/lock.js?v=2"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>คำนวณเงินเดือน · Excel Data Master</title>
 <meta name="description" content="คำนวณเงินเดือนพร้อมสลิป ประกันสังคม 5% ภาษีหัก ณ ที่จ่ายรายเดือน OT เบี้ยขยัน ค่าคอม หักขาด ลา มาสาย และสรุปยอดสะสมทั้งปี พิมพ์สลิปเป็น PDF ได้ทันที">
@@ -479,7 +483,7 @@ $("#delEmp").onclick=()=>{const e=empById(ui.sel);if(!e)return;if(!confirm(`ล�
   emps=emps.filter(x=>x.id!==e.id);Object.values(recs).forEach(R=>delete R[e.id]);svEmps();svRecs();ui.sel=emps[0]?emps[0].id:null;svUi();renderAll();toast("ลบแล้ว")};
 $$("#viewSeg button").forEach(b=>b.onclick=()=>{ui.view=b.dataset.v;svUi();renderPaper()});
 $("#printBtn").onclick=()=>{if(!$("#pages .page"))return;const wasHidden=!$("#previewWrap").classList.contains("show");$("#previewWrap").classList.add("show");setTimeout(()=>{window.print();if(wasHidden&&innerWidth<980&&$(".mtabs .on").dataset.mt==="edit")$("#previewWrap").classList.remove("show")},60)};
-function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="/assets/vendor/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
 // ดาวน์โหลดเป็น Excel: เงินเดือนงวดนี้ + สะสมทั้งปี + รายชื่อพนักงาน (เปิดใน Google ชีตได้)
 function exportExcel(){
   if(!emps.length)return toast("ยังไม่มีพนักงาน");
@@ -538,6 +542,6 @@ renderAll();
 window.__pay={pit,bahtText,calcMonth,calcUpTo,exportExcel,get emps(){return emps},get co(){return co}};
 })();
 </script>
-<script src="../assets/member.js?v=43" defer></script>
+<script src="../assets/member.js?v=45" defer></script>
 </body>
 </html>

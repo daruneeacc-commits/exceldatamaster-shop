@@ -132,7 +132,7 @@ let cur=null,last=null;
 function run(r){const X=data(),t=r.asof&&st.t>today()?today():st.t;const R=r.book?book(X,r.book,st.f,t):r.run(X,st.f,t);R.rows=R.rows||[];return R}
 const cell=(v,ty)=>v===""||v==null?"":ty==="n"?fmt(v):ty==="q"?(+v).toLocaleString("th-TH",{maximumFractionDigits:3}):ty==="d"?thD(v):String(v);
 function totals(R){const T={};R.cols.forEach(c=>{if(c[3])T[c[1]]=r2(R.rows.reduce((a,x)=>a+n(x[c[1]]),0))});return T}
-function renderRpt(){const id=(/[?&]r=([\w-]+)/.exec(location.hash)||[])[1],gk=(/[?&]g=(\w+)/.exec(location.hash)||[])[1];cur=id&&ALL[id]?ALL[id]:null;const grp=cur?GK[cur.gk]:GK[gk]||null;
+function renderRpt(){const id=(/[?&]r=([\w-]+)/.exec(location.hash)||[])[1],gk=(/[?&]g=(\w+)/.exec(location.hash)||[])[1];cur=id&&ALL[id]?ALL[id]:null;if(cur&&cur.link){const l=cur.link;cur=null;return go(l)}const grp=cur?GK[cur.gk]:GK[gk]||null;
   $("#rpHome").hidden=!!cur;$("#rpView").hidden=!cur;$("#rpPer").textContent=perTxt(cur);
   $("#rpP").value=st.p;$("#rpF").value=st.f;$("#rpT").value=st.t;$("#rpCustom").hidden=st.p!=="cu";
   $$("#rpBar [data-only]").forEach(e=>e.hidden=!cur);$("#rpBar").classList.toggle("nod",!!(cur&&cur.nodate));
@@ -170,7 +170,7 @@ $("#rpPrint").onclick=()=>{if(!cur||!last)return;const R=last.view,T=last.T,S=LS
   f.onload=()=>{const w=f.contentWindow;const go2=()=>{try{w.focus();w.print()}catch(e){toast("พิมพ์ไม่ได้ ลองใหม่อีกครั้ง")}};(w.document.fonts&&w.document.fonts.ready?w.document.fonts.ready:Promise.resolve()).then(()=>setTimeout(go2,150))};f.srcdoc=html};
 
 /* ---------- Excel ---------- */
-function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="/assets/vendor/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
 $("#rpXls").onclick=()=>{if(!cur||!last)return;toast("กำลังสร้างไฟล์ Excel...");loadXLSX().then(XL=>{const R=last.view,T=last.T,S=LS.get("edm_bill_seller",{})||{};
   const aoa=[[S.name||""],[cur.t],[perTxt(cur)],[],R.cols.map(c=>c[0])].concat(R.rows.map(x=>R.cols.map(c=>{const v=x[c[1]];return v===""||v==null?"":(c[2]==="n"||c[2]==="q")?n(v):c[2]==="d"?thD(v):String(v)})));
   if(Object.keys(T).length&&R.rows.length)aoa.push(R.cols.map((c,i)=>i===0?"รวม":c[3]?T[c[1]]:""));

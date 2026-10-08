@@ -2,6 +2,10 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<script src="../assets/lock.js?v=2"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>เปิดบิลออนไลน์ · Excel Data Master</title>
 <meta name="description" content="เปิดบิล ใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ ใบกำกับภาษี สำหรับธุรกิจซื้อมาขายไปและงานบริการ คำนวณ VAT และหัก ณ ที่จ่ายให้อัตโนมัติ พิมพ์เป็น PDF ได้ทันที">
@@ -129,7 +133,7 @@ table.p-items .c{text-align:center}
   .paper{box-shadow:none;margin:0;transform:none!important;zoom:1!important;width:210mm;min-height:297mm}
 }
 </style>
-<script src="../assets/suggest.js?v=43"></script>
+<script src="../assets/suggest.js?v=45"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -474,7 +478,7 @@ $("#pickCust").onclick=()=>{const cs=LS.get(K.cust,[]);openDlg("เลือก�
     $$("[data-cp]").forEach(b=>b.onclick=()=>{doc.cust=Object.assign({},cs[+b.dataset.cp]);dlg.close();renderAll()})};
   if(cs.length){draw("");$("#cq").oninput=e=>draw(e.target.value.toLowerCase())}};
 /* ---------- ดาวน์โหลดเป็น Excel (เปิดใน Google ชีตได้) ---------- */
-function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="/assets/vendor/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
 function exportExcel(){
   const docs=LS.get(K.docs,[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))||String(a.no).localeCompare(String(b.no)));
   if(!docs.length)return toast("ยังไม่มีเอกสารที่บันทึกไว้");
@@ -519,7 +523,7 @@ const DEMO={
       ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
 };
 function loadDemo(mode){
-  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=43#demo&back=/bill/";return}
+  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=45#demo&back=/bill/";return}
   const has=LS.get(K.docs,[]).length;
   if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
   const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);
@@ -587,6 +591,6 @@ window.__bill={calc,bahtText,exportExcel,loadDemo,get doc(){return doc}};
 renderAll();bindSuggest();
 })();
 </script>
-<script src="../assets/member.js?v=43" defer></script>
+<script src="../assets/member.js?v=45" defer></script>
 </body>
 </html>
