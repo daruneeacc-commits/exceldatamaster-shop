@@ -173,6 +173,7 @@ function calcDoc(d){const sub=r2((d.items||[]).reduce((a,it)=>a+r2(num(it.q)*num
 const calcPur=p=>calcDoc({items:(p.lines||[]).map(l=>({q:l.q,p:l.p})),vat:p.vat,wht:p.wht,billDisc:0});
 const BT={QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับภาษี",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับภาษี/ใบเสร็จ"};
 const isInvoice=d=>d.type==="IV"||d.type==="IT";
+const isCashSale=d=>(d.type==="IT"&&d.term==="cash")||d.type==="RC"||d.type==="TX";
 // เอกสารรับเงินที่อ้างถึงใบแจ้งหนี้ (เช่น แปลง IV → TX ในหน้าเปิดบิล)
 function receiptsFor(d){return D.docs.filter(x=>(x.type==="RC"||x.type==="TX")&&x.ref&&x.ref===d.no)}
 function arInfo(d){const c=calcDoc(d);const pays=A.pay.filter(p=>p.dir==="in"&&p.docId===d.id);let got=r2(pays.reduce((a,p)=>a+num(p.amount)+num(p.wht),0));
@@ -204,8 +205,8 @@ const EXP_CATS=["ค่าเช่า","ค่าน้ำ-ไฟ","ค่า�
 
 /* ---------- เงินสด-ธนาคาร ---------- */
 function cashMoves(){const L=[];
-  A.pay.forEach(p=>{let label="",party="";if(p.dir==="in"){const d=D.docs.find(x=>x.id===p.docId);label="รับชำระ "+(d?d.no:"");party=d?d.cust.name:""}else{const pu=A.pur.find(x=>x.id===p.purId);label="จ่าย "+(pu?pu.no:"");party=pu?pu.sup.name:""}
-    L.push({id:p.id,src:"pay",date:p.date,acc:p.accId,amt:p.dir==="in"?num(p.amount):-num(p.amount),label,party,note:p.note||""})});
+  A.pay.forEach(p=>{let label="",party="";if(p.dir==="in"){const d=D.docs.find(x=>x.id===p.docId);label=(p.src==="bill"?"ขายเงินสด ":"รับชำระ ")+(d?d.no:"");party=d?d.cust.name:""}else{const pu=A.pur.find(x=>x.id===p.purId);label="จ่าย "+(pu?pu.no:"");party=pu?pu.sup.name:""}
+    L.push({id:p.id,src:"pay",bill:p.src==="bill",date:p.date,acc:p.accId,amt:p.dir==="in"?num(p.amount):-num(p.amount),label,party,note:p.src==="bill"?(p.method||""):p.note||""})});
   A.cash.forEach(c=>L.push({id:c.id,src:"cash",date:c.date,acc:c.accId,amt:c.dir==="in"?num(c.amount):-num(c.amount),label:c.cat||(c.dir==="in"?"รายรับอื่น":"รายจ่ายอื่น"),party:"",note:c.note||""}));
   // ขายเงินสด (ใบเสร็จที่ไม่ได้อ้างใบแจ้งหนี้) ถือว่ารับเงินเข้าบัญชีเงินสดแล้ว ถ้ายังไม่ได้บันทึก
   return L.sort((a,b)=>String(b.date).localeCompare(String(a.date)))}
@@ -241,11 +242,12 @@ function vHome(){
   const B=balances();let money=0;Object.values(B).forEach(v=>money+=v);
   const months=[];for(let k=5;k>=0;k--)months.push(ymShift(ui.ym,-k));const PS=months.map(m=>({m,p:pnl(m,SC)}));
   const mx=Math.max(1,...PS.map(x=>Math.max(x.p.sales,x.p.cogs+x.p.expT+x.p.payroll)));
+  let sCash=0,sCredit=0;salesDocs().forEach(d=>{if(!String(d.date).startsWith(ui.ym))return;const b=calcDoc(d).base;if(isCashSale(d))sCash+=b;else sCredit+=b});
   const cust={};salesDocs().forEach(d=>{if(!String(d.date).startsWith(ui.ym))return;const n=d.cust.name||"ลูกค้าทั่วไป";cust[n]=(cust[n]||0)+calcDoc(d).base});
   const topC=Object.entries(cust).sort((a,b)=>b[1]-a[1]).slice(0,5);
   const expRows=Object.entries(P.exp).sort((a,b)=>b[1]-a[1]);
   $("#view").innerHTML=`<div class="kpis">
-    <div class="kpi"><span>ยอดขาย (ก่อน VAT)</span><b>฿${fmt0(P.sales)}</b><span>${P.salesN} เอกสาร</span></div>
+    <div class="kpi"><span>ยอดขาย (ก่อน VAT)</span><b>฿${fmt0(P.sales)}</b><span>💵 เงินสด ${fmt0(sCash)} · 📄 เชื่อ ${fmt0(sCredit)}</span></div>
     <div class="kpi"><span>ต้นทุนขาย (จากสต๊อก)</span><b>฿${fmt0(P.cogs)}</b></div>
     <div class="kpi ${P.gross>=0?"pos":"neg"}"><span>กำไรขั้นต้น</span><b>฿${fmt0(P.gross)}</b><span>${P.sales?Math.round(P.gross/P.sales*100):0}% ของยอดขาย</span></div>
     <div class="kpi"><span>ค่าใช้จ่าย + เงินเดือน</span><b>฿${fmt0(P.expT+P.payroll)}</b></div>
@@ -388,7 +390,7 @@ function vCash(){
   $("#view").innerHTML=`<div class="kpis k4">${A.accounts.map(a=>`<div class="kpi"><span>${a.type==="cash"?"💵":"🏦"} ${esc(a.name)}</span><b>฿${fmt(B[a.id])}</b></div>`).join("")}<div class="kpi pos"><span>รับเข้าเดือนนี้</span><b>฿${fmt0(tin)}</b></div><div class="kpi neg"><span>จ่ายออกเดือนนี้</span><b>฿${fmt0(tout)}</b></div></div>
   <div class="card"><h2>🏦 รับ-จ่ายเงิน <small>${ymLabel(ui.ym)}</small><span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm ghost edm-lock" data-cashnew="in">＋ รายรับอื่น</button><button class="btn sm ghost edm-lock" data-cashnew="out">＋ รายจ่ายอื่น</button><button class="btn sm ghost edm-lock" id="accMgr">⚙️ บัญชีเงิน</button></span></h2>
     ${pr&&!prPaid?`<div class="card" style="background:var(--warnbg);box-shadow:none;padding:12px"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between"><span>💰 เงินเดือน ${ymLabel(ui.ym)} จากหน้าคำนวณเงินเดือน: รับสุทธิรวม <b>฿${fmt(pr.net)}</b> (${pr.n} คน)</span><button class="btn sm main edm-lock" id="payPayroll">บันทึกจ่ายเงินเดือน</button></div></div>`:""}
-    ${moves.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>วันที่</th><th>รายการ</th><th>บัญชี</th><th class="r">รับเข้า</th><th class="r">จ่ายออก</th><th></th></tr></thead><tbody>${moves.map(m=>`<tr><td>${thD(m.date)}</td><td>${esc(m.label)}${m.party?" · "+esc(m.party):""}${m.note?`<br><span class="note">${esc(m.note)}</span>`:""}</td><td>${esc((A.accounts.find(a=>a.id===m.acc)||{}).name||"")}</td><td class="r pos">${m.amt>0?fmt(m.amt):""}</td><td class="r neg">${m.amt<0?fmt(-m.amt):""}</td><td class="r"><button class="btn sm ghost danger edm-lock" data-delmove="${m.src}:${m.id}">ลบ</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ไม่มีรายการรับ-จ่ายเงินในเดือนนี้</div>`}
+    ${moves.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>วันที่</th><th>รายการ</th><th>บัญชี</th><th class="r">รับเข้า</th><th class="r">จ่ายออก</th><th></th></tr></thead><tbody>${moves.map(m=>`<tr><td>${thD(m.date)}</td><td>${esc(m.label)}${m.party?" · "+esc(m.party):""}${m.note?`<br><span class="note">${esc(m.note)}</span>`:""}</td><td>${esc((A.accounts.find(a=>a.id===m.acc)||{}).name||"")}</td><td class="r pos">${m.amt>0?fmt(m.amt):""}</td><td class="r neg">${m.amt<0?fmt(-m.amt):""}</td><td class="r">${m.bill?`<span class="note" title="แก้ไขหรือลบที่หน้าเปิดบิล">จากบิล</span>`:`<button class="btn sm ghost danger edm-lock" data-delmove="${m.src}:${m.id}">ลบ</button>`}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ไม่มีรายการรับ-จ่ายเงินในเดือนนี้</div>`}
     <div class="note">รายการรับชำระจากลูกหนี้และการจ่ายเจ้าหนี้จะขึ้นที่นี่อัตโนมัติ · ลบรายการรับชำระ ยอดลูกหนี้จะกลับมาเป็นค้างรับ</div></div>`;
   if($("#payPayroll"))$("#payPayroll").onclick=()=>cashDlg("out",{cat:"จ่ายเงินเดือน",amount:pr.net,note:"เงินเดือน "+ymLabel(ui.ym)+" "+pr.n+" คน",ym:ui.ym});
   $("#accMgr").onclick=accDlg;
@@ -481,7 +483,7 @@ function demo(){
     if(p.kind==="stock"&&p.status==="received")p.lines.forEach((l,j)=>stx.push({id:uid("t"),type:"in",date:p.recvDate,pid:l.pid,qty:l.q,cost:l.p,ref:p.no,party:sup,note:"",src:"acc",docId:p.id,ts:ts++}));return p};
   const expn=(dd,sup,cat,desc,amt,o)=>pur(dd,sup,"",[],Object.assign({kind:"expense",cat,lines:[{pid:"",d:desc,q:1,p:amt}],taxInv:false,taxNo:"",vat:"none"},o||{}));
   const payOut=(p,dd,accId,part)=>{const c=calcPur(p);const amt=part||c.net;acc.pay.push({id:uid("y"),dir:"out",purId:p.id,date:day(dd),amount:amt,wht:part?0:c.wht,accId,note:""})};
-  const docs=[];const sale=(dd,cust,lines,o)=>{const d=day(dd);const doc=Object.assign({id:uid("d"),mode:"goods",type:"IT",no:no("IT",d),date:d,due:addDays(d,15),ref:"",cust,items:lines.map(([k,q])=>({pid:pid(k),d:items[k].name,q,u:items[k].unit,p:items[k].price,disc:0})),vat:"ex",billDisc:0,wht:0,notes:"",saved:true,updated:ts++},o||{});doc._total=calcDoc(doc).net;docs.unshift(doc);
+  const docs=[];const sale=(dd,cust,lines,o)=>{const d=day(dd);const doc=Object.assign({id:uid("d"),mode:"goods",type:"IT",no:no("IT",d),date:d,due:addDays(d,15),ref:"",cust,items:lines.map(([k,q])=>({pid:pid(k),d:items[k].name,q,u:items[k].unit,p:items[k].price,disc:0})),vat:"ex",billDisc:0,wht:0,notes:"",saved:true,updated:ts++,term:"credit"},o||{});doc._total=calcDoc(doc).net;docs.unshift(doc);
     doc.items.forEach((l,j)=>stx.push({id:uid("t"),type:"out",date:d,pid:l.pid,qty:l.q,cost:0,ref:doc.no,party:cust.name,note:"",src:"bill",docId:doc.id,ts:ts++}));return doc};
   const C1={name:"บริษัท ดีดี ออฟฟิศ จำกัด",addr:"55 ถ.ลาดพร้าว แขวงจอมพล เขตจตุจักร กรุงเทพฯ 10900",tax:"0105561111111",branch:"สำนักงานใหญ่",contact:""},C2={name:"ร้านกาแฟ บ้านสวน",addr:"19 ถ.นิมมานเหมินท์ ต.สุเทพ อ.เมือง จ.เชียงใหม่ 50200",tax:"3501200123456",branch:"",contact:""},C3={name:"โรงเรียนอนุบาลดวงดาว",addr:"201 ม.5 ต.บางเมือง อ.เมือง จ.สมุทรปราการ 10270",tax:"0994000333333",branch:"สำนักงานใหญ่",contact:""},C4={name:"ลูกค้าหน้าร้าน",addr:"",tax:"",branch:"",contact:""};
   // ซื้อสินค้าเข้าสต๊อก
@@ -502,14 +504,16 @@ function demo(){
   const paidIn=(doc,dd,accId,amt,m)=>acc.pay.push({id:uid("y"),dir:"in",docId:doc.id,date:day(dd),amount:amt||calcDoc(doc).total,wht:0,accId,method:m||"โอนเงิน",note:amt?"แบ่งจ่ายงวดแรก":""});
   paidIn(sale(-50,C1,[[0,120],[1,15],[2,60]]),-38,"bank1");
   paidIn(sale(-44,C3,[[5,60],[6,80],[7,60],[8,80]],{billDisc:500}),-30,"bank1");
-  paidIn(sale(-36,C4,[[0,40],[2,20]],{due:day(-36)}),-36,"cash",0,"เงินสด");
+  const cashSale=(dd,cust,lines,m,accId)=>{const doc=sale(dd,cust,lines,{term:"cash",due:"",payMeth:m,payAcc:accId});const c=calcDoc(doc);acc.pay.push({id:"yb"+doc.id,dir:"in",docId:doc.id,date:doc.date,amount:c.net,wht:c.wht,accId,method:m,note:"ขายเงินสด",src:"bill"});return doc};
+  cashSale(-36,C4,[[0,40],[2,20]],"เงินสด","cash");
   paidIn(sale(-30,C5,[[0,100],[1,20],[3,40],[4,40]]),-16,"bank1");
   paidIn(sale(-25,C3,[[5,80],[6,120],[7,80],[8,120]]),-12,"bank1");
   sale(-18,C2,[[3,90],[4,90]]);
   paidIn(sale(-14,C1,[[0,150],[1,20],[2,50]]),-4,"bank1",20000);
   sale(-9,C5,[[0,30],[1,10],[3,40]]);
   sale(-6,C3,[[5,50],[6,60],[8,60]]);
-  paidIn(sale(-2,C4,[[0,40],[1,6]],{due:day(-2)}),-2,"cash",0,"เงินสด");
+  cashSale(-2,C4,[[0,40],[1,6]],"QR พร้อมเพย์","bank1");
+  cashSale(-1,C2,[[3,20],[4,20]],"เงินสด","cash");
   // ตรวจนับ
   stx.push({id:uid("t"),type:"adj",date:day(-8),pid:pid(2),qty:-2,cost:0,note:"นับได้น้อยกว่าระบบ 2 เล่ม · แฟ้มชำรุด",ts:ts++});
   // เงินเดือน (สรุปจากหน้าคำนวณเงินเดือน)
@@ -550,6 +554,6 @@ render();
 window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get A(){return A},get D(){return D}};
 })();
 </script>
-<script src="../assets/member.js?v=19" defer></script>
+<script src="../assets/member.js?v=20" defer></script>
 </body>
 </html>
