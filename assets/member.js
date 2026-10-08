@@ -4,7 +4,7 @@
  */
 (function () {
   "use strict";
-  var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbySRUPpZ5a61ceeLN6d3X2WRVeDV3w3n7u6whm71rSS2byTJl3YZEXfqUmwMukHpNgQ/exec";
+  var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbyz6_ZopPRL_XG7q2rXNQSHtlDP7C2fcZT6vxtn_wI1xLUU7cHHcM6noL58q4rSpok9/exec";
   var PRICE = 199, DAYS = 30, TRIAL = 7, KEY = "edm_member";
   var BASE = (document.querySelector('script[src*="member.js"]') || {}).src || "";
   BASE = BASE.replace(/assets\/member\.js.*$/, "");
