@@ -167,7 +167,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
 }
 </style>
-<script src="../assets/suggest.js?v=33"></script>
+<script src="../assets/suggest.js?v=35"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -336,9 +336,9 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=33"},stock:{src:"/stock/?v=33",sv:"home"},stockrep:{src:"/stock/?v=33",sv:"report"},
-  ar:{src:"/account/?v=33",v:"ar"},tax:{src:"/account/?v=33",v:"tax"},buy:{src:"/account/?v=33",v:"buy"},cash:{src:"/account/?v=33",v:"cash"},pnl:{src:"/account/?v=33",v:"home"},
-  cost:{src:"/account/?v=33",v:"cost"},exp:{src:"/account/?v=33",v:"exp"},bank:{src:"/account/?v=33",v:"bank"},cashv:{src:"/account/?v=33",v:"cashv"},petty:{src:"/account/?v=33",v:"petty"}};
+const ROUTES={bill:{src:"/bill/?v=35"},stock:{src:"/stock/?v=35",sv:"home"},stockrep:{src:"/stock/?v=35",sv:"report"},
+  ar:{src:"/account/?v=35",v:"ar"},tax:{src:"/account/?v=35",v:"tax"},buy:{src:"/account/?v=35",v:"buy"},cash:{src:"/account/?v=35",v:"cash"},pnl:{src:"/account/?v=35",v:"home"},
+  cost:{src:"/account/?v=35",v:"cost"},exp:{src:"/account/?v=35",v:"exp"},bank:{src:"/account/?v=35",v:"bank"},cashv:{src:"/account/?v=35",v:"cashv"},petty:{src:"/account/?v=35",v:"petty"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -453,7 +453,7 @@ function renderHome(){
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=33#demo&back=/app/"};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=35#demo&back=/app/"};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- ข้อมูลหลัก: ลูกค้า / เจ้าหนี้ / สินค้า-บริการ ---------- */
 const MD={
@@ -628,6 +628,6 @@ $("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
-<script src="../assets/member.js?v=34" defer></script>
+<script src="../assets/member.js?v=35" defer></script>
 </body>
 </html>
