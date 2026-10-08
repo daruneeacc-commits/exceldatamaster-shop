@@ -5,7 +5,7 @@
 (function () {
   "use strict";
   var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbyz6_ZopPRL_XG7q2rXNQSHtlDP7C2fcZT6vxtn_wI1xLUU7cHHcM6noL58q4rSpok9/exec";
-  var TOOLS = [["bill", "🧾 เปิดบิล"], ["stock", "📦 สต๊อกสินค้า"], ["account", "📒 บัญชีร้านค้า"], ["payroll", "💰 คำนวณเงินเดือน"]];
+  var TOOLS = [["app", "🏪 ระบบร้านค้า (รวมทุกระบบ)"], ["bill", "🧾 เปิดบิล"], ["stock", "📦 สต๊อกสินค้า"], ["account", "📒 บัญชีร้านค้า"], ["payroll", "💰 คำนวณเงินเดือน"]];
   var PRICE = 199, DAYS = 30, TRIAL = 7, KEY = "edm_member";
   var BASE = (document.querySelector('script[src*="member.js"]') || {}).src || "";
   BASE = BASE.replace(/assets\/member\.js.*$/, "");
@@ -17,6 +17,10 @@
   };
   try { localStorage.removeItem(KEY); localStorage.removeItem("edm_known"); } catch (e) {} // ล้างค่าที่เวอร์ชันก่อนเคยจำไว้
   var me = LS.get();
+  // เปิดอยู่ในกรอบของ "ระบบร้านค้า" (/app/) บนเว็บเดียวกัน → หน้าหลักจัดการเข้าสู่ระบบให้
+  var EMBED = false; try { EMBED = window.top !== window && window.top.location.origin === location.origin; } catch (e) {}
+  function tellFrames() { for (var i = 0; i < window.frames.length; i++) { try { window.frames[i].postMessage({ edm: "member" }, location.origin); } catch (e) {} } }
+  var _set = LS.set; LS.set = function (v) { _set(v); tellFrames(); };
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function thDate(ms) { var d = new Date(ms); return d.getDate() + " " + ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."][d.getMonth()] + " " + (d.getFullYear() + 543); }
   function daysLeft() { return me && me.exp ? Math.ceil((me.exp - Date.now()) / 864e5) : 0; }
@@ -50,6 +54,7 @@
     "body.edm-ro #saveBtn,body.edm-ro #convertBtn,body.edm-ro #newBtn,body.edm-ro #addEmp,body.edm-ro #delEmp,body.edm-ro #demo,body.edm-ro #empCard{display:none!important}" +
     "body.edm-locked main,body.edm-locked .mtabs{filter:blur(2px);pointer-events:none}" +
     "@media print{.edm-gate,.edm-bar,.edm-chip{display:none!important}}";
+  css += ".edm-embed header.top{position:static}.edm-embed header.top .brand,.edm-embed header.top .nav>a{display:none!important}.edm-embed header.top .nav{margin-left:auto}.edm-embed .tabs{top:8px!important}";
   var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
   /* ---------- gate (สมัคร / เข้าสู่ระบบ) ---------- */
@@ -63,7 +68,7 @@
   }
   function closeGate() { if (gate) { gate.remove(); gate = null; } document.body.classList.remove("edm-locked"); }
   function renderGate() {
-    var tool = /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
+    var tool = /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
     var h = '<div class="edm-card">';
     if (mode === "sent") {
       h += '<div style="font-size:2.4rem;line-height:1">✅</div><h2>สมัครเรียบร้อย · รอร้านเปิดใช้งาน</h2><p>' + esc(note) + '</p>' +
@@ -194,7 +199,24 @@
     }).catch(function () { if (loud) toast("เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง"); });
   }
 
+  function startEmbed() {
+    document.documentElement.classList.add("edm-embed");
+    var hd = document.querySelector("header.top"), nav = hd && hd.querySelector(".nav");
+    if (hd && (!nav || !nav.querySelector("button"))) hd.style.display = "none";
+    var lite = function () { me = LS.get(); document.body.classList.toggle("edm-ro", !!me && expired()); markFree(); };
+    lite();
+    window.addEventListener("message", function (e) { if (e.origin === location.origin && e.data && e.data.edm === "member") lite(); });
+    // ลิงก์ไปหน้าอื่นของระบบ → ให้ระบบร้านค้าเปลี่ยนเมนู
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("a[href]"); if (!a || a.target === "_blank") return;
+      var u; try { u = new URL(a.href, location.href); } catch (x) { return; }
+      if (u.origin !== location.origin) return;
+      var m = /^\/(bill|stock|account|payroll)?\/?$/.exec(u.pathname); if (!m) return;
+      e.preventDefault(); window.top.postMessage({ edm: "go", tool: m[1] || "home", hash: u.hash }, location.origin);
+    }, true);
+  }
   function start() {
+    if (EMBED) return startEmbed();
     if (!me || !me.token) {
       // เปิดหน้าสมัคร/เข้าสู่ระบบ เมื่อระบบหลังร้านพร้อมแล้วเท่านั้น
       // (ถ้ายังไม่ได้ติดตั้งโค้ดสมาชิก จะไม่ขึ้นหน้าต่างเลย และใช้งานได้ตามปกติ — ไม่มีหน้าต่างขึ้นแล้วเด้งหาย)

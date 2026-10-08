@@ -111,6 +111,7 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
   <a class="brand" href="/">📊 Excel Data Master <small>· บัญชีร้านค้า</small></a>
   <nav class="nav">
     <button class="btn sm ghost" id="dataBtn">💾 ข้อมูล</button>
+    <a class="btn sm main" href="/app/">🏪 ระบบร้านค้า</a>
     <a class="btn sm ghost" href="/bill/">🧾 เปิดบิล</a>
     <a class="btn sm ghost" href="/stock/">📦 สต๊อก</a>
     <a class="btn sm ghost" href="/payroll/">💰 เงินเดือน</a>
@@ -531,6 +532,13 @@ function demo(){
 }
 
 /* ---------- events ---------- */
+// เปิดอยู่ใน "ระบบร้านค้า" (/app/) → ใช้เมนูด้านข้างของระบบร้านค้าแทนแท็บ
+const EMB=(()=>{try{return top!==self&&top.location.origin===location.origin}catch(e){return false}})();
+if(EMB)$("#tabs").style.display="none";
+window.edmDemo=()=>demo();
+window.edmView=v=>{if(!["home","ar","buy","cash","tax"].includes(v))return;load();ui.v=v;svU();render();scrollTo(0,0)};
+const fromHash=()=>{const m=/v=(\w+)/.exec(location.hash);if(m)edmView(m[1])};
+window.addEventListener("hashchange",fromHash);fromHash();
 $("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;svU();render();scrollTo(0,0)};
 $("#ym").onchange=e=>{ui.ym=e.target.value||today().slice(0,7);svU();render()};
 let dlgOpen=false;function openDlg(t,h){$("#dlgTitle").textContent=t;$("#dlgBody").oninput=null;$("#dlgBody").onchange=null;$("#dlgBody").innerHTML=h;if(!dlg.open)dlg.showModal()}
@@ -554,6 +562,6 @@ render();
 window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get A(){return A},get D(){return D}};
 })();
 </script>
-<script src="../assets/member.js?v=20" defer></script>
+<script src="../assets/member.js?v=21" defer></script>
 </body>
 </html>

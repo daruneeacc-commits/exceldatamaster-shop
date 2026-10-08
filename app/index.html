@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ระบบร้านค้า · Excel Data Master</title>
+<meta name="description" content="ระบบร้านค้าออนไลน์ครบในที่เดียว: เปิดบิล ใบกำกับภาษี ขายเงินสด/ขายเชื่อ ภาษีซื้อ-ขาย สต๊อกสินค้า ซื้อสินค้า ลูกหนี้ เงินสด-ธนาคาร กำไรขาดทุน และเงินเดือน">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#EEF1EF;--accent:#127A4B;--accent-ink:#fff;--accent-soft:#E3F4EA;--warn:#8A5A00;--warnbg:#FFF4DC;--side:#0F1513;--side-ink:#DDE5E1;--side-muted:#7F8B86;--side-on:#1F2A26}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--accent-soft:#14261C;--warn:#F0C27A;--warnbg:#2A2416;--side:#0A0D0C;--side-ink:#DDE5E1;--side-muted:#7F8B86;--side-on:#1A2320}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif;overflow:hidden}
+a{color:inherit}button{font:inherit;color:inherit}
+header.top{height:56px;background:var(--card);border-bottom:1px solid var(--line);position:relative;z-index:30}
+.top .in{height:100%;padding:0 14px;display:flex;align-items:center;gap:10px}
+.brand{font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand small{font-weight:500;color:var(--muted)}
+.nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.burger{display:none;border:0;background:var(--soft);border-radius:10px;width:38px;height:38px;cursor:pointer;font-size:1.1rem}
+.btn{border:0;border-radius:999px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:var(--soft);color:var(--ink);font-size:.9rem;justify-content:center}
+.btn.main{background:var(--accent);color:var(--accent-ink)}.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:6px 12px;font-size:.84rem}
+.shell{display:flex;height:calc(100% - 56px)}
+aside{width:236px;flex:none;background:var(--side);color:var(--side-ink);overflow-y:auto;padding:14px 10px 20px;display:flex;flex-direction:column;gap:2px}
+aside .grp{font-size:.72rem;letter-spacing:.04em;color:var(--side-muted);padding:14px 12px 4px;font-weight:600}
+aside .grp:first-child{padding-top:2px}
+aside a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;text-decoration:none;font-weight:500;font-size:.92rem;color:var(--side-ink)}
+aside a:hover{background:var(--side-on)}
+aside a.on{background:var(--accent);color:var(--accent-ink);font-weight:600}
+aside a .n{margin-left:auto;font-size:.7rem;font-weight:700;min-width:20px;height:20px;border-radius:999px;display:grid;place-items:center;background:rgba(255,255,255,.12);padding:0 6px}
+aside a.on .n{background:rgba(0,0,0,.18)}
+aside .step{width:22px;height:22px;flex:none;border-radius:999px;display:grid;place-items:center;font-size:.72rem;font-weight:700;background:rgba(255,255,255,.1)}
+aside a.on .step{background:rgba(0,0,0,.18)}
+aside .foot{margin-top:auto;padding:16px 12px 0;font-size:.78rem;color:var(--side-muted)}
+aside .foot a{display:inline;padding:0;color:var(--side-ink);text-decoration:underline}
+.stage{flex:1;min-width:0;position:relative;background:var(--bg)}
+.stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .15s}
+.stage iframe.show{opacity:1;pointer-events:auto}
+#home{position:absolute;inset:0;overflow-y:auto;display:none}
+#home.show{display:block}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 90px;display:flex;flex-direction:column;gap:16px}
+.hello h1{margin:0;font-size:1.5rem;line-height:1.3}.hello p{margin:2px 0 0;color:var(--muted)}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);min-width:0}
+.card h2{font-size:1.02rem;margin:0 0 10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.card h2 small{font-weight:400;color:var(--muted);font-size:.82rem}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.kpi{background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:0 0 0 1px var(--line);min-width:0;cursor:pointer;text-align:left;border:0}
+.kpi span{display:block;color:var(--muted);font-size:.82rem}.kpi b{display:block;font-size:1.35rem;line-height:1.35;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi small{color:var(--muted);font-size:.78rem}
+.kpi.warn b{color:var(--warn)}
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;counter-reset:s}
+.fs{position:relative;border-radius:14px;padding:14px;background:var(--soft);display:flex;flex-direction:column;gap:6px;cursor:pointer;border:0;text-align:left;min-width:0}
+.fs:hover{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.fs .no{width:28px;height:28px;border-radius:999px;background:var(--card);display:grid;place-items:center;font-weight:700;font-size:.85rem;box-shadow:0 0 0 1px var(--line)}
+.fs.done .no{background:var(--accent);color:var(--accent-ink);box-shadow:none}
+.fs b{font-size:.98rem}.fs span{color:var(--muted);font-size:.84rem;line-height:1.5}
+.fs em{font-style:normal;font-size:.78rem;font-weight:600;color:var(--accent);margin-top:auto}
+.fs:not(:last-child)::after{content:"→";position:absolute;right:-10px;top:18px;color:var(--muted);font-weight:700;z-index:1}
+.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+.qa{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.qa button{border:0;border-radius:12px;padding:12px;background:var(--soft);cursor:pointer;text-align:left;font-weight:600;font-size:.9rem;display:flex;gap:8px;align-items:center}
+.qa button:hover{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.list{display:flex;flex-direction:column}
+.li{display:flex;justify-content:space-between;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);font-size:.9rem;align-items:center}
+.li:last-child{border-bottom:0}.li small{color:var(--muted);display:block;font-size:.78rem}
+.li .r{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tag{font-size:.72rem;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.tag.cr{background:var(--warnbg);color:var(--warn)}
+.empty{color:var(--muted);font-size:.9rem;padding:8px 0}
+.demo{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--accent-soft);border-radius:16px;padding:14px 16px}
+.demo p{margin:0;font-size:.9rem}
+.tabbar{display:none}
+.scrim{display:none}
+@media(max-width:900px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.flow{grid-template-columns:repeat(2,minmax(0,1fr))}.fs:nth-child(2)::after{display:none}.grid2{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+  .burger{display:inline-grid;place-items:center}
+  .brand small{display:none}
+  aside{position:fixed;left:0;top:0;bottom:0;z-index:50;transform:translateX(-102%);transition:transform .2s;width:260px;padding-top:18px}
+  body.menu aside{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:45}
+  .shell{height:calc(100% - 56px - 62px)}
+  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;height:62px;background:var(--card);border-top:1px solid var(--line);z-index:30;padding-bottom:env(safe-area-inset-bottom)}
+  .tabbar button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:.7rem;color:var(--muted);font-weight:600;cursor:pointer}
+  .tabbar button i{font-style:normal;font-size:1.2rem;line-height:1.2}
+  .tabbar button.on{color:var(--accent)}
+  .wrap{padding-bottom:24px}
+  .fs::after{display:none}
+}
+.edm-chip button{white-space:nowrap}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <button class="burger" id="burger" aria-label="เมนู">☰</button>
+  <a class="brand" href="#/home">🏪 ระบบร้านค้า <small id="shopName">· Excel Data Master</small></a>
+  <nav class="nav"></nav>
+</div></header>
+
+<div class="shell">
+  <aside id="side">
+    <div class="grp">เริ่มต้น</div>
+    <a href="#/home" data-r="home"><span class="step">🏠</span>หน้าหลัก</a>
+    <div class="grp">1 · ขาย</div>
+    <a href="#/bill" data-r="bill"><span class="step">1</span>เปิดบิล / ใบกำกับภาษี</a>
+    <a href="#/ar" data-r="ar"><span class="step">💳</span>ลูกหนี้ / รับเงิน<span class="n" id="nAr" hidden></span></a>
+    <div class="grp">2 · ภาษี</div>
+    <a href="#/tax" data-r="tax"><span class="step">2</span>ภาษีซื้อ-ขาย (ภ.พ.30)</a>
+    <div class="grp">3 · สินค้า</div>
+    <a href="#/stock" data-r="stock"><span class="step">3</span>สต๊อกสินค้า<span class="n" id="nLow" hidden></span></a>
+    <a href="#/buy" data-r="buy"><span class="step">🛒</span>ซื้อสินค้า / ค่าใช้จ่าย</a>
+    <div class="grp">4 · การเงิน</div>
+    <a href="#/cash" data-r="cash"><span class="step">🏦</span>เงินสด-ธนาคาร</a>
+    <a href="#/pnl" data-r="pnl"><span class="step">📊</span>กำไรขาดทุน</a>
+    <a href="#/payroll" data-r="payroll"><span class="step">💰</span>เงินเดือนพนักงาน</a>
+    <div class="foot">ข้อมูลทุกระบบเก็บในเบราว์เซอร์ของเครื่องนี้ · สำรองได้ที่ปุ่ม 💾 ในหน้าบัญชี<br><br><a href="/">← ร้าน Excel Data Master</a> · <a href="/privacy/">ความเป็นส่วนตัว</a></div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="stage" id="stage">
+    <section id="home"><div class="wrap">
+      <div class="hello"><h1 id="hi">สวัสดีค่ะ</h1><p id="hiSub">ระบบร้านค้าครบในที่เดียว เปิดบิล → ภาษี → สต๊อก → บัญชี ข้อมูลเชื่อมกันอัตโนมัติ</p></div>
+
+      <div class="kpis" id="kpis"></div>
+
+      <div class="card">
+        <h2>เริ่มใช้งานตามขั้นตอน <small id="flowNote"></small></h2>
+        <div class="flow" id="flow"></div>
+      </div>
+
+      <div class="demo" id="demoBox" hidden><p><b>ยังไม่มีข้อมูล?</b> ลองใส่ข้อมูลตัวอย่างร้านขายเครื่องเขียน ให้ทุกระบบเห็นภาพการทำงานเชื่อมกัน</p><button class="btn main" id="demoBtn">✨ ลองใส่ข้อมูลตัวอย่าง</button></div>
+
+      <div class="grid2">
+        <div class="card"><h2>บิลล่าสุด <button class="btn sm ghost" data-go="bill">ดูทั้งหมด →</button></h2><div class="list" id="recent"></div></div>
+        <div class="card"><h2>ทำรายการด่วน</h2>
+          <div class="qa">
+            <button data-go="bill">🧾 เปิดบิลขาย</button>
+            <button data-go="ar">💳 รับเงินจากลูกค้า</button>
+            <button data-go="buy">🛒 บันทึกซื้อ / ค่าใช้จ่าย</button>
+            <button data-go="stock">📦 รับ-เบิกสินค้า</button>
+            <button data-go="tax">📑 ดูภาษีเดือนนี้</button>
+            <button data-go="pnl">📊 ดูกำไรขาดทุน</button>
+          </div>
+          <h2 style="margin-top:16px">สินค้าใกล้หมด</h2><div class="list" id="low"></div>
+        </div>
+      </div>
+    </div></section>
+  </div>
+</div>
+
+<nav class="tabbar" id="tabbar">
+  <button data-go="home"><i>🏠</i>หน้าหลัก</button>
+  <button data-go="bill"><i>🧾</i>เปิดบิล</button>
+  <button data-go="tax"><i>📑</i>ภาษี</button>
+  <button data-go="stock"><i>📦</i>สต๊อก</button>
+  <button data-go="more"><i>☰</i>เพิ่มเติม</button>
+</nav>
+<div id="toast" hidden style="position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:90;font-size:.9rem"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}};
+const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0};
+const r2=n=>Math.round((n+Number.EPSILON)*100)/100;
+const fmt0=n=>Math.round(n).toLocaleString("th-TH");
+const fmt=n=>(+n||0).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
+
+/* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
+const ROUTES={bill:{src:"/bill/"},stock:{src:"/stock/"},payroll:{src:"/payroll/"},
+  ar:{src:"/account/",v:"ar"},tax:{src:"/account/",v:"tax"},buy:{src:"/account/",v:"buy"},cash:{src:"/account/",v:"cash"},pnl:{src:"/account/",v:"home"}};
+const frames={};
+function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
+function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
+let cur="";
+function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0];if(r!=="home"&&!ROUTES[r])r="home";cur=r;
+  document.body.classList.remove("menu");
+  $$("aside a").forEach(a=>a.classList.toggle("on",a.dataset.r===r));
+  $$("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.go===r||(b.dataset.go==="more"&&!["home","bill","tax","stock"].includes(r))));
+  $("#home").classList.toggle("show",r==="home");
+  Object.values(frames).forEach(f=>f.classList.remove("show"));
+  if(r==="home"){renderHome();document.title="ระบบร้านค้า · Excel Data Master";return}
+  const R=ROUTES[r],f=frameFor(R.src);
+  if(f.dataset.ready)f.classList.add("show");else f.addEventListener("load",()=>{if(cur===r)f.classList.add("show")},{once:true});
+  if(R.v)setAccView(f,R.v);
+  const a=$(`aside a[data-r="${r}"]`);document.title=(a?a.textContent.replace(/^\S+\s*/,"").replace(/\d+$/,""):"")+" · ระบบร้านค้า";
+}
+window.addEventListener("hashchange",route);
+const go=r=>{if(r==="more"){document.body.classList.add("menu");return}location.hash="#/"+r};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(b){e.preventDefault();go(b.dataset.go)}});
+$("#burger").onclick=()=>document.body.classList.toggle("menu");$("#scrim").onclick=()=>document.body.classList.remove("menu");
+// ลิงก์ข้ามระบบจากในหน้าย่อย (เช่น ปุ่ม "ไปหน้าสต๊อก") ให้เปลี่ยนเมนูแทนการเปิดหน้าใหม่
+window.addEventListener("message",e=>{if(e.origin!==location.origin||!e.data||e.data.edm!=="go")return;const t=e.data.tool,v=(/v=(\w+)/.exec(e.data.hash||"")||[])[1];
+  if(t==="account"){go(v==="ar"||v==="tax"||v==="buy"||v==="cash"?v:"pnl")}else if(ROUTES[t])go(t);else go("home")});
+
+/* ---------- หน้าหลัก ---------- */
+function calcDoc(d){const sub=r2((d.items||[]).reduce((a,it)=>a+r2(num(it.q)*num(it.p)-num(it.disc)),0));const after=r2(Math.max(0,sub-num(d.billDisc)));
+  let vat=0,total=after,base=after;if(d.vat==="ex"){vat=r2(after*.07);total=r2(after+vat)}else if(d.vat==="in"){base=r2(after/1.07);vat=r2(after-base);total=after}
+  const wht=r2(base*num(d.wht)/100);return{base,vat,total,wht,net:r2(total-wht)}}
+function stockBal(){const B={};LS.get("edm_stock_tx",[]).forEach(t=>{const q=num(t.qty);B[t.pid]=(B[t.pid]||0)+(t.type==="out"?-q:q)});return B}
+function renderHome(){
+  const docs=LS.get("edm_bill_docs",[]),seller=LS.get("edm_bill_seller",{}),items=LS.get("edm_stock_items",[]),A=LS.get("edm_acc",{})||{};
+  const ym=today().slice(0,7),inv=new Set(docs.filter(d=>d.type==="IV"||d.type==="IT").map(d=>d.no));
+  const sales=docs.filter(d=>d.type==="IV"||d.type==="IT"||((d.type==="RC"||d.type==="TX")&&!(d.ref&&inv.has(d.ref))));
+  const isCash=d=>(d.type==="IT"&&d.term==="cash")||d.type==="RC"||d.type==="TX";
+  let s=0,sc=0,n=0,vat=0;sales.forEach(d=>{if(!String(d.date).startsWith(ym))return;const c=calcDoc(d);s+=c.base;n++;if(isCash(d))sc+=c.base});
+  docs.forEach(d=>{if(String(d.date).startsWith(ym)&&d.vat!=="none"&&(d.type==="TX"||(d.type==="IT"&&seller.vat)))vat+=calcDoc(d).vat});
+  // ลูกหนี้ค้าง
+  const pays=(A.pay||[]).filter(p=>p.dir==="in");let ar=0,arN=0;
+  docs.filter(d=>d.type==="IV"||d.type==="IT").forEach(d=>{const c=calcDoc(d);let got=pays.filter(p=>p.docId===d.id).reduce((a,p)=>a+num(p.amount)+num(p.wht),0);
+    docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!pays.some(p=>p.rcDocId===x.id))got+=calcDoc(x).total});const left=r2(c.total-got);if(left>0.009){ar+=left;arN++}});
+  const B=stockBal();const low=items.filter(i=>num(i.min)>0&&(B[i.id]||0)<=num(i.min));
+  $("#nAr").hidden=!arN;$("#nAr").textContent=arN;$("#nLow").hidden=!low.length;$("#nLow").textContent=low.length;
+  $("#shopName").textContent=seller.name?"· "+seller.name:"· Excel Data Master";
+  $("#hi").textContent=seller.name?"สวัสดีค่ะ "+seller.name:"สวัสดีค่ะ 👋";
+  const m=MS[+ym.slice(5)-1];
+  $("#kpis").innerHTML=`<button class="kpi" data-go="pnl"><span>ยอดขาย ${m} (ก่อน VAT)</span><b>฿${fmt0(s)}</b><small>${n} บิล · เงินสด ${fmt0(sc)} · เชื่อ ${fmt0(s-sc)}</small></button>
+   <button class="kpi" data-go="tax"><span>ภาษีขาย ${m}</span><b>฿${fmt(vat)}</b><small>${seller.vat?"ดูภาษีซื้อและยอดที่ต้องชำระ →":"ยังไม่ได้จด VAT"}</small></button>
+   <button class="kpi ${ar>0?"warn":""}" data-go="ar"><span>ลูกหนี้ค้างรับ</span><b>฿${fmt0(ar)}</b><small>${arN} ใบ</small></button>
+   <button class="kpi ${low.length?"warn":""}" data-go="stock"><span>สินค้าใกล้หมด</span><b>${low.length} รายการ</b><small>จากทั้งหมด ${items.length} รายการ</small></button>`;
+  const st=[
+    {done:!!(seller.name&&seller.addr),t:"ตั้งค่าร้าน",d:"ชื่อร้าน ที่อยู่ เลขผู้เสียภาษี โลโก้ และการจด VAT",go:"bill",cta:"กรอกในหน้าเปิดบิล"},
+    {done:items.length>0,t:"เพิ่มสินค้า",d:"รหัส ชื่อ ราคาทุน ราคาขาย และจุดแจ้งเตือนใกล้หมด",go:"stock",cta:"ไปหน้าสต๊อก"},
+    {done:sales.length>0,t:"เปิดบิลขาย",d:"เลือกขายเงินสดหรือขายเชื่อ ระบบตัดสต๊อกและลงบัญชีให้",go:"bill",cta:"เปิดบิล"},
+    {done:sales.length>0&&!!seller.vat,t:"ดูภาษีสิ้นเดือน",d:"ภาษีขาย ภาษีซื้อ ยอดยื่น ภ.พ.30 และหัก ณ ที่จ่าย",go:"tax",cta:"ดูรายงานภาษี"}];
+  $("#flow").innerHTML=st.map((x,i)=>`<button class="fs ${x.done?"done":""}" data-go="${x.go}"><span class="no">${x.done?"✓":i+1}</span><b>${x.t}</b><span>${x.d}</span><em>${x.cta} →</em></button>`).join("");
+  $("#flowNote").textContent=st.filter(x=>x.done).length+"/4 ขั้นตอน";
+  $("#demoBox").hidden=docs.length>0||items.length>0;
+  const rec=docs.filter(d=>d.type!=="QT").slice().sort((a,b)=>(b.updated||0)-(a.updated||0)||String(b.date).localeCompare(String(a.date))).slice(0,6);
+  $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
+  $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
+}
+$("#demoBtn").onclick=()=>{const f=frameFor("/account/");const run=()=>{try{f.contentWindow.edmDemo();setTimeout(()=>{Object.values(frames).forEach(x=>{if(x!==f)try{x.contentWindow.location.reload()}catch(e){}});renderHome()},300)}catch(e){}};
+  if(f.dataset.ready)run();else f.addEventListener("load",run,{once:true})};
+window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
+function renderBadges(){const h=$("#home").classList.contains("show");renderHome();$("#home").classList.toggle("show",h)}
+// จำว่าหน้าย่อยโหลดเสร็จแล้ว
+new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
+route();
+</script>
+<script src="../assets/member.js?v=21" defer></script>
+</body>
+</html>
