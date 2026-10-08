@@ -198,7 +198,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 <script src="../assets/suggest.js?v=45"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261008-2144";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261008-2221";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}location.replace("/app/?u="+j.v+location.hash);return}
@@ -263,7 +263,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
-    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 21:44 น.</small></span></a>
+    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 22:21 น.</small></span></a>
       <div class="side-links"><a href="/">🏠 หน้าร้าน</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></div></div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -322,7 +322,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
       <div class="hello"><h1>💾 สำรอง / กู้คืนข้อมูล</h1><p>ข้อมูลทุกระบบบันทึกในเครื่องนี้ และเมื่อเข้าสู่ระบบสมาชิก จะสำรองขึ้นระบบร้านให้อัตโนมัติ ใช้ต่อจากเครื่องอื่นได้</p></div>
       <div class="card"><h2>ข้อมูลในเครื่องนี้ <small id="dtLast"></small></h2><div class="stats" id="dtStats"></div>
         <div class="acts"><button class="btn main" id="dtBk">⬇️ ดาวน์โหลดไฟล์สำรองทั้งหมด</button><label class="btn ghost">⬆️ กู้คืนจากไฟล์สำรอง<input type="file" id="dtImp" accept=".json" hidden></label><button class="btn ghost" id="dtXls">📊 ดาวน์โหลด Excel ทุกระบบ</button></div>
-        <p class="help" id="dtCloud" style="margin-top:10px"></p><p class="help" style="margin-top:8px">ไฟล์สำรองเก็บได้ครบทุกระบบในไฟล์เดียว ใช้ย้ายไปเครื่องใหม่ได้ · ไฟล์ Excel ใช้ส่งผู้ทำบัญชีหรือเปิดใน Google ชีต</p></div>
+        <p class="help" id="dtCloud" style="margin-top:10px"></p><p class="help" id="dtVer" style="margin-top:4px"></p><p class="help" style="margin-top:8px">ไฟล์สำรองเก็บได้ครบทุกระบบในไฟล์เดียว ใช้ย้ายไปเครื่องใหม่ได้ · ไฟล์ Excel ใช้ส่งผู้ทำบัญชีหรือเปิดใน Google ชีต</p></div>
       <div class="card"><h2>🔒 ล็อกหน้าจอด้วย PIN <small id="lkState"></small></h2>
         <p class="help">กันคนอื่นเปิดดูข้อมูลร้านจากเครื่องนี้ เช่น คอมที่ใช้ร่วมกันหน้าร้าน · ระบบจะล็อกเมื่อเปิดเบราว์เซอร์ใหม่ และเมื่อไม่ได้ใช้งานตามเวลาที่ตั้ง · เก็บเฉพาะค่าเข้ารหัสของ PIN ไม่เก็บ PIN จริง</p>
         <div class="form" style="margin-top:10px"><div class="fl"><label id="lkL1">ตั้ง PIN (ตัวเลข 4–12 หลัก)</label><input class="in" id="lkPin" inputmode="numeric" maxlength="12" autocomplete="off" style="-webkit-text-security:disc"></div>
@@ -686,7 +686,8 @@ $("#lkSet").onclick=async()=>{const L=window.EDM_LOCK;if(!L)return;const a=$("#l
   await L.set(a,$("#lkIdle").value);renderLock();$("#lkMsg").textContent="ตั้ง PIN แล้ว ✓";toast("เปิดล็อกหน้าจอด้วย PIN แล้ว")};
 $("#lkOff").onclick=async()=>{const L=window.EDM_LOCK;if(!(await L.check($("#lkOld").value.trim())))return $("#lkMsg").textContent="ใส่ PIN ปัจจุบันเพื่อยกเลิก";L.clear();renderLock();toast("ยกเลิก PIN แล้ว")};
 $("#lkNow").onclick=()=>window.EDM_LOCK&&EDM_LOCK.lockNow();
-function renderData(){wipeClose();renderLock();const A=LS.get("edm_acc",{})||{};const n=(k)=>(LS.get(k,[])||[]).length;
+function renderData(){wipeClose();renderLock();
+  {const el=$("#dtVer");el.textContent="ระบบหลังร้าน: กำลังตรวจ...";new Promise((ok,no)=>{let n=0;const t=setInterval(()=>{const M=window.EDM_MEMBER;if(M&&M.ping){clearInterval(t);ok(M.ping())}else if(++n>40){clearInterval(t);no()}},100)}).then(x=>x).then(r=>{const v=String(r&&r.version||"");const ok=/^v(1[89]|[2-9]\d)/.test(v);el.innerHTML="ระบบหลังร้าน: <b>"+esc(v||"ไม่ทราบเวอร์ชัน")+"</b> "+(ok?"✅ ระบบความปลอดภัยล่าสุด":"⚠️ ยังเป็นเวอร์ชันเก่า · วางโค้ด v18 แล้วทำให้ใช้งานได้ (เวอร์ชันใหม่)")}).catch(()=>{el.textContent="ระบบหลังร้าน: เชื่อมต่อไม่ได้ (ตรวจอินเทอร์เน็ต)"})}const A=LS.get("edm_acc",{})||{};const n=(k)=>(LS.get(k,[])||[]).length;
   $("#dtStats").innerHTML=[["เอกสารขาย",n("edm_bill_docs")],["สินค้า",n("edm_stock_items")],["ซื้อ / ค่าใช้จ่าย",(A.pur||[]).length],["ลูกค้า",n("edm_bill_customers")]].map(([t,v])=>`<div><b>${v}</b><span>${t}</span></div>`).join("");
   const last=LS.get("edm_last_backup","");$("#dtLast").textContent=last?"ดาวน์โหลดไฟล์สำรองล่าสุด "+thD(last):"";
   const s=LS.get("edm_bill_seller",{});$("#dtKeep").checked=!!s.name&&!/ตัวอย่าง/.test(s.name);
@@ -716,6 +717,6 @@ new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.ad
 route();
 </script>
 <script src="reports.js?v=45"></script>
-<script src="../assets/member.js?v=45" defer></script>
+<script src="../assets/member.js?v=46" defer></script>
 </body>
 </html>
