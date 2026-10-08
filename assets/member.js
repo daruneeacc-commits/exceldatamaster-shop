@@ -4,7 +4,7 @@
  */
 (function () {
   "use strict";
-  var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbyz6_ZopPRL_XG7q2rXNQSHtlDP7C2fcZT6vxtn_wI1xLUU7cHHcM6noL58q4rSpok9/exec";
+  var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbzQsMaqyTsenNm4XIIPFJRm4pcGFycMyLZQesGhIsFfHGjDb0WhvBPvPvRLEuvL5ibE/exec";
   var TOOLS = [["app", "🏪 ระบบร้านค้า (รวมทุกระบบ)"], ["bill", "🧾 เปิดบิล"], ["stock", "📦 สต๊อกสินค้า"], ["account", "📒 บัญชีร้านค้า"], ["payroll", "💰 คำนวณเงินเดือน"]];
   var PRICE = 199, DAYS = 30, TRIAL = 7, KEY = "edm_member";
   var BASE = (document.querySelector('script[src*="member.js"]') || {}).src || "";
