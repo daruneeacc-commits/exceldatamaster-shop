@@ -83,18 +83,25 @@ dialog .db{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
 .preview-wrap{position:sticky;top:70px}
 .paper-scroll{overflow:auto;background:#d9dedb;border-radius:16px;padding:16px;max-height:calc(100vh - 100px)}
 .paper{width:210mm;min-height:297mm;margin:0 auto;background:#fff;color:#111;padding:14mm 14mm 12mm;box-shadow:0 10px 30px -12px rgba(0,0,0,.35);font-size:10.5pt;line-height:1.55;transform-origin:top center;display:flex;flex-direction:column}
-.p-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
-.p-seller{display:flex;gap:12px;align-items:flex-start;max-width:60%}
-.p-seller img{max-width:70px;max-height:70px;object-fit:contain}
-.p-seller b{font-size:12.5pt}
-.p-title{text-align:right}
-.p-title h1{margin:0;font-size:17pt;color:var(--paper-accent,#127A4B);line-height:1.25}
-.p-title .sub{font-size:9pt;color:#555}
-.p-meta{display:grid;grid-template-columns:1.4fr 1fr;gap:12px;margin-top:12px}
-.p-box{border:1px solid #d6dbd8;border-radius:8px;padding:8px 10px}
-.p-box .lb{font-size:8.5pt;color:#666}
-.p-kv{display:grid;grid-template-columns:auto 1fr;gap:2px 10px}
-.p-kv span:nth-child(odd){color:#666}
+/* หัวบิล: ซ้ายข้อมูลร้าน (ยืดตามพื้นที่) · ขวาชื่อเอกสาร (กว้างคงที่) · ตัวอักษรย่อเองเมื่อชื่อ/ที่อยู่ยาว */
+.p-head{display:grid;grid-template-columns:minmax(0,1fr) 74mm;gap:8mm;align-items:start;padding-bottom:4mm;border-bottom:1.5px solid var(--paper-accent,#127A4B)}
+.p-seller{display:flex;gap:4mm;align-items:flex-start;min-width:0}
+.p-seller img{width:22mm;height:22mm;object-fit:contain;flex:none}
+.p-seller .info{min-width:0;flex:1}
+.p-name{display:block;font-size:13pt;line-height:1.3;font-weight:700;overflow-wrap:anywhere}
+.p-addr{font-size:9pt;line-height:1.45;color:#333;margin-top:1mm;white-space:pre-line;text-wrap:pretty}
+.p-line{font-size:9pt;line-height:1.45;color:#333;overflow-wrap:anywhere}
+.p-title{text-align:right;min-width:0}
+.p-title h1{margin:0;font-size:17pt;line-height:1.25;color:var(--paper-accent,#127A4B);white-space:nowrap}
+.p-title .sub{font-size:8.5pt;color:#555;letter-spacing:.04em;margin-top:.5mm}
+.p-title .copy{display:inline-block;margin-top:2mm;font-size:8.5pt;border:1px solid #bbb;border-radius:4px;padding:0 6px;color:#444}
+.p-meta{display:grid;grid-template-columns:minmax(0,1fr) 74mm;gap:4mm;margin-top:4mm}
+.p-box{border:1px solid #d6dbd8;border-radius:8px;padding:2.5mm 3.5mm;min-width:0}
+.p-box .lb{font-size:8pt;color:#666;letter-spacing:.02em}
+.p-cname{display:block;font-size:11pt;line-height:1.35;font-weight:700;overflow-wrap:anywhere}
+.p-kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1mm 3mm;align-content:start;font-size:9.5pt}
+.p-kv span:nth-child(odd){color:#666;white-space:nowrap}
+.p-kv>*:nth-child(even){overflow-wrap:anywhere}
 table.p-items{width:100%;border-collapse:collapse;margin-top:12px;font-variant-numeric:tabular-nums}
 table.p-items th{background:var(--paper-accent,#127A4B);color:#fff;font-weight:600;padding:6px 8px;font-size:9.5pt;text-align:left}
 table.p-items td{padding:6px 8px;border-bottom:1px solid #e6e9e7;vertical-align:top}
@@ -380,12 +387,12 @@ function renderPaper(c){
   const p=$("#paper");p.style.setProperty("--paper-accent",col);
   const rows=c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}</td><td class="r">${(+num(l.q)).toLocaleString("th-TH")}${g&&l.u?" "+esc(l.u):""}</td><td class="r">${fmt(num(l.p))}</td>${g?`<td class="r">${num(l.disc)?fmt(num(l.disc)):"-"}</td>`:""}<td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="${g?6:5}" style="color:#999;text-align:center;padding:18px">ยังไม่มีรายการ</td></tr>`;
   p.innerHTML=`<div class="p-head">
-    <div class="p-seller">${seller.logo?`<img src="${seller.logo}" alt="">`:""}<div><b>${esc(seller.name||"ชื่อกิจการของคุณ")}</b><div style="white-space:pre-line">${esc(seller.addr)}</div>
-      ${seller.tax?`<div>เลขประจำตัวผู้เสียภาษี ${esc(seller.tax)}${seller.branch?" ("+esc(seller.branch)+")":""}</div>`:""}${seller.phone||seller.contact?`<div>${esc([seller.phone&&"โทร "+seller.phone,seller.contact].filter(Boolean).join(" · "))}</div>`:""}</div></div>
-    <div class="p-title"><h1>${tName(doc.type,doc)}</h1><div class="sub">${tEn(doc.type,doc)}${T.tax&&seller.vat?"<br>(ต้นฉบับ)":""}</div></div></div>
+    <div class="p-seller">${seller.logo?`<img src="${seller.logo}" alt="">`:""}<div class="info"><b class="p-name" data-fit="13,9.5,2">${esc(seller.name||"ชื่อกิจการของคุณ")}</b>${seller.addr?`<div class="p-addr" data-fit="9,7.5,3">${esc(seller.addr)}</div>`:""}
+      ${seller.tax?`<div class="p-line">เลขประจำตัวผู้เสียภาษี ${esc(seller.tax)}${seller.branch?" ("+esc(seller.branch)+")":""}</div>`:""}${seller.phone?`<div class="p-line" data-fit="9,7,1">โทร ${esc(seller.phone)}</div>`:""}${seller.contact?`<div class="p-line" data-fit="9,7,1">${esc(seller.contact)}</div>`:""}</div></div>
+    <div class="p-title"><h1 data-fit="17,11,1">${tName(doc.type,doc)}</h1><div class="sub">${tEn(doc.type,doc)}</div>${T.tax&&seller.vat?`<span class="copy">ต้นฉบับ</span>`:""}</div></div>
   <div class="p-meta">
-    <div class="p-box"><div class="lb">${doc.type==="QT"?"เสนอราคาให้":"ลูกค้า"}</div><b>${esc(doc.cust.name||"-")}</b><div style="white-space:pre-line">${esc(doc.cust.addr)}</div>
-      ${doc.cust.tax?`<div>เลขประจำตัวผู้เสียภาษี ${esc(doc.cust.tax)}${doc.cust.branch?" ("+esc(doc.cust.branch)+")":""}</div>`:""}${doc.cust.contact?`<div>${esc(doc.cust.contact)}</div>`:""}</div>
+    <div class="p-box"><div class="lb">${doc.type==="QT"?"เสนอราคาให้":"ลูกค้า"}</div><b class="p-cname" data-fit="11,8.5,2">${esc(doc.cust.name||"-")}</b>${doc.cust.addr?`<div class="p-addr" data-fit="9.5,7.5,3">${esc(doc.cust.addr)}</div>`:""}
+      ${doc.cust.tax?`<div class="p-line">เลขประจำตัวผู้เสียภาษี ${esc(doc.cust.tax)}${doc.cust.branch?" ("+esc(doc.cust.branch)+")":""}</div>`:""}${doc.cust.contact?`<div class="p-line" data-fit="9,7,1">${esc(doc.cust.contact)}</div>`:""}</div>
     <div class="p-box p-kv"><span>เลขที่</span><b>${esc(doc.no)}</b><span>วันที่</span><span>${thDate(doc.date)}</span>${tm==="cash"?`<span>การชำระ</span><span>ขายเงินสด · ${esc(doc.payMeth||"เงินสด")}</span>`:cdays>0?`<span>เงื่อนไข</span><span>ขายเชื่อ ${cdays} วัน</span>`:""}${T.due&&doc.due?`<span>${T.due}</span><span>${thDate(doc.due)}</span>`:""}${doc.ref?`<span>อ้างอิง</span><span>${esc(doc.ref)}</span>`:""}</div></div>
   <table class="p-items"><thead><tr><th class="c" style="width:34px">#</th><th>${g?"รายการสินค้า":"รายการบริการ"}</th><th class="r">จำนวน</th><th class="r">ราคา/หน่วย</th>${g?`<th class="r">ส่วนลด</th>`:""}<th class="r">จำนวนเงิน</th></tr></thead><tbody>${rows}</tbody></table>
   <div class="p-sum"><div class="p-words">(${bahtText(c.wht?c.net:c.total)})${c.wht?`<div style="font-weight:400;font-size:8.5pt;color:#666">ยอดชำระสุทธิหลังหัก ณ ที่จ่าย</div>`:""}${tm==="cash"&&doc.type==="IT"?`<div class="p-paid">✓ ได้รับเงินถูกต้องแล้ว</div>`:""}</div>
@@ -398,7 +405,15 @@ function renderPaper(c){
   <div class="p-foot">สร้างด้วย exceldatamaster.com</div>`;
   fitPaper();
 }
-function fitPaper(){const P=$("#paper");P.style.zoom="";const w=$(".paper-scroll").clientWidth-32,pw=P.offsetWidth;if(!w||w<=0)return;const s=Math.min(1,w/pw);P.style.zoom=s<1?String(s):""}
+// ย่อตัวอักษรที่ยาวเกินจำนวนบรรทัดที่กำหนด (data-fit="ขนาดปกติ,ขนาดเล็กสุด,จำนวนบรรทัด" หน่วย pt)
+function fitTexts(){const P=$("#paper");if(!P||!P.offsetWidth)return;const z=P.style.zoom;P.style.zoom="";
+  P.querySelectorAll("[data-fit]").forEach(el=>{const[mx,mn,ln]=el.dataset.fit.split(",").map(Number);let f=mx;el.style.fontSize=f+"pt";if(ln===1)el.style.whiteSpace="nowrap";
+    const over=()=>ln===1?el.scrollWidth>el.clientWidth+1:el.getBoundingClientRect().height>parseFloat(getComputedStyle(el).lineHeight)*ln+1;
+    while(over()&&f>mn){f=Math.round((f-0.5)*10)/10;el.style.fontSize=f+"pt"}
+    if(ln===1&&over()&&el.tagName!=="H1")el.style.whiteSpace=""});   // ยาวมากจริง ๆ → ยอมขึ้นบรรทัดใหม่
+  P.style.zoom=z}
+window.addEventListener("beforeprint",fitTexts);
+function fitPaper(){const P=$("#paper");P.style.zoom="";fitTexts();const w=$(".paper-scroll").clientWidth-32,pw=P.offsetWidth;if(!w||w<=0)return;const s=Math.min(1,w/pw);P.style.zoom=s<1?String(s):""}
 
 function update(){const c=calc(doc);renderTotals(c);renderPaper(c);LS.set(K.draft,doc)}
 function renderAll(){renderTypes();fillForm();renderItems();update()}
