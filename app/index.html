@@ -42,8 +42,14 @@ aside a .n{margin-left:auto;font-size:.7rem;font-weight:700;min-width:20px;heigh
 aside a.on .n{background:rgba(0,0,0,.18)}
 aside .step{width:22px;height:22px;flex:none;border-radius:999px;display:grid;place-items:center;font-size:.72rem;font-weight:700;background:rgba(255,255,255,.1)}
 aside a.on .step{background:rgba(0,0,0,.18)}
-aside .foot{margin-top:auto;padding:16px 12px 0;font-size:.78rem;color:var(--side-muted)}
-aside .foot a{display:inline;padding:0;color:var(--side-ink);text-decoration:underline}
+aside .foot{margin-top:auto;padding:18px 4px 0;font-size:.78rem;color:var(--side-muted)}
+aside .foot .side-brand{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);text-decoration:none;color:var(--side-ink)}
+aside .foot .side-brand:hover{background:rgba(255,255,255,.1)}
+aside .foot .side-brand img{width:40px;height:40px;border-radius:50%;flex:none;object-fit:cover;box-shadow:0 0 0 2px rgba(255,255,255,.85)}
+aside .foot .side-brand b{display:block;font-size:.88rem;font-weight:700;letter-spacing:.01em}aside .foot .side-brand small{display:block;font-size:.72rem;color:var(--side-muted);margin-top:1px}
+aside .foot .side-links{display:flex;justify-content:center;gap:4px;margin-top:8px;flex-wrap:wrap}
+aside .foot .side-links a{display:inline-block;padding:4px 7px;border-radius:8px;font-size:.72rem;color:var(--side-muted);text-decoration:none;font-weight:500}aside .foot .side-links a:hover{color:var(--side-ink);background:rgba(255,255,255,.06)}
+.brand-logo{width:26px;height:26px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 0 1.5px var(--line)}
 .stage{flex:1;min-width:0;position:relative;background:var(--bg)}
 .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .15s}
 .stage iframe.show{opacity:1;pointer-events:auto}
@@ -184,7 +190,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 <body>
 <header class="top"><div class="in">
   <button class="burger" id="burger" aria-label="เมนู">☰</button>
-  <a class="brand" href="#/home">🏪 ระบบร้านค้า <small id="shopName">· Excel Data Master</small></a>
+  <a class="brand" href="#/home"><img class="brand-logo" src="../assets/logo.jpg" alt="">ระบบร้านค้า <small id="shopName">· Excel Data Master</small></a>
   <div class="search" id="search"><span class="ic">🔍</span><input id="q" type="search" autocomplete="off" placeholder="ค้นหาเลขที่บิล ลูกค้า สินค้า ผู้ขาย..." aria-label="ค้นหา"><kbd>/</kbd><div class="sr" id="sr" hidden></div></div>
   <button class="sbtn" id="sbtn" aria-label="ค้นหา">🔍</button>
   <nav class="nav"></nav>
@@ -229,7 +235,8 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
-    <div class="foot">ข้อมูลทุกระบบเก็บในเบราว์เซอร์ของเครื่องนี้ ควรสำรองไว้เป็นระยะ<br><br><a href="/">← ร้าน Excel Data Master</a> · <a href="/privacy/">ความเป็นส่วนตัว</a></div>
+    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small></span></a>
+      <div class="side-links"><a href="/">🏠 หน้าร้าน</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></div></div>
   </aside>
   <div class="scrim" id="scrim"></div>
 
