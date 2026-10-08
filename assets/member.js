@@ -70,6 +70,19 @@
     renderGate();
   }
   function closeGate() { if (gate) { gate.remove(); gate = null; } document.body.classList.remove("edm-locked"); }
+  // ล้างอีเมลที่พิมพ์/วางมา: ช่องว่าง ตัวอักษรล่องหน @ และ . แบบเต็มความกว้าง ตัวพิมพ์ใหญ่
+  function cleanEmail(v) {
+    return String(v || "").replace(/[\s\u200b-\u200d\u2060\ufeff]/g, "").replace(/[＠]/g, "@").replace(/[．。]/g, ".").replace(/^mailto:/i, "").replace(/[.,;]+$/, "").toLowerCase();
+  }
+  function emailProblem(E) {
+    if (!E) return "กรอกอีเมล";
+    if (/[\u0E00-\u0E7F]/.test(E)) return "อีเมลมีตัวอักษรภาษาไทย ลองเปลี่ยนแป้นพิมพ์เป็นภาษาอังกฤษแล้วพิมพ์ใหม่";
+    if (E.indexOf("@") < 0) return "อีเมลต้องมีเครื่องหมาย @ เช่น name@gmail.com";
+    if (E.split("@").length > 2) return "อีเมลมีเครื่องหมาย @ มากกว่า 1 ตัว";
+    if (!/^[^@]+@[^@]+\.[a-z]{2,}$/.test(E)) return "อีเมลไม่ครบ ตรวจส่วนหลัง @ เช่น @gmail.com";
+    if (/@gmail\.co$|@gmial\.|@gamil\.|@hotmail\.co$/.test(E)) return "ตรวจสะกดอีเมลอีกครั้ง (เช่น @gmail.com)";
+    return "";
+  }
   function renderGate() {
     var tool = /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
     var h = '<div class="edm-card">';
@@ -113,8 +126,10 @@
     if (first && innerWidth > 700) setTimeout(function () { first.focus(); }, 30);
     gate.querySelectorAll(".edm-in").forEach(function (i) { i.onkeydown = function (e) { if (e.key === "Enter") go.click(); }; });
     go.onclick = function () {
-      var E = gate.querySelector("#edmE").value.trim(), P = gate.querySelector("#edmP"), N = gate.querySelector("#edmN");
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(E)) { M.className = "edm-msg err"; M.textContent = "กรอกอีเมลให้ถูกต้อง"; return; }
+      var Ei = gate.querySelector("#edmE"), E = cleanEmail(Ei.value), P = gate.querySelector("#edmP"), N = gate.querySelector("#edmN");
+      Ei.value = E;
+      var bad = emailProblem(E);
+      if (bad) { M.className = "edm-msg err"; M.textContent = bad; Ei.focus(); return; }
       if (P && P.value.length < (mode === "signup" ? 6 : 1)) { M.className = "edm-msg err"; M.textContent = mode === "signup" ? "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร" : "กรอกรหัสผ่าน"; return; }
       go.disabled = true; var t0 = go.textContent; go.textContent = "กำลังดำเนินการ..."; M.className = "edm-msg"; M.textContent = "";
       var req = mode === "signup" ? { a: "signup", email: E, pass: P.value, name: N ? N.value : "" }
