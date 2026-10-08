@@ -174,8 +174,8 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/"},stock:{src:"/stock/"},payroll:{src:"/payroll/"},
-  ar:{src:"/account/",v:"ar"},tax:{src:"/account/",v:"tax"},buy:{src:"/account/",v:"buy"},cash:{src:"/account/",v:"cash"},pnl:{src:"/account/",v:"home"}};
+const ROUTES={bill:{src:"/bill/?v=22"},stock:{src:"/stock/?v=22"},payroll:{src:"/payroll/?v=22"},
+  ar:{src:"/account/?v=22",v:"ar"},tax:{src:"/account/?v=22",v:"tax"},buy:{src:"/account/?v=22",v:"buy"},cash:{src:"/account/?v=22",v:"cash"},pnl:{src:"/account/?v=22",v:"home"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -238,14 +238,13 @@ function renderHome(){
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
 }
-$("#demoBtn").onclick=()=>{const f=frameFor("/account/");const run=()=>{try{f.contentWindow.edmDemo&&f.contentWindow.edmDemo();setTimeout(()=>{Object.values(frames).forEach(x=>{if(x!==f)try{x.contentWindow.location.reload()}catch(e){}});renderHome()},300)}catch(e){}};
-  if(f.dataset.ready)run();else f.addEventListener("load",run,{once:true})};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=22#demo&back=/app/"};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 function renderBadges(){const h=$("#home").classList.contains("show");renderHome();$("#home").classList.toggle("show",h)}
 // จำว่าหน้าย่อยโหลดเสร็จแล้ว
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
-<script src="../assets/member.js?v=21" defer></script>
+<script src="../assets/member.js?v=22" defer></script>
 </body>
 </html>
