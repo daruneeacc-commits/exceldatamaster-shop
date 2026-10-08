@@ -10,9 +10,11 @@
   BASE = BASE.replace(/assets\/member\.js.*$/, "");
 
   var LS = {
-    get: function () { try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { return null; } },
-    set: function (v) { try { v ? localStorage.setItem(KEY, JSON.stringify(v)) : localStorage.removeItem(KEY); } catch (e) {} }
+    // เก็บการเข้าสู่ระบบไว้แค่ระหว่างเปิดเบราว์เซอร์ ปิดแล้วต้องใส่อีเมล+รหัสผ่านใหม่ทุกครั้ง (เครื่องไม่จำ)
+    get: function () { try { return JSON.parse(sessionStorage.getItem(KEY) || "null"); } catch (e) { return null; } },
+    set: function (v) { try { v ? sessionStorage.setItem(KEY, JSON.stringify(v)) : sessionStorage.removeItem(KEY); } catch (e) {} }
   };
+  try { localStorage.removeItem(KEY); localStorage.removeItem("edm_known"); } catch (e) {} // ล้างค่าที่เวอร์ชันก่อนเคยจำไว้
   var me = LS.get();
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function thDate(ms) { var d = new Date(ms); return d.getDate() + " " + ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."][d.getMonth()] + " " + (d.getFullYear() + 543); }
@@ -52,7 +54,7 @@
   /* ---------- gate (สมัคร / เข้าสู่ระบบ) ---------- */
   var gate = null, mode = "signup", note = "";
   function openGate(m, msg) {
-    mode = m || (LS.get() || localStorage.getItem("edm_known") ? "login" : "signup");
+    mode = m || (seen() ? "login" : "signup");
     note = msg || "";
     document.body.classList.add("edm-locked");
     if (!gate) { gate = document.createElement("div"); gate.className = "edm-gate"; gate.setAttribute("role", "dialog"); gate.setAttribute("aria-modal", "true"); document.body.appendChild(gate); }
@@ -68,7 +70,7 @@
         '<button class="edm-btn" data-go="login">ยืนยันแล้ว · เข้าสู่ระบบ</button><button class="edm-link" data-go="signup">ไม่ได้รับอีเมล? ส่งอีกครั้ง</button>';
     } else if (mode === "forgot") {
       h += '<h2>ลืมรหัสผ่าน</h2><p class="edm-muted">ใส่อีเมลที่สมัครไว้ ระบบจะส่งลิงก์ตั้งรหัสผ่านใหม่ให้</p>' +
-        '<input class="edm-in" id="edmE" type="email" autocomplete="email" placeholder="อีเมล" value="' + esc(localStorage.getItem("edm_known") || "") + '">' +
+        '<input class="edm-in" id="edmE" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="อีเมล">' +
         '<button class="edm-btn" id="edmGo">ส่งลิงก์ตั้งรหัสผ่านใหม่</button><div class="edm-msg" id="edmM"></div><button class="edm-link" data-go="login">← กลับไปเข้าสู่ระบบ</button>';
     } else {
       var su = mode === "signup";
@@ -76,9 +78,9 @@
         (note ? '<div class="edm-msg err">' + esc(note) + '</div>' : '') +
         (su ? '<ul class="edm-perks"><li>ใช้ได้ทั้งเปิดบิลและคำนวณเงินเดือน</li><li>ไม่ต้องใส่บัตรเครดิต</li><li>ใช้ต่อเดือนละ ' + PRICE + ' บาท ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
         '<div class="edm-tabs"><button data-go="signup" class="' + (su ? "on" : "") + '">สมัครใหม่</button><button data-go="login" class="' + (su ? "" : "on") + '">เข้าสู่ระบบ</button></div>' +
-        (su ? '<input class="edm-in" id="edmN" autocomplete="organization" placeholder="ชื่อร้าน / ชื่อของคุณ (ไม่บังคับ)">' : '') +
-        '<input class="edm-in" id="edmE" type="email" autocomplete="email" inputmode="email" placeholder="อีเมล" value="' + esc(localStorage.getItem("edm_known") || "") + '">' +
-        '<input class="edm-in" id="edmP" type="password" autocomplete="' + (su ? "new-password" : "current-password") + '" placeholder="' + (su ? "ตั้งรหัสผ่าน (อย่างน้อย 6 ตัว)" : "รหัสผ่าน") + '">' +
+        (su ? '<input class="edm-in" id="edmN" autocomplete="off" placeholder="ชื่อร้าน / ชื่อของคุณ (ไม่บังคับ)">' : '') +
+        '<input class="edm-in" id="edmE" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="email" placeholder="อีเมล">' +
+        '<input class="edm-in" id="edmP" type="password" autocomplete="new-password" placeholder="' + (su ? "ตั้งรหัสผ่าน (อย่างน้อย 6 ตัว)" : "รหัสผ่าน") + '">' +
         '<button class="edm-btn" id="edmGo">' + (su ? "สมัครและเริ่มทดลองใช้ฟรี" : "เข้าสู่ระบบ") + '</button><div class="edm-msg" id="edmM"></div>' +
         (su ? '' : '<button class="edm-link" data-go="forgot" style="align-self:flex-start">ลืมรหัสผ่าน?</button>') +
         '<p class="edm-muted">เราเก็บเฉพาะอีเมลเพื่อจัดการบัญชี ข้อมูลบิลและเงินเดือนของคุณอยู่ในเครื่องนี้เท่านั้น · <a href="' + BASE + 'privacy/" target="_blank" style="color:inherit">นโยบายความเป็นส่วนตัว</a></p>' +
@@ -89,7 +91,7 @@
     gate.querySelectorAll("[data-go]").forEach(function (b) { b.onclick = function () { mode = b.dataset.go; note = ""; renderGate(); }; });
     var go = gate.querySelector("#edmGo"), M = gate.querySelector("#edmM");
     if (!go) return;
-    var first = gate.querySelector(mode === "signup" ? "#edmN" : (gate.querySelector("#edmE").value ? "#edmP" : "#edmE"));
+    var first = gate.querySelector(mode === "signup" ? "#edmN" : "#edmE");
     if (first && innerWidth > 700) setTimeout(function () { first.focus(); }, 30);
     gate.querySelectorAll(".edm-in").forEach(function (i) { i.onkeydown = function (e) { if (e.key === "Enter") go.click(); }; });
     go.onclick = function () {
@@ -102,7 +104,7 @@
         : { a: "login", email: E, pass: P.value, device: deviceName() };
       call(req).then(function (r) {
         go.disabled = false; go.textContent = t0;
-        try { localStorage.setItem("edm_known", E.toLowerCase()); } catch (e) {}
+        try { localStorage.setItem("edm_seen", "1"); } catch (e) {}
         if (!r.ok) { M.className = "edm-msg err"; M.textContent = r.msg || "ไม่สำเร็จ ลองอีกครั้ง"; if (r.code === "exists") { mode = "login"; note = ""; renderGate(); gate.querySelector("#edmM").className = "edm-msg err"; gate.querySelector("#edmM").textContent = r.msg; } return; }
         if (mode === "signup") { mode = "sent"; note = r.msg; renderGate(); return; }
         if (mode === "forgot") { M.className = "edm-msg ok"; M.textContent = r.msg; return; }
@@ -111,6 +113,7 @@
       }).catch(function () { go.disabled = false; go.textContent = t0; M.className = "edm-msg err"; M.textContent = "เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง"; });
     };
   }
+  function seen() { try { return !!localStorage.getItem("edm_seen"); } catch (e) { return false; } }
   function deviceName() {
     var u = navigator.userAgent;
     var os = /iPhone|iPad/.test(u) ? "iOS" : /Android/.test(u) ? "Android" : /Mac/.test(u) ? "Mac" : /Windows/.test(u) ? "Windows" : "อื่น ๆ";
