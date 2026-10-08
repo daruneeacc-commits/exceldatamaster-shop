@@ -914,7 +914,7 @@ function renderCart(){
     if(!n){$("#oErr").textContent="กรอกชื่อก่อนนะคะ";return false;}
     if(needEmail&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c)){$("#oErr").textContent="กรอกอีเมลให้ถูกต้อง เช่น name@gmail.com เพื่อรับไฟล์";return false;}
     $("#oErr").textContent="";
-    if(!checkoutCode)checkoutCode=Math.random().toString(36).slice(2,8).toUpperCase();
+    {const sig=[t.items.map(p=>p.id).join(","),t.total,c.toLowerCase(),n].join("|");if(!checkoutCode||window.__coSig!==sig){checkoutCode=Math.random().toString(36).slice(2,8).toUpperCase();window.__coSig=sig;}}
     const code=checkoutCode;
     lastTotal=t.total;
     lastData={code,ch,name:n,email:c,items:t.items.map(p=>p.id).join(","),total:t.total,note};
