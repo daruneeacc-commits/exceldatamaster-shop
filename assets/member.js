@@ -222,7 +222,7 @@
     if (emptyLocal() && !wipe) { S.h = h; cSet(S); return Promise.resolve(true); } // ไม่สำรองทับด้วยข้อมูลว่าง (เช่น เครื่องใหม่)
     pushing = true; var em = me.email;
     return call({ a: "push", email: em, token: me.token, data: data }).then(function (r) {
-      pushing = false; if (!r || !r.ok) return false;
+      pushing = false; if (!r || !r.ok) { var S2 = cGet(); S2.err = (r && r.msg) || "เชื่อมต่อไม่ได้"; S2.errAt = Date.now(); cSet(S2); return false; }
       cSet({ email: em, h: h, at: r.ts, ok: Date.now() }); dirtySince = 0;
       if (wipe) try { localStorage.removeItem("edm_sync_wipe"); } catch (e) {}
       return true;
