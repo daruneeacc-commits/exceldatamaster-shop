@@ -372,6 +372,8 @@ function drawPur(isEdit){
   $("#pAdd").onclick=()=>{sync();p.lines.push({pid:"",d:"",q:st?"":1,p:""});drawPur(isEdit)};
   $$("[data-rm]").forEach(b=>b.onclick=()=>{sync();p.lines.splice(+b.dataset.rm,1);if(!p.lines.length)p.lines.push({pid:"",d:"",q:st?"":1,p:""});drawPur(isEdit)});
   sync();
+  // ผู้ขายรายเดิม: เติมเลขผู้เสียภาษีและสาขาให้อัตโนมัติ
+  $("#pSup").addEventListener("change",()=>{const n=$("#pSup").value.trim(),prev=A.pur.slice().reverse().find(x=>x.sup&&x.sup.name===n&&x.sup.tax);if(!prev)return;if(!$("#pSupTax").value)$("#pSupTax").value=prev.sup.tax;if($("#pSupBr")&&!$("#pSupBr").value)$("#pSupBr").value=prev.sup.branch||""});
   $("#pSave").onclick=()=>{sync();
     p.lines=p.lines.filter(l=>st?(l.pid||(l._t||"").trim()):(String(l.d).trim()||num(l.p)));
     if(!p.lines.length)return toast(st?"เลือกสินค้าอย่างน้อย 1 รายการ":"ใส่รายการค่าใช้จ่าย");
@@ -609,7 +611,7 @@ function demo(ok){
 // เปิดอยู่ใน "ระบบร้านค้า" (/app/) → ใช้เมนูด้านข้างของระบบร้านค้าแทนแท็บ
 const EMB=(()=>{try{return top!==self&&top.location.origin===location.origin}catch(e){return false}})();
 if(EMB)$("#tabs").style.display="none";
-window.edmDemo=()=>demo();
+window.edmDemo=()=>demo();window.edmExcel=()=>exportExcel();
 window.edmView=v=>{if(!["home","ar","buy","cash","tax"].includes(v))return;load();ui.v=v;svU();render();scrollTo(0,0)};
 const fromHash=()=>{if(/^#demo/.test(location.hash)){const back=(/back=([\w\/]+)/.exec(location.hash)||[])[1];history.replaceState(null,"",location.pathname);demo(true);if(back&&/^\/(bill|stock|payroll|app)\/$/.test(back))location.replace(back);return}
   const pu=/pur=([\w-]+)/.exec(location.hash);if(pu){history.replaceState(null,"",location.pathname+location.search);edmView("buy");if(A.pur.some(p=>p.id===pu[1]))purDlg(pu[1]);return}
@@ -638,6 +640,6 @@ render();
 window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get A(){return A},get D(){return D}};
 })();
 </script>
-<script src="../assets/member.js?v=25" defer></script>
+<script src="../assets/member.js?v=26" defer></script>
 </body>
 </html>

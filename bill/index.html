@@ -45,6 +45,7 @@ main{max-width:1400px;margin:0 auto;padding:16px;display:grid;grid-template-colu
 textarea.in-{resize:vertical;min-height:60px}
 .seg{display:flex;background:var(--soft);border-radius:999px;padding:3px;gap:3px}
 .seg button{flex:1;border:0;background:none;border-radius:999px;padding:8px 6px;cursor:pointer;font-weight:600;font-size:.86rem;color:var(--muted)}
+@media(max-width:600px){#actBar{flex-wrap:nowrap!important;overflow-x:auto;padding:8px!important;bottom:6px!important}#actBar .btn{flex:none;padding:8px 12px;font-size:.84rem}}
 .dflt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.dflt .in-{padding:7px 8px;font-size:.84rem}
 .seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 #termBox{margin:10px 0 2px}#termBox[hidden],#termBox [hidden]{display:none!important}#termBox .row{margin-top:8px}.cdays{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;font-size:.84rem;color:var(--muted)}
@@ -156,6 +157,7 @@ table.p-items .c{text-align:center}
       </div>
     </div>
 
+    <div class="card edm-only" style="display:none;padding:10px 14px;font-size:.88rem">🏪 <span id="sellerLine"></span> · <a href="/app/#/setup" target="_top">แก้ไขข้อมูลร้านที่ ⚙️ ตั้งค่าร้าน</a></div>
     <details class="card more" id="sellerCard">
       <summary>🏪 ข้อมูลกิจการของฉัน <small class="note" id="sellerSum"></small></summary>
       <div class="logo-pick"><div class="pv" id="logoPv"></div><div style="display:flex;flex-direction:column;gap:4px"><label class="btn sm ghost">📷 เลือกโลโก้<input type="file" id="logoIn" accept="image/*" hidden></label><button class="btn sm ghost" id="logoClr" type="button">ลบโลโก้</button></div></div>
@@ -204,7 +206,7 @@ table.p-items .c{text-align:center}
       <div class="f"><label>หมายเหตุ</label><textarea class="in-" id="notes" placeholder="เงื่อนไขการชำระเงิน การรับประกัน ฯลฯ"></textarea></div>
     </div>
 
-    <div class="card no-print" style="position:sticky;bottom:10px;z-index:5;flex-direction:row;flex-wrap:wrap;gap:8px">
+    <div class="card no-print" id="actBar" style="position:sticky;bottom:10px;z-index:5;flex-direction:row;flex-wrap:wrap;gap:8px">
       <button class="btn main" id="saveBtn">💾 บันทึก</button>
       <button class="btn main" id="printBtn">🖨️ พิมพ์ / PDF</button>
       <button class="btn ghost" id="convertBtn">🔁 แปลงเป็นเอกสารอื่น</button>
@@ -277,7 +279,7 @@ function syncPay(d,remove){const t=termOf(d);let A=LS.get("edm_acc",null);
 
 /* ---------- state ---------- */
 let seller=Object.assign({name:"",addr:"",tax:"",branch:"สำนักงานใหญ่",phone:"",contact:"",vat:false,pay:"",color:"#127A4B",logo:""},LS.get(K.seller,{}));
-let doc=LS.get(K.draft,null)||blank("goods","QT");
+let doc=LS.get(K.draft,null)||blank("goods","IT");
 function blank(mode,type){return{id:"d"+Date.now().toString(36),mode,type,no:"",date:today(),due:type==="QT"?addDays(today(),30):type==="IV"?addDays(today(),30):"",ref:"",
   cust:{name:"",addr:"",tax:"",branch:"",contact:""},items:[{d:"",q:1,u:mode==="goods"?"ชิ้น":"งาน",p:0,disc:0}],vat:seller.vat?"ex":"none",billDisc:0,wht:mode==="service"?3:0,notes:"",saved:false,term:LS.get("edm_bill_term","cash")}}
 function nextNo(type,date){const ym=(date||today()).slice(2,7).replace("-","");const c=LS.get(K.cnt,{});const k=type+ym;return type+ym+"-"+String((c[k]||0)+1).padStart(3,"0")}
@@ -363,7 +365,7 @@ function fillForm(){
   $("#billDisc").value=doc.billDisc||"";$("#wht").value=String(doc.wht||0);$("#notes").value=doc.notes||"";
   $("#sName").value=seller.name;$("#sAddr").value=seller.addr;$("#sTax").value=seller.tax;$("#sBranch").value=seller.branch;$("#sPhone").value=seller.phone;$("#sContact").value=seller.contact;$("#sVat").checked=!!seller.vat;$("#sPay").value=seller.pay;$("#sColor").value=seller.color||"#127A4B";
   $("#logoPv").style.backgroundImage=seller.logo?`url(${seller.logo})`:"none";
-  $("#sellerSum").textContent=seller.name?"· "+seller.name:"· ยังไม่ได้กรอก";if(!seller.name)$("#sellerCard").open=true;
+  $("#sellerSum").textContent=seller.name?"· "+seller.name:"· ยังไม่ได้กรอก";$("#sellerLine").textContent=seller.name?seller.name+(seller.vat?" · จด VAT":" · ไม่ได้จด VAT"):"ยังไม่ได้ตั้งค่าร้าน";if(!seller.name)$("#sellerCard").open=true;
 }
 function renderTotals(c){
   $("#totals").innerHTML=`<span>รวมเป็นเงิน</span><span>${fmt(c.sub)}</span>`+(c.disc?`<span>ส่วนลด</span><span>-${fmt(c.disc)}</span><span>ยอดหลังหักส่วนลด</span><span>${fmt(c.after)}</span>`:"")+
@@ -481,7 +483,7 @@ const DEMO={
       ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
 };
 function loadDemo(mode){
-  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=25#demo&back=/bill/";return}
+  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=26#demo&back=/bill/";return}
   const has=LS.get(K.docs,[]).length;
   if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
   const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);
@@ -532,6 +534,6 @@ window.__bill={calc,bahtText,exportExcel,loadDemo,get doc(){return doc}};
 renderAll();
 })();
 </script>
-<script src="../assets/member.js?v=25" defer></script>
+<script src="../assets/member.js?v=26" defer></script>
 </body>
 </html>

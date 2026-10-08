@@ -38,8 +38,21 @@ aside .foot a{display:inline;padding:0;color:var(--side-ink);text-decoration:und
 .stage{flex:1;min-width:0;position:relative;background:var(--bg)}
 .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .15s}
 .stage iframe.show{opacity:1;pointer-events:auto}
-#home{position:absolute;inset:0;overflow-y:auto;display:none}
-#home.show{display:block}
+.pane{position:absolute;inset:0;overflow-y:auto;display:none}
+.pane.show{display:block}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.form .full{grid-column:1/-1}
+.fl{display:flex;flex-direction:column;gap:4px;min-width:0}.fl label{font-size:.84rem;color:var(--muted);font-weight:500}
+.in{width:100%;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 12px;font:inherit;color:inherit;outline:none}.in:focus{border-color:var(--accent)}
+textarea.in{min-height:70px;resize:vertical}
+.chk{display:flex;gap:8px;align-items:center;font-size:.92rem;cursor:pointer}
+.logo{width:72px;height:72px;border-radius:12px;background:var(--soft) center/contain no-repeat;box-shadow:0 0 0 1px var(--line);flex:none}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.help{color:var(--muted);font-size:.84rem;margin:0}
+.btn.danger{color:#B3261E;box-shadow:inset 0 0 0 1px #E8B4B0;background:transparent}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:6px 0 2px}.stats div{background:var(--soft);border-radius:12px;padding:10px 12px}.stats b{display:block;font-size:1.15rem}.stats span{font-size:.78rem;color:var(--muted)}
+@media(max-width:700px){.form{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .wrap{max-width:1080px;margin:0 auto;padding:20px 16px 90px;display:flex;flex-direction:column;gap:16px}
 .hello h1{margin:0;font-size:1.5rem;line-height:1.3}.hello p{margin:2px 0 0;color:var(--muted)}
 .card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);min-width:0}
@@ -128,6 +141,7 @@ aside .foot a{display:inline;padding:0;color:var(--side-ink);text-decoration:und
   <aside id="side">
     <div class="grp">เริ่มต้น</div>
     <a href="#/home" data-r="home"><span class="step">🏠</span>หน้าหลัก</a>
+    <a href="#/setup" data-r="setup"><span class="step">⚙️</span>ตั้งค่าร้าน</a>
     <div class="grp">1 · ขาย</div>
     <a href="#/bill" data-r="bill"><span class="step">1</span>เปิดบิล / ใบกำกับภาษี</a>
     <a href="#/ar" data-r="ar"><span class="step">💳</span>ลูกหนี้ / รับเงิน<span class="n" id="nAr" hidden></span></a>
@@ -140,12 +154,40 @@ aside .foot a{display:inline;padding:0;color:var(--side-ink);text-decoration:und
     <a href="#/cash" data-r="cash"><span class="step">🏦</span>เงินสด-ธนาคาร</a>
     <a href="#/pnl" data-r="pnl"><span class="step">📊</span>กำไรขาดทุน</a>
     <a href="#/payroll" data-r="payroll"><span class="step">💰</span>เงินเดือนพนักงาน</a>
-    <div class="foot">ข้อมูลทุกระบบเก็บในเบราว์เซอร์ของเครื่องนี้ · สำรองได้ที่ปุ่ม 💾 ในหน้าบัญชี<br><br><a href="/">← ร้าน Excel Data Master</a> · <a href="/privacy/">ความเป็นส่วนตัว</a></div>
+    <div class="grp">ข้อมูล</div>
+    <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
+    <div class="foot">ข้อมูลทุกระบบเก็บในเบราว์เซอร์ของเครื่องนี้ ควรสำรองไว้เป็นระยะ<br><br><a href="/">← ร้าน Excel Data Master</a> · <a href="/privacy/">ความเป็นส่วนตัว</a></div>
   </aside>
   <div class="scrim" id="scrim"></div>
 
   <div class="stage" id="stage">
-    <section id="home"><div class="wrap">
+    <section id="setup" class="pane"><div class="wrap" style="max-width:820px">
+      <div class="hello"><h1>⚙️ ตั้งค่าร้าน</h1><p>กรอกครั้งเดียว ใช้กับบิล ใบกำกับภาษี รายงานภาษี สลิปเงินเดือน และรายงานสต๊อกทั้งหมด</p></div>
+      <div class="card"><div class="form">
+        <div class="fl full"><label>โลโก้ร้าน</label><div class="row"><div class="logo" id="stLogoPv"></div><label class="btn sm ghost">📷 เลือกรูป<input type="file" id="stLogo" accept="image/*" hidden></label><button class="btn sm ghost" id="stLogoDel" type="button">ลบโลโก้</button></div></div>
+        <div class="fl full"><label>ชื่อร้าน / ชื่อบริษัท *</label><input class="in" id="stName" placeholder="เช่น ร้าน สมใจการค้า หรือ บริษัท ... จำกัด"></div>
+        <div class="fl full"><label>ที่อยู่</label><textarea class="in" id="stAddr" placeholder="เลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์"></textarea></div>
+        <div class="fl"><label>เลขประจำตัวผู้เสียภาษี (13 หลัก)</label><input class="in" id="stTax" inputmode="numeric" maxlength="13"></div>
+        <div class="fl"><label>สำนักงานใหญ่ / สาขา</label><input class="in" id="stBranch" list="stBrL" placeholder="สำนักงานใหญ่"><datalist id="stBrL"><option>สำนักงานใหญ่</option><option>สาขา 00001</option></datalist></div>
+        <div class="fl"><label>โทรศัพท์</label><input class="in" id="stPhone" inputmode="tel"></div>
+        <div class="fl"><label>อีเมล / LINE</label><input class="in" id="stContact"></div>
+        <label class="chk full"><input type="checkbox" id="stVat"> จดทะเบียนภาษีมูลค่าเพิ่ม (VAT) แล้ว · ออกใบกำกับภาษีได้ และมีรายงานภาษีซื้อ-ขาย</label>
+        <div class="fl full"><label>ช่องทางชำระเงิน (แสดงท้ายใบแจ้งหนี้)</label><textarea class="in" id="stPay" placeholder="เช่น โอนเข้าบัญชี กสิกรไทย 123-4-56789-0 ชื่อบัญชี ..."></textarea></div>
+        <div class="fl"><label>สีของเอกสาร</label><input class="in" type="color" id="stColor" style="height:44px;padding:4px"></div>
+      </div>
+      <div class="acts"><button class="btn main" id="stSave">💾 บันทึกข้อมูลร้าน</button><span class="help" id="stMsg"></span></div></div>
+    </div></section>
+    <section id="data" class="pane"><div class="wrap" style="max-width:820px">
+      <div class="hello"><h1>💾 สำรอง / กู้คืนข้อมูล</h1><p>ข้อมูลทุกระบบเก็บอยู่ในเบราว์เซอร์ของเครื่องนี้ ไม่ได้อยู่บนเซิร์ฟเวอร์ ถ้าล้างเบราว์เซอร์หรือเปลี่ยนเครื่อง ข้อมูลจะไม่ตามไป</p></div>
+      <div class="card"><h2>ข้อมูลในเครื่องนี้ <small id="dtLast"></small></h2><div class="stats" id="dtStats"></div>
+        <div class="acts"><button class="btn main" id="dtBk">⬇️ ดาวน์โหลดไฟล์สำรองทั้งหมด</button><label class="btn ghost">⬆️ กู้คืนจากไฟล์สำรอง<input type="file" id="dtImp" accept=".json" hidden></label><button class="btn ghost" id="dtXls">📊 ดาวน์โหลด Excel ทุกระบบ</button></div>
+        <p class="help" style="margin-top:8px">ไฟล์สำรองเก็บได้ครบทุกระบบในไฟล์เดียว ใช้ย้ายไปเครื่องใหม่ได้ · ไฟล์ Excel ใช้ส่งผู้ทำบัญชีหรือเปิดใน Google ชีต</p></div>
+      <div class="card"><h2>ข้อมูลตัวอย่าง</h2><p class="help">ใส่ข้อมูลร้านขายเครื่องเขียนย้อนหลัง 3 เดือน เพื่อลองใช้ทุกเมนู (ข้อมูลในเครื่องนี้จะถูกแทนที่)</p><div class="acts"><button class="btn ghost" id="dtDemo">✨ ใส่ข้อมูลตัวอย่าง 3 เดือน</button></div></div>
+      <div class="card"><h2>เริ่มใช้งานจริง</h2><p class="help">ลองข้อมูลตัวอย่างเสร็จแล้ว กดล้างข้อมูลทั้งหมด แล้วเริ่มกรอกข้อมูลร้านจริง</p>
+        <label class="chk" style="margin-top:8px"><input type="checkbox" id="dtKeep"> เก็บข้อมูลร้าน (ชื่อ ที่อยู่ เลขผู้เสียภาษี โลโก้) ไว้</label>
+        <div class="acts"><button class="btn danger" id="dtClear">🧹 ล้างข้อมูลทั้งหมดในเครื่องนี้</button></div></div>
+    </div></section>
+    <section id="home" class="pane"><div class="wrap">
       <div class="hello"><h1 id="hi">สวัสดีค่ะ</h1><p id="hiSub">ระบบร้านค้าครบในที่เดียว เปิดบิล → ภาษี → สต๊อก → บัญชี ข้อมูลเชื่อมกันอัตโนมัติ</p></div>
 
       <div class="kpis" id="kpis"></div>
@@ -164,7 +206,7 @@ aside .foot a{display:inline;padding:0;color:var(--side-ink);text-decoration:und
             <button data-go="bill">🧾 เปิดบิลขาย</button>
             <button data-go="ar">💳 รับเงินจากลูกค้า</button>
             <button data-go="buy">🛒 บันทึกซื้อ / ค่าใช้จ่าย</button>
-            <button data-go="stock">📦 รับ-เบิกสินค้า</button>
+            <button data-go="stock">📦 ดูสต๊อก / ตรวจนับ</button>
             <button data-go="tax">📑 ดูภาษีเดือนนี้</button>
             <button data-go="pnl">📊 ดูกำไรขาดทุน</button>
           </div>
@@ -198,19 +240,22 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=25"},stock:{src:"/stock/?v=25"},payroll:{src:"/payroll/?v=25"},
-  ar:{src:"/account/?v=25",v:"ar"},tax:{src:"/account/?v=25",v:"tax"},buy:{src:"/account/?v=25",v:"buy"},cash:{src:"/account/?v=25",v:"cash"},pnl:{src:"/account/?v=25",v:"home"}};
+const ROUTES={bill:{src:"/bill/?v=26"},stock:{src:"/stock/?v=26"},payroll:{src:"/payroll/?v=26"},
+  ar:{src:"/account/?v=26",v:"ar"},tax:{src:"/account/?v=26",v:"tax"},buy:{src:"/account/?v=26",v:"buy"},cash:{src:"/account/?v=26",v:"cash"},pnl:{src:"/account/?v=26",v:"home"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
 let cur="";
-function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0];if(r!=="home"&&!ROUTES[r])r="home";cur=r;
+const PANES=["home","setup","data"];
+function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0];if(!PANES.includes(r)&&!ROUTES[r])r="home";cur=r;
   document.body.classList.remove("menu");
   $$("aside a").forEach(a=>a.classList.toggle("on",a.dataset.r===r));
   $$("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.go===r||(b.dataset.go==="more"&&!["home","bill","tax","stock"].includes(r))));
-  $("#home").classList.toggle("show",r==="home");
+  $$(".pane").forEach(x=>x.classList.toggle("show",x.id===r));
   Object.values(frames).forEach(f=>f.classList.remove("show"));
   if(r==="home"){renderHome();document.title="ระบบร้านค้า · Excel Data Master";return}
+  if(r==="setup"){renderSetup();document.title="ตั้งค่าร้าน · ระบบร้านค้า";return}
+  if(r==="data"){renderData();document.title="สำรองข้อมูล · ระบบร้านค้า";return}
   const R=ROUTES[r],f=frameFor(R.src);
   if(f.dataset.ready)f.classList.add("show");else f.addEventListener("load",()=>{if(cur===r)f.classList.add("show")},{once:true});
   if(R.v)setAccView(f,R.v);
@@ -285,7 +330,7 @@ function renderHome(){
    <button class="kpi ${ar>0?"warn":""}" data-go="ar"><span>ลูกหนี้ค้างรับ</span><b>฿${fmt0(ar)}</b><small>${arN} ใบ</small></button>
    <button class="kpi ${low.length?"warn":""}" data-go="stock"><span>สินค้าใกล้หมด</span><b>${low.length} รายการ</b><small>จากทั้งหมด ${items.length} รายการ</small></button>`;
   const st=[
-    {done:!!(seller.name&&seller.addr),t:"ตั้งค่าร้าน",d:"ชื่อร้าน ที่อยู่ เลขผู้เสียภาษี โลโก้ และการจด VAT",go:"bill",cta:"กรอกในหน้าเปิดบิล"},
+    {done:!!(seller.name&&seller.addr),t:"ตั้งค่าร้าน",d:"ชื่อร้าน ที่อยู่ เลขผู้เสียภาษี โลโก้ และการจด VAT",go:"setup",cta:"ตั้งค่าร้าน"},
     {done:items.length>0,t:"เพิ่มสินค้า",d:"รหัส ชื่อ ราคาทุน ราคาขาย และจุดแจ้งเตือนใกล้หมด",go:"stock",cta:"ไปหน้าสต๊อก"},
     {done:sales.length>0,t:"เปิดบิลขาย",d:"เลือกขายเงินสดหรือขายเชื่อ ระบบตัดสต๊อกและลงบัญชีให้",go:"bill",cta:"เปิดบิล"},
     {done:sales.length>0&&!!seller.vat,t:"ดูภาษีสิ้นเดือน",d:"ภาษีขาย ภาษีซื้อ ยอดยื่น ภ.พ.30 และหัก ณ ที่จ่าย",go:"tax",cta:"ดูรายงานภาษี"}];
@@ -297,13 +342,45 @@ function renderHome(){
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=25#demo&back=/app/"};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี · เงินเดือน)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=26#demo&back=/app/"};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
-function renderBadges(){const h=$("#home").classList.contains("show");renderHome();$("#home").classList.toggle("show",h)}
+function renderBadges(){renderHome()}
+
+/* ---------- ตั้งค่าร้าน (ที่เดียว ใช้ทุกระบบ) ---------- */
+const LSset=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่ในเบราว์เซอร์เต็ม?)");return false}};
+const reloadFrames=()=>Object.values(frames).forEach(f=>{try{f.contentWindow.location.reload()}catch(e){}});
+let stLogo="";
+function renderSetup(){const s=LS.get("edm_bill_seller",{});
+  $("#stName").value=s.name||"";$("#stAddr").value=s.addr||"";$("#stTax").value=s.tax||"";$("#stBranch").value=s.branch||"สำนักงานใหญ่";$("#stPhone").value=s.phone||"";$("#stContact").value=s.contact||"";
+  $("#stVat").checked=!!s.vat;$("#stPay").value=s.pay||"";$("#stColor").value=s.color||"#127A4B";stLogo=s.logo||"";$("#stLogoPv").style.backgroundImage=stLogo?`url(${stLogo})`:"none";$("#stMsg").textContent=""}
+$("#stLogo").onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image();img.onload=()=>{const k=Math.min(1,320/Math.max(img.width,img.height));const c=document.createElement("canvas");c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext("2d").drawImage(img,0,0,c.width,c.height);stLogo=c.toDataURL("image/png");$("#stLogoPv").style.backgroundImage=`url(${stLogo})`;URL.revokeObjectURL(img.src)};img.src=URL.createObjectURL(f)};
+$("#stLogoDel").onclick=()=>{stLogo="";$("#stLogoPv").style.backgroundImage="none"};
+$("#stSave").onclick=()=>{const name=$("#stName").value.trim();if(!name){$("#stMsg").textContent="ใส่ชื่อร้านก่อนนะคะ";$("#stName").focus();return}
+  const tax=$("#stTax").value.replace(/\D/g,"");if(tax&&tax.length!==13){$("#stMsg").textContent="เลขผู้เสียภาษีต้องมี 13 หลัก";$("#stTax").focus();return}
+  const v={name,addr:$("#stAddr").value.trim(),tax,branch:$("#stBranch").value.trim()||"สำนักงานใหญ่",phone:$("#stPhone").value.trim(),contact:$("#stContact").value.trim(),vat:$("#stVat").checked,pay:$("#stPay").value.trim(),color:$("#stColor").value,logo:stLogo};
+  const ok=LSset("edm_bill_seller",Object.assign({},LS.get("edm_bill_seller",{}),v))&&LSset("edm_pay_company",Object.assign({},LS.get("edm_pay_company",{}),{name:v.name,addr:v.addr,tax:v.tax,logo:v.logo,color:v.color}))&&LSset("edm_stock_cfg",Object.assign({},LS.get("edm_stock_cfg",{}),{name:v.name}));
+  if(!ok)return;reloadFrames();$("#stMsg").textContent="บันทึกแล้ว ✓ ใช้กับทุกระบบแล้ว";toast("บันทึกข้อมูลร้านแล้ว ✓");setTimeout(()=>go("home"),900)};
+
+/* ---------- สำรอง / กู้คืน / ล้างข้อมูล ---------- */
+const KS=["edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
+const KS_UI=["edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_pay_ui","edm_bill_term"];
+function renderData(){const A=LS.get("edm_acc",{})||{};const n=(k)=>(LS.get(k,[])||[]).length;
+  $("#dtStats").innerHTML=[["เอกสารขาย",n("edm_bill_docs")],["สินค้า",n("edm_stock_items")],["ซื้อ / ค่าใช้จ่าย",(A.pur||[]).length],["พนักงาน",n("edm_pay_emps")]].map(([t,v])=>`<div><b>${v}</b><span>${t}</span></div>`).join("");
+  const last=LS.get("edm_last_backup","");$("#dtLast").textContent=last?"สำรองล่าสุด "+thD(last):"ยังไม่เคยสำรอง";
+  const s=LS.get("edm_bill_seller",{});$("#dtKeep").checked=!!s.name&&!/ตัวอย่าง/.test(s.name)}
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,3000)}
+$("#dtBk").onclick=()=>{const o={app:"edm-all",v:1};KS.forEach(k=>o[k]=LS.get(k,null));const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="สำรองระบบร้านค้า-"+today()+".json";a.click();LSset("edm_last_backup",today());renderData();toast("ดาวน์โหลดไฟล์สำรองแล้ว ✓")};
+$("#dtImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-all")throw 0;if(!confirm("กู้คืนข้อมูลจากไฟล์? ข้อมูลทุกระบบในเครื่องนี้จะถูกแทนที่"))return;KS.forEach(k=>{if(o[k]!=null)LSset(k,o[k])});KS_UI.forEach(k=>localStorage.removeItem(k));reloadFrames();renderData();toast("กู้คืนข้อมูลแล้ว ✓")}).catch(()=>toast("ไฟล์ไม่ถูกต้อง ต้องเป็นไฟล์สำรองทุกระบบ (.json)"));e.target.value=""};
+$("#dtXls").onclick=()=>{const f=frameFor(ROUTES.pnl.src);const run=()=>{try{f.contentWindow.edmExcel()}catch(e){toast("ลองใหม่อีกครั้ง")}};toast("กำลังสร้างไฟล์ Excel...");f.dataset.ready?run():f.addEventListener("load",()=>setTimeout(run,100),{once:true})};
+$("#dtDemo").onclick=()=>$("#demoBtn").click();
+$("#dtClear").onclick=()=>{if(!confirm("ล้างข้อมูลทั้งหมดในเครื่องนี้? (บิล สต๊อก บัญชี เงินเดือน)\n\nถ้ามีข้อมูลจริง ให้ดาวน์โหลดไฟล์สำรองก่อน"))return;if(!confirm("ยืนยันอีกครั้ง: ลบแล้วกู้คืนไม่ได้ ถ้าไม่มีไฟล์สำรอง"))return;
+  const keep=$("#dtKeep").checked,s=LS.get("edm_bill_seller",null);KS.concat(KS_UI).forEach(k=>localStorage.removeItem(k));
+  if(keep&&s){LSset("edm_bill_seller",s);LSset("edm_pay_company",{name:s.name,addr:s.addr,tax:s.tax,logo:s.logo||"",color:s.color||"#127A4B"});LSset("edm_stock_cfg",{name:s.name})}
+  reloadFrames();toast("ล้างข้อมูลแล้ว พร้อมเริ่มใช้งานจริง");go(keep?"home":"setup")};
 // จำว่าหน้าย่อยโหลดเสร็จแล้ว
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
-<script src="../assets/member.js?v=25" defer></script>
+<script src="../assets/member.js?v=26" defer></script>
 </body>
 </html>

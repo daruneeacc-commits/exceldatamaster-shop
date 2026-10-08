@@ -54,7 +54,10 @@
     "body.edm-ro #saveBtn,body.edm-ro #convertBtn,body.edm-ro #newBtn,body.edm-ro #addEmp,body.edm-ro #delEmp,body.edm-ro #demo,body.edm-ro #empCard{display:none!important}" +
     "body.edm-locked main,body.edm-locked .mtabs{filter:blur(2px);pointer-events:none}" +
     "@media print{.edm-gate,.edm-bar,.edm-chip{display:none!important}}";
-  css += ".edm-embed header.top{position:static}.edm-embed header.top .brand,.edm-embed header.top .nav>a{display:none!important}.edm-embed header.top .nav{margin-left:auto}.edm-embed .tabs{top:8px!important}";
+  css += ".edm-embed header.top{position:static}.edm-embed header.top .brand,.edm-embed header.top .nav>a{display:none!important}.edm-embed header.top .nav{margin-left:auto}.edm-embed .tabs{top:8px!important}" +
+    // ในระบบร้านค้า: ปุ่มตัวอย่าง / สำรองข้อมูล / โฆษณาเทมเพลต มีที่หน้าหลักแล้ว ไม่ต้องซ้ำในแต่ละหน้า
+    ".edm-embed #demoBtn,.edm-embed [data-act=demo],.edm-embed #demo,.edm-embed #dataBtn,.edm-embed #exp,.edm-embed label:has(#imp),.edm-embed .cta,.edm-embed #sellerCard{display:none!important}" +
+    ".edm-embed .edm-only{display:block!important}";
   var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
   /* ---------- gate (สมัคร / เข้าสู่ระบบ) ---------- */
@@ -202,7 +205,7 @@
   function startEmbed() {
     document.documentElement.classList.add("edm-embed");
     var hd = document.querySelector("header.top"), nav = hd && hd.querySelector(".nav");
-    if (hd && (!nav || !nav.querySelector("button"))) hd.style.display = "none";
+    if (hd && (!nav || ![].some.call(nav.querySelectorAll("button"), function (b) { return getComputedStyle(b).display !== "none"; }))) hd.style.display = "none";
     var lite = function () { me = LS.get(); document.body.classList.toggle("edm-ro", !!me && expired()); markFree(); };
     lite();
     window.addEventListener("message", function (e) { if (e.origin === location.origin && e.data && e.data.edm === "member") lite(); });
