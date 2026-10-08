@@ -11,7 +11,7 @@
 <title>ระบบสต๊อกสินค้า · Excel Data Master</title>
 <meta name="description" content="ระบบสต๊อกสินค้าออนไลน์ รับเข้า เบิกออก ตรวจนับ ต้นทุนเฉลี่ย แจ้งเตือนสินค้าใกล้หมด บัญชีคุมสต๊อก รายงานประจำเดือน ส่งออก Excel เชื่อมกับระบบเปิดบิล">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media=\'all\'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
 <style>
 :root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#F4F6F5;--accent:#127A4B;--accent-ink:#fff;--warn:#8A5A00;--warnbg:#FFF4DC;--danger:#B3261E;--dangerbg:#FDE8E7;--okbg:#E3F4EA;--in:#127A4B;--out:#B3261E;--adj:#1F4FA3}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--warn:#F0C27A;--warnbg:#2A2416;--danger:#F2867E;--dangerbg:#2C1A19;--okbg:#14261C;--in:#4CC48A;--out:#F2867E;--adj:#8AB4F8}}
@@ -116,6 +116,7 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
   #printArea{display:block}
 }
 .hint{background:var(--soft);border-radius:12px;padding:10px 12px;font-size:.86rem;line-height:1.55}.hint a{color:var(--accent);font-weight:600}
+html{overscroll-behavior-y:contain}
 </style>
 </head>
 <body>
@@ -474,7 +475,7 @@ window.addEventListener("hashchange",cardFromHash);setTimeout(cardFromHash,0);
 $("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;svU();render();scrollTo(0,0)};
 document.addEventListener("click",e=>{const b=e.target.closest("[data-act],[data-card],[data-in],[data-outq],[data-adjq],[data-edit],[data-deltx],[data-go]");if(!b)return;
   if(b.dataset.act==="add")return itemForm();
-  if(b.dataset.act==="demo"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=48#demo&back=/stock/";return}
+  if(b.dataset.act==="demo"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=50#demo&back=/stock/";return}
   if(b.dataset.go){ui.v=b.dataset.go;svU();render();tellShell(ui.v);return}
   if(b.dataset.card)return stockCard(b.dataset.card);
   if(b.dataset.edit)return itemForm(b.dataset.edit);
@@ -499,6 +500,6 @@ window.__stock={compute,period,demo,exportExcel,get items(){return items},get tx
 })();
 </script>
 <script src="../assets/tool-ui.js?v=2" defer></script>
-<script src="../assets/member.js?v=48" defer></script>
+<script src="../assets/member.js?v=50" defer></script>
 </body>
 </html>

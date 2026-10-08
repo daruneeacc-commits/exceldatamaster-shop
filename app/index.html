@@ -10,12 +10,13 @@
 <title>ระบบร้านค้า · Excel Data Master</title>
 <meta name="description" content="ระบบร้านค้าออนไลน์ครบในที่เดียว: เปิดบิล ใบกำกับภาษี ขายเงินสด/ขายเชื่อ ภาษีซื้อ-ขาย สต๊อกสินค้า ซื้อสินค้า ลูกหนี้ เงินสด-ธนาคาร และกำไรขาดทุน">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media=\'all\'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
 <style>
 :root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#EEF1EF;--accent:#127A4B;--accent-ink:#fff;--accent-soft:#E3F4EA;--warn:#8A5A00;--warnbg:#FFF4DC;--side:#0F1513;--side-ink:#DDE5E1;--side-muted:#7F8B86;--side-on:#1F2A26}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--accent-soft:#14261C;--warn:#F0C27A;--warnbg:#2A2416;--side:#0A0D0C;--side-ink:#DDE5E1;--side-muted:#7F8B86;--side-on:#1A2320}}
 *{box-sizing:border-box}[hidden]{display:none!important}
-html,body{height:100%}
+html,body{height:100%;height:100dvh;overscroll-behavior:none}
+@media(max-width:760px){body{position:fixed;inset:0;width:100%}}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif;overflow:hidden}
 a{color:inherit}button{font:inherit;color:inherit}
 header.top{height:56px;background:var(--card);border-bottom:1px solid var(--line);position:relative;z-index:30}
@@ -27,7 +28,7 @@ header.top>.in{width:auto;border:0;border-radius:0;background:none}
 .burger{display:none;border:0;background:var(--soft);border-radius:10px;width:38px;height:38px;cursor:pointer;font-size:1.1rem}
 .btn{border:0;border-radius:999px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:var(--soft);color:var(--ink);font-size:.9rem;justify-content:center}
 .btn.main{background:var(--accent);color:var(--accent-ink)}.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:6px 12px;font-size:.84rem}
-.shell{display:flex;height:calc(100% - 56px)}
+.shell{display:flex;height:calc(100% - 56px);height:calc(100dvh - 56px)}
 aside{width:236px;flex:none;background:var(--side);color:var(--side-ink);overflow-y:auto;padding:14px 10px 20px;display:flex;flex-direction:column;gap:2px}
 aside .grp{font-size:.72rem;letter-spacing:.04em;color:var(--side-muted);padding:14px 12px 4px;font-weight:600}
 aside .grp:first-child{padding-top:2px}
@@ -58,7 +59,7 @@ aside .foot .side-links a{display:inline-block;padding:4px 7px;border-radius:8px
 .stage{flex:1;min-width:0;position:relative;background:var(--bg)}
 .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .15s}
 .stage iframe.show{opacity:1;pointer-events:auto}
-.pane{position:absolute;inset:0;overflow-y:auto;display:none}
+.pane{position:absolute;inset:0;overflow-y:auto;display:none;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .pane.show{display:block}
 .form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .form .full{grid-column:1/-1}
@@ -164,7 +165,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   aside{position:fixed;left:0;top:0;bottom:0;z-index:50;transform:translateX(-102%);transition:transform .2s;width:260px;padding-top:18px}
   body.menu aside{transform:none}
   body.menu .scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:45}
-  .shell{height:calc(100% - 56px - 62px)}
+  .shell{height:calc(100% - 56px - 62px - env(safe-area-inset-bottom,0px));height:calc(100dvh - 56px - 62px - env(safe-area-inset-bottom,0px))}
   .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;height:62px;background:var(--card);border-top:1px solid var(--line);z-index:30;padding-bottom:env(safe-area-inset-bottom)}
   .tabbar button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:.7rem;color:var(--muted);font-weight:600;cursor:pointer}
   .tabbar button i{font-style:normal;font-size:1.2rem;line-height:1.2}
@@ -221,10 +222,10 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
 }
 </style>
-<script src="../assets/suggest.js?v=48"></script>
+<script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261008-2323";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261008-2330";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -289,7 +290,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
-    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 23:23 น.</small></span></a>
+    <div class="foot"><a class="side-brand" href="/" title="กลับไปร้าน Excel Data Master"><img src="../assets/logo.jpg" alt="Excel Data Master"><span><b>Excel Data Master</b><small>ระบบร้านค้า · บัญชี · สต๊อก</small><small class="ver">อัปเดต 8/10 23:30 น.</small></span></a>
       <div class="side-links"><a href="/">🏠 หน้าร้าน</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></div></div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -437,9 +438,9 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=49"},stock:{src:"/stock/?v=48",sv:"home"},stockrep:{src:"/stock/?v=48",sv:"report"},stkitems:{src:"/stock/?v=48",sv:"items"},stkin:{src:"/stock/?v=48",sv:"in"},stkout:{src:"/stock/?v=48",sv:"out"},stkadj:{src:"/stock/?v=48",sv:"adj"},stkhist:{src:"/stock/?v=48",sv:"hist"},stkre:{src:"/stock/?v=48",sv:"reorder"},
-  ar:{src:"/account/?v=48",v:"ar"},tax:{src:"/account/?v=48",v:"tax"},buy:{src:"/account/?v=48",v:"buy"},cash:{src:"/account/?v=48",v:"cash"},pnl:{src:"/account/?v=48",v:"home"},
-  cost:{src:"/account/?v=48",v:"cost"},exp:{src:"/account/?v=48",v:"exp"},bank:{src:"/account/?v=48",v:"bank"},cashv:{src:"/account/?v=48",v:"cashv"},petty:{src:"/account/?v=48",v:"petty"},ap:{src:"/account/?v=48",v:"ap"}};
+const ROUTES={bill:{src:"/bill/?v=50"},stock:{src:"/stock/?v=50",sv:"home"},stockrep:{src:"/stock/?v=50",sv:"report"},stkitems:{src:"/stock/?v=50",sv:"items"},stkin:{src:"/stock/?v=50",sv:"in"},stkout:{src:"/stock/?v=50",sv:"out"},stkadj:{src:"/stock/?v=50",sv:"adj"},stkhist:{src:"/stock/?v=50",sv:"hist"},stkre:{src:"/stock/?v=50",sv:"reorder"},
+  ar:{src:"/account/?v=50",v:"ar"},tax:{src:"/account/?v=50",v:"tax"},buy:{src:"/account/?v=50",v:"buy"},cash:{src:"/account/?v=50",v:"cash"},pnl:{src:"/account/?v=50",v:"home"},
+  cost:{src:"/account/?v=50",v:"cost"},exp:{src:"/account/?v=50",v:"exp"},bank:{src:"/account/?v=50",v:"bank"},cashv:{src:"/account/?v=50",v:"cashv"},petty:{src:"/account/?v=50",v:"petty"},ap:{src:"/account/?v=50",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -562,7 +563,7 @@ function renderHome(){
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
   if(window.EDM_ED&&EDM_ED.home)EDM_ED.home({docs,seller,items,A,ym,sales,s,sc,n,vat,ar,arN,B,low,m});
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=48#demo&back=/app/"+(window.EDM_ED?"&ed="+EDM_ED.key:"")};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=50#demo&back=/app/"+(window.EDM_ED?"&ed="+EDM_ED.key:"")};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- ข้อมูลหลัก: ลูกค้า / เจ้าหนี้ / สินค้า-บริการ ---------- */
 const MD={
@@ -749,7 +750,7 @@ route();
 // เปิดเอกสาร/บัตรสินค้าที่ส่งต่อมาจากลิงก์เดิม (/bill/#open=... · /stock/#card=...)
 try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h))openIn(P.t==="stock"?"stock":"bill",P.h)}catch(e){}
 </script>
-<script src="reports.js?v=49"></script>
-<script src="../assets/member.js?v=48" defer></script>
+<script src="reports.js?v=50"></script>
+<script src="../assets/member.js?v=50" defer></script>
 </body>
 </html>

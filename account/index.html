@@ -10,7 +10,7 @@
 <title>บัญชีร้านค้า · Excel Data Master</title>
 <meta name="description" content="ระบบบัญชีร้านค้าออนไลน์ เชื่อมเปิดบิล สต๊อก และเงินเดือน: ลูกหนี้ รับชำระ ใบสั่งซื้อ ค่าใช้จ่าย เจ้าหนี้ เงินสด-ธนาคาร ภาษีซื้อ-ขาย และกำไรขาดทุนรายเดือน">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media=\'all\'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
 <style>
 :root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#F4F6F5;--accent:#127A4B;--accent-ink:#fff;--warn:#8A5A00;--warnbg:#FFF4DC;--danger:#B3261E;--dangerbg:#FDE8E7;--okbg:#E3F4EA;--blue:#1F4FA3;--bluebg:#E6EEFB;--c1:#127A4B;--c2:#C56A12;--c3:#1F4FA3}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--warn:#F0C27A;--warnbg:#2A2416;--danger:#F2867E;--dangerbg:#2C1A19;--okbg:#14261C;--blue:#8AB4F8;--bluebg:#16223A;--c1:#4CC48A;--c2:#F0A04B;--c3:#8AB4F8}}
@@ -119,8 +119,9 @@ body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
 .vat-act{display:flex;gap:6px;flex-wrap:wrap}
 @media print{@page{size:A4;margin:10mm}.page.rd .rd-pg{display:block}body{background:#fff}header.top,main,.toast,dialog,.edm-bar,.edm-gate{display:none!important}#printArea{display:block}}
 .ap-seg{width:auto;max-width:none;display:inline-flex}.ap-seg button{white-space:nowrap;padding-left:14px;padding-right:14px;flex:none}
+html{overscroll-behavior-y:contain}
 </style>
-<script src="../assets/suggest.js?v=48"></script>
+<script src="../assets/suggest.js?v=50"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -708,6 +709,6 @@ window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,get 
 })();
 </script>
 <script src="../assets/tool-ui.js?v=2" defer></script>
-<script src="../assets/member.js?v=48" defer></script>
+<script src="../assets/member.js?v=50" defer></script>
 </body>
 </html>

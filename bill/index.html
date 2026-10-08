@@ -11,7 +11,7 @@
 <title>เปิดบิลออนไลน์ · Excel Data Master</title>
 <meta name="description" content="เปิดบิล ใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ ใบกำกับภาษี สำหรับธุรกิจซื้อมาขายไปและงานบริการ คำนวณ VAT และหัก ณ ที่จ่ายให้อัตโนมัติ พิมพ์เป็น PDF ได้ทันที">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media=\'all\'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
 <style>
 :root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#F4F6F5;--accent:#127A4B;--accent-ink:#fff;--warn:#8A5A00;--warnbg:#FFF4DC;--danger:#B3261E}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--warn:#F0C27A;--warnbg:#2A2416}}
@@ -168,8 +168,9 @@ details.more summary{font-size:.86rem}
 @media(max-width:520px){.item>.row3{grid-template-columns:.9fr .8fr 1.1fr .9fr}.item>.row{grid-template-columns:1fr 1.3fr}.item .f.sum{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:baseline;border-top:1px dashed var(--line);padding-top:4px}.item .f.sum span{padding:0}.item .f label{font-size:.7rem}.item .in-{padding:5px 8px}.doctypes button small{display:none}.card{padding:12px}}
 @media(min-width:981px){main{grid-template-columns:minmax(0,500px) minmax(0,1fr)}}
 .edm-embed header.top{background:transparent!important;border:0!important}.edm-embed header.top .in{padding:8px 16px 0!important}
+html{overscroll-behavior-y:contain}
 </style>
-<script src="../assets/suggest.js?v=48"></script>
+<script src="../assets/suggest.js?v=50"></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -559,7 +560,7 @@ const DEMO={
       ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
 };
 function loadDemo(mode){
-  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=48#demo&back=/bill/";return}
+  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=50#demo&back=/bill/";return}
   const has=LS.get(K.docs,[]).length;
   if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
   const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);
@@ -628,6 +629,6 @@ renderAll();bindSuggest();
 })();
 </script>
 <script src="../assets/tool-ui.js?v=2" defer></script>
-<script src="../assets/member.js?v=48" defer></script>
+<script src="../assets/member.js?v=50" defer></script>
 </body>
 </html>
