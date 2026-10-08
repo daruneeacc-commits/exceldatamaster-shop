@@ -263,10 +263,11 @@ const TYPES={
   IV:{name:"ใบแจ้งหนี้ / ใบวางบิล",en:"INVOICE",due:"ครบกำหนดชำระ",sign:["ผู้วางบิล","ผู้รับวางบิล"]},
   RC:{name:"ใบเสร็จรับเงิน",en:"RECEIPT",due:"",sign:["ผู้รับเงิน","ผู้จ่ายเงิน"]},
   TX:{name:"ใบกำกับภาษี / ใบเสร็จรับเงิน",en:"TAX INVOICE / RECEIPT",due:"",sign:["ผู้รับเงิน","ผู้จ่ายเงิน"],tax:1},
+  BN:{name:"ใบวางบิล",en:"BILLING NOTE",due:"กำหนดชำระ",sign:["ผู้วางบิล","ผู้รับวางบิล"]},
   IT:{name:"ใบแจ้งหนี้ / ใบกำกับภาษี",en:"INVOICE / TAX INVOICE",due:"ครบกำหนดชำระ",sign:["ผู้ส่งสินค้า","ผู้รับสินค้า"],tax:1}
 };
 /* ซื้อมาขายไป: ภาษีเกิดตอนส่งมอบสินค้า จึงออกใบแจ้งหนี้คู่กับใบกำกับภาษี ไม่มีใบเสร็จแยก · บริการ: ภาษีเกิดตอนรับเงิน */
-const MODE_TYPES={goods:["QT","IT"],service:["QT","IV","RC","TX"]};
+const MODE_TYPES={goods:["QT","IT","BN"],service:["QT","IV","BN","RC","TX"]};
 const fitType=(mode,t)=>MODE_TYPES[mode].includes(t)?t:mode==="goods"?"IT":"IV";
 const tName=(k,d)=>k==="IT"&&d&&d.term==="cash"?(seller.vat?"ใบกำกับภาษี / ใบเสร็จรับเงิน":"บิลเงินสด / ใบเสร็จรับเงิน"):k==="IT"&&!seller.vat?"ใบส่งของ / ใบแจ้งหนี้":TYPES[k].name;
 const tEn=(k,d)=>k==="IT"&&d&&d.term==="cash"?(seller.vat?"TAX INVOICE / RECEIPT":"CASH SALE / RECEIPT"):k==="IT"&&!seller.vat?"DELIVERY NOTE / INVOICE":TYPES[k].en;
@@ -386,7 +387,8 @@ function renderPaper(c){
   const tm=termOf(doc),T=Object.assign({},TYPES[doc.type],doc.type==="IT"&&tm==="cash"?{due:"",sign:["ผู้รับเงิน","ผู้รับสินค้า"]}:{}),g=doc.mode==="goods",col=seller.color||"#127A4B";
   const cdays=tm==="credit"&&doc.due?Math.round((new Date(doc.due+"T00:00:00")-new Date(doc.date+"T00:00:00"))/864e5):0;
   const p=$("#paper");p.style.setProperty("--paper-accent",col);
-  const rows=c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}</td><td class="r">${(+num(l.q)).toLocaleString("th-TH")}${g&&l.u?" "+esc(l.u):""}</td><td class="r">${fmt(num(l.p))}</td>${g?`<td class="r">${num(l.disc)?fmt(num(l.disc)):"-"}</td>`:""}<td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="${g?6:5}" style="color:#999;text-align:center;padding:18px">ยังไม่มีรายการ</td></tr>`;
+  const bn=doc.type==="BN";
+  const rows=bn?(c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}</td><td class="c">${l.idate?thDate(l.idate):"-"}</td><td class="c">${l.idue?thDate(l.idue):"-"}</td><td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="5" style="color:#999;text-align:center;padding:18px">ยังไม่มีรายการ</td></tr>`):c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}</td><td class="r">${(+num(l.q)).toLocaleString("th-TH")}${g&&l.u?" "+esc(l.u):""}</td><td class="r">${fmt(num(l.p))}</td>${g?`<td class="r">${num(l.disc)?fmt(num(l.disc)):"-"}</td>`:""}<td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="${g?6:5}" style="color:#999;text-align:center;padding:18px">ยังไม่มีรายการ</td></tr>`;
   p.innerHTML=`<div class="p-head">
     <div class="p-brand">${seller.logo?`<img src="${seller.logo}" alt="" onload="logoShape(this)">`:""}<b class="p-name" data-fit="15,9,2">${esc(seller.name||"ชื่อกิจการของคุณ")}</b></div>
     <div class="p-row"><div class="p-seller">${seller.addr?`<div class="p-addr" data-fit="9,7.5,3">${esc(oneLine(seller.addr))}</div>`:""}
@@ -396,7 +398,7 @@ function renderPaper(c){
     <div class="p-box"><div class="lb">${doc.type==="QT"?"เสนอราคาให้":"ลูกค้า"}</div><b class="p-cname" data-fit="11,8.5,2">${esc(doc.cust.name||"-")}</b>${doc.cust.addr?`<div class="p-addr" data-fit="9.5,7.5,3">${esc(oneLine(doc.cust.addr))}</div>`:""}
       ${doc.cust.tax?`<div class="p-line" data-fit="9,7,1">เลขประจำตัวผู้เสียภาษี ${esc(doc.cust.tax)}${doc.cust.branch?" ("+esc(doc.cust.branch)+")":""}</div>`:""}${doc.cust.contact?`<div class="p-line" data-fit="9,7,1">${esc(doc.cust.contact)}</div>`:""}</div>
     <div class="p-box p-kv"><span>เลขที่</span><b>${esc(doc.no)}</b><span>วันที่</span><span>${thDate(doc.date)}</span>${tm==="cash"?`<span>การชำระ</span><span>ขายเงินสด · ${esc(doc.payMeth||"เงินสด")}</span>`:cdays>0?`<span>เงื่อนไข</span><span>ขายเชื่อ ${cdays} วัน</span>`:""}${T.due&&doc.due?`<span>${T.due}</span><span>${thDate(doc.due)}</span>`:""}${doc.ref?`<span>อ้างอิง</span><span>${esc(doc.ref)}</span>`:""}</div></div>
-  <table class="p-items"><thead><tr><th class="c" style="width:34px">#</th><th>${g?"รายการสินค้า":"รายการบริการ"}</th><th class="r">จำนวน</th><th class="r">ราคา/หน่วย</th>${g?`<th class="r">ส่วนลด</th>`:""}<th class="r">จำนวนเงิน</th></tr></thead><tbody>${rows}</tbody></table>
+  <table class="p-items"><thead><tr><th class="c" style="width:34px">#</th>${bn?`<th>เลขที่ใบแจ้งหนี้ / รายการ</th><th class="c">ลงวันที่</th><th class="c">ครบกำหนด</th><th class="r">จำนวนเงิน</th>`:`<th>${g?"รายการสินค้า":"รายการบริการ"}</th><th class="r">จำนวน</th><th class="r">ราคา/หน่วย</th>${g?`<th class="r">ส่วนลด</th>`:""}<th class="r">จำนวนเงิน</th>`}</tr></thead><tbody>${rows}</tbody></table>
   <div class="p-sum"><div class="p-words">(${bahtText(c.wht?c.net:c.total)})${c.wht?`<div style="font-weight:400;font-size:8.5pt;color:#666">ยอดชำระสุทธิหลังหัก ณ ที่จ่าย</div>`:""}${tm==="cash"&&doc.type==="IT"?`<div class="p-paid">✓ ได้รับเงินถูกต้องแล้ว</div>`:""}</div>
     <div class="p-tot"><span>รวมเป็นเงิน</span><span>${fmt(c.sub)}</span>${c.disc?`<span>ส่วนลด</span><span>-${fmt(c.disc)}</span><span>หลังหักส่วนลด</span><span>${fmt(c.after)}</span>`:""}
       ${doc.vat!=="none"?`<span>มูลค่าสินค้า/บริการ</span><span>${fmt(c.base)}</span><span>ภาษีมูลค่าเพิ่ม 7%</span><span>${fmt(c.vat)}</span>`:""}
@@ -503,7 +505,7 @@ const DEMO={
       ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
 };
 function loadDemo(mode){
-  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=32#demo&back=/bill/";return}
+  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=33#demo&back=/bill/";return}
   const has=LS.get(K.docs,[]).length;
   if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
   const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);
@@ -526,7 +528,13 @@ function payTag(d,docs){if(d.type==="IT"&&d.term==="cash")return" · 💵 ขา
   return got>=total-0.01?" · ✅ รับชำระแล้ว":got>0?" · 🟡 รับบางส่วน":" · ⏳ ค้างชำระ"}
 // เปิดเอกสารจากการค้นหาในระบบร้านค้า (#open=<id>)
 // #open=<id> = เปิดดู · #edit=<id> = เปิดแก้ไข · #new = เอกสารใหม่ (จากหน้ารายงานบิลในระบบร้านค้า)
-function openFromHash(){const h=location.hash;if(/^#new/.test(h)){history.replaceState(null,"",location.pathname+location.search);doc=blank(doc.mode||"goods",doc.mode==="service"?"IV":"IT");doc.no=nextNo(doc.type,doc.date);renderAll();const e=document.querySelector('.mtabs button[data-mt="edit"]');if(e)e.click();scrollTo(0,0);return}
+function openFromHash(){const h=location.hash;if(/^#new/.test(h)){history.replaceState(null,"",location.pathname+location.search);
+  const kind=(/new=(\w+)/.exec(h)||[])[1]||"INV",md=doc.mode||"goods",sv=md==="service";
+  const type=kind==="QT"?"QT":kind==="BN"?"BN":kind==="CASH"?(sv?(seller.vat?"TX":"RC"):"IT"):(sv?"IV":"IT");
+  doc=blank(md,type);if(type==="IT")doc.term=kind==="CASH"?"cash":"credit";doc.due=hasDue(doc)?addDays(doc.date,30):"";
+  if(type==="BN"){doc.vat="none";doc.wht=0;doc.items=[{d:"",q:1,u:"",p:0,disc:0}]}
+  if(TYPES[type].tax&&seller.vat&&doc.vat==="none")doc.vat="ex";
+  doc.no=nextNo(doc.type,doc.date);renderAll();const e=document.querySelector('.mtabs button[data-mt="edit"]');if(e)e.click();scrollTo(0,0);return}
   const m=/(open|edit)=([\w-]+)/.exec(h);if(!m)return;history.replaceState(null,"",location.pathname+location.search);
   const d=LS.get(K.docs,[]).find(x=>x.id===m[2]);if(!d)return toast("ไม่พบเอกสาร");doc=JSON.parse(JSON.stringify(d));renderAll();
   const mt=document.querySelector(".mtabs");if(mt&&getComputedStyle(mt).display!=="none")document.querySelector(`.mtabs button[data-mt="${m[1]==="edit"?"edit":"view"}"]`).click();scrollTo(0,0);toast((m[1]==="edit"?"แก้ไข ":"เปิด ")+d.no)}
@@ -565,6 +573,6 @@ window.__bill={calc,bahtText,exportExcel,loadDemo,get doc(){return doc}};
 renderAll();
 })();
 </script>
-<script src="../assets/member.js?v=32" defer></script>
+<script src="../assets/member.js?v=33" defer></script>
 </body>
 </html>

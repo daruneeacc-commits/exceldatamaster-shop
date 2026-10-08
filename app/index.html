@@ -28,6 +28,15 @@ aside .grp{font-size:.72rem;letter-spacing:.04em;color:var(--side-muted);padding
 aside .grp:first-child{padding-top:2px}
 aside a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;text-decoration:none;font-weight:500;font-size:.92rem;color:var(--side-ink)}
 aside a:hover{background:var(--side-on)}
+.mg{display:flex;flex-direction:column;gap:2px}
+.mg-h{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--side-ink);font:inherit;font-weight:600;font-size:.92rem;padding:9px 12px;border-radius:10px;cursor:pointer;text-align:left}
+.mg-h:hover{background:var(--side-on)}.mg-h i{margin-left:auto;font-style:normal;font-size:.75rem;transition:transform .15s;opacity:.7}
+.mg.closed .mg-h i{transform:rotate(-90deg)}.mg.closed .mg-b{display:none}
+.mg-b{display:flex;flex-direction:column;gap:2px;margin-left:16px;padding-left:10px;border-left:1px solid rgba(255,255,255,.12)}
+.mg-b a{padding:7px 10px;font-size:.88rem}
+.mg-b a .no{width:18px;height:18px;flex:none;border-radius:999px;display:grid;place-items:center;font-size:.68rem;font-weight:700;background:rgba(255,255,255,.1)}
+.mg-b a.on .no{background:rgba(0,0,0,.18)}
+.mg.has-on>.mg-h{color:#fff}
 aside a.on{background:var(--accent);color:var(--accent-ink);font-weight:600}
 aside a .n{margin-left:auto;font-size:.7rem;font-weight:700;min-width:20px;height:20px;border-radius:999px;display:grid;place-items:center;background:rgba(255,255,255,.12);padding:0 6px}
 aside a.on .n{background:rgba(0,0,0,.18)}
@@ -55,6 +64,13 @@ textarea.in{min-height:70px;resize:vertical}
 .wipe{margin-top:12px;border-radius:12px;padding:14px 16px;background:color-mix(in srgb,#B3261E 8%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,#B3261E 35%,transparent)}
 .wipe-h{margin:0 0 6px;font-weight:600;color:#B3261E}.wipe-code{font-size:1.15rem;letter-spacing:.2em;padding:2px 8px;border-radius:6px;background:var(--soft);color:var(--ink)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wipe-h{color:#F2867E}}
+.modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
+.modal-c{background:var(--card);border-radius:16px;padding:18px;width:100%;max-width:560px;max-height:90vh;overflow:auto;box-shadow:0 30px 60px -20px rgba(0,0,0,.4)}
+.modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.modal-h b{font-size:1.1rem}
+.bn-list{margin:12px 0;border:1px solid var(--line);border-radius:12px;max-height:300px;overflow:auto}
+.bn-list label{display:flex;gap:10px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:.9rem}
+.bn-list label:last-child{border-bottom:0}.bn-list label span{flex:1}.bn-list label small{color:var(--muted);display:block;font-size:.76rem}
+.bn-list .r{font-variant-numeric:tabular-nums;white-space:nowrap}
 .rb-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
 .rb-f{display:grid;grid-template-columns:2fr 1.4fr 1fr 1fr;gap:8px;padding:12px}
 .rb-wrap{overflow-x:auto}
@@ -164,17 +180,24 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
     <div class="grp">เริ่มต้น</div>
     <a href="#/home" data-r="home"><span class="step">🏠</span>หน้าหลัก</a>
     <a href="#/setup" data-r="setup"><span class="step">⚙️</span>ตั้งค่าร้าน</a>
-    <div class="grp">งานประจำวัน</div>
-    <a href="#/bill" data-r="bill"><span class="step">🧾</span>เปิดบิล / ใบกำกับภาษี</a>
-    <a href="#/ar" data-r="ar"><span class="step">💳</span>ลูกหนี้ / รับเงิน<span class="n" id="nAr" hidden></span></a>
-    <a href="#/buy" data-r="buy"><span class="step">🛒</span>ซื้อสินค้า / ค่าใช้จ่าย</a>
+    <div class="mg" data-g="inc"><button class="mg-h" type="button"><span class="step">💰</span>รายรับ<i>▾</i></button><div class="mg-b">
+      <a href="#/quotes" data-r="quotes"><span class="no">1</span>ใบเสนอราคา</a>
+      <a href="#/invoices" data-r="invoices"><span class="no">2</span>ใบแจ้งหนี้</a>
+      <a href="#/billing" data-r="billing"><span class="no">3</span>ใบวางบิล</a>
+      <a href="#/receipts" data-r="receipts"><span class="no">4</span>ใบเสร็จรับเงิน</a>
+      <a href="#/ar" data-r="ar"><span class="no">5</span>ลูกหนี้ / รับเงิน<span class="n" id="nAr" hidden></span></a>
+    </div></div>
+    <div class="mg" data-g="exp"><button class="mg-h" type="button"><span class="step">🛒</span>รายจ่าย<i>▾</i></button><div class="mg-b">
+      <a href="#/buy" data-r="buy"><span class="no">1</span>ซื้อสินค้า / ค่าใช้จ่าย</a>
+      <a href="#/cash" data-r="cash"><span class="no">2</span>เงินสด-ธนาคาร</a>
+    </div></div>
     <a href="#/stock" data-r="stock"><span class="step">📦</span>สต๊อกสินค้า<span class="n" id="nLow" hidden></span></a>
-    <a href="#/cash" data-r="cash"><span class="step">🏦</span>เงินสด-ธนาคาร</a>
-    <div class="grp">รายงาน</div>
-    <a href="#/bills" data-r="bills"><span class="step">📋</span>รายงานบิล</a>
-    <a href="#/tax" data-r="tax"><span class="step">📑</span>รายงานภาษีซื้อ-ขาย</a>
-    <a href="#/pnl" data-r="pnl"><span class="step">📊</span>กำไรขาดทุน</a>
-    <a href="#/stockrep" data-r="stockrep"><span class="step">📄</span>รายงานสต๊อก</a>
+    <div class="mg" data-g="rep"><button class="mg-h" type="button"><span class="step">📊</span>รายงาน<i>▾</i></button><div class="mg-b">
+      <a href="#/bills" data-r="bills"><span class="no">1</span>รายงานบิลทั้งหมด</a>
+      <a href="#/tax" data-r="tax"><span class="no">2</span>รายงานภาษีซื้อ-ขาย</a>
+      <a href="#/pnl" data-r="pnl"><span class="no">3</span>กำไรขาดทุน</a>
+      <a href="#/stockrep" data-r="stockrep"><span class="no">4</span>รายงานสต๊อก</a>
+    </div></div>
     <div class="grp">ข้อมูล</div>
     <a href="#/data" data-r="data"><span class="step">💾</span>สำรอง / กู้คืนข้อมูล</a>
     <div class="foot">ข้อมูลทุกระบบเก็บในเบราว์เซอร์ของเครื่องนี้ ควรสำรองไว้เป็นระยะ<br><br><a href="/">← ร้าน Excel Data Master</a> · <a href="/privacy/">ความเป็นส่วนตัว</a></div>
@@ -199,7 +222,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
       <div class="acts"><button class="btn main" id="stSave">💾 บันทึกข้อมูลร้าน</button><span class="help" id="stMsg"></span></div></div>
     </div></section>
     <section id="bills" class="pane"><div class="wrap">
-      <div class="hello rb-head"><div><h1>📋 รายงานบิล</h1><p>บิลทั้งหมดที่บันทึกไว้ ดู แก้ไข หรือลบได้จากที่นี่</p></div><div class="acts" style="margin:0"><button class="btn main" id="rbNew">＋ เปิดบิลใหม่</button><button class="btn ghost" id="rbXls">📊 Excel</button></div></div>
+      <div class="hello rb-head"><div><h1 id="rbTitle">📋 รายงานบิลทั้งหมด</h1><p id="rbSub">บิลทั้งหมดที่บันทึกไว้ ดู แก้ไข หรือลบได้จากที่นี่</p></div><div class="acts" style="margin:0"><button class="btn main" id="rbNew">＋ เปิดบิลใหม่</button><button class="btn ghost" id="rbNew2" hidden></button><button class="btn ghost" id="rbXls">📊 Excel</button></div></div>
       <div class="card rb-f">
         <input class="in" id="rbQ" type="search" placeholder="🔍 เลขที่ ลูกค้า หรือสินค้า">
         <select class="in" id="rbT"><option value="">ทุกประเภท</option><option value="IT">ใบแจ้งหนี้ / ใบกำกับ (ขายสินค้า)</option><option value="IV">ใบแจ้งหนี้ (บริการ)</option><option value="TX">ใบกำกับภาษี / ใบเสร็จ</option><option value="RC">ใบเสร็จรับเงิน</option><option value="QT">ใบเสนอราคา</option></select>
@@ -256,6 +279,14 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   </div>
 </div>
 
+<div class="modal" id="bnm" hidden><div class="modal-c">
+  <div class="modal-h"><b>สร้างใบวางบิล</b><button class="btn sm ghost" id="bnX" type="button">✕</button></div>
+  <p class="help">เลือกลูกค้า แล้วติ๊กใบแจ้งหนี้ที่ค้างชำระที่จะรวมในใบวางบิล</p>
+  <div class="form" style="margin-top:8px"><div class="fl full"><label>ลูกค้า</label><select class="in" id="bnC"></select></div>
+    <div class="fl"><label>วันที่วางบิล</label><input class="in" type="date" id="bnD"></div><div class="fl"><label>กำหนดชำระ</label><input class="in" type="date" id="bnDue"></div></div>
+  <div class="bn-list" id="bnL"></div>
+  <div class="acts" style="justify-content:space-between;align-items:center"><span class="help" id="bnSum"></span><button class="btn main" id="bnGo" type="button">สร้างใบวางบิล</button></div>
+</div></div>
 <nav class="tabbar" id="tabbar">
   <button data-go="home"><i>🏠</i>หน้าหลัก</button>
   <button data-go="bill"><i>🧾</i>เปิดบิล</button>
@@ -279,23 +310,32 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=32"},stock:{src:"/stock/?v=32",sv:"home"},stockrep:{src:"/stock/?v=32",sv:"report"},
-  ar:{src:"/account/?v=32",v:"ar"},tax:{src:"/account/?v=32",v:"tax"},buy:{src:"/account/?v=32",v:"buy"},cash:{src:"/account/?v=32",v:"cash"},pnl:{src:"/account/?v=32",v:"home"}};
+const ROUTES={bill:{src:"/bill/?v=33"},stock:{src:"/stock/?v=33",sv:"home"},stockrep:{src:"/stock/?v=33",sv:"report"},
+  ar:{src:"/account/?v=33",v:"ar"},tax:{src:"/account/?v=33",v:"tax"},buy:{src:"/account/?v=33",v:"buy"},cash:{src:"/account/?v=33",v:"cash"},pnl:{src:"/account/?v=33",v:"home"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
 let cur="";
-const PANES=["home","setup","data","bills"];
+const PANES=["home","setup","data","bills","quotes","invoices","billing","receipts"];
+// รายการเอกสารแยกตามประเภท (เมนูรายรับ) ใช้หน้าเดียวกับรายงานบิล
+const VIEWS={
+  bills:{t:"📋 รายงานบิลทั้งหมด",s:"เอกสารขายทั้งหมดที่บันทึกไว้ ดู แก้ไข หรือลบได้จากที่นี่",f:null,nw:["＋ เปิดบิลใหม่","INV"]},
+  quotes:{t:"1 · ใบเสนอราคา",s:"เสนอราคาให้ลูกค้า แล้วกด \"แปลงเป็นเอกสารอื่น\" เป็นใบแจ้งหนี้ได้ทันที",f:d=>d.type==="QT",nw:["＋ สร้างใบเสนอราคา","QT"]},
+  invoices:{t:"2 · ใบแจ้งหนี้ / ใบกำกับภาษี",s:"ขายเชื่อ ตั้งลูกหนี้ ตัดสต๊อก และลงภาษีขาย",f:d=>d.type==="IV"||(d.type==="IT"&&d.term!=="cash"),nw:["＋ สร้างใบแจ้งหนี้","INV"]},
+  billing:{t:"3 · ใบวางบิล",s:"รวมใบแจ้งหนี้ที่ค้างชำระของลูกค้าแต่ละราย ส่งวางบิลเพื่อนัดรับเงิน",f:d=>d.type==="BN",nw:["＋ สร้างใบวางบิล","BNMAKER"]},
+  receipts:{t:"4 · ใบเสร็จรับเงิน / ขายเงินสด",s:"ใบเสร็จจากการรับชำระ และบิลขายเงินสด",f:d=>d.type==="RC"||d.type==="TX"||(d.type==="IT"&&d.term==="cash"),nw:["＋ ขายเงินสด / ออกใบเสร็จ","CASH"],nw2:["💳 รับชำระตามใบแจ้งหนี้","AR"]}};
+let view="bills";
 function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0];if(!PANES.includes(r)&&!ROUTES[r])r="home";cur=r;
   document.body.classList.remove("menu");
   $$("aside a").forEach(a=>a.classList.toggle("on",a.dataset.r===r));
   $$("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.go===r||(b.dataset.go==="more"&&!["home","bill","stock","bills"].includes(r))));
   $$(".pane").forEach(x=>x.classList.toggle("show",x.id===r));
+  $$(".mg").forEach(g=>{const on=!!g.querySelector(`a[data-r="${r}"]`);g.classList.toggle("has-on",on);if(on)g.classList.remove("closed")});
   Object.values(frames).forEach(f=>f.classList.remove("show"));
   if(r==="home"){renderHome();document.title="ระบบร้านค้า · Excel Data Master";return}
   if(r==="setup"){renderSetup();document.title="ตั้งค่าร้าน · ระบบร้านค้า";return}
   if(r==="data"){renderData();document.title="สำรองข้อมูล · ระบบร้านค้า";return}
-  if(r==="bills"){renderBills();document.title="รายงานบิล · ระบบร้านค้า";return}
+  if(VIEWS[r]){view=r;$("#bills").classList.add("show");setView();renderBills();document.title=VIEWS[r].t.replace(/^[^ ]+ (· )?/,"")+" · ระบบร้านค้า";return}
   const R=ROUTES[r],f=frameFor(R.src);
   if(f.dataset.ready)f.classList.add("show");else f.addEventListener("load",()=>{if(cur===r)f.classList.add("show")},{once:true});
   if(R.v)setAccView(f,R.v);
@@ -320,7 +360,7 @@ function search(raw){const q=raw.trim().toLowerCase();const docs=LS.get("edm_bil
   const D=docs.filter(d=>m(d.no)||m(d.cust&&d.cust.name)||m(d.cust&&d.cust.tax)||m(d.ref)||(q&&(d.items||[]).some(it=>m(it.d)))).sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.updated||0)-(a.updated||0)).slice(0,q?8:6);
   if(D.length)G.push({g:q?"เอกสารขาย":"เอกสารล่าสุด",L:D.map(d=>{const c=calcDoc(d),st=paid(d);return{ic:"🧾",t:hl(d.no,q)+" · "+esc(TN[d.type]||""),s:hl(d.cust&&d.cust.name||"-",q)+" · "+thD(d.date),v:"฿"+fmt(c.net)+(st[0]?`<small class="tag ${st[1]}">${st[0]}</small>`:""),go:()=>openIn("bill","open="+d.id)}})});
   if(q){const cs=[...new Set(docs.map(d=>d.cust&&d.cust.name).filter(n=>n&&m(n)))].slice(0,4);
-    if(cs.length)G.push({g:"ลูกค้า",L:cs.map(n=>{const ds=docs.filter(d=>d.cust&&d.cust.name===n&&d.type!=="QT");let tot=0;ds.forEach(d=>tot+=calcDoc(d).base);return{ic:"👤",t:hl(n,q),s:ds.length+" เอกสาร · ยอดขายรวม ฿"+fmt0(tot),v:"ดูบิล →",go:()=>{$("#q").value=n;run(true)},keep:1}})});
+    if(cs.length)G.push({g:"ลูกค้า",L:cs.map(n=>{const ds=docs.filter(d=>d.cust&&d.cust.name===n&&d.type!=="QT"&&d.type!=="BN");let tot=0;ds.forEach(d=>tot+=calcDoc(d).base);return{ic:"👤",t:hl(n,q),s:ds.length+" เอกสาร · ยอดขายรวม ฿"+fmt0(tot),v:"ดูบิล →",go:()=>{$("#q").value=n;run(true)},keep:1}})});
     const I=items.filter(i=>m(i.name)||m(i.sku)||m(i.cat)).slice(0,6);
     if(I.length)G.push({g:"สินค้า",L:I.map(i=>{const b=B[i.id]||0,low=num(i.min)>0&&b<=num(i.min);return{ic:"📦",t:hl(i.name,q),s:hl(i.sku||"",q)+(i.cat?" · "+esc(i.cat):""),v:`คงเหลือ ${fmt0(b)} ${esc(i.unit||"")}${low?'<small class="tag cr">ใกล้หมด</small>':""}`,go:()=>openIn("stock","card="+i.id)}})});
     const P=(A.pur||[]).filter(p=>m(p.no)||m(p.sup&&p.sup.name)||m(p.taxNo)||m(p.cat)||(p.lines||[]).some(l=>m(l.d))).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,6);
@@ -340,6 +380,8 @@ document.addEventListener("click",e=>{if(!e.target.closest("#search")&&!e.target
 $("#sbtn").onclick=()=>{const on=document.body.classList.toggle("srch");if(on)setTimeout(()=>$("#q").focus(),30);else closeSearch()};
 document.addEventListener("keydown",e=>{if(e.key==="/"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$("#q").focus()}});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(b){e.preventDefault();go(b.dataset.go)}});
+$$(".mg-h").forEach(h=>h.onclick=()=>{const g=h.parentNode;g.classList.toggle("closed");try{const st=JSON.parse(localStorage.getItem("edm_menu")||"{}");st[g.dataset.g]=g.classList.contains("closed");localStorage.setItem("edm_menu",JSON.stringify(st))}catch(e){}});
+try{const st=JSON.parse(localStorage.getItem("edm_menu")||"{}");$$(".mg").forEach(g=>{if(st[g.dataset.g])g.classList.add("closed")})}catch(e){}
 $("#burger").onclick=()=>document.body.classList.toggle("menu");$("#scrim").onclick=()=>document.body.classList.remove("menu");
 // ลิงก์ข้ามระบบจากในหน้าย่อย (เช่น ปุ่ม "ไปหน้าสต๊อก") ให้เปลี่ยนเมนูแทนการเปิดหน้าใหม่
 window.addEventListener("message",e=>{if(e.origin!==location.origin||!e.data||e.data.edm!=="go")return;const t=e.data.tool,v=(/v=(\w+)/.exec(e.data.hash||"")||[])[1];
@@ -379,18 +421,40 @@ function renderHome(){
   $("#flowNote").textContent=st.filter(x=>x.done).length+"/4 ขั้นตอน";
   const has=docs.length>0||items.length>0;$("#demoBox").classList.toggle("sm",has);
   $("#demoMsg").innerHTML=has?"อยากดูตัวอย่างร้านที่ใช้งานครบ 3 เดือน? <span style=\"color:var(--muted)\">(ข้อมูลในเครื่องนี้จะถูกแทนที่)</span>":"<b>ยังไม่มีข้อมูล?</b> ลองใส่ข้อมูลตัวอย่างร้านขายเครื่องเขียนย้อนหลัง 3 เดือน (บิล ภาษี สต๊อก ซื้อสินค้า ค่าใช้จ่าย) เห็นภาพการทำงานเชื่อมกันทันที";
-  const rec=docs.filter(d=>d.type!=="QT").slice().sort((a,b)=>(b.updated||0)-(a.updated||0)||String(b.date).localeCompare(String(a.date))).slice(0,6);
+  const rec=docs.filter(d=>d.type!=="QT"&&d.type!=="BN").slice().sort((a,b)=>(b.updated||0)-(a.updated||0)||String(b.date).localeCompare(String(a.date))).slice(0,6);
   $("#recent").innerHTML=rec.length?rec.map(d=>{const c=calcDoc(d),cash=isCash(d);return`<div class="li"><div><b>${esc(d.no)}</b> <span class="tag ${cash?"":"cr"}">${cash?"เงินสด":"เชื่อ"}</span><small>${esc(d.cust&&d.cust.name||"-")} · ${thD(d.date)}</small></div><div class="r">฿${fmt(c.net)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีบิล · กด "เปิดบิลขาย" เพื่อเริ่ม</div>`;
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=32#demo&back=/app/"};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=33#demo&back=/app/"};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
-function renderBadges(){renderHome();if(cur==="bills")renderBills()}
+function renderBadges(){renderHome();if(VIEWS[cur])renderBills()}
+/* ---------- ใบวางบิล: รวมใบแจ้งหนี้ค้างชำระของลูกค้า 1 ราย ---------- */
+let bnOpen=[];
+function bnMaker(){const docs=LS.get("edm_bill_docs",[]),A=LS.get("edm_acc",{})||{},pays=(A.pay||[]).filter(p=>p.dir==="in");
+  bnOpen=docs.filter(d=>d.type==="IV"||(d.type==="IT"&&d.term!=="cash")).map(d=>({d,s:docStatus(d,docs,pays)})).filter(x=>x.s.left>0.009).sort((a,b)=>String(a.d.date).localeCompare(String(b.d.date)));
+  const names=[...new Set(bnOpen.map(x=>x.d.cust&&x.d.cust.name||""))].filter(Boolean);
+  if(!names.length){toast("ไม่มีใบแจ้งหนี้ค้างชำระให้วางบิล");return}
+  $("#bnC").innerHTML=names.map(n=>{const k=bnOpen.filter(x=>x.d.cust.name===n);return`<option>${esc(n)}</option>`}).join("");
+  $("#bnD").value=today();const dd=new Date();dd.setDate(dd.getDate()+30);$("#bnDue").value=dd.toISOString().slice(0,10);
+  bnList();$("#bnm").hidden=false}
+function bnList(){const n=$("#bnC").value,L=bnOpen.filter(x=>x.d.cust.name===n);
+  $("#bnL").innerHTML=L.map(x=>`<label><input type="checkbox" checked data-bi="${x.d.id}"><span><b>${esc(x.d.no)}</b><small>ลงวันที่ ${thD(x.d.date)} · ครบกำหนด ${thD(x.d.due||x.d.date)}${x.s.late?" · เกินกำหนด":""}</small></span><span class="r">฿${fmt(x.s.left)}</span></label>`).join("");bnSum()}
+function bnSum(){const ids=$$("#bnL [data-bi]:checked").map(i=>i.dataset.bi);const t=bnOpen.filter(x=>ids.includes(x.d.id)).reduce((a,x)=>a+x.s.left,0);$("#bnSum").textContent=ids.length+" ใบ · รวม ฿"+fmt(t);$("#bnGo").disabled=!ids.length}
+$("#bnC").onchange=bnList;$("#bnL").addEventListener("change",bnSum);$("#bnX").onclick=()=>$("#bnm").hidden=true;
+$("#bnm").addEventListener("click",e=>{if(e.target.id==="bnm")$("#bnm").hidden=true});
+$("#bnGo").onclick=()=>{const ids=$$("#bnL [data-bi]:checked").map(i=>i.dataset.bi);const L=bnOpen.filter(x=>ids.includes(x.d.id));if(!L.length)return;
+  const date=$("#bnD").value||today(),ym=date.slice(2,7).replace("-",""),cnt=LS.get("edm_bill_counter",{}),k="BN"+ym;cnt[k]=(cnt[k]||0)+1;
+  const c0=L[0].d;const bn={id:"d"+Date.now().toString(36)+"b",mode:c0.mode||"goods",type:"BN",no:k+"-"+String(cnt[k]).padStart(3,"0"),date,due:$("#bnDue").value||"",ref:"",
+    cust:JSON.parse(JSON.stringify(c0.cust)),items:L.map(x=>({d:x.d.no,idate:x.d.date,idue:x.d.due||x.d.date,q:1,u:"",p:r2(x.s.left),disc:0})),vat:"none",billDisc:0,wht:0,notes:"กรุณาชำระภายในวันที่กำหนด",saved:true,updated:Date.now()};
+  bn._total=r2(L.reduce((a,x)=>a+x.s.left,0));
+  const docs=LS.get("edm_bill_docs",[]);docs.unshift(bn);LSset("edm_bill_docs",docs);LSset("edm_bill_counter",cnt);
+  $("#bnm").hidden=true;toast("สร้าง "+bn.no+" แล้ว");openIn("bill","open="+bn.id)};
 
 /* ---------- รายงานบิล ---------- */
-const TN2={QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับภาษี",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับภาษี/ใบเสร็จ"};
+const TN2={BN:"ใบวางบิล",QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับภาษี",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับภาษี/ใบเสร็จ"};
 function docStatus(d,docs,pays){const c=calcDoc(d);
   if(d.type==="QT")return{k:"qt",t:"ใบเสนอราคา",cls:"qt",c};
+  if(d.type==="BN")return{k:"bn",t:"วางบิล "+(d.items||[]).filter(i=>i.d).length+" ใบ",cls:"qt",c};
   if(d.type==="IT"&&d.term==="cash")return{k:"cash",t:"เงินสด",cls:"",c};
   if(d.type==="RC"||d.type==="TX")return{k:"paid",t:d.ref?"รับชำระ":"เงินสด",cls:"",c};
   let got=pays.filter(p=>p.docId===d.id).reduce((a,p)=>a+num(p.amount)+num(p.wht),0);
@@ -398,14 +462,16 @@ function docStatus(d,docs,pays){const c=calcDoc(d);
   if(got>=c.total-.01)return{k:"paid",t:"รับครบ",cls:"paid",c};
   const late=(d.due||d.date)<today();
   return{k:got>0?"part":"open",late,t:(got>0?"รับบางส่วน":"ค้างชำระ")+(late?" · เกินกำหนด":""),cls:late?"late":"cr",c,left:r2(c.total-got)}}
-function renderBills(){const docs=LS.get("edm_bill_docs",[]),A=LS.get("edm_acc",{})||{},pays=(A.pay||[]).filter(p=>p.dir==="in");
+function setView(){const V=VIEWS[view];$("#rbTitle").textContent=V.t;$("#rbSub").textContent=V.s;$("#rbNew").textContent=V.nw[0];
+  $("#rbNew2").hidden=!V.nw2;if(V.nw2)$("#rbNew2").textContent=V.nw2[0];$("#rbT").hidden=!!V.f;if(V.f)$("#rbT").value=""}
+function renderBills(){const docs=LS.get("edm_bill_docs",[]),A=LS.get("edm_acc",{})||{},pays=(A.pay||[]).filter(p=>p.dir==="in");const VF=VIEWS[view]&&VIEWS[view].f;
   const ms=[...new Set(docs.map(d=>String(d.date).slice(0,7)))].sort().reverse(),sel=$("#rbM").value;
   $("#rbM").innerHTML=`<option value="">ทุกเดือน</option>`+ms.map(m=>`<option value="${m}">${MS[+m.slice(5)-1]} ${+m.slice(0,4)+543}</option>`).join("");$("#rbM").value=ms.includes(sel)?sel:"";
   const q=$("#rbQ").value.trim().toLowerCase(),ft=$("#rbT").value,fs=$("#rbS").value,fm=$("#rbM").value;
   const L=docs.map(d=>({d,s:docStatus(d,docs,pays)})).filter(({d,s})=>(!q||(d.no+" "+(d.cust&&d.cust.name||"")+" "+(d.cust&&d.cust.tax||"")+" "+(d.ref||"")+" "+(d.items||[]).map(i=>i.d).join(" ")).toLowerCase().includes(q))
-    &&(!ft||d.type===ft)&&(!fm||String(d.date).startsWith(fm))&&(!fs||(fs==="late"?s.late:s.k===fs)))
+    &&(!VF||VF(d))&&(!ft||d.type===ft)&&(!fm||String(d.date).startsWith(fm))&&(!fs||(fs==="late"?s.late:s.k===fs)))
     .sort((a,b)=>String(b.d.date).localeCompare(String(a.d.date))||String(b.d.no).localeCompare(String(a.d.no)));
-  const sales=L.filter(x=>x.d.type!=="QT"&&!((x.d.type==="RC"||x.d.type==="TX")&&x.d.ref));
+  const sales=L.filter(x=>x.d.type!=="QT"&&x.d.type!=="BN"&&!(view!=="receipts"&&(x.d.type==="RC"||x.d.type==="TX")&&x.d.ref));
   let tot=0,cash=0,left=0;sales.forEach(({s})=>{tot+=s.c.net;if(s.left)left+=s.left});
   sales.forEach(({s})=>{if(s.k==="cash"||(s.k==="paid"&&s.t==="เงินสด"))cash+=s.c.net});
   $("#rbSum").innerHTML=[["เอกสารที่แสดง",L.length+" ใบ"],["ยอดขายรวม","฿"+fmt(tot)],["ขายเงินสด","฿"+fmt(cash)],["ค้างรับ","฿"+fmt(left)]].map(([t,v])=>`<div><b>${v}</b><span>${t}</span></div>`).join("");
@@ -416,7 +482,8 @@ function renderBills(){const docs=LS.get("edm_bill_docs",[]),A=LS.get("edm_acc",
       <td class="act"><button data-rv="${d.id}" title="ดู / พิมพ์">👁 ดู</button><button data-re="${d.id}" title="แก้ไข">✏️ แก้ไข</button><button class="del" data-rd="${d.id}" title="ลบ">🗑 ลบ</button></td></tr>`).join("")
     :`<tr class="empty"><td colspan="7">${docs.length?"ไม่พบเอกสารตามเงื่อนไข":"ยังไม่มีบิล · กด \"เปิดบิลใหม่\" เพื่อเริ่ม"}</td></tr>`)+`</tbody>`}
 ["#rbQ","#rbT","#rbS","#rbM"].forEach(s=>$(s).addEventListener(s==="#rbQ"?"input":"change",renderBills));
-$("#rbNew").onclick=()=>openIn("bill","new");
+function newDoc(k){if(k==="BNMAKER")return bnMaker();if(k==="AR")return go("ar");openIn("bill","new="+k)}
+$("#rbNew").onclick=()=>newDoc(VIEWS[view].nw[1]);$("#rbNew2").onclick=()=>newDoc(VIEWS[view].nw2[1]);
 $("#rbTbl").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
   if(b.dataset.rv)return openIn("bill","open="+b.dataset.rv);
   if(b.dataset.re)return openIn("bill","edit="+b.dataset.re);
@@ -474,6 +541,6 @@ $("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 </script>
-<script src="../assets/member.js?v=32" defer></script>
+<script src="../assets/member.js?v=33" defer></script>
 </body>
 </html>
