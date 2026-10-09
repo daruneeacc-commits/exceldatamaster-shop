@@ -458,7 +458,7 @@ const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
 const ROUTES={bill:{src:"/bill/?v=51"},stock:{src:"/stock/?v=51",sv:"home"},stockrep:{src:"/stock/?v=51",sv:"report"},stkitems:{src:"/stock/?v=51",sv:"items"},stkin:{src:"/stock/?v=51",sv:"in"},stkout:{src:"/stock/?v=51",sv:"out"},stkadj:{src:"/stock/?v=51",sv:"adj"},stkhist:{src:"/stock/?v=51",sv:"hist"},stkre:{src:"/stock/?v=51",sv:"reorder"},
   ar:{src:"/account/?v=50",v:"ar"},tax:{src:"/account/?v=50",v:"tax"},buy:{src:"/account/?v=50",v:"buy"},cash:{src:"/account/?v=50",v:"cash"},pnl:{src:"/account/?v=50",v:"home"},
-  cf:{src:"/cafe/?v=1",cv:"home"},cfpos:{src:"/cafe/?v=1",cv:"pos"},cfbar:{src:"/cafe/?v=1",cv:"bar"},cford:{src:"/cafe/?v=1",cv:"orders"},cfmenu:{src:"/cafe/?v=1",cv:"menu"},cfshift:{src:"/cafe/?v=1",cv:"shift"},cfrpt:{src:"/cafe/?v=1",cv:"rpt"},cfset:{src:"/cafe/?v=1",cv:"set"},
+  cf:{src:"/cafe/?v=2",cv:"home"},cfpos:{src:"/cafe/?v=2",cv:"pos"},cfbar:{src:"/cafe/?v=2",cv:"bar"},cford:{src:"/cafe/?v=2",cv:"orders"},cfmenu:{src:"/cafe/?v=2",cv:"menu"},cfshift:{src:"/cafe/?v=2",cv:"shift"},cfrpt:{src:"/cafe/?v=2",cv:"rpt"},cfset:{src:"/cafe/?v=2",cv:"set"},
   bk:{src:"/booking/?v=2",bv:"home"},bkcal:{src:"/booking/?v=2",bv:"cal"},bklist:{src:"/booking/?v=2",bv:"list"},bkres:{src:"/booking/?v=2",bv:"res"},bkrpt:{src:"/booking/?v=2",bv:"rpt"},bkset:{src:"/booking/?v=2",bv:"set"},
   cost:{src:"/account/?v=50",v:"cost"},exp:{src:"/account/?v=50",v:"exp"},bank:{src:"/account/?v=50",v:"bank"},cashv:{src:"/account/?v=50",v:"cashv"},petty:{src:"/account/?v=50",v:"petty"},ap:{src:"/account/?v=50",v:"ap"}};
 const frames={};
@@ -781,5 +781,6 @@ try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorag
 </script>
 <script src="reports.js?v=50"></script>
 <script src="../assets/member.js?v=54" defer></script>
+<script>/* โหมดออฟไลน์: เก็บหน้าระบบไว้ในเครื่อง เน็ตหลุดแล้วยังเปิดได้ */if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){})});</script>
 </body>
 </html>
