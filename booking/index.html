@@ -835,6 +835,6 @@ setInterval(()=>{if(document.visibilityState==="visible"&&cfg.online.on){publish
 window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.edm==="member"&&cfg.online.on)setTimeout(()=>publish(false).then(()=>pull()),300)});
 })();
 </script>
-<script src="../assets/member.js?v=52" defer></script>
+<script src="../assets/member.js?v=53" defer></script>
 </body>
 </html>
