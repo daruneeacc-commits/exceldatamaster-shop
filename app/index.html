@@ -221,6 +221,8 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   body.srch .search{display:block}.search .ic{left:26px;top:31px}.search kbd{display:none}
   .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
 }
+/* โหมดหน้าร้านของคาเฟ่: ซ่อนเมนูระบบ ให้หน้าขายเต็มจอ */
+body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk #updBar{display:none!important}body.cf-kiosk .stage{position:fixed!important;inset:0;z-index:90}
 </style>
 <script src="../assets/suggest.js?v=50"></script>
 <script>
@@ -458,7 +460,7 @@ const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
 const ROUTES={bill:{src:"/bill/?v=51"},stock:{src:"/stock/?v=51",sv:"home"},stockrep:{src:"/stock/?v=51",sv:"report"},stkitems:{src:"/stock/?v=51",sv:"items"},stkin:{src:"/stock/?v=51",sv:"in"},stkout:{src:"/stock/?v=51",sv:"out"},stkadj:{src:"/stock/?v=51",sv:"adj"},stkhist:{src:"/stock/?v=51",sv:"hist"},stkre:{src:"/stock/?v=51",sv:"reorder"},
   ar:{src:"/account/?v=50",v:"ar"},tax:{src:"/account/?v=50",v:"tax"},buy:{src:"/account/?v=50",v:"buy"},cash:{src:"/account/?v=50",v:"cash"},pnl:{src:"/account/?v=50",v:"home"},
-  cf:{src:"/cafe/?v=2",cv:"home"},cfpos:{src:"/cafe/?v=2",cv:"pos"},cfbar:{src:"/cafe/?v=2",cv:"bar"},cford:{src:"/cafe/?v=2",cv:"orders"},cfmenu:{src:"/cafe/?v=2",cv:"menu"},cfshift:{src:"/cafe/?v=2",cv:"shift"},cfrpt:{src:"/cafe/?v=2",cv:"rpt"},cfset:{src:"/cafe/?v=2",cv:"set"},
+  cf:{src:"/cafe/?v=3",cv:"home"},cfpos:{src:"/cafe/?v=3",cv:"pos"},cfbar:{src:"/cafe/?v=3",cv:"bar"},cford:{src:"/cafe/?v=3",cv:"orders"},cfmenu:{src:"/cafe/?v=3",cv:"menu"},cfshift:{src:"/cafe/?v=3",cv:"shift"},cfrpt:{src:"/cafe/?v=3",cv:"rpt"},cfset:{src:"/cafe/?v=3",cv:"set"},
   bk:{src:"/booking/?v=2",bv:"home"},bkcal:{src:"/booking/?v=2",bv:"cal"},bklist:{src:"/booking/?v=2",bv:"list"},bkres:{src:"/booking/?v=2",bv:"res"},bkrpt:{src:"/booking/?v=2",bv:"rpt"},bkset:{src:"/booking/?v=2",bv:"set"},
   cost:{src:"/account/?v=50",v:"cost"},exp:{src:"/account/?v=50",v:"exp"},bank:{src:"/account/?v=50",v:"bank"},cashv:{src:"/account/?v=50",v:"cashv"},petty:{src:"/account/?v=50",v:"petty"},ap:{src:"/account/?v=50",v:"ap"}};
 const frames={};
@@ -543,6 +545,7 @@ $$(".mg-h").forEach(h=>h.onclick=()=>{const g=h.parentNode;if(horiz()){const o=!
 try{const st=JSON.parse(localStorage.getItem("edm_menu")||"{}");$$(".mg").forEach(g=>{if(st[g.dataset.g])g.classList.add("closed")})}catch(e){}
 $("#burger").onclick=()=>document.body.classList.toggle("menu");$("#scrim").onclick=()=>document.body.classList.remove("menu");
 // ลิงก์ข้ามระบบจากในหน้าย่อย (เช่น ปุ่ม "ไปหน้าสต๊อก") ให้เปลี่ยนเมนูแทนการเปิดหน้าใหม่
+window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.edm==="kiosk")document.body.classList.toggle("cf-kiosk",!!e.data.on)});
 window.addEventListener("message",e=>{if(e.origin!==location.origin||!e.data||e.data.edm!=="go")return;const t=e.data.tool,v=(/v=(\w+)/.exec(e.data.hash||"")||[])[1];
   if(e.data.open&&t==="bill"&&/^(open|new)=[\w-]+$/.test(e.data.hash||"")){openIn("bill",e.data.hash);return}
   if(t==="cafe"){const M={home:"cf",pos:"cfpos",bar:"cfbar",orders:"cford",menu:"cfmenu",shift:"cfshift",rpt:"cfrpt",set:"cfset"};const to=M[v]||"cf";if(cur!==to){if(e.data.quiet)quietNav=1;go(to)}return}
