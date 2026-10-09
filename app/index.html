@@ -448,7 +448,7 @@ const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
 const ROUTES={bill:{src:"/bill/?v=51"},stock:{src:"/stock/?v=50",sv:"home"},stockrep:{src:"/stock/?v=50",sv:"report"},stkitems:{src:"/stock/?v=50",sv:"items"},stkin:{src:"/stock/?v=50",sv:"in"},stkout:{src:"/stock/?v=50",sv:"out"},stkadj:{src:"/stock/?v=50",sv:"adj"},stkhist:{src:"/stock/?v=50",sv:"hist"},stkre:{src:"/stock/?v=50",sv:"reorder"},
   ar:{src:"/account/?v=50",v:"ar"},tax:{src:"/account/?v=50",v:"tax"},buy:{src:"/account/?v=50",v:"buy"},cash:{src:"/account/?v=50",v:"cash"},pnl:{src:"/account/?v=50",v:"home"},
-  bk:{src:"/booking/?v=1",bv:"home"},bkcal:{src:"/booking/?v=1",bv:"cal"},bklist:{src:"/booking/?v=1",bv:"list"},bkres:{src:"/booking/?v=1",bv:"res"},bkrpt:{src:"/booking/?v=1",bv:"rpt"},bkset:{src:"/booking/?v=1",bv:"set"},
+  bk:{src:"/booking/?v=2",bv:"home"},bkcal:{src:"/booking/?v=2",bv:"cal"},bklist:{src:"/booking/?v=2",bv:"list"},bkres:{src:"/booking/?v=2",bv:"res"},bkrpt:{src:"/booking/?v=2",bv:"rpt"},bkset:{src:"/booking/?v=2",bv:"set"},
   cost:{src:"/account/?v=50",v:"cost"},exp:{src:"/account/?v=50",v:"exp"},bank:{src:"/account/?v=50",v:"bank"},cashv:{src:"/account/?v=50",v:"cashv"},petty:{src:"/account/?v=50",v:"petty"},ap:{src:"/account/?v=50",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
@@ -555,7 +555,7 @@ function renderHome(){
     docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!pays.some(p=>p.rcDocId===x.id))got+=calcDoc(x).total});const left=r2(c.total-got);if(left>0.009){ar+=left;arN++}});
   const B=stockBal();const low=items.filter(i=>num(i.min)>0&&(B[i.id]||0)<=num(i.min));
   ($("#nAr")||{}).hidden=!arN;($("#nAr")||{}).textContent=arN;
-  {const t=today(),BL=LS.get("edm_book_list",[])||[];const nb=BL.filter(b=>{const L=b.lines||[];if(b.st==="hold"||b.st==="conf")return L.some(l=>String(l.s).slice(0,10)<=t);if(b.st==="in")return L.some(l=>String(l.e).slice(0,10)<=t);return false}).length;const el=$("#nBk");if(el){el.hidden=!nb;el.textContent=nb}}
+  {const t=today(),BL=LS.get("edm_book_list",[])||[];const nb=BL.filter(b=>{const L=b.lines||[];if(b.st==="hold"||b.st==="conf")return L.some(l=>String(l.s).slice(0,10)<=t);if(b.st==="in")return L.some(l=>String(l.e).slice(0,10)<=t);return false}).length+(((LS.get("edm_book_inbox",{})||{}).items)||[]).filter(x=>!BL.some(b=>b.web===x.code)).length;const el=$("#nBk");if(el){el.hidden=!nb;el.textContent=nb}}
   {const po=(A.pay||[]).filter(p=>p.dir==="out");let apN=0;(A.pur||[]).forEach(p=>{if(p.status==="ordered")return;const c=calcDoc({items:(p.lines||[]).map(l=>({q:l.q,p:l.p})),vat:p.vat,wht:p.wht,billDisc:0});const pd=po.filter(y=>y.purId===p.id).reduce((a,y)=>a+num(y.amount)+num(y.wht),0);if(c.total-pd>0.009)apN++});($("#nAp")||{}).hidden=!apN;($("#nAp")||{}).textContent=apN}($("#nLow")||{}).hidden=!low.length;($("#nLow")||{}).textContent=low.length;
   $("#shopName").textContent=seller.name?"· "+seller.name:"· Excel Data Master";
   $("#hi").textContent=seller.name?"สวัสดีค่ะ "+seller.name:"สวัสดีค่ะ 👋";
@@ -724,7 +724,7 @@ $("#stSave").onclick=()=>{const name=$("#stName").value.trim();if(!name){$("#stM
 
 /* ---------- สำรอง / กู้คืน / ล้างข้อมูล ---------- */
 const KS=["edm_book_res","edm_book_list","edm_book_cfg","edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_suppliers","edm_services","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
-const KS_UI=["edm_book_ui","edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_pay_ui","edm_bill_term"];
+const KS_UI=["edm_book_ui","edm_book_pub","edm_book_inbox","edm_book_acks","edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_pay_ui","edm_bill_term"];
 function renderLock(){const L=window.EDM_LOCK,c=L&&L.get();$("#lkState").textContent=c?"เปิดใช้อยู่":"ยังไม่ได้ตั้ง";$("#lkSet").textContent=c?"เปลี่ยน PIN":"🔒 ตั้ง PIN";$("#lkL1").textContent=c?"PIN ใหม่ (ตัวเลข 4–12 หลัก)":"ตั้ง PIN (ตัวเลข 4–12 หลัก)";
   $("#lkNow").hidden=!c;$("#lkOff").hidden=!c;$("#lkOldBox").hidden=!c;if(c)$("#lkIdle").value=String(c.idle||0);["#lkPin","#lkPin2","#lkOld"].forEach(s=>$(s).value="");$("#lkMsg").textContent=""}
 $("#lkSet").onclick=async()=>{const L=window.EDM_LOCK;if(!L)return;const a=$("#lkPin").value.trim(),b2=$("#lkPin2").value.trim(),m=$("#lkMsg");
@@ -766,6 +766,6 @@ route();
 try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h))openIn(P.t==="stock"?"stock":P.t==="booking"?"bk":"bill",P.h)}catch(e){}
 </script>
 <script src="reports.js?v=50"></script>
-<script src="../assets/member.js?v=51" defer></script>
+<script src="../assets/member.js?v=52" defer></script>
 </body>
 </html>

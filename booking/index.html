@@ -231,7 +231,7 @@ html{overscroll-behavior-y:contain}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2800)}
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast("บันทึกไม่ได้: พื้นที่ในเครื่องเต็มหรือเบราว์เซอร์ไม่อนุญาต");return false}}};
-const K={res:"edm_book_res",list:"edm_book_list",cfg:"edm_book_cfg",ui:"edm_book_ui"};
+const K={res:"edm_book_res",list:"edm_book_list",cfg:"edm_book_cfg",ui:"edm_book_ui",pub:"edm_book_pub",inbox:"edm_book_inbox",acks:"edm_book_acks"};
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0};
 const r2=n=>Math.round((n+Number.EPSILON)*100)/100;
@@ -271,11 +271,11 @@ const PK={pay:"รับชำระ / มัดจำ",ref:"คืนเงิ�
 const PM=["เงินสด","โอนเงิน","บัตรเครดิต","QR พร้อมเพย์","หักค่าประกัน","อื่นๆ"];
 
 /* ---------- ข้อมูล ---------- */
-const CFG0={ci:"14:00",co:"12:00",buf:0,we:[5,6],late:100,depPct:30,vatIn:true,prefix:"BK",peaks:[],kinds:{night:true,hour:true,item:true},cancel:"ยกเลิกก่อนวันเข้าพัก 7 วัน คืนเงินมัดจำเต็มจำนวน · ยกเลิกน้อยกว่า 7 วัน ขอสงวนสิทธิ์ไม่คืนเงินมัดจำ",foot:"กรุณาแสดงใบยืนยันนี้ในวันเข้าใช้บริการ"};
+const CFG0={ci:"14:00",co:"12:00",buf:0,we:[5,6],late:100,depPct:30,vatIn:true,prefix:"BK",peaks:[],kinds:{night:true,hour:true,item:true},cancel:"ยกเลิกก่อนวันเข้าพัก 7 วัน คืนเงินมัดจำเต็มจำนวน · ยกเลิกน้อยกว่า 7 วัน ขอสงวนสิทธิ์ไม่คืนเงินมัดจำ",foot:"กรุณาแสดงใบยืนยันนี้ในวันเข้าใช้บริการ",online:{on:false,name:"",tel:"",line:"",addr:"",note:"",lead:2,max:90,open:"08:00",close:"20:00",hide:[]}};
 let res=[],list=[],cfg={},ui={};
-function load(){res=LS.get(K.res,[])||[];list=LS.get(K.list,[])||[];cfg=Object.assign({},CFG0,LS.get(K.cfg,{})||{});cfg.kinds=Object.assign({},CFG0.kinds,cfg.kinds||{});ui=Object.assign({v:"home",cs:"",span:14,kf:"all",lf:"act",q:"",rm:""},LS.get(K.ui,{})||{})}
+function load(){res=LS.get(K.res,[])||[];list=LS.get(K.list,[])||[];cfg=Object.assign({},CFG0,LS.get(K.cfg,{})||{});cfg.kinds=Object.assign({},CFG0.kinds,cfg.kinds||{});cfg.online=Object.assign({},CFG0.online,cfg.online||{});ui=Object.assign({v:"home",cs:"",span:14,kf:"all",lf:"act",q:"",rm:""},LS.get(K.ui,{})||{})}
 load();
-const saveRes=()=>LS.set(K.res,res),saveList=()=>LS.set(K.list,list),saveCfg=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,{v:ui.v,span:ui.span,kf:ui.kf,lf:ui.lf});
+const saveRes=()=>pubAfter(LS.set(K.res,res)),saveList=()=>pubAfter(LS.set(K.list,list)),saveCfg=()=>pubAfter(LS.set(K.cfg,cfg)),saveUi=()=>LS.set(K.ui,{v:ui.v,span:ui.span,kf:ui.kf,lf:ui.lf});
 const rOf=id=>res.find(r=>r.id===id);
 const kOn=k=>cfg.kinds[k]!==false;
 function bKind(b){const l=(b.lines||[]).find(x=>rOf(x.rid));return l?rOf(l.rid).kind:"night"}
@@ -363,12 +363,14 @@ function vHome(){const V=$("#view"),t=today(),nw=nowT();
     <button class="kpi" data-gv="cal"><span>ห้องว่างคืนนี้</span><b>${nightR.length?fmt0(cap-used)+" / "+fmt0(cap):"-"}</b><small>${nightR.length?"เข้าพัก "+(cap?Math.round(used/cap*100):0)+"%":"ยังไม่มีห้องพัก"}</small></button>
     <button class="kpi ${due>0?"warn":""}" data-gv="list"><span>ยอดค้างชำระ (ยังไม่ออกบิล)</span><b>฿${fmt0(due)}</b><small>${dueN} ใบจอง · ค่าประกันที่ถืออยู่ ฿${fmt0(held)}</small></button>
   </div>
+  ${inboxCard()}
   <div class="qa-row"><button class="main edm-lock" data-nb=""><i>＋</i>จองใหม่</button><button data-gv="cal"><i>📅</i>ดูปฏิทิน</button><button data-gv="list"><i>📋</i>รายการจอง</button><button data-gv="res"><i>🏷️</i>ห้อง / อุปกรณ์</button></div>
   <div class="grid2">
     <div class="card"><h2>เข้า / ส่งมอบวันนี้ <small>${arr.length} รายการ</small></h2><div>${arr.length?arr.map(b=>liAct(b,"in")).join(""):`<div class="empty">ไม่มีรายการที่ต้องเช็คอินหรือส่งมอบ</div>`}</div></div>
     <div class="card"><h2>ออก / รับคืนวันนี้ <small>${dep.length} รายการ</small></h2><div>${dep.length?dep.map(b=>liAct(b,"out")).join(""):`<div class="empty">ไม่มีรายการที่ต้องเช็คเอาท์หรือรับคืน</div>`}</div></div>
   </div>
   <div class="card"><h2>7 วันข้างหน้า <small>${up.length} ใบจอง</small></h2><div>${up.length?up.map(b=>liAct(b,"")).join(""):`<div class="empty">ยังไม่มีการจองในสัปดาห์หน้า</div>`}</div></div>`;
+  wireInbox();
   $$("[data-act]").forEach(x=>x.onclick=e=>{e.stopPropagation();const b=list.find(y=>y.id===x.dataset.id);if(!b)return;openBk(b.id);if(x.dataset.act==="in")setTimeout(()=>doIn(),30);else if(x.dataset.act==="out")setTimeout(()=>retDlg(),30)})}
 function liAct(b,a){const T=tot(b),k=KIND[bKind(b)];
   return`<div class="li click" data-ob="${b.id}"><div><b>${esc(b.cust.name||"-")}</b> ${stPill(b)}<small>${esc(b.no)} · ${resTxt(b)}</small><small>${(b.lines||[]).map(lineTxt).filter((x,i,A)=>A.indexOf(x)===i).join(" · ")}</small></div>
@@ -712,6 +714,7 @@ function vSet(){const V=$("#view");
   <div class="card"><h2>ราคาวันหยุด / เทศกาล</h2><div class="f"><span>คืนที่ใช้ "ราคาคืนวันหยุด" ของห้องพัก</span><div class="days">${DW.map((d,i)=>`<label><input type="checkbox" data-we="${i}" ${(cfg.we||[]).includes(i)?"checked":""}> คืนวัน${["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"][i]}</label>`).join("")}</div></div>
     <div class="f"><span>ช่วงเทศกาล (บวกเพิ่มจากราคาปกติ ทุกประเภท)</span>${(cfg.peaks||[]).map((p,i)=>`<div class="row4" style="margin-bottom:6px"><input class="in-" data-pk="${i}" data-f="n" value="${esc(p.n||"")}" placeholder="ชื่อ เช่น สงกรานต์"><input class="in-" type="date" data-pk="${i}" data-f="s" value="${esc(p.s||"")}"><input class="in-" type="date" data-pk="${i}" data-f="e" value="${esc(p.e||"")}"><div style="display:flex;gap:6px"><input class="in- r" inputmode="decimal" data-pk="${i}" data-f="pct" value="${esc(p.pct||"")}" placeholder="+%"><button class="btn sm ghost" data-rpk="${i}">✕</button></div></div>`).join("")}
     <div><button class="btn sm ghost" id="addPk">＋ เพิ่มช่วงเทศกาล</button></div></div></div>
+  ${onlineHtml()}
   <div class="card"><h2>ข้อความในใบยืนยัน</h2><div class="f"><label>เงื่อนไขการยกเลิก</label><textarea class="in-" rows="2" data-c="cancel">${esc(cfg.cancel)}</textarea></div><div class="f"><label>ข้อความท้ายใบยืนยัน</label><input class="in-" data-c="foot" value="${esc(cfg.foot)}"></div></div>
   <div class="card"><h2>ข้อมูลระบบจอง <small>${res.length} รายการให้เช่า · ${list.length} ใบจอง</small></h2><div class="hint">ข้อมูลอยู่ในเครื่องนี้ และสำรองรวมกับระบบร้านค้า (เมนูสำรองข้อมูล / สำรองขึ้นระบบอัตโนมัติเมื่อเข้าสู่ระบบสมาชิก)</div>
     <div class="acts"><button class="btn ghost" id="sExp">⬇️ ดาวน์โหลดไฟล์สำรองระบบจอง</button><label class="btn ghost">⬆️ นำเข้าไฟล์สำรอง<input type="file" id="sImp" accept=".json" hidden></label>${res.length?"":`<button class="btn ghost" id="sDemo">✨ ใส่ข้อมูลตัวอย่าง</button>`}<button class="btn ghost danger" id="sWipe">🗑 ล้างข้อมูลระบบจอง</button></div></div>`;
@@ -721,6 +724,7 @@ function vSet(){const V=$("#view");
   $$("[data-pk]").forEach(x=>x.addEventListener("input",()=>{const p=cfg.peaks[+x.dataset.pk];p[x.dataset.f]=x.dataset.f==="pct"?num(x.value):x.value;sv()}));
   $$("[data-rpk]").forEach(x=>x.onclick=()=>{cfg.peaks.splice(+x.dataset.rpk,1);saveCfg();vSet()});
   $("#addPk").onclick=()=>{cfg.peaks=cfg.peaks||[];cfg.peaks.push({n:"",s:"",e:"",pct:20});saveCfg();vSet()};
+  wireOnline();
   $$("[data-tk]").forEach(x=>x.onclick=()=>{const k=x.dataset.tk;if(kOn(k)&&KO.filter(kOn).length===1)return toast("ต้องเปิดอย่างน้อย 1 ประเภท");cfg.kinds[k]=!kOn(k);saveCfg();vSet()});
   $("#sExp").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({app:"edm-booking",v:1,res,list,cfg})],{type:"application/json"}));a.download="สำรองระบบจอง-"+today()+".json";a.click()};
   $("#sImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-booking"||!Array.isArray(o.res)||!Array.isArray(o.list))throw 0;if(!confirm("นำเข้าข้อมูลระบบจอง? ข้อมูลระบบจองในเครื่องนี้จะถูกแทนที่"))return;res=o.res;list=o.list;cfg=Object.assign({},CFG0,o.cfg||{});saveRes();saveList();saveCfg();load();toast("นำเข้าแล้ว ✓");render()}).catch(()=>toast("ไฟล์ไม่ถูกต้อง ต้องเป็นไฟล์สำรองระบบจอง"))};
@@ -746,6 +750,70 @@ function demo(){if((res.length||list.length)&&!confirm("ใส่ข้อมู
   add(mk(7,"คุณอรุณี แสงทอง","082-345-6789","walkin","out",[["r102",d(-4),d(-2)]],[["pay",2400,"เงินสด",-4]]));
   saveRes();saveList();toast("ใส่ข้อมูลตัวอย่างแล้ว ✓");ui.v="home";saveUi();render()}
 
+/* ---------- รับจองออนไลน์ (ลูกค้าจองเองที่ /book/?s=รหัสร้าน) ---------- */
+// ส่งให้ระบบหลังร้านเฉพาะ: ชื่อร้าน/ช่องทางติดต่อ, ห้อง/อุปกรณ์ที่เปิดจอง พร้อมราคา, ช่วงเวลาที่ไม่ว่าง (ไม่มีชื่อหรือเบอร์ลูกค้า)
+const MEM=()=>{const m=window.EDM_MEMBER;return m&&m.call&&m.me&&m.me.token?m:null};
+function mcall(o){const m=MEM();if(!m)return Promise.reject(new Error("login"));return m.call(Object.assign({email:m.me.email,token:m.me.token},o))}
+const hashS=s=>{let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return(h>>>0)+":"+s.length};
+const pubRes=()=>{const O=cfg.online;return res.filter(r=>r.active!==false&&kOn(r.kind)&&!(O.hide||[]).includes(r.id))};
+function buildProfile(){const O=cfg.online,S=seller(),R=pubRes(),ids=R.map(r=>r.id),t=dn(today()),nm=mins(nowT()),busy=[];
+  list.forEach(b=>{if(b.st!=="hold"&&b.st!=="conf"&&b.st!=="in")return;(b.lines||[]).forEach(l=>{const r=rOf(l.rid);if(!r||!ids.includes(r.id)||!okLine(l,r))return;const[a,z]=span(l,r,b);if(z<=(r.kind==="hour"?nm:t))return;busy.push([r.id,a,z,num(l.qty)||1])})});
+  return{on:!!O.on,shop:{name:O.name||S.name||"",tel:O.tel||S.tel||S.phone||"",line:O.line||"",addr:O.addr||"",note:O.note||""},
+    cfg:{ci:cfg.ci,co:cfg.co,buf:num(cfg.buf),we:cfg.we||[],depPct:num(cfg.depPct),lead:num(O.lead),max:num(O.max)||90,open:O.open||"08:00",close:O.close||"20:00",cancel:cfg.cancel||"",vatIn:!!cfg.vatIn,peaks:(cfg.peaks||[]).filter(x=>okD(x.s)&&okD(x.e))},
+    res:R.map(r=>({id:r.id,kind:r.kind,name:r.name,cat:r.cat||"",qty:num(r.qty)||1,unit:r.unit||KIND[r.kind].unit,rate:num(r.rate),rateWe:num(r.rateWe),rate7:num(r.rate7),dep:num(r.dep),note:r.note||""})),busy}}
+let pubT=null,pubBusy=false;
+function pubAfter(ok){if(ok)schedulePub();return ok}
+function schedulePub(){clearTimeout(pubT);pubT=setTimeout(()=>publish(false),2500)}
+function publish(force){const O=cfg.online,P=LS.get(K.pub,{})||{};if(!O.on&&!P.on&&!force)return Promise.resolve(P);if(pubBusy){schedulePub();return Promise.resolve(P)}
+  const prof=buildProfile(),h=hashS(JSON.stringify(prof));if(!force&&h===P.h&&!P.err)return Promise.resolve(P);
+  if(!MEM()){LS.set(K.pub,Object.assign(P,{err:"เข้าสู่ระบบสมาชิกก่อน จึงเปิดรับจองออนไลน์ได้",errAt:Date.now()}));onlineUi();return Promise.resolve(P)}
+  pubBusy=true;
+  return mcall({a:"bkpub",profile:prof}).then(r=>{pubBusy=false;const N=r&&r.ok?{h,slug:r.slug,url:r.url,at:Date.now(),on:r.on,n:r.res}:Object.assign(LS.get(K.pub,{})||{},{err:(r&&r.msg)||"ส่งข้อมูลไม่สำเร็จ",errAt:Date.now()});LS.set(K.pub,N);onlineUi();if(r&&r.ok&&r.on)pull();return N})
+    .catch(()=>{pubBusy=false;LS.set(K.pub,Object.assign(LS.get(K.pub,{})||{},{err:"เชื่อมต่อระบบไม่ได้ จะลองใหม่อัตโนมัติ",errAt:Date.now()}));onlineUi()})}
+function flushAcks(){const A=LS.get(K.acks,[])||[];if(!A.length)return Promise.resolve();return mcall({a:"bkack",acks:A}).then(r=>{if(r&&r.ok){const done=r.done||[];LS.set(K.acks,(LS.get(K.acks,[])||[]).filter(x=>!A.some(y=>y.code===x.code)));return done}}).catch(()=>{})}
+function pull(){if(!cfg.online.on||!MEM())return Promise.resolve();return flushAcks().then(()=>mcall({a:"bkpull"})).then(r=>{if(r&&r.ok){const A=LS.get(K.acks,[])||[];LS.set(K.inbox,{at:Date.now(),items:(r.items||[]).filter(x=>!A.some(y=>y.code===x.code))});if(r.url){const P=LS.get(K.pub,{})||{};if(P.url!==r.url){P.url=r.url;P.slug=r.slug;LS.set(K.pub,P)}}if(!dlg.open&&(ui.v==="home"||ui.v==="list"))render()}}).catch(()=>{})}
+const inbox=()=>((LS.get(K.inbox,{})||{}).items||[]).filter(x=>!list.some(b=>b.web===x.code));
+function reqTxt(x){return(x.lines||[]).map(l=>{const r=rOf(l.rid);return(r?esc(r.name):"(รายการที่ปิดไปแล้ว)")+(num(l.qty)>1?" ×"+l.qty:"")+" · "+(r?lineTxt(l):esc(l.s+" – "+l.e))}).join("<br>")}
+function inboxCard(){const I=inbox();if(!I.length)return"";
+  return`<div class="card" style="box-shadow:0 0 0 2px var(--blue)"><h2>🌐 คำขอจองออนไลน์ <small>${I.length} รายการ รอคุณตอบ</small></h2><div>${I.map(x=>{const tmp={id:"tmp",lines:(x.lines||[]).map(l=>Object.assign({},l))};const bad=tmp.lines.map(l=>chk(l,tmp)).find(c=>!c.ok);
+    return`<div class="li"><div><b>${esc(x.name)}</b> <span class="pill p-conf">${esc(x.code)}</span><small>📞 ${esc(x.phone)}${x.email?" · "+esc(x.email):""}</small><small>${reqTxt(x)}</small>${x.note?`<small>📝 ${esc(x.note)}</small>`:""}<small>ราคาประมาณ ฿${fm(num(x.est))}${bad?` · <b style="color:var(--danger)">⚠️ ${esc(bad.msg||"ไม่ว่างแล้ว"+(bad.clash&&bad.clash.length?" (ชนกับ "+bad.clash.join(", ")+")":""))}</b>`:""}</small></div>
+    <div class="r"><button class="btn sm main edm-lock" data-acc="${esc(x.code)}" ${bad?"disabled":""}>✓ รับจอง</button><button class="btn sm ghost danger edm-lock" data-rej="${esc(x.code)}">ไม่รับ</button></div></div>`}).join("")}</div>
+    <div class="note">กดรับจองแล้วระบบสร้างใบจอง (สถานะจองไว้ รอมัดจำ) และแจ้งลูกค้าทางอีเมลถ้าใส่ไว้ · ลูกค้าตรวจสถานะได้ที่หน้าจองด้วยรหัสคำขอ</div></div>`}
+function wireInbox(){$$("[data-acc]").forEach(b=>b.onclick=e=>{e.stopPropagation();accReq(b.dataset.acc)});$$("[data-rej]").forEach(b=>b.onclick=e=>{e.stopPropagation();rejReq(b.dataset.rej)})}
+function ackLater(a){const A=(LS.get(K.acks,[])||[]).filter(x=>x.code!==a.code);A.push(a);LS.set(K.acks,A);const I=LS.get(K.inbox,{})||{};I.items=(I.items||[]).filter(x=>x.code!==a.code);LS.set(K.inbox,I);flushAcks().then(()=>{if(!dlg.open)render()})}
+function accReq(code){const x=inbox().find(y=>y.code===code);if(!x)return;
+  const dep=num(cfg.depPct);let msg=prompt("ข้อความถึงลูกค้า (ส่งทางอีเมลถ้าลูกค้าใส่ไว้ · แก้ได้)",dep?`รับจองแล้ว รบกวนโอนมัดจำ ${fm(dep)}% ภายใน 24 ชั่วโมง ร้านจะติดต่อกลับค่ะ`:"รับจองแล้ว ร้านจะติดต่อกลับค่ะ");if(msg===null)return;
+  cur={id:uid("b"),no:"",date:today(),cust:{name:x.name,contact:x.phone+(x.email?" · "+x.email:""),addr:"",tax:"",branch:""},ch:"web",guests:"",st:"hold",
+    lines:(x.lines||[]).map(l=>({rid:l.rid,qty:num(l.qty)||1,s:l.s,e:l.e,amt:0,n:0,ov:false,g:0,gov:false})),ext:[],disc:0,pays:[],note:"จองออนไลน์ "+x.code+(x.note?" · "+x.note:""),web:x.code};
+  cur.lines.forEach(upd);isNew=true;
+  if(!commit(true)){cur=null;return}
+  const no=list[0]&&list[0].web===code?list[0].no:"";ackLater({code,st:"ok",no,msg:msg.trim()});toast("รับจองแล้ว · สร้างใบจอง "+no);const id=list[0].id;setTimeout(()=>openBk(id),50)}
+function rejReq(code){const x=inbox().find(y=>y.code===code);if(!x)return;const msg=prompt("เหตุผลที่ไม่รับ (ส่งทางอีเมลถ้าลูกค้าใส่ไว้)","ขออภัย ช่วงเวลานี้ไม่ว่างแล้ว ลองเลือกวันอื่นได้ค่ะ");if(msg===null)return;ackLater({code,st:"no",msg:msg.trim()});toast("แจ้งลูกค้าว่าไม่รับจองแล้ว")}
+function onlineHtml(){const O=cfg.online,P=LS.get(K.pub,{})||{},logged=!!MEM(),ids=res.filter(r=>r.active!==false&&kOn(r.kind));
+  return`<div class="card" id="onCard"><h2>🌐 รับจองออนไลน์ <small>ลูกค้าเลือกและส่งคำขอจองเองผ่านลิงก์ของร้าน</small></h2>
+    ${logged?"":`<div class="warn">เข้าสู่ระบบสมาชิกก่อน จึงเปิดรับจองออนไลน์ได้ (ข้อมูลว่างต้องส่งขึ้นระบบเพื่อให้ลูกค้าเห็น)</div>`}
+    <label class="ck"><input type="checkbox" data-o="on" ${O.on?"checked":""}> <b>เปิดรับจองออนไลน์</b></label>
+    <div id="onStat">${onlineStat()}</div>
+    <div class="row"><div class="f"><label>ชื่อร้านที่แสดง</label><input class="in-" data-o="name" value="${esc(O.name)}" placeholder="${esc(seller().name||"ชื่อร้าน")}"></div><div class="f"><label>โทร</label><input class="in-" data-o="tel" value="${esc(O.tel)}" placeholder="${esc(seller().tel||seller().phone||"")}"></div></div>
+    <div class="row"><div class="f"><label>LINE ID (เช่น @myshop)</label><input class="in-" data-o="line" value="${esc(O.line)}"></div><div class="f"><label>ที่อยู่ / จุดนัดรับ (สั้นๆ)</label><input class="in-" data-o="addr" value="${esc(O.addr)}"></div></div>
+    <div class="f"><label>ข้อความต้อนรับ</label><input class="in-" data-o="note" value="${esc(O.note)}" placeholder="เช่น บ้านพักริมน้ำ 3 หลัง ใกล้ตัวเมือง 10 นาที"></div>
+    <div class="row4"><div class="f"><label>จองล่วงหน้าอย่างน้อย (ชม.)</label><input class="in- r" inputmode="decimal" data-o="lead" value="${esc(O.lead)}"></div><div class="f"><label>จองล่วงหน้าได้ไม่เกิน (วัน)</label><input class="in- r" inputmode="numeric" data-o="max" value="${esc(O.max)}"></div><div class="f"><label>เปิดให้จองรายชั่วโมงตั้งแต่</label><input class="in-" type="time" data-o="open" value="${esc(O.open)}"></div><div class="f"><label>ถึง</label><input class="in-" type="time" data-o="close" value="${esc(O.close)}"></div></div>
+    <div class="f"><span>รายการที่เปิดให้ลูกค้าจอง</span><div class="days">${ids.length?ids.map(r=>`<label><input type="checkbox" data-pr="${r.id}" ${(O.hide||[]).includes(r.id)?"":"checked"}> ${KIND[r.kind].ic} ${esc(r.name)}</label>`).join(""):`<span class="note">ยังไม่มีห้อง / อุปกรณ์</span>`}</div></div>
+    <div class="note">ลูกค้าเห็นเฉพาะชื่อร้าน รายการ ราคา และช่วงที่ไม่ว่าง ไม่เห็นชื่อหรือเบอร์ของผู้จองคนอื่น · คำขอจองยังไม่ตัดห้องจนกว่าคุณกดรับจอง แต่จะกันช่วงนั้นไม่ให้ลูกค้าคนอื่นขอซ้ำ</div></div>`}
+function onlineStat(){const O=cfg.online,P=LS.get(K.pub,{})||{};
+  if(P.url&&O.on&&!P.err)return`<div class="hint" style="display:flex;flex-direction:column;gap:8px"><span>✅ เปิดรับจองแล้ว · ส่งข้อมูลว่างล่าสุด ${P.at?new Date(P.at).toLocaleString("th-TH",{dateStyle:"short",timeStyle:"short"}):"-"} (อัปเดตอัตโนมัติเมื่อมีการจองเปลี่ยน)</span><code style="word-break:break-all">${esc(P.url)}</code><span class="acts"><button class="btn sm main" type="button" id="onCopy">📋 คัดลอกลิงก์จอง</button><a class="btn sm ghost" href="${esc(P.url)}" target="_blank" rel="noopener">เปิดดูหน้าจอง ↗</a><button class="btn sm ghost" type="button" id="onPush">↻ ส่งข้อมูลตอนนี้</button></span></div>`;
+  if(P.err&&(O.on||P.on))return`<div class="bad">${esc(P.err)} <button class="btn sm ghost" type="button" id="onPush">ลองอีกครั้ง</button></div>`;
+  if(O.on)return`<div class="hint">กำลังเปิดรับจอง...</div>`;
+  return P.url?`<div class="note">ปิดรับจองอยู่ · ลิงก์เดิม ${esc(P.url)} จะขึ้นว่าปิดรับจองชั่วคราว</div>`:""}
+function onlineUi(){const st=$("#onStat");if(st){st.innerHTML=onlineStat();wireStat()}}
+function wireStat(){const c=$("#onCopy");if(c)c.onclick=()=>{const u=(LS.get(K.pub,{})||{}).url||"";const ok=()=>toast("คัดลอกลิงก์แล้ว ✓ ส่งให้ลูกค้าหรือใส่ในเพจได้เลย");if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(ok,()=>prompt("คัดลอกลิงก์นี้",u));else prompt("คัดลอกลิงก์นี้",u)};
+  const p=$("#onPush");if(p)p.onclick=()=>{p.disabled=true;p.textContent="กำลังส่ง...";const P=LS.get(K.pub,{})||{};delete P.err;LS.set(K.pub,P);publish(true).then(()=>toast("ส่งข้อมูลแล้ว"))}}
+function wireOnline(){const sv=()=>{clearTimeout(wireOnline.t);wireOnline.t=setTimeout(()=>{if(saveCfg())toast("บันทึกการตั้งค่าแล้ว ✓")},500)};
+  $$("[data-o]").forEach(x=>x.addEventListener(x.type==="checkbox"?"change":"input",()=>{const k=x.dataset.o;cfg.online[k]=x.type==="checkbox"?x.checked:/^(lead|max)$/.test(k)?num(x.value):x.value.trim();
+    if(k==="on"){if(x.checked&&!MEM()){toast("เข้าสู่ระบบสมาชิกก่อน");x.checked=false;cfg.online.on=false;return}const P=LS.get(K.pub,{})||{};delete P.err;LS.set(K.pub,P);saveCfg();onlineUi();clearTimeout(pubT);publish(true);return}sv()}));
+  $$("[data-pr]").forEach(x=>x.onchange=()=>{const h=new Set(cfg.online.hide||[]);if(x.checked)h.delete(x.dataset.pr);else h.add(x.dataset.pr);cfg.online.hide=[...h];sv()});
+  wireStat()}
+
 /* ---------- หน้าต่าง ---------- */
 const dlg=$("#dlg");
 function openDlg(t,h,cls){$("#dlgTitle").textContent=t;const old=$("#dlgBody"),nb=old.cloneNode(false);nb.innerHTML=h;old.replaceWith(nb);dlg.className=cls||"";if(!dlg.open){try{dlg.showModal()}catch(e){dlg.setAttribute("open","")}}nb.scrollTop=0;dlg.scrollTop=0}
@@ -761,8 +829,12 @@ window.addEventListener("hashchange",fromHash);
 window.addEventListener("storage",e=>{if(!e.key||/^edm_(book_|bill_docs|bill_seller|bill_customers)/.test(e.key)){const keep=cur;load();if(!dlg.open)render();else cur=keep}});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&!dlg.open){load();render()}});
 render();setTimeout(fromHash,0);
+// รับจองออนไลน์: ส่งข้อมูลว่างเมื่อเปิดหน้า แล้วดึงคำขอใหม่ทุก 2 นาทีระหว่างเปิดหน้าไว้
+setTimeout(()=>{if(cfg.online.on){publish(false).then(()=>pull())}},1500);
+setInterval(()=>{if(document.visibilityState==="visible"&&cfg.online.on){publish(false);pull()}},120000);
+window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.edm==="member"&&cfg.online.on)setTimeout(()=>publish(false).then(()=>pull()),300)});
 })();
 </script>
-<script src="../assets/member.js?v=51" defer></script>
+<script src="../assets/member.js?v=52" defer></script>
 </body>
 </html>

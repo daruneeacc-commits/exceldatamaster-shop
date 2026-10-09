@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>จองออนไลน์</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#F4F6F5;--accent:#127A4B;--accent-ink:#fff;--okbg:#E3F4EA;--danger:#B3261E;--dangerbg:#FDE8E7;--warn:#8A5A00;--warnbg:#FFF4DC;--blue:#1F4FA3;--bluebg:#E6EEFB}
+@media (prefers-color-scheme:dark){:root{--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--okbg:#14261C;--danger:#F2867E;--dangerbg:#2C1A19;--warn:#F0C27A;--warnbg:#2A2416;--blue:#8AB4F8;--bluebg:#18233A}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+main{max-width:640px;margin:0 auto;padding:16px 16px 48px;display:flex;flex-direction:column;gap:14px}
+.hero{padding:8px 2px 0}
+.hero small{color:var(--muted);font-size:.82rem;display:block}
+.hero h1{margin:2px 0 4px;font-size:1.5rem;line-height:1.3}
+.hero p{margin:0;color:var(--muted);font-size:.92rem}
+.contact{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.card{background:var(--card);border-radius:18px;padding:18px 16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px}
+.card h2{margin:0;font-size:1.05rem;display:flex;align-items:center;gap:8px}
+.card h2 .n{width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--bg);display:inline-grid;place-items:center;font-size:.8rem;flex:0 0 auto}
+.btn{border:0;border-radius:999px;padding:11px 18px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;background:var(--soft);color:var(--ink);font-size:.95rem}
+.btn.main{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.btn.sm{padding:7px 14px;font-size:.85rem}
+.btn.line{background:#06C755;color:#fff}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.grp{font-size:.82rem;font-weight:700;color:var(--muted);margin-top:4px}
+.res{display:flex;flex-direction:column;gap:8px}
+.ri{border:0;background:var(--soft);border-radius:14px;padding:12px 14px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center;width:100%}
+.ri b{display:block}
+.ri small{color:var(--muted);font-size:.82rem;display:block;line-height:1.4}
+.ri .p{text-align:right;white-space:nowrap;font-weight:700}
+.ri .p small{font-weight:400}
+.ri.on{box-shadow:inset 0 0 0 2px var(--accent);background:var(--okbg)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:10px}
+@media(max-width:420px){.row3{grid-template-columns:1fr 1fr}.row3 .f:first-child{grid-column:1/-1}}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f label{font-size:.82rem;font-weight:600;color:var(--muted)}
+.in{width:100%;min-width:0;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 12px;outline:none;min-height:46px}
+.in:focus{border-color:var(--accent)}
+input[type=date].in,input[type=time].in{-webkit-appearance:none;appearance:none}
+.strip{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:3px}
+.strip div{border-radius:8px;text-align:center;font-size:.7rem;line-height:1.2;padding:5px 0;background:var(--okbg);color:var(--accent)}
+.strip div b{display:block;font-size:.85rem}
+.strip div.full{background:var(--dangerbg);color:var(--danger)}
+.strip div.part{background:var(--bluebg);color:var(--blue)}
+.strip div.pick{box-shadow:inset 0 0 0 2px var(--ink)}
+.legend{display:flex;gap:12px;font-size:.78rem;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.av{border-radius:12px;padding:10px 12px;font-weight:600;font-size:.92rem}
+.av.ok{background:var(--okbg);color:var(--accent)}.av.no{background:var(--dangerbg);color:var(--danger)}.av.wait{background:var(--soft);color:var(--muted)}
+.sum{background:var(--soft);border-radius:14px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:2px 12px;font-size:.92rem}
+.sum .r{text-align:right;font-variant-numeric:tabular-nums}
+.sum .big{font-weight:700;font-size:1.05rem}
+.note{font-size:.82rem;color:var(--muted)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.done{text-align:center;align-items:center}
+.done .ic{width:64px;height:64px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:30px}
+.code{font-family:ui-monospace,Menlo,monospace;font-size:1.4rem;font-weight:700;letter-spacing:.06em;background:var(--soft);padding:6px 16px;border-radius:12px}
+.pill{font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:999px;display:inline-block}
+.p-wait{background:var(--warnbg);color:var(--warn)}.p-ok{background:var(--okbg);color:var(--accent)}.p-no{background:var(--dangerbg);color:var(--danger)}
+.li{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.li:last-child{border-bottom:0}
+.msg{border-radius:12px;padding:10px 12px;font-size:.9rem}
+.msg.err{background:var(--dangerbg);color:var(--danger)}
+.foot{text-align:center;font-size:.78rem;color:var(--muted)}
+.foot a{color:inherit}
+.skel{height:120px;border-radius:18px;background:linear-gradient(90deg,var(--card),var(--soft),var(--card));background-size:200% 100%;animation:sk 1.2s infinite}
+@keyframes sk{to{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<main id="app"><div class="skel"></div><div class="skel"></div></main>
+<script>
+(function(){
+"use strict";
+const API=window.EDM_API||"https://script.google.com/macros/s/AKfycbzQsMaqyTsenNm4XIIPFJRm4pcGFycMyLZQesGhIsFfHGjDb0WhvBPvPvRLEuvL5ibE/exec";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0};
+const r2=n=>Math.round((n+Number.EPSILON)*100)/100;
+const fm=n=>Math.abs(n-Math.round(n))<.005?Math.round(n).toLocaleString("th-TH"):(+n).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2});
+const pad=n=>String(n).padStart(2,"0");
+const dn=s=>{const[y,m,d]=String(s).slice(0,10).split("-").map(Number);return Math.round(Date.UTC(y,m-1,d)/864e5)};
+const fromDn=n=>new Date(n*864e5).toISOString().slice(0,10);
+const addDays=(s,n)=>fromDn(dn(s)+n);
+const mins=s=>{const[h,m]=String(s).slice(11,16).split(":").map(Number);return dn(s)*1440+h*60+m};
+const okD=s=>/^\d{4}-\d{2}-\d{2}$/.test(s||""),okDT=s=>/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(s||"");
+const dow=s=>new Date(dn(s)*864e5).getUTCDay();
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],DW=["อา","จ","อ","พ","พฤ","ศ","ส"];
+const thD=s=>{if(!okD(String(s).slice(0,10)))return"";const[y,m,d]=s.slice(0,10).split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
+const KIND={night:{n:"ห้องพัก",ic:"🏨",u:"คืน",s:"เช็คอิน",e:"เช็คเอาท์"},hour:{n:"จองเป็นชั่วโมง",ic:"⏰",u:"ชม.",s:"เริ่ม",e:"ถึง"},item:{n:"อุปกรณ์ให้เช่า",ic:"🧰",u:"วัน",s:"วันรับของ",e:"วันคืนของ"}};
+const slug=(new URLSearchParams(location.search).get("s")||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+const SK="edm_bkreq_"+slug;
+let P=null,sel=null,L={rid:"",qty:1,s:"",e:""},sending=false;
+const call=o=>fetch(API,{method:"POST",body:JSON.stringify(o)}).then(r=>r.json());
+const mine=()=>{try{return JSON.parse(localStorage.getItem(SK)||"[]")||[]}catch(e){return[]}};
+const saveMine=a=>{try{localStorage.setItem(SK,JSON.stringify(a.slice(0,10)))}catch(e){}};
+
+/* ---------- เช็กว่าง และราคา (ตรงกับระบบหลังร้าน) ---------- */
+const rOf=id=>(P.res||[]).find(r=>r.id===id);
+function okLine(l,r){if(!r)return false;if(r.kind==="hour")return okDT(l.s)&&okDT(l.e)&&mins(l.e)>mins(l.s);if(!okD(l.s)||!okD(l.e))return false;return r.kind==="night"?dn(l.e)>dn(l.s):dn(l.e)>=dn(l.s)}
+function span(l,r){if(r.kind==="hour")return[mins(l.s),mins(l.e)];const a=dn(l.s);let z=dn(l.e);if(r.kind==="item"&&z<=a)z=a+1;return[a,z]}
+function use(rid,a,z,buf){const ev=[];(P.busy||[]).forEach(b=>{if(b[0]!==rid)return;const x=b[1],y=b[2]+buf;if(x<z+buf&&a<y)ev.push([Math.max(x,a-buf),b[3]],[Math.min(y,z+buf),-b[3]])});ev.sort((p,q)=>p[0]-q[0]||p[1]-q[1]);let c=0,m=0;ev.forEach(e=>{c+=e[1];if(c>m)m=c});return m}
+function peak(s){let p=0;(P.cfg.peaks||[]).forEach(x=>{if(s>=x.s&&s<=x.e)p=Math.max(p,num(x.pct))});return p}
+function quote(l){const r=rOf(l.rid);if(!r||!okLine(l,r))return{n:0,amt:0};const q=num(l.qty)||1,rate=num(r.rate);
+  if(r.kind==="night"){let amt=0,n=0;for(let d=dn(l.s);d<dn(l.e);d++){const s=fromDn(d);let x=(P.cfg.we||[]).includes(dow(s))&&num(r.rateWe)?num(r.rateWe):rate;x*=1+peak(s)/100;amt+=x;n++}return{n,amt:r2(amt*q)}}
+  if(r.kind==="hour"){const h=(mins(l.e)-mins(l.s))/60,d=l.s.slice(0,10),we=dow(d)===0||dow(d)===6;let x=we&&num(r.rateWe)?num(r.rateWe):rate;x*=1+peak(d)/100;return{n:r2(h),amt:r2(x*h*q)}}
+  const n=Math.max(1,dn(l.e)-dn(l.s));let amt=n*rate;if(num(r.rate7)&&n>=7){const w=Math.floor(n/7);amt=w*num(r.rate7)+(n-w*7)*rate}return{n,amt:r2(amt*q)}}
+function check(){const r=rOf(L.rid);if(!r)return{ok:false,msg:"เลือกห้องหรืออุปกรณ์"};
+  if(!okLine(L,r))return{ok:false,msg:r.kind==="hour"?"เลือกเวลาสิ้นสุดหลังเวลาเริ่ม":r.kind==="night"?"วันเช็คเอาท์ต้องหลังวันเช็คอิน":"วันคืนของต้องไม่ก่อนวันรับของ"};
+  const now=P.now||{},lead=num(P.cfg.lead);
+  if(r.kind==="hour"?mins(L.s)<mins(now.dt)+lead*60:(dn(L.s)<dn(now.day)||(dn(L.s)===dn(now.day)&&lead>=24)))return{ok:false,msg:"ต้องจองล่วงหน้าอย่างน้อย "+lead+" ชั่วโมง"};
+  if(dn(L.s)>dn(now.day)+num(P.cfg.max))return{ok:false,msg:"จองล่วงหน้าได้ไม่เกิน "+P.cfg.max+" วัน"};
+  const[a,z]=span(L,r),cap=num(r.qty)||1,free=cap-use(r.id,a,z,r.kind==="hour"?num(P.cfg.buf):0);
+  if(free<(num(L.qty)||1))return{ok:false,msg:free>0?"เหลือว่าง "+free+" "+(r.unit||"ชิ้น")+" ในช่วงนี้":"ไม่ว่างในช่วงที่เลือก ลองวันหรือเวลาอื่น"};
+  return{ok:true,free,cap}}
+
+/* ---------- หน้าจอ ---------- */
+function shell(h){$("#app").innerHTML=h+`<div class="foot">ระบบจองออนไลน์โดย <a href="/" target="_blank" rel="noopener">Excel Data Master</a></div>`}
+function contactBtns(s){const o=[];if(s.tel)o.push(`<a class="btn sm ghost" href="tel:${esc(s.tel.replace(/[^\d+]/g,""))}">📞 ${esc(s.tel)}</a>`);if(s.line){const id=s.line.trim();o.push(`<a class="btn sm line" href="https://line.me/R/ti/p/${encodeURIComponent(id.startsWith("@")?id:"~"+id)}" target="_blank" rel="noopener">LINE ${esc(id)}</a>`)}return o.length?`<div class="contact">${o.join("")}</div>`:""}
+function hero(){const s=P.shop||{};document.title="จอง · "+(s.name||"จองออนไลน์");return`<div class="hero"><small>จองออนไลน์</small><h1>${esc(s.name||"จองออนไลน์")}</h1>${s.addr?`<p>📍 ${esc(s.addr)}</p>`:""}${s.note?`<p>${esc(s.note)}</p>`:""}${contactBtns(s)}</div>`}
+function priceTxt(r){const k=KIND[r.kind];let t=`฿${fm(num(r.rate))}<small> / ${k.u}</small>`;if(r.kind==="night"&&num(r.rateWe)&&num(r.rateWe)!==num(r.rate))t+=`<small>วันหยุด ฿${fm(num(r.rateWe))}</small>`;if(r.kind==="hour"&&num(r.rateWe)&&num(r.rateWe)!==num(r.rate))t+=`<small>ส-อา ฿${fm(num(r.rateWe))}</small>`;if(r.kind==="item"&&num(r.rate7))t+=`<small>7 วัน ฿${fm(num(r.rate7))}</small>`;return t}
+function render(){
+  if(!P.res||!P.res.length){shell(hero()+`<div class="card"><h2>ยังไม่มีรายการให้จอง</h2><p class="note">กรุณาติดต่อร้านโดยตรง</p></div>`);return}
+  const kinds=["night","hour","item"].filter(k=>P.res.some(r=>r.kind===k));
+  const resH=kinds.map(k=>`${kinds.length>1?`<div class="grp">${KIND[k].ic} ${KIND[k].n}</div>`:""}`+P.res.filter(r=>r.kind===k).map(r=>`<button class="ri ${L.rid===r.id?"on":""}" data-r="${esc(r.id)}" type="button"><span><b>${esc(r.name)}</b>${r.note?`<small>${esc(r.note)}</small>`:""}${num(r.qty)>1?`<small>มี ${r.qty} ${esc(r.unit||"ชิ้น")}</small>`:""}</span><span class="p">${priceTxt(r)}</span></button>`).join("")).join("");
+  const r=rOf(L.rid),mineL=mine();
+  shell(hero()+`<div class="card"><h2><span class="n">1</span>เลือกสิ่งที่ต้องการจอง</h2><div class="res">${resH}</div></div>
+  ${r?`<div class="card" id="whenCard"><h2><span class="n">2</span>เลือกวัน${r.kind==="hour"?"และเวลา":""}</h2>${whenHtml(r)}<div id="strip"></div><div class="av wait" id="av"></div><div class="sum" id="sum" hidden></div></div>
+  <div class="card"><h2><span class="n">3</span>ข้อมูลผู้จอง</h2>
+    <div class="f"><label for="nm">ชื่อผู้จอง *</label><input class="in" id="nm" autocomplete="name" maxlength="80"></div>
+    <div class="row"><div class="f"><label for="ph">เบอร์โทร *</label><input class="in" id="ph" type="tel" autocomplete="tel" inputmode="tel" maxlength="20"></div><div class="f"><label for="em">อีเมล (รับแจ้งผล)</label><input class="in" id="em" type="email" autocomplete="email" maxlength="120"></div></div>
+    <div class="f"><label for="nt">หมายเหตุถึงร้าน</label><textarea class="in" id="nt" rows="2" maxlength="400" placeholder="${r.kind==="night"?"เช่น จำนวนผู้เข้าพัก เวลาที่จะมาถึง":r.kind==="item"?"เช่น เวลาที่จะมารับของ":"เช่น จำนวนคน อุปกรณ์ที่ต้องใช้"}"></textarea></div>
+    <div class="hp" aria-hidden="true"><label>เว็บไซต์<input id="hp" tabindex="-1" autocomplete="off"></label></div>
+    ${P.cfg.cancel||num(P.cfg.depPct)?`<div class="note">${num(P.cfg.depPct)?"ร้านจะแจ้งชำระมัดจำ "+fm(num(P.cfg.depPct))+"% หลังยืนยันการจอง · ":""}${esc(P.cfg.cancel||"")}</div>`:""}
+    <div id="err"></div>
+    <button class="btn main" id="go" type="button">ส่งคำขอจอง</button>
+    <div class="note">ส่งแล้วร้านจะตรวจและยืนยันกลับ การจองยังไม่สมบูรณ์จนกว่าร้านยืนยัน</div></div>`:""}
+  <div class="card"><h2>🔎 ตรวจสถานะคำขอจอง</h2>${mineL.length?`<div id="mine">${mineL.map(x=>`<div class="li"><div><b class="code" style="font-size:1rem;padding:2px 8px">${esc(x.code)}</b> <span class="note">${esc(x.what||"")}</span></div><button class="btn sm ghost" data-st="${esc(x.code)}" data-ph="${esc(x.phone)}" type="button">ตรวจ</button></div>`).join("")}</div>`:""}
+    <div class="row"><div class="f"><label for="sc">รหัสคำขอ</label><input class="in" id="sc" placeholder="เช่น R261009ABCD" autocapitalize="characters"></div><div class="f"><label for="sp">เบอร์โทรที่ใช้จอง</label><input class="in" id="sp" type="tel" inputmode="tel"></div></div>
+    <button class="btn ghost" id="stGo" type="button">ตรวจสถานะ</button><div id="stOut"></div></div>`);
+  wire();if(r)refresh()}
+function timeOpts(v){const o=[],a=mins("2000-01-01T"+(P.cfg.open||"08:00")),b=mins("2000-01-01T"+(P.cfg.close||"20:00"));for(let m=a;m<=b;m+=30){const t=pad(Math.floor((m%1440)/60))+":"+pad(m%60);o.push(`<option ${t===v?"selected":""}>${t}</option>`)}return o.join("")}
+function whenHtml(r){const now=P.now||{},min=now.day,max=addDays(now.day,num(P.cfg.max));
+  if(r.kind==="hour")return`<div class="row3"><div class="f"><label for="hd">วันที่</label><input class="in" type="date" id="hd" min="${min}" max="${max}" value="${esc(L.s.slice(0,10))}"></div><div class="f"><label for="hs">เริ่ม</label><select class="in" id="hs">${timeOpts(L.s.slice(11,16))}</select></div><div class="f"><label for="he">ถึง</label><select class="in" id="he">${timeOpts(L.e.slice(11,16))}</select></div></div>`;
+  const q=num(r.qty)>1?`<div class="f"><label for="qt">จำนวน (${esc(r.unit||"ชิ้น")})</label><select class="in" id="qt">${Array.from({length:Math.min(50,num(r.qty))},(_,i)=>`<option ${L.qty===i+1?"selected":""}>${i+1}</option>`).join("")}</select></div>`:"";
+  return`${q}<div class="row"><div class="f"><label for="ds">${KIND[r.kind].s}${r.kind==="night"?" ("+esc(P.cfg.ci)+" น.)":""}</label><input class="in" type="date" id="ds" min="${min}" max="${max}" value="${esc(L.s)}"></div><div class="f"><label for="de">${KIND[r.kind].e}${r.kind==="night"?" ("+esc(P.cfg.co)+" น.)":""}</label><input class="in" type="date" id="de" min="${min}" value="${esc(L.e)}"></div></div>`}
+function setDefaults(r){const now=P.now||{},lead=num(P.cfg.lead);let d=now.day;if(r.kind!=="hour"&&lead>=24)d=addDays(d,Math.ceil(lead/24));
+  if(r.kind==="hour"){let m=mins(now.dt)+lead*60;m=Math.ceil(m/30)*30;let day=fromDn(Math.floor(m/1440)),t=m%1440;const o=mins("2000-01-01T"+(P.cfg.open||"08:00"))%1440,c=mins("2000-01-01T"+(P.cfg.close||"20:00"))%1440;if(t<o)t=o;if(t+60>c){day=addDays(day,1);t=o}
+    L.s=day+"T"+pad(Math.floor(t/60))+":"+pad(t%60);const e=Math.min(t+60,c);L.e=day+"T"+pad(Math.floor(e/60))+":"+pad(e%60)}
+  else{L.s=d;L.e=addDays(d,1)}L.qty=1}
+function wire(){
+  $$("[data-r]").forEach(b=>b.onclick=()=>{const r=rOf(b.dataset.r);const old=rOf(L.rid);L.rid=r.id;if(!old||old.kind!==r.kind||!okLine(L,r))setDefaults(r);if(L.qty>num(r.qty))L.qty=1;render();setTimeout(()=>{const w=$("#whenCard");if(w)w.scrollIntoView({behavior:"smooth",block:"start"})},30)});
+  const on=(id,f)=>{const el=$(id);if(el)el.addEventListener("change",f)};
+  on("#ds",e=>{L.s=e.target.value;const r=rOf(L.rid);if(okD(L.s)&&(!okD(L.e)||dn(L.e)<dn(L.s)+(r.kind==="night"?1:0))){L.e=addDays(L.s,1);$("#de").value=L.e}$("#de").min=L.s;refresh()});
+  on("#de",e=>{L.e=e.target.value;refresh()});
+  on("#qt",e=>{L.qty=+e.target.value||1;refresh()});
+  on("#hd",e=>{const d=e.target.value;if(okD(d)){L.s=d+"T"+L.s.slice(11,16);L.e=d+"T"+L.e.slice(11,16)}refresh()});
+  on("#hs",e=>{const d=L.s.slice(0,10),len=Math.max(30,mins(L.e)-mins(L.s));L.s=d+"T"+e.target.value;if(mins(L.e)<=mins(L.s)){const m=Math.min(mins(L.s)+len,dn(d)*1440+mins("2000-01-01T"+(P.cfg.close||"20:00"))%1440);L.e=d+"T"+pad(Math.floor((m%1440)/60))+":"+pad(m%60);$("#he").value=L.e.slice(11,16)}refresh()});
+  on("#he",e=>{L.e=L.s.slice(0,10)+"T"+e.target.value;refresh()});
+  const go=$("#go");if(go)go.onclick=send;
+  $("#stGo").onclick=()=>status($("#sc").value,$("#sp").value);
+  $$("[data-st]").forEach(b=>b.onclick=()=>status(b.dataset.st,b.dataset.ph))}
+function refresh(){const r=rOf(L.rid);if(!r)return;const c=check(),av=$("#av"),Q=quote(L);
+  av.className="av "+(c.ok?"ok":"no");av.textContent=c.ok?`✅ ว่าง${c.cap>1?" ("+c.free+" จาก "+c.cap+" "+(r.unit||"ชิ้น")+")":""} · ${fm(Q.n)} ${KIND[r.kind].u}`:"❌ "+c.msg;
+  const sm=$("#sum");sm.hidden=!c.ok;if(c.ok){const dep=num(P.cfg.depPct)?r2(Q.amt*num(P.cfg.depPct)/100):0,g=num(r.dep)*(num(L.qty)||1);
+    sm.innerHTML=`<span>${esc(r.name)}${num(L.qty)>1?" × "+L.qty:""} · ${fm(Q.n)} ${KIND[r.kind].u}</span><span class="r">฿${fm(Q.amt)}</span>${dep?`<span>มัดจำ ${fm(num(P.cfg.depPct))}%</span><span class="r">฿${fm(dep)}</span>`:""}${g?`<span>ค่าประกัน (ได้คืน)</span><span class="r">฿${fm(g)}</span>`:""}<span class="big">ราคาประมาณ${P.cfg.vatIn?" (รวม VAT)":""}</span><span class="big r">฿${fm(Q.amt)}</span>`}
+  const go=$("#go");if(go)go.disabled=!c.ok||sending;strip(r)}
+function strip(r){const now=P.now||{};let s0=r.kind==="hour"?L.s.slice(0,10):L.s;if(!okD(s0)||dn(s0)<dn(now.day))s0=now.day;s0=fromDn(Math.max(dn(now.day),dn(s0)-3));
+  const cap=num(r.qty)||1,cells=[];for(let i=0;i<14;i++){const d=addDays(s0,i);let cls,lab;
+    if(r.kind==="hour"){const a=dn(d)*1440,z=a+1440,n=(P.busy||[]).filter(b=>b[0]===r.id&&b[1]<z&&a<b[2]).length;cls=n?"part":"";lab=n?n+" รอบ":"ว่าง"}
+    else{const u=use(r.id,dn(d),dn(d)+1,0),fr=cap-u;cls=fr<=0?"full":u>0?"part":"";lab=fr<=0?"เต็ม":cap>1?"ว่าง "+fr:"ว่าง"}
+    const pick=r.kind==="hour"?d===L.s.slice(0,10):okD(L.s)&&dn(d)>=dn(L.s)&&dn(d)<Math.max(dn(L.e),dn(L.s)+1);
+    cells.push(`<div class="${cls}${pick?" pick":""}" title="${thD(d)}"><small>${DW[dow(d)]}</small><b>${+d.slice(8)}</b>${lab.replace(" ","<br>")}</div>`)}
+  $("#strip").innerHTML=`<div class="strip">${cells.join("")}</div><div class="legend" style="margin-top:6px"><span><i style="background:var(--okbg)"></i>ว่าง</span><span><i style="background:var(--bluebg)"></i>${r.kind==="hour"?"มีจองบางช่วง":"ว่างบางส่วน"}</span><span><i style="background:var(--dangerbg)"></i>เต็ม</span><span>· ${thD(s0)} – ${thD(addDays(s0,13))}</span></div>`}
+function send(){const r=rOf(L.rid),c=check(),err=$("#err");err.innerHTML="";if(!c.ok)return;
+  const nm=$("#nm").value.trim(),ph=$("#ph").value.trim(),em=$("#em").value.trim();
+  const bad=m=>{err.innerHTML=`<div class="msg err">${esc(m)}</div>`};
+  if(nm.length<2)return bad("ใส่ชื่อผู้จอง");if(ph.replace(/\D/g,"").length<9)return bad("ใส่เบอร์โทรให้ถูกต้อง");if(em&&!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em))return bad("อีเมลไม่ถูกต้อง (เว้นว่างได้)");
+  sending=true;const go=$("#go");go.disabled=true;go.textContent="กำลังส่ง...";
+  call({a:"bkreq",s:slug,name:nm,phone:ph,email:em,note:$("#nt").value.trim(),hp:$("#hp").value,lines:[{rid:L.rid,qty:L.qty,s:L.s,e:L.e}]}).then(x=>{sending=false;
+    if(!x||!x.ok){go.textContent="ส่งคำขอจอง";bad((x&&x.msg)||"ส่งไม่สำเร็จ ลองอีกครั้ง");if(x&&x.code==="busy")load(true,x.msg);else go.disabled=false;return}
+    const what=r.name+" · "+(r.kind==="hour"?thD(L.s)+" "+L.s.slice(11,16)+"–"+L.e.slice(11,16):thD(L.s)+" – "+thD(L.e));
+    const a=mine().filter(y=>y.code!==x.code);a.unshift({code:x.code,phone:ph,what});saveMine(a);
+    shell(hero()+`<div class="card done"><div class="ic">✓</div><h2 style="justify-content:center">ส่งคำขอจองแล้ว</h2><div class="code">${esc(x.code)}</div>
+      <p style="margin:0">${esc(what)}<br>ราคาประมาณ ฿${fm(num(x.est))}</p><div class="note">บันทึกรหัสนี้ไว้ ร้านจะตรวจและยืนยันกลับ${em?" ทางอีเมล "+esc(em):""} หรือโทรหาคุณที่ ${esc(ph)}<br>ตรวจสถานะได้ที่หน้านี้ด้วยรหัสคำขอ + เบอร์โทร</div>${contactBtns(P.shop||{})}
+      <button class="btn ghost" id="again" type="button">← จองรายการอื่น</button></div>`);
+    $("#again").onclick=()=>{L={rid:"",qty:1,s:"",e:""};load()}}).catch(()=>{sending=false;go.disabled=false;go.textContent="ส่งคำขอจอง";bad("เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง")})}
+function status(code,phone){const out=$("#stOut");code=String(code||"").trim().toUpperCase();if(!code||String(phone||"").replace(/\D/g,"").length<6){out.innerHTML=`<div class="msg err">ใส่รหัสคำขอและเบอร์โทรที่ใช้จอง</div>`;return}
+  out.innerHTML=`<div class="note">กำลังตรวจ...</div>`;
+  call({a:"bkstat",s:slug,code,phone}).then(x=>{if(!x||!x.ok){out.innerHTML=`<div class="msg err">${esc((x&&x.msg)||"ตรวจไม่ได้")}</div>`;return}
+    const cls=/^รับ/.test(x.status)?"p-ok":/^ไม่/.test(x.status)?"p-no":"p-wait";
+    out.innerHTML=`<div class="sum" style="grid-template-columns:1fr"><span><b>${esc(code)}</b> <span class="pill ${cls}">${esc(x.status)}</span></span>${x.reply?`<span>ข้อความจากร้าน: ${esc(x.reply)}</span>`:""}</div>`}).catch(()=>{out.innerHTML=`<div class="msg err">เชื่อมต่อไม่ได้</div>`})}
+function load(keep,errMsg){if(!slug){shell(`<div class="card"><h2>ลิงก์จองไม่ถูกต้อง</h2><p class="note">ขอลิงก์จองจากร้านอีกครั้ง</p></div>`);return}
+  call({a:"bkinfo",s:slug}).then(x=>{if(!x||!x.ok){shell(`<div class="card"><h2>${esc((x&&x.msg)||"เปิดหน้าจองไม่ได้")}</h2><p class="note">ติดต่อร้านโดยตรง</p></div>`);return}
+    if(x.closed){P=x;shell(hero()+`<div class="card"><h2>ปิดรับจองออนไลน์ชั่วคราว</h2><p class="note">กรุณาติดต่อร้านโดยตรง</p></div>`);return}
+    P=x;P.cfg=P.cfg||{};const pre=new URLSearchParams(location.search).get("r");if(!keep&&!L.rid&&pre&&rOf(pre)){L.rid=pre;setDefaults(rOf(pre))}
+    if(keep){const nm=$("#nm")&&$("#nm").value,ph=$("#ph")&&$("#ph").value,em=$("#em")&&$("#em").value,nt=$("#nt")&&$("#nt").value;render();if($("#nm")){$("#nm").value=nm||"";$("#ph").value=ph||"";$("#em").value=em||"";$("#nt").value=nt||""}if(errMsg&&$("#err"))$("#err").innerHTML=`<div class="msg err">${esc(errMsg)}</div>`}else render()})
+  .catch(()=>shell(`<div class="card"><h2>เชื่อมต่อไม่ได้</h2><p class="note">ตรวจอินเทอร์เน็ตแล้วลองใหม่อีกครั้ง</p><button class="btn main" onclick="location.reload()">ลองใหม่</button></div>`))}
+load();
+})();
+</script>
+</body>
+</html>
