@@ -230,7 +230,8 @@
   /* ---------- สำรองข้อมูลขึ้นระบบร้าน (Google Drive ของร้าน) ----------
    * เข้าสู่ระบบแล้ว: ดึงข้อมูลล่าสุดจากระบบ (ถ้าใหม่กว่า) แล้วสำรองให้อัตโนมัติทุกครั้งที่ข้อมูลเปลี่ยน
    * ใช้เปลี่ยนเครื่องได้ และข้อมูลไม่หายแม้ล้างเบราว์เซอร์ */
-  var CK = ["edm_acc", "edm_bill_docs", "edm_bill_seller", "edm_bill_counter", "edm_bill_customers", "edm_suppliers", "edm_services", "edm_stock_items", "edm_stock_tx", "edm_stock_cfg", "edm_pay_company", "edm_pay_emps", "edm_pay_records", "edm_pay_summary", "edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg"];
+  var CK = ["edm_acc", "edm_bill_docs", "edm_bill_seller", "edm_bill_counter", "edm_bill_customers", "edm_suppliers", "edm_services", "edm_stock_items", "edm_stock_tx", "edm_stock_cfg", "edm_pay_company", "edm_pay_emps", "edm_pay_records", "edm_pay_summary", "edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg", "edm_cafe_items", "edm_cafe_stx"];
+  var KEEP = ["edm_cafe_items", "edm_cafe_stx"]; // วัตถุดิบคาเฟ่ (เพิ่มภายหลัง): ข้อมูลบนระบบรุ่นเก่ายังไม่มี ไม่ลบของในเครื่อง
   var NEWK = ["edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg"]; // ระบบจอง (เพิ่มภายหลัง): ถ้าข้อมูลบนระบบยังไม่มี ไม่ลบข้อมูลในเครื่อง
   var SK = "edm_sync", cloudTimer = null, dirtySince = 0, pushing = false, cloudOn = false;
   function cGet() { try { return JSON.parse(localStorage.getItem(SK) || "{}") || {}; } catch (e) { return {}; } }
@@ -258,7 +259,7 @@
     // ระบบที่เพิ่มภายหลัง (จอง / คาเฟ่): ถ้าข้อมูลบนระบบยังไม่มีระบบนั้นเลย ให้เก็บข้อมูลในเครื่องไว้ ไม่ลบทิ้ง
     var fam = function (k) { return k.split("_").slice(0, 2).join("_"); };
     var hasFam = function (k) { return NEWK.some(function (x) { return fam(x) === fam(k) && o.keys[x] != null; }); };
-    CK.forEach(function (k) { try { if (o.keys[k] != null) localStorage.setItem(k, o.keys[k]); else if (NEWK.indexOf(k) < 0 || hasFam(k)) localStorage.removeItem(k); } catch (e) {} });
+    CK.forEach(function (k) { try { if (o.keys[k] != null) localStorage.setItem(k, o.keys[k]); else if (KEEP.indexOf(k) < 0 && (NEWK.indexOf(k) < 0 || hasFam(k))) localStorage.removeItem(k); } catch (e) {} });
     try { localStorage.removeItem("edm_bill_draft"); } catch (e) {}
     cSet({ email: me.email, h: hashOf(snap()), at: r.ts, ok: Date.now() });
     toast("ดึงข้อมูลล่าสุดจากระบบแล้ว (บันทึกเมื่อ " + timeTh(r.ts) + ")");

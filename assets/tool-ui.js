@@ -68,21 +68,12 @@
     if (nav) {
       [].slice.call(nav.querySelectorAll("a.btn")).forEach(function (a) { a.remove(); });          // ลิงก์เครื่องมือย้ายไปตัวสลับ
       [].slice.call(nav.querySelectorAll("button.btn")).forEach(function (b) { if (b.querySelector(".tu-lbl")) return; var t = b.textContent.trim(), m = t.match(/^(\S+)\s+(.+)$/); if (m) b.innerHTML = m[1] + ' <span class="tu-lbl">' + m[2] + "</span>"; b.title = t; });
-      var sw = document.createElement("div"); sw.className = "tu-sw"; sw.setAttribute("aria-label", "สลับเครื่องมือ");
-      sw.innerHTML = LINKS.map(function (l) { return '<a href="/' + l[0] + '/" class="' + (l[0] === key ? "on" : "") + (l[0] === "app" ? " app" : "") + '">' + l[1] + " <span>" + l[2] + "</span></a>"; }).join("");
-      hd.querySelector(".in").insertBefore(sw, nav);
       var help = document.createElement("button"); help.type = "button"; help.className = "tu-help"; help.title = "วิธีใช้"; help.textContent = "❓"; help.onclick = function () { hero(true); }; nav.appendChild(help);
-      var mb = document.createElement("button"); mb.type = "button"; mb.className = "tu-menu"; mb.title = "เมนู"; mb.textContent = "☰"; mb.onclick = function () { sheet.hidden = false; }; nav.appendChild(mb);
     }
-    var sheet = document.createElement("div"); sheet.className = "tu-sheet"; sheet.hidden = true;
-    sheet.innerHTML = '<div><div class="grab"></div><h4>เครื่องมือของร้าน</h4>' + LINKS.map(function (l) { return '<a href="/' + l[0] + '/" class="' + (l[0] === key ? "on" : "") + '"><i>' + l[1] + "</i><span>" + l[2] + (l[3] ? "<small>" + l[3] + "</small>" : "") + "</span>" + (l[0] === key ? "<em>กำลังใช้</em>" : "") + "</a>"; }).join("") +
-      '<h4 style="margin-top:12px">อื่น ๆ</h4><a href="/"><i>🛒</i><span>ร้านเทมเพลต Excel<small>เทมเพลตพร้อมใช้ทั้งหมด</small></span></a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener"><i>💬</i><span>ติดต่อร้านทาง LINE<small>@856tvnxs</small></span></a></div>';
-    sheet.onclick = function (e) { if (e.target === sheet) sheet.hidden = true; };
-    document.body.appendChild(sheet);
     // ท้ายเว็บ
     var ft = document.createElement("footer"); ft.className = "tu-foot";
     ft.innerHTML = '<a class="b" href="/"><img src="/assets/logo.jpg" alt=""><span><strong>Excel Data Master</strong>เครื่องมือร้านค้าออนไลน์ · ข้อมูลเก็บในเครื่องนี้ ควรสำรองเป็นระยะ</span></a>' +
-      '<nav><a href="/app/">🏪 ระบบร้านค้า</a><a href="/">🛒 ร้านเทมเพลต</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></nav>';
+      '<nav><a href="/">🛒 ร้านเทมเพลต</a><a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE</a><a href="/privacy/">🔒 ความเป็นส่วนตัว</a></nav>';
     document.body.appendChild(ft);
     if (document.querySelector(".mtabs")) document.body.classList.add("has-mtabs");
     hero(false);
@@ -96,7 +87,7 @@
     heroEl = document.createElement("section"); heroEl.className = "tu-hero";
     heroEl.innerHTML = '<div class="ic">' + T.ic + '</div><div><h3>' + T.n + '</h3><p>' + T.d + '</p><div class="tu-steps">' +
       T.steps.map(function (s, i) { return "<div><i>" + s[0] + "</i><u>" + (i + 1) + "</u><b>" + s[1] + "</b><span>" + s[2] + "</span></div>"; }).join("") +
-      '</div><div class="acts"><button class="btn main" type="button" data-tu="start">เริ่มใช้งานเลย →</button>' + (T.has() ? "" : '<button class="btn ghost" type="button" data-tu="demo">✨ ลองดูข้อมูลตัวอย่าง</button>') + '<a class="btn ghost" href="/app/">🏪 ใช้แบบครบทุกระบบ</a></div></div><button class="x" type="button" title="ปิด" data-tu="x">✕</button>';
+      '</div><div class="acts"><button class="btn main" type="button" data-tu="start">เริ่มใช้งานเลย →</button>' + (T.has() ? "" : '<button class="btn ghost" type="button" data-tu="demo">✨ ลองดูข้อมูลตัวอย่าง</button>') + '</div></div><button class="x" type="button" title="ปิด" data-tu="x">✕</button>';
     main.insertBefore(heroEl, main.firstChild);
     heroEl.addEventListener("click", function (e) {
       var b = e.target.closest("[data-tu]"); if (!b) return;

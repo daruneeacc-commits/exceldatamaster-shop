@@ -9,7 +9,7 @@
 <script src="../assets/lock.js?v=2"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ระบบจองและให้เช่า · Excel Data Master</title>
-<meta name="description" content="ระบบจองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า เช็กห้องว่างอัตโนมัติ ปฏิทินผัง มัดจำ ค่าประกัน ค่าปรับคืนช้า เชื่อมเปิดบิลและบัญชี">
+<meta name="description" content="ระบบจองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า เช็กห้องว่างอัตโนมัติ ปฏิทินผัง มัดจำ ค่าประกัน ค่าปรับคืนช้า ออกใบเสร็จได้ทันที">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
 <style>
@@ -202,8 +202,6 @@ html{overscroll-behavior-y:contain}
 <header class="top"><div class="in">
   <a class="brand" href="/">📊 Excel Data Master <small>· ระบบจองและให้เช่า</small></a>
   <nav class="nav">
-    <a class="btn sm main" href="/app/">🏪 ระบบร้านค้า</a>
-    <a class="btn sm ghost" href="/bill/">🧾 เปิดบิล</a>
     <a class="btn sm ghost" href="/">🛒 ร้านเทมเพลต</a>
   </nav>
 </div></header>
@@ -273,7 +271,7 @@ const PM=["เงินสด","โอนเงิน","บัตรเครด
 /* ---------- ข้อมูล ---------- */
 const CFG0={ci:"14:00",co:"12:00",buf:0,we:[5,6],late:100,depPct:30,vatIn:true,prefix:"BK",peaks:[],kinds:{night:true,hour:true,item:true},cancel:"ยกเลิกก่อนวันเข้าพัก 7 วัน คืนเงินมัดจำเต็มจำนวน · ยกเลิกน้อยกว่า 7 วัน ขอสงวนสิทธิ์ไม่คืนเงินมัดจำ",foot:"กรุณาแสดงใบยืนยันนี้ในวันเข้าใช้บริการ",online:{on:false,name:"",tel:"",line:"",addr:"",note:"",lead:2,max:90,open:"08:00",close:"20:00",hide:[]}};
 let res=[],list=[],cfg={},ui={};
-function load(){res=LS.get(K.res,[])||[];list=LS.get(K.list,[])||[];cfg=Object.assign({},CFG0,LS.get(K.cfg,{})||{});cfg.kinds=Object.assign({},CFG0.kinds,cfg.kinds||{});cfg.online=Object.assign({},CFG0.online,cfg.online||{});ui=Object.assign({v:"home",cs:"",span:14,kf:"all",lf:"act",q:"",rm:""},LS.get(K.ui,{})||{})}
+function load(){res=LS.get(K.res,[])||[];list=LS.get(K.list,[])||[];cfg=Object.assign({},CFG0,LS.get(K.cfg,{})||{});cfg.kinds=Object.assign({},CFG0.kinds,cfg.kinds||{});cfg.online=Object.assign({},CFG0.online,cfg.online||{});if(!cfg.shop){const s0=LS.get("edm_bill_seller",{})||{};cfg.shop={name:s0.name||"",addr:s0.addr||"",tax:s0.tax||"",phone:s0.phone||s0.tel||"",vat:!!s0.vat,logo:s0.logo||"",pay:s0.pay||""};LS.set(K.cfg,cfg)}ui=Object.assign({v:"home",cs:"",span:14,kf:"all",lf:"act",q:"",rm:""},LS.get(K.ui,{})||{})}
 load();
 const saveRes=()=>pubAfter(LS.set(K.res,res)),saveList=()=>pubAfter(LS.set(K.list,list)),saveCfg=()=>pubAfter(LS.set(K.cfg,cfg)),saveUi=()=>LS.set(K.ui,{v:ui.v,span:ui.span,kf:ui.kf,lf:ui.lf});
 const rOf=id=>res.find(r=>r.id===id);
@@ -281,7 +279,7 @@ const kOn=k=>cfg.kinds[k]!==false;
 function bKind(b){const l=(b.lines||[]).find(x=>rOf(x.rid));return l?rOf(l.rid).kind:"night"}
 function stName(b){if(b.st==="in")return KIND[bKind(b)].inS;if(b.st==="out")return KIND[bKind(b)].outS;return(ST[b.st]||ST.hold)[0]}
 function stPill(b){const late=isLate(b);return`<span class="pill ${(ST[b.st]||ST.hold)[1]}">${esc(stName(b))}</span>`+(late?` <span class="pill p-late">เกินกำหนด</span>`:"")}
-function bills(b){return(LS.get("edm_bill_docs",[])||[]).filter(d=>d.ref===b.no&&d.type!=="QT"&&d.type!=="BN")}
+function bills(b){return[]}
 function bStart(b){let s="";(b.lines||[]).forEach(l=>{if(l.s&&(!s||l.s<s))s=l.s});return s}
 function bEnd(b){let e="";(b.lines||[]).forEach(l=>{const x=b.st==="out"&&l.ae?l.ae:l.e;if(x&&x>e)e=x});return e}
 function isLate(b){if(b.st!=="in")return false;const t=today(),n=nowT();return(b.lines||[]).some(l=>{const r=rOf(l.rid);if(!r||!l.e)return false;return r.kind==="hour"?l.e<n:r.kind==="night"?l.e<t:l.e<t})}
@@ -324,7 +322,7 @@ function nextNo(){const p=(cfg.prefix||"BK").replace(/[^A-Za-z]/g,"").slice(0,4)
 /* ---------- ระบบร้านค้า ---------- */
 function tell(v){if(EMB){try{window.parent.postMessage({edm:"go",tool:"booking",hash:"v="+v,quiet:1},location.origin)}catch(e){}}}
 function goBill(hash){if(EMB){try{window.parent.postMessage({edm:"go",tool:"bill",hash:hash,open:1},location.origin)}catch(e){}}else location.href="/bill/#"+hash}
-function seller(){return LS.get("edm_bill_seller",{})||{}}
+function seller(){return cfg.shop||{}}
 
 /* ---------- เปลี่ยนหน้า ---------- */
 const VIEWS=["home","cal","list","res","rpt","set"];
@@ -336,12 +334,12 @@ window.edmBookView=v=>{if(!VIEWS.includes(v))return;load();ui.v=v;saveUi();rende
 document.addEventListener("click",e=>{const g=e.target.closest("[data-gv]");if(g){e.preventDefault();show(g.dataset.gv)}
   const o=e.target.closest("[data-ob]");if(o&&!e.target.closest("button:not([data-ob]),a")){openBk(o.dataset.ob)}
   const n=e.target.closest("[data-nb]");if(n){e.preventDefault();newBk(n.dataset.nb?JSON.parse(n.dataset.nb):{})}});
-function custDL(){const cs=LS.get("edm_bill_customers",[])||[];$("#custList").innerHTML=cs.slice(0,200).map(c=>`<option value="${esc(c.name)}">${esc(c.contact||"")}</option>`).join("")}
+function custDL(){const seen=new Set(),cs=[];list.forEach(b=>{const c=b.cust||{};if(c.name&&!seen.has(c.name)){seen.add(c.name);cs.push(c)}});$("#custList").innerHTML=cs.slice(0,200).map(c=>`<option value="${esc(c.name)}">${esc(c.contact||"")}</option>`).join("")}
 
 /* ---------- หน้าภาพรวม ---------- */
 function vHome(){const V=$("#view"),t=today(),nw=nowT();
-  if(!res.length){V.innerHTML=`<div class="hello"><h1>📅 ระบบจองและให้เช่า</h1><p>จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า ระบบเช็กว่างให้ ไม่จองซ้อน และส่งต่อไปเปิดบิลได้ทันที</p></div>
-    <div class="card"><h2>เริ่มต้นใน 3 ขั้นตอน</h2><div class="hint">1) เพิ่มห้องหรืออุปกรณ์ที่ให้เช่า พร้อมราคา &nbsp;·&nbsp; 2) กด "＋ จองใหม่" ระบบแสดงเฉพาะที่ว่างและคิดราคาให้ &nbsp;·&nbsp; 3) เช็คอิน/รับคืน แล้วกดออกบิล ยอดเข้ารายงานรายรับและภาษีอัตโนมัติ</div>
+  if(!res.length){V.innerHTML=`<div class="hello"><h1>📅 ระบบจองและให้เช่า</h1><p>จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า ระบบเช็กว่างให้ ไม่จองซ้อน และพิมพ์ใบเสร็จได้ทันที</p></div>
+    <div class="card"><h2>เริ่มต้นใน 3 ขั้นตอน</h2><div class="hint">1) เพิ่มห้องหรืออุปกรณ์ที่ให้เช่า พร้อมราคา &nbsp;·&nbsp; 2) กด "＋ จองใหม่" ระบบแสดงเฉพาะที่ว่างและคิดราคาให้ &nbsp;·&nbsp; 3) เช็คอิน/รับคืน รับเงิน แล้วพิมพ์ใบเสร็จ ยอดเข้ารายงานการจองอัตโนมัติ</div>
     <b>ธุรกิจของคุณให้เช่าแบบไหน? (เลือกเพื่อเพิ่มรายการแรก)</b>
     <div class="kinds">${KO.map(k=>`<button type="button" data-addres="${k}" class="edm-lock"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}</div>
     <div class="acts"><button class="btn ghost" id="demoB" type="button">✨ ลองใส่ข้อมูลตัวอย่าง</button><span class="note">ข้อมูลตัวอย่างใส่เฉพาะระบบจอง ลบทิ้งได้ที่หน้าตั้งค่า</span></div></div>`;
@@ -361,7 +359,7 @@ function vHome(){const V=$("#view"),t=today(),nw=nowT();
     <button class="kpi" data-gv="list"><span>ต้องเช็คอิน / ส่งมอบวันนี้</span><b>${arr.length} รายการ</b><small>${hold.length?"รอมัดจำ "+hold.length+" ใบ":"ยืนยันครบแล้ว"}</small></button>
     <button class="kpi ${late.length?"bad":""}" data-gv="list"><span>ต้องเช็คเอาท์ / รับคืนวันนี้</span><b>${dep.length} รายการ</b><small>${late.length?"⚠️ เกินกำหนด "+late.length+" รายการ":"ใช้งานอยู่ "+inn.length+" รายการ"}</small></button>
     <button class="kpi" data-gv="cal"><span>ห้องว่างคืนนี้</span><b>${nightR.length?fmt0(cap-used)+" / "+fmt0(cap):"-"}</b><small>${nightR.length?"เข้าพัก "+(cap?Math.round(used/cap*100):0)+"%":"ยังไม่มีห้องพัก"}</small></button>
-    <button class="kpi ${due>0?"warn":""}" data-gv="list"><span>ยอดค้างชำระ (ยังไม่ออกบิล)</span><b>฿${fmt0(due)}</b><small>${dueN} ใบจอง · ค่าประกันที่ถืออยู่ ฿${fmt0(held)}</small></button>
+    <button class="kpi ${due>0?"warn":""}" data-gv="list"><span>ยอดค้างชำระ</span><b>฿${fmt0(due)}</b><small>${dueN} ใบจอง · ค่าประกันที่ถืออยู่ ฿${fmt0(held)}</small></button>
   </div>
   ${inboxCard()}
   <div class="qa-row"><button class="main edm-lock" data-nb=""><i>＋</i>จองใหม่</button><button data-gv="cal"><i>📅</i>ดูปฏิทิน</button><button data-gv="list"><i>📋</i>รายการจอง</button><button data-gv="res"><i>🏷️</i>ห้อง / อุปกรณ์</button></div>
@@ -490,7 +488,7 @@ function drawBk(){const b=cur,Kd=KIND[bKind(b)],T=tot(b),bl=isNew?[]:bills(b),ac
   if(b.st==="hold")acts+=`<button class="btn blue edm-lock" data-a="conf">✅ ยืนยันการจอง</button>`;
   if(b.st==="hold"||b.st==="conf")acts+=`<button class="btn main edm-lock" data-a="in">${Kd.in}</button>`;
   if(b.st==="in")acts+=`<button class="btn blue edm-lock" data-a="out">${Kd.out}</button>`;
-  if(!isNew&&(b.st==="out"||((b.st==="cancel"||b.st==="noshow")&&T.paid>0.009))&&!bl.length)acts+=`<button class="btn main edm-lock" data-a="bill">🧾 ออกบิล</button>`;
+  if(!isNew&&(T.paid>0.009||T.bal>0.009))acts+=`<button class="btn ${b.st==="out"?"main":"ghost"}" data-a="bill">🧾 ใบเสร็จ / ใบแจ้งหนี้</button>`;
   openDlg(title,`<div class="db">
     ${isNew?"":`<div class="chips">${stPill(b)}<span class="note">สร้าง ${thD(b.date)} · ${esc(CH[b.ch]||"")}</span>${bl.map(d=>`<button class="chip" data-bill="${d.id}">🧾 ${esc(d.no)}</button>`).join("")}</div>`}
     ${bl.length?`<div class="hint">ออกบิลแล้ว · การแก้ใบจองจะไม่เปลี่ยนบิล ถ้าต้องแก้ยอดให้แก้ที่บิล</div>`:""}
@@ -524,7 +522,7 @@ function grabC(){const b=cur;if(!b||!$("#cN"))return;b.cust.name=$("#cN").value.
   b.cust.tax=$("#cT").value.trim();b.cust.branch=$("#cB").value.trim();b.cust.addr=$("#cA").value.trim();b.disc=num($("#bD").value);b.note=$("#bN").value.trim()}
 function wireBk(){const D=$("#dlgBody"),b=cur;
   $("#cMore").onclick=()=>{$("#cMoreBox").hidden=!$("#cMoreBox").hidden};
-  $("#cN").onchange=()=>{const c=(LS.get("edm_bill_customers",[])||[]).find(x=>x.name===$("#cN").value.trim());if(c){if(!$("#cP").value)$("#cP").value=c.contact||"";if(!$("#cA").value)$("#cA").value=c.addr||"";if(!$("#cT").value)$("#cT").value=c.tax||"";if(!$("#cB").value)$("#cB").value=c.branch||"";if(c.addr||c.tax)$("#cMoreBox").hidden=false}};
+  $("#cN").onchange=()=>{const c=(list.find(x=>x.id!==b.id&&x.cust&&x.cust.name===$("#cN").value.trim())||{}).cust;if(c){if(!$("#cP").value)$("#cP").value=c.contact||"";if(!$("#cA").value)$("#cA").value=c.addr||"";if(!$("#cT").value)$("#cT").value=c.tax||"";if(!$("#cB").value)$("#cB").value=c.branch||"";if(c.addr||c.tax)$("#cMoreBox").hidden=false}};
   if($("#addL"))$("#addL").onclick=()=>{grabC();const last=b.lines[b.lines.length-1];const l=blankLine({});if(last&&rOf(last.rid)&&rOf(l.rid)&&rOf(last.rid).kind===rOf(l.rid).kind){l.s=last.s;l.e=last.e;upd(l)}b.lines.push(l);drawBk();const el=$("#bl"+(b.lines.length-1));if(el)el.scrollIntoView({block:"center"})};
   $("#addX").onclick=()=>{grabC();b.ext.push({d:"",amt:""});drawBk()};
   D.addEventListener("input",e=>{const x=e.target;if(x.dataset.i!=null){lineInput(x,false)}else if(x.dataset.x!=null){const o=b.ext[+x.dataset.x];o[x.dataset.f]=x.dataset.f==="amt"?x.value:x.value;refresh()}else if(x.id==="bD"){b.disc=num(x.value);refresh()}});
@@ -578,8 +576,6 @@ function commit(quiet){const b=cur;grabC();if(!valid(b,true))return false;b.line
   if(isNew){b.no=nextNo();b.created=Date.now()}b.updated=Date.now();
   const i=list.findIndex(x=>x.id===b.id);const copy=JSON.parse(JSON.stringify(b));if(i>=0)list[i]=copy;else list.unshift(copy);
   if(!saveList())return false;isNew=false;
-  if(b.cust.name){const cs=LS.get("edm_bill_customers",[])||[];const j=cs.findIndex(x=>x.name===b.cust.name);const c={name:b.cust.name,addr:b.cust.addr||"",tax:b.cust.tax||"",branch:b.cust.branch||"",contact:b.cust.contact||""};
-    if(j<0){cs.unshift(c);LS.set("edm_bill_customers",cs.slice(0,200))}else{const o=cs[j];let ch=false;["addr","tax","branch","contact"].forEach(k=>{if(c[k]&&!o[k]){o[k]=c[k];ch=true}});if(ch)LS.set("edm_bill_customers",cs)}}
   if(!quiet)toast("บันทึก "+b.no+" แล้ว ✓");render();return true}
 function act(a){const b=cur,Kd=KIND[bKind(b)];
   if(a==="save"){if(commit())closeDlg();return}
@@ -590,7 +586,7 @@ function act(a){const b=cur,Kd=KIND[bKind(b)];
   if(a==="print")return printBk(b);
   if(a==="copy")return copyLine(b);
   if(a==="cancel"||a==="noshow"){grabC();const T=tot(b);if(!confirm((a==="cancel"?"ยกเลิกใบจอง ":"บันทึกว่าลูกค้าไม่มา ")+b.no+"?"))return;
-    if(T.paid>0.009){if(confirm(`ลูกค้าชำระไว้ ฿${fm(T.paid)}\n\nตกลง = คืนเงินให้ลูกค้า (บันทึกรายการคืนเงิน)\nยกเลิก = ริบเงินมัดจำ (ออกบิลค่าธรรมเนียมได้ภายหลัง)`))b.pays.push({k:"ref",amt:T.paid,m:"โอนเงิน",date:today(),n:"คืนเงินเมื่อ"+(a==="cancel"?"ยกเลิก":"ไม่มา")})}
+    if(T.paid>0.009){if(confirm(`ลูกค้าชำระไว้ ฿${fm(T.paid)}\n\nตกลง = คืนเงินให้ลูกค้า (บันทึกรายการคืนเงิน)\nยกเลิก = ริบเงินมัดจำ (พิมพ์ใบเสร็จค่าธรรมเนียมได้ภายหลัง)`))b.pays.push({k:"ref",amt:T.paid,m:"โอนเงิน",date:today(),n:"คืนเงินเมื่อ"+(a==="cancel"?"ยกเลิก":"ไม่มา")})}
     if(T.held>0.009)b.pays.push({k:"gr",amt:T.held,m:"เงินสด",date:today()});
     b.st=a;b.lines.forEach(l=>l.ov=true);if(commit(true)){toast(a==="cancel"?"ยกเลิกแล้ว":"บันทึกไม่มาแล้ว");drawBk()}return}
   if(a==="del"){const bl=bills(b);if(!confirm("ลบใบจอง "+b.no+"?"+(bl.length?"\n(บิล "+bl.map(d=>d.no).join(", ")+" ยังอยู่ ต้องลบที่ระบบเปิดบิลเอง)":"")))return;list=list.filter(x=>x.id!==b.id);saveList();closeDlg();toast("ลบแล้ว");render()}}
@@ -626,36 +622,27 @@ function retDlg(){const b=cur,Kd=KIND[bKind(b)],t=today(),nw=nowT();
     const dm=num($("#dmA").value);if(dm>0)b.ext.push({d:$("#dmD").value.trim()||"ค่าเสียหาย",amt:dm});
     if(c.ded>0){b.pays.push({k:"pay",amt:c.ded,m:"หักค่าประกัน",date:today()});b.pays.push({k:"gx",amt:c.ded,m:"หักเป็นค่าเช่า/ค่าเสียหาย",date:today()})}
     const rf=num($("#rRef").value),T=tot(b);if(rf>0)b.pays.push({k:"gr",amt:Math.min(rf,T.held),m:$("#rM").value,date:today()});
-    b.st="out";if(commit(true)){toast("บันทึกแล้ว ✓ ออกบิลต่อได้เลย");drawBk()}}}
+    b.st="out";if(commit(true)){toast("บันทึกแล้ว ✓ พิมพ์ใบเสร็จได้เลย");drawBk()}}}
 
-/* ---------- ออกบิล ---------- */
-function billDlg(){const b=cur,T=tot(b),cx=b.st==="cancel"||b.st==="noshow",paid=T.bal<=0.009;
-  openDlg("🧾 ออกบิลจากใบจอง "+b.no,`<div class="db"><div class="hint">ระบบจะเปิดหน้า <b>เปิดบิล</b> พร้อมใส่ลูกค้า รายการ และส่วนลดให้ ตรวจแล้วกดบันทึกที่หน้าบิล ยอดจะเข้ารายงานรายรับ ภาษีขาย และบัญชีอัตโนมัติ${cfg.vatIn?" · ราคาในระบบจองถือว่ารวม VAT แล้ว":""}</div>
-    ${cx?`<div class="warn">ใบจองถูก${b.st==="cancel"?"ยกเลิก":"บันทึกว่าไม่มา"} · ออกบิลค่าธรรมเนียมจากเงินที่ริบไว้ ฿${fm(T.paid)}</div>`:`<div class="sum"><span>ยอดรวม</span><span class="r">${fmt(T.total)}</span><span>ชำระแล้ว</span><span class="r paid">${fmt(T.paid)}</span><span>คงเหลือ</span><span class="r ${T.bal>0.009?"due":""}">${fmt(Math.max(0,T.bal))}</span></div>`}
-    <div class="acts"><button class="btn ${paid||cx?"main":"ghost"}" id="bC">🧾 ใบเสร็จรับเงิน / ขายเงินสด${paid||cx?" (ชำระครบ)":""}</button>${cx?"":`<button class="btn ${paid?"ghost":"main"}" id="bI">📄 ใบแจ้งหนี้ (ตั้งลูกหนี้${T.bal>0.009?" ฿"+fm(T.bal):""})</button>`}<button class="btn ghost" id="bB">← กลับ</button></div>
-    ${!paid&&!cx?`<div class="note">เลือกใบแจ้งหนี้ถ้าลูกค้ายังค้างชำระ · ยอดที่รับไว้แล้วจะระบุในหมายเหตุของบิล</div>`:""}</div>`,"sm");
-  $("#bC").onclick=()=>toBill(b,"CASH");if($("#bI"))$("#bI").onclick=()=>toBill(b,"INV");$("#bB").onclick=()=>drawBk()}
-function toBill(b,kind){const T=tot(b),cx=b.st==="cancel"||b.st==="noshow",items=[];
-  if(cx)items.push({d:`ค่าธรรมเนียม${b.st==="cancel"?"ยกเลิก":"ไม่มาตามนัด"} ใบจอง ${b.no} (ริบเงินมัดจำ)`,q:1,u:"รายการ",p:T.paid,disc:0});
-  else{b.lines.forEach(l=>{const r=rOf(l.rid)||{name:"-",kind:"night"},Kd=KIND[r.kind],n=num(l.n)||1,amt=num(l.amt);
-      const d=`ค่าเช่า${r.name}${num(l.qty)>1?" × "+l.qty+" "+(r.unit||Kd.unit):""} · ${lineTxt(l)}`;const p=r2(amt/n);
-      items.push(r2(p*n)===r2(amt)?{d,q:n,u:Kd.u,p,disc:0}:{d:d+` (${fm(n)} ${Kd.u})`,q:1,u:"รายการ",p:amt,disc:0})});
-    b.ext.forEach(x=>{if(num(x.amt))items.push({d:x.d||"ค่าใช้จ่ายเพิ่มเติม",q:1,u:"รายการ",p:num(x.amt),disc:0})})}
-  const notes=["อ้างอิงใบจอง "+b.no];if(!cx&&T.paid>0.009)notes.push(`รับเงินมัดจำ/ชำระแล้ว ${fmt(T.paid)} บาท${T.bal>0.009?" · คงเหลือชำระ "+fmt(T.bal)+" บาท":""}`);
-  const c=b.cust;LS.set("edm_bill_pre",{at:Date.now(),mode:"service",cust:{name:c.name,addr:c.addr||"",tax:c.tax||"",branch:c.branch||"",contact:c.contact||""},items,disc:cx?0:T.disc,ref:b.no,notes:notes.join("\n"),vatIn:!!cfg.vatIn});
-  closeDlg();goBill("new="+kind)}
+/* ---------- ใบเสร็จ / ใบแจ้งหนี้ (ออกจากใบจองโดยตรง) ---------- */
+function billDlg(){const b=cur,cx=b.st==="cancel"||b.st==="noshow",T0=tot(b),T=cx?Object.assign({},T0,{total:T0.paid,bal:0}):T0;
+  openDlg("🧾 เอกสารของใบจอง "+b.no,`<div class="db"><div class="sum"><span>ยอดรวม</span><span class="r">${fmt(T.total)}</span><span>ชำระแล้ว</span><span class="r paid">${fmt(T.paid)}</span><span>คงเหลือ</span><span class="r ${T.bal>0.009?"due":""}">${fmt(Math.max(0,T.bal))}</span></div>
+    <div class="acts">${T.paid>0.009?`<button class="btn main" id="bC">🧾 ใบเสร็จรับเงิน (฿${fm(T.paid)})</button>`:""}${T.bal>0.009?`<button class="btn ${T.paid>0.009?"ghost":"main"}" id="bI">📄 ใบแจ้งหนี้ (ค้าง ฿${fm(T.bal)})</button>`:""}<button class="btn ghost" id="bB">← กลับ</button></div>
+    <div class="note">พิมพ์หรือบันทึกเป็น PDF ได้จากหน้าต่างพิมพ์ · ชื่อร้านและที่อยู่บนเอกสารแก้ได้ที่ ⚙️ ตั้งค่า</div></div>`,"sm");
+  if($("#bC"))$("#bC").onclick=()=>printBk(cx?Object.assign({},b,{lines:[],ext:[{d:`ค่าธรรมเนียม${b.st==="cancel"?"ยกเลิก":"ไม่มาตามนัด"} (ริบเงินมัดจำ)`,amt:T0.paid}],disc:0}):b,"rc");if($("#bI"))$("#bI").onclick=()=>printBk(b,"iv");$("#bB").onclick=()=>drawBk()}
 
 /* ---------- ใบยืนยัน / ข้อความ LINE ---------- */
-function printBk(b){grabC();const S=seller(),T=tot(b);
+function printBk(b,kind){grabC();const S=seller(),T=tot(b),D={rc:[S.vat?"ใบเสร็จรับเงิน / ใบกำกับภาษี":"ใบเสร็จรับเงิน","Receipt","RC-"],iv:["ใบแจ้งหนี้","Invoice","IV-"]}[kind]||["ใบยืนยันการจอง","Booking Confirmation",""],vt=S.vat?r2(T.total*7/107):0;
   $("#printArea").innerHTML=`<div class="page"><div class="ph"><div class="shop">${S.logo&&/^data:image\//.test(S.logo)?`<img src="${esc(S.logo)}" alt="">`:""}<b>${esc(S.name||"")}</b><div>${esc(S.addr||"").replace(/\n/g,"<br>")}</div>${S.tel||S.phone?`<div>โทร ${esc(S.tel||S.phone)}</div>`:""}${S.tax?`<div>เลขประจำตัวผู้เสียภาษี ${esc(S.tax)}</div>`:""}</div>
-    <div style="text-align:right"><h1>ใบยืนยันการจอง</h1><div>Booking Confirmation</div><div style="margin-top:6px">เลขที่ <b>${esc(b.no)}</b></div><div>วันที่ ${thD(today())}</div><div>สถานะ ${esc(stName(b))}</div></div></div>
-    <div class="box"><b>ลูกค้า</b> ${esc(b.cust.name)}${b.cust.contact?" · โทร "+esc(b.cust.contact):""}${b.guests?" · "+esc(b.guests):""}${b.cust.addr?"<br>"+esc(b.cust.addr):""}</div>
+    <div style="text-align:right"><h1>${D[0]}</h1><div>${D[1]}</div><div style="margin-top:6px">เลขที่ <b>${esc(D[2]+b.no)}</b></div>${D[2]?`<div>อ้างอิงใบจอง ${esc(b.no)}</div>`:""}<div>วันที่ ${thD(today())}</div>${D[2]?"":`<div>สถานะ ${esc(stName(b))}</div>`}</div></div>
+    <div class="box"><b>ลูกค้า</b> ${esc(b.cust.name)}${b.cust.tax?" · เลขผู้เสียภาษี "+esc(b.cust.tax):""}${b.cust.contact?" · โทร "+esc(b.cust.contact):""}${b.guests?" · "+esc(b.guests):""}${b.cust.addr?"<br>"+esc(b.cust.addr):""}</div>
     <table><thead><tr><th>รายการ</th><th>วันเวลา</th><th class="r">จำนวน</th><th class="r">จำนวนเงิน</th></tr></thead><tbody>
     ${b.lines.map(l=>{const r=rOf(l.rid)||{name:"-",kind:"night"},Kd=KIND[r.kind];return`<tr><td><b>${esc(r.name)}</b>${num(l.qty)>1?" × "+l.qty+" "+esc(r.unit||Kd.unit):""}${r.note?`<div style="color:#666;font-size:8.5pt">${esc(r.note)}</div>`:""}</td><td>${lineTxt(l)}</td><td class="r">${fm(num(l.n))} ${Kd.u}</td><td class="r">${fmt(num(l.amt))}</td></tr>`}).join("")}
     ${b.ext.filter(x=>num(x.amt)).map(x=>`<tr><td colspan="3">${esc(x.d||"ค่าใช้จ่ายเพิ่มเติม")}</td><td class="r">${fmt(num(x.amt))}</td></tr>`).join("")}</tbody></table>
-    <table class="tot">${T.disc?`<tr><td>ส่วนลด</td><td class="r">−${fmt(T.disc)}</td></tr>`:""}<tr class="g"><td>ยอดรวม${cfg.vatIn&&S.vat?" (รวม VAT)":""}</td><td class="r">${fmt(T.total)}</td></tr><tr><td>รับชำระ / มัดจำแล้ว</td><td class="r">${fmt(T.paid)}</td></tr><tr class="g"><td>คงเหลือชำระ</td><td class="r">${fmt(Math.max(0,T.bal))}</td></tr>${T.guar?`<tr><td>ค่าประกัน (คืนเมื่อคืนของครบสภาพเดิม)</td><td class="r">${fmt(T.guar)}</td></tr>`:""}</table>
+    <table class="tot">${T.disc?`<tr><td>ส่วนลด</td><td class="r">−${fmt(T.disc)}</td></tr>`:""}<tr class="g"><td>ยอดรวม${S.vat?" (รวม VAT)":""}</td><td class="r">${fmt(T.total)}</td></tr>${vt?`<tr><td>มูลค่าก่อน VAT</td><td class="r">${fmt(r2(T.total-vt))}</td></tr><tr><td>VAT 7%</td><td class="r">${fmt(vt)}</td></tr>`:""}<tr><td>รับชำระ / มัดจำแล้ว</td><td class="r">${fmt(T.paid)}</td></tr><tr class="g"><td>คงเหลือชำระ</td><td class="r">${fmt(Math.max(0,T.bal))}</td></tr>${T.guar?`<tr><td>ค่าประกัน (คืนเมื่อคืนของครบสภาพเดิม)</td><td class="r">${fmt(T.guar)}</td></tr>`:""}</table>
     <div class="box">${b.lines.some(l=>(rOf(l.rid)||{}).kind==="night")?`เช็คอิน ${esc(cfg.ci)} น. · เช็คเอาท์ ${esc(cfg.co)} น.<br>`:""}${cfg.cancel?"<b>เงื่อนไขการยกเลิก</b> "+esc(cfg.cancel)+"<br>":""}${b.note?"<b>หมายเหตุ</b> "+esc(b.note)+"<br>":""}${esc(cfg.foot||"")}</div>
-    <div class="sig"><div>ผู้จอง</div><div>ผู้รับจอง</div></div></div>`;
+    ${kind==="rc"?`<div class="box"><b>รับชำระแล้ว</b><br>${(b.pays||[]).filter(p=>p.k==="pay"||p.k==="ref").map(p=>`${thD(p.date)} · ${esc(p.m||"")} · ${p.k==="ref"?"คืนเงิน −":""}${fmt(num(p.amt))} บาท`).join("<br>")||"-"}</div>`:""}${kind==="iv"&&S.pay?`<div class="box"><b>ช่องทางชำระเงิน</b><br>${esc(S.pay).replace(/\n/g,"<br>")}</div>`:""}
+    <div class="sig">${kind==="rc"?"<div>ผู้จ่ายเงิน</div><div>ผู้รับเงิน</div>":kind==="iv"?"<div>ผู้รับเอกสาร</div><div>ผู้ออกเอกสาร</div>":"<div>ผู้จอง</div><div>ผู้รับจอง</div>"}</div></div>`;
   setTimeout(()=>window.print(),60)}
 function lineMsg(b){const S=seller(),T=tot(b),o=[`📅 ยืนยันการจอง ${b.no}`,`คุณ${b.cust.name}`];
   b.lines.forEach(l=>{const r=rOf(l.rid)||{name:"-",kind:"night"},Kd=KIND[r.kind];o.push(`• ${r.name}${num(l.qty)>1?" × "+l.qty:""} ${lineTxt(l)} (${fm(num(l.n))} ${Kd.u}) ${fm(num(l.amt))} บาท`)});
@@ -704,7 +691,12 @@ function xls(m,D){toast("กำลังสร้างไฟล์ Excel...");l
 
 /* ---------- ตั้งค่า ---------- */
 function vSet(){const V=$("#view");
-  V.innerHTML=`<div class="hello"><h1>⚙️ ตั้งค่าการจอง</h1><p>บันทึกอัตโนมัติเมื่อแก้ไข · ชื่อร้าน ที่อยู่ และโลโก้ใช้จากหน้า "ตั้งค่าร้าน" ของระบบเปิดบิล</p></div>
+  V.innerHTML=`<div class="hello"><h1>⚙️ ตั้งค่าการจอง</h1><p>บันทึกอัตโนมัติเมื่อแก้ไข</p></div>
+  <div class="card"><h2>🏪 ข้อมูลร้าน <small>ใช้บนใบยืนยัน ใบเสร็จ และหน้าจองออนไลน์</small></h2><div class="row"><div class="f"><label>ชื่อร้าน / ที่พัก</label><input class="in-" data-sh="name" value="${esc(seller().name||"")}"></div><div class="f"><label>โทรศัพท์</label><input class="in-" data-sh="phone" value="${esc(seller().phone||"")}" inputmode="tel"></div></div>
+    <div class="f"><label>ที่อยู่</label><textarea class="in-" rows="2" data-sh="addr">${esc(seller().addr||"")}</textarea></div>
+    <div class="row"><div class="f"><label>เลขประจำตัวผู้เสียภาษี (ถ้ามี)</label><input class="in-" data-sh="tax" value="${esc(seller().tax||"")}" inputmode="numeric" maxlength="13"></div><div class="f"><label>&nbsp;</label><label class="ck"><input type="checkbox" data-sh="vat" ${seller().vat?"checked":""}> จดทะเบียน VAT แล้ว</label></div></div>
+    <div class="f"><label>ช่องทางชำระเงิน (แสดงบนใบแจ้งหนี้)</label><textarea class="in-" rows="2" data-sh="pay" placeholder="เช่น โอนเข้าบัญชี กสิกรไทย 123-4-56789-0">${esc(seller().pay||"")}</textarea></div>
+    <div class="f"><span>โลโก้</span><div class="acts">${seller().logo?`<img src="${esc(seller().logo)}" alt="" style="width:48px;height:48px;border-radius:10px;object-fit:cover">`:""}<label class="btn sm ghost">📷 เลือกรูป<input type="file" id="shLogo" accept="image/*" hidden></label>${seller().logo?`<button class="btn sm ghost" id="shLogoX">ลบโลโก้</button>`:""}</div></div></div>
   <div class="card"><h2>ประเภทที่ใช้</h2><div class="kinds">${KO.map(k=>`<button type="button" data-tk="${k}" class="${kOn(k)?"on":""}"><i>${KIND[k].ic}</i><b>${kOn(k)?"✓ ":""}${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}</div></div>
   <div class="grid2"><div class="card"><h2>เวลา</h2><div class="row"><div class="f"><label>เวลาเช็คอิน</label><input class="in-" type="time" data-c="ci" value="${esc(cfg.ci)}"></div><div class="f"><label>เวลาเช็คเอาท์</label><input class="in-" type="time" data-c="co" value="${esc(cfg.co)}"></div></div>
     <div class="f"><label>เวลาเตรียมห้องระหว่างรอบ (นาที) · ใช้กับแบบรายชั่วโมง</label><input class="in- r" inputmode="numeric" data-c="buf" value="${esc(cfg.buf||0)}"></div></div>
@@ -716,7 +708,7 @@ function vSet(){const V=$("#view");
     <div><button class="btn sm ghost" id="addPk">＋ เพิ่มช่วงเทศกาล</button></div></div></div>
   ${onlineHtml()}
   <div class="card"><h2>ข้อความในใบยืนยัน</h2><div class="f"><label>เงื่อนไขการยกเลิก</label><textarea class="in-" rows="2" data-c="cancel">${esc(cfg.cancel)}</textarea></div><div class="f"><label>ข้อความท้ายใบยืนยัน</label><input class="in-" data-c="foot" value="${esc(cfg.foot)}"></div></div>
-  <div class="card"><h2>ข้อมูลระบบจอง <small>${res.length} รายการให้เช่า · ${list.length} ใบจอง</small></h2><div class="hint">ข้อมูลอยู่ในเครื่องนี้ และสำรองรวมกับระบบร้านค้า (เมนู ⚙️ ตั้งค่า → สำรอง / กู้คืนข้อมูล · สำรองขึ้นระบบอัตโนมัติเมื่อเข้าสู่ระบบสมาชิก)</div>
+  <div class="card"><h2>ข้อมูลระบบจอง <small>${res.length} รายการให้เช่า · ${list.length} ใบจอง</small></h2><div class="hint">ข้อมูลอยู่ในเครื่องนี้ · ดาวน์โหลดไฟล์สำรองเก็บไว้เป็นระยะ หรือเข้าสู่ระบบสมาชิกเพื่อสำรองขึ้นระบบอัตโนมัติ</div>
     <div class="acts"><button class="btn ghost" id="sExp">⬇️ ดาวน์โหลดไฟล์สำรองระบบจอง</button><label class="btn ghost">⬆️ นำเข้าไฟล์สำรอง<input type="file" id="sImp" accept=".json" hidden></label>${res.length?"":`<button class="btn ghost" id="sDemo">✨ ใส่ข้อมูลตัวอย่าง</button>`}<button class="btn ghost danger" id="sWipe">🗑 ล้างข้อมูลระบบจอง</button></div></div>`;
   const sv=()=>{clearTimeout(vSet.t);vSet.t=setTimeout(()=>{if(saveCfg())toast("บันทึกการตั้งค่าแล้ว ✓")},400)};
   $$("[data-c]").forEach(x=>x.addEventListener(x.type==="checkbox"?"change":"input",()=>{const k=x.dataset.c;cfg[k]=x.type==="checkbox"?x.checked:/^(buf|depPct|late)$/.test(k)?num(x.value):k==="prefix"?x.value.replace(/[^A-Za-z]/g,"").toUpperCase():x.value;sv()}));
@@ -724,12 +716,15 @@ function vSet(){const V=$("#view");
   $$("[data-pk]").forEach(x=>x.addEventListener("input",()=>{const p=cfg.peaks[+x.dataset.pk];p[x.dataset.f]=x.dataset.f==="pct"?num(x.value):x.value;sv()}));
   $$("[data-rpk]").forEach(x=>x.onclick=()=>{cfg.peaks.splice(+x.dataset.rpk,1);saveCfg();vSet()});
   $("#addPk").onclick=()=>{cfg.peaks=cfg.peaks||[];cfg.peaks.push({n:"",s:"",e:"",pct:20});saveCfg();vSet()};
+  $$("[data-sh]").forEach(x=>x.addEventListener(x.type==="checkbox"?"change":"input",()=>{cfg.shop=Object.assign({},cfg.shop||{});cfg.shop[x.dataset.sh]=x.type==="checkbox"?x.checked:x.value.trim();sv()}));
+  $("#shLogo").onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image();img.onload=()=>{const k=Math.min(1,240/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext("2d").drawImage(img,0,0,c.width,c.height);cfg.shop=Object.assign({},cfg.shop||{},{logo:c.toDataURL("image/png")});saveCfg();vSet()};img.src=URL.createObjectURL(f)};
+  if($("#shLogoX"))$("#shLogoX").onclick=()=>{cfg.shop=Object.assign({},cfg.shop||{},{logo:""});saveCfg();vSet()};
   wireOnline();
   $$("[data-tk]").forEach(x=>x.onclick=()=>{const k=x.dataset.tk;if(kOn(k)&&KO.filter(kOn).length===1)return toast("ต้องเปิดอย่างน้อย 1 ประเภท");cfg.kinds[k]=!kOn(k);saveCfg();vSet()});
   $("#sExp").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({app:"edm-booking",v:1,res,list,cfg})],{type:"application/json"}));a.download="สำรองระบบจอง-"+today()+".json";a.click()};
   $("#sImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-booking"||!Array.isArray(o.res)||!Array.isArray(o.list))throw 0;if(!confirm("นำเข้าข้อมูลระบบจอง? ข้อมูลระบบจองในเครื่องนี้จะถูกแทนที่"))return;res=o.res;list=o.list;cfg=Object.assign({},CFG0,o.cfg||{});saveRes();saveList();saveCfg();load();toast("นำเข้าแล้ว ✓");render()}).catch(()=>toast("ไฟล์ไม่ถูกต้อง ต้องเป็นไฟล์สำรองระบบจอง"))};
   if($("#sDemo"))$("#sDemo").onclick=demo;
-  $("#sWipe").onclick=()=>{if(!confirm("ล้างห้อง/อุปกรณ์ และใบจองทั้งหมด?\nบิลที่ออกไปแล้วยังอยู่ในระบบเปิดบิล"))return;if(!confirm("ยืนยันอีกครั้ง: ลบข้อมูลระบบจองทั้งหมด"))return;res=[];list=[];saveRes();saveList();toast("ล้างข้อมูลแล้ว");render()}}
+  $("#sWipe").onclick=()=>{if(!confirm("ล้างห้อง/อุปกรณ์ และใบจองทั้งหมด?"))return;if(!confirm("ยืนยันอีกครั้ง: ลบข้อมูลระบบจองทั้งหมด"))return;res=[];list=[];saveRes();saveList();toast("ล้างข้อมูลแล้ว");render()}}
 
 /* ---------- ข้อมูลตัวอย่าง ---------- */
 function demo(){if((res.length||list.length)&&!confirm("ใส่ข้อมูลตัวอย่างแทนข้อมูลระบบจองเดิม?"))return;const t=today(),d=n=>addDays(t,n),h=(n,x)=>d(n)+"T"+x;
@@ -835,6 +830,6 @@ setInterval(()=>{if(document.visibilityState==="visible"&&cfg.online.on){publish
 window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.edm==="member"&&cfg.online.on)setTimeout(()=>publish(false).then(()=>pull()),300)});
 })();
 </script>
-<script src="../assets/member.js?v=54" defer></script>
+<script src="../assets/member.js?v=55" defer></script>
 </body>
 </html>

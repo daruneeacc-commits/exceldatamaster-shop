@@ -42,7 +42,7 @@ main{max-width:1400px;margin:0 auto;padding:14px 16px;display:flex;flex-directio
 #kExit{display:none}
 body.kiosk header.top{display:none}
 body.kiosk #tabs{display:flex!important;position:sticky;top:0;z-index:40}
-body.kiosk #tabs [data-v="home"],body.kiosk #tabs [data-v="menu"],body.kiosk #tabs [data-v="rpt"],body.kiosk #tabs [data-v="set"]{display:none}
+body.kiosk #tabs [data-v="home"],body.kiosk #tabs [data-v="menu"],body.kiosk #tabs [data-v="inv"],body.kiosk #tabs [data-v="rpt"],body.kiosk #tabs [data-v="set"]{display:none}
 body.kiosk #kExit{display:block;flex:0 0 auto;color:var(--danger)}
 body.kiosk main{max-width:none;padding-top:8px}
 #view{display:flex;flex-direction:column;gap:14px}
@@ -227,11 +227,11 @@ html{overscroll-behavior-y:contain}
 <body>
 <header class="top"><div class="in">
   <a class="brand" href="/">📊 Excel Data Master <small>· ระบบร้านคาเฟ่</small></a>
-  <nav class="nav"><a class="btn sm main" href="/app/">🏪 ระบบร้านค้า</a><a class="btn sm ghost" href="/stock/">📦 สต๊อก</a><a class="btn sm ghost" href="/">🛒 ร้านเทมเพลต</a></nav>
+  <nav class="nav"><a class="btn sm ghost" href="/">🛒 ร้านเทมเพลต</a></nav>
 </div></header>
 <main>
   <div class="tabs" id="tabs">
-    <button data-v="home">🏠 ภาพรวม</button><button data-v="pos">🧾 ขายหน้าร้าน</button><button data-v="bar">🍹 จอบาร์</button><button data-v="orders">📋 ออเดอร์</button><button data-v="menu">☕ เมนูและสูตร</button><button data-v="shift">💰 กะ</button><button data-v="rpt">📊 รายงาน</button><button data-v="set">⚙️ ตั้งค่า</button><button type="button" id="kExit">✕ ออกจากโหมดหน้าร้าน</button>
+    <button data-v="home">🏠 ภาพรวม</button><button data-v="pos">🧾 ขายหน้าร้าน</button><button data-v="bar">🍹 จอบาร์</button><button data-v="orders">📋 ออเดอร์</button><button data-v="menu">☕ เมนูและสูตร</button><button data-v="inv">🧂 วัตถุดิบ</button><button data-v="shift">💰 กะ</button><button data-v="rpt">📊 รายงาน</button><button data-v="set">⚙️ ตั้งค่า</button><button type="button" id="kExit">✕ ออกจากโหมดหน้าร้าน</button>
   </div>
   <div id="view"></div>
 </main>
@@ -247,7 +247,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast("บันทึกไม่ได้: พื้นที่ในเครื่องเต็ม ลองปิดกะเพื่อย่อข้อมูลเก่า");return false}}};
 const K={menu:"edm_cafe_menu",orders:"edm_cafe_orders",shifts:"edm_cafe_shifts",cfg:"edm_cafe_cfg",ui:"edm_cafe_ui",cart:"edm_cafe_cart"};
-const SK={items:"edm_stock_items",tx:"edm_stock_tx"};
+const SK={items:"edm_cafe_items",tx:"edm_cafe_stx"};
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0};
 const r2=n=>Math.round((n+Number.EPSILON)*100)/100,r4=n=>Math.round((n+Number.EPSILON)*1e4)/1e4;
@@ -274,8 +274,8 @@ const chOn=()=>(C.channels||[]).filter(c=>c.on&&c.name);
 const payKey=o=>o.pay.m==="app"?"app_"+o.pay.ch:o.pay.m;
 const pmName=k=>String(k).startsWith("app_")?((chOf(String(k).slice(4))||{}).name||String(k).slice(4)):(PMN[k]||k);
 const pmIcon=k=>String(k).startsWith("app_")?"🛵":(PMI[k]||"");
-// รายการข้อมูลทั้งระบบ (ตรงกับไฟล์สำรองของระบบร้านค้า /app/)
-const KS_ALL=["edm_cafe_menu","edm_cafe_orders","edm_cafe_shifts","edm_cafe_cfg","edm_book_res","edm_book_list","edm_book_cfg","edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_suppliers","edm_services","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
+// ข้อมูลของระบบคาเฟ่ (แยกจากระบบอื่น)
+const KS_ALL=["edm_cafe_menu","edm_cafe_orders","edm_cafe_shifts","edm_cafe_cfg","edm_cafe_items","edm_cafe_stx"];
 const OST={new:["รอทำ","p-new"],make:["กำลังทำ","p-make"],done:["เสร็จ รอรับ","p-done"],served:["รับแล้ว","p-served"],void:["ยกเลิก","p-void"]};
 
 /* ---------- ข้อมูล ---------- */
@@ -286,14 +286,20 @@ function load(){M=Object.assign({cats:[],items:[],groups:[]},LS.get(K.menu,{})||
   if((!Array.isArray(C.staffs)||!C.staffs.length)&&Array.isArray(C.staff)&&C.staff.length)C.staffs=C.staff.map(n=>({id:uid("u"),name:n,pin:""}));C.staffs=Array.isArray(C.staffs)?C.staffs:[];
   if(!C.print)C.print=C.autoPrint?"auto":"ask";
   const cs=Array.isArray(C.channels)?C.channels:[];C.channels=CH0.map(d=>Object.assign({},d,cs.find(x=>x.id===d.id)||{})).concat(cs.filter(x=>!CH0.some(d=>d.id===x.id)));
+  if(!C.shop){const b=LS.get("edm_bill_seller",{})||{};C.shop={name:b.name||"",addr:b.addr||"",tax:b.tax||"",branch:b.branch||"",phone:b.phone||"",vat:!!b.vat};LS.set(K.cfg,C)}
+  if(localStorage.getItem(SK.items)==null)migrateInv();
   ui=Object.assign({v:"home",cat:"",q:"",of:"all",mt:"menu",rr:"today",rf:"",rt:""},LS.get(K.ui,{})||{});cart=Object.assign(newCart(),LS.get(K.cart,null)||{})}
+// ย้ายวัตถุดิบที่สูตรใช้อยู่จากระบบสต๊อกเดิมมาเป็นของคาเฟ่เอง (ทำครั้งเดียว · ข้อมูลเดิมไม่ถูกลบ)
+function migrateInv(){const P=new Set();const add=L=>(L||[]).forEach(r=>{if(r&&r.pid)P.add(r.pid)});M.items.forEach(m=>add(m.rec));M.groups.forEach(g=>(g.choices||[]).forEach(c=>add(c.rec)));
+  const old=LS.get("edm_stock_items",[])||[],items=old.filter(i=>P.has(i.id)||String(i.id).startsWith("cafe_")).map(i=>Object.assign({},i,{name:String(i.name||"").replace(/^คาเฟ่ · /,"")})),ids=new Set(items.map(i=>i.id));
+  const tx=ids.size?(LS.get("edm_stock_tx",[])||[]).filter(t=>ids.has(t.pid)):[];LS.set(SK.items,items);LS.set(SK.tx,tx)}
 function newCart(){return{type:"take",table:"",ch:"",ref:"",lines:[],disc:{t:"amt",v:0},note:"",hold:[]}}
 const saveM=()=>LS.set(K.menu,M),saveO=()=>LS.set(K.orders,O),saveSH=()=>LS.set(K.shifts,SH),saveC=()=>LS.set(K.cfg,C),saveUi=()=>LS.set(K.ui,{v:ui.v,cat:ui.cat,of:ui.of,mt:ui.mt,rr:ui.rr,kiosk:!!ui.kiosk}),saveCart=()=>LS.set(K.cart,cart);
-const seller=()=>LS.get("edm_bill_seller",{})||{};
+const seller=()=>C.shop||{};
 const curShift=()=>SH.find(s=>!s.closed)||null;
 const mOf=id=>M.items.find(x=>x.id===id),gOf=id=>M.groups.find(x=>x.id===id),catOf=id=>M.cats.find(x=>x.id===id);
 
-/* ---------- สต๊อกวัตถุดิบ (ใช้รายการและต้นทุนถัวเฉลี่ยจากระบบสต๊อก) ---------- */
+/* ---------- วัตถุดิบของคาเฟ่ (ยอดคงเหลือและต้นทุนถัวเฉลี่ย) ---------- */
 let ST=null;
 let STB=null,STri=null,STrt=null;
 function stock(){if(ST)return ST;const ri=localStorage.getItem(SK.items)||"[]",rt=localStorage.getItem(SK.tx)||"[]";
@@ -307,7 +313,7 @@ function stock(){if(ST)return ST;const ri=localStorage.getItem(SK.items)||"[]",r
 const dirtyStock=()=>{ST=null};
 const stItems=()=>Object.values(stock()).map(s=>s.i);
 const sOf=pid=>stock()[pid];
-// วัตถุดิบที่ใช้ไปในกะที่ยังไม่ปิด (ยังไม่ได้ตัดสต๊อกจริง)
+// วัตถุดิบที่ใช้ไปในกะที่ยังไม่ปิด (ยังไม่ได้ตัดจริง)
 function pendingUse(){const s=curShift(),U={};if(!s)return U;O.forEach(o=>{if(o.shift!==s.id||o.st==="void")return;eff(o).lines.forEach(l=>(l.use||[]).forEach(u=>{U[u.pid]=r4((U[u.pid]||0)+u.qty*l.qty)}))});return U}
 // ยอดจริงของบิลหลังคืนเงินบางรายการ (ส่วนลดคิดตามสัดส่วน)
 function eff(o){const R=o.ref||{},lines=o.lines.map((l,i)=>Object.assign({},l,{qty:l.qty-(R[i]||0)})).filter(l=>l.qty>0),sub=r2(lines.reduce((a,l)=>a+l.price*l.qty,0)),disc=o.sub?r2(sub*o.disc/o.sub):0,total=r2(sub-disc);return{lines,sub,disc,total,refund:r2(o.total-total)}}
@@ -349,20 +355,20 @@ function lockCard(why){return`<div class="card" style="align-items:center;text-a
 
 /* ---------- กันข้อมูลหาย: สำรองขึ้นระบบ / ไฟล์สำรอง ---------- */
 function backupInfo(){const m=window.EDM_MEMBER,me=m&&m.me,c=m&&m.cloud?m.cloud():null;if(me&&me.token&&c&&c.ok&&c.email===me.email&&Date.now()-c.ok<864e5)return{ok:true,cloud:true,txt:"☁️ สำรองขึ้นระบบล่าสุด "+hm(c.ok)+" น."};
-  const last=LS.get("edm_last_backup","");return{ok:!!last&&last>=today(),last}}
-function backupAll(){const o={app:"edm-all",v:1};KS_ALL.forEach(k=>o[k]=LS.get(k,null));const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="สำรองระบบร้านค้า-"+today()+".json";a.click();LS.set("edm_last_backup",today());toast("ดาวน์โหลดไฟล์สำรองทั้งระบบแล้ว ✓ เก็บไว้ในไดรฟ์หรือส่งเข้าอีเมลตัวเอง")}
+  const last=LS.get("edm_cafe_lastbk","");return{ok:!!last&&last>=today(),last}}
+function backupAll(){const o={app:"edm-cafe",v:2};KS_ALL.forEach(k=>o[k]=LS.get(k,null));const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="สำรองคาเฟ่-"+today()+".json";a.click();LS.set("edm_cafe_lastbk",today());toast("ดาวน์โหลดไฟล์สำรองคาเฟ่แล้ว ✓ เก็บไว้ในไดรฟ์หรือส่งเข้าอีเมลตัวเอง")}
 function backupBanner(force){const b=backupInfo();if(b.ok&&!force)return"";if(b.cloud)return`<div class="hint">${b.txt}</div>`;
   return`<div class="warn" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span style="flex:1;min-width:220px">⚠️ ข้อมูลร้านอยู่ในเครื่องนี้เครื่องเดียว ${b.last?"· ดาวน์โหลดไฟล์สำรองล่าสุด "+thD(b.last):"· ยังไม่เคยสำรอง"} — เข้าสู่ระบบสมาชิกเพื่อสำรองขึ้นระบบอัตโนมัติ หรือดาวน์โหลดไฟล์สำรองทุกวัน</span><button class="btn sm main" type="button" data-bk="1">⬇️ ดาวน์โหลดไฟล์สำรอง</button></div>`}
-function staleBanner(){const s=curShift();if(!s||s.date>=today())return"";return`<div class="bad" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span style="flex:1;min-width:220px">กะ ${esc(s.no)} เปิดค้างตั้งแต่ ${thD(s.date)} ${hm(s.open)} น. · ปิดกะเพื่อให้สต๊อก บัญชี และเงินในลิ้นชักเป็นปัจจุบัน</span><button class="btn sm main" type="button" data-gv="shift">ไปปิดกะ</button></div>`}
+function staleBanner(){const s=curShift();if(!s||s.date>=today())return"";return`<div class="bad" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span style="flex:1;min-width:220px">กะ ${esc(s.no)} เปิดค้างตั้งแต่ ${thD(s.date)} ${hm(s.open)} น. · ปิดกะเพื่อให้ยอดขาย วัตถุดิบ และเงินในลิ้นชักเป็นปัจจุบัน</span><button class="btn sm main" type="button" data-gv="shift">ไปปิดกะ</button></div>`}
 const offChip=()=>navigator.onLine?"":`<span class="pill p-new" title="ขายต่อได้ ข้อมูลอยู่ในเครื่อง">📴 ออฟไลน์ · ขายต่อได้</span>`;
 
 /* ---------- เปลี่ยนหน้า ---------- */
-const VIEWS=["home","pos","bar","orders","menu","shift","rpt","set"];
+const VIEWS=["home","pos","bar","orders","menu","inv","shift","rpt","set"];
 function render(){if(ui.kiosk&&!["pos","bar","orders","shift"].includes(ui.v))ui.v="pos";const v=VIEWS.includes(ui.v)?ui.v:"home";$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));dirtyStock();document.body.classList.remove("cart-open");
   if($(".cartbar")&&v!=="pos")$(".cartbar").remove();
-  const need=v==="menu"?"เมนูและสูตร":v==="set"?"ตั้งค่าคาเฟ่":v==="rpt"&&!C.perm.staffRpt?"รายงานยอดขายและต้นทุน":"";
+  const need=v==="menu"?"เมนูและสูตร":v==="inv"?"วัตถุดิบและต้นทุน":v==="set"?"ตั้งค่าคาเฟ่":v==="rpt"&&!C.perm.staffRpt?"รายงานยอดขายและต้นทุน":"";
   if(need&&!unlocked()){$("#view").innerHTML=lockCard(need);return}
-  ({home:vHome,pos:vPos,bar:vBar,orders:vOrders,menu:vMenu,shift:vShift,rpt:vRpt,set:vSet})[v]();
+  ({home:vHome,pos:vPos,bar:vBar,orders:vOrders,menu:vMenu,inv:vInv,shift:vShift,rpt:vRpt,set:vSet})[v]();
   if(need&&hasOwner()){const d=document.createElement("div");d.className="hint";d.style.cssText="display:flex;gap:10px;align-items:center;flex-wrap:wrap";d.innerHTML=`<span style="flex:1">🔓 ปลดล็อกด้วยรหัสเจ้าของร้าน${unlockUntil===Infinity?" จนกว่าจะกดล็อก":" ถึง "+hm(unlockUntil)+" น."}</span><button class="btn sm ghost" type="button" id="relock">🔒 ล็อกตอนนี้</button>`;$("#view").prepend(d);$("#relock").onclick=()=>{unlockUntil=0;toast("ล็อกแล้ว");render()}}}
 function show(v){ui.v=v;saveUi();render();scrollTo(0,0);if(EMB){try{window.parent.postMessage({edm:"go",tool:"cafe",hash:"v="+v,quiet:1},location.origin)}catch(e){}}}
 $("#tabs").onclick=e=>{if(e.target.closest("#kExit"))return kiosk(false);const b=e.target.closest("[data-v]");if(b)show(b.dataset.v)};
@@ -383,8 +389,8 @@ function vHome(){const V=$("#view"),s=curShift(),T=todayStats(),wait=O.filter(o=
     <button class="kpi ${wait?"warn":""}" data-gv="bar"><span>ออเดอร์ค้างทำ</span><b>${wait}</b><small>เสร็จรอรับ ${ready}</small></button>
     <button class="kpi ${low.length?"bad":""}" data-gv="menu"><span>วัตถุดิบใกล้หมด</span><b>${low.length} รายการ</b><small>${T.top?"ขายดีวันนี้: "+esc(T.top[0])+" ("+T.top[1]+")":"ยังไม่มียอดขายวันนี้"}</small></button></div>
   <div class="grid2"><div class="card"><h2>💰 กะวันนี้</h2>${s?`<div class="hint">เปิดกะ ${hm(s.open)} น. · เงินทอนตั้งต้น ฿${fm(s.float)}</div><div class="tools"><button class="btn main lg grow edm-lock" data-gv="pos">🧾 ขายหน้าร้าน</button><button class="btn ghost" data-gv="shift">ปิดกะ</button></div>`
-      :`<div class="warn">เปิดกะก่อนเริ่มขาย เพื่อให้ระบบสรุปเงินในลิ้นชักและลงบัญชีได้ถูกต้อง</div><button class="btn main lg edm-lock" data-gv="shift">💰 เปิดกะ</button>`}</div>
-    <div class="card"><h2>🧂 วัตถุดิบที่ต้องเติม <small>คงเหลือหลังหักที่ขายในกะนี้</small></h2>${low.length?low.slice(0,8).map(x=>`<div class="li"><div><b>${esc(x.i.name)}</b><small>จุดสั่งซื้อ ${fq(num(x.i.min))} ${esc(x.i.unit||"")}</small></div><div class="r" style="color:var(--danger);font-weight:700">${fq(x.b)} ${esc(x.i.unit||"")}</div></div>`).join("")+`<a class="btn sm ghost" href="/stock/">ไปหน้าสต๊อก / รับเข้า →</a>`:`<div class="empty">วัตถุดิบพอทุกรายการ 👍</div>`}</div></div>`}
+      :`<div class="warn">เปิดกะก่อนเริ่มขาย เพื่อให้ระบบสรุปเงินในลิ้นชักได้ถูกต้อง</div><button class="btn main lg edm-lock" data-gv="shift">💰 เปิดกะ</button>`}</div>
+    <div class="card"><h2>🧂 วัตถุดิบที่ต้องเติม <small>คงเหลือหลังหักที่ขายในกะนี้</small></h2>${low.length?low.slice(0,8).map(x=>`<div class="li"><div><b>${esc(x.i.name)}</b><small>จุดสั่งซื้อ ${fq(num(x.i.min))} ${esc(x.i.unit||"")}</small></div><div class="r" style="color:var(--danger);font-weight:700">${fq(x.b)} ${esc(x.i.unit||"")}</div></div>`).join("")+`<button class="btn sm ghost" type="button" data-gv="inv">ไปหน้าวัตถุดิบ / รับของเข้า →</button>`:`<div class="empty">วัตถุดิบพอทุกรายการ 👍</div>`}</div></div>`}
 
 /* ---------- ขายหน้าร้าน ---------- */
 function vPos(){const V=$("#view"),s=curShift();
@@ -487,7 +493,7 @@ function payDlg(){const T=cartCalc(cart);if(!cart.lines.length)return;
   if(!curShift()){toast("เปิดกะก่อนรับเงิน");show("shift");return}
   if(cart.type==="dine"&&!cart.table&&String(C.tables||"").trim()){toast("เลือกโต๊ะก่อน");return}
   if(cart.type==="deli"){const c=chOf(cart.ch);if(!c)return toast("เลือกแอปเดลิเวอรีก่อน");const gp=r2(T.total*num(c.gp)/100);
-    openDlg("🛵 ออเดอร์ "+c.name,`<div class="db"><div class="paybig">฿${fm(T.total)}</div><div class="hint">ลูกค้าจ่ายผ่านแอป ${esc(c.name)} · ค่า GP ${fm(num(c.gp))}% ≈ ฿${fm(gp)} · แอปจะโอนให้ร้านประมาณ <b>฿${fm(T.total-gp)}</b><br>ตอนปิดกะ ระบบตั้งยอดนี้เป็นลูกหนี้ ${esc(c.name)} รอรับเงิน ไม่นับรวมเงินในลิ้นชัก</div>${cart.ref?`<div class="note">เลขออเดอร์ ${esc(cart.ref)}</div>`:""}</div>
+    openDlg("🛵 ออเดอร์ "+c.name,`<div class="db"><div class="paybig">฿${fm(T.total)}</div><div class="hint">ลูกค้าจ่ายผ่านแอป ${esc(c.name)} · ค่า GP ${fm(num(c.gp))}% ≈ ฿${fm(gp)} · แอปจะโอนให้ร้านประมาณ <b>฿${fm(T.total-gp)}</b><br>ยอดนี้แยกไว้ในรายงานตามแอป ไม่นับรวมเงินในลิ้นชัก</div>${cart.ref?`<div class="note">เลขออเดอร์ ${esc(cart.ref)}</div>`:""}</div>
       <div class="foot"><button class="btn main lg edm-lock" id="pOk" style="flex:1">✓ รับออเดอร์ · ออกคิว</button></div>`);
     $("#pOk").onclick=()=>{const o=placeOrder({m:"app",ch:c.id,got:T.total,change:0,gp});if(o)doneDlg(o)};return}
   const ms=Object.keys(PMN).filter(k=>C.methods[k]);let m=ms[0]||"cash";
@@ -560,7 +566,7 @@ function orderDlg(id){const o=O.find(x=>x.id===id);if(!o)return;const s=curShift
     <div>${o.lines.map((l,i)=>{const r=(o.ref||{})[i]||0;return`<div class="li"><div><b>${l.qty} × ${esc(l.name)}</b>${r?` <span class="pill p-void">คืน ${r}</span>`:""}${l.opt?`<small>${esc(l.opt)}</small>`:""}${l.note?`<small>📝 ${esc(l.note)}</small>`:""}<small>ต้นทุนวัตถุดิบ ฿${fm(num(l.cost)*(l.qty-r))}</small></div><div class="r">฿${fm(l.price*l.qty)}</div></div>`}).join("")}</div>
     <div class="hint">รวม ฿${fm(o.sub)}${o.disc?" · ส่วนลด ฿"+fm(o.disc):""} · ชำระ ฿${fm(o.total)} · ${esc(pmName(payKey(o)))}${o.pay.m==="cash"?" รับ ฿"+fm(o.pay.got)+" ทอน ฿"+fm(o.pay.change):""}${E.refund>0?`<br><b>คืนเงินแล้ว ฿${fm(E.refund)} · ยอดสุทธิ ฿${fm(E.total)}</b>`:""}${(o.refunds||[]).map(x=>`<br>· คืน ฿${fm(x.amt)} ${hm(x.at)} น. — ${esc(x.reason)}`).join("")}${o.voidReason?"<br>เหตุผลที่ยกเลิก: "+esc(o.voidReason):""}</div>
     ${o.st!=="void"?`<div class="f"><span>สถานะที่บาร์</span><div class="seg" id="ost">${["new","make","done","served"].map(k=>`<button data-k="${k}" class="${o.st===k?"on":""}">${OST[k][0]}</button>`).join("")}</div></div>`:""}</div>
-    <div class="foot">${C.print!=="off"?`<button class="btn ghost" id="oPr">🖨 พิมพ์ใบเสร็จ</button>`:""}<span class="sp"></span>${open?`<button class="btn ghost edm-lock" id="oRef" ${E.lines.length?"":"disabled"}>↩️ คืนเงินบางรายการ</button><button class="btn ghost danger edm-lock" id="oVoid">ยกเลิกบิล</button>`:o.st!=="void"?`<span class="note">กะปิดแล้ว · คืนเงินให้ทำใบลดหนี้ที่ระบบเปิดบิล</span>`:""}</div>`);
+    <div class="foot">${C.print!=="off"?`<button class="btn ghost" id="oPr">🖨 พิมพ์ใบเสร็จ</button>`:""}<span class="sp"></span>${open?`<button class="btn ghost edm-lock" id="oRef" ${E.lines.length?"":"disabled"}>↩️ คืนเงินบางรายการ</button><button class="btn ghost danger edm-lock" id="oVoid">ยกเลิกบิล</button>`:o.st!=="void"?`<span class="note">กะปิดแล้ว · คืนเงินได้เฉพาะบิลในกะที่ยังเปิดอยู่</span>`:""}</div>`);
   if($("#oPr"))$("#oPr").onclick=()=>printSlip(o);
   if($("#ost"))$("#ost").onclick=e=>{const b=e.target.closest("[data-k]");if(!b)return;o.st=b.dataset.k;saveO();orderDlg(id);if(ui.v==="orders")vOrders()};
   if($("#oVoid"))$("#oVoid").onclick=()=>guard(async ()=>{const r=await askIn("ยกเลิกบิลคิว #"+o.q+" ยอด ฿"+fm(E.total)+"\nเหตุผล (เช่น ลูกค้าเปลี่ยนใจ คีย์ผิด)","");if(r===null)return orderDlg(id);if(!r.trim()){toast("ใส่เหตุผลก่อน");return orderDlg(id)}
@@ -568,7 +574,7 @@ function orderDlg(id){const o=O.find(x=>x.id===id);if(!o)return;const s=curShift
   if($("#oRef"))$("#oRef").onclick=()=>guard(()=>refundDlg(o),"คืนเงิน ต้องใช้รหัสเจ้าของร้าน")}
 function refundDlg(o){const R=o.ref||{},left=o.lines.map((l,i)=>l.qty-(R[i]||0)),pick=o.lines.map(()=>0);
   const amt=()=>{const tmp=Object.assign({},o,{ref:Object.assign({},R)});pick.forEach((q,i)=>{if(q)tmp.ref[i]=(tmp.ref[i]||0)+q});return r2(eff(o).total-eff(tmp).total)};
-  const draw=()=>{openDlg("↩️ คืนเงิน คิว #"+o.q,`<div class="db"><div class="note">เลือกจำนวนที่คืนของแต่ละรายการ (ส่วนลดท้ายบิลคิดคืนตามสัดส่วน) · วัตถุดิบของรายการที่คืนจะไม่ถูกตัดสต๊อก</div>
+  const draw=()=>{openDlg("↩️ คืนเงิน คิว #"+o.q,`<div class="db"><div class="note">เลือกจำนวนที่คืนของแต่ละรายการ (ส่วนลดท้ายบิลคิดคืนตามสัดส่วน) · วัตถุดิบของรายการที่คืนจะไม่ถูกตัดวัตถุดิบ</div>
     ${o.lines.map((l,i)=>left[i]>0?`<div class="li"><div><b>${esc(l.name)}</b><small>${esc(l.opt||"")} · เหลือ ${left[i]} · ฿${fm(l.price)}/${esc(l.unit)}</small></div><div class="qty"><button data-m="${i}" type="button">−</button><b>${pick[i]}</b><button data-p="${i}" type="button">+</button></div></div>`:"").join("")}
     <div class="f"><label>เหตุผล</label><input class="in-" id="rfR" placeholder="เช่น ทำผิดเมนู ลูกค้าไม่รับ"></div>
     <div class="paybig" style="font-size:1.6rem">คืน ฿${fm(amt())}</div><div class="note" style="text-align:center">คืนทาง ${esc(pmName(payKey(o)))}${o.pay.m==="cash"?" (หยิบจากลิ้นชัก)":""}</div></div>
@@ -581,12 +587,12 @@ function refundDlg(o){const R=o.ref||{},left=o.lines.map((l,i)=>l.qty-(R[i]||0))
   draw()}
 /* ---------- เมนูและสูตร ---------- */
 function vMenu(){const V=$("#view");
-  V.innerHTML=`<div class="hello"><h1>☕ เมนูและสูตร</h1><p>สูตรต่อแก้วใช้วัตถุดิบจากระบบสต๊อก ระบบคิดต้นทุนจากราคาทุนถัวเฉลี่ย และตัดสต๊อกให้ตอนปิดกะ</p></div>
+  V.innerHTML=`<div class="hello"><h1>☕ เมนูและสูตร</h1><p>สูตรต่อแก้วใช้วัตถุดิบจากหน้า "วัตถุดิบ" ระบบคิดต้นทุนจากราคาทุนถัวเฉลี่ย และตัดวัตถุดิบให้ตอนปิดกะ</p></div>
   <div class="seg" id="mt" style="max-width:520px">${[["menu","เมนู ("+M.items.length+")"],["opts","ตัวเลือก ("+M.groups.length+")"],["cats","หมวด ("+M.cats.length+")"]].map(([k,n])=>`<button data-k="${k}" class="${ui.mt===k?"on":""}">${n}</button>`).join("")}</div><div id="mv"></div>`;
   $("#mt").onclick=e=>{const b=e.target.closest("[data-k]");if(b){ui.mt=b.dataset.k;saveUi();vMenu()}};
   ({menu:mvMenu,opts:mvOpts,cats:mvCats}[ui.mt]||mvMenu)()}
 function mvMenu(){const W=$("#mv");const cats=M.cats.concat(M.items.some(m=>!catOf(m.cat))?[{id:"",name:"ไม่มีหมวด"}]:[]);
-  W.innerHTML=`${M.items.length&&!M.items.some(m=>(m.rec||[]).length)?`<div class="hint">ยังไม่ได้ใส่สูตรต่อแก้ว · ร้านขายได้ปกติ ใส่สูตรเมื่ออยากรู้ต้นทุนและให้ระบบตัดสต๊อก (แตะชื่อเมนูเพื่อใส่สูตร)</div>`:""}<div class="card"><h2>เมนูทั้งหมด <span class="tools"><button class="btn sm main edm-lock" id="mAdd">＋ เพิ่มเมนู</button></span></h2>
+  W.innerHTML=`${M.items.length&&!M.items.some(m=>(m.rec||[]).length)?`<div class="hint">ยังไม่ได้ใส่สูตรต่อแก้ว · ร้านขายได้ปกติ ใส่สูตรเมื่ออยากรู้ต้นทุนและให้ระบบตัดวัตถุดิบ (แตะชื่อเมนูเพื่อใส่สูตร)</div>`:""}<div class="card"><h2>เมนูทั้งหมด <span class="tools"><button class="btn sm main edm-lock" id="mAdd">＋ เพิ่มเมนู</button></span></h2>
   ${M.items.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>เมนู</th><th class="r">ราคา</th><th class="r">ต้นทุนวัตถุดิบ</th><th class="r">กำไรขั้นต้น</th><th>สูตร</th><th>ขาย</th></tr></thead><tbody>
   ${cats.map(c=>{const L=M.items.filter(m=>(m.cat||"")===c.id||(!c.id&&!catOf(m.cat)));if(!L.length)return"";return`<tr><td colspan="6" style="background:var(--soft);font-weight:700">${esc(c.name)}</td></tr>`+L.map(m=>{const cost=menuCost(m),p=num(m.price),gp=p?Math.round((p-cost)/p*100):0;
     return`<tr class="click" data-em="${m.id}"><td>${esc(m.icon||"☕")} <b>${esc(m.name)}</b>${(m.groups||[]).length?`<span class="sub">${(m.groups||[]).map(g=>gOf(g)?gOf(g).name:"").filter(Boolean).join(" · ")}</span>`:""}</td><td class="r">${fm(p)}</td><td class="r">${(m.rec||[]).length?fmt(cost):"-"}</td><td class="r" style="${gp<50&&(m.rec||[]).length?"color:var(--warn);font-weight:700":""}">${(m.rec||[]).length?gp+"%":"-"}</td><td>${(m.rec||[]).length?(m.rec||[]).length+" วัตถุดิบ":`<span class="pill p-new">ยังไม่มีสูตร</span>`}</td><td><button class="btn sm ${m.off?"ghost danger":"ghost"}" data-tog="${m.id}">${m.off?"ปิดขาย":"เปิดขาย"}</button></td></tr>`}).join("")}).join("")}</tbody></table></div>
@@ -595,15 +601,15 @@ function mvMenu(){const W=$("#mv");const cats=M.cats.concat(M.items.some(m=>!cat
   $$("[data-tog]").forEach(b=>b.onclick=()=>{const m=mOf(b.dataset.tog);m.off=!m.off;saveM();mvMenu();toast(m.name+(m.off?" ปิดขายชั่วคราว":" เปิดขายแล้ว"))})}
 function stockOpts(sel){const I=stItems().slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),"th"));return`<option value="">— เลือกวัตถุดิบ —</option>`+I.map(i=>`<option value="${esc(i.id)}" ${i.id===sel?"selected":""}>${esc(i.name)} (${esc(i.unit||"")})</option>`).join("")}
 function recRows(rec,key,signed){return(rec||[]).map((r,i)=>{const s=sOf(r.pid);return`<div class="rec"><select class="in-" data-${key}="${i}" data-f="pid">${stockOpts(r.pid)}</select><input class="in- r" inputmode="decimal" data-${key}="${i}" data-f="qty" value="${esc(r.qty)}" placeholder="${signed?"+/-":"0"}"><span class="u">${s?esc(s.i.unit||""):""}</span><button class="x" type="button" data-${key}x="${i}" aria-label="ลบ">✕</button></div>`}).join("")}
-function newStockDlg(back){openDlg("＋ วัตถุดิบใหม่ (เพิ่มในระบบสต๊อก)",`<div class="db"><div class="hint">ใช้หน่วยเล็กที่ใช้ในสูตร เช่น กรัม มล. ใบ ชิ้น แล้วใส่ราคาทุนต่อหน่วยนั้น (เช่น เมล็ดกาแฟ 1 กก. 600 บาท = 0.60 บาท/กรัม)</div>
+function newStockDlg(back){openDlg("＋ วัตถุดิบใหม่",`<div class="db"><div class="hint">ใช้หน่วยเล็กที่ใช้ในสูตร เช่น กรัม มล. ใบ ชิ้น แล้วใส่ราคาทุนต่อหน่วยนั้น (เช่น เมล็ดกาแฟ 1 กก. 600 บาท = 0.60 บาท/กรัม)</div>
   <div class="f"><label>ชื่อวัตถุดิบ</label><input class="in-" id="nsN" placeholder="เช่น เมล็ดกาแฟคั่วกลาง"></div>
   <div class="row3"><div class="f"><label>หน่วย</label><input class="in-" id="nsU" placeholder="กรัม"></div><div class="f"><label>ทุนต่อหน่วย (บาท)</label><input class="in- r" id="nsC" inputmode="decimal" placeholder="0.60"></div><div class="f"><label>เตือนเมื่อเหลือต่ำกว่า</label><input class="in- r" id="nsM" inputmode="decimal" placeholder="500"></div></div>
   <div class="f"><label>ยอดคงเหลือตอนนี้ (ไม่บังคับ)</label><input class="in- r" id="nsB" inputmode="decimal" placeholder="0"></div>
   <div class="tools"><button class="btn main" id="nsOk">เพิ่มวัตถุดิบ</button><button class="btn ghost" id="nsBack">← กลับ</button></div></div>`);
   $("#nsBack").onclick=()=>back(null);
-  $("#nsOk").onclick=()=>{const name=$("#nsN").value.trim();if(!name)return toast("ใส่ชื่อวัตถุดิบ");const items=LS.get(SK.items,[])||[];const it={id:uid("i"),sku:"",name,brand:"",cat:"วัตถุดิบคาเฟ่",unit:$("#nsU").value.trim()||"กรัม",cost:num($("#nsC").value),price:0,min:num($("#nsM").value),note:""};
-    items.push(it);LS.set(SK.items,items);const b=num($("#nsB").value);if(b>0){const tx=LS.get(SK.tx,[])||[];tx.push({id:uid("tc"),type:"in",date:today(),pid:it.id,qty:b,cost:it.cost,ref:"",party:"",note:"ยอดยกมา (เพิ่มจากหน้าคาเฟ่)",src:"cafe",ts:Date.now()});LS.set(SK.tx,tx)}
-    dirtyStock();toast("เพิ่ม "+name+" ในสต๊อกแล้ว");back(it.id)}}
+  $("#nsOk").onclick=()=>{const name=$("#nsN").value.trim();if(!name)return toast("ใส่ชื่อวัตถุดิบ");const items=LS.get(SK.items,[])||[];const it={id:uid("i"),sku:"",name,brand:"",cat:"",unit:$("#nsU").value.trim()||"กรัม",cost:num($("#nsC").value),price:0,min:num($("#nsM").value),note:""};
+    items.push(it);LS.set(SK.items,items);const b=num($("#nsB").value);if(b>0){const tx=LS.get(SK.tx,[])||[];tx.push({id:uid("tc"),type:"in",date:today(),pid:it.id,qty:b,cost:it.cost,ref:"",party:"",note:"ยอดยกมา",src:"cafe",ts:Date.now()});LS.set(SK.tx,tx)}
+    dirtyStock();toast("เพิ่ม "+name+" แล้ว");back(it.id)}}
 function menuDlg(id){const old=id?mOf(id):null;const m=old?JSON.parse(JSON.stringify(old)):{id:uid("m"),cat:ui.cat||(M.cats[0]||{}).id||"",name:"",price:"",icon:"☕",unit:C.unitDefault||"แก้ว",groups:[],rec:[],off:false};
   const grab=()=>{if(!$("#mN"))return;m.name=$("#mN").value.trim();m.price=num($("#mP").value);m.icon=$("#mI").value.trim()||"☕";m.unit=$("#mU").value.trim()||"แก้ว";m.cat=$("#mC").value;m.groups=$$("[data-mg]").filter(x=>x.checked).map(x=>x.dataset.mg);m.cp=m.cp||{};$$("[data-cp]").forEach(x=>{const v=num(x.value);if(v>0)m.cp[x.dataset.cp]=v;else delete m.cp[x.dataset.cp]})};
   const draw=()=>{const cost=costOf(recipeOf(m,defaultPicks(m))),p=num(m.price);
@@ -613,9 +619,9 @@ function menuDlg(id){const old=id?mOf(id):null;const m=old?JSON.parse(JSON.strin
       <div class="chips">${["☕","🧋","🍵","🥤","🍫","🧉","🍹","🥛","🥐","🍰","🧁","🍪","🥪","🍞"].map(e=>`<button class="chip" type="button" data-ic="${e}">${e}</button>`).join("")}</div>
       ${chOn().length?`<div class="f"><span>ราคาบนแอปเดลิเวอรี (เว้นว่าง = ราคาหน้าร้าน${chOn().some(c=>num(c.markup))?" บวกตาม % ที่ตั้งไว้":""})</span><div class="row3">${chOn().map(c=>`<div class="f"><label>${esc(c.name)}</label><input class="in- r" inputmode="decimal" data-cp="${c.id}" value="${esc((m.cp||{})[c.id]||"")}" placeholder="${fm(unitPrice(Object.assign({},m,{cp:{}}),[],c.id))}"></div>`).join("")}</div></div>`:""}
       <div class="f"><span>ตัวเลือกที่ใช้กับเมนูนี้</span>${M.groups.length?`<div class="chips">${M.groups.map(g=>`<label class="chip"><input type="checkbox" data-mg="${g.id}" ${(m.groups||[]).includes(g.id)?"checked":""}> ${esc(g.name)}</label>`).join("")}</div>`:`<div class="note">ยังไม่มีกลุ่มตัวเลือก สร้างได้ที่แท็บ "ตัวเลือก"</div>`}</div>
-      <div class="f"><span>สูตรต่อ 1 ${esc(m.unit||"แก้ว")} <small style="font-weight:400">· ไม่ใส่ก็ขายได้ ใส่เมื่ออยากรู้ต้นทุนต่อแก้วและให้ระบบตัดสต๊อก</small></span><div style="display:flex;flex-direction:column;gap:6px">${recRows(m.rec,"r")}</div>
-        <div class="tools"><button class="btn sm ghost" type="button" id="rAdd">＋ วัตถุดิบ</button><button class="btn sm ghost" type="button" id="rNew">＋ สร้างวัตถุดิบใหม่ในสต๊อก</button></div></div>
-      <div class="hint">ต้นทุนวัตถุดิบ ฿${fmt(cost)} · ราคาขาย ฿${fm(p)} · กำไรขั้นต้น <b>฿${fmt(p-cost)}${p?" ("+Math.round((p-cost)/p*100)+"%)":""}</b>${stItems().length?"":"<br>ยังไม่มีวัตถุดิบในสต๊อก กด \"สร้างวัตถุดิบใหม่\" ได้เลย"}</div></div>
+      <div class="f"><span>สูตรต่อ 1 ${esc(m.unit||"แก้ว")} <small style="font-weight:400">· ไม่ใส่ก็ขายได้ ใส่เมื่ออยากรู้ต้นทุนต่อแก้วและให้ระบบตัดวัตถุดิบ</small></span><div style="display:flex;flex-direction:column;gap:6px">${recRows(m.rec,"r")}</div>
+        <div class="tools"><button class="btn sm ghost" type="button" id="rAdd">＋ วัตถุดิบ</button><button class="btn sm ghost" type="button" id="rNew">＋ สร้างวัตถุดิบใหม่</button></div></div>
+      <div class="hint">ต้นทุนวัตถุดิบ ฿${fmt(cost)} · ราคาขาย ฿${fm(p)} · กำไรขั้นต้น <b>฿${fmt(p-cost)}${p?" ("+Math.round((p-cost)/p*100)+"%)":""}</b>${stItems().length?"":"<br>ยังไม่มีวัตถุดิบ กด \"สร้างวัตถุดิบใหม่\" ได้เลย"}</div></div>
       <div class="foot"><button class="btn main edm-lock" id="mSave">บันทึก</button>${old?`<button class="btn ghost danger" id="mDel">ลบเมนู</button>`:""}</div>`,"lg");
     const D=$("#dlgBody");
     D.addEventListener("change",e=>{const x=e.target;if(x.dataset.r!=null){const r=m.rec[+x.dataset.r];r[x.dataset.f]=x.dataset.f==="qty"?num(x.value):x.value;grab();draw()}});
@@ -660,7 +666,51 @@ function mvCats(){const W=$("#mv");
     else{const c=M.cats[+b.dataset.dc];if(M.items.some(m=>m.cat===c.id))return toast("ย้ายเมนูออกจากหมวดนี้ก่อน");if(!await ask("ลบหมวด "+c.name+"?"))return;M.cats.splice(+b.dataset.dc,1)}
     saveM();mvCats()}}
 
-/* ---------- กะ: เปิด / ปิด และลงบัญชี ---------- */
+/* ---------- วัตถุดิบ: รายการ รับของเข้า ตรวจนับ ประวัติ ---------- */
+const TXN={in:["รับเข้า","p-done"],out:["ใช้ไป","p-make"],adj:["ปรับยอด","p-new"]};
+function invRows(){const S=stock();return Object.values(S).map(x=>{const b=r4(x.bal-(x.pend||0));return{i:x.i,b,avg:x.avg,low:num(x.i.min)>0&&b<=num(x.i.min),out:b<=0}}).sort((a,b)=>(b.out-a.out)||(b.low-a.low)||String(a.i.name).localeCompare(String(b.i.name),"th"))}
+function vInv(){const V=$("#view"),L=invRows(),q=(ui.iq||"").trim().toLowerCase(),F=q?L.filter(x=>String(x.i.name).toLowerCase().includes(q)):L;
+  const val=L.reduce((a,x)=>a+Math.max(x.b,0)*x.avg,0),low=L.filter(x=>x.low||x.out).length,tx=(LS.get(SK.tx,[])||[]).slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.ts||0)-(a.ts||0)).slice(0,40),byId={};L.forEach(x=>byId[x.i.id]=x.i);
+  V.innerHTML=`<div class="tools"><div class="hello grow"><h1>🧂 วัตถุดิบ</h1><p>ของที่ใช้ทำเมนู · รับของเข้าเมื่อซื้อมา ระบบคิดต้นทุนถัวเฉลี่ย และตัดตามสูตรตอนปิดกะ</p></div>
+    <button class="btn main" id="ivIn">⬇️ รับของเข้า</button><button class="btn ghost" id="ivCnt">🔍 ตรวจนับ</button><button class="btn ghost" id="ivNew">＋ วัตถุดิบใหม่</button></div>
+  <div class="kpis"><div class="kpi"><span>วัตถุดิบทั้งหมด</span><b>${L.length} รายการ</b><small>&nbsp;</small></div><div class="kpi"><span>มูลค่าคงเหลือ</span><b>฿${fm(r2(val))}</b><small>ตามทุนถัวเฉลี่ย</small></div><div class="kpi ${low?"warn":""}"><span>ใกล้หมด / หมด</span><b>${low} รายการ</b><small>ต่ำกว่าจุดเตือน</small></div><div class="kpi"><span>กะที่เปิดอยู่ใช้ไปแล้ว</span><b>${L.filter(x=>stock()[x.i.id].pend).length} รายการ</b><small>ตัดจริงตอนปิดกะ</small></div></div>
+  <div class="card"><h2>รายการวัตถุดิบ <input class="in-" id="ivQ" type="search" placeholder="🔎 ค้นหา" value="${esc(ui.iq||"")}" style="max-width:200px;font-weight:400"></h2>
+  ${F.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>วัตถุดิบ</th><th class="r">คงเหลือ</th><th class="r">ทุน/หน่วย</th><th class="r">เตือนเมื่อต่ำกว่า</th><th></th></tr></thead><tbody>
+    ${F.map(x=>`<tr class="click" data-ie="${esc(x.i.id)}"><td><b>${esc(x.i.name)}</b>${x.out?' <span class="pill p-void">หมด</span>':x.low?' <span class="pill p-new">ใกล้หมด</span>':""}</td><td class="r" style="${x.out||x.low?"color:var(--danger);font-weight:700":""}">${fq(x.b)} ${esc(x.i.unit||"")}</td><td class="r">${fmt(x.avg)}</td><td class="r">${num(x.i.min)?fq(num(x.i.min)):"-"}</td><td class="r"><button class="btn sm ghost" data-iin="${esc(x.i.id)}">＋ รับเข้า</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">${L.length?"ไม่พบ":"ยังไม่มีวัตถุดิบ · กด \"＋ วัตถุดิบใหม่\" หรือใช้ร้านตัวอย่างในหน้าตั้งค่า"}</div>`}</div>
+  <div class="card"><h2>ความเคลื่อนไหวล่าสุด <small>${tx.length?tx.length+" รายการล่าสุด":""}</small></h2>${tx.length?tx.map(t=>{const i=byId[t.pid]||{name:"(ลบแล้ว)",unit:""},T=TXN[t.type]||["",""],q=num(t.qty);return`<div class="li"><div><b>${esc(i.name)}</b> <span class="pill ${T[1]}">${T[0]}</span><small>${thD(t.date)}${t.ref?" · "+esc(t.ref):""}${t.note?" · "+esc(t.note):""}</small></div><div class="r">${t.type==="out"?"−":q>0&&t.type==="adj"?"+":""}${fq(t.type==="out"?q:q)} ${esc(i.unit||"")}</div></div>`}).join(""):`<div class="empty">ยังไม่มีความเคลื่อนไหว</div>`}</div>`;
+  $("#ivQ").oninput=e=>{ui.iq=e.target.value;const p=e.target.selectionStart;vInv();const n=$("#ivQ");n.focus();try{n.setSelectionRange(p,p)}catch(x){}};
+  $("#ivNew").onclick=()=>newStockDlg(()=>{closeDlg();vInv()});
+  $("#ivIn").onclick=()=>inDlg("");$("#ivCnt").onclick=cntDlg;
+  $$("[data-iin]").forEach(b=>b.onclick=e=>{e.stopPropagation();inDlg(b.dataset.iin)});
+  $$("[data-ie]").forEach(r=>r.onclick=()=>itemDlg(r.dataset.ie))}
+function addTx(t){const tx=LS.get(SK.tx,[])||[];tx.push(Object.assign({id:uid("tc"),date:today(),ref:"",party:"",note:"",ts:Date.now()},t));const ok=LS.set(SK.tx,tx);dirtyStock();return ok}
+function inDlg(pid){if(!stItems().length){toast("เพิ่มวัตถุดิบก่อน");return newStockDlg(()=>{closeDlg();vInv()})}
+  openDlg("⬇️ รับของเข้า",`<div class="db"><div class="f"><label>วัตถุดิบ</label><select class="in-" id="iiP">${stockOpts(pid)}</select></div>
+    <div class="row"><div class="f"><label>จำนวนที่รับ <span id="iiU"></span></label><input class="in- r" id="iiQ" inputmode="decimal" placeholder="เช่น 1000"></div><div class="f"><label>ราคาที่จ่ายทั้งหมด (บาท)</label><input class="in- r" id="iiA" inputmode="decimal" placeholder="เช่น 600"></div></div>
+    <div class="row"><div class="f"><label>วันที่</label><input class="in-" id="iiD" type="date" value="${today()}"></div><div class="f"><label>ซื้อจาก / หมายเหตุ</label><input class="in-" id="iiN" placeholder="ไม่บังคับ"></div></div>
+    <div id="iiC" class="note"></div>
+    <div class="tools"><button class="btn main" id="iiOk">บันทึก</button><button class="btn ghost" id="iiMore">บันทึก แล้วรับรายการต่อไป</button></div></div>`,"sm");
+  const upd=()=>{const s=sOf($("#iiP").value),q=num($("#iiQ").value),a=num($("#iiA").value);$("#iiU").textContent=s?"("+(s.i.unit||"")+")":"";$("#iiC").textContent=q>0&&a>0?"ทุนต่อหน่วย ฿"+fq(r4(a/q))+(s?" · ทุนเฉลี่ยเดิม ฿"+fq(s.avg):""):"ไม่ใส่ราคา ระบบใช้ทุนเฉลี่ยเดิม"};
+  ["iiP","iiQ","iiA"].forEach(k=>$("#"+k).addEventListener("input",upd));$("#iiP").onchange=upd;upd();
+  const save=more=>{const pidv=$("#iiP").value,q=num($("#iiQ").value),a=num($("#iiA").value);if(!pidv)return toast("เลือกวัตถุดิบ");if(!(q>0))return toast("ใส่จำนวนที่รับ");
+    const s=sOf(pidv);if(!addTx({type:"in",pid:pidv,qty:q,cost:a>0?r4(a/q):(s?s.avg:0),date:$("#iiD").value||today(),party:$("#iiN").value.trim(),note:$("#iiN").value.trim()?"":"รับของเข้า"}))return;
+    toast("รับเข้า "+(s?s.i.name:"")+" "+fq(q)+" ✓");if(more){$("#iiQ").value="";$("#iiA").value="";$("#iiP").value="";upd();$("#iiP").focus()}else{closeDlg();vInv()}};
+  $("#iiOk").onclick=()=>save(false);$("#iiMore").onclick=()=>save(true);dlg.addEventListener("close",()=>{if(ui.v==="inv")vInv()},{once:true})}
+function cntDlg(){const L=invRows();if(!L.length)return toast("ยังไม่มีวัตถุดิบ");
+  openDlg("🔍 ตรวจนับวัตถุดิบ",`<div class="db"><div class="hint">ใส่จำนวนที่นับได้จริงเฉพาะรายการที่นับ · ช่องว่าง = ไม่เปลี่ยน · ระบบบันทึกส่วนต่างให้${curShift()?"<br>มีกะเปิดอยู่: ยอดในระบบหักที่ขายในกะนี้ไปแล้ว":""}</div>
+    ${L.map(x=>`<div class="li"><div><b>${esc(x.i.name)}</b><small>ในระบบ ${fq(x.b)} ${esc(x.i.unit||"")}</small></div><input class="in- r" data-cn="${esc(x.i.id)}" inputmode="decimal" style="max-width:120px" placeholder="${fq(x.b)}"></div>`).join("")}
+    <div class="tools"><button class="btn main" id="cnOk">บันทึกผลนับ</button></div></div>`);
+  $("#cnOk").onclick=()=>{const S=stock();let n=0;const tx=LS.get(SK.tx,[])||[];$$("[data-cn]").forEach(x=>{if(x.value.trim()==="")return;const s=S[x.dataset.cn];if(!s)return;const d=r4(num(x.value)-(s.bal-(s.pend||0)));if(Math.abs(d)<1e-9)return;tx.push({id:uid("tc"),type:"adj",date:today(),pid:x.dataset.cn,qty:d,cost:0,ref:"",party:"",note:"ตรวจนับ",ts:Date.now()+n});n++});
+    if(n&&!LS.set(SK.tx,tx))return;dirtyStock();closeDlg();toast(n?"ปรับยอด "+n+" รายการ ✓":"ไม่มีรายการที่เปลี่ยน");vInv()}}
+function itemDlg(id){const s=sOf(id);if(!s)return;const i=s.i,used=M.items.some(m=>(m.rec||[]).some(r=>r.pid===id))||M.groups.some(g=>(g.choices||[]).some(c=>(c.rec||[]).some(r=>r.pid===id)));
+  openDlg("✏️ "+i.name,`<div class="db"><div class="f"><label>ชื่อวัตถุดิบ</label><input class="in-" id="ieN" value="${esc(i.name)}"></div>
+    <div class="row3"><div class="f"><label>หน่วย</label><input class="in-" id="ieU" value="${esc(i.unit||"")}"></div><div class="f"><label>ทุนตั้งต้น/หน่วย</label><input class="in- r" id="ieC" inputmode="decimal" value="${esc(i.cost||"")}"></div><div class="f"><label>เตือนเมื่อต่ำกว่า</label><input class="in- r" id="ieM" inputmode="decimal" value="${esc(i.min||"")}"></div></div>
+    <div class="note">คงเหลือ ${fq(r4(s.bal-(s.pend||0)))} ${esc(i.unit||"")} · ทุนเฉลี่ย ฿${fq(s.avg)}${used?" · ใช้อยู่ในสูตรเมนู":""}</div>
+    <div class="tools"><button class="btn main" id="ieOk">บันทึก</button><span class="sp"></span>${used?"":`<button class="btn ghost danger" id="ieDel">ลบวัตถุดิบ</button>`}</div></div>`,"sm");
+  $("#ieOk").onclick=()=>{const n=$("#ieN").value.trim();if(!n)return toast("ใส่ชื่อ");const L=LS.get(SK.items,[])||[],x=L.find(y=>y.id===id);if(!x)return;Object.assign(x,{name:n,unit:$("#ieU").value.trim(),cost:num($("#ieC").value),min:num($("#ieM").value)});if(!LS.set(SK.items,L))return;dirtyStock();closeDlg();toast("บันทึกแล้ว ✓");vInv()};
+  if($("#ieDel"))$("#ieDel").onclick=async()=>{if(!await ask("ลบ "+i.name+"? ประวัติรับเข้า/ใช้ไปของรายการนี้จะถูกลบด้วย"))return;LS.set(SK.items,(LS.get(SK.items,[])||[]).filter(y=>y.id!==id));LS.set(SK.tx,(LS.get(SK.tx,[])||[]).filter(t=>t.pid!==id));dirtyStock();toast("ลบแล้ว");vInv()}}
+
+/* ---------- กะ: เปิด / ปิด ---------- */
 function openShift(staff,float){const t=today().slice(2).replace(/-/g,""),n=SH.filter(s=>String(s.no).startsWith("S"+t)).length+1;
   const s={id:uid("s"),no:"S"+t+"-"+n,open:Date.now(),date:today(),staff:String(staff||"").trim(),float:num(float),closed:0};SH.push(s);saveSH();return s}
 function shiftSum(s){const L=O.filter(o=>o.shift===s.id),ok=L.filter(o=>o.st!=="void"),vd=L.filter(o=>o.st==="void");
@@ -671,27 +721,14 @@ function shiftSum(s){const L=O.filter(o=>o.shift===s.id),ok=L.filter(o=>o.st!=="
     const f=E.sub?E.total/E.sub:1;E.lines.forEach(l=>{const c=num(l.cost)*l.qty;S.cost+=c;const x=S.items[l.name]||(S.items[l.name]={q:0,amt:0,cost:0});x.q+=l.qty;x.amt+=l.price*l.qty*f;x.cost+=c})});
   ["gross","disc","net","cost","refund","gp"].forEach(k=>S[k]=r2(S[k]));Object.keys(S.byM).forEach(k=>S.byM[k]=r2(S.byM[k]));Object.values(S.items).forEach(x=>{x.amt=r2(x.amt);x.cost=r2(x.cost)});
   S.expected=r2(num(s.float)+(S.byM.cash||0));return S}
-function closeShift(s,counted,note){const S=shiftSum(s),ok=O.filter(o=>o.shift===s.id&&o.st!=="void"),seller0=seller();
-  let A=LS.get("edm_acc",null);if(!A||!A.accounts)A=Object.assign({accounts:[{id:"cash",name:"เงินสด",type:"cash",open:0},{id:"bank1",name:"บัญชีธนาคาร",type:"bank",open:0}],pay:[],pur:[],cash:[],cnt:{}},A||{});A.pay=A.pay||[];
-  const cashAcc=(A.accounts.find(a=>a.type==="cash")||A.accounts[0]||{id:"cash"}).id,bankAcc=(A.accounts.find(a=>a.type==="bank")||{id:"bank1"}).id;
-  const docs=LS.get("edm_bill_docs",[])||[],cnt=LS.get("edm_bill_counter",{})||{},made=[];
-  const G={};ok.forEach(o=>{const E=eff(o);if(!E.lines.length)return;const k=o.date+"|"+payKey(o);(G[k]=G[k]||[]).push([o,E])});
-  Object.keys(G).sort().forEach((k,gi)=>{const[date,m]=k.split("|"),L=G[k],agg={},app=m.startsWith("app_");let disc=0;
-    L.forEach(([o,E])=>{disc+=E.disc;E.lines.forEach(l=>{const key=l.name+"|"+l.price;const a=agg[key]||(agg[key]={d:l.name,q:0,u:l.unit||"แก้ว",p:l.price,disc:0});a.q+=l.qty})});
-    const ym=date.slice(2,7).replace("-",""),ck="IT"+ym;cnt[ck]=(cnt[ck]||0)+1;const no="IT"+ym+"-"+String(cnt[ck]).padStart(3,"0");
-    const id="d"+Date.now().toString(36)+gi+Math.random().toString(36).slice(2,5),items=Object.values(agg).sort((a,b)=>b.q-a.q),sub=r2(items.reduce((a,x)=>a+x.p*x.q,0)),net=r2(sub-disc);
-    const rcs=L.map(([o])=>o.rc).sort(),c=app?chOf(m.slice(4)):null,gp=app?r2(net*num(c?c.gp:0)/100):0;
-    docs.unshift({id,mode:"goods",type:"IT",no,date,due:app?addDays(date,7):"",ref:s.no,cust:{name:app?(c?c.name:m.slice(4))+" (แอปเดลิเวอรี)":"ลูกค้าหน้าร้าน (คาเฟ่)",addr:"",tax:"",branch:"",contact:""},items,vat:seller0.vat?"in":"none",billDisc:r2(disc),wht:0,
-      notes:`สรุปยอดขาย${app?"ผ่านแอป":"หน้าร้าน"} กะ ${s.no} · ${pmName(m)} ${L.length} บิล · ใบเสร็จ ${rcs[0]}${rcs.length>1?" ถึง "+rcs[rcs.length-1]:""}${app?` · ค่า GP ประมาณ ${fmt(gp)} บาท (บันทึกเป็นค่าใช้จ่ายเมื่อได้ใบกำกับภาษีจากแอป)`:""}`,saved:true,term:app?"credit":"cash",payAcc:app?"":m==="cash"?cashAcc:bankAcc,payMeth:app?"":pmName(m),updated:Date.now(),src:"cafe",shiftId:s.id});
-    if(!app&&net>0)A.pay.push({id:"yb"+id,dir:"in",docId:id,date,amount:net,wht:0,accId:m==="cash"?cashAcc:bankAcc,method:pmName(m),note:"ขายหน้าร้าน (คาเฟ่)",src:"bill"});
-    made.push({id,no,m,amt:net,date,credit:app})});
+function closeShift(s,counted,note){const S=shiftSum(s),ok=O.filter(o=>o.shift===s.id&&o.st!=="void");
   // ตัดสต๊อกวัตถุดิบตามสูตร (รวมเป็นรายการเดียวต่อวัตถุดิบต่อวัน · ไม่รวมรายการที่คืนเงิน)
   const items=LS.get(SK.items,[])||[],tx=LS.get(SK.tx,[])||[],U={};let nTx=0;
   ok.forEach(o=>eff(o).lines.forEach(l=>(l.use||[]).forEach(u=>{if(!items.some(i=>i.id===u.pid))return;const k=o.date+"|"+u.pid;U[k]=r4((U[k]||0)+u.qty*l.qty)})));
   Object.keys(U).forEach((k,i)=>{const[date,pid]=k.split("|");tx.push({id:"tc"+Date.now().toString(36)+i,type:"out",date,pid,qty:U[k],cost:0,ref:s.no,party:"ขายหน้าร้าน (คาเฟ่)",note:"ตัดตามสูตรเมนู",src:"cafe",shiftId:s.id,ts:Date.now()+i});nTx++});
-  Object.assign(s,{closed:Date.now(),counted:num(counted),expected:S.expected,diff:r2(num(counted)-S.expected),note:String(note||"").trim(),sum:S,docs:made,stockTx:nTx,closedBy:s.staff||""});
+  Object.assign(s,{closed:Date.now(),counted:num(counted),expected:S.expected,diff:r2(num(counted)-S.expected),note:String(note||"").trim(),sum:S,docs:[],stockTx:nTx,closedBy:s.staff||""});
   const keep=addDays(today(),-(num(C.keepDays)||14)),open=SH.filter(x=>!x.closed).map(x=>x.id);O=O.filter(o=>o.date>=keep||open.includes(o.shift));
-  const okAll=LS.set("edm_bill_docs",docs)&&LS.set("edm_bill_counter",cnt)&&LS.set("edm_acc",A)&&LS.set(SK.tx,tx)&&saveSH()&&saveO();dirtyStock();
+  const okAll=LS.set(SK.tx,tx)&&saveSH()&&saveO();dirtyStock();
   if(!okAll)toast("บันทึกบางส่วนไม่สำเร็จ ตรวจพื้นที่ในเครื่อง");return s}
 function vShift(){const V=$("#view"),s=curShift(),hist=SH.filter(x=>x.closed).sort((a,b)=>b.closed-a.closed);
   let body;
@@ -701,21 +738,20 @@ function vShift(){const V=$("#view"),s=curShift(),hist=SH.filter(x=>x.closed).so
     <div class="kpis"><div class="kpi"><span>ยอดขายสุทธิ</span><b>฿${fm(S.net)}</b><small>${S.orders} บิล${S.disc?" · ส่วนลด ฿"+fm(S.disc):""}</small></div><div class="kpi"><span>เงินสดที่ควรมีในลิ้นชัก</span><b>฿${fm(S.expected)}</b><small>ทอนตั้งต้น ฿${fm(s.float)} + ขายเงินสด ฿${fm(S.byM.cash||0)}</small></div><div class="kpi"><span>โอน / QR / บัตร / แอป</span><b>฿${fm(Object.keys(S.byM).filter(k=>k!=="cash").reduce((a,k)=>a+S.byM[k],0))}</b><small>${Object.keys(S.byM).filter(k=>k!=="cash").map(k=>esc(pmName(k))+" ฿"+fm(S.byM[k])).join(" · ")||"-"}</small></div><div class="kpi ${S.voids||S.refund?"warn":""}"><span>ยกเลิก / คืนเงิน</span><b>${S.voids} บิล</b><small>ยกเลิก ฿${fm(S.voidAmt)} · คืนบางรายการ ฿${fm(S.refund)}</small></div></div>
     <div class="row"><div class="f"><label>นับเงินสดในลิ้นชักได้จริง</label><input class="in- r" id="sCount" inputmode="decimal" style="font-size:1.3rem" placeholder="${fm(S.expected)}"></div><div class="f"><label>หมายเหตุ</label><input class="in-" id="sNote" placeholder="เช่น ทอนเงินผิด 20 บาท"></div></div>
     <div id="sDiff" class="hint">ใส่ยอดที่นับได้ ระบบจะบอกเงินขาด/เกิน</div>
-    <div class="hint">ปิดกะแล้วระบบจะ: ① สร้างบิลขายเงินสดสรุปต่อวันต่อวิธีรับเงินในระบบเปิดบิล (เข้ารายงานรายรับ ภาษีขาย และบัญชีเงินสด/ธนาคาร) · ออเดอร์แอปเดลิเวอรีตั้งเป็นลูกหนี้ของแอปนั้น ② ตัดสต๊อกวัตถุดิบตามสูตรของทุกแก้วที่ขาย</div>
-    <div class="tools"><button class="btn main lg edm-lock" id="sClose">ปิดกะ · ลงบัญชี · ตัดสต๊อก</button><button class="btn ghost" id="sPrintX">🖨 พิมพ์ยอดระหว่างกะ</button></div></div>`}
-  V.innerHTML=`${staleBanner()}<div class="hello"><h1>💰 เปิด / ปิดกะ</h1><p>คุมเงินในลิ้นชักทุกกะ ปิดกะแล้วยอดขายเข้าบัญชีและตัดสต๊อกให้อัตโนมัติ</p></div>${body}
-  <div class="card"><h2>ประวัติกะ <small>${hist.length} กะ</small></h2>${hist.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>กะ</th><th>พนักงาน</th><th class="r">บิล</th><th class="r">ยอดสุทธิ</th><th class="r">เงินขาด/เกิน</th><th>ลงบัญชี</th><th></th></tr></thead><tbody>
-    ${hist.slice(0,60).map(x=>`<tr><td><b>${esc(x.no)}</b><span class="sub">${thD(x.date)} ${hm(x.open)}–${hm(x.closed)}</span></td><td>${esc(x.staff||"-")}</td><td class="r">${x.sum.orders}</td><td class="r">${fm(x.sum.net)}</td><td class="r" style="color:${x.diff<0?"var(--danger)":x.diff>0?"var(--warn)":"inherit"};font-weight:${x.diff?700:400}">${x.diff>0?"+":""}${fm(x.diff)}</td><td>${(x.docs||[]).map(d=>`<span class="pill p-done">${esc(d.no)}</span>`).join(" ")}</td><td><button class="btn sm ghost" data-ps="${x.id}">🖨</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีกะที่ปิดแล้ว</div>`}</div>`;
+    <div class="hint">ปิดกะแล้วระบบจะ: ① สรุปยอดขายแยกตามวิธีรับเงินและแอปเดลิเวอรี เก็บไว้ในประวัติกะและรายงาน ② ตัดวัตถุดิบตามสูตรของทุกแก้วที่ขาย</div>
+    <div class="tools"><button class="btn main lg edm-lock" id="sClose">ปิดกะ · สรุปยอด · ตัดวัตถุดิบ</button><button class="btn ghost" id="sPrintX">🖨 พิมพ์ยอดระหว่างกะ</button></div></div>`}
+  V.innerHTML=`${staleBanner()}<div class="hello"><h1>💰 เปิด / ปิดกะ</h1><p>คุมเงินในลิ้นชักทุกกะ ปิดกะแล้วสรุปยอดขายและตัดวัตถุดิบให้อัตโนมัติ</p></div>${body}
+  <div class="card"><h2>ประวัติกะ <small>${hist.length} กะ</small></h2>${hist.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>กะ</th><th>พนักงาน</th><th class="r">บิล</th><th class="r">ยอดสุทธิ</th><th class="r">เงินขาด/เกิน</th><th></th></tr></thead><tbody>
+    ${hist.slice(0,60).map(x=>`<tr><td><b>${esc(x.no)}</b><span class="sub">${thD(x.date)} ${hm(x.open)}–${hm(x.closed)}</span></td><td>${esc(x.staff||"-")}</td><td class="r">${x.sum.orders}</td><td class="r">${fm(x.sum.net)}</td><td class="r" style="color:${x.diff<0?"var(--danger)":x.diff>0?"var(--warn)":"inherit"};font-weight:${x.diff?700:400}">${x.diff>0?"+":""}${fm(x.diff)}</td><td><button class="btn sm ghost" data-ps="${x.id}">🖨</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีกะที่ปิดแล้ว</div>`}</div>`;
   if($("#sOpen"))$("#sOpen").onclick=()=>{const sel=$("#sStaff").value,u=(C.staffs||[]).find(x=>x.id===sel),fl=$("#sFloat").value;const go=()=>{openShift(u?u.name:sel,fl);toast("เปิดกะแล้ว เริ่มขายได้เลย");show("pos")};
     if(u&&u.pin)pinDlg("👤 "+u.name,"ใส่ PIN ของคุณเพื่อเปิดกะ",p=>sha(salt()+p).then(h=>h===u.pin)).then(ok=>{if(ok)go()});else go()};
   if($("#sCount")){const S=shiftSum(s),upd=()=>{const v=$("#sCount").value;if(v===""){$("#sDiff").className="hint";$("#sDiff").textContent="ใส่ยอดที่นับได้ ระบบจะบอกเงินขาด/เกิน";return}const d=r2(num(v)-S.expected);$("#sDiff").className=d<0?"bad":d>0?"warn":"hint";$("#sDiff").textContent=d<0?"เงินขาด ฿"+fm(-d):d>0?"เงินเกิน ฿"+fm(d):"✓ เงินตรงพอดี"};$("#sCount").oninput=upd;
     $("#sPrintX").onclick=()=>printShift(Object.assign({},s,{sum:S}),true);
     $("#sClose").onclick=async()=>{const v=$("#sCount").value,note=$("#sNote").value,cnt=v===""?S.expected:num(v),d=r2(cnt-S.expected),pend=O.filter(o=>o.shift===s.id&&(o.st==="new"||o.st==="make")).length;
-      const ok=await ask(`<div class="paybig" style="font-size:1.8rem">฿${fm(S.net)}</div><div style="text-align:center">${S.orders} บิล · ${v===""?"ยังไม่ได้ใส่ยอดเงินที่นับได้ ถือว่าเงินตรงตามระบบ":d?`<b style="color:${d<0?"var(--danger)":"var(--warn)"}">เงิน${d<0?"ขาด":"เกิน"} ฿${fm(Math.abs(d))}</b>`:"✓ เงินตรงพอดี"}</div>${pend?`<div class="warn">ยังมีออเดอร์ค้างทำ ${pend} รายการ · ยังแสดงที่จอบาร์ต่อได้</div>`:""}<div class="note" style="text-align:center">ระบบจะสร้างบิลสรุปในระบบเปิดบิล และตัดสต๊อกวัตถุดิบตามสูตร</div>`,{title:"ปิดกะ "+s.no,ok:"ปิดกะ"});if(!ok)return;
+      const ok=await ask(`<div class="paybig" style="font-size:1.8rem">฿${fm(S.net)}</div><div style="text-align:center">${S.orders} บิล · ${v===""?"ยังไม่ได้ใส่ยอดเงินที่นับได้ ถือว่าเงินตรงตามระบบ":d?`<b style="color:${d<0?"var(--danger)":"var(--warn)"}">เงิน${d<0?"ขาด":"เกิน"} ฿${fm(Math.abs(d))}</b>`:"✓ เงินตรงพอดี"}</div>${pend?`<div class="warn">ยังมีออเดอร์ค้างทำ ${pend} รายการ · ยังแสดงที่จอบาร์ต่อได้</div>`:""}<div class="note" style="text-align:center">ระบบจะสรุปยอดกะนี้ และตัดวัตถุดิบตามสูตร</div>`,{title:"ปิดกะ "+s.no,ok:"ปิดกะ"});if(!ok)return;
       const x=closeShift(s,cnt,note);
       openDlg("✓ ปิดกะ "+x.no+" แล้ว",`<div class="db"><div class="hint">ยอดสุทธิ <b>฿${fm(x.sum.net)}</b> · ${x.sum.orders} บิล · เงินขาด/เกิน <b>${x.diff>0?"+":""}${fm(x.diff)}</b></div>
-        <div><b>บิลสรุปที่ลงในระบบเปิดบิล</b>${x.docs.length?x.docs.map(d=>`<div class="li"><div>${esc(d.no)} · ${esc(pmName(d.m))}${d.credit?" (ลูกหนี้)":""}<small>${thD(d.date)}</small></div><div class="r">฿${fm(d.amt)}</div></div>`).join(""):`<div class="note">ไม่มียอดขายในกะนี้</div>`}</div>
-        <div class="note">ตัดสต๊อกวัตถุดิบ ${x.stockTx} รายการ (ดูได้ที่ระบบสต๊อก > ประวัติเคลื่อนไหว)</div>${backupBanner(true)}</div>
+        <div class="note">ตัดวัตถุดิบตามสูตร ${x.stockTx} รายการ (ดูได้ที่หน้าวัตถุดิบ)</div>${backupBanner(true)}</div>
         <div class="foot"><button class="btn ghost" id="cxPr">🖨 พิมพ์สรุปกะ</button><span class="sp"></span><button class="btn main" id="cxOk">เสร็จ</button></div>`);
       $("#cxPr").onclick=()=>printShift(x);$("#cxOk").onclick=()=>{closeDlg();vShift()}}}
   $$("[data-ps]").forEach(b=>b.onclick=()=>printShift(SH.find(x=>x.id===b.dataset.ps)))}
@@ -726,7 +762,7 @@ function printShift(s,interim){const S=s.sum;setPage(num(C.width)||80);const top
     ${Object.keys(S.byM).map(k=>`<tr><td>${esc(pmName(k))} (${S.cnt[k]})</td><td class="r">${fmt(S.byM[k])}</td></tr>`).join("")}<tr><td>ยกเลิก ${S.voids} บิล</td><td class="r">${fmt(S.voidAmt)}</td></tr>${S.refund?`<tr><td>คืนเงินบางรายการ</td><td class="r">${fmt(S.refund)}</td></tr>`:""}</table><hr>
     <table><tr><td>เงินทอนตั้งต้น</td><td class="r">${fmt(s.float)}</td></tr><tr><td>เงินสดที่ควรมี</td><td class="r">${fmt(S.expected)}</td></tr>${s.closed?`<tr><td>นับได้จริง</td><td class="r">${fmt(s.counted)}</td></tr><tr class="tt"><td>ขาด/เกิน</td><td class="r">${fmt(s.diff)}</td></tr>`:""}</table><hr>
     <div><b>เมนูที่ขาย</b></div><table>${top.map(([n,x])=>`<tr><td>${x.q} ${esc(n)}</td><td class="r">${fmt(x.amt)}</td></tr>`).join("")}</table>
-    ${s.docs&&s.docs.length?`<hr><div>ลงบัญชี: ${s.docs.map(d=>esc(d.no)).join(", ")}</div>`:""}${s.note?`<div>หมายเหตุ: ${esc(s.note)}</div>`:""}<hr><div class="c">พิมพ์ ${new Date().toLocaleString("th-TH")}</div></div>`;
+    ${s.note?`<div>หมายเหตุ: ${esc(s.note)}</div>`:""}<hr><div class="c">พิมพ์ ${new Date().toLocaleString("th-TH")}</div></div>`;
   setTimeout(()=>window.print(),60)}
 
 /* ---------- รายงาน ---------- */
@@ -758,7 +794,10 @@ function vRpt(){const V=$("#view"),[f,t]=rptRange(),R=rptData(f,t),gp=R.net-R.co
 
 /* ---------- ตั้งค่า ---------- */
 function vSet(){const V=$("#view"),S=seller(),sw="serviceWorker" in navigator,ready=sw&&!!navigator.serviceWorker.controller,B=backupInfo();
-  V.innerHTML=`<div class="tools"><div class="hello grow"><h1>⚙️ ตั้งค่าคาเฟ่</h1><p>บันทึกอัตโนมัติ · ชื่อร้าน ที่อยู่ เลขผู้เสียภาษี และการจด VAT ใช้จากหน้า "ตั้งค่าร้าน"</p></div>${hasOwner()?`<button class="btn sm ghost" id="lockNow">🔒 ล็อกทันที</button>`:""}</div>
+  V.innerHTML=`<div class="tools"><div class="hello grow"><h1>⚙️ ตั้งค่าคาเฟ่</h1><p>บันทึกอัตโนมัติทุกช่อง</p></div>${hasOwner()?`<button class="btn sm ghost" id="lockNow">🔒 ล็อกทันที</button>`:""}</div>
+  <div class="card"><h2>🏪 ข้อมูลร้าน <small>ใช้บนใบเสร็จ</small></h2><div class="row"><div class="f"><label>ชื่อร้าน</label><input class="in-" data-sh="name" value="${esc(S.name||"")}" placeholder="เช่น ร้านกาแฟสมใจ"></div><div class="f"><label>โทรศัพท์</label><input class="in-" data-sh="phone" value="${esc(S.phone||"")}" inputmode="tel"></div></div>
+    <div class="f"><label>ที่อยู่</label><input class="in-" data-sh="addr" value="${esc(S.addr||"")}"></div>
+    <div class="row"><div class="f"><label>เลขประจำตัวผู้เสียภาษี (ถ้ามี)</label><input class="in-" data-sh="tax" value="${esc(S.tax||"")}" inputmode="numeric" maxlength="13"></div><div class="f"><label>&nbsp;</label><label class="ck"><input type="checkbox" data-sh="vat" ${S.vat?"checked":""}> จดทะเบียน VAT แล้ว (ใบเสร็จแสดง VAT)</label></div></div></div>
   <div class="grid2"><div class="card"><h2>🔐 พนักงานและรหัส</h2>
     ${hasOwner()?`<div class="hint">✅ ตั้งรหัสเจ้าของร้านแล้ว · ยกเลิกบิล คืนเงิน ส่วนลดเกิน ${fm(num(C.perm.maxDisc))}% เมนู/ราคา ตั้งค่า${C.perm.staffRpt?"":" และรายงาน"} ต้องใช้รหัสนี้</div>`:`<div class="warn">ยังไม่ได้ตั้งรหัสเจ้าของร้าน · พนักงานทุกคนยกเลิกบิล แก้ราคา และดูต้นทุนได้</div>`}
     <div class="tools"><button class="btn sm ${hasOwner()?"ghost":"main"}" id="oPin">${hasOwner()?"เปลี่ยนรหัสเจ้าของร้าน":"🔐 ตั้งรหัสเจ้าของร้าน"}</button>${hasOwner()?`<button class="btn sm ghost danger" id="oPinX">ลบรหัส</button>`:""}</div>
@@ -779,12 +818,12 @@ function vSet(){const V=$("#view"),S=seller(),sw="serviceWorker" in navigator,re
     ${S.vat?`<label class="ck"><input type="checkbox" data-c="abbr" ${C.abbr?"checked":""}> พิมพ์หัวเป็น "ใบกำกับภาษีอย่างย่อ"</label><div class="note">ร้านที่จด VAT และออกใบกำกับภาษีอย่างย่อจากเครื่อง POS โดยทั่วไปต้องขออนุมัติใช้เครื่องบันทึกการเก็บเงินกับกรมสรรพากรก่อน (ภ.พ.06) · ตรวจสอบกับสรรพากรหรือนักบัญชีก่อนเปิดตัวเลือกนี้ · ถ้าไม่เปิด ใบเสร็จยังแสดงยอดรวม VAT ตามปกติ</div>`:""}</div></div>
   <div class="grid2"><div class="card"><h2>💳 รับเงิน</h2><div class="f"><label>พร้อมเพย์ (เบอร์มือถือ / เลขบัตร ปชช. / เลขผู้เสียภาษี)</label><input class="in-" data-c="pp" value="${esc(C.pp)}" inputmode="numeric" placeholder="0812345678"></div>
     <div class="f"><span>วิธีรับเงินที่เปิดใช้</span><div class="chips">${Object.keys(PMN).map(k=>`<label class="chip"><input type="checkbox" data-pm="${k}" ${C.methods[k]?"checked":""}> ${PMI[k]} ${PMN[k]}</label>`).join("")}</div></div>
-    <div class="note">ปิดกะแล้ว เงินสดลงบัญชี "เงินสด" · QR / โอน / บัตร ลงบัญชีธนาคารบัญชีแรกในระบบบัญชี</div></div>
+    <div class="note">ยอดแต่ละวิธีรับเงินแยกให้ในสรุปกะและรายงาน</div></div>
   <div class="card"><h2>🛵 แอปเดลิเวอรี</h2><div class="note">เปิดช่องทางที่ร้านขาย · ตั้งค่า GP เพื่อดูกำไรจริง · บวกราคา % ถ้าราคาในแอปสูงกว่าหน้าร้าน (หรือตั้งราคาแยกรายเมนูในหน้าเมนู)</div>
     <div class="chrow note"><span></span><span>ช่องทาง</span><span>GP %</span><span>บวกราคา %</span></div>
     ${C.channels.map((c,i)=>`<div class="chrow"><input type="checkbox" data-co="${i}" ${c.on?"checked":""} aria-label="เปิด ${esc(c.name)}"><input class="in-" data-cn="${i}" value="${esc(c.name)}"><input class="in- r" inputmode="decimal" data-cg="${i}" value="${esc(c.gp)}"><input class="in- r" inputmode="decimal" data-cm="${i}" value="${esc(c.markup)}"></div>`).join("")}
     <div class="tools"><button class="btn sm ghost" id="chAdd">＋ เพิ่มช่องทาง</button><div class="f" style="max-width:180px"><label>ปัดราคาแอปขึ้นทีละ (บาท)</label><input class="in- r" data-c="round" inputmode="numeric" value="${esc(C.round)}"></div></div>
-    <div class="note">ปิดกะแล้ว ยอดขายผ่านแอปตั้งเป็นลูกหนี้ของแอปนั้น เมื่อแอปโอนเงินให้ร้าน ให้บันทึกรับเงินในเมนูลูกหนี้ และบันทึกค่า GP เป็นค่าใช้จ่ายตามใบกำกับภาษีที่แอปส่งมา</div></div></div>
+    <div class="note">ยอดขายผ่านแอปไม่นับรวมเงินในลิ้นชัก · รายงานแสดงยอดขาย ค่า GP และยอดที่ร้านได้รับจริงแยกตามแอป</div></div></div>
   <div class="grid2"><div class="card"><h2>🏪 หน้าร้าน</h2>
     <div class="f"><label>เลขโต๊ะ (คั่นด้วย , หรือเว้นวรรค · เว้นว่าง = พิมพ์เอง)</label><input class="in-" data-c="tables" value="${esc(C.tables)}" placeholder="1 2 3 4 5 A1 A2"></div>
     <div class="row"><div class="f"><label>เลขคิวเริ่มต้นแต่ละวัน</label><input class="in- r" data-c="qStart" inputmode="numeric" value="${esc(C.qStart)}"></div><div class="f"><label>เตือนออเดอร์รอนานเกิน (นาที)</label><input class="in- r" data-c="warnMin" inputmode="numeric" value="${esc(C.warnMin)}"></div></div>
@@ -792,11 +831,12 @@ function vSet(){const V=$("#view"),S=seller(),sw="serviceWorker" in navigator,re
   <div class="card"><h2>💾 ข้อมูลและออฟไลน์</h2>
     <div class="${ready?"hint":"warn"}">${ready?"✅ พร้อมใช้ออฟไลน์ · เน็ตหลุดแล้วยังเปิดหน้าขายและขายต่อได้ ข้อมูลอยู่ในเครื่อง":sw?"กำลังเตรียมโหมดออฟไลน์ · เปิดหน้านี้ใหม่อีกครั้งตอนมีเน็ต":"เบราว์เซอร์นี้ไม่รองรับโหมดออฟไลน์"}</div>
     <div class="${B.ok?"hint":"warn"}">${B.cloud?B.txt:B.last?"ดาวน์โหลดไฟล์สำรองล่าสุด "+thD(B.last):"ยังไม่เคยสำรองข้อมูล"}${B.cloud?"":" · แนะนำให้เข้าสู่ระบบสมาชิกเพื่อสำรองขึ้นระบบอัตโนมัติ"}</div>
-    <div class="tools"><button class="btn sm main" data-bk="1">⬇️ ไฟล์สำรองทั้งระบบ</button><button class="btn sm ghost" id="xE">⬇️ เฉพาะคาเฟ่</button><label class="btn sm ghost">⬆️ นำเข้าคาเฟ่<input type="file" id="xI" accept=".json" hidden></label></div>
+    <div class="tools"><button class="btn sm main" data-bk="1">⬇️ ดาวน์โหลดไฟล์สำรอง</button><label class="btn sm ghost">⬆️ นำเข้าไฟล์สำรอง<input type="file" id="xI" accept=".json" hidden></label></div>
     <div class="f"><label>เก็บรายละเอียดออเดอร์ย้อนหลัง (วัน)</label><input class="in- r" data-c="keepDays" inputmode="numeric" value="${esc(C.keepDays)}"></div><div class="note">เกินกว่านี้เก็บเฉพาะสรุปของแต่ละกะ · ${M.items.length} เมนู · ${O.length} ออเดอร์ · ${SH.length} กะ</div>
     <div class="tools">${M.items.length?"":`<button class="btn sm ghost" id="xD">✨ ร้านตัวอย่าง</button>`}<button class="btn sm ghost danger" id="xW">🗑 ล้างข้อมูลคาเฟ่</button></div></div></div>`;
   const sv=()=>{clearTimeout(vSet.t);vSet.t=setTimeout(()=>{if(saveC())toast("บันทึกการตั้งค่าแล้ว ✓")},400)};
   $$("[data-c]").forEach(x=>x.addEventListener(x.type==="checkbox"?"change":"input",()=>{const k=x.dataset.c;C[k]=x.type==="checkbox"?x.checked:/^(qStart|warnMin|keepDays|round)$/.test(k)?Math.max(0,Math.round(num(x.value))):x.value.trim();sv()}));
+  $$("[data-sh]").forEach(x=>x.addEventListener(x.type==="checkbox"?"change":"input",()=>{C.shop=Object.assign({},C.shop||{});const k=x.dataset.sh;C.shop[k]=x.type==="checkbox"?x.checked:x.value.trim();sv();if(k==="vat")setTimeout(vSet,450)}));
   $$("[data-pr]").forEach(x=>x.addEventListener(x.type==="checkbox"?"change":"input",()=>{C.perm[x.dataset.pr]=x.type==="checkbox"?x.checked:Math.max(0,Math.min(100,num(x.value)));sv()}));
   $$("[data-pm]").forEach(x=>x.onchange=()=>{C.methods[x.dataset.pm]=x.checked;if(!Object.values(C.methods).some(Boolean)){C.methods.cash=true;toast("ต้องเปิดอย่างน้อย 1 วิธี");vSet()}sv()});
   $$("[data-co]").forEach(x=>x.onchange=()=>{C.channels[+x.dataset.co].on=x.checked;sv()});
@@ -816,13 +856,13 @@ function vSet(){const V=$("#view"),S=seller(),sw="serviceWorker" in navigator,re
   $$("[data-spx]").forEach(b=>b.onclick=()=>{C.staffs[+b.dataset.spx].pin="";saveC();vSet()});
   $$("[data-sx]").forEach(b=>b.onclick=async ()=>{const u=C.staffs[+b.dataset.sx];if(!await ask("ลบ "+u.name+" ออกจากรายชื่อ?"))return;C.staffs.splice(+b.dataset.sx,1);saveC();vSet()});
   $("#nsAdd").onclick=()=>{const n=$("#nsName").value.trim();if(!n)return;C.staffs.push({id:uid("u"),name:n,pin:""});saveC();vSet()};
-  $("#xE").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({app:"edm-cafe",v:1,menu:M,orders:O,shifts:SH,cfg:C})],{type:"application/json"}));a.download="สำรองคาเฟ่-"+today()+".json";a.click()};
-  $("#xI").onchange=e=>{const fl=e.target.files[0];if(!fl)return;fl.text().then(async t=>{const d=JSON.parse(t);if(d.app!=="edm-cafe")throw 0;if(!await ask("นำเข้าข้อมูลคาเฟ่? ข้อมูลคาเฟ่ในเครื่องนี้จะถูกแทนที่"))return;LS.set(K.menu,d.menu||{});LS.set(K.orders,d.orders||[]);LS.set(K.shifts,d.shifts||[]);LS.set(K.cfg,d.cfg||{});load();toast("นำเข้าแล้ว ✓");render()}).catch(()=>toast("ไฟล์ไม่ถูกต้อง"))};
+  $("#xI").onchange=e=>{const fl=e.target.files[0];if(!fl)return;fl.text().then(async t=>{const d=JSON.parse(t);if(d.app!=="edm-cafe"&&d.app!=="edm-all")throw 0;if(!await ask("นำเข้าข้อมูลคาเฟ่? ข้อมูลคาเฟ่ในเครื่องนี้จะถูกแทนที่"))return;
+    if(d.app==="edm-cafe"&&d.v===1){LS.set(K.menu,d.menu||{});LS.set(K.orders,d.orders||[]);LS.set(K.shifts,d.shifts||[]);LS.set(K.cfg,d.cfg||{});localStorage.removeItem(SK.items);localStorage.removeItem(SK.tx)}
+    else KS_ALL.forEach(k=>{if(d[k]!=null)LS.set(k,d[k]);else if(k===SK.items||k===SK.tx)localStorage.removeItem(k)});
+    load();dirtyStock();toast("นำเข้าแล้ว ✓");render()}).catch(()=>toast("ไฟล์ไม่ถูกต้อง"))};
   if($("#xD"))$("#xD").onclick=demo;
-  $("#xW").onclick=async ()=>{if(curShift())return toast("ปิดกะที่เปิดอยู่ก่อน");if(!await ask("ล้างเมนู ออเดอร์ ประวัติกะ และการตั้งค่าคาเฟ่ทั้งหมด?\n(บิลที่ลงบัญชีแล้วและสต๊อกยังอยู่)"))return;
-    const demoItems=(LS.get(SK.items,[])||[]).filter(i=>String(i.id).startsWith("cafe_"));const rmDemo=demoItems.length&&await ask("ลบวัตถุดิบตัวอย่าง "+demoItems.length+" รายการ (ขึ้นต้นด้วย \"คาเฟ่ ·\") ออกจากสต๊อกด้วย?");
-    [K.menu,K.orders,K.shifts,K.cart,K.cfg].forEach(k=>localStorage.removeItem(k));
-    if(rmDemo){LS.set(SK.items,(LS.get(SK.items,[])||[]).filter(i=>!String(i.id).startsWith("cafe_")));LS.set(SK.tx,(LS.get(SK.tx,[])||[]).filter(t=>!String(t.pid).startsWith("cafe_")))}
+  $("#xW").onclick=async ()=>{if(curShift())return toast("ปิดกะที่เปิดอยู่ก่อน");if(!await ask("ล้างเมนู ออเดอร์ ประวัติกะ วัตถุดิบ และการตั้งค่าคาเฟ่ทั้งหมด?"))return;
+    [K.menu,K.orders,K.shifts,K.cart,K.cfg].forEach(k=>localStorage.removeItem(k));LS.set(SK.items,[]);LS.set(SK.tx,[]);
     unlockUntil=0;load();dirtyStock();toast("ล้างข้อมูลคาเฟ่แล้ว");show("home")}}
 /* ---------- ร้านตัวอย่าง ---------- */
 function TPL(){const P=k=>"cafe_"+k,R=(...a)=>{const o=[];for(let i=0;i<a.length;i+=2)o.push({pid:P(a[i]),qty:a[i+1]});return o};
@@ -842,7 +882,7 @@ function TPL(){const P=k=>"cafe_"+k,R=(...a)=>{const o=[];for(let i=0;i<a.length
       {id:"m11",cat:"k4",name:"ครัวซองต์",price:45,icon:"🥐",unit:"ชิ้น",groups:[],rec:R("croissant",1)},{id:"m12",cat:"k4",name:"บราวนี่",price:55,icon:"🍰",unit:"ชิ้น",groups:[],rec:R("brownie",1)}]}}
 // สร้างเมนูจากแม่แบบ: sel = id เมนูที่เลือก, price = ราคาที่แก้, iced = ขายเย็นเป็นหลัก, recipes = ใส่สูตร+วัตถุดิบตัวอย่าง
 function buildMenu(sel,price,iced,recipes){const T=TPL();
-  if(recipes){const items=LS.get(SK.items,[])||[],tx=LS.get(SK.tx,[])||[];T.ing.forEach(([k,n,u,c,mn,b],i)=>{const id="cafe_"+k;if(items.some(x=>x.id===id))return;items.push({id,sku:"CF-"+String(i+1).padStart(2,"0"),name:"คาเฟ่ · "+n,brand:"",cat:"วัตถุดิบคาเฟ่",unit:u,cost:c,price:0,min:mn,note:"วัตถุดิบตัวอย่าง แก้ราคาทุนได้ที่ระบบสต๊อก"});tx.push({id:uid("tc"),type:"in",date:today(),pid:id,qty:b,cost:c,ref:"",party:"",note:"ยอดยกมา (ตัวอย่าง)",src:"cafe",ts:Date.now()+i})});LS.set(SK.items,items);LS.set(SK.tx,tx);dirtyStock()}
+  if(recipes){const items=LS.get(SK.items,[])||[],tx=LS.get(SK.tx,[])||[];T.ing.forEach(([k,n,u,c,mn,b],i)=>{const id="cafe_"+k;if(items.some(x=>x.id===id))return;items.push({id,sku:"CF-"+String(i+1).padStart(2,"0"),name:n,brand:"",cat:"",unit:u,cost:c,price:0,min:mn,note:"วัตถุดิบตัวอย่าง แก้ราคาทุนได้ที่หน้าวัตถุดิบ"});tx.push({id:uid("tc"),type:"in",date:today(),pid:id,qty:b,cost:c,ref:"",party:"",note:"ยอดยกมา (ตัวอย่าง)",src:"cafe",ts:Date.now()+i})});LS.set(SK.items,items);LS.set(SK.tx,tx);dirtyStock()}
   const items=T.items.filter(m=>sel.includes(m.id)).map(m=>Object.assign({},m,{price:num(price[m.id])||m.price,unit:m.unit||"แก้ว",off:false,rec:recipes?m.rec:[]}));
   const used=new Set();items.forEach(m=>m.groups.forEach(g=>used.add(g)));
   const groups=T.groups.filter(g=>used.has(g.id)).map(g=>Object.assign({},g,{choices:g.choices.map(c=>Object.assign({},c,{rec:recipes?c.rec:[]}))}));
@@ -856,7 +896,7 @@ function vWizard(V){const T=TPL();if(!WZ)WZ={sel:new Set(T.items.map(m=>m.id)),p
     ${T.cats.map(c=>`<div><b>${esc(c.name)}</b><div class="wzg">${T.items.filter(m=>m.cat===c.id).map(m=>`<div class="li"><label class="ck" style="flex:1"><input type="checkbox" data-ws="${m.id}" ${WZ.sel.has(m.id)?"checked":""}> ${m.icon} ${esc(m.name)}</label><div class="r"><span class="note">฿</span><input class="in- r" style="width:90px" inputmode="decimal" data-wp="${m.id}" value="${esc(WZ.price[m.id]||m.price)}"></div></div>`).join("")}</div></div>`).join("")}</div>
   <div class="grid2"><div class="card"><h2>② ลูกค้าส่วนใหญ่สั่งแบบไหน</h2><div class="seg" id="wIce"><button data-k="1" class="${WZ.iced?"on":""}">🧊 เย็น</button><button data-k="0" class="${WZ.iced?"":"on"}">☕ ร้อน</button></div><div class="note">ใช้เป็นค่าเริ่มต้น ตอนกดค้างที่เมนูจะเพิ่มแบบนี้ทันที (เย็น +10 บาท · ปั่น +20 บาท แก้ได้ทีหลัง)</div></div>
     <div class="card"><h2>③ ต้นทุนต่อแก้ว</h2><div class="seg" id="wRec"><button data-k="0" class="${WZ.recipes?"":"on"}">ข้ามไปก่อน</button><button data-k="1" class="${WZ.recipes?"on":""}">ใส่สูตรตัวอย่างให้</button></div>
-      <div class="note">${WZ.recipes?"ใส่สูตรและวัตถุดิบตัวอย่าง (เมล็ดกาแฟ นม แก้ว ฯลฯ) ลงในสต๊อก ระบบคิดต้นทุนและตัดสต๊อกให้ · แก้ราคาทุนให้ตรงร้านได้ที่ระบบสต๊อก":"ขายได้ปกติ ยังไม่คิดต้นทุนและไม่ตัดสต๊อก · มาใส่สูตรทีหลังได้ที่หน้าเมนูและสูตร"}</div></div></div>
+      <div class="note">${WZ.recipes?"ใส่สูตรและวัตถุดิบตัวอย่าง (เมล็ดกาแฟ นม แก้ว ฯลฯ) ระบบคิดต้นทุนและตัดวัตถุดิบให้ · แก้ราคาทุนให้ตรงร้านได้ที่หน้าวัตถุดิบ":"ขายได้ปกติ ยังไม่คิดต้นทุนและไม่ตัดวัตถุดิบ · มาใส่สูตรทีหลังได้ที่หน้าเมนูและสูตร"}</div></div></div>
   <div class="tools"><button class="btn main lg edm-lock" id="wGo">✓ สร้างเมนู ${WZ.sel.size} รายการ แล้วเปิดกะ</button><button class="btn ghost" id="wOwn">ไม่ใช้เมนูสำเร็จรูป · สร้างเมนูเอง</button></div>`;
   $$("[data-ws]").forEach(x=>x.onchange=()=>{x.checked?WZ.sel.add(x.dataset.ws):WZ.sel.delete(x.dataset.ws);vWizard(V)});
   $$("[data-wp]").forEach(x=>x.oninput=()=>{WZ.price[x.dataset.wp]=num(x.value)});
@@ -883,8 +923,8 @@ function closeDlg(){if(dlg.open)dlg.close()}
 $("#dlgX").onclick=closeDlg;
 
 /* ---------- ซิงก์ระหว่างแท็บ / จอบาร์ ---------- */
-window.addEventListener("storage",e=>{if(!e.key||/^edm_(cafe_|stock_|bill_seller)/.test(e.key)){const was=O.length;load();dirtyStock();if(dlg.open)return;
-  if(ui.v==="bar"){if(O.length>was&&O.some(o=>o.ts>seenMax&&o.st==="new"))beep();vBar()}else if(ui.v==="home"||ui.v==="orders"||ui.v==="shift")render();else if(ui.v==="pos"&&/^edm_stock_|menu/.test(e.key||""))vPos()}});
+window.addEventListener("storage",e=>{if(!e.key||/^edm_cafe_/.test(e.key)){const was=O.length;load();dirtyStock();if(dlg.open)return;
+  if(ui.v==="bar"){if(O.length>was&&O.some(o=>o.ts>seenMax&&o.st==="new"))beep();vBar()}else if(ui.v==="home"||ui.v==="orders"||ui.v==="shift")render();else if(ui.v==="pos"&&/^edm_cafe_(items|stx|menu)/.test(e.key||""))vPos()}});
 setInterval(()=>{if(document.visibilityState==="visible"&&ui.v==="bar"&&!dlg.open)vBar()},15000);
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&!dlg.open){load();render()}});
 function fromHash(){const m=/v=(\w+)/.exec(location.hash);if(m&&VIEWS.includes(m[1])){history.replaceState(null,"",location.pathname+location.search);ui.v=m[1];render()}}
@@ -894,6 +934,6 @@ kioskApply();render();setTimeout(fromHash,0);
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))navigator.serviceWorker.register("/sw.js").catch(()=>{});
 })();
 </script>
-<script src="../assets/member.js?v=54" defer></script>
+<script src="../assets/member.js?v=55" defer></script>
 </body>
 </html>
