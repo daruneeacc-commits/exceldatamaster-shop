@@ -716,7 +716,7 @@ function vSet(){const V=$("#view");
     <div><button class="btn sm ghost" id="addPk">＋ เพิ่มช่วงเทศกาล</button></div></div></div>
   ${onlineHtml()}
   <div class="card"><h2>ข้อความในใบยืนยัน</h2><div class="f"><label>เงื่อนไขการยกเลิก</label><textarea class="in-" rows="2" data-c="cancel">${esc(cfg.cancel)}</textarea></div><div class="f"><label>ข้อความท้ายใบยืนยัน</label><input class="in-" data-c="foot" value="${esc(cfg.foot)}"></div></div>
-  <div class="card"><h2>ข้อมูลระบบจอง <small>${res.length} รายการให้เช่า · ${list.length} ใบจอง</small></h2><div class="hint">ข้อมูลอยู่ในเครื่องนี้ และสำรองรวมกับระบบร้านค้า (เมนูสำรองข้อมูล / สำรองขึ้นระบบอัตโนมัติเมื่อเข้าสู่ระบบสมาชิก)</div>
+  <div class="card"><h2>ข้อมูลระบบจอง <small>${res.length} รายการให้เช่า · ${list.length} ใบจอง</small></h2><div class="hint">ข้อมูลอยู่ในเครื่องนี้ และสำรองรวมกับระบบร้านค้า (เมนู ⚙️ ตั้งค่า → สำรอง / กู้คืนข้อมูล · สำรองขึ้นระบบอัตโนมัติเมื่อเข้าสู่ระบบสมาชิก)</div>
     <div class="acts"><button class="btn ghost" id="sExp">⬇️ ดาวน์โหลดไฟล์สำรองระบบจอง</button><label class="btn ghost">⬆️ นำเข้าไฟล์สำรอง<input type="file" id="sImp" accept=".json" hidden></label>${res.length?"":`<button class="btn ghost" id="sDemo">✨ ใส่ข้อมูลตัวอย่าง</button>`}<button class="btn ghost danger" id="sWipe">🗑 ล้างข้อมูลระบบจอง</button></div></div>`;
   const sv=()=>{clearTimeout(vSet.t);vSet.t=setTimeout(()=>{if(saveCfg())toast("บันทึกการตั้งค่าแล้ว ✓")},400)};
   $$("[data-c]").forEach(x=>x.addEventListener(x.type==="checkbox"?"change":"input",()=>{const k=x.dataset.c;cfg[k]=x.type==="checkbox"?x.checked:/^(buf|depPct|late)$/.test(k)?num(x.value):k==="prefix"?x.value.replace(/[^A-Za-z]/g,"").toUpperCase():x.value;sv()}));

@@ -9,30 +9,30 @@
       sub: "ออกใบเสนอราคา ใบแจ้งหนี้ ใบกำกับภาษี ใบเสร็จ ใบวางบิล และติดตามลูกหนี้ได้ในที่เดียว",
       allow: ["home", "setup", "data", "cust", "prod", "quotes", "invoices", "billing", "receipts", "ar", "bill", "bills", "rpt"],
       rpt: { inc: 0, mst: ["custlist", "pricelist"] },
-      tab: [["home", "🏠", "หน้าหลัก"], ["bill", "🧾", "เปิดบิล"], ["bills", "📋", "บิลทั้งหมด"], ["rpt", "📊", "รายงาน"], ["more", "☰", "เพิ่มเติม"]]
+      tab: [["home", "🏠", "หน้าหลัก"], ["bill", "🧾", "เปิดบิล"], ["bills", "📋", "บิลทั้งหมด"], ["rpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]
     },
     stock: {
       name: "ระบบสต๊อกสินค้า", ic: "📦",
       sub: "รู้ยอดคงเหลือ ต้นทุนถัวเฉลี่ย รับเข้า-เบิกออก ตรวจนับ และสั่งซื้อสินค้าได้ในที่เดียว",
       allow: ["home", "setup", "data", "prod", "sup", "stock", "stkitems", "stkin", "stkout", "stkadj", "stkhist", "stkre", "stockrep", "cost", "rpt"],
       rpt: { stk: 0, exp: ["cost", "po", "pursup", "purbrand"], mst: ["suplist", "pricelist"] },
-      labels: { cost: "ซื้อสินค้า / ใบสั่งซื้อ" }, groups: { exp: "ซื้อสินค้า" }, rptLabels: { exp: "รายงานซื้อสินค้า" },
-      tab: [["home", "🏠", "หน้าหลัก"], ["stkitems", "📦", "สินค้า"], ["stkin", "⬇️", "รับเข้า"], ["rpt", "📊", "รายงาน"], ["more", "☰", "เพิ่มเติม"]]
+      labels: { cost: "ซื้อสินค้า / ใบสั่งซื้อ" }, groups: { exp: "ซื้อสินค้า" }, rptLabels: { exp: "ซื้อสินค้า" },
+      tab: [["home", "🏠", "หน้าหลัก"], ["stkitems", "📦", "สินค้า"], ["stkin", "⬇️", "รับเข้า"], ["rpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]
     }
     ,book: {
       name: "ระบบจองและให้เช่า", ic: "📅",
       sub: "จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า เช็กว่างอัตโนมัติ มัดจำ ค่าประกัน แล้วออกบิลต่อได้ทันที",
       allow: ["home", "setup", "data", "cust", "bk", "bkcal", "bklist", "bkres", "bkrpt", "bkset", "bill", "bills", "invoices", "receipts", "ar", "rpt"],
-      rpt: { inc: 0, mst: ["custlist"] },
-      tab: [["bk", "🏠", "หน้าหลัก"], ["bkcal", "📅", "ปฏิทิน"], ["bklist", "📋", "การจอง"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เพิ่มเติม"]]
+      rpt: { inc: 0, mst: ["custlist"] }, groups: { inc: "บิล / รับเงิน" },
+      tab: [["bk", "🏠", "หน้าหลัก"], ["bkcal", "📅", "ปฏิทิน"], ["bklist", "📋", "การจอง"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]
     }
     ,cafe: {
       name: "ระบบร้านคาเฟ่", ic: "☕",
       sub: "ขายหน้าร้าน ออกคิว จอบาร์ ตัดสต๊อกวัตถุดิบตามสูตรต่อแก้ว ปิดกะแล้วลงบัญชีให้อัตโนมัติ",
       allow: ["home", "setup", "data", "cf", "cfpos", "cfbar", "cford", "cfmenu", "cfshift", "cfrpt", "cfset", "stock", "stkitems", "stkin", "stkout", "stkadj", "stkhist", "stkre", "stockrep", "cost", "bills", "receipts", "rpt"],
       rpt: { inc: 0, stk: 0, exp: ["cost", "po", "pursup"] },
-      labels: { cost: "ซื้อวัตถุดิบ / ใบสั่งซื้อ" }, groups: { exp: "ซื้อวัตถุดิบ" }, rptLabels: { exp: "รายงานซื้อวัตถุดิบ" },
-      tab: [["cfpos", "🧾", "ขาย"], ["cfbar", "🍹", "บาร์"], ["cf", "☕", "ภาพรวม"], ["cfrpt", "📊", "รายงาน"], ["more", "☰", "เพิ่มเติม"]]
+      labels: { cost: "ซื้อวัตถุดิบ / ใบสั่งซื้อ" }, groups: { exp: "ซื้อวัตถุดิบ", inc: "ใบเสร็จ" }, rptLabels: { exp: "ซื้อวัตถุดิบ" },
+      tab: [["cfpos", "🧾", "ขาย"], ["cfbar", "🍹", "บาร์"], ["cf", "☕", "ภาพรวม"], ["cfrpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]
     }
   };
   var E = EDS[ed] || null;
@@ -55,6 +55,8 @@
     as.forEach(function (a, i) { var n = $(".no", a); if (n && n.textContent !== "★") n.textContent = i + 1; });
     if (E.groups && E.groups[g.dataset.g]) setText($(".mg-h", g), E.groups[g.dataset.g]);
   });
+  // รุ่นสต๊อก: เอาเมนูสต๊อกขึ้นก่อน
+  if (ed === "stock") { var sg = $('aside .mg[data-g="stk"]'), eg = $('aside .mg[data-g="exp"]'); if (sg && eg) eg.parentNode.insertBefore(sg, eg); }
   // ชื่อระบบ
   var br = $("header .brand"); setText(br, E.name + " ");
   var hs = $("#hiSub"); if (hs) hs.textContent = E.sub;
