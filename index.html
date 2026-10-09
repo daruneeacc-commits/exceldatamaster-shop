@@ -239,9 +239,9 @@ section{padding-block:64px}
 .faq{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px}
 details{border-top:1px solid var(--line);padding:16px 0}
 details:last-child{border-bottom:1px solid var(--line)}
-summary{cursor:pointer;font-weight:500;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary{cursor:pointer;font-weight:500;list-style:none;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:16px;overflow-wrap:anywhere}
 summary::-webkit-details-marker{display:none}
-summary::after{content:"+";font-weight:300;font-size:1.3rem;line-height:1;color:var(--muted);transition:transform .2s}
+summary::after{content:"+";flex:none;font-weight:300;font-size:1.3rem;line-height:1;color:var(--muted);transition:transform .2s}
 details[open] summary::after{transform:rotate(45deg)}
 details p{color:var(--muted);margin:10px 0 0;max-width:62ch}
 @media (max-width:760px){.faq{grid-template-columns:1fr;gap:12px}}

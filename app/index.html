@@ -244,10 +244,31 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   aside>a,aside .mg-h{min-width:70px;min-height:56px;padding:7px 8px 6px;font-size:.78rem}
   aside>a .step,aside .mg-h .step{font-size:1.25rem}
 }
+/* แท็บเล็ต: ปุ่มเมนูแบ่งความกว้างเท่ากันในแถวเดียว ชื่อยาวขึ้นบรรทัดใหม่ได้ */
+@media(min-width:761px) and (max-width:1023px){
+  aside{flex-wrap:nowrap;padding:5px 8px 7px;gap:2px}
+  aside>a,aside>.mg{flex:1 1 0;min-width:0}
+  aside .mg-h{width:100%}
+  aside>a,aside .mg-h{min-width:0;min-height:58px;padding:7px 3px 6px;font-size:.74rem;white-space:normal;overflow-wrap:anywhere}
+  aside>a .step,aside .mg-h .step{font-size:1.2rem}
+  aside .mg-h i{top:4px;right:3px}
+  aside .foot{flex:none}
+  aside .foot .ed-up{padding:7px 10px;max-width:120px;white-space:normal;text-align:center;line-height:1.25}aside .foot .ed-up b{font-size:.72rem}
+}
 /* มือถือ: เมนู ☰ ใหญ่ขึ้น กดง่าย */
 @media(max-width:760px){
-  aside a,aside .mg-h{padding:12px 14px;font-size:1rem;min-height:46px}
-  aside .mg-b a{padding:11px 14px 11px 18px}
+  header.top{height:60px}
+  .burger,.sbtn{width:44px;height:44px;font-size:1.25rem;border-radius:12px}
+  aside{width:min(310px,86vw);padding:16px 12px calc(24px + env(safe-area-inset-bottom,0px));gap:3px}
+  aside a,aside .mg-h{padding:12px 14px;font-size:1.02rem;min-height:48px;border-radius:12px}
+  aside .mg-h .step,aside>a .step{font-size:1.15rem}
+  aside .mg-b a{padding:11px 14px 11px 18px;min-height:46px}
+  .shell{height:calc(100% - 60px - 66px - env(safe-area-inset-bottom,0px));height:calc(100dvh - 60px - 66px - env(safe-area-inset-bottom,0px))}
+  .tabbar{height:calc(66px + env(safe-area-inset-bottom,0px))}
+  .tabbar button{font-size:.8rem;gap:3px;min-width:0}
+  .tabbar button i{font-size:1.45rem;line-height:1.1}
+  .tabbar button.on{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+  .search{top:60px}
 }
 /* โหมดหน้าร้านของคาเฟ่: ซ่อนเมนูระบบ ให้หน้าขายเต็มจอ */
 body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk #updBar{display:none!important}body.cf-kiosk .stage{position:fixed!important;inset:0;z-index:90}
@@ -255,7 +276,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261008-2352";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261009-1714";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -570,7 +591,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(b
 const horiz=()=>matchMedia("(min-width:761px)").matches;const ddClose=()=>$$(".mg.dd").forEach(x=>x.classList.remove("dd"));
 document.addEventListener("click",e=>{if(!e.target.closest(".mg-h"))ddClose()});window.addEventListener("blur",ddClose);document.addEventListener("keydown",e=>{if(e.key==="Escape")ddClose()});window.addEventListener("hashchange",ddClose);
 $$(".mg-h").forEach(h=>h.onclick=()=>{const g=h.parentNode;if(horiz()){const o=!g.classList.contains("dd");ddClose();if(o){g.classList.add("dd");const b=g.querySelector(".mg-b");b.style.left="";b.style.right="";const rc=b.getBoundingClientRect();if(rc.right>innerWidth-8){b.style.left="auto";b.style.right="0"}}return}g.classList.toggle("closed");try{const st=JSON.parse(localStorage.getItem("edm_menu")||"{}");st[g.dataset.g]=g.classList.contains("closed");localStorage.setItem("edm_menu",JSON.stringify(st))}catch(e){}});
-try{const st=JSON.parse(localStorage.getItem("edm_menu")||"{}");$$(".mg").forEach(g=>{if(st[g.dataset.g])g.classList.add("closed")})}catch(e){}
+try{const raw=localStorage.getItem("edm_menu");const st=JSON.parse(raw||"{}");const mob=!raw&&matchMedia("(max-width:760px)").matches;$$(".mg").forEach(g=>{if(st[g.dataset.g]||mob)g.classList.add("closed")})}catch(e){}
 $("#burger").onclick=()=>document.body.classList.toggle("menu");$("#scrim").onclick=()=>document.body.classList.remove("menu");
 // ลิงก์ข้ามระบบจากในหน้าย่อย (เช่น ปุ่ม "ไปหน้าสต๊อก") ให้เปลี่ยนเมนูแทนการเปิดหน้าใหม่
 window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.edm==="kiosk")document.body.classList.toggle("cf-kiosk",!!e.data.on)});
