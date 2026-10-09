@@ -19,6 +19,13 @@
       labels: { cost: "ซื้อสินค้า / ใบสั่งซื้อ" }, groups: { exp: "ซื้อสินค้า" }, rptLabels: { exp: "รายงานซื้อสินค้า" },
       tab: [["home", "🏠", "หน้าหลัก"], ["stkitems", "📦", "สินค้า"], ["stkin", "⬇️", "รับเข้า"], ["rpt", "📊", "รายงาน"], ["more", "☰", "เพิ่มเติม"]]
     }
+    ,book: {
+      name: "ระบบจองและให้เช่า", ic: "📅",
+      sub: "จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า เช็กว่างอัตโนมัติ มัดจำ ค่าประกัน แล้วออกบิลต่อได้ทันที",
+      allow: ["home", "setup", "data", "cust", "bk", "bkcal", "bklist", "bkres", "bkrpt", "bkset", "bill", "bills", "invoices", "receipts", "ar", "rpt"],
+      rpt: { inc: 0, mst: ["custlist"] },
+      tab: [["bk", "🏠", "หน้าหลัก"], ["bkcal", "📅", "ปฏิทิน"], ["bklist", "📋", "การจอง"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เพิ่มเติม"]]
+    }
   };
   var E = EDS[ed] || null;
   window.EDM_ED = E;
@@ -68,6 +75,7 @@
 
   // หน้าหลักของแต่ละรุ่น (เรียกจาก renderHome ของระบบร้านค้า)
   E.home = function (c) {
+    if (ed === "book") { var hh = location.hash.replace(/^#\/?/, "").split("?")[0]; if (!hh || hh === "home") location.replace("#/bk"); return; } // renderHome ถูกเรียกเพื่ออัปเดตตัวเลขเมนูด้วย จึงพาไปหน้าจองเฉพาะตอนอยู่หน้าหลัก
     var qa = $("#home .qa"), cards = $$("#home .grid2 > .card"), h2a = cards[0] && $("h2", cards[0]), h2b = cards[1] && $$("h2", cards[1]);
     function qbtns(L) { qa.innerHTML = L.map(function (x) { return '<button data-go="' + x[0] + '">' + x[1] + "</button>"; }).join(""); }
     if (ed === "bill") {

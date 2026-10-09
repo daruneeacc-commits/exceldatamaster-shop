@@ -584,12 +584,17 @@ function payTag(d,docs){if(d.type==="IT"&&d.term==="cash")return" · 💵 ขา
 // เปิดเอกสารจากการค้นหาในระบบร้านค้า (#open=<id>)
 // #open=<id> = เปิดดู · #edit=<id> = เปิดแก้ไข · #new = เอกสารใหม่ (จากหน้ารายงานบิลในระบบร้านค้า)
 function openFromHash(){const h=location.hash;if(/^#new/.test(h)){history.replaceState(null,"",location.pathname+location.search);
-  const kind=(/new=(\w+)/.exec(h)||[])[1]||"INV",md=doc.mode||"goods",sv=md==="service";
+  /* เปิดจากระบบจอง: ใส่ลูกค้า รายการ ส่วนลด และเลขอ้างอิงใบจองให้ (ข้อมูลส่งผ่าน edm_bill_pre ใช้ครั้งเดียว อายุ 2 นาที) */
+  let pre=null;try{pre=JSON.parse(localStorage.getItem("edm_bill_pre")||"null");localStorage.removeItem("edm_bill_pre")}catch(e){}if(!pre||!(Date.now()-pre.at<120000)||!Array.isArray(pre.items))pre=null;
+  const kind=(/new=(\w+)/.exec(h)||[])[1]||"INV",md=pre&&/^(goods|service)$/.test(pre.mode)?pre.mode:doc.mode||"goods",sv=md==="service";
   const type=kind==="QT"?"QT":kind==="BN"?"BN":kind==="CASH"?(sv?(seller.vat?"TX":"RC"):"IT"):(sv?"IV":"IT");
   doc=blank(md,type);if(type==="IT")doc.term=kind==="CASH"?"cash":"credit";doc.due=hasDue(doc)?addDays(doc.date,30):"";
   if(type==="BN"){doc.vat="none";doc.wht=0;doc.items=[{d:"",q:1,u:"",p:0,disc:0}]}
   if(TYPES[type].tax&&seller.vat&&doc.vat==="none")doc.vat="ex";
-  doc.no=nextNo(doc.type,doc.date);renderAll();const e=document.querySelector('.mtabs button[data-mt="edit"]');if(e)e.click();scrollTo(0,0);return}
+  if(pre){const c=pre.cust||{};doc.cust={name:String(c.name||""),addr:String(c.addr||""),tax:String(c.tax||""),branch:String(c.branch||""),contact:String(c.contact||"")};
+    doc.items=pre.items.map(it=>({d:String(it.d||""),q:num(it.q)||1,u:String(it.u||""),p:num(it.p),disc:num(it.disc)}));doc.billDisc=num(pre.disc);doc.ref=String(pre.ref||"");doc.notes=String(pre.notes||"");doc.wht=0;
+    if(seller.vat)doc.vat=pre.vatIn?"in":"ex"}
+  doc.no=nextNo(doc.type,doc.date);renderAll();const e=document.querySelector('.mtabs button[data-mt="edit"]');if(e)e.click();scrollTo(0,0);if(pre)toast("ใส่ข้อมูลจากใบจอง "+doc.ref+" แล้ว ตรวจแล้วกดบันทึก");return}
   const m=/(open|edit)=([\w-]+)/.exec(h);if(!m)return;history.replaceState(null,"",location.pathname+location.search);
   const d=LS.get(K.docs,[]).find(x=>x.id===m[2]);if(!d)return toast("ไม่พบเอกสาร");doc=JSON.parse(JSON.stringify(d));renderAll();
   const mt=document.querySelector(".mtabs");if(mt&&getComputedStyle(mt).display!=="none")document.querySelector(`.mtabs button[data-mt="${m[1]==="edit"?"edit":"view"}"]`).click();scrollTo(0,0);toast((m[1]==="edit"?"แก้ไข ":"เปิด ")+d.no)}
@@ -629,6 +634,6 @@ renderAll();bindSuggest();
 })();
 </script>
 <script src="../assets/tool-ui.js?v=3" defer></script>
-<script src="../assets/member.js?v=50" defer></script>
+<script src="../assets/member.js?v=51" defer></script>
 </body>
 </html>

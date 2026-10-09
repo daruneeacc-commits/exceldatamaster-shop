@@ -279,6 +279,14 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
       <a href="#/stkre" data-r="stkre"><span class="no">7</span>สินค้าต้องสั่งซื้อ<span class="n" id="nLow" hidden></span></a>
       <a href="#/stockrep" data-r="stockrep"><span class="no">8</span>รายงานสต๊อก</a>
     </div></div>
+    <div class="mg" data-g="bk"><button class="mg-h" type="button"><span class="step">📅</span>จอง / ให้เช่า<i>▾</i></button><div class="mg-b">
+      <a href="#/bk" data-r="bk"><span class="no">1</span>ภาพรวมการจอง<span class="n" id="nBk" hidden></span></a>
+      <a href="#/bkcal" data-r="bkcal"><span class="no">2</span>ปฏิทินห้อง / อุปกรณ์</a>
+      <a href="#/bklist" data-r="bklist"><span class="no">3</span>รายการจอง</a>
+      <a href="#/bkres" data-r="bkres"><span class="no">4</span>ห้อง / อุปกรณ์ให้เช่า</a>
+      <a href="#/bkrpt" data-r="bkrpt"><span class="no">5</span>รายงานการจอง</a>
+      <a href="#/bkset" data-r="bkset"><span class="no">6</span>ตั้งค่าการจอง</a>
+    </div></div>
     <div class="mg" data-g="rep"><button class="mg-h" type="button"><span class="step">📊</span>รายงาน<i>▾</i></button><div class="mg-b">
       <a href="#/rpt?g=inc" data-r="rpt" data-g="inc"><span class="no">1</span>รายงานรายรับ</a>
       <a href="#/rpt?g=exp" data-r="rpt" data-g="exp"><span class="no">2</span>รายงานรายจ่าย</a>
@@ -423,7 +431,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 </nav>
 <div id="toast" hidden style="position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:90;font-size:.9rem"></div>
 
-<script src="edition.js?v=2"></script>
+<script src="edition.js?v=3"></script>
 <script>
 "use strict";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -438,8 +446,9 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=50"},stock:{src:"/stock/?v=50",sv:"home"},stockrep:{src:"/stock/?v=50",sv:"report"},stkitems:{src:"/stock/?v=50",sv:"items"},stkin:{src:"/stock/?v=50",sv:"in"},stkout:{src:"/stock/?v=50",sv:"out"},stkadj:{src:"/stock/?v=50",sv:"adj"},stkhist:{src:"/stock/?v=50",sv:"hist"},stkre:{src:"/stock/?v=50",sv:"reorder"},
+const ROUTES={bill:{src:"/bill/?v=51"},stock:{src:"/stock/?v=50",sv:"home"},stockrep:{src:"/stock/?v=50",sv:"report"},stkitems:{src:"/stock/?v=50",sv:"items"},stkin:{src:"/stock/?v=50",sv:"in"},stkout:{src:"/stock/?v=50",sv:"out"},stkadj:{src:"/stock/?v=50",sv:"adj"},stkhist:{src:"/stock/?v=50",sv:"hist"},stkre:{src:"/stock/?v=50",sv:"reorder"},
   ar:{src:"/account/?v=50",v:"ar"},tax:{src:"/account/?v=50",v:"tax"},buy:{src:"/account/?v=50",v:"buy"},cash:{src:"/account/?v=50",v:"cash"},pnl:{src:"/account/?v=50",v:"home"},
+  bk:{src:"/booking/?v=1",bv:"home"},bkcal:{src:"/booking/?v=1",bv:"cal"},bklist:{src:"/booking/?v=1",bv:"list"},bkres:{src:"/booking/?v=1",bv:"res"},bkrpt:{src:"/booking/?v=1",bv:"rpt"},bkset:{src:"/booking/?v=1",bv:"set"},
   cost:{src:"/account/?v=50",v:"cost"},exp:{src:"/account/?v=50",v:"exp"},bank:{src:"/account/?v=50",v:"bank"},cashv:{src:"/account/?v=50",v:"cashv"},petty:{src:"/account/?v=50",v:"petty"},ap:{src:"/account/?v=50",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
@@ -458,7 +467,7 @@ let quietNav=0;
 function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0];if(!PANES.includes(r)&&!ROUTES[r])r="home";if(window.EDM_ED&&!EDM_ED.ok(r))r="upg";cur=r;
   document.body.classList.remove("menu");
   $$("aside a").forEach(a=>a.classList.toggle("on",a.dataset.r===r));
-  const tr=/^stk|^stock/.test(r)?"stock":r;$$("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.go===tr||(b.dataset.go==="more"&&!["home","bill","stock","rpt"].includes(tr))));
+  const tr=/^stk|^stock/.test(r)?"stock":r;const tbs=$$("#tabbar button");tbs.forEach(b=>b.classList.toggle("on",b.dataset.go===tr||(b.dataset.go==="more"&&!tbs.some(x=>x.dataset.go===tr))));
   $$(".pane").forEach(x=>x.classList.toggle("show",x.id===r));
   $$(".mg").forEach(g=>{const on=!!g.querySelector(`a[data-r="${r}"]`);g.classList.toggle("has-on",on);if(on)g.classList.remove("closed")});
   Object.values(frames).forEach(f=>f.classList.remove("show"));
@@ -472,6 +481,7 @@ function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0]
   const R=ROUTES[r],f=frameFor(R.src);
   if(f.dataset.ready)f.classList.add("show");else f.addEventListener("load",()=>{if(cur===r)f.classList.add("show")},{once:true});
   if(R.v)setAccView(f,R.v);
+  if(R.bv&&quietNav){quietNav=0}else if(R.bv){const gv=()=>{try{f.contentWindow.edmBookView&&f.contentWindow.edmBookView(R.bv)}catch(e){}};f.dataset.ready?gv():f.addEventListener("load",gv,{once:true})}
   if(R.sv&&quietNav){quietNav=0}else if(R.sv){const gv=()=>{try{f.contentWindow.edmStockView&&f.contentWindow.edmStockView(R.sv)}catch(e){}};f.dataset.ready?gv():f.addEventListener("load",gv,{once:true})}
   const a=$(`aside a[data-r="${r}"]`);document.title=(a?a.textContent.replace(/^\S+\s*/,"").replace(/\d+$/,""):"")+" · ระบบร้านค้า";
 }
@@ -492,6 +502,8 @@ function search(raw){const q=raw.trim().toLowerCase();const docs=LS.get("edm_bil
   const G=[];const m=s=>!q||String(s||"").toLowerCase().includes(q);
   const D=docs.filter(d=>m(d.no)||m(d.cust&&d.cust.name)||m(d.cust&&d.cust.tax)||m(d.ref)||(q&&(d.items||[]).some(it=>m(it.d)))).sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.updated||0)-(a.updated||0)).slice(0,q?8:6);
   if(D.length)G.push({g:q?"เอกสารขาย":"เอกสารล่าสุด",L:D.map(d=>{const c=calcDoc(d),st=paid(d);return{ic:"🧾",t:hl(d.no,q)+" · "+esc(TN[d.type]||""),s:hl(d.cust&&d.cust.name||"-",q)+" · "+thD(d.date),v:"฿"+fmt(c.net)+(st[0]?`<small class="tag ${st[1]}">${st[0]}</small>`:""),go:()=>openIn("bill","open="+d.id)}})});
+  {const BK=(LS.get("edm_book_list",[])||[]).filter(b=>q&&(m(b.no)||m(b.cust&&b.cust.name)||m(b.cust&&b.cust.contact))).slice(0,6);const BS={hold:"จองไว้",conf:"ยืนยันแล้ว",in:"ใช้งานอยู่",out:"เสร็จแล้ว",cancel:"ยกเลิก",noshow:"ไม่มา"};
+    if(BK.length)G.push({g:"การจอง",L:BK.map(b=>{const s0=(b.lines||[]).map(l=>l.s).filter(Boolean).sort()[0]||"";return{ic:"📅",t:hl(b.no,q)+" · "+esc(BS[b.st]||""),s:hl(b.cust&&b.cust.name||"-",q)+(s0?" · "+thD(s0.slice(0,10)):""),v:"เปิดใบจอง →",go:()=>openIn("bk","open="+b.id)}})})}
   if(q){const cs=[...new Set(docs.map(d=>d.cust&&d.cust.name).filter(n=>n&&m(n)))].slice(0,4);
     if(cs.length)G.push({g:"ลูกค้า",L:cs.map(n=>{const ds=docs.filter(d=>d.cust&&d.cust.name===n&&d.type!=="QT"&&d.type!=="BN");let tot=0;ds.forEach(d=>tot+=calcDoc(d).base);return{ic:"👤",t:hl(n,q),s:ds.length+" เอกสาร · ยอดขายรวม ฿"+fmt0(tot),v:"ดูบิล →",go:()=>{$("#q").value=n;run(true)},keep:1}})});
     const I=items.filter(i=>m(i.name)||m(i.sku)||m(i.cat)||m(i.brand)).slice(0,6);
@@ -520,6 +532,8 @@ try{const st=JSON.parse(localStorage.getItem("edm_menu")||"{}");$$(".mg").forEac
 $("#burger").onclick=()=>document.body.classList.toggle("menu");$("#scrim").onclick=()=>document.body.classList.remove("menu");
 // ลิงก์ข้ามระบบจากในหน้าย่อย (เช่น ปุ่ม "ไปหน้าสต๊อก") ให้เปลี่ยนเมนูแทนการเปิดหน้าใหม่
 window.addEventListener("message",e=>{if(e.origin!==location.origin||!e.data||e.data.edm!=="go")return;const t=e.data.tool,v=(/v=(\w+)/.exec(e.data.hash||"")||[])[1];
+  if(e.data.open&&t==="bill"&&/^(open|new)=[\w-]+$/.test(e.data.hash||"")){openIn("bill",e.data.hash);return}
+  if(t==="booking"){const M={home:"bk",cal:"bkcal",list:"bklist",res:"bkres",rpt:"bkrpt",set:"bkset"};const to=M[v]||"bk";if(cur!==to){if(e.data.quiet)quietNav=1;go(to)}return}
   if(t==="stock"&&v){const M={home:"stock",items:"stkitems",in:"stkin",out:"stkout",adj:"stkadj",hist:"stkhist",reorder:"stkre",report:"stockrep",move:"stkin"};if(M[v]&&cur!==M[v]){if(e.data.quiet){quietNav=1;}go(M[v])}return}
   if(t==="account"){go(v==="ar"||v==="tax"||v==="ap"?v:v==="buy"?"cost":v==="cash"?"bank":"pnl")}else if(ROUTES[t])go(t);else go("home")});
 
@@ -541,6 +555,7 @@ function renderHome(){
     docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!pays.some(p=>p.rcDocId===x.id))got+=calcDoc(x).total});const left=r2(c.total-got);if(left>0.009){ar+=left;arN++}});
   const B=stockBal();const low=items.filter(i=>num(i.min)>0&&(B[i.id]||0)<=num(i.min));
   ($("#nAr")||{}).hidden=!arN;($("#nAr")||{}).textContent=arN;
+  {const t=today(),BL=LS.get("edm_book_list",[])||[];const nb=BL.filter(b=>{const L=b.lines||[];if(b.st==="hold"||b.st==="conf")return L.some(l=>String(l.s).slice(0,10)<=t);if(b.st==="in")return L.some(l=>String(l.e).slice(0,10)<=t);return false}).length;const el=$("#nBk");if(el){el.hidden=!nb;el.textContent=nb}}
   {const po=(A.pay||[]).filter(p=>p.dir==="out");let apN=0;(A.pur||[]).forEach(p=>{if(p.status==="ordered")return;const c=calcDoc({items:(p.lines||[]).map(l=>({q:l.q,p:l.p})),vat:p.vat,wht:p.wht,billDisc:0});const pd=po.filter(y=>y.purId===p.id).reduce((a,y)=>a+num(y.amount)+num(y.wht),0);if(c.total-pd>0.009)apN++});($("#nAp")||{}).hidden=!apN;($("#nAp")||{}).textContent=apN}($("#nLow")||{}).hidden=!low.length;($("#nLow")||{}).textContent=low.length;
   $("#shopName").textContent=seller.name?"· "+seller.name:"· Excel Data Master";
   $("#hi").textContent=seller.name?"สวัสดีค่ะ "+seller.name:"สวัสดีค่ะ 👋";
@@ -708,8 +723,8 @@ $("#stSave").onclick=()=>{const name=$("#stName").value.trim();if(!name){$("#stM
   if(!ok)return;reloadFrames();$("#stMsg").textContent="บันทึกแล้ว ✓ ใช้กับทุกระบบแล้ว";toast("บันทึกข้อมูลร้านแล้ว ✓");setTimeout(()=>go("home"),900)};
 
 /* ---------- สำรอง / กู้คืน / ล้างข้อมูล ---------- */
-const KS=["edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_suppliers","edm_services","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
-const KS_UI=["edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_pay_ui","edm_bill_term"];
+const KS=["edm_book_res","edm_book_list","edm_book_cfg","edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_suppliers","edm_services","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
+const KS_UI=["edm_book_ui","edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_pay_ui","edm_bill_term"];
 function renderLock(){const L=window.EDM_LOCK,c=L&&L.get();$("#lkState").textContent=c?"เปิดใช้อยู่":"ยังไม่ได้ตั้ง";$("#lkSet").textContent=c?"เปลี่ยน PIN":"🔒 ตั้ง PIN";$("#lkL1").textContent=c?"PIN ใหม่ (ตัวเลข 4–12 หลัก)":"ตั้ง PIN (ตัวเลข 4–12 หลัก)";
   $("#lkNow").hidden=!c;$("#lkOff").hidden=!c;$("#lkOldBox").hidden=!c;if(c)$("#lkIdle").value=String(c.idle||0);["#lkPin","#lkPin2","#lkOld"].forEach(s=>$(s).value="");$("#lkMsg").textContent=""}
 $("#lkSet").onclick=async()=>{const L=window.EDM_LOCK;if(!L)return;const a=$("#lkPin").value.trim(),b2=$("#lkPin2").value.trim(),m=$("#lkMsg");
@@ -748,9 +763,9 @@ $("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 // เปิดเอกสาร/บัตรสินค้าที่ส่งต่อมาจากลิงก์เดิม (/bill/#open=... · /stock/#card=...)
-try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h))openIn(P.t==="stock"?"stock":"bill",P.h)}catch(e){}
+try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h))openIn(P.t==="stock"?"stock":P.t==="booking"?"bk":"bill",P.h)}catch(e){}
 </script>
 <script src="reports.js?v=50"></script>
-<script src="../assets/member.js?v=50" defer></script>
+<script src="../assets/member.js?v=51" defer></script>
 </body>
 </html>

@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<script>/* เปิดตรง /booking/ → ไปรุ่นตัวแยกแบบมีเมนู (/app/?ed=book) · ใส่ ?solo=1 เพื่อเปิดหน้าเดี่ยว */(function(){var emb=false;try{emb=window.top!==window.self}catch(e){emb=true}if(emb||/[?&]solo=1/.test(location.search))return;var h=location.hash.replace(/^#/,"");try{if(h)sessionStorage.setItem("edm_pend",JSON.stringify({t:"booking",h:h}))}catch(e){}document.documentElement.style.visibility="hidden";location.replace("/app/?ed=book")})()</script>
+<script src="../assets/lock.js?v=2"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ระบบจองและให้เช่า · Excel Data Master</title>
+<meta name="description" content="ระบบจองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า เช็กห้องว่างอัตโนมัติ ปฏิทินผัง มัดจำ ค่าประกัน ค่าปรับคืนช้า เชื่อมเปิดบิลและบัญชี">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
+<style>
+:root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#F4F6F5;--accent:#127A4B;--accent-ink:#fff;--warn:#8A5A00;--warnbg:#FFF4DC;--danger:#B3261E;--dangerbg:#FDE8E7;--okbg:#E3F4EA;--blue:#1F4FA3;--bluebg:#E6EEFB;--hold:#8A5A00;--holdbg:#FFF4DC;--done:#5B6470;--donebg:#ECEFF1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--warn:#F0C27A;--warnbg:#2A2416;--danger:#F2867E;--dangerbg:#2C1A19;--okbg:#14261C;--blue:#8AB4F8;--bluebg:#18233A;--hold:#F0C27A;--holdbg:#2A2416;--done:#A9B2BC;--donebg:#222A30}}
+:root[data-theme="dark"]{--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--warn:#F0C27A;--warnbg:#2A2416;--danger:#F2867E;--dangerbg:#2C1A19;--okbg:#14261C;--blue:#8AB4F8;--bluebg:#18233A;--hold:#F0C27A;--holdbg:#2A2416;--done:#A9B2BC;--donebg:#222A30}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px}
+.brand small{font-weight:500;color:var(--muted)}
+.nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.btn{border:0;border-radius:999px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:var(--soft);color:var(--ink);font-size:.9rem;justify-content:center}
+.btn:hover{filter:brightness(.97)}
+.btn.main{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.btn.sm{padding:6px 12px;font-size:.84rem}
+.btn.danger{color:var(--danger)}
+.btn.blue{background:var(--blue);color:#fff}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+main{max-width:1200px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+.tabs{display:flex;gap:6px;background:var(--card);border-radius:999px;padding:4px;box-shadow:0 0 0 1px var(--line);position:sticky;top:62px;z-index:15;overflow-x:auto}
+.tabs button{flex:1;border:0;background:none;border-radius:999px;padding:9px 12px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabs button.on{background:var(--ink);color:var(--bg)}
+.edm-embed #tabs{display:none!important}
+@media(max-width:520px){.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;border-radius:16px}.tabs button{padding:8px 2px!important;font-size:.78rem!important;white-space:normal!important;line-height:1.2;border-radius:12px!important}}
+#view{display:flex;flex-direction:column;gap:14px}
+.hello h1{font-size:1.35rem;margin:0}.hello p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}
+.card h2{font-size:1.05rem;margin:0;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.card h2 small{font-weight:400;color:var(--muted);font-size:.82rem}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:0 0 0 1px var(--line);border:0;text-align:left;cursor:pointer;display:block;width:100%}
+.kpi span{font-size:.8rem;color:var(--muted);display:block}
+.kpi b{font-size:1.45rem;font-variant-numeric:tabular-nums;line-height:1.3;display:block}
+.kpi small{color:var(--muted);font-size:.76rem}
+.kpi.warn b{color:var(--warn)}.kpi.bad b{color:var(--danger)}
+.qa-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.qa-row button{border:0;background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:14px;padding:14px 8px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.qa-row button i{font-style:normal;font-size:1.4rem}
+.qa-row button.main{background:var(--accent);color:var(--accent-ink);box-shadow:none}
+@media(max-width:600px){.qa-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.row4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:620px){.row3,.row4{grid-template-columns:1fr 1fr}}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f label,.f>span{font-size:.8rem;font-weight:600;color:var(--muted)}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 11px;outline:none}
+.in-:focus{border-color:var(--accent)}
+.in-.r{text-align:right;font-variant-numeric:tabular-nums}
+.in-.ov{border-color:var(--warn)}
+.seg{display:flex;background:var(--soft);border-radius:999px;padding:3px;gap:3px;flex-wrap:wrap}
+.seg button{flex:1;border:0;background:none;border-radius:999px;padding:7px 10px;cursor:pointer;font-weight:600;font-size:.86rem;color:var(--muted);white-space:nowrap}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tools .in-{flex:1;min-width:160px}
+.tools .grow{flex:1}
+.tbl-wrap{overflow-x:auto;margin:0 -4px}
+table.t{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.9rem}
+table.t th{text-align:left;font-size:.76rem;color:var(--muted);font-weight:600;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.t td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.t .r{text-align:right;white-space:nowrap}
+table.t tr.click{cursor:pointer}table.t tr.click:hover td{background:var(--soft)}
+table.t tfoot td{font-weight:700;border-top:1.5px solid var(--ink)}
+.sub{display:block;font-size:.78rem;color:var(--muted)}
+.pill{font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap;display:inline-block}
+.p-hold{background:var(--holdbg);color:var(--hold)}.p-conf{background:var(--bluebg);color:var(--blue)}.p-in{background:var(--okbg);color:var(--accent)}.p-out{background:var(--donebg);color:var(--done)}.p-x{background:var(--dangerbg);color:var(--danger)}.p-late{background:var(--dangerbg);color:var(--danger)}.p-bill{background:var(--okbg);color:var(--accent)}
+.empty{text-align:center;padding:26px 10px;color:var(--muted);display:flex;flex-direction:column;gap:10px;align-items:center}
+.note{font-size:.8rem;color:var(--muted)}
+.warn{background:var(--warnbg);color:var(--warn);border-radius:10px;padding:8px 12px;font-size:.86rem}
+.bad{background:var(--dangerbg);color:var(--danger);border-radius:10px;padding:8px 12px;font-size:.86rem}
+.hint{background:var(--soft);border-radius:12px;padding:10px 12px;font-size:.86rem;line-height:1.55}
+.li{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.li:last-child{border-bottom:0}
+.li>div:first-child{min-width:0}
+.li b{font-weight:600}
+.li small{display:block;color:var(--muted);font-size:.8rem}
+.li .r{text-align:right;white-space:nowrap;display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.li.click{cursor:pointer}
+.kinds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media(max-width:700px){.kinds{grid-template-columns:1fr}}
+.kinds button{border:0;background:var(--soft);border-radius:14px;padding:14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:3px}
+.kinds button i{font-style:normal;font-size:1.6rem}
+.kinds button b{font-size:.98rem}.kinds button span{font-size:.8rem;color:var(--muted)}
+.kinds button.on{box-shadow:inset 0 0 0 2px var(--accent);background:var(--okbg)}
+/* ปฏิทิน */
+.calwrap{overflow:auto;border-radius:12px;box-shadow:0 0 0 1px var(--line);max-height:70vh;background:var(--card)}
+.cal{display:grid;grid-template-columns:150px repeat(var(--n),minmax(42px,1fr));min-width:calc(150px + var(--n) * 42px);font-size:.8rem}
+.cal>div{border-bottom:1px solid var(--line);border-right:1px solid var(--line);min-height:40px;display:flex;align-items:center;justify-content:center;padding:2px;position:relative}
+.cal .hd{position:sticky;top:0;z-index:3;background:var(--card);flex-direction:column;line-height:1.15;font-weight:600;min-height:44px}
+.cal .hd small{font-weight:400;color:var(--muted);font-size:.7rem}
+.cal .hd.we{background:var(--soft)}
+.cal .hd.td{background:var(--accent);color:var(--accent-ink)}.cal .hd.td small{color:var(--accent-ink)}
+.cal .rn{position:sticky;left:0;z-index:2;background:var(--card);justify-content:flex-start;padding:4px 10px;font-weight:600;flex-direction:column;align-items:flex-start;line-height:1.2;text-align:left;cursor:pointer}
+.cal .rn small{font-weight:400;color:var(--muted);font-size:.72rem}
+.cal .corner{position:sticky;left:0;top:0;z-index:4;background:var(--card)}
+.cal .gh{grid-column:1/-1;justify-content:flex-start;padding:6px 10px;background:var(--soft);font-weight:700;min-height:30px;position:sticky;left:0}
+.cal .c{cursor:pointer}
+.cal .c:hover{background:var(--soft)}
+.cal .c.we{background:color-mix(in srgb,var(--soft) 55%,transparent)}
+.cal .c.past{opacity:.55}
+.cal .bar{color:#fff;font-weight:600;justify-content:flex-start;overflow:hidden;white-space:nowrap;padding:0 4px;border-right-color:transparent}
+.cal .bar span{overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.cal .bar.hold{background:#C8901A}.cal .bar.conf{background:#2F66C9}.cal .bar.in{background:#127A4B}.cal .bar.out{background:#7C8691}
+.cal .bar.bs{border-top-left-radius:10px;border-bottom-left-radius:10px;margin-left:3px}
+.cal .bar.be{border-top-right-radius:10px;border-bottom-right-radius:10px;margin-right:3px;border-right-color:var(--line)}
+.cal .cnt{font-weight:700;font-variant-numeric:tabular-nums}
+.cal .cnt.full{background:var(--dangerbg);color:var(--danger)}
+.cal .cnt.part{background:var(--bluebg);color:var(--blue)}
+.cal .cnt.free{color:var(--muted);font-weight:400}
+@media(max-width:600px){.cal{grid-template-columns:112px repeat(var(--n),minmax(40px,1fr));min-width:calc(112px + var(--n) * 40px)}.cal .rn{padding:4px 6px;font-size:.76rem}.cal .rn small{font-size:.66rem}}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-2px;margin-right:4px}
+/* ฟอร์มจอง */
+dialog{border:0;border-radius:18px;padding:0;max-width:min(860px,calc(100% - 24px));width:100%;background:var(--card);color:var(--ink);max-height:calc(100% - 24px)}
+dialog.sm{max-width:min(560px,calc(100% - 24px))}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog .dh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);z-index:2}
+dialog .db{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.sec{display:flex;flex-direction:column;gap:8px}
+.sec>h3{margin:0;font-size:.92rem;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bl{border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.bl .top{display:grid;grid-template-columns:minmax(0,1fr) 90px auto;gap:8px;align-items:end}
+.bl .top.noq{grid-template-columns:minmax(0,1fr) auto}
+.bl .x{border:0;background:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:8px}
+.bl .dates{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bl .dates.h{grid-template-columns:1.3fr 1fr 1fr}
+.bl .bot{display:grid;grid-template-columns:minmax(0,1fr) 140px 120px;gap:8px;align-items:end}
+@media(max-width:560px){.bl .bot{grid-template-columns:1fr 1fr}.bl .bot .av{grid-column:1/-1}.bl .dates.h{grid-template-columns:1fr 1fr}.bl .dates.h .f:first-child{grid-column:1/-1}}
+.av{font-size:.84rem;font-weight:600;padding:6px 10px;border-radius:10px}
+.av.ok{background:var(--okbg);color:var(--accent)}.av.no{background:var(--dangerbg);color:var(--danger)}.av.wait{background:var(--soft);color:var(--muted)}
+@media(max-width:560px){.bl .dates .in-{padding:9px 6px;font-size:.86rem}input[type=date].in-,input[type=time].in-{-webkit-appearance:none;appearance:none;min-height:42px}.row3 .more{grid-column:1/-1}.row3 .more>label{display:none}}
+.exr{display:grid;grid-template-columns:minmax(0,1fr) 130px auto;gap:8px;align-items:center}
+.sum{background:var(--soft);border-radius:14px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:2px 14px;font-variant-numeric:tabular-nums;font-size:.92rem}
+.sum .r{text-align:right}
+.sum .big{font-weight:700;font-size:1.05rem;border-top:1px solid var(--line);padding-top:4px;margin-top:2px}
+.sum .due{color:var(--danger);font-weight:700}
+.sum .paid{color:var(--accent);font-weight:700}
+.payf{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr auto;gap:8px;align-items:end}
+@media(max-width:620px){.payf{grid-template-columns:1fr 1fr}.payf .btn{grid-column:1/-1}}
+.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.acts .sp{flex:1}
+.foot{position:sticky;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;z-index:2}
+.foot .sp{flex:1}
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chip{border:0;background:var(--soft);border-radius:999px;padding:4px 10px;font-size:.8rem;cursor:pointer;font-weight:600}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:150;font-size:.9rem;max-width:calc(100% - 32px);text-align:center}
+.ck{display:flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
+.days{display:flex;gap:6px;flex-wrap:wrap}
+.days label{display:flex;gap:4px;align-items:center;background:var(--soft);padding:5px 10px;border-radius:999px;font-size:.86rem;cursor:pointer}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar2{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:10px;align-items:center;font-size:.88rem}
+.bar2 .tr{height:8px;border-radius:99px;background:var(--soft);overflow:hidden;margin-top:4px}
+.bar2 .tr i{display:block;height:100%;background:var(--accent);border-radius:99px}
+body.edm-ro .edm-lock{pointer-events:none;opacity:.45;filter:grayscale(.4)}
+/* พิมพ์ใบยืนยัน */
+#printArea{display:none}
+.page{background:#fff;color:#111;font-size:10pt;line-height:1.5;max-width:190mm;margin:0 auto}
+.page .ph{display:flex;justify-content:space-between;gap:14px;border-bottom:2px solid #127A4B;padding-bottom:8px;margin-bottom:10px}
+.page h1{font-size:15pt;margin:0;color:#127A4B}
+.page .shop b{font-size:12pt}
+.page .shop img{max-height:56px;max-width:140px;display:block;margin-bottom:4px}
+.page table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;margin:8px 0}
+.page th{color:#127A4B;border-bottom:1.5px solid #127A4B;padding:5px 6px;text-align:left}
+.page td{padding:5px 6px;border-bottom:1px solid #e3e6e4;vertical-align:top}
+.page .r{text-align:right}
+.page .tot{width:60%;margin-left:auto}
+.page .tot td{border:0;padding:3px 6px}
+.page .tot .g td{font-weight:700;border-top:1.5px solid #111}
+.page .box{border:1px solid #d9dedb;border-radius:8px;padding:8px 10px;margin-top:8px;font-size:9pt}
+.page .sig{display:flex;justify-content:space-between;margin-top:36px;gap:20px;text-align:center;font-size:9pt}
+.page .sig div{flex:1;border-top:1px solid #999;padding-top:4px}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff}
+  header.top,main,.toast,dialog,.edm-bar,.edm-gate{display:none!important}
+  #printArea{display:block}
+}
+html{overscroll-behavior-y:contain}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="/">📊 Excel Data Master <small>· ระบบจองและให้เช่า</small></a>
+  <nav class="nav">
+    <a class="btn sm main" href="/app/">🏪 ระบบร้านค้า</a>
+    <a class="btn sm ghost" href="/bill/">🧾 เปิดบิล</a>
+    <a class="btn sm ghost" href="/">🛒 ร้านเทมเพลต</a>
+  </nav>
+</div></header>
+
+<main>
+  <div class="tabs" id="tabs">
+    <button data-v="home">🏠 ภาพรวม</button>
+    <button data-v="cal">📅 ปฏิทิน</button>
+    <button data-v="list">📋 การจอง</button>
+    <button data-v="res">🏷️ ห้อง / อุปกรณ์</button>
+    <button data-v="rpt">📊 รายงาน</button>
+    <button data-v="set">⚙️ ตั้งค่า</button>
+  </div>
+  <div id="view"></div>
+</main>
+
+<div id="printArea"></div>
+<dialog id="dlg"><div class="dh"><b id="dlgTitle"></b><button class="btn sm ghost" type="button" id="dlgX" aria-label="ปิด">✕</button></div><div id="dlgBody"></div></dialog>
+<div class="toast" id="toast" hidden></div>
+<datalist id="custList"></datalist>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2800)}
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast("บันทึกไม่ได้: พื้นที่ในเครื่องเต็มหรือเบราว์เซอร์ไม่อนุญาต");return false}}};
+const K={res:"edm_book_res",list:"edm_book_list",cfg:"edm_book_cfg",ui:"edm_book_ui"};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0};
+const r2=n=>Math.round((n+Number.EPSILON)*100)/100;
+const fmt0=n=>Math.round(n).toLocaleString("th-TH");
+const fmt=n=>(+n||0).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2});
+const fm=n=>Math.abs(n-Math.round(n))<.005?fmt0(n):fmt(n);
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const today=()=>ymd(new Date());
+const nowT=()=>{const d=new Date();return ymd(d)+"T"+pad(d.getHours())+":"+pad(d.getMinutes())};
+const dn=s=>{const[y,m,d]=String(s).slice(0,10).split("-").map(Number);return Math.round(Date.UTC(y,m-1,d)/864e5)};
+const fromDn=n=>new Date(n*864e5).toISOString().slice(0,10);
+const addDays=(s,n)=>fromDn(dn(s)+n);
+const okD=s=>/^\d{4}-\d{2}-\d{2}/.test(s||"");
+const okDT=s=>/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(s||"");
+const mins=s=>{const t=String(s).slice(11,16)||"00:00";const[h,m]=t.split(":").map(Number);return dn(s)*1440+h*60+m};
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const MF=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+const DW=["อา","จ","อ","พ","พฤ","ศ","ส"];
+const dow=s=>new Date(dn(s)*864e5).getUTCDay();
+const thD=s=>{if(!okD(s))return"";const[y,m,d]=s.slice(0,10).split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
+const thDs=s=>{if(!okD(s))return"";const[,m,d]=s.slice(0,10).split("-");return +d+" "+MS[+m-1]};
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const EMB=(()=>{try{return window.top!==window.self&&window.top.location.origin===location.origin}catch(e){return false}})();
+if(EMB)document.documentElement.classList.add("edm-embed");
+
+/* ---------- แบบการเช่า ---------- */
+const KIND={
+  night:{n:"ห้องพัก / รายคืน",ic:"🏨",u:"คืน",s:"เข้าพัก",e:"ออก",in:"🔑 เช็คอิน",out:"🏁 เช็คเอาท์",inS:"เข้าพักอยู่",outS:"เช็คเอาท์แล้ว",ex:"ห้องพัก โฮมสเตย์ รีสอร์ท บ้านพัก ลานกางเต็นท์",unit:"ห้อง"},
+  hour:{n:"รายชั่วโมง / รอบ",ic:"⏰",u:"ชม.",s:"เริ่ม",e:"ถึง",in:"▶️ เริ่มใช้งาน",out:"🏁 ใช้งานเสร็จ",inS:"กำลังใช้งาน",outS:"ใช้งานเสร็จ",ex:"ห้องประชุม สนามกีฬา สตูดิโอ ห้องซ้อมดนตรี",unit:"ห้อง"},
+  item:{n:"อุปกรณ์ / ของให้เช่า",ic:"🧰",u:"วัน",s:"รับของ",e:"คืนของ",in:"📦 ส่งมอบของ",out:"↩️ รับคืนของ",inS:"ลูกค้ายืมอยู่",outS:"คืนของแล้ว",ex:"กล้อง เต็นท์ ชุดไทย เครื่องมือช่าง รถเข็น",unit:"ชิ้น"}};
+const KO=["night","hour","item"];
+const ST={hold:["จองไว้ (รอมัดจำ)","p-hold"],conf:["ยืนยันแล้ว","p-conf"],in:["","p-in"],out:["","p-out"],cancel:["ยกเลิก","p-x"],noshow:["ไม่มา","p-x"]};
+const ACT=b=>b.st==="hold"||b.st==="conf"||b.st==="in"||b.st==="out";
+const CH={walkin:"หน้าร้าน",phone:"โทรศัพท์",line:"LINE",fb:"Facebook",web:"เว็บไซต์",ota:"Agoda / Booking",other:"อื่นๆ"};
+const PK={pay:"รับชำระ / มัดจำ",ref:"คืนเงินให้ลูกค้า",g:"รับค่าประกัน",gr:"คืนค่าประกัน",gx:"หักค่าประกันเป็นค่าเสียหาย"};
+const PM=["เงินสด","โอนเงิน","บัตรเครดิต","QR พร้อมเพย์","หักค่าประกัน","อื่นๆ"];
+
+/* ---------- ข้อมูล ---------- */
+const CFG0={ci:"14:00",co:"12:00",buf:0,we:[5,6],late:100,depPct:30,vatIn:true,prefix:"BK",peaks:[],kinds:{night:true,hour:true,item:true},cancel:"ยกเลิกก่อนวันเข้าพัก 7 วัน คืนเงินมัดจำเต็มจำนวน · ยกเลิกน้อยกว่า 7 วัน ขอสงวนสิทธิ์ไม่คืนเงินมัดจำ",foot:"กรุณาแสดงใบยืนยันนี้ในวันเข้าใช้บริการ"};
+let res=[],list=[],cfg={},ui={};
+function load(){res=LS.get(K.res,[])||[];list=LS.get(K.list,[])||[];cfg=Object.assign({},CFG0,LS.get(K.cfg,{})||{});cfg.kinds=Object.assign({},CFG0.kinds,cfg.kinds||{});ui=Object.assign({v:"home",cs:"",span:14,kf:"all",lf:"act",q:"",rm:""},LS.get(K.ui,{})||{})}
+load();
+const saveRes=()=>LS.set(K.res,res),saveList=()=>LS.set(K.list,list),saveCfg=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,{v:ui.v,span:ui.span,kf:ui.kf,lf:ui.lf});
+const rOf=id=>res.find(r=>r.id===id);
+const kOn=k=>cfg.kinds[k]!==false;
+function bKind(b){const l=(b.lines||[]).find(x=>rOf(x.rid));return l?rOf(l.rid).kind:"night"}
+function stName(b){if(b.st==="in")return KIND[bKind(b)].inS;if(b.st==="out")return KIND[bKind(b)].outS;return(ST[b.st]||ST.hold)[0]}
+function stPill(b){const late=isLate(b);return`<span class="pill ${(ST[b.st]||ST.hold)[1]}">${esc(stName(b))}</span>`+(late?` <span class="pill p-late">เกินกำหนด</span>`:"")}
+function bills(b){return(LS.get("edm_bill_docs",[])||[]).filter(d=>d.ref===b.no&&d.type!=="QT"&&d.type!=="BN")}
+function bStart(b){let s="";(b.lines||[]).forEach(l=>{if(l.s&&(!s||l.s<s))s=l.s});return s}
+function bEnd(b){let e="";(b.lines||[]).forEach(l=>{const x=b.st==="out"&&l.ae?l.ae:l.e;if(x&&x>e)e=x});return e}
+function isLate(b){if(b.st!=="in")return false;const t=today(),n=nowT();return(b.lines||[]).some(l=>{const r=rOf(l.rid);if(!r||!l.e)return false;return r.kind==="hour"?l.e<n:r.kind==="night"?l.e<t:l.e<t})}
+
+/* ---------- ช่วงเวลา และเช็กว่าง ---------- */
+function okLine(l,r){if(!r)return false;if(r.kind==="hour")return okDT(l.s)&&okDT(l.e)&&mins(l.e)>mins(l.s);if(!okD(l.s)||!okD(l.e))return false;return r.kind==="night"?dn(l.e)>dn(l.s):dn(l.e)>=dn(l.s)}
+function span(l,r,b){
+  if(r.kind==="hour"){const a=mins(l.s);let z=mins(l.e);if(b&&b.st==="out"&&okDT(l.ae))z=mins(l.ae);return[a,Math.max(a,z)]}
+  const a=dn(l.s);let z=dn(l.e);if(b&&b.st==="out"&&okD(l.ae))z=dn(l.ae);
+  if(r.kind==="item"&&z<=a)z=a+1;
+  if(b&&b.st==="in"){const t=dn(today());if(t>=z)z=t+1}
+  return[a,Math.max(a,z)]}
+function usage(rid,a,z,skip){const r=rOf(rid),buf=r.kind==="hour"?num(cfg.buf):0,ev=[],clash=new Set();
+  list.forEach(b=>{if(b.id===skip||!ACT(b))return;(b.lines||[]).forEach(l=>{if(l.rid!==rid||!okLine(l,r))return;const[x,y]=span(l,r,b);if(x<z+buf&&a<y+buf){const q=num(l.qty)||1;ev.push([Math.max(x,a-buf),q],[Math.min(y+buf,z+buf),-q]);clash.add(b.no||"(ใบจองนี้)")}})});
+  ev.sort((p,q)=>p[0]-q[0]||p[1]-q[1]);let c=0,m=0;ev.forEach(e=>{c+=e[1];if(c>m)m=c});return{max:m,clash:[...clash]}}
+function chk(l,b){const r=rOf(l.rid);if(!r)return{ok:false,msg:"เลือกห้อง / อุปกรณ์"};if(!okLine(l,r))return{ok:false,msg:r.kind==="hour"?"เวลาสิ้นสุดต้องหลังเวลาเริ่ม":r.kind==="night"?"วันออกต้องหลังวันเข้าพัก":"วันคืนต้องไม่ก่อนวันรับ"};
+  const[a,z]=span(l,r,null),cap=num(r.qty)||1,q=num(l.qty)||1;const u=usage(l.rid,a,z,b.id);
+  let own=0;(b.lines||[]).forEach(o=>{if(o!==l&&o.rid===l.rid&&okLine(o,r)){const[x,y]=span(o,r,null);if(x<z&&a<y)own+=num(o.qty)||1}});
+  const free=cap-u.max-own;return{ok:free>=q,free:Math.max(0,free),cap,clash:u.clash}}
+
+/* ---------- ราคา ---------- */
+const isWeN=s=>(cfg.we||[]).includes(dow(s));
+function peak(s){let p=0;(cfg.peaks||[]).forEach(x=>{if(okD(x.s)&&okD(x.e)&&s>=x.s&&s<=x.e)p=Math.max(p,num(x.pct))});return p}
+function quote(l){const r=rOf(l.rid);if(!r||!okLine(l,r))return{n:0,amt:0};const q=num(l.qty)||1;
+  if(r.kind==="night"){let amt=0,n=0;for(let d=dn(l.s);d<dn(l.e);d++){const s=fromDn(d);let p=isWeN(s)&&num(r.rateWe)?num(r.rateWe):num(r.rate);p*=1+peak(s)/100;amt+=p;n++}return{n,amt:r2(amt*q)}}
+  if(r.kind==="hour"){const h=(mins(l.e)-mins(l.s))/60,d=l.s.slice(0,10),we=dow(d)===0||dow(d)===6;let p=we&&num(r.rateWe)?num(r.rateWe):num(r.rate);p*=1+peak(d)/100;return{n:r2(h),amt:r2(p*h*q)}}
+  const n=Math.max(1,dn(l.e)-dn(l.s)),p=num(r.rate);let amt=n*p;if(num(r.rate7)&&n>=7){const w=Math.floor(n/7);amt=w*num(r.rate7)+(n-w*7)*p}return{n,amt:r2(amt*q)}}
+function upd(l){const r=rOf(l.rid);const Q=quote(l);l.n=Q.n;if(!l.ov)l.amt=Q.amt;if(!l.gov&&r)l.g=r2(num(r.dep)*(num(l.qty)||1))}
+function tot(b){const rent=r2((b.lines||[]).reduce((a,l)=>a+num(l.amt),0)),ext=r2((b.ext||[]).reduce((a,x)=>a+num(x.amt),0)),disc=num(b.disc),total=r2(rent+ext-disc);
+  const P=b.pays||[],sum=k=>r2(P.filter(p=>p.k===k).reduce((a,p)=>a+num(p.amt),0));const paid=r2(sum("pay")-sum("ref"));
+  const guar=r2((b.lines||[]).reduce((a,l)=>a+num(l.g),0)),held=r2(sum("g")-sum("gr")-sum("gx"));
+  return{rent,ext,disc,total,paid,bal:r2(total-paid),guar,held}}
+function when(v,r){if(!v)return"";return r&&r.kind==="hour"?thDs(v)+" "+v.slice(11,16):thD(v)}
+function lineTxt(l){const r=rOf(l.rid);if(!r)return"-";const Kd=KIND[r.kind];
+  if(r.kind==="hour")return`${thD(l.s)} ${l.s.slice(11,16)}–${(l.e||"").slice(11,16)} น.`;
+  return`${Kd.s} ${thDs(l.s)} – ${Kd.e} ${thD(l.e)}`}
+function resTxt(b){return(b.lines||[]).map(l=>{const r=rOf(l.rid);return r?esc(r.name)+(num(l.qty)>1?" ×"+l.qty:""):"-"}).join(", ")}
+function nextNo(){const p=(cfg.prefix||"BK").replace(/[^A-Za-z]/g,"").slice(0,4)||"BK",ym=today().slice(2,7).replace("-",""),k=p+ym+"-";let m=0;list.forEach(b=>{if(String(b.no).startsWith(k))m=Math.max(m,parseInt(String(b.no).slice(k.length),10)||0)});return k+String(m+1).padStart(3,"0")}
+
+/* ---------- ระบบร้านค้า ---------- */
+function tell(v){if(EMB){try{window.parent.postMessage({edm:"go",tool:"booking",hash:"v="+v,quiet:1},location.origin)}catch(e){}}}
+function goBill(hash){if(EMB){try{window.parent.postMessage({edm:"go",tool:"bill",hash:hash,open:1},location.origin)}catch(e){}}else location.href="/bill/#"+hash}
+function seller(){return LS.get("edm_bill_seller",{})||{}}
+
+/* ---------- เปลี่ยนหน้า ---------- */
+const VIEWS=["home","cal","list","res","rpt","set"];
+function render(){const v=VIEWS.includes(ui.v)?ui.v:"home";$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  ({home:vHome,cal:vCal,list:vList,res:vRes,rpt:vRpt,set:vSet})[v]();custDL()}
+function show(v,quiet){ui.v=v;saveUi();render();scrollTo(0,0);if(!quiet)tell(v)}
+$("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b)show(b.dataset.v)};
+window.edmBookView=v=>{if(!VIEWS.includes(v))return;load();ui.v=v;saveUi();render();scrollTo(0,0)};
+document.addEventListener("click",e=>{const g=e.target.closest("[data-gv]");if(g){e.preventDefault();show(g.dataset.gv)}
+  const o=e.target.closest("[data-ob]");if(o&&!e.target.closest("button:not([data-ob]),a")){openBk(o.dataset.ob)}
+  const n=e.target.closest("[data-nb]");if(n){e.preventDefault();newBk(n.dataset.nb?JSON.parse(n.dataset.nb):{})}});
+function custDL(){const cs=LS.get("edm_bill_customers",[])||[];$("#custList").innerHTML=cs.slice(0,200).map(c=>`<option value="${esc(c.name)}">${esc(c.contact||"")}</option>`).join("")}
+
+/* ---------- หน้าภาพรวม ---------- */
+function vHome(){const V=$("#view"),t=today(),nw=nowT();
+  if(!res.length){V.innerHTML=`<div class="hello"><h1>📅 ระบบจองและให้เช่า</h1><p>จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า ระบบเช็กว่างให้ ไม่จองซ้อน และส่งต่อไปเปิดบิลได้ทันที</p></div>
+    <div class="card"><h2>เริ่มต้นใน 3 ขั้นตอน</h2><div class="hint">1) เพิ่มห้องหรืออุปกรณ์ที่ให้เช่า พร้อมราคา &nbsp;·&nbsp; 2) กด "＋ จองใหม่" ระบบแสดงเฉพาะที่ว่างและคิดราคาให้ &nbsp;·&nbsp; 3) เช็คอิน/รับคืน แล้วกดออกบิล ยอดเข้ารายงานรายรับและภาษีอัตโนมัติ</div>
+    <b>ธุรกิจของคุณให้เช่าแบบไหน? (เลือกเพื่อเพิ่มรายการแรก)</b>
+    <div class="kinds">${KO.map(k=>`<button type="button" data-addres="${k}" class="edm-lock"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}</div>
+    <div class="acts"><button class="btn ghost" id="demoB" type="button">✨ ลองใส่ข้อมูลตัวอย่าง</button><span class="note">ข้อมูลตัวอย่างใส่เฉพาะระบบจอง ลบทิ้งได้ที่หน้าตั้งค่า</span></div></div>`;
+    $$("[data-addres]").forEach(b=>b.onclick=()=>resDlg(null,b.dataset.addres));$("#demoB").onclick=demo;return}
+  const A=list.filter(ACT);
+  const arr=A.filter(b=>(b.st==="hold"||b.st==="conf")&&bStart(b).slice(0,10)<=t).sort((a,b)=>bStart(a).localeCompare(bStart(b)));
+  const dep=A.filter(b=>b.st==="in"&&(bEnd(b).length>10?bEnd(b)<=nw.slice(0,10)+"T23:59":bEnd(b)<=t)).sort((a,b)=>bEnd(a).localeCompare(bEnd(b)));
+  const late=A.filter(isLate);
+  const inn=A.filter(b=>b.st==="in");
+  const nightR=res.filter(r=>r.kind==="night"&&r.active!==false);let cap=0,used=0;nightR.forEach(r=>{cap+=num(r.qty)||1;used+=usage(r.id,dn(t),dn(t)+1,"").max});
+  let due=0,dueN=0,held=0;list.forEach(b=>{const T=tot(b);if(ACT(b)&&T.bal>0.009&&!bills(b).length){due+=T.bal;dueN++}if(T.held>0.009)held+=T.held});
+  const up=A.filter(b=>(b.st==="hold"||b.st==="conf")&&bStart(b).slice(0,10)>t&&bStart(b).slice(0,10)<=addDays(t,7)).sort((a,b)=>bStart(a).localeCompare(bStart(b)));
+  const hold=A.filter(b=>b.st==="hold");
+  const shop=seller().name;
+  V.innerHTML=`<div class="hello"><h1>📅 ภาพรวมการจอง${shop?" · "+esc(shop):""}</h1><p>วัน${["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"][dow(t)]}ที่ ${thD(t)} · เวลาเช็คอิน ${esc(cfg.ci)} น. · เช็คเอาท์ ${esc(cfg.co)} น.</p></div>
+  <div class="kpis">
+    <button class="kpi" data-gv="list"><span>ต้องเช็คอิน / ส่งมอบวันนี้</span><b>${arr.length} รายการ</b><small>${hold.length?"รอมัดจำ "+hold.length+" ใบ":"ยืนยันครบแล้ว"}</small></button>
+    <button class="kpi ${late.length?"bad":""}" data-gv="list"><span>ต้องเช็คเอาท์ / รับคืนวันนี้</span><b>${dep.length} รายการ</b><small>${late.length?"⚠️ เกินกำหนด "+late.length+" รายการ":"ใช้งานอยู่ "+inn.length+" รายการ"}</small></button>
+    <button class="kpi" data-gv="cal"><span>ห้องว่างคืนนี้</span><b>${nightR.length?fmt0(cap-used)+" / "+fmt0(cap):"-"}</b><small>${nightR.length?"เข้าพัก "+(cap?Math.round(used/cap*100):0)+"%":"ยังไม่มีห้องพัก"}</small></button>
+    <button class="kpi ${due>0?"warn":""}" data-gv="list"><span>ยอดค้างชำระ (ยังไม่ออกบิล)</span><b>฿${fmt0(due)}</b><small>${dueN} ใบจอง · ค่าประกันที่ถืออยู่ ฿${fmt0(held)}</small></button>
+  </div>
+  <div class="qa-row"><button class="main edm-lock" data-nb=""><i>＋</i>จองใหม่</button><button data-gv="cal"><i>📅</i>ดูปฏิทิน</button><button data-gv="list"><i>📋</i>รายการจอง</button><button data-gv="res"><i>🏷️</i>ห้อง / อุปกรณ์</button></div>
+  <div class="grid2">
+    <div class="card"><h2>เข้า / ส่งมอบวันนี้ <small>${arr.length} รายการ</small></h2><div>${arr.length?arr.map(b=>liAct(b,"in")).join(""):`<div class="empty">ไม่มีรายการที่ต้องเช็คอินหรือส่งมอบ</div>`}</div></div>
+    <div class="card"><h2>ออก / รับคืนวันนี้ <small>${dep.length} รายการ</small></h2><div>${dep.length?dep.map(b=>liAct(b,"out")).join(""):`<div class="empty">ไม่มีรายการที่ต้องเช็คเอาท์หรือรับคืน</div>`}</div></div>
+  </div>
+  <div class="card"><h2>7 วันข้างหน้า <small>${up.length} ใบจอง</small></h2><div>${up.length?up.map(b=>liAct(b,"")).join(""):`<div class="empty">ยังไม่มีการจองในสัปดาห์หน้า</div>`}</div></div>`;
+  $$("[data-act]").forEach(x=>x.onclick=e=>{e.stopPropagation();const b=list.find(y=>y.id===x.dataset.id);if(!b)return;openBk(b.id);if(x.dataset.act==="in")setTimeout(()=>doIn(),30);else if(x.dataset.act==="out")setTimeout(()=>retDlg(),30)})}
+function liAct(b,a){const T=tot(b),k=KIND[bKind(b)];
+  return`<div class="li click" data-ob="${b.id}"><div><b>${esc(b.cust.name||"-")}</b> ${stPill(b)}<small>${esc(b.no)} · ${resTxt(b)}</small><small>${(b.lines||[]).map(lineTxt).filter((x,i,A)=>A.indexOf(x)===i).join(" · ")}</small></div>
+  <div class="r">${T.bal>0.009?`<small style="color:var(--danger)">ค้าง ฿${fm(T.bal)}</small>`:""}${a==="in"?`<button class="btn sm main edm-lock" data-act="in" data-id="${b.id}">${k.in}</button>`:a==="out"?`<button class="btn sm blue edm-lock" data-act="out" data-id="${b.id}">${k.out}</button>`:""}</div></div>`}
+
+/* ---------- ปฏิทิน ---------- */
+function vCal(){const V=$("#view"),t=today();if(!ui.cs)ui.cs=addDays(t,-1);const n=+ui.span||14,s0=ui.cs;
+  const kinds=KO.filter(kOn);const R=res.filter(r=>r.active!==false&&(ui.kf==="all"||r.kind===ui.kf)&&kOn(r.kind));
+  const days=[];for(let i=0;i<n;i++)days.push(addDays(s0,i));
+  let h=`<div class="corner hd"></div>`+days.map(d=>`<div class="hd ${d===t?"td":dow(d)===0||dow(d)===6?"we":""}"><small>${DW[dow(d)]}</small>${+d.slice(8)}<small>${+d.slice(8)===1||d===days[0]?MS[+d.slice(5,7)-1]:""}</small></div>`).join("");
+  KO.forEach(k=>{const RR=R.filter(r=>r.kind===k);if(!RR.length)return;h+=`<div class="gh">${KIND[k].ic} ${KIND[k].n}</div>`;
+    RR.forEach(r=>{const cap=num(r.qty)||1;h+=`<div class="rn" data-er="${r.id}">${esc(r.name)}<small>${r.cat?esc(r.cat)+" · ":""}${cap>1?cap+" "+esc(r.unit||KIND[k].unit)+" · ":""}฿${fm(num(r.rate))}/${KIND[k].u}</small></div>`;
+      if(k==="night"&&cap===1){let prev=null;days.forEach((d,i)=>{const hit=cover(r,d);const cls=(d<t?" past":"")+(dow(d)===0||dow(d)===6?" we":"");
+          if(hit){const b=hit.b,nx=i<n-1?cover(r,days[i+1]):null,bs=!prev||prev.b.id!==b.id,be=!nx||nx.b.id!==b.id;h+=`<div class="c bar ${b.st}${bs?" bs":""}${be?" be":""}" data-ob="${b.id}" title="${esc(b.no+" · "+b.cust.name+" · "+stName(b))}">${bs?`<span>${esc(b.cust.name||b.no)}</span>`:""}</div>`;prev=hit}
+          else{h+=`<div class="c${cls} edm-lock" data-nb='${esc(JSON.stringify({rid:r.id,s:d}))}'></div>`;prev=null}})}
+      else days.forEach(d=>{const cls=(d<t?" past":"")+(dow(d)===0||dow(d)===6?" we":"");
+        if(k==="hour"){const L=dayLines(r,d);const q=L.length;h+=`<div class="c cnt${q?" part":" free"}${cls}" data-day='${esc(JSON.stringify({rid:r.id,d}))}'>${q?q+" รอบ":"·"}</div>`}
+        else{const u=usage(r.id,dn(d),dn(d)+1,"").max,fr=cap-u;h+=`<div class="c cnt ${fr<=0?"full":u>0?"part":"free"}${cls}" data-day='${esc(JSON.stringify({rid:r.id,d}))}' title="ว่าง ${fr} จาก ${cap}">${fr<=0?"เต็ม":fr}</div>`}})})});
+  const e1=addDays(s0,n-1);
+  V.innerHTML=`<div class="hello"><h1>📅 ปฏิทินห้อง / อุปกรณ์</h1><p>กดช่องว่างเพื่อจอง · กดแถบสีเพื่อเปิดใบจอง · ช่องตัวเลข = จำนวนที่ยังว่างในวันนั้น</p></div>
+  <div class="card"><div class="tools"><button class="btn sm ghost" id="cPrev">◀</button><input class="in-" type="date" id="cStart" value="${s0}" style="max-width:170px;flex:0 1 170px"><button class="btn sm ghost" id="cNext">▶</button><button class="btn sm ghost" id="cToday">วันนี้</button>
+    <div class="seg" id="cSpan" style="flex:0 0 auto">${[7,14,31].map(x=>`<button data-n="${x}" class="${n===x?"on":""}">${x} วัน</button>`).join("")}</div>
+    ${kinds.length>1?`<div class="seg" id="cKind" style="flex:0 0 auto"><button data-k="all" class="${ui.kf==="all"?"on":""}">ทั้งหมด</button>${kinds.map(k=>`<button data-k="${k}" class="${ui.kf===k?"on":""}">${KIND[k].ic}</button>`).join("")}</div>`:""}
+    <span class="grow"></span><button class="btn sm main edm-lock" data-nb="">＋ จองใหม่</button></div>
+    <div class="note">${thD(s0)} – ${thD(e1)}</div>
+    ${R.length?`<div class="calwrap"><div class="cal" style="--n:${n}">${h}</div></div>
+    <div class="legend"><span><i style="background:#C8901A"></i>จองไว้ (รอมัดจำ)</span><span><i style="background:#2F66C9"></i>ยืนยันแล้ว</span><span><i style="background:#127A4B"></i>เข้าพัก / ใช้งานอยู่</span><span><i style="background:#7C8691"></i>ออกแล้ว</span><span><i style="background:var(--dangerbg)"></i>เต็ม</span></div>`
+    :`<div class="empty">ยังไม่มีห้องหรืออุปกรณ์${ui.kf!=="all"?"ในประเภทนี้":""}<button class="btn main" data-gv="res">เพิ่มห้อง / อุปกรณ์</button></div>`}</div>`;
+  const setS=s=>{ui.cs=s;vCal()};
+  $("#cPrev").onclick=()=>setS(addDays(s0,-Math.max(7,Math.round(n/2))));$("#cNext").onclick=()=>setS(addDays(s0,Math.max(7,Math.round(n/2))));$("#cToday").onclick=()=>setS(addDays(t,-1));
+  $("#cStart").onchange=e=>{if(okD(e.target.value))setS(e.target.value)};
+  $("#cSpan").onclick=e=>{const b=e.target.closest("[data-n]");if(b){ui.span=+b.dataset.n;saveUi();vCal()}};
+  if($("#cKind"))$("#cKind").onclick=e=>{const b=e.target.closest("[data-k]");if(b){ui.kf=b.dataset.k;saveUi();vCal()}};
+  $$("[data-day]").forEach(x=>x.onclick=()=>{const o=JSON.parse(x.dataset.day);dayDlg(o.rid,o.d)});
+  $$("[data-er]").forEach(x=>x.onclick=()=>resDlg(x.dataset.er))}
+function cover(r,d){const x=dn(d);for(const b of list){if(!ACT(b))continue;for(const l of b.lines||[]){if(l.rid!==r.id||!okLine(l,r))continue;const[a,z]=span(l,r,b);if(a<=x&&x<z)return{b,l}}}return null}
+function dayLines(r,d){const o=[],x=dn(d);list.forEach(b=>{if(!ACT(b))return;(b.lines||[]).forEach(l=>{if(l.rid!==r.id||!okLine(l,r))return;if(r.kind==="hour"){if(l.s.slice(0,10)===d)o.push({b,l})}else{const[a,z]=span(l,r,b);if(a<=x&&x<z)o.push({b,l})}})});return o.sort((p,q)=>p.l.s.localeCompare(q.l.s))}
+function dayDlg(rid,d){const r=rOf(rid);if(!r)return;const L=dayLines(r,d),cap=num(r.qty)||1;
+  openDlg(`${KIND[r.kind].ic} ${r.name} · ${thD(d)}`,`<div class="db">${r.kind==="hour"?`<div class="hint">ช่วงเวลาที่ถูกจองแล้ว${num(cfg.buf)?` (เผื่อเวลาเตรียมห้อง ${num(cfg.buf)} นาที)`:""}</div>`:`<div class="hint">มีทั้งหมด ${cap} ${esc(r.unit||KIND[r.kind].unit)} · ว่างวันนี้ ${Math.max(0,cap-usage(r.id,dn(d),dn(d)+1,"").max)}</div>`}
+    <div>${L.length?L.map(({b,l})=>`<div class="li click" data-ob="${b.id}"><div><b>${r.kind==="hour"?l.s.slice(11,16)+"–"+l.e.slice(11,16)+" น. · ":""}${esc(b.cust.name||"-")}</b><small>${esc(b.no)}${num(l.qty)>1?" · "+l.qty+" "+esc(r.unit||KIND[r.kind].unit):""}${r.kind!=="hour"?" · "+lineTxt(l):""}</small></div><div class="r">${stPill(b)}</div></div>`).join(""):`<div class="empty">ยังไม่มีการจองในวันนี้</div>`}</div>
+    <div class="acts"><button class="btn main edm-lock" id="ddNew">＋ จอง${esc(r.name)}วันนี้</button></div></div>`,"sm");
+  $("#ddNew").onclick=()=>newBk({rid,s:d})}
+
+/* ---------- รายการจอง ---------- */
+function vList(){const V=$("#view"),t=today(),q=(ui.q||"").trim().toLowerCase();
+  const F={act:b=>b.st==="hold"||b.st==="conf"||b.st==="in",due:b=>ACT(b)&&tot(b).bal>0.009&&!bills(b).length,out:b=>b.st==="out",x:b=>b.st==="cancel"||b.st==="noshow",all:()=>true};
+  const f=F[ui.lf]||F.act;
+  let L=list.filter(f).filter(b=>!q||[b.no,b.cust.name,b.cust.contact,resTxt(b),b.note].some(x=>String(x||"").toLowerCase().includes(q)));
+  L.sort((a,b)=>ui.lf==="act"?bStart(a).localeCompare(bStart(b)):bStart(b).localeCompare(bStart(a)));
+  let sT=0,sB=0;L.forEach(b=>{const T=tot(b);sT+=T.total;if(!bills(b).length)sB+=Math.max(0,T.bal)});
+  const cnt=k=>list.filter(F[k]).length;
+  V.innerHTML=`<div class="hello"><h1>📋 รายการจอง</h1><p>ค้นหาด้วยเลขที่ ชื่อลูกค้า เบอร์โทร หรือชื่อห้อง/อุปกรณ์ · กดแถวเพื่อเปิดใบจอง</p></div>
+  <div class="card"><div class="tools"><div class="seg" id="lf" style="flex:1 1 auto">${[["act","กำลังดำเนินการ"],["due","ค้างชำระ"],["out","เสร็จแล้ว"],["x","ยกเลิก / ไม่มา"],["all","ทั้งหมด"]].map(([k,n])=>`<button data-k="${k}" class="${ui.lf===k?"on":""}">${n} (${cnt(k)})</button>`).join("")}</div></div>
+    <div class="tools"><input class="in-" id="lq" placeholder="🔎 ค้นหา" value="${esc(ui.q||"")}"><button class="btn main edm-lock" data-nb="">＋ จองใหม่</button></div>
+    ${L.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>เลขที่ / ลูกค้า</th><th>รายการ</th><th>วันที่</th><th class="r">ยอดรวม</th><th class="r">ค้างชำระ</th><th>สถานะ</th></tr></thead><tbody>
+    ${L.map(b=>{const T=tot(b),bl=bills(b);return`<tr class="click" data-ob="${b.id}"><td><b>${esc(b.cust.name||"-")}</b><span class="sub">${esc(b.no)}${b.cust.contact?" · "+esc(b.cust.contact):""}</span></td><td>${resTxt(b)}<span class="sub">${esc(CH[b.ch]||"")}</span></td><td style="white-space:nowrap">${(b.lines||[]).slice(0,2).map(lineTxt).join("<br>")}</td><td class="r">${fm(T.total)}</td><td class="r" style="${T.bal>0.009&&!bl.length?"color:var(--danger);font-weight:700":""}">${bl.length?"-":fm(Math.max(0,T.bal))}</td><td>${stPill(b)}${bl.length?` <span class="pill p-bill">🧾 ${esc(bl[0].no)}</span>`:""}</td></tr>`}).join("")}
+    </tbody><tfoot><tr><td colspan="3">${L.length} ใบจอง</td><td class="r">${fm(sT)}</td><td class="r">${fm(sB)}</td><td></td></tr></tfoot></table></div>`:`<div class="empty">ไม่พบใบจอง${q?" ที่ค้นหา":""}</div>`}</div>`;
+  $("#lf").onclick=e=>{const b=e.target.closest("[data-k]");if(b){ui.lf=b.dataset.k;saveUi();vList()}};
+  const lq=$("#lq");lq.oninput=()=>{ui.q=lq.value;clearTimeout(vList.t);vList.t=setTimeout(()=>{vList();const x=$("#lq");x.focus();x.setSelectionRange(x.value.length,x.value.length)},250)}}
+
+/* ---------- ห้อง / อุปกรณ์ ---------- */
+function vRes(){const V=$("#view");const ks=KO.filter(kOn);
+  V.innerHTML=`<div class="hello"><h1>🏷️ ห้อง / อุปกรณ์ให้เช่า</h1><p>ตั้งราคา จำนวน และค่าประกันของแต่ละรายการ · ห้องที่เหมือนกันหลายห้องจะแยกทีละห้อง หรือรวมเป็นประเภทห้องพร้อมจำนวนก็ได้</p></div>
+  ${ks.map(k=>{const R=res.filter(r=>r.kind===k);const Kd=KIND[k];return`<div class="card"><h2>${Kd.ic} ${Kd.n} <span class="acts"><small>${R.length} รายการ</small><button class="btn sm main edm-lock" data-addres="${k}">＋ เพิ่ม</button></span></h2>
+    ${R.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>ชื่อ</th><th>หมวด</th><th class="r">จำนวน</th><th class="r">ราคา/${Kd.u}</th><th class="r">${k==="night"?"คืนศุกร์-เสาร์":k==="hour"?"เสาร์-อาทิตย์":"ราคา/สัปดาห์"}</th><th class="r">ค่าประกัน</th><th>สถานะ</th></tr></thead><tbody>
+    ${R.map(r=>`<tr class="click" data-er="${r.id}"><td><b>${esc(r.name)}</b>${r.note?`<span class="sub">${esc(r.note)}</span>`:""}</td><td>${esc(r.cat||"")}</td><td class="r">${fmt0(num(r.qty)||1)} ${esc(r.unit||Kd.unit)}</td><td class="r">${fm(num(r.rate))}</td><td class="r">${k==="item"?(num(r.rate7)?fm(num(r.rate7)):"-"):(num(r.rateWe)?fm(num(r.rateWe)):"-")}</td><td class="r">${num(r.dep)?fm(num(r.dep)):"-"}</td><td>${r.active===false?`<span class="pill p-x">ปิดใช้</span>`:`<span class="pill p-in">เปิดจอง</span>`}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีรายการ เช่น ${Kd.ex}</div>`}</div>`}).join("")}
+  ${ks.length<3?`<div class="note">ซ่อนประเภท ${KO.filter(k=>!kOn(k)).map(k=>KIND[k].n).join(", ")} ไว้ · เปิดได้ที่หน้าตั้งค่า</div>`:""}`;
+  $$("[data-addres]").forEach(b=>b.onclick=()=>resDlg(null,b.dataset.addres));$$("[data-er]").forEach(x=>x.onclick=()=>resDlg(x.dataset.er))}
+function resDlg(id,kind){const old=id?rOf(id):null;const r=old?Object.assign({},old):{id:uid("r"),kind:kind||"night",name:"",cat:"",qty:1,rate:"",rateWe:"",rate7:"",dep:"",unit:"",note:"",active:true};
+  const draw=()=>{const Kd=KIND[r.kind];
+  openDlg(old?"แก้ไข "+old.name:"เพิ่ม"+Kd.n,`<div class="db">
+    ${old?"":`<div class="kinds">${KO.map(k=>`<button type="button" data-k="${k}" class="${r.kind===k?"on":""}"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}</div>`}
+    <div class="row"><div class="f"><label>ชื่อ${r.kind==="item"?"อุปกรณ์":"ห้อง / สถานที่"} *</label><input class="in-" id="rN" value="${esc(r.name)}" placeholder="${r.kind==="night"?"เช่น ห้อง 101 Deluxe":r.kind==="hour"?"เช่น ห้องประชุม A":"เช่น กล้อง Canon EOS R6"}"></div>
+      <div class="f"><label>หมวด / ประเภท</label><input class="in-" id="rC" value="${esc(r.cat||"")}" placeholder="${r.kind==="night"?"เช่น Deluxe, Family":r.kind==="hour"?"เช่น ห้องประชุม, สนาม":"เช่น กล้อง, แคมป์ปิ้ง"}"></div></div>
+    <div class="row3"><div class="f"><label>${r.kind==="item"?"จำนวนที่มี":"จำนวน (ห้องเหมือนกัน)"}</label><input class="in- r" id="rQ" inputmode="numeric" value="${esc(r.qty||1)}"></div>
+      <div class="f"><label>หน่วย</label><input class="in-" id="rU" value="${esc(r.unit||"")}" placeholder="${Kd.unit}"></div>
+      <div class="f"><label>ค่าประกัน / ${esc(r.unit||Kd.unit)}</label><input class="in- r" id="rD" inputmode="decimal" value="${esc(r.dep||"")}" placeholder="0"></div></div>
+    <div class="row"><div class="f"><label>ราคาต่อ${Kd.u} *</label><input class="in- r" id="rR" inputmode="decimal" value="${esc(r.rate||"")}" placeholder="0"></div>
+      ${r.kind==="item"?`<div class="f"><label>ราคาเหมาสัปดาห์ (7 วัน) ไม่บังคับ</label><input class="in- r" id="r7" inputmode="decimal" value="${esc(r.rate7||"")}" placeholder="ไม่มี"></div>`
+      :`<div class="f"><label>${r.kind==="night"?"ราคาคืนวันหยุด (ตามที่ตั้งค่า)":"ราคาวันเสาร์-อาทิตย์"} ไม่บังคับ</label><input class="in- r" id="rW" inputmode="decimal" value="${esc(r.rateWe||"")}" placeholder="ใช้ราคาปกติ"></div>`}</div>
+    <div class="f"><label>รายละเอียด (แสดงในใบยืนยัน)</label><input class="in-" id="rT" value="${esc(r.note||"")}" placeholder="${r.kind==="night"?"เช่น เตียงคิง 2 ท่าน รวมอาหารเช้า":r.kind==="hour"?"เช่น จุ 20 คน มีโปรเจกเตอร์":"เช่น พร้อมเลนส์ 24-105 และแบต 2 ก้อน"}"></div>
+    <label class="ck"><input type="checkbox" id="rA" ${r.active!==false?"checked":""}> เปิดให้จอง</label>
+    <div class="acts"><button class="btn main edm-lock" id="rSave">บันทึก</button>${old?`<button class="btn ghost danger" id="rDel">ลบ</button>`:""}</div></div>`,"sm");
+  $$("#dlgBody .kinds [data-k]").forEach(b=>b.onclick=()=>{grab();r.kind=b.dataset.k;draw()});
+  const grab=()=>{r.name=$("#rN").value.trim();r.cat=$("#rC").value.trim();r.qty=Math.max(1,Math.round(num($("#rQ").value))||1);r.unit=$("#rU").value.trim();r.dep=num($("#rD").value)||"";r.rate=num($("#rR").value)||"";if($("#rW"))r.rateWe=num($("#rW").value)||"";if($("#r7"))r.rate7=num($("#r7").value)||"";r.note=$("#rT").value.trim();r.active=$("#rA").checked};
+  $("#rSave").onclick=()=>{grab();if(!r.name)return toast("ใส่ชื่อก่อน");if(!num(r.rate)&&!confirm("ยังไม่ได้ใส่ราคา บันทึกเป็นราคา 0 บาท?"))return;
+    if(old&&(num(old.qty)||1)>r.qty){const over=list.some(b=>ACT(b)&&b.st!=="out"&&(b.lines||[]).some(l=>l.rid===r.id&&usage(r.id,...span(l,old,b),"").max>r.qty));if(over&&!confirm("มีการจองที่ใช้เกินจำนวนใหม่อยู่ ยืนยันลดจำนวน?"))return}
+    const i=res.findIndex(x=>x.id===r.id);if(i>=0)res[i]=r;else res.push(r);if(saveRes()){closeDlg();toast("บันทึกแล้ว ✓");render()}};
+  if($("#rDel"))$("#rDel").onclick=()=>{const used=list.some(b=>(b.lines||[]).some(l=>l.rid===r.id));if(used){if(confirm("รายการนี้มีประวัติการจองอยู่ จึงลบไม่ได้\nปิดการจองแทน (ข้อมูลเดิมยังอยู่ครบ)?")){old.active=false;saveRes();closeDlg();render()}return}
+    if(!confirm("ลบ "+old.name+"?"))return;res=res.filter(x=>x.id!==r.id);saveRes();closeDlg();render()};
+  setTimeout(()=>{const n=$("#rN");if(n&&!old)n.focus()},50)};
+  draw()}
+
+/* ---------- ใบจอง ---------- */
+let cur=null,isNew=false;
+function blankLine(p){const r=rOf(p.rid)||res.find(x=>x.active!==false&&kOn(x.kind));const l={rid:r?r.id:"",qty:1,s:"",e:"",amt:0,n:0,ov:false,g:0,gov:false};setDates(l,r,p.s);upd(l);return l}
+function setDates(l,r,s){const t=s||today();if(!r){l.s=t;l.e=addDays(t,1);return}
+  if(r.kind==="hour"){const d=new Date();let h=t===today()?Math.min(22,d.getHours()+1):9;l.s=t+"T"+pad(h)+":00";l.e=t+"T"+pad(Math.min(23,h+1))+":00"}
+  else{l.s=t;l.e=addDays(t,1)}}
+function newBk(p){if(!res.some(r=>r.active!==false)){toast("เพิ่มห้องหรืออุปกรณ์ก่อน");show("res");return}
+  cur={id:uid("b"),no:"",date:today(),cust:{name:"",contact:"",addr:"",tax:"",branch:""},ch:"walkin",guests:"",st:"hold",lines:[blankLine(p||{})],ext:[],disc:0,pays:[],note:""};isNew=true;drawBk()}
+function openBk(id){const b=list.find(x=>x.id===id);if(!b)return toast("ไม่พบใบจอง");cur=JSON.parse(JSON.stringify(b));cur.ext=cur.ext||[];cur.pays=cur.pays||[];isNew=false;drawBk()}
+function resOpts(sel){return KO.filter(k=>kOn(k)||res.some(r=>r.id===sel&&r.kind===k)).map(k=>{const R=res.filter(r=>r.kind===k&&(r.active!==false||r.id===sel));return R.length?`<optgroup label="${KIND[k].ic} ${KIND[k].n}">${R.map(r=>`<option value="${r.id}" ${r.id===sel?"selected":""}>${esc(r.name)}${num(r.qty)>1?" ("+r.qty+" "+esc(r.unit||KIND[k].unit)+")":""} · ฿${fm(num(r.rate))}/${KIND[k].u}</option>`).join("")}</optgroup>`:""}).join("")}
+function lineHtml(l,i){const r=rOf(l.rid),k=r?r.kind:"night",Kd=KIND[k],cap=r?num(r.qty)||1:1,lock=cur.st==="out";
+  const dates=k==="hour"?`<div class="dates h"><div class="f"><label>วันที่</label><input class="in-" type="date" data-i="${i}" data-f="hd" value="${esc((l.s||"").slice(0,10))}" ${lock?"disabled":""}></div><div class="f"><label>เริ่ม</label><input class="in-" type="time" step="900" data-i="${i}" data-f="hs" value="${esc((l.s||"").slice(11,16))}" ${lock?"disabled":""}></div><div class="f"><label>ถึง</label><input class="in-" type="time" step="900" data-i="${i}" data-f="he" value="${esc((l.e||"").slice(11,16))}" ${lock?"disabled":""}></div></div>`
+    :`<div class="dates"><div class="f"><label>${Kd.s}${k==="night"?" ("+esc(cfg.ci)+" น.)":""}</label><input class="in-" type="date" data-i="${i}" data-f="s" value="${esc(l.s)}" ${lock?"disabled":""}></div><div class="f"><label>${Kd.e}${k==="night"?" ("+esc(cfg.co)+" น.)":""}</label><input class="in-" type="date" data-i="${i}" data-f="e" value="${esc(l.e)}" ${lock?"disabled":""}></div></div>`;
+  return`<div class="bl" id="bl${i}"><div class="top ${cap>1?"":"noq"}"><div class="f"><label>${Kd.ic} ห้อง / อุปกรณ์</label><select class="in-" data-i="${i}" data-f="rid" ${lock?"disabled":""}>${r?"":`<option value="">— เลือก —</option>`}${resOpts(l.rid)}</select></div>
+    ${cap>1?`<div class="f"><label>จำนวน</label><input class="in- r" inputmode="numeric" data-i="${i}" data-f="qty" value="${esc(l.qty)}" ${lock?"disabled":""}></div>`:""}
+    ${cur.lines.length>1&&!lock?`<button class="x" type="button" data-rm="${i}" aria-label="ลบรายการ">✕</button>`:""}</div>
+    ${dates}
+    <div class="bot"><div class="av" id="av${i}"></div><div class="f"><label>ค่าเช่า <span id="ln${i}"></span></label><input class="in- r ${l.ov?"ov":""}" inputmode="decimal" data-i="${i}" data-f="amt" id="la${i}" value="${esc(l.amt)}" title="แก้ราคาเองได้"></div><div class="f"><label>ค่าประกัน</label><input class="in- r" inputmode="decimal" data-i="${i}" data-f="g" id="lg${i}" value="${esc(l.g||0)}"></div></div>
+    ${l.ae?`<div class="note">${cur.st==="out"?"คืน/ออกจริง":"บันทึกคืน"}: ${when(l.ae,r)}</div>`:""}</div>`}
+function drawBk(){const b=cur,Kd=KIND[bKind(b)],T=tot(b),bl=isNew?[]:bills(b),act=ACT(b),dep=r2(T.total*num(cfg.depPct)/100);
+  const title=isNew?"＋ จองใหม่":`ใบจอง ${b.no}`;
+  const pays=b.pays.map((p,i)=>`<div class="li"><div><b>${esc(PK[p.k]||p.k)}</b><small>${thD(p.date)} · ${esc(p.m||"")}${p.n?" · "+esc(p.n):""}</small></div><div class="r"><b style="color:${p.k==="ref"||p.k==="gr"?"var(--danger)":"var(--accent)"}">${p.k==="ref"||p.k==="gr"?"−":""}฿${fm(num(p.amt))}</b><button class="btn sm ghost" data-rp="${i}" aria-label="ลบ">✕</button></div></div>`).join("");
+  let acts="";
+  if(b.st==="hold")acts+=`<button class="btn blue edm-lock" data-a="conf">✅ ยืนยันการจอง</button>`;
+  if(b.st==="hold"||b.st==="conf")acts+=`<button class="btn main edm-lock" data-a="in">${Kd.in}</button>`;
+  if(b.st==="in")acts+=`<button class="btn blue edm-lock" data-a="out">${Kd.out}</button>`;
+  if(!isNew&&(b.st==="out"||((b.st==="cancel"||b.st==="noshow")&&T.paid>0.009))&&!bl.length)acts+=`<button class="btn main edm-lock" data-a="bill">🧾 ออกบิล</button>`;
+  openDlg(title,`<div class="db">
+    ${isNew?"":`<div class="chips">${stPill(b)}<span class="note">สร้าง ${thD(b.date)} · ${esc(CH[b.ch]||"")}</span>${bl.map(d=>`<button class="chip" data-bill="${d.id}">🧾 ${esc(d.no)}</button>`).join("")}</div>`}
+    ${bl.length?`<div class="hint">ออกบิลแล้ว · การแก้ใบจองจะไม่เปลี่ยนบิล ถ้าต้องแก้ยอดให้แก้ที่บิล</div>`:""}
+    <div class="sec"><h3>👤 ลูกค้า</h3>
+      <div class="row"><div class="f"><label>ชื่อลูกค้า / บริษัท *</label><input class="in-" id="cN" list="custList" autocomplete="off" value="${esc(b.cust.name)}"></div><div class="f"><label>โทร / LINE</label><input class="in-" id="cP" value="${esc(b.cust.contact||"")}"></div></div>
+      <div class="row3"><div class="f"><label>ช่องทางการจอง</label><select class="in-" id="cCh">${Object.entries(CH).map(([k,n])=>`<option value="${k}" ${b.ch===k?"selected":""}>${n}</option>`).join("")}</select></div>
+        <div class="f"><label>${bKind(b)==="item"?"ผู้รับของ / หมายเหตุ":"จำนวนผู้เข้าพัก / ผู้ใช้"}</label><input class="in-" id="cG" value="${esc(b.guests||"")}" placeholder="${bKind(b)==="item"?"":"เช่น 2 ผู้ใหญ่ 1 เด็ก"}"></div>
+        <div class="f more"><label>&nbsp;</label><button class="btn ghost" type="button" id="cMore">${b.cust.addr||b.cust.tax?"ที่อยู่ / เลขภาษี ✓":"＋ ที่อยู่ / เลขภาษี (ออกใบกำกับ)"}</button></div></div>
+      <div id="cMoreBox" ${b.cust.addr||b.cust.tax?"":"hidden"}><div class="row"><div class="f"><label>เลขประจำตัวผู้เสียภาษี</label><input class="in-" id="cT" value="${esc(b.cust.tax||"")}"></div><div class="f"><label>สาขา</label><input class="in-" id="cB" value="${esc(b.cust.branch||"")}"></div></div><div class="f" style="margin-top:8px"><label>ที่อยู่</label><textarea class="in-" id="cA" rows="2">${esc(b.cust.addr||"")}</textarea></div></div>
+    </div>
+    <div class="sec"><h3>📅 รายการจอง ${b.st!=="out"?`<button class="btn sm ghost" type="button" id="addL">＋ เพิ่มห้อง / อุปกรณ์</button>`:""}</h3>${b.lines.map(lineHtml).join("")}</div>
+    <div class="sec"><h3>➕ ค่าใช้จ่ายเพิ่ม / ส่วนลด <button class="btn sm ghost" type="button" id="addX">＋ เพิ่ม</button></h3>
+      ${b.ext.map((x,i)=>`<div class="exr"><input class="in-" data-x="${i}" data-f="d" value="${esc(x.d)}" placeholder="เช่น เตียงเสริม, ค่าทำความสะอาด, ค่าปรับ"><input class="in- r" inputmode="decimal" data-x="${i}" data-f="amt" value="${esc(x.amt)}" placeholder="0"><button class="btn sm ghost" type="button" data-rx="${i}">✕</button></div>`).join("")}
+      <div class="exr"><span class="note" style="text-align:right">ส่วนลด (บาท)</span><input class="in- r" inputmode="decimal" id="bD" value="${esc(b.disc||"")}" placeholder="0"><span style="width:40px"></span></div></div>
+    <div class="sum" id="sum"></div>
+    <div class="sec"><h3>💵 รับ-จ่ายเงิน</h3><div>${pays||`<div class="note">ยังไม่มีการรับเงิน</div>`}</div>
+      <div class="payf"><div class="f"><label>รายการ</label><select class="in-" id="pK">${Object.entries(PK).filter(([k])=>k!=="gx").map(([k,n])=>`<option value="${k}">${n}</option>`).join("")}</select></div>
+        <div class="f"><label>จำนวนเงิน</label><input class="in- r" inputmode="decimal" id="pA" placeholder="0"></div>
+        <div class="f"><label>วิธี</label><select class="in-" id="pM">${PM.filter(x=>x!=="หักค่าประกัน").map(m=>`<option>${m}</option>`).join("")}</select></div>
+        <div class="f"><label>วันที่</label><input class="in-" type="date" id="pD" value="${today()}"></div>
+        <button class="btn edm-lock" type="button" id="pAdd">＋ บันทึก</button></div>
+      <div class="chips" id="pQuick"></div></div>
+    <div class="sec"><h3>📝 หมายเหตุ</h3><textarea class="in-" id="bN" rows="2" placeholder="เช่น ขอห้องชั้นล่าง, มารับของเวลา 10 โมง">${esc(b.note||"")}</textarea></div>
+  </div>
+  <div class="foot"><button class="btn main edm-lock" data-a="save">💾 บันทึก</button>${acts}<span class="sp"></span>
+    ${isNew?"":`<button class="btn ghost" data-a="print">📄 ใบยืนยัน</button><button class="btn ghost" data-a="copy">💬 ข้อความ LINE</button>`}
+    ${!isNew&&(b.st==="hold"||b.st==="conf")?`<button class="btn ghost danger edm-lock" data-a="cancel">ยกเลิก</button><button class="btn ghost danger edm-lock" data-a="noshow">ไม่มา</button>`:""}
+    ${!isNew?`<button class="btn ghost danger edm-lock" data-a="del" aria-label="ลบใบจอง">🗑</button>`:""}</div>`,"bk");
+  wireBk();refresh()}
+function grabC(){const b=cur;if(!b||!$("#cN"))return;b.cust.name=$("#cN").value.trim();b.cust.contact=$("#cP").value.trim();b.ch=$("#cCh").value;b.guests=$("#cG").value.trim();
+  b.cust.tax=$("#cT").value.trim();b.cust.branch=$("#cB").value.trim();b.cust.addr=$("#cA").value.trim();b.disc=num($("#bD").value);b.note=$("#bN").value.trim()}
+function wireBk(){const D=$("#dlgBody"),b=cur;
+  $("#cMore").onclick=()=>{$("#cMoreBox").hidden=!$("#cMoreBox").hidden};
+  $("#cN").onchange=()=>{const c=(LS.get("edm_bill_customers",[])||[]).find(x=>x.name===$("#cN").value.trim());if(c){if(!$("#cP").value)$("#cP").value=c.contact||"";if(!$("#cA").value)$("#cA").value=c.addr||"";if(!$("#cT").value)$("#cT").value=c.tax||"";if(!$("#cB").value)$("#cB").value=c.branch||"";if(c.addr||c.tax)$("#cMoreBox").hidden=false}};
+  if($("#addL"))$("#addL").onclick=()=>{grabC();const last=b.lines[b.lines.length-1];const l=blankLine({});if(last&&rOf(last.rid)&&rOf(l.rid)&&rOf(last.rid).kind===rOf(l.rid).kind){l.s=last.s;l.e=last.e;upd(l)}b.lines.push(l);drawBk();const el=$("#bl"+(b.lines.length-1));if(el)el.scrollIntoView({block:"center"})};
+  $("#addX").onclick=()=>{grabC();b.ext.push({d:"",amt:""});drawBk()};
+  D.addEventListener("input",e=>{const x=e.target;if(x.dataset.i!=null){lineInput(x,false)}else if(x.dataset.x!=null){const o=b.ext[+x.dataset.x];o[x.dataset.f]=x.dataset.f==="amt"?x.value:x.value;refresh()}else if(x.id==="bD"){b.disc=num(x.value);refresh()}});
+  D.addEventListener("change",e=>{const x=e.target;if(x.dataset.i!=null)lineInput(x,true)});
+  D.addEventListener("click",e=>{const x=e.target.closest("[data-rm],[data-rx],[data-rp],[data-q],[data-bill],[data-reset]");if(!x)return;
+    if(x.dataset.rm!=null){grabC();b.lines.splice(+x.dataset.rm,1);drawBk()}
+    else if(x.dataset.rx!=null){grabC();b.ext.splice(+x.dataset.rx,1);drawBk()}
+    else if(x.dataset.rp!=null){if(!confirm("ลบรายการเงินนี้?"))return;grabC();b.pays.splice(+x.dataset.rp,1);drawBk()}
+    else if(x.dataset.q!=null){const o=JSON.parse(x.dataset.q);$("#pK").value=o.k;$("#pA").value=o.a;$("#pA").focus()}
+    else if(x.dataset.bill){closeDlg();goBill("open="+x.dataset.bill)}
+    else if(x.dataset.reset!=null){const l=b.lines[+x.dataset.reset];l.ov=false;upd(l);const a=$("#la"+x.dataset.reset);a.value=l.amt;a.classList.remove("ov");refresh()}});
+  $("#pAdd").onclick=()=>{const a=num($("#pA").value);if(a<=0)return toast("ใส่จำนวนเงิน");const d=$("#pD").value||today();b.pays.push({k:$("#pK").value,amt:a,m:$("#pM").value,date:d});grabC();
+    const st0=b.st;if(b.st==="hold"&&$("#pK").value==="pay")b.st="conf";
+    if(!isNew&&!commit(true)){b.pays.pop();b.st=st0;return}drawBk();toast(isNew?"เพิ่มรายการเงินแล้ว · กดบันทึกเพื่อสร้างใบจอง":"บันทึกรับ-จ่ายเงินแล้ว ✓")};
+  $$(".foot [data-a]").forEach(x=>x.onclick=()=>act(x.dataset.a))}
+function lineInput(x,full){const b=cur,i=+x.dataset.i,l=b.lines[i],f=x.dataset.f;if(!l)return;
+  if(f==="rid"){const old=rOf(l.rid),r=rOf(x.value);l.rid=x.value;l.ov=false;l.gov=false;if(!old||!r||old.kind!==r.kind)setDates(l,r,(l.s||"").slice(0,10)||today());if(r&&l.qty>(num(r.qty)||1))l.qty=1;upd(l);grabC();drawBk();return}
+  if(f==="qty"){l.qty=Math.max(1,Math.round(num(x.value))||1)}
+  else if(f==="s"||f==="e"){l[f]=x.value;const r=rOf(l.rid);if(f==="s"&&okD(l.s)&&r&&(!okD(l.e)||dn(l.e)<dn(l.s)+(r.kind==="night"?1:0))){l.e=addDays(l.s,r.kind==="night"?1:1);const el=$(`[data-i="${i}"][data-f="e"]`);if(el)el.value=l.e}}
+  else if(f==="hd"){const d=x.value;if(okD(d)){l.s=d+"T"+((l.s||"").slice(11,16)||"09:00");l.e=d+"T"+((l.e||"").slice(11,16)||"10:00")}}
+  else if(f==="hs"||f==="he"){const d=(l.s||today()).slice(0,10);if(/^\d{2}:\d{2}/.test(x.value)){if(f==="hs"){const len=okDT(l.s)&&okDT(l.e)?mins(l.e)-mins(l.s):60;l.s=d+"T"+x.value.slice(0,5);if(full||!okDT(l.e)||mins(l.e)<=mins(l.s)){const m=Math.min(mins(l.s)+Math.max(30,len),dn(d)*1440+23*60+59),hh=Math.floor((m%1440)/60),mm=m%60;l.e=d+"T"+pad(hh)+":"+pad(mm);const el=$(`[data-i="${i}"][data-f="he"]`);if(el)el.value=l.e.slice(11,16)}}else l.e=d+"T"+x.value.slice(0,5)}}
+  else if(f==="amt"){l.amt=num(x.value);l.ov=true;x.classList.add("ov")}
+  else if(f==="g"){l.g=num(x.value);l.gov=true}
+  upd(l);refresh()}
+function refresh(){const b=cur;if(!b)return;
+  b.lines.forEach((l,i)=>{const r=rOf(l.rid),av=$("#av"+i);if(!av)return;const c=chk(l,b);
+    if(!r){av.className="av wait";av.textContent="เลือกห้อง / อุปกรณ์"}
+    else if(c.msg){av.className="av no";av.textContent="⚠️ "+c.msg}
+    else if(b.st==="out"||b.st==="cancel"||b.st==="noshow"){av.className="av wait";av.textContent=`${fm(l.n)} ${KIND[r.kind].u}`}
+    else if(c.ok){av.className="av ok";av.textContent=`✅ ว่าง${c.cap>1?" "+c.free+" จาก "+c.cap+" "+(r.unit||KIND[r.kind].unit):""} · ${fm(l.n)} ${KIND[r.kind].u}`}
+    else{av.className="av no";av.textContent=`❌ ${c.cap>1?"เหลือว่าง "+c.free+" "+(r.unit||KIND[r.kind].unit):"ไม่ว่าง"}${c.clash.length?" · ชนกับ "+c.clash.slice(0,3).join(", "):""}`}
+    const la=$("#la"+i);if(la&&document.activeElement!==la)la.value=l.amt;const lg=$("#lg"+i);if(lg&&document.activeElement!==lg)lg.value=l.g||0;
+    const ln=$("#ln"+i),lh=l.ov?`<button class="chip" type="button" data-reset="${i}" style="padding:0 6px">↺ ราคาระบบ</button>`:"";if(ln&&ln.dataset.h!==lh){ln.innerHTML=lh;ln.dataset.h=lh}});
+  const T=tot(b);
+  $("#sum").innerHTML=`<span>ค่าเช่า</span><span class="r">${fmt(T.rent)}</span>${T.ext?`<span>ค่าใช้จ่ายเพิ่ม</span><span class="r">${fmt(T.ext)}</span>`:""}${T.disc?`<span>ส่วนลด</span><span class="r">−${fmt(T.disc)}</span>`:""}
+    <span class="big">ยอดรวม${cfg.vatIn&&seller().vat?" (รวม VAT)":""}</span><span class="big r">${fmt(T.total)}</span><span>รับชำระ / มัดจำแล้ว</span><span class="r paid">${fmt(T.paid)}</span>
+    <span>${T.bal>=0?"คงเหลือต้องชำระ":"ต้องคืนเงินลูกค้า"}</span><span class="r ${T.bal>0.009?"due":""}">${fmt(Math.abs(T.bal))}</span>
+    ${T.guar||T.held?`<span>ค่าประกัน (ต้องเก็บ ${fmt(T.guar)})</span><span class="r">ถืออยู่ ${fmt(T.held)}</span>`:""}`;
+  const q=[];const dep=r2(T.total*num(cfg.depPct)/100);
+  if(T.paid<=0.009&&dep>0&&num(cfg.depPct)<100&&b.st!=="out")q.push([`มัดจำ ${num(cfg.depPct)}% = ฿${fm(dep)}`,"pay",dep]);
+  if(T.bal>0.009)q.push([`ชำระเต็ม ฿${fm(T.bal)}`,"pay",T.bal]);
+  if(T.guar-T.held>0.009&&b.st!=="out")q.push([`รับค่าประกัน ฿${fm(T.guar-T.held)}`,"g",r2(T.guar-T.held)]);
+  if(T.held>0.009&&(b.st==="out"||b.st==="cancel"||b.st==="noshow"))q.push([`คืนค่าประกัน ฿${fm(T.held)}`,"gr",T.held]);
+  const pq=$("#pQuick"),qh=q.map(x=>`<button class="chip" type="button" data-q='${esc(JSON.stringify({k:x[1],a:x[2]}))}'>${x[0]}</button>`).join("");if(pq&&pq.dataset.h!==qh){pq.innerHTML=qh;pq.dataset.h=qh}}
+function valid(b,strict){if(!b.cust.name){toast("ใส่ชื่อลูกค้า");$("#cN").focus();return false}
+  if(!b.lines.length){toast("เพิ่มห้อง / อุปกรณ์อย่างน้อย 1 รายการ");return false}
+  for(let i=0;i<b.lines.length;i++){const l=b.lines[i],c=chk(l,b);if(c.msg){toast("รายการที่ "+(i+1)+": "+c.msg);return false}
+    if(strict&&ACT(b)&&b.st!=="out"&&!c.ok){toast("รายการที่ "+(i+1)+" ไม่ว่าง"+(c.clash.length?" (ชนกับ "+c.clash.slice(0,3).join(", ")+")":"")+" · เปลี่ยนวันหรือเลือกห้อง/อุปกรณ์อื่น");const el=$("#bl"+i);if(el)el.scrollIntoView({block:"center"});return false}}
+  return true}
+function commit(quiet){const b=cur;grabC();if(!valid(b,true))return false;b.lines.forEach(upd);
+  if(isNew){b.no=nextNo();b.created=Date.now()}b.updated=Date.now();
+  const i=list.findIndex(x=>x.id===b.id);const copy=JSON.parse(JSON.stringify(b));if(i>=0)list[i]=copy;else list.unshift(copy);
+  if(!saveList())return false;isNew=false;
+  if(b.cust.name){const cs=LS.get("edm_bill_customers",[])||[];const j=cs.findIndex(x=>x.name===b.cust.name);const c={name:b.cust.name,addr:b.cust.addr||"",tax:b.cust.tax||"",branch:b.cust.branch||"",contact:b.cust.contact||""};
+    if(j<0){cs.unshift(c);LS.set("edm_bill_customers",cs.slice(0,200))}else{const o=cs[j];let ch=false;["addr","tax","branch","contact"].forEach(k=>{if(c[k]&&!o[k]){o[k]=c[k];ch=true}});if(ch)LS.set("edm_bill_customers",cs)}}
+  if(!quiet)toast("บันทึก "+b.no+" แล้ว ✓");render();return true}
+function act(a){const b=cur,Kd=KIND[bKind(b)];
+  if(a==="save"){if(commit())closeDlg();return}
+  if(a==="conf"){grabC();b.st="conf";if(commit(true)){toast("ยืนยันการจอง "+b.no+" แล้ว ✓");drawBk()}return}
+  if(a==="in")return doIn();
+  if(a==="out"){grabC();if(!valid(b,false))return;return retDlg()}
+  if(a==="bill")return billDlg();
+  if(a==="print")return printBk(b);
+  if(a==="copy")return copyLine(b);
+  if(a==="cancel"||a==="noshow"){grabC();const T=tot(b);if(!confirm((a==="cancel"?"ยกเลิกใบจอง ":"บันทึกว่าลูกค้าไม่มา ")+b.no+"?"))return;
+    if(T.paid>0.009){if(confirm(`ลูกค้าชำระไว้ ฿${fm(T.paid)}\n\nตกลง = คืนเงินให้ลูกค้า (บันทึกรายการคืนเงิน)\nยกเลิก = ริบเงินมัดจำ (ออกบิลค่าธรรมเนียมได้ภายหลัง)`))b.pays.push({k:"ref",amt:T.paid,m:"โอนเงิน",date:today(),n:"คืนเงินเมื่อ"+(a==="cancel"?"ยกเลิก":"ไม่มา")})}
+    if(T.held>0.009)b.pays.push({k:"gr",amt:T.held,m:"เงินสด",date:today()});
+    b.st=a;b.lines.forEach(l=>l.ov=true);if(commit(true)){toast(a==="cancel"?"ยกเลิกแล้ว":"บันทึกไม่มาแล้ว");drawBk()}return}
+  if(a==="del"){const bl=bills(b);if(!confirm("ลบใบจอง "+b.no+"?"+(bl.length?"\n(บิล "+bl.map(d=>d.no).join(", ")+" ยังอยู่ ต้องลบที่ระบบเปิดบิลเอง)":"")))return;list=list.filter(x=>x.id!==b.id);saveList();closeDlg();toast("ลบแล้ว");render()}}
+function doIn(){const b=cur;if(!b)return;grabC();if(!valid(b,true))return;const T=tot(b),Kd=KIND[bKind(b)];
+  if(T.guar-T.held>0.009){const need=r2(T.guar-T.held);if(confirm(`รับค่าประกัน ฿${fm(need)} จากลูกค้าแล้วใช่ไหม?\n(ตกลง = บันทึกรับเป็นเงินสด · แก้วิธีรับได้ภายหลัง)`))b.pays.push({k:"g",amt:need,m:"เงินสด",date:today()})}
+  b.st="in";b.lines.forEach(l=>{l.ai=nowT()});if(commit(true)){toast(Kd.in.replace(/^\S+\s/,"")+" "+b.no+" แล้ว ✓");drawBk()}}
+
+/* ---------- เช็คเอาท์ / รับคืน ---------- */
+function retDlg(){const b=cur,Kd=KIND[bKind(b)],t=today(),nw=nowT();
+  const rows=b.lines.map((l,i)=>{const r=rOf(l.rid);if(!r)return"";const def=r.kind==="hour"?(l.e<nw?nw.slice(0,10)===l.s.slice(0,10)?nw:l.e:l.e):(t>l.e?t:t<l.e&&r.kind==="item"?t:l.e);
+    return`<div class="bl"><b>${KIND[r.kind].ic} ${esc(r.name)}${num(l.qty)>1?" × "+l.qty:""}</b><div class="note">กำหนด${KIND[r.kind].e}: ${when(l.e,r)}</div>
+      <div class="row"><div class="f"><label>${r.kind==="hour"?"เวลาเสร็จจริง":KIND[r.kind].e+"จริง"}</label>${r.kind==="hour"?`<input class="in-" type="time" data-ri="${i}" value="${esc(def.slice(11,16))}">`:`<input class="in-" type="date" data-ri="${i}" value="${esc(def)}">`}</div>
+      <div class="f"><label>ค่าปรับเกินเวลา (คิด ${num(cfg.late)}% ของค่าเช่า)</label><input class="in- r" inputmode="decimal" data-rl="${i}" placeholder="0"></div></div></div>`}).join("");
+  openDlg(Kd.out+" · "+b.no,`<div class="db">${rows}
+    <div class="sec"><h3>ค่าเสียหาย / ค่าใช้จ่ายเพิ่ม</h3><div class="exr"><input class="in-" id="dmD" placeholder="เช่น เลนส์มีรอยขีดข่วน, มินิบาร์"><input class="in- r" id="dmA" inputmode="decimal" placeholder="0"><span></span></div></div>
+    <div class="sum" id="rSum"></div>
+    <label class="ck"><input type="checkbox" id="rDed" checked> หักยอดค้างชำระจากค่าประกันที่ถือไว้</label>
+    <div class="row"><div class="f"><label>คืนค่าประกันที่เหลือให้ลูกค้า</label><input class="in- r" id="rRef" inputmode="decimal"></div><div class="f"><label>วิธีคืน</label><select class="in-" id="rM">${PM.filter(x=>x!=="หักค่าประกัน").map(m=>`<option>${m}</option>`).join("")}</select></div></div>
+    <div class="acts"><button class="btn main edm-lock" id="rGo">ยืนยัน${Kd.out.replace(/^\S+\s/,"")}</button><button class="btn ghost" id="rBack">← กลับ</button></div></div>`,"sm");
+  const late=i=>{const l=b.lines[i],r=rOf(l.rid),v=$(`[data-ri="${i}"]`).value;if(!v)return 0;const ae=r.kind==="hour"?l.s.slice(0,10)+"T"+v:v;
+    if(r.kind==="hour"?mins(ae)<=mins(l.e):dn(ae)<=dn(l.e))return 0;const Q=quote(Object.assign({},l,{s:l.e,e:ae}));return r2(Q.amt*num(cfg.late)/100)};
+  const calc=(auto)=>{if(auto)b.lines.forEach((l,i)=>{const el=$(`[data-rl="${i}"]`);if(el&&!el.dataset.ed)el.value=late(i)||""});
+    let add=num($("#dmA").value);b.lines.forEach((l,i)=>add+=num(($(`[data-rl="${i}"]`)||{}).value));const T=tot(b),total=r2(T.total+add),bal=r2(total-T.paid),ded=$("#rDed").checked?Math.max(0,Math.min(T.held,bal)):0,left=r2(T.held-ded);
+    const rr=$("#rRef");if(!rr.dataset.ed)rr.value=left>0?left:"";
+    $("#rSum").innerHTML=`<span>ยอดเดิม</span><span class="r">${fmt(T.total)}</span>${add?`<span>ค่าปรับ / ค่าเสียหาย</span><span class="r">${fmt(add)}</span>`:""}<span class="big">ยอดรวมใหม่</span><span class="big r">${fmt(total)}</span><span>ชำระแล้ว</span><span class="r paid">${fmt(T.paid)}</span>${ded?`<span>หักจากค่าประกัน</span><span class="r">${fmt(ded)}</span>`:""}<span>คงเหลือต้องชำระ</span><span class="r ${bal-ded>0.009?"due":""}">${fmt(Math.max(0,bal-ded))}</span><span>ค่าประกันถืออยู่</span><span class="r">${fmt(T.held)}</span>`;
+    return{add,ded,total}};
+  $("#dlgBody").addEventListener("input",e=>{if(e.target.dataset.rl!=null||e.target.id==="rRef")e.target.dataset.ed=1;calc(e.target.dataset.ri!=null)});
+  $("#dlgBody").addEventListener("change",e=>calc(e.target.dataset.ri!=null));
+  calc(true);
+  $("#rBack").onclick=()=>drawBk();
+  $("#rGo").onclick=()=>{const c=calc(false);
+    b.lines.forEach((l,i)=>{const r=rOf(l.rid),v=$(`[data-ri="${i}"]`).value;if(v)l.ae=r.kind==="hour"?l.s.slice(0,10)+"T"+v:v;const lf=num($(`[data-rl="${i}"]`).value);if(lf>0)b.ext.push({d:`ค่าปรับเกินเวลา ${r.name} (${KIND[r.kind].e}จริง ${when(l.ae,r)})`,amt:lf});l.ov=true});
+    const dm=num($("#dmA").value);if(dm>0)b.ext.push({d:$("#dmD").value.trim()||"ค่าเสียหาย",amt:dm});
+    if(c.ded>0){b.pays.push({k:"pay",amt:c.ded,m:"หักค่าประกัน",date:today()});b.pays.push({k:"gx",amt:c.ded,m:"หักเป็นค่าเช่า/ค่าเสียหาย",date:today()})}
+    const rf=num($("#rRef").value),T=tot(b);if(rf>0)b.pays.push({k:"gr",amt:Math.min(rf,T.held),m:$("#rM").value,date:today()});
+    b.st="out";if(commit(true)){toast("บันทึกแล้ว ✓ ออกบิลต่อได้เลย");drawBk()}}}
+
+/* ---------- ออกบิล ---------- */
+function billDlg(){const b=cur,T=tot(b),cx=b.st==="cancel"||b.st==="noshow",paid=T.bal<=0.009;
+  openDlg("🧾 ออกบิลจากใบจอง "+b.no,`<div class="db"><div class="hint">ระบบจะเปิดหน้า <b>เปิดบิล</b> พร้อมใส่ลูกค้า รายการ และส่วนลดให้ ตรวจแล้วกดบันทึกที่หน้าบิล ยอดจะเข้ารายงานรายรับ ภาษีขาย และบัญชีอัตโนมัติ${cfg.vatIn?" · ราคาในระบบจองถือว่ารวม VAT แล้ว":""}</div>
+    ${cx?`<div class="warn">ใบจองถูก${b.st==="cancel"?"ยกเลิก":"บันทึกว่าไม่มา"} · ออกบิลค่าธรรมเนียมจากเงินที่ริบไว้ ฿${fm(T.paid)}</div>`:`<div class="sum"><span>ยอดรวม</span><span class="r">${fmt(T.total)}</span><span>ชำระแล้ว</span><span class="r paid">${fmt(T.paid)}</span><span>คงเหลือ</span><span class="r ${T.bal>0.009?"due":""}">${fmt(Math.max(0,T.bal))}</span></div>`}
+    <div class="acts"><button class="btn ${paid||cx?"main":"ghost"}" id="bC">🧾 ใบเสร็จรับเงิน / ขายเงินสด${paid||cx?" (ชำระครบ)":""}</button>${cx?"":`<button class="btn ${paid?"ghost":"main"}" id="bI">📄 ใบแจ้งหนี้ (ตั้งลูกหนี้${T.bal>0.009?" ฿"+fm(T.bal):""})</button>`}<button class="btn ghost" id="bB">← กลับ</button></div>
+    ${!paid&&!cx?`<div class="note">เลือกใบแจ้งหนี้ถ้าลูกค้ายังค้างชำระ · ยอดที่รับไว้แล้วจะระบุในหมายเหตุของบิล</div>`:""}</div>`,"sm");
+  $("#bC").onclick=()=>toBill(b,"CASH");if($("#bI"))$("#bI").onclick=()=>toBill(b,"INV");$("#bB").onclick=()=>drawBk()}
+function toBill(b,kind){const T=tot(b),cx=b.st==="cancel"||b.st==="noshow",items=[];
+  if(cx)items.push({d:`ค่าธรรมเนียม${b.st==="cancel"?"ยกเลิก":"ไม่มาตามนัด"} ใบจอง ${b.no} (ริบเงินมัดจำ)`,q:1,u:"รายการ",p:T.paid,disc:0});
+  else{b.lines.forEach(l=>{const r=rOf(l.rid)||{name:"-",kind:"night"},Kd=KIND[r.kind],n=num(l.n)||1,amt=num(l.amt);
+      const d=`ค่าเช่า${r.name}${num(l.qty)>1?" × "+l.qty+" "+(r.unit||Kd.unit):""} · ${lineTxt(l)}`;const p=r2(amt/n);
+      items.push(r2(p*n)===r2(amt)?{d,q:n,u:Kd.u,p,disc:0}:{d:d+` (${fm(n)} ${Kd.u})`,q:1,u:"รายการ",p:amt,disc:0})});
+    b.ext.forEach(x=>{if(num(x.amt))items.push({d:x.d||"ค่าใช้จ่ายเพิ่มเติม",q:1,u:"รายการ",p:num(x.amt),disc:0})})}
+  const notes=["อ้างอิงใบจอง "+b.no];if(!cx&&T.paid>0.009)notes.push(`รับเงินมัดจำ/ชำระแล้ว ${fmt(T.paid)} บาท${T.bal>0.009?" · คงเหลือชำระ "+fmt(T.bal)+" บาท":""}`);
+  const c=b.cust;LS.set("edm_bill_pre",{at:Date.now(),mode:"service",cust:{name:c.name,addr:c.addr||"",tax:c.tax||"",branch:c.branch||"",contact:c.contact||""},items,disc:cx?0:T.disc,ref:b.no,notes:notes.join("\n"),vatIn:!!cfg.vatIn});
+  closeDlg();goBill("new="+kind)}
+
+/* ---------- ใบยืนยัน / ข้อความ LINE ---------- */
+function printBk(b){grabC();const S=seller(),T=tot(b);
+  $("#printArea").innerHTML=`<div class="page"><div class="ph"><div class="shop">${S.logo&&/^data:image\//.test(S.logo)?`<img src="${esc(S.logo)}" alt="">`:""}<b>${esc(S.name||"")}</b><div>${esc(S.addr||"").replace(/\n/g,"<br>")}</div>${S.tel||S.phone?`<div>โทร ${esc(S.tel||S.phone)}</div>`:""}${S.tax?`<div>เลขประจำตัวผู้เสียภาษี ${esc(S.tax)}</div>`:""}</div>
+    <div style="text-align:right"><h1>ใบยืนยันการจอง</h1><div>Booking Confirmation</div><div style="margin-top:6px">เลขที่ <b>${esc(b.no)}</b></div><div>วันที่ ${thD(today())}</div><div>สถานะ ${esc(stName(b))}</div></div></div>
+    <div class="box"><b>ลูกค้า</b> ${esc(b.cust.name)}${b.cust.contact?" · โทร "+esc(b.cust.contact):""}${b.guests?" · "+esc(b.guests):""}${b.cust.addr?"<br>"+esc(b.cust.addr):""}</div>
+    <table><thead><tr><th>รายการ</th><th>วันเวลา</th><th class="r">จำนวน</th><th class="r">จำนวนเงิน</th></tr></thead><tbody>
+    ${b.lines.map(l=>{const r=rOf(l.rid)||{name:"-",kind:"night"},Kd=KIND[r.kind];return`<tr><td><b>${esc(r.name)}</b>${num(l.qty)>1?" × "+l.qty+" "+esc(r.unit||Kd.unit):""}${r.note?`<div style="color:#666;font-size:8.5pt">${esc(r.note)}</div>`:""}</td><td>${lineTxt(l)}</td><td class="r">${fm(num(l.n))} ${Kd.u}</td><td class="r">${fmt(num(l.amt))}</td></tr>`}).join("")}
+    ${b.ext.filter(x=>num(x.amt)).map(x=>`<tr><td colspan="3">${esc(x.d||"ค่าใช้จ่ายเพิ่มเติม")}</td><td class="r">${fmt(num(x.amt))}</td></tr>`).join("")}</tbody></table>
+    <table class="tot">${T.disc?`<tr><td>ส่วนลด</td><td class="r">−${fmt(T.disc)}</td></tr>`:""}<tr class="g"><td>ยอดรวม${cfg.vatIn&&S.vat?" (รวม VAT)":""}</td><td class="r">${fmt(T.total)}</td></tr><tr><td>รับชำระ / มัดจำแล้ว</td><td class="r">${fmt(T.paid)}</td></tr><tr class="g"><td>คงเหลือชำระ</td><td class="r">${fmt(Math.max(0,T.bal))}</td></tr>${T.guar?`<tr><td>ค่าประกัน (คืนเมื่อคืนของครบสภาพเดิม)</td><td class="r">${fmt(T.guar)}</td></tr>`:""}</table>
+    <div class="box">${b.lines.some(l=>(rOf(l.rid)||{}).kind==="night")?`เช็คอิน ${esc(cfg.ci)} น. · เช็คเอาท์ ${esc(cfg.co)} น.<br>`:""}${cfg.cancel?"<b>เงื่อนไขการยกเลิก</b> "+esc(cfg.cancel)+"<br>":""}${b.note?"<b>หมายเหตุ</b> "+esc(b.note)+"<br>":""}${esc(cfg.foot||"")}</div>
+    <div class="sig"><div>ผู้จอง</div><div>ผู้รับจอง</div></div></div>`;
+  setTimeout(()=>window.print(),60)}
+function lineMsg(b){const S=seller(),T=tot(b),o=[`📅 ยืนยันการจอง ${b.no}`,`คุณ${b.cust.name}`];
+  b.lines.forEach(l=>{const r=rOf(l.rid)||{name:"-",kind:"night"},Kd=KIND[r.kind];o.push(`• ${r.name}${num(l.qty)>1?" × "+l.qty:""} ${lineTxt(l)} (${fm(num(l.n))} ${Kd.u}) ${fm(num(l.amt))} บาท`)});
+  b.ext.filter(x=>num(x.amt)).forEach(x=>o.push(`• ${x.d||"ค่าใช้จ่ายเพิ่มเติม"} ${fm(num(x.amt))} บาท`));if(T.disc)o.push(`ส่วนลด ${fm(T.disc)} บาท`);
+  o.push(`ยอดรวม ${fmt(T.total)} บาท · ชำระแล้ว ${fmt(T.paid)} บาท`);if(T.bal>0.009)o.push(`คงเหลือชำระ ${fmt(T.bal)} บาท`);
+  if(T.guar)o.push(`ค่าประกัน ${fmt(T.guar)} บาท (คืนเมื่อคืนของครบ)`);
+  if(b.lines.some(l=>(rOf(l.rid)||{}).kind==="night"))o.push(`เช็คอิน ${cfg.ci} น. · เช็คเอาท์ ${cfg.co} น.`);
+  if(cfg.cancel)o.push(`เงื่อนไข: ${cfg.cancel}`);if(S.name)o.push(`— ${S.name}${S.tel||S.phone?" โทร "+(S.tel||S.phone):""}`);return o.join("\n")}
+function copyLine(b){grabC();const t=lineMsg(b);const ok=()=>toast("คัดลอกข้อความแล้ว ✓ วางในแชท LINE ได้เลย");
+  const fb=()=>{const a=document.createElement("textarea");a.value=t;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){toast("คัดลอกไม่ได้")}a.remove()};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,fb);else fb()}
+
+/* ---------- รายงาน ---------- */
+function monthRange(m){const s=m+"-01",y=+m.slice(0,4),mo=+m.slice(5,7),e=(mo===12?(y+1)+"-01":y+"-"+pad(mo+1))+"-01";return[dn(s),dn(e)]}
+function share(l,r,b,a,z){if(!okLine(l,r))return 0;if(r.kind==="hour"){const d=dn(l.s);return d>=a&&d<z?1:0}const[x,y]=span(l,r,b.st==="out"?b:null),len=Math.max(1,y-x);return Math.max(0,Math.min(y,z)-Math.max(x,a))/len}
+function rptData(m){const[a,z]=monthRange(m),days=z-a,R={},CHs={},B=[];let rev=0,nB=0,cx=0,nightCap=0,nightUsed=0;
+  res.forEach(r=>R[r.id]={r,n:0,units:0,rev:0,cap:(num(r.qty)||1)*(r.kind==="hour"?0:days)});
+  list.forEach(b=>{const st=bStart(b);const inM=st&&dn(st)>=a&&dn(st)<z;if(inM){nB++;if(b.st==="cancel"||b.st==="noshow")cx++}
+    if(b.st!=="conf"&&b.st!=="in"&&b.st!=="out")return;let br=0,touched=false;
+    (b.lines||[]).forEach(l=>{const r=rOf(l.rid);if(!r)return;const sh=share(l,r,b,a,z);if(sh<=0)return;touched=true;const x=R[r.id];x.n++;const u=r.kind==="hour"?num(l.n)*(num(l.qty)||1):sh*Math.max(1,(()=>{const[p,q]=span(l,r,b.st==="out"?b:null);return q-p})())*(num(l.qty)||1);x.units+=u;const v=num(l.amt)*sh;x.rev+=v;br+=v});
+    if(inM){br+=r2((b.ext||[]).reduce((s,e)=>s+num(e.amt),0)-num(b.disc))}
+    if(touched||inM){rev+=br;const c=CH[b.ch]||"อื่นๆ";CHs[c]=CHs[c]||{n:0,rev:0};CHs[c].n++;CHs[c].rev+=br;B.push({b,rev:br})}});
+  Object.values(R).forEach(x=>{if(x.r.kind==="night"){nightCap+=x.cap;nightUsed+=x.units}});
+  return{R:Object.values(R),CHs,B,rev:r2(rev),nB,cx,occ:nightCap?nightUsed/nightCap:null,nightUsed,days}}
+function vRpt(){const V=$("#view");if(!ui.rm)ui.rm=today().slice(0,7);const m=ui.rm,D=rptData(m),mn=MF[+m.slice(5)-1]+" "+(+m.slice(0,4)+543);
+  let due=0,held=0;const dueL=[];list.forEach(b=>{const T=tot(b);if(ACT(b)&&T.bal>0.009&&!bills(b).length){due+=T.bal;dueL.push([b,T.bal])}if(T.held>0.009)held+=T.held});
+  const maxR=Math.max(1,...D.R.map(x=>x.rev));
+  V.innerHTML=`<div class="hello"><h1>📊 รายงานการจอง</h1><p>ค่าเช่าแบ่งตามจำนวนคืน/วันที่อยู่ในเดือน (รวมเฉพาะที่ยืนยันแล้ว เข้าพัก และออกแล้ว)</p></div>
+  <div class="card"><div class="tools"><input class="in-" type="month" id="rm" value="${m}" style="max-width:200px;flex:0 1 200px"><span class="grow"></span><button class="btn sm ghost" id="rXls">📊 ดาวน์โหลด Excel</button></div>
+  <div class="kpis"><div class="kpi"><span>ค่าเช่า ${mn}</span><b>฿${fmt0(D.rev)}</b><small>${D.B.length} ใบจองที่มีผลในเดือน</small></div>
+    <div class="kpi"><span>อัตราเข้าพักห้อง</span><b>${D.occ==null?"-":Math.round(D.occ*100)+"%"}</b><small>${D.occ==null?"ยังไม่มีห้องพัก":"ขายได้ "+fmt0(D.nightUsed)+" ห้อง-คืน"}</small></div>
+    <div class="kpi"><span>ใบจองใหม่ (เริ่มในเดือน)</span><b>${D.nB}</b><small>ยกเลิก / ไม่มา ${D.cx} ใบ${D.nB?" ("+Math.round(D.cx/D.nB*100)+"%)":""}</small></div>
+    <div class="kpi ${due>0?"warn":""}"><span>ค้างชำระ (ทุกเดือน)</span><b>฿${fmt0(due)}</b><small>ค่าประกันถืออยู่ ฿${fmt0(held)}</small></div></div></div>
+  <div class="card"><h2>แยกตามห้อง / อุปกรณ์ <small>${mn}</small></h2>${D.R.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>รายการ</th><th class="r">ครั้ง</th><th class="r">ขายได้</th><th class="r">ใช้งาน</th><th class="r">ค่าเช่า</th></tr></thead><tbody>
+    ${D.R.sort((p,q)=>q.rev-p.rev).map(x=>{const k=KIND[x.r.kind];return`<tr><td>${k.ic} ${esc(x.r.name)}<div class="bar2" style="grid-template-columns:1fr"><div class="tr"><i style="width:${Math.round(x.rev/maxR*100)}%"></i></div></div></td><td class="r">${x.n}</td><td class="r">${fm(r2(x.units))} ${x.r.kind==="item"?"ชิ้น-วัน":k.u}</td><td class="r">${x.cap?Math.round(x.units/x.cap*100)+"%":"-"}</td><td class="r">${fmt(x.rev)}</td></tr>`}).join("")}
+    </tbody></table></div>`:`<div class="empty">ยังไม่มีห้อง / อุปกรณ์</div>`}</div>
+  <div class="grid2"><div class="card"><h2>แยกตามช่องทาง</h2>${Object.keys(D.CHs).length?Object.entries(D.CHs).sort((p,q)=>q[1].rev-p[1].rev).map(([c,x])=>`<div class="li"><div><b>${esc(c)}</b><small>${x.n} ใบจอง</small></div><div class="r">฿${fmt(x.rev)}</div></div>`).join(""):`<div class="empty">ไม่มีข้อมูลเดือนนี้</div>`}</div>
+    <div class="card"><h2>ค้างชำระ <small>${dueL.length} ใบ</small></h2>${dueL.length?dueL.sort((p,q)=>q[1]-p[1]).slice(0,12).map(([b,v])=>`<div class="li click" data-ob="${b.id}"><div><b>${esc(b.cust.name)}</b><small>${esc(b.no)} · ${resTxt(b)}</small></div><div class="r">${stPill(b)}<b style="color:var(--danger)">฿${fm(v)}</b></div></div>`).join(""):`<div class="empty">ไม่มียอดค้าง 🎉</div>`}</div></div>`;
+  $("#rm").onchange=e=>{if(/^\d{4}-\d{2}$/.test(e.target.value)){ui.rm=e.target.value;vRpt()}};
+  $("#rXls").onclick=()=>xls(m,D)}
+function loadX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="../assets/vendor/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+function xls(m,D){toast("กำลังสร้างไฟล์ Excel...");loadX().then(X=>{const wb=X.utils.book_new();
+  const r1=[["เลขที่","สถานะ","ลูกค้า","โทร","ช่องทาง","รายการ","วันที่","ยอดรวม","ชำระแล้ว","คงเหลือ","ค่าเช่าในเดือนนี้","บิล"]].concat(D.B.map(({b,rev})=>{const T=tot(b);return[b.no,stName(b),b.cust.name,b.cust.contact||"",CH[b.ch]||"",(b.lines||[]).map(l=>(rOf(l.rid)||{}).name).join(", "),(b.lines||[]).map(lineTxt).join(" / "),T.total,T.paid,T.bal,r2(rev),bills(b).map(d=>d.no).join(", ")]}));
+  const r2_=[["ห้อง / อุปกรณ์","ประเภท","ครั้ง","ขายได้","อัตราใช้งาน %","ค่าเช่า"]].concat(D.R.map(x=>[x.r.name,KIND[x.r.kind].n,x.n,r2(x.units),x.cap?Math.round(x.units/x.cap*100):"",r2(x.rev)]));
+  X.utils.book_append_sheet(wb,X.utils.aoa_to_sheet(r1),"การจอง");X.utils.book_append_sheet(wb,X.utils.aoa_to_sheet(r2_),"สรุปตามรายการ");X.writeFile(wb,"รายงานการจอง-"+m+".xlsx")}).catch(()=>toast("สร้างไฟล์ไม่ได้ ลองใหม่อีกครั้ง"))}
+
+/* ---------- ตั้งค่า ---------- */
+function vSet(){const V=$("#view");
+  V.innerHTML=`<div class="hello"><h1>⚙️ ตั้งค่าการจอง</h1><p>บันทึกอัตโนมัติเมื่อแก้ไข · ชื่อร้าน ที่อยู่ และโลโก้ใช้จากหน้า "ตั้งค่าร้าน" ของระบบเปิดบิล</p></div>
+  <div class="card"><h2>ประเภทที่ใช้</h2><div class="kinds">${KO.map(k=>`<button type="button" data-tk="${k}" class="${kOn(k)?"on":""}"><i>${KIND[k].ic}</i><b>${kOn(k)?"✓ ":""}${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}</div></div>
+  <div class="grid2"><div class="card"><h2>เวลา</h2><div class="row"><div class="f"><label>เวลาเช็คอิน</label><input class="in-" type="time" data-c="ci" value="${esc(cfg.ci)}"></div><div class="f"><label>เวลาเช็คเอาท์</label><input class="in-" type="time" data-c="co" value="${esc(cfg.co)}"></div></div>
+    <div class="f"><label>เวลาเตรียมห้องระหว่างรอบ (นาที) · ใช้กับแบบรายชั่วโมง</label><input class="in- r" inputmode="numeric" data-c="buf" value="${esc(cfg.buf||0)}"></div></div>
+  <div class="card"><h2>เงิน</h2><div class="row"><div class="f"><label>มัดจำแนะนำ (% ของยอดรวม)</label><input class="in- r" inputmode="decimal" data-c="depPct" value="${esc(cfg.depPct)}"></div><div class="f"><label>ค่าปรับเกินเวลา (% ของค่าเช่าช่วงที่เกิน)</label><input class="in- r" inputmode="decimal" data-c="late" value="${esc(cfg.late)}"></div></div>
+    <label class="ck"><input type="checkbox" data-c="vatIn" ${cfg.vatIn?"checked":""}> ราคาในระบบจองรวม VAT แล้ว (ใช้เมื่อร้านจด VAT)</label>
+    <div class="f"><label>อักษรนำหน้าเลขที่ใบจอง</label><input class="in-" data-c="prefix" value="${esc(cfg.prefix)}" maxlength="4"></div></div></div>
+  <div class="card"><h2>ราคาวันหยุด / เทศกาล</h2><div class="f"><span>คืนที่ใช้ "ราคาคืนวันหยุด" ของห้องพัก</span><div class="days">${DW.map((d,i)=>`<label><input type="checkbox" data-we="${i}" ${(cfg.we||[]).includes(i)?"checked":""}> คืนวัน${["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"][i]}</label>`).join("")}</div></div>
+    <div class="f"><span>ช่วงเทศกาล (บวกเพิ่มจากราคาปกติ ทุกประเภท)</span>${(cfg.peaks||[]).map((p,i)=>`<div class="row4" style="margin-bottom:6px"><input class="in-" data-pk="${i}" data-f="n" value="${esc(p.n||"")}" placeholder="ชื่อ เช่น สงกรานต์"><input class="in-" type="date" data-pk="${i}" data-f="s" value="${esc(p.s||"")}"><input class="in-" type="date" data-pk="${i}" data-f="e" value="${esc(p.e||"")}"><div style="display:flex;gap:6px"><input class="in- r" inputmode="decimal" data-pk="${i}" data-f="pct" value="${esc(p.pct||"")}" placeholder="+%"><button class="btn sm ghost" data-rpk="${i}">✕</button></div></div>`).join("")}
+    <div><button class="btn sm ghost" id="addPk">＋ เพิ่มช่วงเทศกาล</button></div></div></div>
+  <div class="card"><h2>ข้อความในใบยืนยัน</h2><div class="f"><label>เงื่อนไขการยกเลิก</label><textarea class="in-" rows="2" data-c="cancel">${esc(cfg.cancel)}</textarea></div><div class="f"><label>ข้อความท้ายใบยืนยัน</label><input class="in-" data-c="foot" value="${esc(cfg.foot)}"></div></div>
+  <div class="card"><h2>ข้อมูลระบบจอง <small>${res.length} รายการให้เช่า · ${list.length} ใบจอง</small></h2><div class="hint">ข้อมูลอยู่ในเครื่องนี้ และสำรองรวมกับระบบร้านค้า (เมนูสำรองข้อมูล / สำรองขึ้นระบบอัตโนมัติเมื่อเข้าสู่ระบบสมาชิก)</div>
+    <div class="acts"><button class="btn ghost" id="sExp">⬇️ ดาวน์โหลดไฟล์สำรองระบบจอง</button><label class="btn ghost">⬆️ นำเข้าไฟล์สำรอง<input type="file" id="sImp" accept=".json" hidden></label>${res.length?"":`<button class="btn ghost" id="sDemo">✨ ใส่ข้อมูลตัวอย่าง</button>`}<button class="btn ghost danger" id="sWipe">🗑 ล้างข้อมูลระบบจอง</button></div></div>`;
+  const sv=()=>{clearTimeout(vSet.t);vSet.t=setTimeout(()=>{if(saveCfg())toast("บันทึกการตั้งค่าแล้ว ✓")},400)};
+  $$("[data-c]").forEach(x=>x.addEventListener(x.type==="checkbox"?"change":"input",()=>{const k=x.dataset.c;cfg[k]=x.type==="checkbox"?x.checked:/^(buf|depPct|late)$/.test(k)?num(x.value):k==="prefix"?x.value.replace(/[^A-Za-z]/g,"").toUpperCase():x.value;sv()}));
+  $$("[data-we]").forEach(x=>x.onchange=()=>{cfg.we=$$("[data-we]").filter(y=>y.checked).map(y=>+y.dataset.we);sv()});
+  $$("[data-pk]").forEach(x=>x.addEventListener("input",()=>{const p=cfg.peaks[+x.dataset.pk];p[x.dataset.f]=x.dataset.f==="pct"?num(x.value):x.value;sv()}));
+  $$("[data-rpk]").forEach(x=>x.onclick=()=>{cfg.peaks.splice(+x.dataset.rpk,1);saveCfg();vSet()});
+  $("#addPk").onclick=()=>{cfg.peaks=cfg.peaks||[];cfg.peaks.push({n:"",s:"",e:"",pct:20});saveCfg();vSet()};
+  $$("[data-tk]").forEach(x=>x.onclick=()=>{const k=x.dataset.tk;if(kOn(k)&&KO.filter(kOn).length===1)return toast("ต้องเปิดอย่างน้อย 1 ประเภท");cfg.kinds[k]=!kOn(k);saveCfg();vSet()});
+  $("#sExp").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({app:"edm-booking",v:1,res,list,cfg})],{type:"application/json"}));a.download="สำรองระบบจอง-"+today()+".json";a.click()};
+  $("#sImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-booking"||!Array.isArray(o.res)||!Array.isArray(o.list))throw 0;if(!confirm("นำเข้าข้อมูลระบบจอง? ข้อมูลระบบจองในเครื่องนี้จะถูกแทนที่"))return;res=o.res;list=o.list;cfg=Object.assign({},CFG0,o.cfg||{});saveRes();saveList();saveCfg();load();toast("นำเข้าแล้ว ✓");render()}).catch(()=>toast("ไฟล์ไม่ถูกต้อง ต้องเป็นไฟล์สำรองระบบจอง"))};
+  if($("#sDemo"))$("#sDemo").onclick=demo;
+  $("#sWipe").onclick=()=>{if(!confirm("ล้างห้อง/อุปกรณ์ และใบจองทั้งหมด?\nบิลที่ออกไปแล้วยังอยู่ในระบบเปิดบิล"))return;if(!confirm("ยืนยันอีกครั้ง: ลบข้อมูลระบบจองทั้งหมด"))return;res=[];list=[];saveRes();saveList();toast("ล้างข้อมูลแล้ว");render()}}
+
+/* ---------- ข้อมูลตัวอย่าง ---------- */
+function demo(){if((res.length||list.length)&&!confirm("ใส่ข้อมูลตัวอย่างแทนข้อมูลระบบจองเดิม?"))return;const t=today(),d=n=>addDays(t,n),h=(n,x)=>d(n)+"T"+x;
+  res=[{id:"r101",kind:"night",name:"ห้อง 101 Deluxe",cat:"Deluxe",qty:1,rate:1200,rateWe:1500,dep:500,note:"เตียงคิง 2 ท่าน รวมอาหารเช้า",active:true},
+    {id:"r102",kind:"night",name:"ห้อง 102 Deluxe",cat:"Deluxe",qty:1,rate:1200,rateWe:1500,dep:500,note:"เตียงแฝด 2 ท่าน รวมอาหารเช้า",active:true},
+    {id:"r201",kind:"night",name:"ห้อง 201 Family",cat:"Family",qty:1,rate:1800,rateWe:2200,dep:1000,note:"พักได้ 4 ท่าน",active:true},
+    {id:"rMA",kind:"hour",name:"ห้องประชุม A",cat:"ห้องประชุม",qty:1,rate:500,rateWe:600,dep:0,note:"จุ 20 คน มีโปรเจกเตอร์",active:true},
+    {id:"rCAM",kind:"item",name:"กล้อง Canon EOS R6",cat:"กล้อง",qty:2,unit:"ตัว",rate:800,rate7:4500,dep:5000,note:"พร้อมเลนส์ 24-105 และแบต 2 ก้อน",active:true},
+    {id:"rTNT",kind:"item",name:"เต็นท์ 4 คน",cat:"แคมป์ปิ้ง",qty:6,unit:"หลัง",rate:250,rate7:1200,dep:500,note:"พร้อมฟลายชีท",active:true}];
+  const mk=(no,name,tel,ch,st,lines,pays,ext)=>{const b={id:"bd"+no,no:"",date:d(-3),cust:{name,contact:tel,addr:"",tax:"",branch:""},ch,guests:"",st,lines:lines.map(([rid,s,e,q])=>({rid,s,e,qty:q||1,amt:0,n:0,ov:false,g:0,gov:false})),ext:ext||[],disc:0,pays:(pays||[]).map(([k,a,m,dd])=>({k,amt:a,m,date:d(dd||-2)})),note:""};return b};
+  list=[];const add=b=>{b.lines.forEach(upd);b.no=nextNo();b.created=Date.now();list.unshift(b)};
+  add(mk(1,"คุณสมชาย ใจดี","081-234-5678","line","in",[["r101",d(-1),d(1)]],[["pay",1200,"โอนเงิน",-5],["g",500,"เงินสด",-1]]));
+  add(mk(2,"คุณมานี มีสุข","089-111-2222","ota","conf",[["r201",d(0),d(2)]],[["pay",1200,"โอนเงิน",-4]]));
+  add(mk(3,"บริษัท สยามเทรด จำกัด","02-555-0101","phone","conf",[["rMA",h(1,"09:00"),h(1,"12:00")]],[["pay",500,"โอนเงิน",-1]]));
+  add(mk(4,"คุณวิทยา ถ่ายสวย","086-777-8888","fb","in",[["rCAM",d(-2),d(0)]],[["pay",1600,"เงินสด",-2],["g",5000,"เงินสด",-2]]));
+  add(mk(5,"ชมรมเดินป่าเชียงดาว","090-123-4567","line","hold",[["rTNT",d(3),d(5),4]],[]));
+  add(mk(6,"คุณปรีชา รักษ์ดี","085-000-1111","walkin","conf",[["r102",d(2),d(5)]],[["pay",1000,"QR พร้อมเพย์",-1]]));
+  add(mk(7,"คุณอรุณี แสงทอง","082-345-6789","walkin","out",[["r102",d(-4),d(-2)]],[["pay",2400,"เงินสด",-4]]));
+  saveRes();saveList();toast("ใส่ข้อมูลตัวอย่างแล้ว ✓");ui.v="home";saveUi();render()}
+
+/* ---------- หน้าต่าง ---------- */
+const dlg=$("#dlg");
+function openDlg(t,h,cls){$("#dlgTitle").textContent=t;const old=$("#dlgBody"),nb=old.cloneNode(false);nb.innerHTML=h;old.replaceWith(nb);dlg.className=cls||"";if(!dlg.open){try{dlg.showModal()}catch(e){dlg.setAttribute("open","")}}nb.scrollTop=0;dlg.scrollTop=0}
+function closeDlg(){if(dlg.open)dlg.close()}
+$("#dlgX").onclick=()=>{if(cur&&dlg.className==="bk"&&!isNew){const o=list.find(x=>x.id===cur.id);try{grabC()}catch(e){}if(o&&(o.cust.name!==cur.cust.name||o.note!==cur.note||JSON.stringify(o.lines)!==JSON.stringify(cur.lines)||JSON.stringify(o.ext)!==JSON.stringify(cur.ext))&&!confirm("ยังไม่ได้บันทึกการแก้ไข ปิดเลยไหม?"))return}closeDlg()};
+dlg.addEventListener("close",()=>{if(dlg.className==="bk")cur=null});
+
+/* ---------- เปิดจากลิงก์ / ระบบอื่น ---------- */
+function fromHash(){const h=location.hash;if(!h)return;const m=/(open|new)=([\w-]*)/.exec(h);const v=/v=(\w+)/.exec(h);history.replaceState(null,"",location.pathname+location.search);
+  if(v&&VIEWS.includes(v[1])){ui.v=v[1];render()}
+  if(m&&m[1]==="open")openBk(m[2]);else if(m&&m[1]==="new")newBk({})}
+window.addEventListener("hashchange",fromHash);
+window.addEventListener("storage",e=>{if(!e.key||/^edm_(book_|bill_docs|bill_seller|bill_customers)/.test(e.key)){const keep=cur;load();if(!dlg.open)render();else cur=keep}});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&!dlg.open){load();render()}});
+render();setTimeout(fromHash,0);
+})();
+</script>
+<script src="../assets/member.js?v=51" defer></script>
+</body>
+</html>
