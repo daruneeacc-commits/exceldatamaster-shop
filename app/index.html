@@ -221,6 +221,34 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
   body.srch .search{display:block}.search .ic{left:26px;top:31px}.search kbd{display:none}
   .sr{position:static;margin-top:8px;max-height:calc(100vh - 200px);box-shadow:none;padding:0}
 }
+/* ---------- เมนูแถบดำ: ปุ่มใหญ่แบบไอคอน + ชื่อ กดง่าย อ่านง่าย ---------- */
+@media(min-width:761px){
+  aside{padding:6px 14px 8px;gap:4px;align-items:stretch}
+  aside>a,aside .mg-h{position:relative;flex-direction:column;justify-content:center;align-items:center;gap:4px;min-width:86px;min-height:62px;padding:8px 12px 7px;font-size:.88rem;font-weight:600;line-height:1.2;border-radius:14px;color:#fff;text-align:center}
+  aside>a .step,aside .mg-h .step{font-size:1.45rem;line-height:1;width:auto;height:auto}
+  aside>a:hover,aside .mg-h:hover{background:rgba(255,255,255,.09)}
+  aside>a.on{background:var(--accent);color:var(--accent-ink)}
+  aside .mg-h i{position:absolute;top:7px;right:7px;margin:0;font-size:.6rem;opacity:.7}
+  aside .mg.has-on>.mg-h{box-shadow:inset 0 -3px 0 var(--accent)}
+  aside>a .n,aside .mg-h .n{position:absolute;top:4px;right:6px;margin:0}
+  aside .mg-b,aside .mg.closed .mg-b{top:calc(100% + 8px);min-width:270px;padding:8px;border-radius:16px}
+  aside .mg-b a{padding:12px 14px;font-size:.98rem;gap:12px;border-radius:12px}
+  aside .mg-b a .no{width:26px;height:26px;font-size:.8rem}
+  aside .mg-b a:hover{background:rgba(255,255,255,.09)}
+  aside .mg-b a.on{background:var(--accent);color:var(--accent-ink)}
+  aside .foot{align-self:center}
+  aside .foot .ed-up{padding:9px 16px}aside .foot .ed-up b{font-size:.86rem}
+}
+@media(min-width:761px) and (max-width:1180px){
+  aside{padding:5px 10px 7px;gap:2px}
+  aside>a,aside .mg-h{min-width:70px;min-height:56px;padding:7px 8px 6px;font-size:.78rem}
+  aside>a .step,aside .mg-h .step{font-size:1.25rem}
+}
+/* มือถือ: เมนู ☰ ใหญ่ขึ้น กดง่าย */
+@media(max-width:760px){
+  aside a,aside .mg-h{padding:12px 14px;font-size:1rem;min-height:46px}
+  aside .mg-b a{padding:11px 14px 11px 18px}
+}
 /* โหมดหน้าร้านของคาเฟ่: ซ่อนเมนูระบบ ให้หน้าขายเต็มจอ */
 body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk #updBar{display:none!important}body.cf-kiosk .stage{position:fixed!important;inset:0;z-index:90}
 </style>
