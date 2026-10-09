@@ -279,6 +279,16 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
       <a href="#/stkre" data-r="stkre"><span class="no">7</span>สินค้าต้องสั่งซื้อ<span class="n" id="nLow" hidden></span></a>
       <a href="#/stockrep" data-r="stockrep"><span class="no">8</span>รายงานสต๊อก</a>
     </div></div>
+    <div class="mg" data-g="cf"><button class="mg-h" type="button"><span class="step">☕</span>คาเฟ่ / หน้าร้าน<i>▾</i></button><div class="mg-b">
+      <a href="#/cf" data-r="cf"><span class="no">1</span>ภาพรวมคาเฟ่</a>
+      <a href="#/cfpos" data-r="cfpos"><span class="no">2</span>ขายหน้าร้าน (POS)</a>
+      <a href="#/cfbar" data-r="cfbar"><span class="no">3</span>จอบาร์ / ครัว<span class="n" id="nCf" hidden></span></a>
+      <a href="#/cford" data-r="cford"><span class="no">4</span>ออเดอร์ / ใบเสร็จ</a>
+      <a href="#/cfmenu" data-r="cfmenu"><span class="no">5</span>เมนูและสูตร</a>
+      <a href="#/cfshift" data-r="cfshift"><span class="no">6</span>เปิด / ปิดกะ</a>
+      <a href="#/cfrpt" data-r="cfrpt"><span class="no">7</span>รายงานคาเฟ่</a>
+      <a href="#/cfset" data-r="cfset"><span class="no">8</span>ตั้งค่าคาเฟ่</a>
+    </div></div>
     <div class="mg" data-g="bk"><button class="mg-h" type="button"><span class="step">📅</span>จอง / ให้เช่า<i>▾</i></button><div class="mg-b">
       <a href="#/bk" data-r="bk"><span class="no">1</span>ภาพรวมการจอง<span class="n" id="nBk" hidden></span></a>
       <a href="#/bkcal" data-r="bkcal"><span class="no">2</span>ปฏิทินห้อง / อุปกรณ์</a>
@@ -431,7 +441,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 </nav>
 <div id="toast" hidden style="position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:90;font-size:.9rem"></div>
 
-<script src="edition.js?v=3"></script>
+<script src="edition.js?v=4"></script>
 <script>
 "use strict";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -446,8 +456,9 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=51"},stock:{src:"/stock/?v=50",sv:"home"},stockrep:{src:"/stock/?v=50",sv:"report"},stkitems:{src:"/stock/?v=50",sv:"items"},stkin:{src:"/stock/?v=50",sv:"in"},stkout:{src:"/stock/?v=50",sv:"out"},stkadj:{src:"/stock/?v=50",sv:"adj"},stkhist:{src:"/stock/?v=50",sv:"hist"},stkre:{src:"/stock/?v=50",sv:"reorder"},
+const ROUTES={bill:{src:"/bill/?v=51"},stock:{src:"/stock/?v=51",sv:"home"},stockrep:{src:"/stock/?v=51",sv:"report"},stkitems:{src:"/stock/?v=51",sv:"items"},stkin:{src:"/stock/?v=51",sv:"in"},stkout:{src:"/stock/?v=51",sv:"out"},stkadj:{src:"/stock/?v=51",sv:"adj"},stkhist:{src:"/stock/?v=51",sv:"hist"},stkre:{src:"/stock/?v=51",sv:"reorder"},
   ar:{src:"/account/?v=50",v:"ar"},tax:{src:"/account/?v=50",v:"tax"},buy:{src:"/account/?v=50",v:"buy"},cash:{src:"/account/?v=50",v:"cash"},pnl:{src:"/account/?v=50",v:"home"},
+  cf:{src:"/cafe/?v=1",cv:"home"},cfpos:{src:"/cafe/?v=1",cv:"pos"},cfbar:{src:"/cafe/?v=1",cv:"bar"},cford:{src:"/cafe/?v=1",cv:"orders"},cfmenu:{src:"/cafe/?v=1",cv:"menu"},cfshift:{src:"/cafe/?v=1",cv:"shift"},cfrpt:{src:"/cafe/?v=1",cv:"rpt"},cfset:{src:"/cafe/?v=1",cv:"set"},
   bk:{src:"/booking/?v=2",bv:"home"},bkcal:{src:"/booking/?v=2",bv:"cal"},bklist:{src:"/booking/?v=2",bv:"list"},bkres:{src:"/booking/?v=2",bv:"res"},bkrpt:{src:"/booking/?v=2",bv:"rpt"},bkset:{src:"/booking/?v=2",bv:"set"},
   cost:{src:"/account/?v=50",v:"cost"},exp:{src:"/account/?v=50",v:"exp"},bank:{src:"/account/?v=50",v:"bank"},cashv:{src:"/account/?v=50",v:"cashv"},petty:{src:"/account/?v=50",v:"petty"},ap:{src:"/account/?v=50",v:"ap"}};
 const frames={};
@@ -481,6 +492,7 @@ function route(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0]
   const R=ROUTES[r],f=frameFor(R.src);
   if(f.dataset.ready)f.classList.add("show");else f.addEventListener("load",()=>{if(cur===r)f.classList.add("show")},{once:true});
   if(R.v)setAccView(f,R.v);
+  if(R.cv&&quietNav){quietNav=0}else if(R.cv){const gv=()=>{try{f.contentWindow.edmCafeView&&f.contentWindow.edmCafeView(R.cv)}catch(e){}};f.dataset.ready?gv():f.addEventListener("load",gv,{once:true})}
   if(R.bv&&quietNav){quietNav=0}else if(R.bv){const gv=()=>{try{f.contentWindow.edmBookView&&f.contentWindow.edmBookView(R.bv)}catch(e){}};f.dataset.ready?gv():f.addEventListener("load",gv,{once:true})}
   if(R.sv&&quietNav){quietNav=0}else if(R.sv){const gv=()=>{try{f.contentWindow.edmStockView&&f.contentWindow.edmStockView(R.sv)}catch(e){}};f.dataset.ready?gv():f.addEventListener("load",gv,{once:true})}
   const a=$(`aside a[data-r="${r}"]`);document.title=(a?a.textContent.replace(/^\S+\s*/,"").replace(/\d+$/,""):"")+" · ระบบร้านค้า";
@@ -533,6 +545,7 @@ $("#burger").onclick=()=>document.body.classList.toggle("menu");$("#scrim").oncl
 // ลิงก์ข้ามระบบจากในหน้าย่อย (เช่น ปุ่ม "ไปหน้าสต๊อก") ให้เปลี่ยนเมนูแทนการเปิดหน้าใหม่
 window.addEventListener("message",e=>{if(e.origin!==location.origin||!e.data||e.data.edm!=="go")return;const t=e.data.tool,v=(/v=(\w+)/.exec(e.data.hash||"")||[])[1];
   if(e.data.open&&t==="bill"&&/^(open|new)=[\w-]+$/.test(e.data.hash||"")){openIn("bill",e.data.hash);return}
+  if(t==="cafe"){const M={home:"cf",pos:"cfpos",bar:"cfbar",orders:"cford",menu:"cfmenu",shift:"cfshift",rpt:"cfrpt",set:"cfset"};const to=M[v]||"cf";if(cur!==to){if(e.data.quiet)quietNav=1;go(to)}return}
   if(t==="booking"){const M={home:"bk",cal:"bkcal",list:"bklist",res:"bkres",rpt:"bkrpt",set:"bkset"};const to=M[v]||"bk";if(cur!==to){if(e.data.quiet)quietNav=1;go(to)}return}
   if(t==="stock"&&v){const M={home:"stock",items:"stkitems",in:"stkin",out:"stkout",adj:"stkadj",hist:"stkhist",reorder:"stkre",report:"stockrep",move:"stkin"};if(M[v]&&cur!==M[v]){if(e.data.quiet){quietNav=1;}go(M[v])}return}
   if(t==="account"){go(v==="ar"||v==="tax"||v==="ap"?v:v==="buy"?"cost":v==="cash"?"bank":"pnl")}else if(ROUTES[t])go(t);else go("home")});
@@ -556,6 +569,7 @@ function renderHome(){
   const B=stockBal();const low=items.filter(i=>num(i.min)>0&&(B[i.id]||0)<=num(i.min));
   ($("#nAr")||{}).hidden=!arN;($("#nAr")||{}).textContent=arN;
   {const t=today(),BL=LS.get("edm_book_list",[])||[];const nb=BL.filter(b=>{const L=b.lines||[];if(b.st==="hold"||b.st==="conf")return L.some(l=>String(l.s).slice(0,10)<=t);if(b.st==="in")return L.some(l=>String(l.e).slice(0,10)<=t);return false}).length+(((LS.get("edm_book_inbox",{})||{}).items)||[]).filter(x=>!BL.some(b=>b.web===x.code)).length;const el=$("#nBk");if(el){el.hidden=!nb;el.textContent=nb}}
+  {const nc=(LS.get("edm_cafe_orders",[])||[]).filter(o=>o.st==="new"||o.st==="make").length;const el=$("#nCf");if(el){el.hidden=!nc;el.textContent=nc}}
   {const po=(A.pay||[]).filter(p=>p.dir==="out");let apN=0;(A.pur||[]).forEach(p=>{if(p.status==="ordered")return;const c=calcDoc({items:(p.lines||[]).map(l=>({q:l.q,p:l.p})),vat:p.vat,wht:p.wht,billDisc:0});const pd=po.filter(y=>y.purId===p.id).reduce((a,y)=>a+num(y.amount)+num(y.wht),0);if(c.total-pd>0.009)apN++});($("#nAp")||{}).hidden=!apN;($("#nAp")||{}).textContent=apN}($("#nLow")||{}).hidden=!low.length;($("#nLow")||{}).textContent=low.length;
   $("#shopName").textContent=seller.name?"· "+seller.name:"· Excel Data Master";
   $("#hi").textContent=seller.name?"สวัสดีค่ะ "+seller.name:"สวัสดีค่ะ 👋";
@@ -723,8 +737,8 @@ $("#stSave").onclick=()=>{const name=$("#stName").value.trim();if(!name){$("#stM
   if(!ok)return;reloadFrames();$("#stMsg").textContent="บันทึกแล้ว ✓ ใช้กับทุกระบบแล้ว";toast("บันทึกข้อมูลร้านแล้ว ✓");setTimeout(()=>go("home"),900)};
 
 /* ---------- สำรอง / กู้คืน / ล้างข้อมูล ---------- */
-const KS=["edm_book_res","edm_book_list","edm_book_cfg","edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_suppliers","edm_services","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
-const KS_UI=["edm_book_ui","edm_book_pub","edm_book_inbox","edm_book_acks","edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_pay_ui","edm_bill_term"];
+const KS=["edm_cafe_menu","edm_cafe_orders","edm_cafe_shifts","edm_cafe_cfg","edm_book_res","edm_book_list","edm_book_cfg","edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_suppliers","edm_services","edm_stock_items","edm_stock_tx","edm_stock_cfg","edm_pay_company","edm_pay_emps","edm_pay_records","edm_pay_summary"];
+const KS_UI=["edm_cafe_ui","edm_cafe_cart","edm_book_ui","edm_book_pub","edm_book_inbox","edm_book_acks","edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_pay_ui","edm_bill_term"];
 function renderLock(){const L=window.EDM_LOCK,c=L&&L.get();$("#lkState").textContent=c?"เปิดใช้อยู่":"ยังไม่ได้ตั้ง";$("#lkSet").textContent=c?"เปลี่ยน PIN":"🔒 ตั้ง PIN";$("#lkL1").textContent=c?"PIN ใหม่ (ตัวเลข 4–12 หลัก)":"ตั้ง PIN (ตัวเลข 4–12 หลัก)";
   $("#lkNow").hidden=!c;$("#lkOff").hidden=!c;$("#lkOldBox").hidden=!c;if(c)$("#lkIdle").value=String(c.idle||0);["#lkPin","#lkPin2","#lkOld"].forEach(s=>$(s).value="");$("#lkMsg").textContent=""}
 $("#lkSet").onclick=async()=>{const L=window.EDM_LOCK;if(!L)return;const a=$("#lkPin").value.trim(),b2=$("#lkPin2").value.trim(),m=$("#lkMsg");
@@ -763,9 +777,9 @@ $("#dtWipeGo").onclick=()=>{if(!wipeCode||$("#dtCodeIn").value!==wipeCode)return
 new MutationObserver(()=>Object.values(frames).forEach(f=>{if(!f._b){f._b=1;f.addEventListener("load",()=>f.dataset.ready=1)}})).observe($("#stage"),{childList:true});
 route();
 // เปิดเอกสาร/บัตรสินค้าที่ส่งต่อมาจากลิงก์เดิม (/bill/#open=... · /stock/#card=...)
-try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h))openIn(P.t==="stock"?"stock":P.t==="booking"?"bk":"bill",P.h)}catch(e){}
+try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h))openIn(P.t==="stock"?"stock":P.t==="booking"?"bk":P.t==="cafe"?"cf":"bill",P.h)}catch(e){}
 </script>
 <script src="reports.js?v=50"></script>
-<script src="../assets/member.js?v=53" defer></script>
+<script src="../assets/member.js?v=54" defer></script>
 </body>
 </html>

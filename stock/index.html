@@ -242,7 +242,7 @@ function vHome(){
 function txTable(list,withDel){
   if(!list.length)return`<div class="empty" style="padding:14px">ยังไม่มีรายการ</div>`;
   return`<div class="tbl-wrap"><table class="t"><thead><tr><th>วันที่</th><th>ประเภท</th><th>สินค้า</th><th class="r">จำนวน</th><th class="r">ทุน/หน่วย</th><th>คู่ค้า / อ้างอิง</th>${withDel?"<th></th>":""}</tr></thead><tbody>${list.map(t=>{const i=byId(t.pid)||{name:"(ลบแล้ว)",unit:""},T=TY[t.type];const q=num(t.qty);
-    return`<tr><td style="white-space:nowrap">${thD(t.date)}</td><td><span class="pill ${T[1]}">${T[0]}</span></td><td>${esc(i.name)}</td><td class="r ${T[2]}">${t.type==="adj"?(q>0?"+":""):T[3]}${fq(q)} ${esc(i.unit)}</td><td class="r">${t.type==="in"?fmt(t.cost):""}</td><td>${esc(t.party||"")}${t.ref?` <span class="sku">${esc(t.ref)}</span>`:""}${t.src==="bill"?` <span class="pill p-adj">จากบิล</span>`:t.src==="acc"?` <span class="pill p-adj">จากใบซื้อ</span>`:""}${t.note?`<br><span class="note">${esc(t.note)}</span>`:""}</td>${withDel?`<td class="r">${t.src==="bill"?`<span class="note">แก้ที่หน้าเปิดบิล</span>`:t.src==="acc"?`<span class="note">แก้ที่หน้าบัญชี</span>`:`<button class="btn sm ghost danger edm-lock" data-deltx="${t.id}">ลบ</button>`}</td>`:""}</tr>`}).join("")}</tbody></table></div>`;
+    return`<tr><td style="white-space:nowrap">${thD(t.date)}</td><td><span class="pill ${T[1]}">${T[0]}</span></td><td>${esc(i.name)}</td><td class="r ${T[2]}">${t.type==="adj"?(q>0?"+":""):T[3]}${fq(q)} ${esc(i.unit)}</td><td class="r">${t.type==="in"?fmt(t.cost):""}</td><td>${esc(t.party||"")}${t.ref?` <span class="sku">${esc(t.ref)}</span>`:""}${t.src==="bill"?` <span class="pill p-adj">จากบิล</span>`:t.src==="acc"?` <span class="pill p-adj">จากใบซื้อ</span>`:t.src==="cafe"?` <span class="pill p-adj">จากคาเฟ่</span>`:""}${t.note?`<br><span class="note">${esc(t.note)}</span>`:""}</td>${withDel?`<td class="r">${t.src==="bill"?`<span class="note">แก้ที่หน้าเปิดบิล</span>`:t.src==="acc"?`<span class="note">แก้ที่หน้าบัญชี</span>`:`<button class="btn sm ghost danger edm-lock" data-deltx="${t.id}">ลบ</button>`}</td>`:""}</tr>`}).join("")}</tbody></table></div>`;
 }
 
 function vItems(){
@@ -500,6 +500,6 @@ window.__stock={compute,period,demo,exportExcel,get items(){return items},get tx
 })();
 </script>
 <script src="../assets/tool-ui.js?v=3" defer></script>
-<script src="../assets/member.js?v=53" defer></script>
+<script src="../assets/member.js?v=54" defer></script>
 </body>
 </html>

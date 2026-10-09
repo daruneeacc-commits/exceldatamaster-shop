@@ -26,6 +26,14 @@
       rpt: { inc: 0, mst: ["custlist"] },
       tab: [["bk", "🏠", "หน้าหลัก"], ["bkcal", "📅", "ปฏิทิน"], ["bklist", "📋", "การจอง"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เพิ่มเติม"]]
     }
+    ,cafe: {
+      name: "ระบบร้านคาเฟ่", ic: "☕",
+      sub: "ขายหน้าร้าน ออกคิว จอบาร์ ตัดสต๊อกวัตถุดิบตามสูตรต่อแก้ว ปิดกะแล้วลงบัญชีให้อัตโนมัติ",
+      allow: ["home", "setup", "data", "cf", "cfpos", "cfbar", "cford", "cfmenu", "cfshift", "cfrpt", "cfset", "stock", "stkitems", "stkin", "stkout", "stkadj", "stkhist", "stkre", "stockrep", "cost", "bills", "receipts", "rpt"],
+      rpt: { inc: 0, stk: 0, exp: ["cost", "po", "pursup"] },
+      labels: { cost: "ซื้อวัตถุดิบ / ใบสั่งซื้อ" }, groups: { exp: "ซื้อวัตถุดิบ" }, rptLabels: { exp: "รายงานซื้อวัตถุดิบ" },
+      tab: [["cfpos", "🧾", "ขาย"], ["cfbar", "🍹", "บาร์"], ["cf", "☕", "ภาพรวม"], ["cfrpt", "📊", "รายงาน"], ["more", "☰", "เพิ่มเติม"]]
+    }
   };
   var E = EDS[ed] || null;
   window.EDM_ED = E;
@@ -75,7 +83,7 @@
 
   // หน้าหลักของแต่ละรุ่น (เรียกจาก renderHome ของระบบร้านค้า)
   E.home = function (c) {
-    if (ed === "book") { var hh = location.hash.replace(/^#\/?/, "").split("?")[0]; if (!hh || hh === "home") location.replace("#/bk"); return; } // renderHome ถูกเรียกเพื่ออัปเดตตัวเลขเมนูด้วย จึงพาไปหน้าจองเฉพาะตอนอยู่หน้าหลัก
+    if (ed === "book" || ed === "cafe") { var hh = location.hash.replace(/^#\/?/, "").split("?")[0]; if (!hh || hh === "home") location.replace(ed === "cafe" ? "#/cf" : "#/bk"); return; } // renderHome ถูกเรียกเพื่ออัปเดตตัวเลขเมนูด้วย จึงพาไปหน้าจองเฉพาะตอนอยู่หน้าหลัก
     var qa = $("#home .qa"), cards = $$("#home .grid2 > .card"), h2a = cards[0] && $("h2", cards[0]), h2b = cards[1] && $$("h2", cards[1]);
     function qbtns(L) { qa.innerHTML = L.map(function (x) { return '<button data-go="' + x[0] + '">' + x[1] + "</button>"; }).join(""); }
     if (ed === "bill") {

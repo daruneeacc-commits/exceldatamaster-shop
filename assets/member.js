@@ -84,7 +84,7 @@
     return "";
   }
   function renderGate() {
-    var tool = /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /booking/.test(location.pathname) ? "ระบบจองและให้เช่า" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
+    var tool = /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /booking/.test(location.pathname) ? "ระบบจองและให้เช่า" : /cafe/.test(location.pathname) ? "ระบบร้านคาเฟ่" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
     var h = '<div class="edm-card">';
     if (mode === "sent") {
       h += '<div style="font-size:2.4rem;line-height:1">✅</div><h2>สมัครเรียบร้อย · รอร้านเปิดใช้งาน</h2><p>' + esc(note) + '</p>' +
@@ -230,14 +230,14 @@
   /* ---------- สำรองข้อมูลขึ้นระบบร้าน (Google Drive ของร้าน) ----------
    * เข้าสู่ระบบแล้ว: ดึงข้อมูลล่าสุดจากระบบ (ถ้าใหม่กว่า) แล้วสำรองให้อัตโนมัติทุกครั้งที่ข้อมูลเปลี่ยน
    * ใช้เปลี่ยนเครื่องได้ และข้อมูลไม่หายแม้ล้างเบราว์เซอร์ */
-  var CK = ["edm_acc", "edm_bill_docs", "edm_bill_seller", "edm_bill_counter", "edm_bill_customers", "edm_suppliers", "edm_services", "edm_stock_items", "edm_stock_tx", "edm_stock_cfg", "edm_pay_company", "edm_pay_emps", "edm_pay_records", "edm_pay_summary", "edm_book_res", "edm_book_list", "edm_book_cfg"];
-  var NEWK = ["edm_book_res", "edm_book_list", "edm_book_cfg"]; // ระบบจอง (เพิ่มภายหลัง): ถ้าข้อมูลบนระบบยังไม่มี ไม่ลบข้อมูลในเครื่อง
+  var CK = ["edm_acc", "edm_bill_docs", "edm_bill_seller", "edm_bill_counter", "edm_bill_customers", "edm_suppliers", "edm_services", "edm_stock_items", "edm_stock_tx", "edm_stock_cfg", "edm_pay_company", "edm_pay_emps", "edm_pay_records", "edm_pay_summary", "edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg"];
+  var NEWK = ["edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg"]; // ระบบจอง (เพิ่มภายหลัง): ถ้าข้อมูลบนระบบยังไม่มี ไม่ลบข้อมูลในเครื่อง
   var SK = "edm_sync", cloudTimer = null, dirtySince = 0, pushing = false, cloudOn = false;
   function cGet() { try { return JSON.parse(localStorage.getItem(SK) || "{}") || {}; } catch (e) { return {}; } }
   function cSet(o) { try { localStorage.setItem(SK, JSON.stringify(o)); } catch (e) {} }
   function snap() { var o = {}; CK.forEach(function (k) { var v = null; try { v = localStorage.getItem(k); } catch (e) {} if (v != null) o[k] = v; }); return JSON.stringify({ v: 1, keys: o }); }
   function hashOf(str) { var h = 5381; for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return String(h >>> 0) + ":" + str.length; }
-  function emptyLocal() { return ["edm_bill_docs", "edm_stock_items", "edm_pay_emps", "edm_book_list", "edm_book_res"].every(function (k) { var v = localStorage.getItem(k); return !v || v === "[]"; }) && !/"pur":\[\{|"cash":\[\{/.test(localStorage.getItem("edm_acc") || ""); }
+  function emptyLocal() { return ["edm_bill_docs", "edm_stock_items", "edm_pay_emps", "edm_book_list", "edm_book_res", "edm_cafe_menu"].every(function (k) { var v = localStorage.getItem(k); return !v || v === "[]"; }) && !/"pur":\[\{|"cash":\[\{/.test(localStorage.getItem("edm_acc") || ""); }
   function timeTh(ts) { var d = new Date(ts); return thDate(ts) + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
   function cloudPush(force) {
     if (!me || !me.token || pushing) return Promise.resolve(false);
@@ -255,8 +255,10 @@
   function cloudRestore(r) {
     var o; try { o = JSON.parse(r.data); } catch (e) { return; }
     if (!o || !o.keys) return;
-    var hasNew = NEWK.some(function (k) { return o.keys[k] != null; });
-    CK.forEach(function (k) { try { if (o.keys[k] != null) localStorage.setItem(k, o.keys[k]); else if (hasNew || NEWK.indexOf(k) < 0) localStorage.removeItem(k); } catch (e) {} });
+    // ระบบที่เพิ่มภายหลัง (จอง / คาเฟ่): ถ้าข้อมูลบนระบบยังไม่มีระบบนั้นเลย ให้เก็บข้อมูลในเครื่องไว้ ไม่ลบทิ้ง
+    var fam = function (k) { return k.split("_").slice(0, 2).join("_"); };
+    var hasFam = function (k) { return NEWK.some(function (x) { return fam(x) === fam(k) && o.keys[x] != null; }); };
+    CK.forEach(function (k) { try { if (o.keys[k] != null) localStorage.setItem(k, o.keys[k]); else if (NEWK.indexOf(k) < 0 || hasFam(k)) localStorage.removeItem(k); } catch (e) {} });
     try { localStorage.removeItem("edm_bill_draft"); } catch (e) {}
     cSet({ email: me.email, h: hashOf(snap()), at: r.ts, ok: Date.now() });
     toast("ดึงข้อมูลล่าสุดจากระบบแล้ว (บันทึกเมื่อ " + timeTh(r.ts) + ")");
@@ -300,7 +302,7 @@
       var a = e.target.closest && e.target.closest("a[href]"); if (!a || a.target === "_blank") return;
       var u; try { u = new URL(a.href, location.href); } catch (x) { return; }
       if (u.origin !== location.origin) return;
-      var m = /^\/(bill|stock|account|payroll|booking)?\/?$/.exec(u.pathname); if (!m) return;
+      var m = /^\/(bill|stock|account|payroll|booking|cafe)?\/?$/.exec(u.pathname); if (!m) return;
       e.preventDefault(); window.top.postMessage({ edm: "go", tool: m[1] || "home", hash: u.hash }, location.origin);
     }, true);
   }
