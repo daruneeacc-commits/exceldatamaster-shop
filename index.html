@@ -639,6 +639,17 @@ header.top .wrap.hd{height:auto}
 .toolbar{min-width:0;max-width:100%}.tabs{max-width:100%}
 header.top .hd .logo{flex:0 1 auto;min-width:0}
 @media (max-width:900px){header.top .head-actions{flex:none}}
+
+/* ไอคอนชุดเดียวกันทั้งหน้า: เส้นบาง บนพื้นสีอ่อนตามระบบ */
+.ico{--ic:var(--brand);flex:none;display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;color:var(--ic);background:color-mix(in srgb,var(--ic) 12%,var(--bg));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ic) 22%,transparent)}
+.ico svg{width:58%;height:58%}
+.ico.sm{width:34px;height:34px;border-radius:10px}
+.ico.lg{width:48px;height:48px;border-radius:14px}
+.ico.on-dark{color:#fff;background:linear-gradient(140deg,#3DBB7E,#0E6B43);box-shadow:none}
+.door-ics{gap:6px}
+.sys-txt h3{gap:12px}
+.sys-main h3{display:flex;align-items:center;gap:14px}
+@media (max-width:620px){.sys-txt h3 .ico{width:32px;height:32px;border-radius:9px}.sys-txt h3{gap:10px}}
 .rc{color:var(--muted);font-size:.9rem;white-space:nowrap}
 </style><div id="app"><!--pre--><header class="top"><div class="wrap hd">
     <a class="logo" href="#top"><img class="logo-img" src="/assets/shop/avatar.webp" alt=""><span>Excel Data Master</span></a>
@@ -664,30 +675,30 @@ header.top .hd .logo{flex:0 1 auto;min-width:0}
     </div></section>
 
     <section class="doors"><div class="wrap doors-in">
-      <a class="door" href="#tools"><span class="door-k">ระบบออนไลน์</span><b>ใช้ผ่านเว็บ จ่ายเป็นรายเดือน</b><span class="door-p">199 บาท / 30 วัน · ทดลองฟรี 7 วัน</span><span class="door-ics"><i title="เปิดบิลออนไลน์">🧾</i><i title="สต๊อกสินค้า">📦</i><i title="ร้านคาเฟ่ (POS)">☕</i><i title="จองห้อง / ให้เช่า">📅</i><i title="บัญชีร้านค้า">📒</i><i title="คำนวณเงินเดือน">💰</i></span></a>
-      <a class="door" href="#shop"><span class="door-k">เทมเพลต Excel / Google Sheets</span><b>ซื้อครั้งเดียว ได้ไฟล์ไปใช้เลย</b><span class="door-p">11 ไฟล์ · เริ่มต้น ฿459</span><span class="door-ics"><i>📊</i><i>🧾</i><i>📦</i><i>📅</i><i>💵</i></span></a>
+      <a class="door" href="#tools"><span class="door-k">ระบบออนไลน์</span><b>ใช้ผ่านเว็บ จ่ายเป็นรายเดือน</b><span class="door-p">199 บาท / 30 วัน · ทดลองฟรี 7 วัน</span><span class="door-ics"><span class="ico sm" style="--ic:#0E7A4B" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4L6 21z"></path><path d="M9 8h6M9 12h6M9 16h3.5"></path></svg></span><span class="ico sm" style="--ic:#B7700A" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"></path><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9M7.8 5.3l8.5 4.5"></path></svg></span><span class="ico sm" style="--ic:#8A5232" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h12v4.5A5.5 5.5 0 0 1 10.5 19h-1A5.5 5.5 0 0 1 4 13.5z"></path><path d="M16 10.5h1.2a2.6 2.6 0 0 1 0 5.2H16M7.5 3.5c-.6.9.6 1.6 0 2.5M11.5 3.5c-.6.9.6 1.6 0 2.5M3 21h14"></path></svg></span><span class="ico sm" style="--ic:#2563C9" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path><path d="m9 15 2 2 4-4"></path></svg></span><span class="ico sm" style="--ic:#0B7F8A" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"></path><rect x="5.5" y="12" width="3" height="5" rx=".8"></rect><rect x="10.5" y="8" width="3" height="9" rx=".8"></rect><rect x="15.5" y="4.5" width="3" height="12.5" rx=".8"></rect></svg></span><span class="ico sm" style="--ic:#7448B5" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="18" height="13" rx="2.5"></rect><path d="M3 10.5h18M7 6.5 8.6 3.8a1.5 1.5 0 0 1 2-.5L16 6.5"></path><circle cx="16.5" cy="15" r="1.3"></circle></svg></span></span></a>
+      <a class="door" href="#shop"><span class="door-k">เทมเพลต Excel / Google Sheets</span><b>ซื้อครั้งเดียว ได้ไฟล์ไปใช้เลย</b><span class="door-p">11 ไฟล์ · เริ่มต้น ฿459</span><span class="door-ics"><span class="ico sm" style="--ic:#1F7A45" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M3.5 9h17M3.5 14.5h17M9.5 4v16"></path></svg></span><span class="ico sm" style="--ic:#0E8A5F" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7.5L19 7.5V21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><path d="M14.5 3v4.5H19M8.5 11h7v6.5h-7zM8.5 14.25h7M12 11v6.5"></path></svg></span></span></a>
     </div></section>
 
     <section id="tools" class="sx"><div class="wrap">
       <div class="sx-head"><h2>ระบบออนไลน์ เลือกใช้ตามงานของร้าน</h2><p>แต่ละระบบใช้แยกกันได้ ข้อมูลของระบบหนึ่งไม่ปนกับอีกระบบ หรือใช้ระบบร้านค้าตัวเต็มที่รวมเปิดบิล สต๊อก และบัญชีไว้ด้วยกัน</p></div>
       <a class="sys-main" href="/app/">
-        <div class="sys-main-txt"><span class="sys-tag">คุ้มที่สุด</span><h3>ระบบร้านค้า ตัวเต็ม</h3><p>เปิดบิล ภาษี สต๊อก ซื้อ-ค่าใช้จ่าย การเงิน และรายงาน อยู่ในที่เดียว หน้าแรกสรุปยอดขาย ลูกหนี้ และสินค้าใกล้หมดให้ทุกวัน</p>
+        <div class="sys-main-txt"><span class="sys-tag">คุ้มที่สุด</span><h3><span class="ico lg on-dark" style="--ic:#0E6B43" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9 5.3 4h13.4l1.8 5"></path><path d="M3.5 9a2.8 2.8 0 0 0 5.7 0 2.8 2.8 0 0 0 5.6 0 2.8 2.8 0 0 0 5.7 0"></path><path d="M5 11.5V20h14v-8.5M10 20v-5h4v5"></path></svg></span>ระบบร้านค้า ตัวเต็ม</h3><p>เปิดบิล ภาษี สต๊อก ซื้อ-ค่าใช้จ่าย การเงิน และรายงาน อยู่ในที่เดียว หน้าแรกสรุปยอดขาย ลูกหนี้ และสินค้าใกล้หมดให้ทุกวัน</p>
           <ul class="sys-flow"><li>เปิดบิล</li><li>ตัดสต๊อก</li><li>ลงบัญชี</li><li>สรุปภาษี</li></ul><span class="btn btn-main">เข้าระบบร้านค้า</span></div>
         <div class="sys-main-img"><img src="/assets/shop/ui-app.webp" alt="หน้าหลักระบบร้านค้า สรุปยอดขาย ภาษี ลูกหนี้" loading="lazy" width="1280" height="800"></div>
       </a>
       <div class="sys-grid">
         <a class="sys" href="/bill/"><div class="sys-img"><img src="/assets/shop/ui-billform.webp" alt="ตัวอย่างหน้าจอเปิดบิลออนไลน์" loading="lazy" width="1280" height="800"></div>
-          <div class="sys-txt"><h3><span aria-hidden="true">🧾</span>เปิดบิลออนไลน์</h3><p>ใบเสนอราคา ใบแจ้งหนี้ ใบกำกับภาษี ใบเสร็จ ใบวางบิล พิมพ์ A4 หรือส่ง PDF ให้ลูกค้า</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>
+          <div class="sys-txt"><h3><span class="ico " style="--ic:#0E7A4B" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4L6 21z"></path><path d="M9 8h6M9 12h6M9 16h3.5"></path></svg></span>เปิดบิลออนไลน์</h3><p>ใบเสนอราคา ใบแจ้งหนี้ ใบกำกับภาษี ใบเสร็จ ใบวางบิล พิมพ์ A4 หรือส่ง PDF ให้ลูกค้า</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>
         <a class="sys" href="/stock/"><div class="sys-img"><img src="/assets/shop/ui-stock.webp" alt="ตัวอย่างหน้าจอสต๊อกสินค้า" loading="lazy" width="1280" height="800"></div>
-          <div class="sys-txt"><h3><span aria-hidden="true">📦</span>สต๊อกสินค้า</h3><p>รับเข้า เบิกออก ตรวจนับ รู้ยอดคงเหลือและต้นทุนเฉลี่ย เตือนก่อนของหมด</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>
+          <div class="sys-txt"><h3><span class="ico " style="--ic:#B7700A" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"></path><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9M7.8 5.3l8.5 4.5"></path></svg></span>สต๊อกสินค้า</h3><p>รับเข้า เบิกออก ตรวจนับ รู้ยอดคงเหลือและต้นทุนเฉลี่ย เตือนก่อนของหมด</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>
         <a class="sys" href="/cafe/"><div class="sys-img"><img src="/assets/shop/ui-cafe.webp" alt="ตัวอย่างหน้าจอร้านคาเฟ่ (POS)" loading="lazy" width="1280" height="800"></div>
-          <div class="sys-txt"><h3><span aria-hidden="true">☕</span>ร้านคาเฟ่ (POS)</h3><p>ขายหน้าร้าน ออกคิว ส่งออเดอร์เข้าจอบาร์ ตัดวัตถุดิบตามสูตร ปิดกะนับเงิน</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>
+          <div class="sys-txt"><h3><span class="ico " style="--ic:#8A5232" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h12v4.5A5.5 5.5 0 0 1 10.5 19h-1A5.5 5.5 0 0 1 4 13.5z"></path><path d="M16 10.5h1.2a2.6 2.6 0 0 1 0 5.2H16M7.5 3.5c-.6.9.6 1.6 0 2.5M11.5 3.5c-.6.9.6 1.6 0 2.5M3 21h14"></path></svg></span>ร้านคาเฟ่ (POS)</h3><p>ขายหน้าร้าน ออกคิว ส่งออเดอร์เข้าจอบาร์ ตัดวัตถุดิบตามสูตร ปิดกะนับเงิน</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>
         <a class="sys" href="/booking/"><div class="sys-img"><img src="/assets/shop/ui-booking.webp" alt="ตัวอย่างหน้าจอจองห้อง / ให้เช่า" loading="lazy" width="1280" height="800"></div>
-          <div class="sys-txt"><h3><span aria-hidden="true">📅</span>จองห้อง / ให้เช่า</h3><p>ห้องพัก ห้องประชุม สนาม อุปกรณ์ เช็กว่างให้ ไม่จองซ้อน รับมัดจำ ออกใบเสร็จ</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>
+          <div class="sys-txt"><h3><span class="ico " style="--ic:#2563C9" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path><path d="m9 15 2 2 4-4"></path></svg></span>จองห้อง / ให้เช่า</h3><p>ห้องพัก ห้องประชุม สนาม อุปกรณ์ เช็กว่างให้ ไม่จองซ้อน รับมัดจำ ออกใบเสร็จ</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>
         <a class="sys" href="/account/"><div class="sys-img"><img src="/assets/shop/ui-account.webp" alt="ตัวอย่างหน้าจอบัญชีร้านค้า" loading="lazy" width="1280" height="800"></div>
-          <div class="sys-txt"><h3><span aria-hidden="true">📒</span>บัญชีร้านค้า</h3><p>กำไรขาดทุนรายเดือน ลูกหนี้ เจ้าหนี้ เงินสด-ธนาคาร ภาษีซื้อ-ขาย</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>
+          <div class="sys-txt"><h3><span class="ico " style="--ic:#0B7F8A" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"></path><rect x="5.5" y="12" width="3" height="5" rx=".8"></rect><rect x="10.5" y="8" width="3" height="9" rx=".8"></rect><rect x="15.5" y="4.5" width="3" height="12.5" rx=".8"></rect></svg></span>บัญชีร้านค้า</h3><p>กำไรขาดทุนรายเดือน ลูกหนี้ เจ้าหนี้ เงินสด-ธนาคาร ภาษีซื้อ-ขาย</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>
         <a class="sys" href="/payroll/"><div class="sys-img"><img src="/assets/shop/ui-payroll.webp" alt="ตัวอย่างหน้าจอคำนวณเงินเดือน" loading="lazy" width="1280" height="800"></div>
-          <div class="sys-txt"><h3><span aria-hidden="true">💰</span>คำนวณเงินเดือน</h3><p>ประกันสังคม ภาษีหัก ณ ที่จ่าย OT ขาดลามาสาย พิมพ์สลิปรายคน</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a></div>
+          <div class="sys-txt"><h3><span class="ico " style="--ic:#7448B5" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="18" height="13" rx="2.5"></rect><path d="M3 10.5h18M7 6.5 8.6 3.8a1.5 1.5 0 0 1 2-.5L16 6.5"></path><circle cx="16.5" cy="15" r="1.3"></circle></svg></span>คำนวณเงินเดือน</h3><p>ประกันสังคม ภาษีหัก ณ ที่จ่าย OT ขาดลามาสาย พิมพ์สลิปรายคน</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a></div>
       <div class="trial" id="trial"><div class="trial-t"><h3>เริ่มทดลองใช้ฟรี 7 วัน</h3><ol class="trial-steps"><li>สมัครด้วยอีเมล</li><li>ร้านเปิดใช้งานให้ แจ้งทางอีเมล</li><li>เข้าใช้งานได้ทุกระบบ</li></ol></div>
         <div class="trial-btns"><a class="btn btn-main" href="/app/?start=signup">สมัครทดลองใช้</a><a class="btn btn-line" href="/app/?start=login">เข้าสู่ระบบ</a></div></div>
     </div></section>
@@ -936,6 +947,18 @@ function render(){
   const lineId=(s.line||"@856tvnxs").replace(/^@?/,"@"),lineUrl="https://line.me/R/ti/p/"+encodeURIComponent(lineId);
   const lineMsg=t=>"https://line.me/R/oaMessage/"+encodeURIComponent(lineId)+"/?"+encodeURIComponent(t);
   const LINEIC=`<svg class="ln-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C6.5 3 2 6.6 2 11c0 3.9 3.5 7.2 8.3 7.9.3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.6 1.1-.5 6-3.5 8.2-6.1 1.5-1.6 2.2-3.3 2.2-5C22.4 6.6 17.5 3 12 3Zm-5.3 10.6H4.8c-.3 0-.5-.2-.5-.5V9.4c0-.3.2-.5.5-.5s.5.2.5.5v3.2h1.4c.3 0 .5.2.5.5s-.2.5-.5.5Zm2-.5c0 .3-.2.5-.5.5s-.5-.2-.5-.5V9.4c0-.3.2-.5.5-.5s.5.2.5.5v3.7Zm4.5 0c0 .2-.1.4-.3.5h-.2c-.2 0-.3-.1-.4-.2l-1.9-2.6v2.3c0 .3-.2.5-.5.5s-.5-.2-.5-.5V9.4c0-.2.1-.4.3-.5h.2c.2 0 .3.1.4.2l1.9 2.6V9.4c0-.3.2-.5.5-.5s.5.2.5.5v3.7Zm3.1-2.3c.3 0 .5.2.5.5s-.2.5-.5.5h-1.4v.9h1.4c.3 0 .5.2.5.5s-.2.5-.5.5h-1.9c-.3 0-.5-.2-.5-.5V9.4c0-.3.2-.5.5-.5h1.9c.3 0 .5.2.5.5s-.2.5-.5.5h-1.4v.9h1.4Z"/></svg>`;
+  const ICP={
+    bill:'<path d="M6 3h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4L6 21z"/><path d="M9 8h6M9 12h6M9 16h3.5"/>',
+    stock:'<path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9M7.8 5.3l8.5 4.5"/>',
+    cafe:'<path d="M4 9h12v4.5A5.5 5.5 0 0 1 10.5 19h-1A5.5 5.5 0 0 1 4 13.5z"/><path d="M16 10.5h1.2a2.6 2.6 0 0 1 0 5.2H16M7.5 3.5c-.6.9.6 1.6 0 2.5M11.5 3.5c-.6.9.6 1.6 0 2.5M3 21h14"/>',
+    booking:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="m9 15 2 2 4-4"/>',
+    account:'<path d="M4 20h16"/><rect x="5.5" y="12" width="3" height="5" rx=".8"/><rect x="10.5" y="8" width="3" height="9" rx=".8"/><rect x="15.5" y="4.5" width="3" height="12.5" rx=".8"/>',
+    payroll:'<rect x="3" y="6.5" width="18" height="13" rx="2.5"/><path d="M3 10.5h18M7 6.5 8.6 3.8a1.5 1.5 0 0 1 2-.5L16 6.5"/><circle cx="16.5" cy="15" r="1.3"/>',
+    store:'<path d="M3.5 9 5.3 4h13.4l1.8 5"/><path d="M3.5 9a2.8 2.8 0 0 0 5.7 0 2.8 2.8 0 0 0 5.6 0 2.8 2.8 0 0 0 5.7 0"/><path d="M5 11.5V20h14v-8.5M10 20v-5h4v5"/>',
+    xlsx:'<rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M3.5 9h17M3.5 14.5h17M9.5 4v16"/>',
+    sheets:'<path d="M7 3h7.5L19 7.5V21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M14.5 3v4.5H19M8.5 11h7v6.5h-7zM8.5 14.25h7M12 11v6.5"/>'};
+  const ICC={bill:"#0E7A4B",stock:"#B7700A",cafe:"#8A5232",booking:"#2563C9",account:"#0B7F8A",payroll:"#7448B5",store:"#0E6B43",xlsx:"#1F7A45",sheets:"#0E8A5F"};
+  const ico=(k,cls)=>`<span class="ico ${cls||""}" style="--ic:${ICC[k]||"var(--brand)"}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICP[k]||""}</svg></span>`;
   const SYS=[
     ["bill","🧾","เปิดบิลออนไลน์","ใบเสนอราคา ใบแจ้งหนี้ ใบกำกับภาษี ใบเสร็จ ใบวางบิล พิมพ์ A4 หรือส่ง PDF ให้ลูกค้า","billform"],
     ["stock","📦","สต๊อกสินค้า","รับเข้า เบิกออก ตรวจนับ รู้ยอดคงเหลือและต้นทุนเฉลี่ย เตือนก่อนของหมด","stock"],
@@ -968,20 +991,20 @@ function render(){
     </div></section>
 
     <section class="doors"><div class="wrap doors-in">
-      <a class="door" href="#tools"><span class="door-k">ระบบออนไลน์</span><b>ใช้ผ่านเว็บ จ่ายเป็นรายเดือน</b><span class="door-p">199 บาท / 30 วัน · ทดลองฟรี 7 วัน</span><span class="door-ics">${SYS.map(x=>`<i title="${x[2]}">${x[1]}</i>`).join("")}</span></a>
-      <a class="door" href="#shop"><span class="door-k">เทมเพลต Excel / Google Sheets</span><b>ซื้อครั้งเดียว ได้ไฟล์ไปใช้เลย</b><span class="door-p">${tpl.length} ไฟล์${minPrice?` · เริ่มต้น ${baht(minPrice)}`:""}</span><span class="door-ics"><i>📊</i><i>🧾</i><i>📦</i><i>📅</i><i>💵</i></span></a>
+      <a class="door" href="#tools"><span class="door-k">ระบบออนไลน์</span><b>ใช้ผ่านเว็บ จ่ายเป็นรายเดือน</b><span class="door-p">199 บาท / 30 วัน · ทดลองฟรี 7 วัน</span><span class="door-ics">${SYS.map(x=>ico(x[0],"sm")).join("")}</span></a>
+      <a class="door" href="#shop"><span class="door-k">เทมเพลต Excel / Google Sheets</span><b>ซื้อครั้งเดียว ได้ไฟล์ไปใช้เลย</b><span class="door-p">${tpl.length} ไฟล์${minPrice?` · เริ่มต้น ${baht(minPrice)}`:""}</span><span class="door-ics">${ico("xlsx","sm")}${ico("sheets","sm")}</span></a>
     </div></section>
 
     <section id="tools" class="sx"><div class="wrap">
       <div class="sx-head"><h2>ระบบออนไลน์ เลือกใช้ตามงานของร้าน</h2><p>แต่ละระบบใช้แยกกันได้ ข้อมูลของระบบหนึ่งไม่ปนกับอีกระบบ หรือใช้ระบบร้านค้าตัวเต็มที่รวมเปิดบิล สต๊อก และบัญชีไว้ด้วยกัน</p></div>
       <a class="sys-main" href="${base}app/"${tg}>
-        <div class="sys-main-txt"><span class="sys-tag">คุ้มที่สุด</span><h3>ระบบร้านค้า ตัวเต็ม</h3><p>เปิดบิล ภาษี สต๊อก ซื้อ-ค่าใช้จ่าย การเงิน และรายงาน อยู่ในที่เดียว หน้าแรกสรุปยอดขาย ลูกหนี้ และสินค้าใกล้หมดให้ทุกวัน</p>
+        <div class="sys-main-txt"><span class="sys-tag">คุ้มที่สุด</span><h3>${ico("store","lg on-dark")}ระบบร้านค้า ตัวเต็ม</h3><p>เปิดบิล ภาษี สต๊อก ซื้อ-ค่าใช้จ่าย การเงิน และรายงาน อยู่ในที่เดียว หน้าแรกสรุปยอดขาย ลูกหนี้ และสินค้าใกล้หมดให้ทุกวัน</p>
           <ul class="sys-flow"><li>เปิดบิล</li><li>ตัดสต๊อก</li><li>ลงบัญชี</li><li>สรุปภาษี</li></ul><span class="btn btn-main">เข้าระบบร้านค้า</span></div>
         <div class="sys-main-img"><img src="/assets/shop/ui-app.webp" alt="หน้าหลักระบบร้านค้า สรุปยอดขาย ภาษี ลูกหนี้" loading="lazy" width="1280" height="800"></div>
       </a>
       <div class="sys-grid">${SYS.map(([k,ic,n,d,img])=>`
         <a class="sys" href="${base}${k}/"${tg}><div class="sys-img"><img src="/assets/shop/ui-${img}.webp" alt="ตัวอย่างหน้าจอ${n}" loading="lazy" width="1280" height="800"></div>
-          <div class="sys-txt"><h3><span aria-hidden="true">${ic}</span>${n}</h3><p>${d}</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>`).join("")}</div>
+          <div class="sys-txt"><h3>${ico(k)}${n}</h3><p>${d}</p><span class="sys-go">ทดลองใช้ฟรี</span></div></a>`).join("")}</div>
       <div class="trial" id="trial"><div class="trial-t"><h3>เริ่มทดลองใช้ฟรี 7 วัน</h3><ol class="trial-steps"><li>สมัครด้วยอีเมล</li><li>ร้านเปิดใช้งานให้ แจ้งทางอีเมล</li><li>เข้าใช้งานได้ทุกระบบ</li></ol></div>
         <div class="trial-btns"><a class="btn btn-main" href="${base}app/?start=signup"${tg}>สมัครทดลองใช้</a><a class="btn btn-line" href="${base}app/?start=login"${tg}>เข้าสู่ระบบ</a></div></div>
     </div></section>
