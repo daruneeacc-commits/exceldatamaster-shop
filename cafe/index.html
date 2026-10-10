@@ -534,7 +534,7 @@ function doneDlg(o){openDlg("✓ "+(o.pay.m==="app"?"รับออเดอร
 /* ---------- ใบเสร็จ 80 / 58 มม. ---------- */
 function setPage(w){$("#pageSize").textContent=w?`@page{size:${w}mm auto;margin:3mm}`:"@page{size:A4;margin:12mm}"}
 function slipHead(){const S=seller(),h=C.rcHead||S.name||"";return`<h3>${esc(h)}</h3>${S.addr?`<div class="c">${esc(S.addr).replace(/\n/g,"<br>")}</div>`:""}${S.phone?`<div class="c">โทร ${esc(S.phone)}</div>`:""}${S.vat&&S.tax?`<div class="c">เลขประจำตัวผู้เสียภาษี ${esc(S.tax)}${S.branch?" ("+esc(S.branch)+")":""}</div>`:""}`}
-function printSlip(o){const S=seller(),vat=!!S.vat,E=o.lines?eff(o):o,v=r2(E.total*7/107),d=new Date(o.ts);setPage(num(C.width)||80);
+function printSlip(o){window.EDM_DOCNAME="ใบเสร็จ-"+o.rc;const S=seller(),vat=!!S.vat,E=o.lines?eff(o):o,v=r2(E.total*7/107),d=new Date(o.ts);setPage(num(C.width)||80);
   const typ=o.type==="dine"?"ทานที่ร้าน"+(o.table?" · โต๊ะ "+esc(o.table):""):o.type==="deli"?"เดลิเวอรี · "+esc(pmName(payKey(o)))+(o.extRef?" #"+esc(o.extRef):""):"กลับบ้าน";
   $("#printArea").innerHTML=`<div class="slip ${num(C.width)===58?"w58":""}">${slipHead()}<hr><div class="c"><b>${vat&&C.abbr?"ใบกำกับภาษีอย่างย่อ / ใบเสร็จรับเงิน":"ใบเสร็จรับเงิน"}</b></div>
     <table><tr><td>เลขที่ ${esc(o.rc)}</td><td class="r">${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()+543} ${hm(o.ts)}</td></tr>${o.staff?`<tr><td colspan="2">พนักงาน ${esc(o.staff)}</td></tr>`:""}</table>
@@ -772,7 +772,7 @@ function vShift(){const V=$("#view"),s=curShift(),hist=SH.filter(x=>x.closed).so
         <div class="foot"><button class="btn ghost" id="cxPr">🖨 พิมพ์สรุปกะ</button><span class="sp"></span><button class="btn main" id="cxOk">เสร็จ</button></div>`);
       $("#cxPr").onclick=()=>printShift(x);$("#cxOk").onclick=()=>{closeDlg();vShift()}}}
   $$("[data-ps]").forEach(b=>b.onclick=()=>printShift(SH.find(x=>x.id===b.dataset.ps)))}
-function printShift(s,interim){const S=s.sum;setPage(num(C.width)||80);const top=Object.entries(S.items).sort((a,b)=>b[1].q-a[1].q);
+function printShift(s,interim){window.EDM_DOCNAME="สรุปกะ-"+s.no;const S=s.sum;setPage(num(C.width)||80);const top=Object.entries(S.items).sort((a,b)=>b[1].q-a[1].q);
   $("#printArea").innerHTML=`<div class="slip ${num(C.width)===58?"w58":""}">${slipHead()}<hr><div class="c"><b>${interim?"ยอดระหว่างกะ (ยังไม่ปิด)":"สรุปปิดกะ"} ${esc(s.no)}</b></div>
     <table><tr><td>เปิด</td><td class="r">${thD(s.date)} ${hm(s.open)}</td></tr>${s.closed?`<tr><td>ปิด</td><td class="r">${hm(s.closed)}</td></tr>`:""}${s.staff?`<tr><td>พนักงาน</td><td class="r">${esc(s.staff)}</td></tr>`:""}</table><hr>
     <table><tr><td>จำนวนบิล</td><td class="r">${S.orders}</td></tr><tr><td>ยอดก่อนส่วนลด</td><td class="r">${fmt(S.gross)}</td></tr><tr><td>ส่วนลด</td><td class="r">-${fmt(S.disc)}</td></tr><tr class="tt"><td>ยอดสุทธิ</td><td class="r">${fmt(S.net)}</td></tr>
@@ -952,5 +952,6 @@ if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostnam
 })();
 </script>
 <script src="../assets/member.js?v=57" defer></script>
+<script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

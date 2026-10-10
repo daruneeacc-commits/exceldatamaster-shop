@@ -280,7 +280,7 @@ html{overscroll-behavior-y:contain}
 
     <div class="card no-print" id="actBar" style="position:sticky;bottom:10px;z-index:5;flex-direction:row;flex-wrap:wrap;gap:8px">
       <button class="btn main" id="saveBtn"><i>💾</i> บันทึก</button>
-      <button class="btn main keep" id="printBtn"><i>🖨️</i> พิมพ์<span class="lg"> / PDF</span></button>
+      <button class="btn main keep" id="printBtn"><i>🖨️</i> พิมพ์<span class="lg"> / ส่ง PDF</span></button>
       <button class="btn ghost keep" id="shareBtn"><i>📤</i> <span class="lg">ส่งให้ลูกค้า</span><span class="sh">ส่ง</span></button>
       <button class="btn ghost keep" id="convertBtn"><i>🔁</i> <span class="lg">แปลงเป็นเอกสารอื่น</span><span class="sh">แปลงเอกสาร</span></button>
       <button class="btn ghost keep" id="newBtn"><i>＋</i> <span class="lg">เอกสารใหม่</span><span class="sh">ใหม่</span></button>
@@ -621,7 +621,7 @@ function save(silent){
 }
 $("#saveBtn").onclick=()=>save();
 $("#shareBtn").onclick=()=>shareDoc();
-$("#printBtn").onclick=()=>{if(!locked()&&!save(true))return;const pw=$("#previewWrap");pw.classList.add("show");setTimeout(()=>window.print(),80)};
+$("#printBtn").onclick=()=>{if(!locked()&&!save(true))return;window.EDM_DOCNAME=doc.no;const pw=$("#previewWrap");pw.classList.add("show");setTimeout(()=>window.print(),80)};
 function newDoc(quiet){const dirty=!isStored(doc)&&!!(doc.cust.name||doc.items.some(i=>i.d||num(i.p)));if(!quiet&&dirty&&!confirm("เริ่มเอกสารใหม่? เอกสารนี้ยังไม่ได้บันทึก"))return;
   doc=blank(doc.mode||"goods",baseType(doc));doc.no=nextNo(doc.type,doc.date);renderAll();if(!quiet){scrollTo(0,0);toast("เอกสารใหม่")}}
 $("#newBtn").onclick=()=>newDoc();
@@ -783,5 +783,6 @@ renderAll();bindSuggest();
 </script>
 <script src="../assets/tool-ui.js?v=4" defer></script>
 <script src="../assets/member.js?v=57" defer></script>
+<script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

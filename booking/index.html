@@ -634,7 +634,7 @@ function billDlg(){const b=cur,cx=b.st==="cancel"||b.st==="noshow",T0=tot(b),T=c
   if($("#bC"))$("#bC").onclick=()=>printBk(cx?Object.assign({},b,{lines:[],ext:[{d:`ค่าธรรมเนียม${b.st==="cancel"?"ยกเลิก":"ไม่มาตามนัด"} (ริบเงินมัดจำ)`,amt:T0.paid}],disc:0}):b,"rc");if($("#bI"))$("#bI").onclick=()=>printBk(b,"iv");$("#bB").onclick=()=>drawBk()}
 
 /* ---------- ใบยืนยัน / ข้อความ LINE ---------- */
-function printBk(b,kind){grabC();const S=seller(),T=tot(b),D={rc:[S.vat?"ใบเสร็จรับเงิน / ใบกำกับภาษี":"ใบเสร็จรับเงิน","Receipt","RC-"],iv:["ใบแจ้งหนี้","Invoice","IV-"]}[kind]||["ใบยืนยันการจอง","Booking Confirmation",""],vt=S.vat?r2(T.total*7/107):0;
+function printBk(b,kind){window.EDM_DOCNAME=(b.no||"จอง")+"-"+kind;grabC();const S=seller(),T=tot(b),D={rc:[S.vat?"ใบเสร็จรับเงิน / ใบกำกับภาษี":"ใบเสร็จรับเงิน","Receipt","RC-"],iv:["ใบแจ้งหนี้","Invoice","IV-"]}[kind]||["ใบยืนยันการจอง","Booking Confirmation",""],vt=S.vat?r2(T.total*7/107):0;
   $("#printArea").innerHTML=`<div class="page"><div class="ph"><div class="shop">${S.logo&&/^data:image\//.test(S.logo)?`<img src="${esc(S.logo)}" alt="">`:""}<b>${esc(S.name||"")}</b><div>${esc(S.addr||"").replace(/\n/g,"<br>")}</div>${S.tel||S.phone?`<div>โทร ${esc(S.tel||S.phone)}</div>`:""}${S.tax?`<div>เลขประจำตัวผู้เสียภาษี ${esc(S.tax)}</div>`:""}</div>
     <div style="text-align:right"><h1>${D[0]}</h1><div>${D[1]}</div><div style="margin-top:6px">เลขที่ <b>${esc(D[2]+b.no)}</b></div>${D[2]?`<div>อ้างอิงใบจอง ${esc(b.no)}</div>`:""}<div>วันที่ ${thD(today())}</div>${D[2]?"":`<div>สถานะ ${esc(stName(b))}</div>`}</div></div>
     <div class="box"><b>ลูกค้า</b> ${esc(b.cust.name)}${b.cust.tax?" · เลขผู้เสียภาษี "+esc(b.cust.tax):""}${b.cust.contact?" · โทร "+esc(b.cust.contact):""}${b.guests?" · "+esc(b.guests):""}${b.cust.addr?"<br>"+esc(b.cust.addr):""}</div>
@@ -833,5 +833,6 @@ window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.d
 })();
 </script>
 <script src="../assets/member.js?v=57" defer></script>
+<script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

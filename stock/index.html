@@ -373,7 +373,7 @@ function vReport(){
   const list=items.slice().sort((a,b)=>(a.cat||"").localeCompare(b.cat||"","th")||a.name.localeCompare(b.name,"th"));
   list.forEach(i=>T.value+=P[i.id].value);
   $("#view").innerHTML=`<div class="card"><h2>📄 รายงานสต๊อกประจำเดือน <small>${ymLabel(ui.rm)}</small></h2>
-    <div class="tools"><input class="in-" type="month" id="rm" value="${esc(ui.rm)}" style="max-width:220px"><button class="btn main" id="pBtn">🖨️ พิมพ์ / PDF</button><button class="btn ghost" id="xBtn">📊 ดาวน์โหลด Excel</button></div>
+    <div class="tools"><input class="in-" type="month" id="rm" value="${esc(ui.rm)}" style="max-width:220px"><button class="btn main" id="pBtn">🖨️ พิมพ์ / ส่ง PDF</button><button class="btn ghost" id="xBtn">📊 ดาวน์โหลด Excel</button></div>
     <div class="tbl-wrap"><table class="t"><thead><tr><th>สินค้า</th><th class="r">ยกมา</th><th class="r">รับเข้า</th><th class="r">จ่ายออก</th><th class="r">ปรับยอด</th><th class="r">คงเหลือ</th><th class="r">ทุนเฉลี่ย</th><th class="r">มูลค่า</th></tr></thead><tbody>
     ${list.map(i=>{const p=P[i.id];return`<tr class="click" data-card="${i.id}"><td><b>${esc(i.name)}</b> <span class="sku">${esc(i.sku||"")}</span>${i.brand?` <span class="brandtag">${esc(i.brand)}</span>`:""}</td><td class="r">${fq(p.open)}</td><td class="r qin">${p.inQ?fq(p.inQ):"-"}</td><td class="r qout">${p.outQ?fq(p.outQ):"-"}</td><td class="r qadj">${p.adjQ?fq(p.adjQ):"-"}</td><td class="r"><b>${fq(p.close)}</b> ${esc(i.unit)}</td><td class="r">${fmt(p.avg)}</td><td class="r">${fmt(p.value)}</td></tr>`}).join("")}
     </tbody><tfoot><tr><td colspan="7" class="r"><b>มูลค่าสต๊อกคงเหลือ ณ สิ้นเดือน</b></td><td class="r"><b>${fmt(T.value)}</b></td></tr></tfoot></table></div>
@@ -501,5 +501,6 @@ window.__stock={compute,period,demo,exportExcel,get items(){return items},get tx
 </script>
 <script src="../assets/tool-ui.js?v=4" defer></script>
 <script src="../assets/member.js?v=57" defer></script>
+<script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

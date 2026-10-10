@@ -178,8 +178,10 @@ $("#rpPrint").onclick=()=>{if(!cur||!last)return;const R=last.view,T=last.T,S=LS
   <table><thead><tr>${R.cols.map(c=>`<th class="${c[2]==="n"||c[2]==="q"?"r":""}">${c[0]}</th>`).join("")}</tr></thead><tbody>${R.rows.map(x=>`<tr class="${x.b?"b":""}">${R.cols.map(c=>`<td class="${c[2]==="n"||c[2]==="q"?"r":""}${c[2]==="n"&&n(x[c[1]])<0?" neg":""}">${esc(cell(x[c[1]],c[2]))}</td>`).join("")}</tr>`).join("")||`<tr><td colspan="${R.cols.length}">ไม่มีข้อมูล</td></tr>`}</tbody>
   ${Object.keys(T).length&&R.rows.length?`<tfoot><tr>${R.cols.map((c,i)=>`<td class="${c[3]?"r":""}">${i===0?"รวม":c[3]?fmt(T[c[1]]):""}</td>`).join("")}</tr></tfoot>`:""}</table>
   <div class="f"><span>${R.rows.length} รายการ${last.note?" · "+esc(last.note):""}</span><span>พิมพ์เมื่อ ${thD(today())} ${new Date().toTimeString().slice(0,5)}</span></div></body></html>`;
-  let f=$("#rpFrame");if(f)f.remove();f=document.createElement("iframe");f.id="rpFrame";f.style.cssText="position:fixed;width:0;height:0;border:0;right:0;bottom:0";document.body.appendChild(f);
-  f.onload=()=>{const w=f.contentWindow;const go2=()=>{try{w.focus();w.print()}catch(e){toast("พิมพ์ไม่ได้ ลองใหม่อีกครั้ง")}};(w.document.fonts&&w.document.fonts.ready?w.document.fonts.ready:Promise.resolve()).then(()=>setTimeout(go2,150))};f.srcdoc=html};
+  let f=$("#rpFrame");if(f)f.remove();f=document.createElement("iframe");f.id="rpFrame";f.style.cssText="position:fixed;left:-20000px;top:0;width:"+Math.round((wide?277:190)*96/25.4)+"px;height:1200px;border:0";document.body.appendChild(f);
+  f.onload=()=>{const w=f.contentWindow;const go2=()=>{try{w.focus();w.print()}catch(e){toast("พิมพ์ไม่ได้ ลองใหม่อีกครั้ง")}};(w.document.fonts&&w.document.fonts.ready?w.document.fonts.ready:Promise.resolve()).then(()=>setTimeout(()=>{
+    if(!window.EDM_DOCSHARE)return go2();f.style.height=(w.document.documentElement.scrollHeight+20)+"px";
+    window.EDM_DOCSHARE.open({el:w.document.body,pg:{roll:false,w:wide?297:210,h:wide?210:297,margin:10,land:wide},name:cur.t+"-"+perTxt(cur),onPrint:go2})},150))};f.srcdoc=html};
 
 /* ---------- Excel ---------- */
 function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="/assets/vendor/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}

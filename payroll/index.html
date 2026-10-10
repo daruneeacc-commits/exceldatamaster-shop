@@ -314,7 +314,7 @@ dialog.wide{max-width:min(1100px,96vw);width:96vw}
     <div class="vtabs no-print">
       <div class="seg chips" id="viewSeg"><button data-v="dash">📊 ภาพรวม</button><button data-v="slip">🧾 สลิปคนนี้</button><button data-v="all">สลิปทุกคน</button><button data-v="month">สรุปเงินเดือน</button><button data-v="sso">ประกันสังคม สปส.1-10</button><button data-v="tax">ภ.ง.ด.1 / ภ.ง.ด.3</button><button data-v="bank">รายการโอนเงิน</button><button data-v="dept">ต้นทุนตามแผนก</button><button data-v="year">สะสมทั้งปี</button><button data-v="cert">50 ทวิ (รายปี)</button></div>
       <label class="note" id="certDateF" style="display:none;align-items:center;gap:6px">วันที่ออกหนังสือรับรอง <input class="in-" type="date" id="certDate" style="width:auto;padding:5px 8px"></label>
-      <button class="btn sm main" id="printBtn">🖨️ พิมพ์ / PDF</button>
+      <button class="btn sm main" id="printBtn">🖨️ พิมพ์ / ส่ง PDF</button>
       <button class="btn sm ghost" id="csvBtn">📊 Excel</button>
     </div>
     <div class="paper-scroll"><div id="pages"></div></div>
@@ -782,5 +782,6 @@ window.__pay={pit,bahtText,calcMonth,calcUpTo,exportExcel,get emps(){return emps
 </script>
 <script src="../assets/tool-ui.js?v=4" defer></script>
 <script src="../assets/member.js?v=57" defer></script>
+<script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

@@ -294,7 +294,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261010-2115";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261010-2155";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -539,7 +539,7 @@ const ROUTES={bill:{src:"/bill/?v=53"},stock:{src:"/stock/?v=51",sv:"home"},stoc
   bk:{src:"/booking/?v=6",bv:"home"},bkcal:{src:"/booking/?v=6",bv:"cal"},bklist:{src:"/booking/?v=6",bv:"list"},bkres:{src:"/booking/?v=6",bv:"res"},bkrpt:{src:"/booking/?v=6",bv:"rpt"},bkset:{src:"/booking/?v=6",bv:"set"},
   cost:{src:"/account/?v=52",v:"cost"},exp:{src:"/account/?v=52",v:"exp"},bank:{src:"/account/?v=52",v:"bank"},cashv:{src:"/account/?v=52",v:"cashv"},petty:{src:"/account/?v=52",v:"petty"},ap:{src:"/account/?v=52",v:"ap"}};
 const frames={};
-function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
+function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.allow="web-share; clipboard-write";f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
 let cur="";
 const PANES=["home","setup","data","bills","quotes","invoices","billing","receipts","cust","sup","prod","rpt","upg"];
@@ -899,8 +899,9 @@ route();if(window.EDM_ED&&EDM_ED.solo)renderBadges();
 // เปิดเอกสาร/บัตรสินค้าที่ส่งต่อมาจากลิงก์เดิม (/bill/#open=... · /stock/#card=...)
 try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h)){const t=P.t==="stock"?"stock":P.t==="booking"?"bk":P.t==="cafe"?"cf":"bill";if(!window.EDM_ED||EDM_ED.ok(t))openIn(t,P.h)}}catch(e){}
 </script>
-<script src="reports.js?v=51"></script>
+<script src="reports.js?v=52"></script>
 <script src="../assets/member.js?v=57" defer></script>
+<script src="../assets/docshare.js?v=1" defer></script>
 <script>/* โหมดออฟไลน์: เก็บหน้าระบบไว้ในเครื่อง เน็ตหลุดแล้วยังเปิดได้ */if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){})});</script>
 </body>
 </html>
