@@ -591,6 +591,7 @@ function act(a){const b=cur,Kd=KIND[bKind(b)];
     b.st=a;b.lines.forEach(l=>l.ov=true);if(commit(true)){toast(a==="cancel"?"ยกเลิกแล้ว":"บันทึกไม่มาแล้ว");drawBk()}return}
   if(a==="del"){const bl=bills(b);if(!confirm("ลบใบจอง "+b.no+"?"+(bl.length?"\n(บิล "+bl.map(d=>d.no).join(", ")+" ยังอยู่ ต้องลบที่ระบบเปิดบิลเอง)":"")))return;list=list.filter(x=>x.id!==b.id);saveList();closeDlg();toast("ลบแล้ว");render()}}
 function doIn(){const b=cur;if(!b)return;grabC();if(!valid(b,true))return;const T=tot(b),Kd=KIND[bKind(b)];
+  {const s0=bStart(b),d0=String(s0).slice(0,10);if(d0&&d0>today()&&!confirm(`ใบจองนี้เริ่ม ${thD(d0)} ยังไม่ถึงวัน\n${Kd.in.replace(/^\S+\s/,"")}ก่อนวันจริงใช่ไหม?`))return}
   if(T.guar-T.held>0.009){const need=r2(T.guar-T.held);if(confirm(`รับค่าประกัน ฿${fm(need)} จากลูกค้าแล้วใช่ไหม?\n(ตกลง = บันทึกรับเป็นเงินสด · แก้วิธีรับได้ภายหลัง)`))b.pays.push({k:"g",amt:need,m:"เงินสด",date:today()})}
   b.st="in";b.lines.forEach(l=>{l.ai=nowT()});if(commit(true)){toast(Kd.in.replace(/^\S+\s/,"")+" "+b.no+" แล้ว ✓");drawBk()}}
 
@@ -617,11 +618,12 @@ function retDlg(){const b=cur,Kd=KIND[bKind(b)],t=today(),nw=nowT();
   $("#dlgBody").addEventListener("change",e=>calc(e.target.dataset.ri!=null));
   calc(true);
   $("#rBack").onclick=()=>drawBk();
-  $("#rGo").onclick=()=>{const c=calc(false);
+  $("#rGo").onclick=()=>{const c=calc(false),snap=JSON.stringify({ext:b.ext,pays:b.pays,lines:b.lines});
     b.lines.forEach((l,i)=>{const r=rOf(l.rid),v=$(`[data-ri="${i}"]`).value;if(v)l.ae=r.kind==="hour"?l.s.slice(0,10)+"T"+v:v;const lf=num($(`[data-rl="${i}"]`).value);if(lf>0)b.ext.push({d:`ค่าปรับเกินเวลา ${r.name} (${KIND[r.kind].e}จริง ${when(l.ae,r)})`,amt:lf});l.ov=true});
     const dm=num($("#dmA").value);if(dm>0)b.ext.push({d:$("#dmD").value.trim()||"ค่าเสียหาย",amt:dm});
     if(c.ded>0){b.pays.push({k:"pay",amt:c.ded,m:"หักค่าประกัน",date:today()});b.pays.push({k:"gx",amt:c.ded,m:"หักเป็นค่าเช่า/ค่าเสียหาย",date:today()})}
     const rf=num($("#rRef").value),T=tot(b);if(rf>0)b.pays.push({k:"gr",amt:Math.min(rf,T.held),m:$("#rM").value,date:today()});
+    {const T2=tot(b);if(T2.bal>0.009&&!confirm(`ลูกค้ายังค้างชำระ ฿${fm(T2.bal)}\nบันทึกปิดใบจองต่อไหม? (รับเงินภายหลังได้ที่ใบจองนี้)`)){Object.assign(b,JSON.parse(snap));return}}
     b.st="out";if(commit(true)){toast("บันทึกแล้ว ✓ พิมพ์ใบเสร็จได้เลย");drawBk()}}}
 
 /* ---------- ใบเสร็จ / ใบแจ้งหนี้ (ออกจากใบจองโดยตรง) ---------- */

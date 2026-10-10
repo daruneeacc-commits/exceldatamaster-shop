@@ -3,25 +3,31 @@
 (function(){
 const COST_CATS=["ต้นทุนบริการ / ค่าจ้างเหมาช่วง","วัตถุดิบ / วัสดุใช้ในงาน"];
 const NOT_EXP=["จ่ายเงินเดือน","ถอนใช้ส่วนตัว","ชำระภาษี","คืนเงินกู้","โอนระหว่างบัญชี"],NOT_INC=["เงินลงทุนเพิ่ม","เงินกู้ยืม","โอนระหว่างบัญชี"];
-const TN={QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับ",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับ/ใบเสร็จ",BN:"ใบวางบิล"};
+const TN={QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับ",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับ/ใบเสร็จ",BN:"ใบวางบิล",CN:"ใบลดหนี้",DN:"ใบเพิ่มหนี้"};
 const r2=n=>Math.round((n+Number.EPSILON)*100)/100,r4=n=>Math.round(n*1e4)/1e4;
 const n=v=>{v=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(v)?v:0};
 const days=(a,b)=>Math.round((new Date(a)-new Date(b))/864e5);
 const isCostP=p=>p.kind==="stock"||(p.kind==="expense"&&COST_CATS.includes(p.cat));
 const calcPur=p=>calcDoc({items:(p.lines||[]).map(l=>({q:l.q,p:l.p})),vat:p.vat,wht:p.wht,billDisc:0});
-const isInv=d=>d.type==="IV"||(d.type==="IT"&&d.term!=="cash");
+const isInv0=d=>d.type==="IV"||(d.type==="IT"&&d.term!=="cash"),isInv=d=>isInv0(d)&&!d.void;
+/* ใบลดหนี้ (CN) ติดลบ · ใบเพิ่มหนี้ (DN) บวก · เอกสารที่ยกเลิก (d.void) เป็น 0 ทุกยอด */
+const ADJ=d=>d.type==="CN"||d.type==="DN",sg=d=>d.void?0:d.type==="CN"?-1:1;
+const sc=d=>{const c=calcDoc(d),k=sg(d);return{base:r2(c.base*k),vat:r2(c.vat*k),total:r2(c.total*k),wht:r2(c.wht*k),net:r2(c.net*k)}};
 const NB="(ไม่ระบุแบรนด์)";
 
 function data(){const A=LS.get("edm_acc",{})||{};const X={docs:LS.get("edm_bill_docs",[])||[],A,pay:A.pay||[],pur:A.pur||[],cash:A.cash||[],accs:A.accounts||[],
   items:LS.get("edm_stock_items",[])||[],tx:LS.get("edm_stock_tx",[])||[],svcs:LS.get("edm_services",[])||[],custs:LS.get("edm_bill_customers",[])||[],sups:LS.get("edm_suppliers",[])||[],seller:LS.get("edm_bill_seller",{})||{}};
   X.byId={};X.items.forEach(i=>X.byId[i.id]=i);X.lb=l=>l.brand||(l.pid&&X.byId[l.pid]||{}).brand||"";X.pin=X.pay.filter(p=>p.dir==="in");X.pout=X.pay.filter(p=>p.dir==="out");
   const inv=new Set(X.docs.filter(d=>d.type==="IV"||d.type==="IT").map(d=>d.no));
-  X.sales=X.docs.filter(d=>d.type==="IV"||d.type==="IT"||((d.type==="RC"||d.type==="TX")&&!(d.ref&&inv.has(d.ref))));
+  X.sales=X.docs.filter(d=>!d.void&&(d.type==="IV"||d.type==="IT"||ADJ(d)||((d.type==="RC"||d.type==="TX")&&!(d.ref&&inv.has(d.ref)))));
+  X.vatOf=d=>!!(d.seller?d.seller.vat:X.seller.vat);
   X.docNo=id=>{const d=X.docs.find(x=>x.id===id);return d?d.no:""};X.pu=id=>X.pur.find(x=>x.id===id);X.acc=id=>(X.accs.find(a=>a.id===id)||{}).name||"";
   return X}
+// ยอดใบแจ้งหนี้หลังใบลดหนี้/ใบเพิ่มหนี้ที่อ้างถึง (ณ วันที่กำหนด)
+function invTotal(X,d,upto){let t=calcDoc(d).total;X.docs.forEach(x=>{if(ADJ(x)&&!x.void&&x.refId===d.id&&(!upto||x.date<=upto))t+=sg(x)*calcDoc(x).total});return r2(t)}
 // ยอดที่รับชำระแล้วของใบแจ้งหนี้ ณ วันที่กำหนด
 function arGot(X,d,upto){let g=X.pin.filter(p=>p.docId===d.id&&(!upto||p.date<=upto)).reduce((a,p)=>a+n(p.amount)+n(p.wht),0);
-  X.docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!X.pin.some(p=>p.rcDocId===x.id)&&(!upto||x.date<=upto))g+=calcDoc(x).total});return r2(g)}
+  X.docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&!x.void&&x.ref===d.no&&!X.pin.some(p=>p.rcDocId===x.id)&&(!upto||x.date<=upto))g+=calcDoc(x).total});return r2(g)}
 function apPaid(X,p,upto){return r2(X.pout.filter(y=>y.purId===p.id&&(!upto||y.date<=upto)).reduce((a,y)=>a+n(y.amount)+n(y.wht),0))}
 function moves(X){const L=[];
   X.pay.forEach(p=>{let label,party="";if(p.dir==="in"){const d=X.docs.find(x=>x.id===p.docId);label=(p.src==="bill"?"ขายเงินสด ":"รับชำระ ")+(d?d.no:"");party=d&&d.cust?d.cust.name:""}else{const u=X.pu(p.purId);label="จ่าย "+(u?u.no:"");party=u&&u.sup?u.sup.name:""}
@@ -36,8 +42,8 @@ function stockRun(X,upto){const S={};X.items.forEach(i=>S[i.id]={bal:0,avg:n(i.c
 /* ---------- นิยามรายงาน: cols [หัว, คีย์, ชนิด d=วันที่ n=เงิน q=จำนวน s=ข้อความ, รวม?] ---------- */
 const G=[
  {k:"mst",g:"ข้อมูลหลัก",ic:"🗂️",L:[
-  {id:"custlist",t:"ทะเบียนลูกค้า",d:"รายชื่อลูกค้า เลขผู้เสียภาษี ที่อยู่ ยอดขาย และยอดค้างรับ",nodate:1,run:X=>({cols:[["ลูกค้า","name"],["เลขผู้เสียภาษี","tax"],["สาขา","branch"],["ผู้ติดต่อ","contact"],["ที่อยู่","addr"],["ยอดขายรวม","sale","n",1],["ค้างรับ","left","n",1]],
-    rows:X.custs.map(c=>{const ds=X.sales.filter(d=>d.cust&&d.cust.name===c.name);let left=0;ds.filter(isInv).forEach(d=>left+=Math.max(0,calcDoc(d).total-arGot(X,d)));return Object.assign({},c,{sale:ds.reduce((a,d)=>a+calcDoc(d).net,0),left:r2(left)})})})},
+  {id:"custlist",t:"ทะเบียนลูกค้า",d:"รายชื่อลูกค้า เลขผู้เสียภาษี ที่อยู่ ยอดขาย และยอดค้างรับ",nodate:1,run:X=>({cols:[["ลูกค้า","name"],["เลขผู้เสียภาษี","tax"],["สาขา","branch"],["ผู้ติดต่อ","contact"],["ที่อยู่","addr"],["ยอดขายรวม (รวม VAT)","sale","n",1],["ถูกหัก ณ ที่จ่าย","wht","n",1],["ค้างรับ","left","n",1]],
+    rows:X.custs.map(c=>{const ds=X.sales.filter(d=>d.cust&&d.cust.name===c.name);let left=0;ds.filter(isInv).forEach(d=>left+=Math.max(0,invTotal(X,d)-arGot(X,d)));return Object.assign({},c,{sale:r2(ds.reduce((a,d)=>a+sc(d).total,0)),wht:r2(ds.reduce((a,d)=>a+sc(d).wht,0)),left:r2(left)})})})},
   {id:"suplist",t:"ทะเบียนเจ้าหนี้",d:"รายชื่อผู้ขาย เลขผู้เสียภาษี ยอดซื้อ และยอดค้างจ่าย",nodate:1,run:X=>{const seen=new Set(X.sups.map(s=>s.name)),L=X.sups.slice();X.pur.forEach(p=>{const nm=p.sup&&p.sup.name;if(nm&&!seen.has(nm)){seen.add(nm);L.push({name:nm,tax:p.sup.tax||"",branch:p.sup.branch||""})}});
     return{cols:[["เจ้าหนี้ / ผู้ขาย","name"],["เลขผู้เสียภาษี","tax"],["สาขา","branch"],["ผู้ติดต่อ","contact"],["บัญชีรับโอน","bank"],["ยอดซื้อรวม","buy","n",1],["ค้างจ่าย","left","n",1]],
     rows:L.map(s=>{const ps=X.pur.filter(p=>p.sup&&p.sup.name===s.name&&p.status!=="ordered");let b=0,l=0;ps.forEach(p=>{const t=calcPur(p).total;b+=t;l+=Math.max(0,t-apPaid(X,p))});return Object.assign({},s,{buy:r2(b),left:r2(l)})})}}},
@@ -46,22 +52,26 @@ const G=[
  {k:"inc",g:"รายรับ",ic:"💰",L:[
   {id:"bills",t:"รายงานบิลทั้งหมด",d:"บิลทุกใบ ค้นหา ดู แก้ไข หรือลบบิลได้",link:"bills"},
   {id:"qt",t:"รายงานใบเสนอราคา",d:"ใบเสนอราคาที่ออก และสถานะว่าแปลงเป็นใบแจ้งหนี้แล้วหรือยัง",run:(X,f,t)=>({cols:[["วันที่","date","d"],["เลขที่","no"],["ลูกค้า","cust"],["ยืนราคาถึง","due","d"],["สถานะ","st"],["มูลค่ารวม","net","n",1]],
-    rows:X.docs.filter(d=>d.type==="QT"&&d.date>=f&&d.date<=t).map(d=>{const cv=X.docs.find(x=>x.ref===d.no&&x.type!=="QT");return{date:d.date,no:d.no,cust:d.cust&&d.cust.name,due:d.due,st:cv?"แปลงเป็น "+cv.no:(d.due&&d.due<today()?"หมดอายุ":"รอตอบรับ"),net:calcDoc(d).net}})})},
+    rows:X.docs.filter(d=>d.type==="QT"&&d.date>=f&&d.date<=t).map(d=>{const cv=X.docs.find(x=>x.ref===d.no&&x.type!=="QT"&&!x.void);return{date:d.date,no:d.no,cust:d.cust&&d.cust.name,due:d.due,st:cv?"แปลงเป็น "+cv.no:(d.due&&d.due<today()?"หมดอายุ":"รอตอบรับ"),net:calcDoc(d).net}})})},
   {id:"inv",t:"รายงานใบแจ้งหนี้ / ขายเชื่อ",d:"ใบแจ้งหนี้ทั้งหมด ยอดก่อน VAT ภาษี ยอดรับแล้ว และค้างชำระ",run:(X,f,t)=>({cols:[["วันที่","date","d"],["เลขที่","no"],["ลูกค้า","cust"],["ครบกำหนด","due","d"],["ก่อน VAT","base","n",1],["VAT","vat","n",1],["ยอดสุทธิ","net","n",1],["รับแล้ว","got","n",1],["ค้างชำระ","left","n",1],["สถานะ","st"]],
-    rows:X.docs.filter(d=>isInv(d)&&d.date>=f&&d.date<=t).map(d=>{const c=calcDoc(d),g=Math.min(c.total,arGot(X,d)),l=r2(c.total-g);return{date:d.date,no:d.no,cust:d.cust&&d.cust.name,due:d.due,base:c.base,vat:c.vat,net:c.net,got:g,left:l,st:l<=.01?"รับครบ":(d.due||d.date)<today()?"เกินกำหนด":g>0?"รับบางส่วน":"ค้างชำระ"}})})},
+    rows:X.docs.filter(d=>isInv0(d)&&d.date>=f&&d.date<=t).map(d=>{if(d.void)return{date:d.date,no:d.no,cust:d.cust&&d.cust.name,due:d.due,base:0,vat:0,net:0,got:0,left:0,st:"ยกเลิก"};const c=calcDoc(d),T=invTotal(X,d),g=Math.min(T,arGot(X,d)),l=r2(Math.max(0,T-g));return{date:d.date,no:d.no,cust:d.cust&&d.cust.name,due:d.due,base:c.base,vat:c.vat,net:c.net,got:g,left:l,st:(T!==c.total?"มีใบลด/เพิ่มหนี้ · ":"")+(l<=.01?"รับครบ":(d.due||d.date)<today()?"เกินกำหนด":g>0?"รับบางส่วน":"ค้างชำระ")}})})},
   {id:"bn",t:"รายงานใบวางบิล",d:"ใบวางบิลที่ออก จำนวนใบแจ้งหนี้ และกำหนดชำระ",run:(X,f,t)=>({cols:[["วันที่","date","d"],["เลขที่","no"],["ลูกค้า","cust"],["จำนวนใบแจ้งหนี้","cnt","q"],["กำหนดชำระ","due","d"],["ยอดวางบิล","net","n",1]],
-    rows:X.docs.filter(d=>d.type==="BN"&&d.date>=f&&d.date<=t).map(d=>({date:d.date,no:d.no,cust:d.cust&&d.cust.name,cnt:(d.items||[]).filter(i=>i.d).length,due:d.due,net:calcDoc(d).net}))})},
+    rows:X.docs.filter(d=>d.type==="BN"&&!d.void&&d.date>=f&&d.date<=t).map(d=>({date:d.date,no:d.no,cust:d.cust&&d.cust.name,cnt:(d.items||[]).filter(i=>i.d).length,due:d.due,net:calcDoc(d).net}))})},
   {id:"rc",t:"รายงานใบเสร็จรับเงิน / ขายเงินสด",d:"บิลขายเงินสดและใบเสร็จจากการรับชำระ",run:(X,f,t)=>({cols:[["วันที่","date","d"],["เลขที่","no"],["ประเภท","k"],["ลูกค้า","cust"],["อ้างอิง","ref"],["ก่อน VAT","base","n",1],["VAT","vat","n",1],["ยอดรวม","net","n",1]],
-    rows:X.docs.filter(d=>(d.type==="RC"||d.type==="TX"||(d.type==="IT"&&d.term==="cash"))&&d.date>=f&&d.date<=t).map(d=>{const c=calcDoc(d);return{date:d.date,no:d.no,k:d.ref?"รับชำระ":"ขายเงินสด",cust:d.cust&&d.cust.name,ref:d.ref,base:c.base,vat:c.vat,net:c.net}})})},
+    rows:X.docs.filter(d=>(d.type==="RC"||d.type==="TX"||(d.type==="IT"&&d.term==="cash"))&&d.date>=f&&d.date<=t).map(d=>{const c=sc(d);return{date:d.date,no:d.no,k:d.void?"ยกเลิก":d.ref?"รับชำระ":"ขายเงินสด",cust:d.cust&&d.cust.name,ref:d.ref,base:c.base,vat:c.vat,net:c.net}})})},
   {id:"rcv",t:"รายงานการรับชำระจากลูกหนี้",d:"เงินที่รับจากลูกค้าตามใบแจ้งหนี้ เข้าบัญชีไหน หักภาษี ณ ที่จ่ายเท่าไร",run:(X,f,t)=>({cols:[["วันที่","date","d"],["ลูกค้า","cust"],["ใบแจ้งหนี้","doc"],["วิธีรับ","m"],["เข้าบัญชี","acc"],["ภาษีถูกหัก ณ ที่จ่าย","wht","n",1],["รับจริง","amt","n",1]],
     rows:X.pin.filter(p=>p.src!=="bill"&&p.date>=f&&p.date<=t).map(p=>{const d=X.docs.find(x=>x.id===p.docId);return{date:p.date,cust:d&&d.cust&&d.cust.name,doc:d?d.no:"",m:p.method||"",acc:X.acc(p.accId),wht:n(p.wht),amt:n(p.amount)}})})},
   {id:"aging",t:"ลูกหนี้คงค้าง (แยกอายุหนี้)",d:"ยอดค้างรับ ณ วันสิ้นงวด แยกยังไม่ถึงกำหนด / เกิน 1-30 / 31-60 / 61-90 / เกิน 90 วัน",asof:1,run:(X,f,t)=>({cols:[["ลูกค้า","cust"],["เลขที่","no"],["วันที่","date","d"],["ครบกำหนด","due","d"],["ยังไม่ถึงกำหนด","b0","n",1],["1-30 วัน","b1","n",1],["31-60 วัน","b2","n",1],["61-90 วัน","b3","n",1],["เกิน 90 วัน","b4","n",1],["รวมค้าง","left","n",1]],
-    rows:X.docs.filter(d=>isInv(d)&&d.date<=t).map(d=>{const l=r2(calcDoc(d).total-arGot(X,d,t));if(l<=.01)return null;const od=days(t,d.due||d.date),r={cust:d.cust&&d.cust.name,no:d.no,date:d.date,due:d.due,left:l,b0:"",b1:"",b2:"",b3:"",b4:""};r[od<=0?"b0":od<=30?"b1":od<=60?"b2":od<=90?"b3":"b4"]=l;return r}).filter(Boolean).sort((a,b)=>String(a.cust).localeCompare(String(b.cust),"th")||a.date.localeCompare(b.date))})},
-  {id:"salecust",t:"ยอดขายตามลูกค้า",d:"สรุปยอดขายแต่ละราย พร้อมสัดส่วน",run:(X,f,t)=>{const M={};X.sales.filter(d=>d.date>=f&&d.date<=t).forEach(d=>{const k=d.cust&&d.cust.name||"ขายเงินสด (ไม่ระบุชื่อ)",c=calcDoc(d);const m=M[k]||(M[k]={cust:k,cnt:0,base:0,vat:0,net:0});m.cnt++;m.base+=c.base;m.vat+=c.vat;m.net+=c.net});
-    const L=Object.values(M).sort((a,b)=>b.base-a.base),T=L.reduce((a,x)=>a+x.base,0);L.forEach(x=>x.pc=T?r2(x.base/T*100):0);return{cols:[["ลูกค้า","cust"],["จำนวนเอกสาร","cnt","q",1],["ก่อน VAT","base","n",1],["VAT","vat","n",1],["รวม","net","n",1],["สัดส่วน %","pc","q"]],rows:L}}},
-  {id:"saleitem",t:"ยอดขายตามสินค้า / บริการ",d:"ขายอะไรไปเท่าไร จำนวนและมูลค่าแต่ละรายการ",run:(X,f,t)=>{const M={};X.sales.filter(d=>d.date>=f&&d.date<=t).forEach(d=>(d.items||[]).forEach(i=>{if(!i.d)return;const k=i.d;const m=M[k]||(M[k]={item:k,brand:X.lb(i),unit:i.u||"",q:0,amt:0});m.q+=n(i.q);m.amt+=r2(n(i.q)*n(i.p)-n(i.disc))}));
+    rows:X.docs.filter(d=>isInv(d)&&d.date<=t).map(d=>{const l=r2(invTotal(X,d,t)-arGot(X,d,t));if(l<=.01)return null;const od=days(t,d.due||d.date),r={cust:d.cust&&d.cust.name,no:d.no,date:d.date,due:d.due,left:l,b0:"",b1:"",b2:"",b3:"",b4:""};r[od<=0?"b0":od<=30?"b1":od<=60?"b2":od<=90?"b3":"b4"]=l;return r}).filter(Boolean).sort((a,b)=>String(a.cust).localeCompare(String(b.cust),"th")||a.date.localeCompare(b.date))})},
+  {id:"salecust",t:"ยอดขายตามลูกค้า",d:"สรุปยอดขายแต่ละราย พร้อมสัดส่วน",run:(X,f,t)=>{const M={};X.sales.filter(d=>d.date>=f&&d.date<=t).forEach(d=>{const k=d.cust&&d.cust.name||"ขายเงินสด (ไม่ระบุชื่อ)",c=sc(d);const m=M[k]||(M[k]={cust:k,cnt:0,base:0,vat:0,total:0,wht:0});m.cnt++;m.base+=c.base;m.vat+=c.vat;m.total+=c.total;m.wht+=c.wht});
+    const L=Object.values(M).sort((a,b)=>b.base-a.base),T=L.reduce((a,x)=>a+x.base,0);L.forEach(x=>x.pc=T?r2(x.base/T*100):0);L.forEach(x=>{x.base=r2(x.base);x.vat=r2(x.vat);x.total=r2(x.total);x.wht=r2(x.wht)});return{cols:[["ลูกค้า","cust"],["จำนวนเอกสาร","cnt","q",1],["ก่อน VAT","base","n",1],["VAT","vat","n",1],["รวม","total","n",1],["ถูกหัก ณ ที่จ่าย","wht","n",1],["สัดส่วน %","pc","q"]],rows:L,note:"รวม = ก่อน VAT + VAT · ใบลดหนี้หักออก ใบเพิ่มหนี้บวกเพิ่ม"}}},
+  {id:"salevat",t:"รายงานภาษีขาย (ใบกำกับภาษี / ใบลดหนี้ / ใบเพิ่มหนี้)",d:"ใบกำกับภาษีที่ออกในเดือน ใบลดหนี้ติดลบ ใบเพิ่มหนี้บวก ใบที่ยกเลิกแสดงยอด 0",run:(X,f,t)=>{const inv=new Set(X.docs.filter(d=>d.type==="IT").map(d=>d.no));
+    const L=X.docs.filter(d=>d.date>=f&&d.date<=t&&X.vatOf(d)&&(ADJ(d)||(d.type==="TX"&&!(d.ref&&inv.has(d.ref)))||(d.type==="IT"&&d.vat!=="none"))).sort((a,b)=>String(a.date).localeCompare(String(b.date))||String(a.no).localeCompare(String(b.no)));
+    return{cols:[["วันที่","date","d"],["เลขที่","no"],["ประเภท","k"],["ลูกค้า","cust"],["เลขผู้เสียภาษี","tax"],["สาขา","br"],["มูลค่า","base","n",1],["VAT","vat","n",1],["รวม","total","n",1],["หมายเหตุ","nt"]],
+      rows:L.map(d=>{const c=sc(d),cu=d.cust||{};return{date:d.date,no:d.no,k:(TN[d.type]||d.type)+(d.void?" (ยกเลิก)":""),cust:cu.name||"",tax:cu.tax||"",br:cu.branch||"",base:c.base,vat:c.vat,total:c.total,nt:d.void?"ยกเลิก"+(d.void.reason?": "+d.void.reason:""):ADJ(d)?"อ้างถึง "+(d.ref||"-")+(d.reason?" · "+d.reason:""):""}}),note:"ใบลดหนี้ติดลบ · ใบที่ยกเลิกไม่นับยอด"}}},
+  {id:"saleitem",t:"ยอดขายตามสินค้า / บริการ",d:"ขายอะไรไปเท่าไร จำนวนและมูลค่าแต่ละรายการ",run:(X,f,t)=>{const M={};X.sales.filter(d=>d.date>=f&&d.date<=t).forEach(d=>{const k0=sg(d);(d.items||[]).forEach(i=>{if(!i.d)return;const k=i.d;const m=M[k]||(M[k]={item:k,brand:X.lb(i),unit:i.u||"",q:0,amt:0});m.q+=k0*n(i.q);m.amt+=k0*r2(n(i.q)*n(i.p)-n(i.disc))})});
     const L=Object.values(M).sort((a,b)=>b.amt-a.amt),T=L.reduce((a,x)=>a+x.amt,0);L.forEach(x=>{x.avg=x.q?r2(x.amt/x.q):0;x.pc=T?r2(x.amt/T*100):0});return{cols:[["สินค้า / บริการ","item"],["แบรนด์","brand"],["จำนวน","q","q",1],["หน่วย","unit"],["ราคาเฉลี่ย","avg","n"],["มูลค่าขาย","amt","n",1],["สัดส่วน %","pc","q"]],rows:L,note:"มูลค่าตามราคาในบิล ก่อนหักส่วนลดท้ายบิล"}}},
-  {id:"salebrand",t:"ยอดขายตามแบรนด์",d:"แบรนด์ไหนขายดี จำนวนชิ้น ยอดขาย ต้นทุน และกำไรขั้นต้นของแต่ละแบรนด์",run:(X,f,t)=>{const M={},R=stockRun(X,t);X.sales.filter(d=>d.date>=f&&d.date<=t&&d.mode!=="service").forEach(d=>(d.items||[]).forEach(i=>{if(!i.d)return;const k=X.lb(i)||NB;const m=M[k]||(M[k]={brand:k,items:new Set(),q:0,amt:0,cost:0});m.items.add(i.d);m.q+=n(i.q);m.amt+=r2(n(i.q)*n(i.p)-n(i.disc));const s=i.pid&&R.S[i.pid];m.cost+=n(i.q)*(s?s.avg:n((X.byId[i.pid]||{}).cost))}));
+  {id:"salebrand",t:"ยอดขายตามแบรนด์",d:"แบรนด์ไหนขายดี จำนวนชิ้น ยอดขาย ต้นทุน และกำไรขั้นต้นของแต่ละแบรนด์",run:(X,f,t)=>{const M={},R=stockRun(X,t);X.sales.filter(d=>d.date>=f&&d.date<=t&&d.mode!=="service").forEach(d=>{const k0=sg(d),rc=d.type!=="CN"||d.restock;(d.items||[]).forEach(i=>{if(!i.d)return;const k=X.lb(i)||NB;const m=M[k]||(M[k]={brand:k,items:new Set(),q:0,amt:0,cost:0});m.items.add(i.d);m.q+=k0*n(i.q);m.amt+=k0*r2(n(i.q)*n(i.p)-n(i.disc));const s=i.pid&&R.S[i.pid];if(rc&&d.type!=="DN")m.cost+=k0*n(i.q)*(s?s.avg:n((X.byId[i.pid]||{}).cost))})});
     const L=Object.values(M).map(m=>({brand:m.brand,cnt:m.items.size,q:m.q,amt:r2(m.amt),cost:r2(m.cost),gp:r2(m.amt-m.cost)})).sort((a,b)=>b.amt-a.amt),T=L.reduce((a,x)=>a+x.amt,0);L.forEach(x=>{x.gpp=x.amt?r2(x.gp/x.amt*100):0;x.pc=T?r2(x.amt/T*100):0});
     return{cols:[["แบรนด์","brand"],["จำนวนรายการสินค้า","cnt","q"],["จำนวนที่ขาย","q","q",1],["ยอดขาย","amt","n",1],["ต้นทุนโดยประมาณ","cost","n",1],["กำไรขั้นต้น","gp","n",1],["% กำไร","gpp","q"],["สัดส่วนยอดขาย %","pc","q"]],rows:L,note:"เฉพาะบิลขายสินค้า · ต้นทุนตามต้นทุนถัวเฉลี่ยในสต๊อก"}}}]},
  {k:"exp",g:"รายจ่าย",ic:"🛒",L:[
@@ -98,7 +108,7 @@ const G=[
     rows:X.items.map(it=>{let o=0,i=0,u=0,a=0;X.tx.forEach(x=>{if(x.pid!==it.id||x.date>t)return;const q=n(x.qty),v=x.type==="out"?-q:q;if(x.date<f)o+=v;else if(x.type==="in")i+=q;else if(x.type==="out")u+=q;else a+=q});return{sku:it.sku,name:it.name,brand:it.brand,unit:it.unit,o:r4(o),i:r4(i),u:r4(u),a:r4(a),b:r4(o+i-u+a)}})})},
   {id:"stockrep",t:"รายงานสต๊อกแบบละเอียด",d:"เปิดหน้ารายงานในระบบสต๊อก (บัตรสินค้า / ตรวจนับ)",link:"stockrep"}]},
  {k:"tax",g:"ภาษีและงบการเงิน",ic:"📑",L:[
-  {id:"pnlr",t:"งบกำไรขาดทุน (ตามช่วงวันที่)",d:"รายได้ ต้นทุนขาย กำไรขั้นต้น ค่าใช้จ่าย และกำไรสุทธิ",run:(X,f,t)=>{const inR=d=>d>=f&&d<=t;let sales=0;X.sales.forEach(d=>{if(inR(d.date))sales+=calcDoc(d).base});
+  {id:"pnlr",t:"งบกำไรขาดทุน (ตามช่วงวันที่)",d:"รายได้ ต้นทุนขาย กำไรขั้นต้น ค่าใช้จ่าย และกำไรสุทธิ",run:(X,f,t)=>{const inR=d=>d>=f&&d<=t;let sales=0;X.sales.forEach(d=>{if(inR(d.date))sales+=sc(d).base});
     let cogs=0;stockRun(X).cogs.forEach(c=>{if(inR(c.date))cogs+=c.v});let svc=0;const E={};
     X.pur.forEach(p=>{if(p.kind!=="expense"||p.status==="ordered"||!inR(p.date))return;const b=calcPur(p).base;if(COST_CATS.includes(p.cat))svc+=b;else E[p.cat||"ค่าใช้จ่ายอื่น"]=(E[p.cat||"ค่าใช้จ่ายอื่น"]||0)+b});
     let oth=0;X.cash.forEach(c=>{if(!inR(c.date))return;const a=n(c.amount);if(c.dir==="out"){if(COST_CATS.includes(c.cat))svc+=a;else if(c.cat==="จ่ายเงินเดือน")E["เงินเดือน / ค่าจ้าง"]=(E["เงินเดือน / ค่าจ้าง"]||0)+a;else if(!NOT_EXP.includes(c.cat))E[c.cat||"ค่าใช้จ่ายอื่น"]=(E[c.cat||"ค่าใช้จ่ายอื่น"]||0)+a}else if(!NOT_INC.includes(c.cat))oth+=a});

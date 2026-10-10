@@ -293,7 +293,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261010-1544";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261010-1649";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -424,7 +424,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
       <div class="hello rb-head"><div><h1 id="rbTitle">📋 รายงานบิลทั้งหมด</h1><p id="rbSub">บิลทั้งหมดที่บันทึกไว้ ดู แก้ไข หรือลบได้จากที่นี่</p></div><div class="acts" style="margin:0"><button class="btn main" id="rbNew">＋ เปิดบิลใหม่</button><button class="btn ghost" id="rbNew2" hidden></button><button class="btn ghost" id="rbXls">📊 Excel</button></div></div>
       <div class="card rb-f">
         <input class="in" id="rbQ" type="search" placeholder="🔍 เลขที่ ลูกค้า หรือสินค้า">
-        <select class="in" id="rbT"><option value="">ทุกประเภท</option><option value="IT">ใบแจ้งหนี้ / ใบกำกับ (ขายสินค้า)</option><option value="IV">ใบแจ้งหนี้ (บริการ)</option><option value="TX">ใบกำกับภาษี / ใบเสร็จ</option><option value="RC">ใบเสร็จรับเงิน</option><option value="QT">ใบเสนอราคา</option></select>
+        <select class="in" id="rbT"><option value="">ทุกประเภท</option><option value="IT">ใบแจ้งหนี้ / ใบกำกับ (ขายสินค้า)</option><option value="IV">ใบแจ้งหนี้ (บริการ)</option><option value="TX">ใบกำกับภาษี / ใบเสร็จ</option><option value="CN">ใบลดหนี้</option><option value="DN">ใบเพิ่มหนี้</option><option value="RC">ใบเสร็จรับเงิน</option><option value="QT">ใบเสนอราคา</option></select>
         <select class="in" id="rbS"><option value="">ทุกสถานะ</option><option value="cash">💵 ขายเงินสด</option><option value="open">⏳ ค้างชำระ</option><option value="part">🟡 รับบางส่วน</option><option value="paid">✅ รับครบ</option><option value="late">⚠️ เกินกำหนด</option></select>
         <select class="in" id="rbM"></select>
       </div>
@@ -435,7 +435,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
       <div class="hello"><h1>💾 สำรอง / กู้คืนข้อมูล</h1><p>ข้อมูลทุกระบบบันทึกในเครื่องนี้ และเมื่อเข้าสู่ระบบสมาชิก จะสำรองขึ้นระบบร้านให้อัตโนมัติ ใช้ต่อจากเครื่องอื่นได้</p></div>
       <div class="card"><h2>ข้อมูลในเครื่องนี้ <small id="dtLast"></small></h2><div class="stats" id="dtStats"></div>
         <div class="acts"><button class="btn main" id="dtBk">⬇️ ดาวน์โหลดไฟล์สำรองทั้งหมด</button><label class="btn ghost">⬆️ กู้คืนจากไฟล์สำรอง<input type="file" id="dtImp" accept=".json" hidden></label><button class="btn ghost" id="dtXls">📊 ดาวน์โหลด Excel</button></div>
-        <p class="help" id="dtCloud" style="margin-top:10px"></p><p class="help" id="dtVer" style="margin-top:4px"></p><p class="help" style="margin-top:8px">ไฟล์สำรองเก็บได้ครบทุกระบบในไฟล์เดียว ใช้ย้ายไปเครื่องใหม่ได้ · ไฟล์ Excel ใช้ส่งผู้ทำบัญชีหรือเปิดใน Google ชีต</p></div>
+        <p class="help" id="dtCloud" style="margin-top:10px"></p><p class="help" id="dtVer" style="margin-top:4px"></p><p class="help" style="margin-top:8px">ไฟล์สำรองเก็บได้ข้อมูลระบบร้านค้าครบในไฟล์เดียว ใช้ย้ายไปเครื่องใหม่ได้ · ไฟล์ Excel ใช้ส่งผู้ทำบัญชีหรือเปิดใน Google ชีต</p></div>
       <div class="card"><h2>🔒 ล็อกหน้าจอด้วย PIN <small id="lkState"></small></h2>
         <p class="help">กันคนอื่นเปิดดูข้อมูลร้านจากเครื่องนี้ เช่น คอมที่ใช้ร่วมกันหน้าร้าน · ระบบจะล็อกเมื่อเปิดเบราว์เซอร์ใหม่ และเมื่อไม่ได้ใช้งานตามเวลาที่ตั้ง · เก็บเฉพาะค่าเข้ารหัสของ PIN ไม่เก็บ PIN จริง</p>
         <div class="form" style="margin-top:10px"><div class="fl"><label id="lkL1">ตั้ง PIN (ตัวเลข 4–12 หลัก)</label><input class="in" id="lkPin" inputmode="numeric" maxlength="12" autocomplete="off" style="-webkit-text-security:disc"></div>
@@ -510,7 +510,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
 <div id="toast" hidden style="position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:90;font-size:.9rem"></div>
 
 <script src="../assets/icons.js?v=1"></script>
-<script src="edition.js?v=6"></script>
+<script src="edition.js?v=7"></script>
 <script>
 "use strict";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -525,11 +525,11 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=51"},stock:{src:"/stock/?v=51",sv:"home"},stockrep:{src:"/stock/?v=51",sv:"report"},stkitems:{src:"/stock/?v=51",sv:"items"},stkin:{src:"/stock/?v=51",sv:"in"},stkout:{src:"/stock/?v=51",sv:"out"},stkadj:{src:"/stock/?v=51",sv:"adj"},stkhist:{src:"/stock/?v=51",sv:"hist"},stkre:{src:"/stock/?v=51",sv:"reorder"},
-  ar:{src:"/account/?v=51",v:"ar"},tax:{src:"/account/?v=51",v:"tax"},buy:{src:"/account/?v=51",v:"buy"},cash:{src:"/account/?v=51",v:"cash"},pnl:{src:"/account/?v=51",v:"home"},
-  cf:{src:"/cafe/?v=5",cv:"home"},cfpos:{src:"/cafe/?v=5",cv:"pos"},cfbar:{src:"/cafe/?v=5",cv:"bar"},cford:{src:"/cafe/?v=5",cv:"orders"},cfmenu:{src:"/cafe/?v=5",cv:"menu"},cfinv:{src:"/cafe/?v=5",cv:"inv"},cfshift:{src:"/cafe/?v=5",cv:"shift"},cfrpt:{src:"/cafe/?v=5",cv:"rpt"},cfset:{src:"/cafe/?v=5",cv:"set"},
-  bk:{src:"/booking/?v=4",bv:"home"},bkcal:{src:"/booking/?v=4",bv:"cal"},bklist:{src:"/booking/?v=4",bv:"list"},bkres:{src:"/booking/?v=4",bv:"res"},bkrpt:{src:"/booking/?v=4",bv:"rpt"},bkset:{src:"/booking/?v=4",bv:"set"},
-  cost:{src:"/account/?v=51",v:"cost"},exp:{src:"/account/?v=51",v:"exp"},bank:{src:"/account/?v=51",v:"bank"},cashv:{src:"/account/?v=51",v:"cashv"},petty:{src:"/account/?v=51",v:"petty"},ap:{src:"/account/?v=51",v:"ap"}};
+const ROUTES={bill:{src:"/bill/?v=52"},stock:{src:"/stock/?v=51",sv:"home"},stockrep:{src:"/stock/?v=51",sv:"report"},stkitems:{src:"/stock/?v=51",sv:"items"},stkin:{src:"/stock/?v=51",sv:"in"},stkout:{src:"/stock/?v=51",sv:"out"},stkadj:{src:"/stock/?v=51",sv:"adj"},stkhist:{src:"/stock/?v=51",sv:"hist"},stkre:{src:"/stock/?v=51",sv:"reorder"},
+  ar:{src:"/account/?v=52",v:"ar"},tax:{src:"/account/?v=52",v:"tax"},buy:{src:"/account/?v=52",v:"buy"},cash:{src:"/account/?v=52",v:"cash"},pnl:{src:"/account/?v=52",v:"home"},
+  cf:{src:"/cafe/?v=6",cv:"home"},cfpos:{src:"/cafe/?v=6",cv:"pos"},cfbar:{src:"/cafe/?v=6",cv:"bar"},cford:{src:"/cafe/?v=6",cv:"orders"},cfmenu:{src:"/cafe/?v=6",cv:"menu"},cfinv:{src:"/cafe/?v=6",cv:"inv"},cfshift:{src:"/cafe/?v=6",cv:"shift"},cfrpt:{src:"/cafe/?v=6",cv:"rpt"},cfset:{src:"/cafe/?v=6",cv:"set"},
+  bk:{src:"/booking/?v=5",bv:"home"},bkcal:{src:"/booking/?v=5",bv:"cal"},bklist:{src:"/booking/?v=5",bv:"list"},bkres:{src:"/booking/?v=5",bv:"res"},bkrpt:{src:"/booking/?v=5",bv:"rpt"},bkset:{src:"/booking/?v=5",bv:"set"},
+  cost:{src:"/account/?v=52",v:"cost"},exp:{src:"/account/?v=52",v:"exp"},bank:{src:"/account/?v=52",v:"bank"},cashv:{src:"/account/?v=52",v:"cashv"},petty:{src:"/account/?v=52",v:"petty"},ap:{src:"/account/?v=52",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -539,7 +539,7 @@ const PANES=["home","setup","data","bills","quotes","invoices","billing","receip
 const VIEWS={
   bills:{t:"📋 รายงานบิลทั้งหมด",s:"เอกสารขายทั้งหมดที่บันทึกไว้ ดู แก้ไข หรือลบได้จากที่นี่",f:null,nw:["＋ เปิดบิลใหม่","INV"]},
   quotes:{t:"📝 ใบเสนอราคา",s:"เสนอราคาให้ลูกค้า แล้วกด \"แปลงเป็นเอกสารอื่น\" เป็นใบแจ้งหนี้ได้ทันที",f:d=>d.type==="QT",nw:["＋ สร้างใบเสนอราคา","QT"]},
-  invoices:{t:"🧾 ใบแจ้งหนี้ / ใบกำกับภาษี",s:"ขายเชื่อ ตั้งลูกหนี้ ตัดสต๊อก และลงภาษีขาย",f:d=>d.type==="IV"||(d.type==="IT"&&d.term!=="cash"),nw:["＋ สร้างใบแจ้งหนี้","INV"]},
+  invoices:{t:"🧾 ใบแจ้งหนี้ / ใบกำกับภาษี",s:"ขายเชื่อ ตั้งลูกหนี้ ตัดสต๊อก และลงภาษีขาย",f:d=>d.type==="IV"||d.type==="CN"||d.type==="DN"||(d.type==="IT"&&d.term!=="cash"),nw:["＋ สร้างใบแจ้งหนี้","INV"]},
   billing:{t:"📨 ใบวางบิล",s:"รวมใบแจ้งหนี้ที่ค้างชำระของลูกค้าแต่ละราย ส่งวางบิลเพื่อนัดรับเงิน",f:d=>d.type==="BN",nw:["＋ สร้างใบวางบิล","BNMAKER"]},
   receipts:{t:"💵 ใบเสร็จรับเงิน / ขายเงินสด",s:"ใบเสร็จจากการรับชำระ และบิลขายเงินสด",f:d=>d.type==="RC"||d.type==="TX"||(d.type==="IT"&&d.term==="cash"),nw:["＋ ขายเงินสด / ออกใบเสร็จ","CASH"],nw2:["💳 รับชำระตามใบแจ้งหนี้","AR"]}};
 let view="bills";
@@ -575,12 +575,12 @@ function openIn(r,hash){const R=ROUTES[r];let f=frames[R.src];
   go(r)}
 
 /* ---------- ค้นหาทุกระบบ ---------- */
-const TN={QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับภาษี",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับภาษี/ใบเสร็จ"};
+const TN={CN:"ใบลดหนี้",DN:"ใบเพิ่มหนี้",QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับภาษี",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับภาษี/ใบเสร็จ"};
 const hl=(t,q)=>{t=esc(t);if(!q)return t;const i=t.toLowerCase().indexOf(esc(q).toLowerCase());return i<0?t:t.slice(0,i)+"<mark>"+t.slice(i,i+q.length)+"</mark>"+t.slice(i+q.length)};
 let hits=[],hi=0;
 function search(raw){const q=raw.trim().toLowerCase();const docs=LS.get("edm_bill_docs",[]),items=LS.get("edm_stock_items",[]),A=LS.get("edm_acc",{})||{},B=stockBal();
   const pays=(A.pay||[]).filter(p=>p.dir==="in");
-  const paid=d=>{if(d.type==="IT"&&d.term==="cash")return["เงินสด",""];if(d.type!=="IV"&&d.type!=="IT")return["",""];const c=calcDoc(d);let got=pays.filter(p=>p.docId===d.id).reduce((a,p)=>a+num(p.amount)+num(p.wht),0);docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!pays.some(p=>p.rcDocId===x.id))got+=calcDoc(x).total});return got>=c.total-.01?["รับครบ",""]:got>0?["รับบางส่วน","cr"]:["ค้างชำระ","cr"]};
+  const paid=d=>{if(d.void)return["ยกเลิก","cr"];if(d.type==="CN"||d.type==="DN")return[TN[d.type],""];if(d.type==="IT"&&d.term==="cash")return["เงินสด",""];if(d.type!=="IV"&&d.type!=="IT")return["",""];const c=calcDoc(d);let got=pays.filter(p=>p.docId===d.id).reduce((a,p)=>a+num(p.amount)+num(p.wht),0);docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!pays.some(p=>p.rcDocId===x.id))got+=calcDoc(x).total});return got>=c.total-.01?["รับครบ",""]:got>0?["รับบางส่วน","cr"]:["ค้างชำระ","cr"]};
   const G=[],SE=window.EDM_ED?EDM_ED.key:"",sBill=SE!=="stock",sStk=SE!=="bill";const m=s=>!q||String(s||"").toLowerCase().includes(q);
   const D=docs.filter(d=>m(d.no)||m(d.cust&&d.cust.name)||m(d.cust&&d.cust.tax)||m(d.ref)||(q&&(d.items||[]).some(it=>m(it.d)))).sort((a,b)=>String(b.date).localeCompare(String(a.date))||(b.updated||0)-(a.updated||0)).slice(0,q?8:6);
   if(sBill&&D.length)G.push({g:q?"เอกสารขาย":"เอกสารล่าสุด",L:D.map(d=>{const c=calcDoc(d),st=paid(d);return{ic:"🧾",t:hl(d.no,q)+" · "+esc(TN[d.type]||""),s:hl(d.cust&&d.cust.name||"-",q)+" · "+thD(d.date),v:"฿"+fmt(c.net)+(st[0]?`<small class="tag ${st[1]}">${st[0]}</small>`:""),go:()=>openIn("bill","open="+d.id)}})});
@@ -647,20 +647,23 @@ window.addEventListener("message",e=>{if(e.origin!==location.origin||!e.data||e.
   if(t==="account"){go(v==="ar"||v==="tax"||v==="ap"?v:v==="buy"?"cost":v==="cash"?"bank":"pnl")}else if(ROUTES[t])go(t);else go("home")});
 
 /* ---------- หน้าหลัก ---------- */
+const sgnD=d=>d.void?0:d.type==="CN"?-1:1;
+const isTaxD=d=>{const sv=d.seller&&"vat" in d.seller?d.seller.vat:!!(LS.get("edm_bill_seller",{})||{}).vat;return d.type==="TX"||d.type==="CN"||d.type==="DN"||(d.type==="IT"&&sv)};
+const adjOf=(d,docs)=>docs.filter(x=>!x.void&&(x.type==="CN"||x.type==="DN")&&x.refId===d.id).reduce((a,x)=>a+(x.type==="CN"?-1:1)*calcDoc(x).total,0);
 function calcDoc(d){const sub=r2((d.items||[]).reduce((a,it)=>a+r2(num(it.q)*num(it.p)-num(it.disc)),0));const after=r2(Math.max(0,sub-num(d.billDisc)));
   let vat=0,total=after,base=after;if(d.vat==="ex"){vat=r2(after*.07);total=r2(after+vat)}else if(d.vat==="in"){base=r2(after/1.07);vat=r2(after-base);total=after}
   const wht=r2(base*num(d.wht)/100);return{base,vat,total,wht,net:r2(total-wht)}}
 function stockBal(){const B={};LS.get("edm_stock_tx",[]).forEach(t=>{const q=num(t.qty);B[t.pid]=(B[t.pid]||0)+(t.type==="out"?-q:q)});return B}
 function renderHome(){
-  const docs=LS.get("edm_bill_docs",[]),seller=LS.get("edm_bill_seller",{}),items=LS.get("edm_stock_items",[]),A=LS.get("edm_acc",{})||{};
+  const docsAll=LS.get("edm_bill_docs",[]),docs=docsAll.filter(d=>!d.void),seller=LS.get("edm_bill_seller",{}),items=LS.get("edm_stock_items",[]),A=LS.get("edm_acc",{})||{};
   const ym=today().slice(0,7),inv=new Set(docs.filter(d=>d.type==="IV"||d.type==="IT").map(d=>d.no));
-  const sales=docs.filter(d=>d.type==="IV"||d.type==="IT"||((d.type==="RC"||d.type==="TX")&&!(d.ref&&inv.has(d.ref))));
+  const sales=docs.filter(d=>d.type==="IV"||d.type==="IT"||d.type==="CN"||d.type==="DN"||((d.type==="RC"||d.type==="TX")&&!(d.ref&&inv.has(d.ref))));
   const isCash=d=>(d.type==="IT"&&d.term==="cash")||d.type==="RC"||d.type==="TX";
-  let s=0,sc=0,n=0,vat=0;sales.forEach(d=>{if(!String(d.date).startsWith(ym))return;const c=calcDoc(d);s+=c.base;n++;if(isCash(d))sc+=c.base});
-  docs.forEach(d=>{if(String(d.date).startsWith(ym)&&d.vat!=="none"&&(d.type==="TX"||(d.type==="IT"&&seller.vat)))vat+=calcDoc(d).vat});
+  let s=0,sc=0,n=0,vat=0;sales.forEach(d=>{if(!String(d.date).startsWith(ym))return;const c=calcDoc(d),g=sgnD(d);s+=g*c.base;if(g>0&&d.type!=="DN")n++;if(isCash(d))sc+=c.base});
+  docs.forEach(d=>{if(String(d.date).startsWith(ym)&&d.vat!=="none"&&isTaxD(d)&&d.type!=="RC")vat+=sgnD(d)*calcDoc(d).vat});
   // ลูกหนี้ค้าง
   const pays=(A.pay||[]).filter(p=>p.dir==="in");let ar=0,arN=0;
-  docs.filter(d=>d.type==="IV"||d.type==="IT").forEach(d=>{const c=calcDoc(d);let got=pays.filter(p=>p.docId===d.id).reduce((a,p)=>a+num(p.amount)+num(p.wht),0);
+  docs.filter(d=>d.type==="IV"||d.type==="IT").forEach(d=>{const c=calcDoc(d);c.total=r2(c.total+adjOf(d,docs));let got=pays.filter(p=>p.docId===d.id).reduce((a,p)=>a+num(p.amount)+num(p.wht),0);
     docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!pays.some(p=>p.rcDocId===x.id))got+=calcDoc(x).total});const left=r2(c.total-got);if(left>0.009){ar+=left;arN++}});
   const B=stockBal();const low=items.filter(i=>num(i.min)>0&&(B[i.id]||0)<=num(i.min));
   ($("#nAr")||{}).hidden=!arN;($("#nAr")||{}).textContent=arN;
@@ -688,7 +691,7 @@ function renderHome(){
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
   if(window.EDM_ED&&EDM_ED.home)EDM_ED.home({docs,seller,items,A,ym,sales,s,sc,n,vat,ar,arN,B,low,m});
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=51#demo&back=/app/"+(window.EDM_ED?"&ed="+EDM_ED.key:"")};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=52#demo&back=/app/"+(window.EDM_ED?"&ed="+EDM_ED.key:"")};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- ข้อมูลหลัก: ลูกค้า / เจ้าหนี้ / สินค้า-บริการ ---------- */
 const MD={
@@ -745,6 +748,7 @@ $("#mdSave").onclick=()=>{const def=mdDef(),E=mdEdit;if(!E)return;const v={};$$(
   let L=LS.get(def.k,[])||[];const dup=L.findIndex(y=>y.name===v.name);
   if(md==="sup"){const old=E.x&&E.x.name;const j=old?L.findIndex(y=>y.name===old):-1;if(dup>=0&&dup!==j)return $("#mdMsg").textContent="มีชื่อนี้อยู่แล้ว";if(j>=0)L[j]=Object.assign(L[j],v);else L.unshift(Object.assign({id:"s"+Date.now().toString(36)},v))}
   else{const j=E.i;if(dup>=0&&dup!==j)return $("#mdMsg").textContent="มีชื่อนี้อยู่แล้ว";
+    if(v.sku){const ds=L.findIndex(y=>String(y.sku||"").trim().toLowerCase()===v.sku.toLowerCase());if(ds>=0&&ds!==j)return $("#mdMsg").textContent="รหัสสินค้า "+v.sku+" ซ้ำกับ "+L[ds].name;}
     if(j>=0)L[j]=Object.assign(L[j],v);else L.unshift(Object.assign(md==="prod"?{id:(mdSeg==="goods"?"p":"sv")+Date.now().toString(36),created:Date.now()}:{},v))}
   if(!LSset(def.k,L))return;mdClose();renderMaster();if(window.edmCloudDirty)edmCloudDirty()};
 $("#mdDel").onclick=()=>{const def=mdDef(),E=mdEdit;if(!E||E.i<0)return;let L=LS.get(def.k,[])||[];const x=md==="sup"?L.find(y=>y.name===E.x.name):L[E.i];if(!x)return mdClose();
@@ -774,14 +778,17 @@ $("#bnGo").onclick=()=>{const ids=$$("#bnL [data-bi]:checked").map(i=>i.dataset.
   $("#bnm").hidden=true;toast("สร้าง "+bn.no+" แล้ว");openIn("bill","open="+bn.id)};
 
 /* ---------- รายงานบิล ---------- */
-const TN2={BN:"ใบวางบิล",QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับภาษี",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับภาษี/ใบเสร็จ"};
+const TN2={CN:"ใบลดหนี้",DN:"ใบเพิ่มหนี้",BN:"ใบวางบิล",QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับภาษี",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับภาษี/ใบเสร็จ"};
 function docStatus(d,docs,pays){const c=calcDoc(d);
+  if(d.void)return{k:"void",t:"ยกเลิก",cls:"late",c:{base:0,vat:0,total:0,wht:0,net:0},v:1};
+  if(d.type==="CN"||d.type==="DN"){const g=d.type==="CN"?-1:1;return{k:"adj",t:(d.type==="CN"?"ลดหนี้":"เพิ่มหนี้")+(d.ref?" "+d.ref:""),cls:"qt",c:{base:g*c.base,vat:g*c.vat,total:g*c.total,wht:g*c.wht,net:g*c.net}}}
   if(d.type==="QT")return{k:"qt",t:"ใบเสนอราคา",cls:"qt",c};
   if(d.type==="BN")return{k:"bn",t:"วางบิล "+(d.items||[]).filter(i=>i.d).length+" ใบ",cls:"qt",c};
   if(d.type==="IT"&&d.term==="cash")return{k:"cash",t:"เงินสด",cls:"",c};
   if(d.type==="RC"||d.type==="TX")return{k:"paid",t:d.ref?"รับชำระ":"เงินสด",cls:"",c};
   let got=pays.filter(p=>p.docId===d.id).reduce((a,p)=>a+num(p.amount)+num(p.wht),0);
-  docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!pays.some(p=>p.rcDocId===x.id))got+=calcDoc(x).total});
+  docs.forEach(x=>{if(!x.void&&(x.type==="RC"||x.type==="TX")&&x.ref===d.no&&!pays.some(p=>p.rcDocId===x.id))got+=calcDoc(x).total});
+  const adj=adjOf(d,docs);if(adj)c.total=r2(c.total+adj);
   if(got>=c.total-.01)return{k:"paid",t:"รับครบ",cls:"paid",c};
   const late=(d.due||d.date)<today();
   return{k:got>0?"part":"open",late,t:(got>0?"รับบางส่วน":"ค้างชำระ")+(late?" · เกินกำหนด":""),cls:late?"late":"cr",c,left:r2(c.total-got)}}
@@ -802,7 +809,7 @@ function renderBills(){const docs=LS.get("edm_bill_docs",[]),A=LS.get("edm_acc",
     (L.length?L.map(({d,s})=>`<tr><td class="no">${esc(d.no)}<small>${thD(d.date)}</small></td><td class="c-date">${thD(d.date)}</td><td class="c-type">${esc(TN2[d.type]||"")}</td>
       <td class="cust"><b>${esc(d.cust&&d.cust.name||"-")}</b>${d.ref?`<small>อ้างอิง ${esc(d.ref)}</small>`:""}</td><td class="r">฿${fmt(s.c.net)}${s.left&&s.left<s.c.total?`<small>ค้าง ฿${fmt(s.left)}</small>`:""}</td>
       <td class="st"><span class="tag ${s.cls}">${s.t}</span></td>
-      <td class="act"><button data-rv="${d.id}" title="ดู / พิมพ์">👁 ดู</button><button data-re="${d.id}" title="แก้ไข">✏️ แก้ไข</button><button class="del" data-rd="${d.id}" title="ลบ">🗑 ลบ</button></td></tr>`).join("")
+      <td class="act"><button data-rv="${d.id}" title="ดู / พิมพ์">👁 ดู</button>${d.void||isTaxD(d)?"":`<button data-re="${d.id}" title="แก้ไข">✏️ แก้ไข</button>`}${d.void?"":isTaxD(d)?`<button class="del" data-rd="${d.id}" title="ยกเลิกเอกสาร (ใบกำกับภาษีลบไม่ได้)">⛔ ยกเลิก</button>`:`<button class="del" data-rd="${d.id}" title="ลบ">🗑 ลบ</button>`}</td></tr>`).join("")
     :`<tr class="empty"><td colspan="7">${docs.length?"ไม่พบเอกสารตามเงื่อนไข":"ยังไม่มีบิล · กด \"เปิดบิลใหม่\" เพื่อเริ่ม"}</td></tr>`)+`</tbody>`}
 ["#rbQ","#rbT","#rbS","#rbM"].forEach(s=>$(s).addEventListener(s==="#rbQ"?"input":"change",renderBills));
 function newDoc(k){if(k==="BNMAKER")return bnMaker();if(k==="AR")return go("ar");openIn("bill","new="+k)}
@@ -811,6 +818,7 @@ $("#rbTbl").addEventListener("click",e=>{const b=e.target.closest("button");if(!
   if(b.dataset.rv)return openIn("bill","open="+b.dataset.rv);
   if(b.dataset.re)return openIn("bill","edit="+b.dataset.re);
   if(b.dataset.rd){const d=LS.get("edm_bill_docs",[]).find(x=>x.id===b.dataset.rd);if(!d)return;
+    if(isTaxD(d)){const f=frameFor(ROUTES.bill.src);const run=()=>{try{f.contentWindow.edmDeleteDoc(d.id)&&toast("ยกเลิก "+d.no+" แล้ว · เลขที่ยังเก็บไว้")}catch(err){toast("ลองใหม่อีกครั้ง")}renderBills();renderHome()};f.dataset.ready?run():f.addEventListener("load",()=>setTimeout(run,50),{once:true});return}
     const A=LS.get("edm_acc",{})||{},np=(A.pay||[]).filter(p=>p.docId===d.id&&p.src!=="bill").length;
     if(!confirm(`ลบ ${d.no} (${d.cust&&d.cust.name||"-"}) ?\n\nสิ่งที่ผูกกับบิลนี้จะถูกลบด้วย:\n• การตัดสต๊อกของบิลนี้\n• รายการรับเงิน${np?` (${np} รายการ) และใบเสร็จที่ระบบออกให้`:""}\n\nลบแล้วกู้คืนไม่ได้`))return;
     const f=frameFor(ROUTES.bill.src);const run=()=>{try{f.contentWindow.edmDeleteDoc(d.id)?toast("ลบ "+d.no+" แล้ว"):toast("ไม่พบเอกสาร")}catch(err){toast("ลองใหม่อีกครั้ง")}renderBills();renderHome()};
@@ -875,7 +883,7 @@ route();if(window.EDM_ED&&EDM_ED.solo)renderBadges();
 // เปิดเอกสาร/บัตรสินค้าที่ส่งต่อมาจากลิงก์เดิม (/bill/#open=... · /stock/#card=...)
 try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h)){const t=P.t==="stock"?"stock":P.t==="booking"?"bk":P.t==="cafe"?"cf":"bill";if(!window.EDM_ED||EDM_ED.ok(t))openIn(t,P.h)}}catch(e){}
 </script>
-<script src="reports.js?v=50"></script>
+<script src="reports.js?v=51"></script>
 <script src="../assets/member.js?v=55" defer></script>
 <script>/* โหมดออฟไลน์: เก็บหน้าระบบไว้ในเครื่อง เน็ตหลุดแล้วยังเปิดได้ */if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){})});</script>
 </body>

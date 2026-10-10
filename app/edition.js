@@ -29,7 +29,7 @@
     }
     ,cafe: {
       name: "ระบบร้านคาเฟ่", ic: "☕",
-      sub: "ขายหน้าร้าน ออกคิว จอบาร์ ตัดสต๊อกวัตถุดิบตามสูตรต่อแก้ว ปิดกะแล้วลงบัญชีให้อัตโนมัติ",
+      sub: "ขายหน้าร้าน ออกคิว จอบาร์ ตัดวัตถุดิบตามสูตรต่อแก้ว ปิดกะแล้วสรุปยอดและเงินในลิ้นชักให้อัตโนมัติ",
       allow: ["cf", "cfpos", "cfbar", "cford", "cfmenu", "cfinv", "cfshift", "cfrpt", "cfset"], solo: "cf", start: "cf",
       shopName: function () { try { return ((JSON.parse(localStorage.getItem("edm_cafe_cfg") || "{}") || {}).shop || {}).name || ""; } catch (e) { return ""; } },
       rpt: {},
