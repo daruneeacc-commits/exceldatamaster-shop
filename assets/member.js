@@ -1,5 +1,5 @@
 /* Excel Data Master · ระบบสมาชิกสำหรับเครื่องมือออนไลน์ (เปิดบิล / คำนวณเงินเดือน)
- * - ทดลองใช้ฟรี 7 วัน แล้วต่ออายุ 199 บาท / 30 วัน
+ * - ทดลองใช้ฟรี 7 วัน แล้วต่ออายุ (ระบบเดี่ยว 149 · ร้านค้า 249 · ครบทุกระบบ 349 บาท / 30 วัน; สมาชิกเดิม 199)
  * - บัญชีและวันหมดอายุเก็บที่ระบบหลังร้าน (Google Apps Script) · ข้อมูลบิล/เงินเดือนอยู่ในเบราว์เซอร์ของผู้ใช้เท่านั้น
  */
 (function () {
@@ -177,7 +177,7 @@
       bar.className = "edm-bar" + (ex ? "" : " warn");
       bar.innerHTML = (ex ? "บัญชีหมดอายุแล้ว · ยังเปิดดูและพิมพ์เอกสารเดิมได้ แต่สร้างหรือแก้ไขไม่ได้จนกว่าจะต่ออายุ"
         : (me.status === "ทดลองใช้" ? "ช่วงทดลองใช้" : "บัญชีของคุณ") + "จะหมดอายุใน " + left + " วัน (" + thDate(me.exp) + ")") +
-        ' <a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">ต่ออายุ ' + PRICE + ' บาท / ' + DAYS + ' วัน</a>';
+        ' <a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">ต่ออายุสมาชิก</a>';
     } else if (bar) { bar.remove(); bar = null; }
     markFree();
   }
@@ -194,7 +194,7 @@
     menu = document.createElement("div"); menu.className = "edm-menu";
     menu.innerHTML = '<div><span class="edm-muted">บัญชี</span><br><b>' + esc(me.email) + '</b></div>' +
       '<div class="edm-muted">' + esc(expired() ? "หมดอายุเมื่อ " : (me.status === "ทดลองใช้" ? "ทดลองใช้ถึง " : "ใช้งานได้ถึง ")) + thDate(me.exp) + '</div>' +
-      '<a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">ต่ออายุ ' + PRICE + ' บาท / ' + DAYS + ' วัน</a>' +
+      '<a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">ต่ออายุสมาชิก</a>' +
       '<button class="edm-btn ghost" id="edmRe" type="button">↻ ตรวจสถานะล่าสุด</button>' +
       '<div class="edm-muted" id="edmCl">' + esc(cloudLine()) + ' <button class="edm-link" id="edmPush" type="button">สำรองตอนนี้</button></div>' +
       TOOLS.filter(function (t) { return location.pathname.indexOf("/" + t[0] + "/") === -1; }).map(function (t) { return '<a class="edm-btn ghost" href="' + BASE + t[0] + '/">' + t[1] + '</a>'; }).join("") +

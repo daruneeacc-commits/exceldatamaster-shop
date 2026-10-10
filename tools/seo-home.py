@@ -18,6 +18,9 @@ SYSTEMS = [("/app/", "ระบบร้านค้าออนไลน์ (�
            ("/account/", "โปรแกรมบัญชีร้านค้า", "กำไรขาดทุน ลูกหนี้ เจ้าหนี้ ภาษีซื้อ-ขาย"),
            ("/payroll/", "โปรแกรมคำนวณเงินเดือน พร้อมสลิป", "ประกันสังคม ภาษีหัก ณ ที่จ่าย OT สลิปเงินเดือน")]
 
+# ราคาเริ่มต้นต่อ 30 วัน: ระบบเดี่ยว 149 · ร้านค้า (บิล+สต๊อก+บัญชี) 249 · ครบทุกระบบ 349
+PRICE = {"/app/": "349", "/account/": "249", "/payroll/": "349"}
+
 def main():
     s = F.read_text(encoding="utf-8")
     a = s.index('<script type="application/json" id="store">') + len('<script type="application/json" id="store">')
@@ -44,8 +47,8 @@ def main():
     for path, name, d in SYSTEMS:
         ld.append({"@context": "https://schema.org", "@type": "SoftwareApplication", "name": name, "description": d,
                    "url": SITE + path, "applicationCategory": "BusinessApplication", "operatingSystem": "Web, Windows, macOS, Android, iOS",
-                   "inLanguage": "th", "offers": {"@type": "Offer", "price": "199", "priceCurrency": "THB",
-                                                  "description": "ทดลองใช้ฟรี 7 วัน แล้ว 199 บาท / 30 วัน"}})
+                   "inLanguage": "th", "offers": {"@type": "Offer", "price": PRICE.get(path, "149"), "priceCurrency": "THB",
+                                                  "description": "ทดลองใช้ฟรี 7 วัน แล้ว " + PRICE.get(path, "149") + " บาท / 30 วัน"}})
     e = html.escape
     block = ("<!--seo-->"
              f'<title>{e(TITLE)}</title><meta name="description" content="{e(DESC)}">'
