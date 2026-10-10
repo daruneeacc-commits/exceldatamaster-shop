@@ -278,13 +278,22 @@ body.cf-kiosk .subnav{display:none!important}
 .mod-card{margin-top:16px}.mod-card h2{margin:0 0 4px;font-size:1.1rem}.mod-card .help{margin:0 0 12px}
 .mod{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:12px;background:var(--soft);margin-top:8px;cursor:pointer}
 .mod input{width:22px;height:22px;margin:2px 0 0;flex:none;accent-color:var(--accent)}.mod b{display:block}.mod small{display:block;color:var(--muted);font-size:.84rem;margin-top:2px}
+
+/* ไอคอนประจำร้านในเมนู */
+aside .step{background:none!important}
+aside .step .edm-ic{display:block;width:30px;height:30px}
+aside>a.on .edm-ic,aside .mg.has-on>.mg-h .edm-ic{filter:drop-shadow(0 0 1.2px rgba(255,255,255,.95))}
+#tabbar button i .edm-ic{display:block;width:26px;height:26px;margin:0 auto 1px}
+#tabbar button:not(.on) i .edm-ic{opacity:.9}
+@media(max-width:760px){aside .step{width:auto!important;height:auto!important}aside .step .edm-ic{width:28px;height:28px}}
+@media(min-width:761px) and (max-width:1100px){aside .step .edm-ic{width:26px;height:26px}}
 /* โหมดหน้าร้านของคาเฟ่: ซ่อนเมนูระบบ ให้หน้าขายเต็มจอ */
 body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk #updBar{display:none!important}body.cf-kiosk .stage{position:fixed!important;inset:0;z-index:90}
 </style>
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261010-1145";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261010-1540";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -500,6 +509,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
 </nav>
 <div id="toast" hidden style="position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:90;font-size:.9rem"></div>
 
+<script src="../assets/icons.js?v=1"></script>
 <script src="edition.js?v=6"></script>
 <script>
 "use strict";
@@ -618,6 +628,12 @@ $$(".mg-h").forEach(h=>h.onclick=()=>{const g=h.parentNode,links=[...g.querySele
   try{to=JSON.parse(sessionStorage.getItem(NAVK)||"{}")[g.dataset.g]}catch(e){}
   if(!to||!links.some(a=>a.getAttribute("href")===to))to=links[0].getAttribute("href");
   document.body.classList.remove("menu");if(location.hash===to)route();else location.hash=to});
+/* ไอคอนประจำร้าน (ทรงกระดาษพับมุม) แทนอีโมจิในเมนู */
+function applyIcons(){if(!window.EDM_ICON_FOR)return;
+  $$("aside > a[data-r] .step").forEach(x=>x.innerHTML=EDM_ICON_FOR(x.parentNode.dataset.r));
+  $$("aside .mg").forEach(g=>{const x=g.querySelector(".mg-h .step");if(x)x.innerHTML=EDM_ICON_FOR("g_"+g.dataset.g)});
+  $$("#tabbar button").forEach(b=>{const i=b.querySelector("i");if(i)i.innerHTML=EDM_ICON_FOR(b.dataset.go)})}
+applyIcons();
 /* ระบบร้านค้าไม่มีคาเฟ่ / จอง (แยกเป็นระบบของตัวเอง) */
 if(!window.EDM_ED)$$('aside .mg[data-g="cf"],aside .mg[data-g="bk"]').forEach(x=>x.remove());
 $("#burger").onclick=()=>document.body.classList.toggle("menu");$("#scrim").onclick=()=>document.body.classList.remove("menu");
