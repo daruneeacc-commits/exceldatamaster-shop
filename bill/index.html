@@ -7,6 +7,7 @@
 <script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
 <script>/* เปิดตรง /bill/ → ไปรุ่นตัวแยกแบบมีเมนูและรายงาน (/app/?ed=bill) · ใส่ ?solo=1 เพื่อเปิดหน้าเดี่ยวแบบเดิม */(function(){var emb=false;try{emb=window.top!==window.self}catch(e){emb=true}if(emb||/[?&]solo=1/.test(location.search))return;var h=location.hash.replace(/^#/,"");try{if(h)sessionStorage.setItem("edm_pend",JSON.stringify({t:"bill",h:h}))}catch(e){}document.documentElement.style.visibility="hidden";location.replace("/app/?ed=bill")})()</script>
 <script src="../assets/lock.js?v=2"></script>
+<script src="../assets/vendor/qrcode.js"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>โปรแกรมเปิดบิลออนไลน์ ใบกำกับภาษี ใบเสร็จ ใบเสนอราคา | Excel Data Master</title>
 <meta name="description" content="เปิดบิล ใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ ใบกำกับภาษี สำหรับธุรกิจซื้อมาขายไปและงานบริการ คำนวณ VAT และหัก ณ ที่จ่ายให้อัตโนมัติ พิมพ์เป็น PDF ได้ทันที"><link rel="canonical" href="https://exceldatamaster.com/bill/"><meta property="og:type" content="website"><meta property="og:site_name" content="Excel Data Master"><meta property="og:locale" content="th_TH"><meta property="og:title" content="โปรแกรมเปิดบิลออนไลน์ ใบกำกับภาษี ใบเสร็จ ใบเสนอราคา | Excel Data Master"><meta property="og:description" content="เปิดบิล ใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ ใบกำกับภาษี สำหรับธุรกิจซื้อมาขายไปและงานบริการ คำนวณ VAT และหัก ณ ที่จ่ายให้อัตโนมัติ พิมพ์เป็น PDF ได้ทันที"><meta property="og:url" content="https://exceldatamaster.com/bill/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og.jpg"><meta name="twitter:card" content="summary_large_image">
@@ -121,6 +122,7 @@ table.p-items .c{text-align:center}
 .p-tot{display:grid;grid-template-columns:1fr auto;gap:3px 10px;font-variant-numeric:tabular-nums}
 .p-tot .grand{font-weight:700;font-size:12pt;border-top:1.5px solid #111;padding-top:4px;margin-top:2px}
 .p-notes{margin-top:12px;font-size:9.5pt;white-space:pre-wrap}
+.p-pp{display:flex;gap:4mm;align-items:center;margin-top:4mm;padding:3mm;border:1px solid #ddd;border-radius:3mm;width:max-content;max-width:100%;font-size:9pt;line-height:1.5}.p-qr{width:26mm;height:26mm;flex:none}.p-qr svg{width:100%;height:100%;display:block}
 .p-sign{margin-top:auto;padding-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:30px;text-align:center;font-size:9.5pt}
 .p-sign .ln{border-top:1px dotted #555;margin:44px 20px 4px}
 .p-foot{margin-top:10px;font-size:7.5pt;color:#999;text-align:center}
@@ -241,6 +243,7 @@ html{overscroll-behavior-y:contain}
       </div>
       <label style="display:flex;gap:8px;align-items:center;font-weight:600;font-size:.9rem"><input type="checkbox" id="sVat"> จดทะเบียนภาษีมูลค่าเพิ่ม (VAT)</label>
       <div class="f"><label>ข้อมูลการชำระเงิน (แสดงท้ายเอกสาร)</label><textarea class="in-" id="sPay" placeholder="เช่น ธ.กสิกรไทย 123-4-56789-0 ชื่อบัญชี ..."></textarea></div>
+      <div class="f"><label>พร้อมเพย์สำหรับ QR บนบิล (เบอร์มือถือ / เลขผู้เสียภาษี)</label><input class="in-" id="sPP" inputmode="numeric" placeholder="เว้นว่าง = ไม่แสดง QR"></div>
       <div class="f"><label>สีเอกสาร</label><input type="color" id="sColor" value="#127A4B" style="width:60px;height:34px;border:0;background:none"></div>
       <p class="note">บันทึกไว้ในเครื่องนี้ครั้งเดียว ใช้กับทุกเอกสาร</p>
     </details>
@@ -278,6 +281,7 @@ html{overscroll-behavior-y:contain}
     <div class="card no-print" id="actBar" style="position:sticky;bottom:10px;z-index:5;flex-direction:row;flex-wrap:wrap;gap:8px">
       <button class="btn main" id="saveBtn"><i>💾</i> บันทึก</button>
       <button class="btn main keep" id="printBtn"><i>🖨️</i> พิมพ์<span class="lg"> / PDF</span></button>
+      <button class="btn ghost keep" id="shareBtn"><i>📤</i> <span class="lg">ส่งให้ลูกค้า</span><span class="sh">ส่ง</span></button>
       <button class="btn ghost keep" id="convertBtn"><i>🔁</i> <span class="lg">แปลงเป็นเอกสารอื่น</span><span class="sh">แปลงเอกสาร</span></button>
       <button class="btn ghost keep" id="newBtn"><i>＋</i> <span class="lg">เอกสารใหม่</span><span class="sh">ใหม่</span></button>
     </div>
@@ -412,7 +416,7 @@ const REASONS={CN:["ลดราคา","คืนสินค้า","คิด
 const taxOrigs=()=>LS.get(K.docs,[]).filter(x=>(x.type==="IT"||x.type==="TX")&&isTax(x)&&!x.void);
 function adjOrigVal(o,selfId){let v=calc(o).base;LS.get(K.docs,[]).forEach(x=>{if(ADJ(x.type)&&x.refId===o.id&&x.id!==selfId&&!x.void&&(x.updated||0)<=(doc.updated||Infinity))v+=(x.type==="CN"?-1:1)*calc(x).base});return r2(v)}
 function setAdjOrig(d,o){d.refId=o.id;d.ref=o.no;d.vat=o.vat==="none"?"ex":o.vat;d.cust=Object.assign({},o.cust);d.mode=o.mode||d.mode;d.orig={no:o.no,date:o.date,val:adjOrigVal(o,d.id)};d.wht=0;d.billDisc=0}
-function adjFrom(o,type){if(!vatOf(o))return toast(NOVAT_MSG);if(o.void)return toast("ใบนี้ยกเลิกแล้ว");
+async function adjFrom(o,type){if(!vatOf(o))return toast(NOVAT_MSG);if(!(await pinOk("ออก"+TYPES[type].name+" อ้างถึง "+o.no)))return;if(o.void)return toast("ใบนี้ยกเลิกแล้ว");
   doc=blank(o.mode||"goods",type);doc.term="";doc.due="";doc.reason="";setAdjOrig(doc,o);
   doc.items=doc.mode==="goods"?o.items.filter(i=>i.d||num(i.p)).map(i=>{const x={d:i.d,q:0,u:i.u,p:num(i.p),disc:0};if(i.pid)x.pid=i.pid;if(i.brand)x.brand=i.brand;return x}):[{d:"",q:1,u:"งาน",p:0,disc:0}];
   if(!doc.items.length)doc.items=[{d:"",q:1,u:"",p:0,disc:0}];
@@ -481,7 +485,7 @@ function fillForm(){
   $("#docNo").value=doc.no;$("#docDate").value=doc.date;$("#docDue").value=doc.due||"";$("#docRef").value=doc.ref||"";
   ["name","addr","tax","branch","contact"].forEach(k=>$("#c"+k[0].toUpperCase()+k.slice(1)).value=doc.cust[k]||"");
   $("#billDisc").value=doc.billDisc||"";$("#wht").value=String(doc.wht||0);$("#notes").value=doc.notes||"";
-  $("#sName").value=seller.name;$("#sAddr").value=seller.addr;$("#sTax").value=seller.tax;$("#sBranch").value=seller.branch;$("#sPhone").value=seller.phone;$("#sContact").value=seller.contact;$("#sVat").checked=!!seller.vat;$("#sPay").value=seller.pay;$("#sColor").value=seller.color||"#127A4B";
+  $("#sName").value=seller.name;$("#sAddr").value=seller.addr;$("#sTax").value=seller.tax;$("#sBranch").value=seller.branch;$("#sPhone").value=seller.phone;$("#sContact").value=seller.contact;$("#sVat").checked=!!seller.vat;$("#sPay").value=seller.pay;$("#sPP").value=seller.pp||"";$("#sColor").value=seller.color||"#127A4B";
   $("#logoPv").style.backgroundImage=seller.logo?`url(${seller.logo})`:"none";
   $("#sellerSum").textContent=seller.name?"· "+seller.name:"· ยังไม่ได้กรอก";$("#sellerLine").textContent=seller.name?seller.name+(seller.vat?" · จด VAT":" · ไม่ได้จด VAT"):"ยังไม่ได้ตั้งค่าร้าน";if(!seller.name)$("#sellerCard").open=true;
 }
@@ -493,6 +497,26 @@ function renderTotals(c){
 }
 
 /* ---------- render paper ---------- */
+/* ---------- QR พร้อมเพย์บนบิล ---------- */
+function ppPayload(target,amount){const f=(id,v)=>id+("0"+v.length).slice(-2)+v,t=String(target||"").replace(/\D/g,"");let acc;
+  if(t.length===10&&t[0]==="0")acc=f("01","0066"+t.slice(1));else if(t.length===13)acc=f("02",t);else if(t.length===15)acc=f("03",t);else return"";
+  const body=f("00","01")+f("01",amount?"12":"11")+f("29",f("00","A000000677010111")+acc)+f("58","TH")+f("53","764")+(amount?f("54",Number(amount).toFixed(2)):"")+"6304";
+  let c=0xFFFF;for(let i=0;i<body.length;i++){c^=body.charCodeAt(i)<<8;for(let j=0;j<8;j++)c=(c&0x8000)?((c<<1)^0x1021)&0xFFFF:(c<<1)&0xFFFF}
+  return body+("0000"+c.toString(16).toUpperCase()).slice(-4)}
+function qrSvg(t){try{const q=qrcode(0,"M");q.addData(t);q.make();return q.createSvgTag({cellSize:4,margin:0,scalable:true})}catch(e){return""}}
+// ยอดที่ลูกค้าต้องจ่ายตามเอกสารนี้ (0 = ไม่ต้องแสดง QR)
+function dueAmt(c){if(doc.void||ADJ(doc.type)||doc.type==="QT"||doc.type==="RC"||doc.type==="TX"||termOf(doc)==="cash")return 0;return r2(doc.type==="BN"?c.lines.reduce((a,l)=>a+num(l.amt),0):c.net)}
+/* ---------- ประวัติการทำงานกับเอกสาร (ใครทำอะไร เมื่อไร) ---------- */
+function audit(act,d,note){try{const L=LS.get("edm_audit",[])||[];const c=calc(d);L.unshift({at:Date.now(),act,type:d.type,no:d.no,cust:d.cust&&d.cust.name||"",total:r2(c.total),note:note||"",by:localStorage.getItem("edm_who")||""});LS.set("edm_audit",L.slice(0,3000))}catch(e){}}
+// ขอ PIN เจ้าของร้านก่อนยกเลิก/ลดหนี้/ลบ (ถ้าเปิดใช้ที่หน้า สำรอง/กู้คืนข้อมูล)
+async function pinOk(why){const cfg=LS.get("edm_audit_cfg",{})||{};if(!cfg.pin)return true;let L=null;try{L=window.top.EDM_LOCK}catch(e){}L=L||window.EDM_LOCK;if(!L||!L.check||!L.get||!L.get())return true;
+  const v=prompt("🔒 "+why+"\nใส่ PIN เจ้าของร้าน");if(v==null)return false;const ok=await L.check(v.trim());if(!ok)alert("PIN ไม่ถูกต้อง");return ok}
+async function shareDoc(){if(!locked()&&!isStored(doc)&&!save(true))return;const c=calc(doc),S=sOf(doc),due=dueAmt(c);
+  const t=[`เรียน ${doc.cust.name||"ลูกค้า"}`,`${tName(doc.type,doc)} เลขที่ ${doc.no} ลงวันที่ ${thDate(doc.date)}`,`ยอดรวม ${fmt(c.total)} บาท`+(c.wht?` · หัก ณ ที่จ่าย ${fmt(c.wht)} · ชำระสุทธิ ${fmt(c.net)} บาท`:""),
+    doc.due&&due?`ครบกำหนดชำระ ${thDate(doc.due)}`:"",due&&seller.pp?`ชำระผ่านพร้อมเพย์ ${seller.pp}`:"",due&&seller.pay?`ช่องทางชำระ: ${oneLine(seller.pay)}`:"",`ขอบคุณค่ะ · ${S.name||""}`,"(แนบไฟล์ PDF: กดพิมพ์ แล้วเลือกบันทึกเป็น PDF)"].filter(Boolean).join("\n");
+  audit("ส่งให้ลูกค้า",doc);
+  if(navigator.share){try{await navigator.share({title:doc.no,text:t});return}catch(e){if(e&&e.name==="AbortError")return}}
+  try{await navigator.clipboard.writeText(t)}catch(e){}window.open("https://line.me/R/share?text="+encodeURIComponent(t),"_blank","noopener");toast("คัดลอกข้อความแล้ว · เปิด LINE ให้เลือกผู้รับ")}
 function renderPaper(c){
   const S=sOf(doc),tm=termOf(doc),T=Object.assign({},TYPES[doc.type],doc.type==="IT"&&tm==="cash"?{due:"",sign:["ผู้รับเงิน","ผู้รับสินค้า"]}:{}),g=doc.mode==="goods",col=seller.color||"#127A4B",adj=ADJ(doc.type);
   const cdays=tm==="credit"&&doc.due?Math.round((new Date(doc.due+"T00:00:00")-new Date(doc.date+"T00:00:00"))/864e5):0;
@@ -516,6 +540,7 @@ function renderPaper(c){
       <span class="grand">ยอดรวมทั้งสิ้น</span><span class="grand">${fmt(c.total)}</span>
       ${c.wht?`<span>หัก ณ ที่จ่าย ${doc.wht}%</span><span>-${fmt(c.wht)}</span><span style="font-weight:700">ยอดชำระสุทธิ</span><span style="font-weight:700">${fmt(c.net)}</span>`:""}</div></div>`}
   ${doc.notes||(seller.pay&&tm!=="cash"&&doc.type!=="RC"&&doc.type!=="TX"&&!adj)?`<div class="p-notes">${doc.notes?`<b>หมายเหตุ</b>\n${esc(doc.notes)}\n`:""}${seller.pay&&tm!=="cash"&&doc.type!=="RC"&&doc.type!=="TX"&&!adj?`<b>ช่องทางชำระเงิน</b>\n${esc(seller.pay)}`:""}</div>`:""}
+  ${seller.pp&&dueAmt(c)>0&&ppPayload(seller.pp,dueAmt(c))?`<div class="p-pp"><div class="p-qr">${qrSvg(ppPayload(seller.pp,dueAmt(c)))}</div><div><b>สแกนจ่ายด้วยพร้อมเพย์</b><br>ยอดชำระ ${fmt(dueAmt(c))} บาท<br>พร้อมเพย์ ${esc(seller.pp)}${S.name?"<br>"+esc(S.name):""}</div></div>`:""}
   <div class="p-sign"><div><div class="ln"></div>${T.sign[1]}<br>วันที่ ____/____/______</div><div><div class="ln"></div>${T.sign[0]}<br>วันที่ ____/____/______</div></div>
   <div class="p-foot">สร้างด้วย exceldatamaster.com</div>${doc.void?`<div class="p-void">ยกเลิก<small>${esc(doc.void.reason||"")}</small></div>`:""}`;
   fitPaper();
@@ -555,7 +580,7 @@ bindVal("#docNo",v=>doc.no=v);bindVal("#docDate",v=>doc.date=v);bindVal("#docDue
 ["name","addr","tax","branch","contact"].forEach(k=>bindVal("#c"+k[0].toUpperCase()+k.slice(1),v=>doc.cust[k]=v));
 bindVal("#billDisc",v=>doc.billDisc=v);$("#wht").onchange=e=>{doc.wht=+e.target.value;update()};bindVal("#notes",v=>doc.notes=v);
 const sv=()=>{LS.set(K.seller,seller);$("#sellerSum").textContent=seller.name?"· "+seller.name:"· ยังไม่ได้กรอก"};
-[["#sName","name"],["#sAddr","addr"],["#sTax","tax"],["#sBranch","branch"],["#sPhone","phone"],["#sContact","contact"],["#sPay","pay"],["#sColor","color"]].forEach(([s,k])=>$(s).oninput=e=>{seller[k]=e.target.value;sv();renderTypes();update()});
+[["#sName","name"],["#sAddr","addr"],["#sTax","tax"],["#sBranch","branch"],["#sPhone","phone"],["#sContact","contact"],["#sPay","pay"],["#sPP","pp"],["#sColor","color"]].forEach(([s,k])=>$(s).oninput=e=>{seller[k]=e.target.value;sv();renderTypes();update()});
 $("#sVat").onchange=e=>{seller.vat=e.target.checked;sv();if(!isStored(doc)){if(seller.vat&&doc.vat==="none")doc.vat="ex";if(!seller.vat&&(doc.type==="TX"||ADJ(doc.type))){doc.type=doc.mode==="service"?(doc.type==="TX"?"RC":"IV"):"IT";doc.no=nextNo(doc.type,doc.date);delete doc.refId;delete doc.orig}}renderAll()};
 $("#logoIn").onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image(),u=URL.createObjectURL(f);img.onload=()=>{const m=240,s=Math.min(1,m/Math.max(img.width,img.height)),cv=document.createElement("canvas");cv.width=Math.round(img.width*s);cv.height=Math.round(img.height*s);cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);seller.logo=cv.toDataURL("image/png");sv();fillForm();update();URL.revokeObjectURL(u)};img.src=u};
 $("#logoClr").onclick=()=>{seller.logo="";sv();fillForm();update()};
@@ -590,11 +615,12 @@ function save(silent){
   const i=docs.findIndex(d=>d.id===doc.id);if(i>=0)docs[i]=JSON.parse(JSON.stringify(doc));else docs.unshift(JSON.parse(JSON.stringify(doc)));
   if(LS.set(K.docs,docs)){bumpNo(doc.no);
     if(doc.cust.name){const cs=LS.get(K.cust,[]);const j=cs.findIndex(x=>x.name===doc.cust.name);if(j>=0)cs[j]=doc.cust;else cs.unshift(doc.cust);LS.set(K.cust,cs)}
-    const ns=syncStock(doc);syncPay(doc);const tm=termOf(doc);renderAll();
+    const ns=syncStock(doc);syncPay(doc);const tm=termOf(doc);audit(first?"สร้าง":"แก้ไข",doc);renderAll();
     if(!silent)toast("บันทึกแล้ว ✓"+(ns?(doc.type==="CN"?" รับคืนเข้าสต๊อก ":" ตัดสต๊อก ")+ns+" รายการ":"")+(tm==="cash"?" · รับเงินเข้าบัญชีแล้ว":tm==="credit"?" · ตั้งเป็นลูกหนี้":""));return true}
   doc.saved=isStored(doc);return false;
 }
 $("#saveBtn").onclick=()=>save();
+$("#shareBtn").onclick=()=>shareDoc();
 $("#printBtn").onclick=()=>{if(!locked()&&!save(true))return;const pw=$("#previewWrap");pw.classList.add("show");setTimeout(()=>window.print(),80)};
 function newDoc(quiet){const dirty=!isStored(doc)&&!!(doc.cust.name||doc.items.some(i=>i.d||num(i.p)));if(!quiet&&dirty&&!confirm("เริ่มเอกสารใหม่? เอกสารนี้ยังไม่ได้บันทึก"))return;
   doc=blank(doc.mode||"goods",baseType(doc));doc.no=nextNo(doc.type,doc.date);renderAll();if(!quiet){scrollTo(0,0);toast("เอกสารใหม่")}}
@@ -699,29 +725,31 @@ function openFromHash(){const h=location.hash;if(/^#(new|open|edit)/.test(h))has
   const d=LS.get(K.docs,[]).find(x=>x.id===m[2]);if(!d)return toast("ไม่พบเอกสาร");doc=JSON.parse(JSON.stringify(d));renderAll();if(m[1]==="edit"&&locked())m[1]="open";
   const mt=document.querySelector(".mtabs");if(mt&&getComputedStyle(mt).display!=="none")document.querySelector(`.mtabs button[data-mt="${m[1]==="edit"?"edit":"view"}"]`).click();scrollTo(0,0);toast((m[1]==="edit"?"แก้ไข ":"เปิด ")+d.no+(locked()&&!d.void?" · ใบกำกับภาษีแก้ไม่ได้":d.void?" · ยกเลิกแล้ว":""))}
 /* ยกเลิกเอกสาร (ใบกำกับภาษีลบไม่ได้): เก็บเลขที่ไว้ ทำเครื่องหมายยกเลิก คืนสต๊อก ไม่นับยอดขาย/ภาษี */
-function askVoid(id){const docs=LS.get(K.docs,[]),d=docs.find(x=>x.id===id);if(!d)return false;if(d.void){toast("เอกสารนี้ยกเลิกแล้ว");return false}
+async function askVoid(id){const docs=LS.get(K.docs,[]),d=docs.find(x=>x.id===id);if(!d)return false;if(d.void){toast("เอกสารนี้ยกเลิกแล้ว");return false}
+  if(!(await pinOk("ยกเลิกเอกสาร "+d.no)))return false;
   const A=LS.get("edm_acc",null),P=(A&&A.pay||[]).filter(p=>p.dir==="in"&&p.docId===id),ext=P.filter(p=>p.src!=="bill");
   if(ext.length){alert("ยกเลิกไม่ได้: ใบนี้มีรายการรับชำระ "+ext.length+" รายการ\nให้ยกเลิกใบเสร็จและลบรายการรับชำระที่หน้าบัญชีก่อน");return false}
   const adj=docs.filter(x=>ADJ(x.type)&&x.refId===id&&!x.void);if(adj.length){alert("ยกเลิกไม่ได้: มีใบลดหนี้/ใบเพิ่มหนี้ "+adj.map(x=>x.no).join(", ")+" อ้างถึงใบนี้ ให้ยกเลิกใบนั้นก่อน");return false}
   const own=r2(P.reduce((a,p)=>a+num(p.amount),0)),hasStk=LS.get(SK.tx,[]).some(t=>t.docId===id);
   const r=prompt("ยกเลิกเอกสาร "+d.no+"\nเลขที่นี้จะเก็บไว้ และไม่นับในยอดขาย/ภาษี"+(own?"\nรายการรับเงินสดของบิลนี้ ฿"+fmt(own)+" จะถูกยกเลิกด้วย":"")+(hasStk?"\nสินค้าในบิลนี้จะคืนเข้าสต๊อก":"")+"\n\nเหตุผลที่ยกเลิก:","");
   if(r==null)return false;if(!r.trim()){alert("ต้องใส่เหตุผลที่ยกเลิก");return false}
-  d.void={at:Date.now(),reason:r.trim()};d.updated=Date.now();syncStock(d,true);syncPay(d,true);LS.set(K.docs,docs);
+  d.void={at:Date.now(),reason:r.trim()};d.updated=Date.now();syncStock(d,true);syncPay(d,true);LS.set(K.docs,docs);audit("ยกเลิก",d,r.trim());
   if(doc.id===id){doc=JSON.parse(JSON.stringify(d));renderAll()}toast("ยกเลิก "+d.no+" แล้ว");return true}
 // ลบเอกสาร (เฉพาะที่ไม่ใช่ใบกำกับภาษี) + ล้างสิ่งที่ผูกกัน: การตัดสต๊อก รายการรับเงิน และใบเสร็จที่ระบบออกให้อัตโนมัติ
 // ใบกำกับภาษี (IT ของผู้จด VAT, TX, ใบลด/เพิ่มหนี้) ลบไม่ได้ → ยกเลิกแทน
-function deleteDoc(id){const docs=LS.get(K.docs,[]);const d=docs.find(x=>x.id===id);if(!d)return false;
+async function deleteDoc(id){const docs=LS.get(K.docs,[]);const d=docs.find(x=>x.id===id);if(!d)return false;
   if(d.void){alert("เอกสารนี้ยกเลิกแล้ว ใบกำกับภาษีลบไม่ได้ (ต้องเก็บเลขที่ไว้)");return false}
   if(isTax(d)){alert("ใบกำกับภาษีลบไม่ได้ ใช้ \"ยกเลิกเอกสาร\" แทน");return askVoid(id)}
+  if(!(await pinOk("ลบเอกสาร "+d.no)))return false;
   const A=LS.get("edm_acc",null),rmRc=[];
   const tl=(A&&A.pay||[]).filter(p=>p.docId===id&&p.rcDocId).map(p=>docs.find(x=>x.id===p.rcDocId)).filter(x=>x&&isTax(x)&&!x.void);
   if(tl.length){alert("ลบไม่ได้: มีใบกำกับภาษี "+tl.map(x=>x.no).join(", ")+" ผูกกับใบนี้ ให้ยกเลิกใบนั้นก่อน");return false}
-  syncStock(d,true);syncPay(d,true);
+  syncStock(d,true);syncPay(d,true);audit("ลบ",d);
   if(A&&A.pay){A.pay=A.pay.filter(p=>{if(p.docId===id){const r=p.rcDocId&&docs.find(x=>x.id===p.rcDocId);if(r&&!isTax(r)&&!r.void)rmRc.push(r.id);return false}if(p.rcDocId===id)p.rcDocId="";return true});LS.set("edm_acc",A)}
   LS.set(K.docs,docs.filter(x=>x.id!==id&&!rmRc.includes(x.id)));
   if(doc.id===id||rmRc.includes(doc.id)){doc=blank(doc.mode,baseType(doc));doc.no=nextNo(doc.type,doc.date);renderAll()}
   return true}
-window.edmDeleteDoc=deleteDoc;window.edmBillExcel=()=>exportExcel();
+window.edmDeleteDoc=deleteDoc;window.edmVoidDoc=askVoid;window.edmBillExcel=()=>exportExcel();
 window.addEventListener("hashchange",openFromHash);setTimeout(openFromHash,0);
 /* ฝังใน /app/: กดเมนู "เปิดบิล" (#/bill) โดยไม่ได้ระบุเอกสาร → เริ่มเอกสารใหม่ (ไม่เปิดใบที่บันทึกล่าสุดค้างไว้) */
 (function(){let P;try{P=window.parent!==window&&window.parent.location.origin===location.origin?window.parent:null}catch(e){P=null}if(!P)return;
@@ -736,8 +764,8 @@ $("#openList").onclick=()=>{
       .sort((a,b)=>String(b.date).localeCompare(String(a.date))||String(b.no).localeCompare(String(a.no)));
     $("#dsum").textContent=L.length?"พบ "+L.length+" รายการ · รวม ฿"+fmt(L.reduce((s,d)=>s+(d.void?0:(d.type==="CN"?-1:1)*(d._total||0)),0)):"";$("#dl").innerHTML=L.length?L.map(d=>`<div class="li"><div><b>${esc(d.no)} · ${esc(tName(d.type,d))}${d.void?`<span class="vtag">ยกเลิก</span>`:""}</b><small>${esc(d.cust.name||"-")} · ${thDate(d.date)} · ฿${fmt(d._total||0)}${d.void?"":payTag(d,docs)}${ADJ(d.type)&&d.ref?" · อ้างถึง "+esc(d.ref):""}</small></div><div class="acts"><button class="btn sm main" data-op="${d.id}">เปิด</button>${d.void?"":isTax(d)?`<button class="btn sm ghost danger" data-vd="${d.id}">ยกเลิก</button>`:`<button class="btn sm ghost danger" data-dl="${d.id}">ลบ</button>`}</div></div>`).join(""):`<p class="note">ยังไม่มีเอกสารที่บันทึกไว้</p>`;
     $$("[data-op]").forEach(b=>b.onclick=()=>{doc=JSON.parse(JSON.stringify(docs.find(d=>d.id===b.dataset.op)));dlg.close();renderAll()});
-    $$("[data-dl]").forEach(b=>b.onclick=()=>{if(!confirm("ลบเอกสารนี้?\nการตัดสต๊อกและรายการรับเงินของเอกสารนี้จะถูกลบด้วย"))return;deleteDoc(b.dataset.dl);const nd=LS.get(K.docs,[]);docs.length=0;nd.forEach(x=>docs.push(x));draw()});
-    $$("[data-vd]").forEach(b=>b.onclick=()=>{if(!askVoid(b.dataset.vd))return;const nd=LS.get(K.docs,[]);docs.length=0;nd.forEach(x=>docs.push(x));draw()})};
+    $$("[data-dl]").forEach(b=>b.onclick=async()=>{if(!confirm("ลบเอกสารนี้?\nการตัดสต๊อกและรายการรับเงินของเอกสารนี้จะถูกลบด้วย"))return;if(!(await deleteDoc(b.dataset.dl)))return;const nd=LS.get(K.docs,[]);docs.length=0;nd.forEach(x=>docs.push(x));draw()});
+    $$("[data-vd]").forEach(b=>b.onclick=async()=>{if(!(await askVoid(b.dataset.vd)))return;const nd=LS.get(K.docs,[]);docs.length=0;nd.forEach(x=>docs.push(x));draw()})};
   draw();["#dq","#dt","#ds","#dm"].forEach(s=>$(s).addEventListener(s==="#dq"?"input":"change",()=>draw()));
   $("#xls").onclick=()=>exportExcel();
   $("#exp").onclick=()=>{const data={v:1,app:"edm-bill",seller,docs:LS.get(K.docs,[]),customers:LS.get(K.cust,[]),counter:LS.get(K.cnt,{})};const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"}));a.download="สำรองข้อมูลบิล-"+today()+".json";a.click()};
@@ -754,6 +782,6 @@ renderAll();bindSuggest();
 })();
 </script>
 <script src="../assets/tool-ui.js?v=4" defer></script>
-<script src="../assets/member.js?v=55" defer></script>
+<script src="../assets/member.js?v=56" defer></script>
 </body>
 </html>

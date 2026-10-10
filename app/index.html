@@ -213,6 +213,7 @@ table.rb{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 .sr .t{flex:1;min-width:0}.sr .t b{display:block;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sr .t small{display:block;color:var(--muted);font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sr .v{text-align:right;font-size:.85rem;white-space:nowrap;font-variant-numeric:tabular-nums}.sr .v small{display:block;font-size:.72rem}
 .sr .none{padding:18px 12px;color:var(--muted);font-size:.9rem;text-align:center}
+.au-list{max-height:360px;overflow:auto;margin-top:10px}.au-list .li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.au-list small{display:block;color:var(--muted);font-size:.8rem}
 .sr mark{background:color-mix(in srgb,var(--accent) 22%,transparent);color:inherit;border-radius:3px}
 .sbtn{display:none;border:0;background:var(--soft);border-radius:10px;width:38px;height:38px;cursor:pointer;font-size:1rem;margin-left:auto}
 @media(max-width:760px){
@@ -293,7 +294,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261010-1649";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261010-1711";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -393,6 +394,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
         <div class="fl"><label>โทรศัพท์</label><input class="in" id="stPhone" inputmode="tel"></div>
         <div class="fl"><label>อีเมล / LINE</label><input class="in" id="stContact"></div>
         <label class="chk full"><input type="checkbox" id="stVat"> จดทะเบียนภาษีมูลค่าเพิ่ม (VAT) แล้ว · ออกใบกำกับภาษีได้ และมีรายงานภาษีซื้อ-ขาย</label>
+        <div class="fl"><label>พร้อมเพย์สำหรับ QR บนบิล</label><input class="in" id="stPP" inputmode="numeric" placeholder="เบอร์มือถือ / เลขผู้เสียภาษี"></div>
         <div class="fl full"><label>ช่องทางชำระเงิน (แสดงท้ายใบแจ้งหนี้)</label><textarea class="in" id="stPay" placeholder="เช่น โอนเข้าบัญชี กสิกรไทย 123-4-56789-0 ชื่อบัญชี ..."></textarea></div>
         <div class="fl"><label>สีของเอกสาร</label><input class="in" type="color" id="stColor" style="height:44px;padding:4px"></div>
       </div>
@@ -443,6 +445,12 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
           <div class="fl"><label>ล็อกอัตโนมัติเมื่อไม่ได้ใช้งาน</label><select class="in" id="lkIdle"><option value="5">5 นาที</option><option value="10">10 นาที</option><option value="15" selected>15 นาที</option><option value="30">30 นาที</option><option value="60">1 ชั่วโมง</option><option value="0">ไม่ล็อกอัตโนมัติ (ล็อกเมื่อเปิดเบราว์เซอร์ใหม่)</option></select></div>
           <div class="fl" id="lkOldBox" hidden><label>PIN ปัจจุบัน (เพื่อยืนยัน)</label><input class="in" id="lkOld" inputmode="numeric" maxlength="12" autocomplete="off" style="-webkit-text-security:disc"></div></div>
         <div class="acts"><button class="btn main" id="lkSet">🔒 ตั้ง PIN</button><button class="btn ghost" id="lkNow" hidden>ล็อกเดี๋ยวนี้</button><button class="btn ghost" id="lkOff" hidden>ยกเลิก PIN</button><span class="help" id="lkMsg"></span></div></div>
+      <div class="card"><h2>👥 ผู้ใช้และประวัติเอกสาร</h2><p class="help">ระบบบันทึกทุกครั้งที่สร้าง แก้ไข ยกเลิก ลบ หรือส่งเอกสาร ว่าใครทำ เมื่อไร</p>
+        <div class="form" style="margin-top:8px"><div class="fl"><label>ชื่อผู้ใช้เครื่องนี้ (บันทึกในประวัติ)</label><input class="in" id="auWho" placeholder="เช่น พี่นก (เจ้าของ) / น้องฝ้าย (แคชเชียร์)"></div>
+          <div class="fl"><label>&nbsp;</label><label class="chk"><input type="checkbox" id="auPin"> ต้องใส่ PIN เจ้าของร้านก่อนยกเลิก ลบ หรือออกใบลดหนี้</label></div></div>
+        <p class="help" id="auPinNote" hidden>ต้องตั้ง PIN ที่การ์ด "ล็อกหน้าจอด้วย PIN" ด้านบนก่อน ตัวเลือกนี้จึงจะทำงาน</p>
+        <div class="acts"><input class="in" id="auQ" type="search" placeholder="ค้นหาเลขที่ ลูกค้า ผู้ใช้" style="max-width:260px"><button class="btn ghost" id="auXls" type="button">📊 ดาวน์โหลด Excel</button></div>
+        <div class="au-list" id="auList"></div></div>
       <div class="card"><h2>ข้อมูลตัวอย่าง</h2><p class="help">ใส่ข้อมูลร้านขายเครื่องเขียนย้อนหลัง 3 เดือน เพื่อลองใช้ทุกเมนู (ข้อมูลในเครื่องนี้จะถูกแทนที่)</p><div class="acts"><button class="btn ghost" id="dtDemo">✨ ใส่ข้อมูลตัวอย่าง 3 เดือน</button></div></div>
       <div class="card"><h2>เริ่มใช้งานจริง</h2><p class="help">ลองข้อมูลตัวอย่างเสร็จแล้ว กดล้างข้อมูลทั้งหมด แล้วเริ่มกรอกข้อมูลร้านจริง</p>
         <label class="chk" style="margin-top:8px"><input type="checkbox" id="dtKeep"> เก็บข้อมูลร้าน (ชื่อ ที่อยู่ เลขผู้เสียภาษี โลโก้) ไว้</label>
@@ -525,7 +533,7 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=52"},stock:{src:"/stock/?v=51",sv:"home"},stockrep:{src:"/stock/?v=51",sv:"report"},stkitems:{src:"/stock/?v=51",sv:"items"},stkin:{src:"/stock/?v=51",sv:"in"},stkout:{src:"/stock/?v=51",sv:"out"},stkadj:{src:"/stock/?v=51",sv:"adj"},stkhist:{src:"/stock/?v=51",sv:"hist"},stkre:{src:"/stock/?v=51",sv:"reorder"},
+const ROUTES={bill:{src:"/bill/?v=53"},stock:{src:"/stock/?v=51",sv:"home"},stockrep:{src:"/stock/?v=51",sv:"report"},stkitems:{src:"/stock/?v=51",sv:"items"},stkin:{src:"/stock/?v=51",sv:"in"},stkout:{src:"/stock/?v=51",sv:"out"},stkadj:{src:"/stock/?v=51",sv:"adj"},stkhist:{src:"/stock/?v=51",sv:"hist"},stkre:{src:"/stock/?v=51",sv:"reorder"},
   ar:{src:"/account/?v=52",v:"ar"},tax:{src:"/account/?v=52",v:"tax"},buy:{src:"/account/?v=52",v:"buy"},cash:{src:"/account/?v=52",v:"cash"},pnl:{src:"/account/?v=52",v:"home"},
   cf:{src:"/cafe/?v=6",cv:"home"},cfpos:{src:"/cafe/?v=6",cv:"pos"},cfbar:{src:"/cafe/?v=6",cv:"bar"},cford:{src:"/cafe/?v=6",cv:"orders"},cfmenu:{src:"/cafe/?v=6",cv:"menu"},cfinv:{src:"/cafe/?v=6",cv:"inv"},cfshift:{src:"/cafe/?v=6",cv:"shift"},cfrpt:{src:"/cafe/?v=6",cv:"rpt"},cfset:{src:"/cafe/?v=6",cv:"set"},
   bk:{src:"/booking/?v=5",bv:"home"},bkcal:{src:"/booking/?v=5",bv:"cal"},bklist:{src:"/booking/?v=5",bv:"list"},bkres:{src:"/booking/?v=5",bv:"res"},bkrpt:{src:"/booking/?v=5",bv:"rpt"},bkset:{src:"/booking/?v=5",bv:"set"},
@@ -818,10 +826,10 @@ $("#rbTbl").addEventListener("click",e=>{const b=e.target.closest("button");if(!
   if(b.dataset.rv)return openIn("bill","open="+b.dataset.rv);
   if(b.dataset.re)return openIn("bill","edit="+b.dataset.re);
   if(b.dataset.rd){const d=LS.get("edm_bill_docs",[]).find(x=>x.id===b.dataset.rd);if(!d)return;
-    if(isTaxD(d)){const f=frameFor(ROUTES.bill.src);const run=()=>{try{f.contentWindow.edmDeleteDoc(d.id)&&toast("ยกเลิก "+d.no+" แล้ว · เลขที่ยังเก็บไว้")}catch(err){toast("ลองใหม่อีกครั้ง")}renderBills();renderHome()};f.dataset.ready?run():f.addEventListener("load",()=>setTimeout(run,50),{once:true});return}
+    if(isTaxD(d)){const f=frameFor(ROUTES.bill.src);const run=()=>{Promise.resolve().then(()=>(f.contentWindow.edmVoidDoc||f.contentWindow.edmDeleteDoc)(d.id)).then(ok=>{if(ok)toast("ยกเลิก "+d.no+" แล้ว · เลขที่ยังเก็บไว้")}).catch(()=>toast("ลองใหม่อีกครั้ง")).then(()=>{renderBills();renderHome()})};f.dataset.ready?run():f.addEventListener("load",()=>setTimeout(run,50),{once:true});return}
     const A=LS.get("edm_acc",{})||{},np=(A.pay||[]).filter(p=>p.docId===d.id&&p.src!=="bill").length;
     if(!confirm(`ลบ ${d.no} (${d.cust&&d.cust.name||"-"}) ?\n\nสิ่งที่ผูกกับบิลนี้จะถูกลบด้วย:\n• การตัดสต๊อกของบิลนี้\n• รายการรับเงิน${np?` (${np} รายการ) และใบเสร็จที่ระบบออกให้`:""}\n\nลบแล้วกู้คืนไม่ได้`))return;
-    const f=frameFor(ROUTES.bill.src);const run=()=>{try{f.contentWindow.edmDeleteDoc(d.id)?toast("ลบ "+d.no+" แล้ว"):toast("ไม่พบเอกสาร")}catch(err){toast("ลองใหม่อีกครั้ง")}renderBills();renderHome()};
+    const f=frameFor(ROUTES.bill.src);const run=()=>{Promise.resolve().then(()=>f.contentWindow.edmDeleteDoc(d.id)).then(ok=>toast(ok?"ลบ "+d.no+" แล้ว":"ยังไม่ได้ลบ")).catch(()=>toast("ลองใหม่อีกครั้ง")).then(()=>{renderBills();renderHome()})};
     f.dataset.ready?run():f.addEventListener("load",()=>setTimeout(run,50),{once:true})}});
 $("#rbXls").onclick=()=>{const f=frameFor(ROUTES.bill.src);const run=()=>{try{f.contentWindow.edmBillExcel()}catch(e){toast("ลองใหม่อีกครั้ง")}};toast("กำลังสร้างไฟล์ Excel...");f.dataset.ready?run():f.addEventListener("load",()=>setTimeout(run,100),{once:true})};
 
@@ -831,17 +839,17 @@ const reloadFrames=()=>Object.values(frames).forEach(f=>{try{f.contentWindow.loc
 let stLogo="";
 function renderSetup(){const s=LS.get("edm_bill_seller",{});
   $("#stName").value=s.name||"";$("#stAddr").value=s.addr||"";$("#stTax").value=s.tax||"";$("#stBranch").value=s.branch||"สำนักงานใหญ่";$("#stPhone").value=s.phone||"";$("#stContact").value=s.contact||"";
-  $("#stVat").checked=!!s.vat;$("#stPay").value=s.pay||"";$("#stColor").value=s.color||"#127A4B";stLogo=s.logo||"";$("#stLogoPv").style.backgroundImage=stLogo?`url(${stLogo})`:"none";$("#stMsg").textContent=""}
+  $("#stVat").checked=!!s.vat;$("#stPay").value=s.pay||"";$("#stPP").value=s.pp||"";$("#stColor").value=s.color||"#127A4B";stLogo=s.logo||"";$("#stLogoPv").style.backgroundImage=stLogo?`url(${stLogo})`:"none";$("#stMsg").textContent=""}
 $("#stLogo").onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image();img.onload=()=>{const k=Math.min(1,320/Math.max(img.width,img.height));const c=document.createElement("canvas");c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext("2d").drawImage(img,0,0,c.width,c.height);stLogo=c.toDataURL("image/png");$("#stLogoPv").style.backgroundImage=`url(${stLogo})`;URL.revokeObjectURL(img.src)};img.src=URL.createObjectURL(f)};
 $("#stLogoDel").onclick=()=>{stLogo="";$("#stLogoPv").style.backgroundImage="none"};
 $("#stSave").onclick=()=>{const name=$("#stName").value.trim();if(!name){$("#stMsg").textContent="ใส่ชื่อร้านก่อนนะคะ";$("#stName").focus();return}
   const tax=$("#stTax").value.replace(/\D/g,"");if(tax&&tax.length!==13){$("#stMsg").textContent="เลขผู้เสียภาษีต้องมี 13 หลัก";$("#stTax").focus();return}
-  const v={name,addr:$("#stAddr").value.trim(),tax,branch:$("#stBranch").value.trim()||"สำนักงานใหญ่",phone:$("#stPhone").value.trim(),contact:$("#stContact").value.trim(),vat:$("#stVat").checked,pay:$("#stPay").value.trim(),color:$("#stColor").value,logo:stLogo};
+  const v={name,addr:$("#stAddr").value.trim(),tax,branch:$("#stBranch").value.trim()||"สำนักงานใหญ่",phone:$("#stPhone").value.trim(),contact:$("#stContact").value.trim(),vat:$("#stVat").checked,pay:$("#stPay").value.trim(),pp:$("#stPP").value.replace(/[^0-9]/g,""),color:$("#stColor").value,logo:stLogo};
   const ok=LSset("edm_bill_seller",Object.assign({},LS.get("edm_bill_seller",{}),v))&&LSset("edm_stock_cfg",Object.assign({},LS.get("edm_stock_cfg",{}),{name:v.name}));
   if(!ok)return;reloadFrames();$("#stMsg").textContent="บันทึกแล้ว ✓ ใช้กับทุกระบบแล้ว";toast("บันทึกข้อมูลร้านแล้ว ✓");setTimeout(()=>go("home"),900)};
 
 /* ---------- สำรอง / กู้คืน / ล้างข้อมูล ---------- */
-const KS=["edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_suppliers","edm_services","edm_stock_items","edm_stock_tx","edm_stock_cfg"];
+const KS=["edm_audit","edm_audit_cfg","edm_acc","edm_bill_docs","edm_bill_seller","edm_bill_counter","edm_bill_customers","edm_suppliers","edm_services","edm_stock_items","edm_stock_tx","edm_stock_cfg"];
 const KS_UI=["edm_bill_draft","edm_acc_ui","edm_stock_ui","edm_bill_term"];
 function renderLock(){const L=window.EDM_LOCK,c=L&&L.get();$("#lkState").textContent=c?"เปิดใช้อยู่":"ยังไม่ได้ตั้ง";$("#lkSet").textContent=c?"เปลี่ยน PIN":"🔒 ตั้ง PIN";$("#lkL1").textContent=c?"PIN ใหม่ (ตัวเลข 4–12 หลัก)":"ตั้ง PIN (ตัวเลข 4–12 หลัก)";
   $("#lkNow").hidden=!c;$("#lkOff").hidden=!c;$("#lkOldBox").hidden=!c;if(c)$("#lkIdle").value=String(c.idle||0);["#lkPin","#lkPin2","#lkOld"].forEach(s=>$(s).value="");$("#lkMsg").textContent=""}
@@ -851,7 +859,15 @@ $("#lkSet").onclick=async()=>{const L=window.EDM_LOCK;if(!L)return;const a=$("#l
   await L.set(a,$("#lkIdle").value);renderLock();$("#lkMsg").textContent="ตั้ง PIN แล้ว ✓";toast("เปิดล็อกหน้าจอด้วย PIN แล้ว")};
 $("#lkOff").onclick=async()=>{const L=window.EDM_LOCK;if(!(await L.check($("#lkOld").value.trim())))return $("#lkMsg").textContent="ใส่ PIN ปัจจุบันเพื่อยกเลิก";L.clear();renderLock();toast("ยกเลิก PIN แล้ว")};
 $("#lkNow").onclick=()=>window.EDM_LOCK&&EDM_LOCK.lockNow();
-function renderData(){wipeClose();renderLock();
+function renderAudit(){const L=LS.get("edm_audit",[])||[],q=($("#auQ").value||"").trim().toLowerCase(),F=q?L.filter(x=>(x.no+" "+x.cust+" "+x.by+" "+x.act).toLowerCase().includes(q)):L;
+  $("#auWho").value=localStorage.getItem("edm_who")||"";const cfg=LS.get("edm_audit_cfg",{})||{};$("#auPin").checked=!!cfg.pin;$("#auPinNote").hidden=!(cfg.pin&&!(window.EDM_LOCK&&EDM_LOCK.get&&EDM_LOCK.get()));
+  $("#auList").innerHTML=F.length?F.slice(0,150).map(x=>{const d=new Date(x.at);return`<div class="li"><div><b>${esc(x.act)}</b> · ${esc(TN[x.type]||x.type||"")} ${esc(x.no||"")}<small>${thD(d.toISOString().slice(0,10))} ${d.toTimeString().slice(0,5)} น.${x.by?" · "+esc(x.by):""}${x.cust?" · "+esc(x.cust):""}${x.note?" · "+esc(x.note):""}</small></div><div class="r">฿${fmt(x.total||0)}</div></div>`}).join(""):`<div class="empty">ยังไม่มีประวัติ</div>`}
+$("#auWho").addEventListener("change",e=>{const v=e.target.value.trim();try{v?localStorage.setItem("edm_who",v):localStorage.removeItem("edm_who")}catch(x){}toast("บันทึกชื่อผู้ใช้แล้ว")});
+$("#auPin").onchange=e=>{LSset("edm_audit_cfg",Object.assign({},LS.get("edm_audit_cfg",{})||{},{pin:e.target.checked}));renderAudit();toast(e.target.checked?"เปิดใช้แล้ว":"ปิดแล้ว")};
+$("#auQ").addEventListener("input",renderAudit);
+$("#auXls").onclick=()=>{const L=LS.get("edm_audit",[])||[];const rows=[["วันที่เวลา","การทำงาน","ประเภท","เลขที่","ลูกค้า","ยอดรวม","ผู้ใช้","หมายเหตุ"]].concat(L.map(x=>[new Date(x.at).toLocaleString("th-TH"),x.act,TN[x.type]||x.type,x.no,x.cust,x.total,x.by,x.note]));
+  const csv="\ufeff"+rows.map(r=>r.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="ประวัติเอกสาร-"+today()+".csv";a.click()};
+function renderData(){wipeClose();renderLock();renderAudit();
   {const el=$("#dtVer");el.textContent="ระบบหลังร้าน: กำลังตรวจ...";new Promise((ok,no)=>{let n=0;const t=setInterval(()=>{const M=window.EDM_MEMBER;if(M&&M.ping){clearInterval(t);ok(M.ping())}else if(++n>40){clearInterval(t);no()}},100)}).then(x=>x).then(r=>{const v=String(r&&r.version||"");const ok=/^v(1[89]|[2-9]\d)/.test(v);el.innerHTML="ระบบหลังร้าน: <b>"+esc(v||"ไม่ทราบเวอร์ชัน")+"</b> "+(ok?"✅ ระบบความปลอดภัยล่าสุด":"⚠️ ยังเป็นเวอร์ชันเก่า · วางโค้ด v18 แล้วทำให้ใช้งานได้ (เวอร์ชันใหม่)")}).catch(()=>{el.textContent="ระบบหลังร้าน: เชื่อมต่อไม่ได้ (ตรวจอินเทอร์เน็ต)"})}const A=LS.get("edm_acc",{})||{};const n=(k)=>(LS.get(k,[])||[]).length;
   const SE=window.EDM_ED?EDM_ED.key:"";$("#dtStats").innerHTML=(SE==="bill"?[["เอกสารขาย",n("edm_bill_docs")],["ลูกค้า",n("edm_bill_customers")],["สินค้า / บริการ",n("edm_stock_items")+n("edm_services")]]:SE==="stock"?[["สินค้า",n("edm_stock_items")],["ความเคลื่อนไหว",n("edm_stock_tx")],["ใบสั่งซื้อ",(A.pur||[]).filter(p=>p.kind==="stock").length],["ผู้ขาย",n("edm_suppliers")]]:[["เอกสารขาย",n("edm_bill_docs")],["สินค้า",n("edm_stock_items")],["ซื้อ / ค่าใช้จ่าย",(A.pur||[]).length],["ลูกค้า",n("edm_bill_customers")]]).map(([t,v])=>`<div><b>${v}</b><span>${t}</span></div>`).join("");
   const last=LS.get("edm_last_backup","");$("#dtLast").textContent=last?"ดาวน์โหลดไฟล์สำรองล่าสุด "+thD(last):"";
@@ -884,7 +900,7 @@ route();if(window.EDM_ED&&EDM_ED.solo)renderBadges();
 try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h)){const t=P.t==="stock"?"stock":P.t==="booking"?"bk":P.t==="cafe"?"cf":"bill";if(!window.EDM_ED||EDM_ED.ok(t))openIn(t,P.h)}}catch(e){}
 </script>
 <script src="reports.js?v=51"></script>
-<script src="../assets/member.js?v=55" defer></script>
+<script src="../assets/member.js?v=56" defer></script>
 <script>/* โหมดออฟไลน์: เก็บหน้าระบบไว้ในเครื่อง เน็ตหลุดแล้วยังเปิดได้ */if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){})});</script>
 </body>
 </html>
