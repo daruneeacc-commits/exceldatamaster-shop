@@ -7,7 +7,7 @@
 <script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>โปรแกรมลงเวลาทำงาน ตอกบัตรออนไลน์ คิด OT สาย ขาด ลา | Excel Data Master</title>
-<meta name="description" content="ลงเวลาเข้าออกงานผ่านมือถือหรือแท็บเล็ต รองรับหลายกะ กะดึก ทำงานวันหยุด คิด OT มาสาย ออกก่อน ขาด ลา อัตโนมัติ รายงานตามแผนกและสาขา ส่งเข้าระบบเงินเดือนได้ทันที">
+<meta name="description" content="ลงเวลาเข้าออกงานผ่านมือถือหรือแท็บเล็ต รองรับหลายกะ กะดึก ทำงานวันหยุด คิด OT มาสาย ออกก่อน ขาด ลา อัตโนมัติ รายงานตามแผนกและสาขา ส่งออกรายงาน Excel และ PDF ได้ทันที">
 <link rel="canonical" href="https://exceldatamaster.com/time/">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
@@ -82,7 +82,6 @@ body.kiosk header.top .nav,body.kiosk .tabs{display:none}
 <header class="top"><div class="in">
   <a class="brand" href="/">⏱ Excel Data Master <small>· ลงเวลาทำงาน</small></a>
   <nav class="nav">
-    <a class="btn sm ghost" href="/payroll/">💰 ระบบเงินเดือน</a>
     <button class="btn sm ghost" id="kioskBtn" type="button">🔒 โหมดตอกบัตร</button>
   </nav>
 </div></header>
@@ -125,6 +124,7 @@ const svUi=()=>T.set(UIK,ui), svCfg=()=>T.set(T.K.cfg,c);
 const emps=()=>T.emps().filter(e=>T.active(e,ui.ym));
 const brOf=id=>(c.emp[id]||{}).branch||"";
 const co=()=>T.get(T.K.co,{})||{};
+const hasPay=()=>{try{return !!localStorage.getItem("edm_pay_company")||Object.keys(JSON.parse(localStorage.getItem("edm_pay_records")||"{}")).length>0}catch(e){return false}};
 function getLog(){return T.get(T.K.log,{})||{}}
 function setLog(L){T.set(T.K.log,L)}
 function getMarks(){return T.get(T.K.day,{})||{}}
@@ -161,7 +161,7 @@ function kioskCard(e){const o=openSessionOf(e.id),ts=todaySess(e.id),last=ts.fil
 function vKiosk(){const list=emps().filter(e=>!ui.q||(e.name+" "+e.code+" "+(e.dept||"")).toLowerCase().includes(ui.q.toLowerCase()));
   return`<section class="card"><div class="clock" aria-live="off"><b id="clk">--:--:--</b><span id="clkD"></span></div>
   ${T.emps().length>8?`<input class="in-" id="kq" placeholder="🔍 ค้นหาชื่อหรือรหัสพนักงาน" value="${esc(ui.q)}" aria-label="ค้นหาพนักงาน">`:""}
-  ${list.length?`<div class="kgrid">${list.map(kioskCard).join("")}</div>`:`<div class="empty">ยังไม่มีพนักงาน · เพิ่มพนักงานที่ <a href="/payroll/">ระบบเงินเดือน</a> ก่อน แล้วกลับมาที่หน้านี้</div>`}
+  ${list.length?`<div class="kgrid">${list.map(kioskCard).join("")}</div>`:`<div class="empty">ยังไม่มีพนักงาน · เจ้าของร้านเพิ่มรายชื่อได้ที่เมนู ⚙️ ตั้งค่า</div>`}
   <p class="muted small" style="margin:0;text-align:center">แตะชื่อตัวเองเพื่อเข้างาน / ออกงาน · เวลาอ้างอิงจากนาฬิกาของเครื่องนี้</p></section>`}
 function bindKiosk(){const tick=()=>{const n=new Date(),k=$("#clk");if(!k)return clearInterval(bindKiosk.t);k.textContent=pad(n.getHours())+":"+pad(n.getMinutes())+":"+pad(n.getSeconds());$("#clkD").textContent=thDL(ymd(n))};
   clearInterval(bindKiosk.t);tick();bindKiosk.t=setInterval(tick,1000);
@@ -209,7 +209,7 @@ function monthSel(){const [y,m]=ui.ym.split("-").map(Number);
   return`<div class="f" style="flex:0 1 260px"><label>เดือน</label><div style="display:flex;gap:6px"><button class="btn sm ghost" id="mP" type="button" aria-label="เดือนก่อน">‹</button><select class="in-" id="mS">${MONTHS.map((x,i)=>`<option value="${i+1}" ${i+1===m?"selected":""}>${x}</option>`).join("")}</select><select class="in-" id="yS" style="max-width:100px">${[y-2,y-1,y,y+1].map(v=>`<option value="${v}" ${v===y?"selected":""}>${v+543}</option>`).join("")}</select><button class="btn sm ghost" id="mN" type="button" aria-label="เดือนถัดไป">›</button></div></div>`}
 function bindMonth(){const go=(y,m)=>{if(m<1){m=12;y--}if(m>12){m=1;y++}ui.ym=y+"-"+pad(m);svUi();render()};const [y,m]=ui.ym.split("-").map(Number);
   $("#mP").onclick=()=>go(y,m-1);$("#mN").onclick=()=>go(y,m+1);$("#mS").onchange=e=>go(y,+e.target.value);$("#yS").onchange=e=>go(+e.target.value,m)}
-function vSheet(){const list=emps();if(!list.length)return`<section class="card"><div class="empty">ยังไม่มีพนักงาน · เพิ่มที่ <a href="/payroll/">ระบบเงินเดือน</a></div></section>`;
+function vSheet(){const list=emps();if(!list.length)return`<section class="card"><div class="empty">ยังไม่มีพนักงาน · <button class="btn sm main" data-goset type="button">เพิ่มพนักงานที่ตั้งค่า</button></div></section>`;
   if(!list.some(e=>e.id===ui.emp))ui.emp=list[0].id;const e=list.find(x=>x.id===ui.emp),S=T.month(e.id,ui.ym,{c,co:co()});
   const lv=Object.entries(S.lv).filter(([,v])=>v).map(([k,v])=>T.LEAVE[k].n+" "+v).join(" · ")||"-";
   return`<section class="card"><h2>🗓 ตารางเวลา <small>แตะแถวเพื่อแก้ไขเวลา ลา หรืออนุมัติ OT</small></h2>
@@ -222,12 +222,12 @@ function vSheet(){const list=emps();if(!list.length)return`<section class="card"
    return`<tr class="click ${R.sched?"":"we"}" data-d="${R.d}"><td>${DOW[R.dow]} ${thD(R.d)}</td><td>${esc(sh)}</td><td>${R.sess.map(s=>tm(R.d,s.in)).join("<br>")||"-"}</td><td>${R.sess.map(s=>s.out?tm(R.d,s.out):"…").join("<br>")||"-"}</td>
    <td class="r">${dur(R.work)}</td><td class="r">${R.late?R.late+" น.":"-"}</td><td class="r">${R.early?R.early+" น.":"-"}</td><td class="r">${ot?dur(ot):R.otPend?`<span class="chip late">รอ ${dur(R.otRaw)}</span>`:"-"}</td><td>${chip(R)}</td><td class="small">${esc((R.mark&&R.mark.note)||"")}</td></tr>`}).join("")}</tbody>
   <tfoot><tr><td colspan="4">รวม</td><td class="r">${dur(S.work)}</td><td class="r">${Math.round(S.late)} น.</td><td class="r">${Math.round(S.early)} น.</td><td class="r">${dur(S.ot15+S.ot2+S.ot3)}</td><td colspan="2"></td></tr></tfoot></table></div>
-  <div class="row"><button class="btn main" id="toPay" type="button">💰 ส่งเข้าระบบเงินเดือน ${esc(ymTh(ui.ym))}</button><button class="btn ghost" id="addS" type="button">＋ เพิ่มเวลาย้อนหลัง</button></div>
-  <p class="muted small" style="margin:0">ส่งเข้าเงินเดือน: ${esc(TYPES[e.type||"m"])}${(e.type||"m")==="d"?` · วันทำงาน ${S.payDays} วัน (รวมลาที่ได้ค่าจ้างและวันหยุดนักขัตฤกษ์)`:(e.type||"m")==="h"?` · ชั่วโมงทำงาน ${S.payHrs} ชม.`:` · ขาด ${S.abs} วัน · ลาไม่รับค่าจ้าง ${S.lv.unpaid} วัน`} · สาย/ออกก่อน ${S.payLate} นาที · OT ตามจริง</p></section>`}
-function bindSheet(){bindMonth();$("#eS").onchange=e=>{ui.emp=e.target.value;svUi();render()};
+  <div class="row">${hasPay()?`<button class="btn main" id="toPay" type="button">💰 ส่งเข้าระบบเงินเดือน ${esc(ymTh(ui.ym))}</button>`:""}<button class="btn ghost" id="addS" type="button">＋ เพิ่มเวลาย้อนหลัง</button></div>
+  ${hasPay()?"":"<!--"}<p class="muted small" style="margin:0">ส่งเข้าเงินเดือน: ${esc(TYPES[e.type||"m"])}${(e.type||"m")==="d"?` · วันทำงาน ${S.payDays} วัน (รวมลาที่ได้ค่าจ้างและวันหยุดนักขัตฤกษ์)`:(e.type||"m")==="h"?` · ชั่วโมงทำงาน ${S.payHrs} ชม.`:` · ขาด ${S.abs} วัน · ลาไม่รับค่าจ้าง ${S.lv.unpaid} วัน`} · สาย/ออกก่อน ${S.payLate} นาที · OT ตามจริง</p>${hasPay()?"":"-->"}</section>`}
+function bindSheet(){if($("[data-goset]")){$("[data-goset]").onclick=()=>{ui.tab="set";svUi();render()};return}bindMonth();$("#eS").onchange=e=>{ui.emp=e.target.value;svUi();render()};
   $$("[data-d]").forEach(r=>r.onclick=()=>editDay(ui.emp,r.dataset.d));
   $("#addS").onclick=()=>{const d=prompt("วันที่ (ปปปป-ดด-วว)",T.today());if(d&&/^\d{4}-\d{2}-\d{2}$/.test(d))editDay(ui.emp,d)};
-  $("#toPay").onclick=()=>toPayroll()}
+  if($("#toPay"))$("#toPay").onclick=()=>toPayroll()}
 async function toPayroll(){if(!await adminOk())return;
   if(!confirm(`ส่งเวลาทำงานเดือน ${ymTh(ui.ym)} เข้าระบบเงินเดือน?\n\nจะแทนที่ช่อง วันทำงาน/ชั่วโมง · ขาด · ลาไม่รับค่าจ้าง · สาย · OT ของพนักงานที่มีข้อมูลลงเวลา\n(รายได้อื่น ค่าคอม เงินหัก ไม่เปลี่ยน)`))return;
   const r=T.apply(ui.ym);toast(`ส่งเข้าเงินเดือนแล้ว ${r.n} คน`+(r.skipped.length?` · ข้าม ${r.skipped.length} คนที่ไม่มีข้อมูลลงเวลา`:""))}
@@ -311,7 +311,7 @@ function vRep(){const R=buildRep(),dr=ui.rep==="daily"||ui.rep==="exc";
   return`<section class="card"><h2>📊 รายงานเวลาทำงาน <small>เลือกแผนก / สาขาได้ · พิมพ์ ส่ง PDF หรือส่งออก Excel</small></h2>
   <div class="row"><div class="f"><label for="rK">รายงาน</label><select class="in-" id="rK">${Object.entries(REPS).map(([k,v])=>`<option value="${k}" ${k===ui.rep?"selected":""}>${v}</option>`).join("")}</select></div>${monthSel()}
   ${dr?`<div class="f" style="flex:0 1 170px"><label for="rF">ตั้งแต่</label><input class="in-" type="date" id="rF" value="${esc(ui.from||ui.ym+"-01")}"></div><div class="f" style="flex:0 1 170px"><label for="rT">ถึง</label><input class="in-" type="date" id="rT" value="${esc(ui.to||T.daysOf(ui.ym).slice(-1)[0])}"></div>`:""}${filters()}</div>
-  <div class="row"><button class="btn main" id="rPrint" type="button">🖨️ พิมพ์ / ส่ง PDF</button><button class="btn ghost" id="rXls" type="button">📊 Excel</button>${["sum","ot","dept"].includes(ui.rep)?`<button class="btn ghost" id="toPay2" type="button">💰 ส่งเข้าเงินเดือน</button>`:""}</div>
+  <div class="row"><button class="btn main" id="rPrint" type="button">🖨️ พิมพ์ / ส่ง PDF</button><button class="btn ghost" id="rXls" type="button">📊 Excel</button>${["sum","ot","dept"].includes(ui.rep)&&hasPay()?`<button class="btn ghost" id="toPay2" type="button">💰 ส่งเข้าเงินเดือน</button>`:""}</div>
   ${R.note?`<div class="info">${esc(R.note)}</div>`:""}<div class="tw">${repTable(R,false)}</div></section>`}
 function bindRep(){bindMonth();bindFilters();$("#rK").onchange=e=>{ui.rep=e.target.value;svUi();render()};
   if($("#rF")){$("#rF").onchange=e=>{ui.from=e.target.value;svUi();render()};$("#rT").onchange=e=>{ui.to=e.target.value;svUi();render()}}
@@ -342,11 +342,11 @@ function vSet(){const E=T.emps(),y=+ui.ym.slice(0,4);
    <label class="chk"><input type="checkbox" id="gBrk" ${c.brkAuto?"checked":""}>หักเวลาพักตามกะอัตโนมัติ (ทำงานรอบเดียวเกิน 5 ชม.)</label>
    <label class="chk"><input type="checkbox" id="gPin" ${c.needPin?"checked":""}>ต้องใส่ PIN ตอนตอกบัตร (กันตอกแทนกัน)</label>
    <div class="info">OT วันทำงาน ×1.5 · ทำงานวันหยุด ×1 (รายเดือน) หรือ ×2 (รายวัน/รายชั่วโมง) · OT วันหยุด ×3 ตามที่ตั้งในระบบเงินเดือน</div></section></div>
-  <section class="card"><h2>👥 พนักงาน <small>ชื่อ แผนก ค่าจ้าง แก้ที่ <a href="/payroll/">ระบบเงินเดือน</a></small></h2>
-  ${E.length?`<div class="tw"><table class="t"><thead><tr><th>พนักงาน</th><th>แผนก</th><th>ประเภท</th><th>กะ</th><th>สาขา</th><th>PIN ตอกบัตร</th></tr></thead><tbody>${E.map(e=>{const x=c.emp[e.id]||{};return`<tr><td><b>${esc(e.name||e.code)}</b><div class="muted small">${esc(e.code||"")}</div></td><td>${esc(e.dept||"-")}</td><td>${esc(TYPES[e.type||"m"])}</td>
+  <section class="card"><h2>👥 พนักงาน <small>${E.length} คน</small><button class="btn sm main" id="eAdd" type="button">＋ เพิ่มพนักงาน</button></h2>
+  ${E.length?`<div class="tw"><table class="t"><thead><tr><th>พนักงาน</th><th>แผนก</th><th>ประเภท</th><th>กะ</th><th>สาขา</th><th>PIN ตอกบัตร</th><th></th></tr></thead><tbody>${E.map(e=>{const x=c.emp[e.id]||{};return`<tr><td><b>${esc(e.name||e.code)}</b><div class="muted small">${esc(e.code||"")}</div></td><td>${esc(e.dept||"-")}</td><td>${esc(TYPES[e.type||"m"])}</td>
    <td><select class="in-" data-esh="${esc(e.id)}" aria-label="กะของ ${esc(e.name)}">${c.shifts.map(s=>`<option value="${esc(s.id)}" ${(T.shiftOf(c,e.id)||{}).id===s.id?"selected":""}>${esc(s.name)} ${esc(s.start)}–${esc(s.end)}</option>`).join("")}<option value="none" ${x.shift==="none"?"selected":""}>เวลายืดหยุ่น (นับชั่วโมงจริง)</option></select></td>
    <td><input class="in-" data-ebr="${esc(e.id)}" value="${esc(x.branch||"")}" placeholder="เช่น สาขาหลัก" aria-label="สาขาของ ${esc(e.name)}" style="min-width:130px"></td>
-   <td>${x.pin?`<button class="btn sm ghost" data-epin="${esc(e.id)}" type="button">เปลี่ยน</button> <button class="btn sm ghost danger" data-epinx="${esc(e.id)}" type="button">ลบ</button>`:`<button class="btn sm ghost" data-epin="${esc(e.id)}" type="button">ตั้ง PIN</button>`}</td></tr>`}).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีพนักงาน · <a href="/payroll/">เพิ่มที่ระบบเงินเดือน</a></div>`}</section>
+   <td>${x.pin?`<button class="btn sm ghost" data-epin="${esc(e.id)}" type="button">เปลี่ยน</button> <button class="btn sm ghost danger" data-epinx="${esc(e.id)}" type="button">ลบ</button>`:`<button class="btn sm ghost" data-epin="${esc(e.id)}" type="button">ตั้ง PIN</button>`}</td><td><button class="btn sm ghost" data-eed="${esc(e.id)}" type="button">แก้ไข</button></td></tr>`}).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีพนักงาน · กด “เพิ่มพนักงาน” เพื่อเริ่ม</div>`}</section>
   <div class="grid2"><section class="card"><h2>🎌 วันหยุดนักขัตฤกษ์ <small>${c.hol.length} วัน</small></h2>
    <div class="row"><div class="f" style="flex:0 1 170px"><label for="hD">วันที่</label><input class="in-" type="date" id="hD"></div><div class="f"><label for="hN">ชื่อวันหยุด</label><input class="in-" id="hN" placeholder="เช่น วันมาฆบูชา"></div><button class="btn ghost" id="hAdd" type="button">เพิ่ม</button></div>
    <button class="btn sm ghost" id="hFix" type="button" style="align-self:flex-start">＋ ใส่วันหยุดที่วันที่ตายตัวของปี ${y+543}</button>
@@ -368,12 +368,27 @@ function bindSet(){const save=()=>{svCfg();toast("บันทึกแล้ว
   $$("[data-ebr]").forEach(s=>s.onchange=()=>{ce(s.dataset.ebr).branch=s.value.trim();save()});
   $$("[data-epin]").forEach(b=>b.onclick=async()=>{const v=prompt("ตั้ง PIN ตอกบัตร 4–6 หลัก (ตัวเลข)");if(v==null)return;if(!/^\d{4,6}$/.test(v.trim()))return toast("PIN ต้องเป็นตัวเลข 4–6 หลัก");ce(b.dataset.epin).pin=await empHash(v.trim());save();render()});
   $$("[data-epinx]").forEach(b=>b.onclick=()=>{delete ce(b.dataset.epinx).pin;save();render()});
+  $("#eAdd").onclick=()=>empForm(null);$$("[data-eed]").forEach(b=>b.onclick=()=>empForm(b.dataset.eed));
   $("#hAdd").onclick=()=>{const d=$("#hD").value,n=$("#hN").value.trim()||"วันหยุด";if(!d)return toast("เลือกวันที่");c.hol=c.hol.filter(h=>h.d!==d);c.hol.push({d,n});save();render()};
   $("#hFix").onclick=()=>{const y=ui.ym.slice(0,4);let n=0;FIXED_HOL.forEach(([md,nm])=>{const d=y+"-"+md;if(!c.hol.some(h=>h.d===d)){c.hol.push({d,n:nm});n++}});save();render();toast("เพิ่ม "+n+" วัน")};
   $$("[data-hdel]").forEach(b=>b.onclick=()=>{c.hol=c.hol.filter(h=>h.d!==b.dataset.hdel);save();render()});
   $("#dExp").onclick=()=>{const o={app:"edm-time",v:1};Object.values(T.K).filter(k=>k.startsWith("edm_time")).forEach(k=>o[k]=T.get(k,null));const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="time-backup-"+T.today()+".json";a.click()};
   $("#dImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-time")throw 0;if(!confirm("นำเข้าจะแทนที่ข้อมูลลงเวลาในเครื่องนี้ ยืนยัน?"))return;Object.keys(o).filter(k=>k.startsWith("edm_time")).forEach(k=>T.set(k,o[k]));c=T.cfg();toast("นำเข้าแล้ว");render()}).catch(()=>toast("ไฟล์ไม่ถูกต้อง"))};
   if($("#dDemo"))$("#dDemo").onclick=demo}
+function empForm(id){const all=T.get(T.K.emps,[])||[],e=id?all.find(x=>x.id===id):null,x=e||{type:"m"};
+  openDlg(`<h3>${e?"แก้ไขพนักงาน":"เพิ่มพนักงาน"} <button class="btn sm ghost" data-x type="button">ปิด</button></h3>
+   <div class="row"><div class="f"><label for="pfName">ชื่อ-นามสกุล</label><input class="in-" id="pfName" value="${esc(x.name||"")}"></div><div class="f" style="flex:0 1 140px"><label for="pfCode">รหัส</label><input class="in-" id="pfCode" value="${esc(x.code||"EMP"+String(all.length+1).padStart(3,"0"))}"></div></div>
+   <div class="row"><div class="f"><label for="pfPos">ตำแหน่ง</label><input class="in-" id="pfPos" value="${esc(x.pos||"")}"></div><div class="f"><label for="pfDept">แผนก / ฝ่าย</label><input class="in-" id="pfDept" value="${esc(x.dept||"")}" list="pfDepts"><datalist id="pfDepts">${[...new Set(all.map(a=>a.dept).filter(Boolean))].map(d=>`<option value="${esc(d)}">`).join("")}</datalist></div></div>
+   <div class="row"><div class="f"><label for="pfType">ประเภทค่าจ้าง</label><select class="in-" id="pfType">${["m","d","h"].map(k=>`<option value="${k}" ${(x.type||"m")===k?"selected":""}>${TYPES[k]}</option>`).join("")}</select></div><div class="f"><label for="pfSal">ค่าจ้าง (บาท) ไม่บังคับ</label><input class="in-" id="pfSal" type="number" min="0" step="0.01" inputmode="decimal" value="${esc(x.salary||"")}"></div></div>
+   <p class="muted small" style="margin:0">ใส่ค่าจ้างเพื่อให้รายงานประมาณค่า OT ได้ ถ้าไม่ใส่ รายงานยังนับชั่วโมงได้ตามปกติ</p>
+   <button class="btn main" id="pfSave" type="button">บันทึก</button>${e?`<button class="btn ghost danger" id="pfEnd" type="button">พนักงานลาออก (เก็บประวัติไว้)</button>`:""}`);
+  setTimeout(()=>$("#pfName").focus(),50);
+  $("#pfSave").onclick=()=>{const name=$("#pfName").value.trim();if(!name){toast("ใส่ชื่อพนักงาน");return}
+    const v={name,code:$("#pfCode").value.trim(),pos:$("#pfPos").value.trim(),dept:$("#pfDept").value.trim(),type:$("#pfType").value,salary:num($("#pfSal").value)};
+    const L2=T.get(T.K.emps,[])||[];
+    if(e){const t=L2.find(a=>a.id===e.id);Object.assign(t,v)}else L2.push(Object.assign({id:"e"+uid(),idc:"",bank:"",sso:true,tax:true,spouse:false,kids:0,kids2:0,parents:0,allow:0,posA:0,fixA:0,comPct:0,pvd:0,pvdEr:0,slf:0},v));
+    T.set(T.K.emps,L2);closeDlg();toast("บันทึกแล้ว");render()};
+  if($("#pfEnd"))$("#pfEnd").onclick=()=>{if(!confirm(`บันทึกว่า ${e.name} ลาออกวันนี้? รายชื่อจะไม่แสดงตั้งแต่เดือนถัดไป แต่ประวัติเวลายังอยู่`))return;const L2=T.get(T.K.emps,[])||[];const t=L2.find(a=>a.id===e.id);t.end=T.today();T.set(T.K.emps,L2);closeDlg();render()}}
 function demo(){const ym=T.today().slice(0,7),L={},E=T.emps().filter(e=>T.active(e,ym)),MK={};L[ym]=[];let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
   E.forEach((e,i)=>{const sh=T.shiftOf(c,e.id),sp=T.shiftSpan(sh);if(!sp)return;T.daysOf(ym,T.today()).forEach(d=>{const dow=new Date(T.midnight(d)).getDay();if(!(sh.days||[]).includes(dow)||T.holidayOf(c,d))return;
     const r=rnd();if(r<0.04)return;if(r<0.08){(MK[e.id]=MK[e.id]||{})[d]={lv:"sick",note:"ไม่สบาย"};return}
@@ -392,7 +407,7 @@ $("#kioskBtn").onclick=async()=>{if(ui.kiosk){if(!await adminOk())return;ui.kios
 window.addEventListener("storage",e=>{if(e.key&&e.key.startsWith("edm_")){c=T.cfg();if(!$("#dlg").open)render()}});
 if(ui.tab!=="kiosk"&&lockCfg()&&!adminFresh())ui.tab="kiosk";
 // เปิดหน้าครั้งแรก: ถ้ายังไม่มีการตอกบัตรเลย ไปหน้าตั้งค่าก่อน
-if(!T.get(T.K.cfg,null)&&T.emps().length&&!lockCfg())ui.tab="set";
+if(!T.get(T.K.cfg,null)&&!lockCfg())ui.tab="set";
 render();
 })();
 </script>
