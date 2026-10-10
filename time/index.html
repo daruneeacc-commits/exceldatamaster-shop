@@ -201,7 +201,7 @@ function vToday(){const d=T.today(),ym=ymOf(d),L=T.logOf(ym),MK=T.marksOf(ym),cc
   <div class="stat"><small>ยังไม่มา / ขาด</small><b style="color:var(--danger)">${n(R=>R.status==="wait"||R.status==="abs")}</b></div><div class="stat"><small>ลา</small><b>${n(R=>R.status==="leave")}</b></div></div>
   ${rows.length?`<div class="tw"><table class="t"><thead><tr><th>พนักงาน</th><th>แผนก</th><th>กะ</th><th>เข้า</th><th>ออก</th><th class="r">ทำงาน</th><th class="r">สาย</th><th>สถานะ</th></tr></thead><tbody>
   ${rows.sort((a,b)=>(a.e.dept||"").localeCompare(b.e.dept||"")||(a.e.name||"").localeCompare(b.e.name||"")).map(({e,R})=>`<tr class="click" data-se="${esc(e.id)}"><td><b>${esc(e.name||e.code)}</b></td><td>${esc(e.dept||"-")}</td><td>${R.sh?esc(R.sh.start+"–"+R.sh.end):"ยืดหยุ่น"}</td>
-  <td>${R.sess.length?tm(d,Math.min(...R.sess.map(s=>s.in))):"-"}</td><td>${R.open?"…":R.sess.some(s=>s.out)?tm(d,Math.max(...R.sess.map(s=>s.out||0))):"-"}</td><td class="r">${dur(R.work)}</td><td class="r">${R.late?R.late+" น.":"-"}</td><td>${chip(R)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีพนักงาน</div>`}</section>`}
+  <td>${R.sess.length?tm(d,Math.min(...R.sess.map(s=>s.in))):"-"}</td><td>${R.open?"…":R.sess.some(s=>s.out)?tm(d,Math.max(...R.sess.map(s=>s.out||0))):"-"}</td><td class="r">${R.open?dur(R.work+(Date.now()-R.open.in)/60000):dur(R.work)}</td><td class="r">${R.late?R.late+" น.":"-"}</td><td>${chip(R)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีพนักงาน</div>`}</section>`}
 function bindToday(){bindFilters();$$("[data-se]").forEach(r=>r.onclick=()=>{ui.emp=r.dataset.se;ui.ym=T.today().slice(0,7);ui.tab="sheet";svUi();render()})}
 
 /* ---------- ตารางเวลา ---------- */

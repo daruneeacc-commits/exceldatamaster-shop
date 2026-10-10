@@ -294,7 +294,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261010-2335";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261010-2312";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -517,7 +517,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
 </nav>
 <div id="toast" hidden style="position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:90;font-size:.9rem"></div>
 
-<script src="../assets/icons.js?v=1"></script>
+<script src="../assets/icons.js?v=2"></script>
 <script src="edition.js?v=7"></script>
 <script>
 "use strict";
