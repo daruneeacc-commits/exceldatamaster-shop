@@ -294,7 +294,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261010-1711";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261010-1736";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -536,7 +536,7 @@ const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" 
 const ROUTES={bill:{src:"/bill/?v=53"},stock:{src:"/stock/?v=51",sv:"home"},stockrep:{src:"/stock/?v=51",sv:"report"},stkitems:{src:"/stock/?v=51",sv:"items"},stkin:{src:"/stock/?v=51",sv:"in"},stkout:{src:"/stock/?v=51",sv:"out"},stkadj:{src:"/stock/?v=51",sv:"adj"},stkhist:{src:"/stock/?v=51",sv:"hist"},stkre:{src:"/stock/?v=51",sv:"reorder"},
   ar:{src:"/account/?v=52",v:"ar"},tax:{src:"/account/?v=52",v:"tax"},buy:{src:"/account/?v=52",v:"buy"},cash:{src:"/account/?v=52",v:"cash"},pnl:{src:"/account/?v=52",v:"home"},
   cf:{src:"/cafe/?v=6",cv:"home"},cfpos:{src:"/cafe/?v=6",cv:"pos"},cfbar:{src:"/cafe/?v=6",cv:"bar"},cford:{src:"/cafe/?v=6",cv:"orders"},cfmenu:{src:"/cafe/?v=6",cv:"menu"},cfinv:{src:"/cafe/?v=6",cv:"inv"},cfshift:{src:"/cafe/?v=6",cv:"shift"},cfrpt:{src:"/cafe/?v=6",cv:"rpt"},cfset:{src:"/cafe/?v=6",cv:"set"},
-  bk:{src:"/booking/?v=5",bv:"home"},bkcal:{src:"/booking/?v=5",bv:"cal"},bklist:{src:"/booking/?v=5",bv:"list"},bkres:{src:"/booking/?v=5",bv:"res"},bkrpt:{src:"/booking/?v=5",bv:"rpt"},bkset:{src:"/booking/?v=5",bv:"set"},
+  bk:{src:"/booking/?v=6",bv:"home"},bkcal:{src:"/booking/?v=6",bv:"cal"},bklist:{src:"/booking/?v=6",bv:"list"},bkres:{src:"/booking/?v=6",bv:"res"},bkrpt:{src:"/booking/?v=6",bv:"rpt"},bkset:{src:"/booking/?v=6",bv:"set"},
   cost:{src:"/account/?v=52",v:"cost"},exp:{src:"/account/?v=52",v:"exp"},bank:{src:"/account/?v=52",v:"bank"},cashv:{src:"/account/?v=52",v:"cashv"},petty:{src:"/account/?v=52",v:"petty"},ap:{src:"/account/?v=52",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}

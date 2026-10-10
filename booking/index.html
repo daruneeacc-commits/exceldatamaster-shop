@@ -328,9 +328,9 @@ function seller(){return cfg.shop||{}}
 const VIEWS=["home","cal","list","res","rpt","set"];
 function render(){const v=VIEWS.includes(ui.v)?ui.v:"home";$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
   ({home:vHome,cal:vCal,list:vList,res:vRes,rpt:vRpt,set:vSet})[v]();custDL()}
-function show(v,quiet){ui.v=v;saveUi();render();scrollTo(0,0);if(!quiet)tell(v)}
+function show(v,quiet){{const D0=document.getElementById("dlg");if(D0&&D0.open)D0.close()}ui.v=v;saveUi();render();scrollTo(0,0);if(!quiet)tell(v)}
 $("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b)show(b.dataset.v)};
-window.edmBookView=v=>{if(!VIEWS.includes(v))return;load();ui.v=v;saveUi();render();scrollTo(0,0)};
+window.edmBookView=v=>{if(!VIEWS.includes(v))return;{const D0=document.getElementById("dlg");if(D0&&D0.open)D0.close()}load();ui.v=v;saveUi();render();scrollTo(0,0)};
 document.addEventListener("click",e=>{const g=e.target.closest("[data-gv]");if(g){e.preventDefault();show(g.dataset.gv)}
   const o=e.target.closest("[data-ob]");if(o&&!e.target.closest("button:not([data-ob]),a")){openBk(o.dataset.ob)}
   const n=e.target.closest("[data-nb]");if(n){e.preventDefault();newBk(n.dataset.nb?JSON.parse(n.dataset.nb):{})}});
