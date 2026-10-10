@@ -10,7 +10,7 @@
 <title>ระบบร้านค้า · Excel Data Master</title>
 <meta name="description" content="ระบบร้านค้าออนไลน์ครบในที่เดียว: เปิดบิล ใบกำกับภาษี ขายเงินสด/ขายเชื่อ ภาษีซื้อ-ขาย สต๊อกสินค้า ซื้อสินค้า ลูกหนี้ เงินสด-ธนาคาร และกำไรขาดทุน"><link rel="canonical" href="https://exceldatamaster.com/app/"><meta property="og:type" content="website"><meta property="og:site_name" content="Excel Data Master"><meta property="og:locale" content="th_TH"><meta property="og:title" content="ระบบร้านค้า · Excel Data Master"><meta property="og:description" content="ระบบร้านค้าออนไลน์ครบในที่เดียว: เปิดบิล ใบกำกับภาษี ขายเงินสด/ขายเชื่อ ภาษีซื้อ-ขาย สต๊อกสินค้า ซื้อสินค้า ลูกหนี้ เงินสด-ธนาคาร และกำไรขาดทุน"><meta property="og:url" content="https://exceldatamaster.com/app/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og.jpg"><meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media=\'all\'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
 <style>
 :root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#EEF1EF;--accent:#127A4B;--accent-ink:#fff;--accent-soft:#E3F4EA;--warn:#8A5A00;--warnbg:#FFF4DC;--side:#0F1513;--side-ink:#DDE5E1;--side-muted:#7F8B86;--side-on:#1F2A26}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--accent-soft:#14261C;--warn:#F0C27A;--warnbg:#2A2416;--side:#0A0D0C;--side-ink:#DDE5E1;--side-muted:#7F8B86;--side-on:#1A2320}}
@@ -294,7 +294,7 @@ body.cf-kiosk header.top,body.cf-kiosk aside,body.cf-kiosk #tabbar,body.cf-kiosk
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261010-2155";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261010-2335";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -533,11 +533,11 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=53"},stock:{src:"/stock/?v=51",sv:"home"},stockrep:{src:"/stock/?v=51",sv:"report"},stkitems:{src:"/stock/?v=51",sv:"items"},stkin:{src:"/stock/?v=51",sv:"in"},stkout:{src:"/stock/?v=51",sv:"out"},stkadj:{src:"/stock/?v=51",sv:"adj"},stkhist:{src:"/stock/?v=51",sv:"hist"},stkre:{src:"/stock/?v=51",sv:"reorder"},
-  ar:{src:"/account/?v=52",v:"ar"},tax:{src:"/account/?v=52",v:"tax"},buy:{src:"/account/?v=52",v:"buy"},cash:{src:"/account/?v=52",v:"cash"},pnl:{src:"/account/?v=52",v:"home"},
-  cf:{src:"/cafe/?v=6",cv:"home"},cfpos:{src:"/cafe/?v=6",cv:"pos"},cfbar:{src:"/cafe/?v=6",cv:"bar"},cford:{src:"/cafe/?v=6",cv:"orders"},cfmenu:{src:"/cafe/?v=6",cv:"menu"},cfinv:{src:"/cafe/?v=6",cv:"inv"},cfshift:{src:"/cafe/?v=6",cv:"shift"},cfrpt:{src:"/cafe/?v=6",cv:"rpt"},cfset:{src:"/cafe/?v=6",cv:"set"},
-  bk:{src:"/booking/?v=6",bv:"home"},bkcal:{src:"/booking/?v=6",bv:"cal"},bklist:{src:"/booking/?v=6",bv:"list"},bkres:{src:"/booking/?v=6",bv:"res"},bkrpt:{src:"/booking/?v=6",bv:"rpt"},bkset:{src:"/booking/?v=6",bv:"set"},
-  cost:{src:"/account/?v=52",v:"cost"},exp:{src:"/account/?v=52",v:"exp"},bank:{src:"/account/?v=52",v:"bank"},cashv:{src:"/account/?v=52",v:"cashv"},petty:{src:"/account/?v=52",v:"petty"},ap:{src:"/account/?v=52",v:"ap"}};
+const ROUTES={bill:{src:"/bill/?v=54"},stock:{src:"/stock/?v=52",sv:"home"},stockrep:{src:"/stock/?v=52",sv:"report"},stkitems:{src:"/stock/?v=52",sv:"items"},stkin:{src:"/stock/?v=52",sv:"in"},stkout:{src:"/stock/?v=52",sv:"out"},stkadj:{src:"/stock/?v=52",sv:"adj"},stkhist:{src:"/stock/?v=52",sv:"hist"},stkre:{src:"/stock/?v=52",sv:"reorder"},
+  ar:{src:"/account/?v=53",v:"ar"},tax:{src:"/account/?v=53",v:"tax"},buy:{src:"/account/?v=53",v:"buy"},cash:{src:"/account/?v=53",v:"cash"},pnl:{src:"/account/?v=53",v:"home"},
+  cf:{src:"/cafe/?v=7",cv:"home"},cfpos:{src:"/cafe/?v=7",cv:"pos"},cfbar:{src:"/cafe/?v=7",cv:"bar"},cford:{src:"/cafe/?v=7",cv:"orders"},cfmenu:{src:"/cafe/?v=7",cv:"menu"},cfinv:{src:"/cafe/?v=7",cv:"inv"},cfshift:{src:"/cafe/?v=7",cv:"shift"},cfrpt:{src:"/cafe/?v=7",cv:"rpt"},cfset:{src:"/cafe/?v=7",cv:"set"},
+  bk:{src:"/booking/?v=7",bv:"home"},bkcal:{src:"/booking/?v=7",bv:"cal"},bklist:{src:"/booking/?v=7",bv:"list"},bkres:{src:"/booking/?v=7",bv:"res"},bkrpt:{src:"/booking/?v=7",bv:"rpt"},bkset:{src:"/booking/?v=7",bv:"set"},
+  cost:{src:"/account/?v=53",v:"cost"},exp:{src:"/account/?v=53",v:"exp"},bank:{src:"/account/?v=53",v:"bank"},cashv:{src:"/account/?v=53",v:"cashv"},petty:{src:"/account/?v=53",v:"petty"},ap:{src:"/account/?v=53",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.allow="web-share; clipboard-write";f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -699,7 +699,7 @@ function renderHome(){
   $("#low").innerHTML=low.length?low.slice(0,5).map(i=>`<div class="li"><div>${esc(i.name)}<small>${esc(i.sku||"")}</small></div><div class="r">เหลือ ${fmt0(B[i.id]||0)} ${esc(i.unit||"")}<small>จุดสั่งซื้อ ${fmt0(num(i.min))}</small></div></div>`).join(""):`<div class="empty">ไม่มีสินค้าใกล้หมด 👍</div>`;
   if(window.EDM_ED&&EDM_ED.home)EDM_ED.home({docs,seller,items,A,ym,sales,s,sc,n,vat,ar,arN,B,low,m});
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=52#demo&back=/app/"+(window.EDM_ED?"&ed="+EDM_ED.key:"")};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=53#demo&back=/app/"+(window.EDM_ED?"&ed="+EDM_ED.key:"")};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- ข้อมูลหลัก: ลูกค้า / เจ้าหนี้ / สินค้า-บริการ ---------- */
 const MD={
@@ -900,7 +900,7 @@ route();if(window.EDM_ED&&EDM_ED.solo)renderBadges();
 try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h)){const t=P.t==="stock"?"stock":P.t==="booking"?"bk":P.t==="cafe"?"cf":"bill";if(!window.EDM_ED||EDM_ED.ok(t))openIn(t,P.h)}}catch(e){}
 </script>
 <script src="reports.js?v=52"></script>
-<script src="../assets/member.js?v=57" defer></script>
+<script src="../assets/member.js?v=58" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 <script>/* โหมดออฟไลน์: เก็บหน้าระบบไว้ในเครื่อง เน็ตหลุดแล้วยังเปิดได้ */if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){})});</script>
 </body>

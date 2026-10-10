@@ -10,7 +10,7 @@
 <title>โปรแกรมคำนวณเงินเดือน ประกันสังคม พร้อมสลิป | Excel Data Master</title>
 <meta name="description" content="คำนวณเงินเดือนพร้อมสลิป ประกันสังคม 5% ภาษีหัก ณ ที่จ่ายรายเดือน OT เบี้ยขยัน ค่าคอม หักขาด ลา มาสาย และสรุปยอดสะสมทั้งปี พิมพ์สลิปเป็น PDF ได้ทันที"><link rel="canonical" href="https://exceldatamaster.com/payroll/"><meta property="og:type" content="website"><meta property="og:site_name" content="Excel Data Master"><meta property="og:locale" content="th_TH"><meta property="og:title" content="โปรแกรมคำนวณเงินเดือน ประกันสังคม พร้อมสลิป | Excel Data Master"><meta property="og:description" content="คำนวณเงินเดือนพร้อมสลิป ประกันสังคม 5% ภาษีหัก ณ ที่จ่ายรายเดือน OT เบี้ยขยัน ค่าคอม หักขาด ลา มาสาย และสรุปยอดสะสมทั้งปี พิมพ์สลิปเป็น PDF ได้ทันที"><meta property="og:url" content="https://exceldatamaster.com/payroll/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og.jpg"><meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media=\'all\'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
 <style>
 :root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#F4F6F5;--accent:#127A4B;--accent-ink:#fff;--warn:#8A5A00;--warnbg:#FFF4DC;--danger:#B3261E}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--warn:#F0C27A;--warnbg:#2A2416;--danger:#F2867E}}
@@ -159,6 +159,7 @@ dialog.wide{max-width:min(1100px,96vw);width:96vw}
 <header class="top"><div class="in">
   <a class="brand" href="/">📊 Excel Data Master <small>· คำนวณเงินเดือน</small></a>
   <nav class="nav">
+    <a class="btn sm ghost" href="/time/">⏱ ลงเวลา / ตอกบัตร</a>
     <button class="btn sm ghost" id="dataBtn">💾 สำรอง / นำเข้า</button>
     <a class="btn sm ghost" href="/">🛒 ร้านเทมเพลต</a>
   </nav>
@@ -182,7 +183,7 @@ dialog.wide{max-width:min(1100px,96vw);width:96vw}
     <div class="card">
       <h2>พนักงาน <small id="empCount"></small></h2>
       <div class="emps" id="emps"></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="addEmp">＋ เพิ่มพนักงาน</button><button class="btn ghost" id="bulkBtn">📋 กรอกทั้งเดือนแบบตาราง</button><button class="btn ghost" id="copyPrev">↻ คัดลอกจากเดือนก่อน</button></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="addEmp">＋ เพิ่มพนักงาน</button><button class="btn ghost" id="bulkBtn">📋 กรอกทั้งเดือนแบบตาราง</button><button class="btn ghost" id="copyPrev">↻ คัดลอกจากเดือนก่อน</button><button class="btn ghost" id="fromTime">⏱ ดึงจากลงเวลา</button></div>
     </div>
 
     <div class="card" id="empCard" hidden>
@@ -752,6 +753,10 @@ function copyPrev(){const pk=ymKey(ui.m?ui.y:ui.y-1,ui.m?ui.m-1:11),P=recs[pk]||
   if(!recs[key()])recs[key()]={};const has=ids.filter(id=>recs[key()][id]);if(has.length&&!confirm(`มีข้อมูลเดือนนี้แล้ว ${has.length} คน · คัดลอกทับด้วยข้อมูลเดือนก่อน?\n(กดยกเลิก = คัดลอกเฉพาะคนที่ยังไม่มีข้อมูล)`))ids.splice(0,ids.length,...ids.filter(id=>!recs[key()][id]));
   ids.forEach(id=>{const o=Object.assign({},P[id]);delete o.bonus;delete o.adv;recs[key()][id]=o});svRecs();renderAll();toast("คัดลอกแล้ว "+ids.length+" คน (ไม่รวมโบนัสและเบิกล่วงหน้า)")}
 $("#bulkBtn").onclick=openBulk;$("#copyPrev").onclick=copyPrev;
+$("#fromTime").onclick=()=>{if(!window.EDM_TIME)return toast("โหลดระบบลงเวลาไม่สำเร็จ");const k=key(),has=Object.keys(EDM_TIME.logOf(k)).length||Object.keys(EDM_TIME.marksOf(k)).length;
+  if(!has){if(confirm("เดือนนี้ยังไม่มีข้อมูลลงเวลา\nเปิดหน้าลงเวลา / ตอกบัตร?"))location.href="/time/";return}
+  if(!confirm("ดึงเวลาทำงานเดือนนี้จากระบบลงเวลา?\nจะแทนที่ วันทำงาน/ชั่วโมง ขาด ลาไม่รับค่าจ้าง สาย และ OT ของพนักงานที่มีข้อมูลลงเวลา"))return;
+  const r=EDM_TIME.apply(k);recs=LS.get(K.recs,{});renderAll();toast("ดึงเวลาทำงานแล้ว "+r.n+" คน"+(r.skipped.length?" · ข้าม "+r.skipped.length+" คนที่ไม่ได้ลงเวลา":""))};
 $("#bizSel").innerHTML=`<option value="">— เลือกประเภทธุรกิจ —</option>`+Object.entries(BIZ).map(([k,b])=>`<option value="${k}">${b.n}</option>`).join("");
 function bizNote(){const b=BIZ[co.biz];$("#bizSel").value=co.biz||"";$("#bizNote").textContent=b?"💡 "+b.tip:""}
 $("#bizSel").onchange=e=>{co.biz=e.target.value;const b=BIZ[co.biz];if(b){co.hpd=b.hpd;co.dpm=b.dpm}svCo();renderCo();bizNote();toast(b?"ตั้งค่าเริ่มต้นสำหรับ "+b.n.replace(/^\S+ /,"")+" แล้ว":"")};
@@ -781,7 +786,8 @@ window.__pay={pit,bahtText,calcMonth,calcUpTo,exportExcel,get emps(){return emps
 })();
 </script>
 <script src="../assets/tool-ui.js?v=4" defer></script>
-<script src="../assets/member.js?v=57" defer></script>
+<script src="../assets/timecalc.js?v=1"></script>
+<script src="../assets/member.js?v=58" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

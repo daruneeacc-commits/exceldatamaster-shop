@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>โปรแกรมลงเวลาทำงาน ตอกบัตรออนไลน์ คิด OT สาย ขาด ลา | Excel Data Master</title>
+<meta name="description" content="ลงเวลาเข้าออกงานผ่านมือถือหรือแท็บเล็ต รองรับหลายกะ กะดึก ทำงานวันหยุด คิด OT มาสาย ออกก่อน ขาด ลา อัตโนมัติ รายงานตามแผนกและสาขา ส่งเข้าระบบเงินเดือนได้ทันที">
+<link rel="canonical" href="https://exceldatamaster.com/time/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
+<style>
+:root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#F4F6F5;--accent:#127A4B;--accent-ink:#fff;--warn:#8A5A00;--warnbg:#FFF4DC;--danger:#B3261E;--dangerbg:#FDECEA;--info:#1E4FA8;--infobg:#E8EFFB;--okbg:#E4F3EA}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--warn:#F0C27A;--warnbg:#2A2416;--danger:#F2867E;--dangerbg:#2C1715;--info:#8DB0F0;--infobg:#17213A;--okbg:#14261C}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif}
+a{color:inherit}button,input,select,textarea{font:inherit;color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1400px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px}.brand small{font-weight:500;color:var(--muted)}
+.nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.btn{border:0;border-radius:999px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;background:var(--soft);color:var(--ink);font-size:.9rem;min-height:40px}
+.btn:hover{filter:brightness(.97)}.btn.main{background:var(--accent);color:var(--accent-ink)}.btn.dark{background:var(--ink);color:var(--bg)}
+.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:6px 12px;font-size:.84rem;min-height:34px}.btn.danger{color:var(--danger)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.tabs{max-width:1400px;margin:12px auto 0;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:none;border:0;border-radius:999px;padding:9px 16px;background:var(--card);box-shadow:0 0 0 1px var(--line);font-weight:600;cursor:pointer;white-space:nowrap}
+.tabs button.on{background:var(--ink);color:var(--bg);box-shadow:none}
+main{max-width:1400px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}
+.card h2{font-size:1rem;margin:0;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.card h2 small{font-weight:400;color:var(--muted);font-size:.82rem}
+.card h3{font-size:.92rem;margin:4px 0 0}
+.muted{color:var(--muted)}.small{font-size:.84rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1 1 150px}.f label{font-size:.8rem;font-weight:600;color:var(--muted)}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 11px;outline:none;min-height:42px}.in-:focus{border-color:var(--accent)}
+.chk{display:flex;align-items:center;gap:8px;font-size:.9rem;cursor:pointer}.chk input{width:18px;height:18px;accent-color:var(--accent)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.stat{background:var(--card);border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px var(--line)}.stat small{display:block;color:var(--muted);font-size:.8rem}.stat b{font-size:1.5rem;font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1px 10px;font-size:.78rem;font-weight:600;white-space:nowrap;background:var(--soft);color:var(--muted)}
+.chip.ok{background:var(--okbg);color:var(--accent)}.chip.late{background:var(--warnbg);color:var(--warn)}.chip.abs{background:var(--dangerbg);color:var(--danger)}.chip.open{background:var(--infobg);color:var(--info)}.chip.leave{background:var(--infobg);color:var(--info)}
+.tw{overflow-x:auto;border-radius:12px;box-shadow:0 0 0 1px var(--line)}
+table.t{width:100%;border-collapse:collapse;font-size:.88rem;font-variant-numeric:tabular-nums}
+.t th,.t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}.t th{background:var(--soft);font-weight:600;font-size:.8rem;color:var(--muted);position:sticky;top:0}
+.t td.r,.t th.r{text-align:right}.t tr.we td{background:color-mix(in srgb,var(--soft) 70%,transparent)}.t tfoot td{font-weight:700;background:var(--soft)}
+.t tr.click{cursor:pointer}.t tr.click:hover td{background:var(--soft)}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+/* kiosk */
+.clock{text-align:center;padding:10px 0 4px}.clock b{display:block;font-size:clamp(3rem,12vw,6rem);line-height:1;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}.clock span{color:var(--muted)}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.kemp{border:0;background:var(--card);box-shadow:0 0 0 1px var(--line);border-radius:16px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;text-align:center;min-height:132px}
+.kemp:hover{box-shadow:0 0 0 2px var(--accent)}.kemp .av{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:1.2rem;background:var(--soft)}
+.kemp.in .av{background:var(--accent);color:var(--accent-ink)}.kemp b{font-size:.95rem;line-height:1.3}.kemp small{color:var(--muted);font-size:.78rem;line-height:1.3}
+dialog{border:0;border-radius:20px;padding:0;background:var(--card);color:var(--ink);width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 24px);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(10,15,13,.5)}
+.dlg{padding:20px;display:flex;flex-direction:column;gap:14px}.dlg h3{margin:0;font-size:1.1rem;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bigbtn{width:100%;border:0;border-radius:18px;padding:22px;font-size:1.4rem;font-weight:700;cursor:pointer}
+.bigbtn.in{background:var(--accent);color:var(--accent-ink)}.bigbtn.out{background:var(--ink);color:var(--bg)}
+.pin{font-size:1.8rem;text-align:center;letter-spacing:.4em}
+.done{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 92%,transparent);text-align:center;padding:24px}
+.done .ic{width:96px;height:96px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;margin:0 auto 14px}
+.done b{display:block;font-size:2rem}.done p{margin:6px 0 0;font-size:1.1rem;color:var(--muted)}
+.sess{display:grid;grid-template-columns:1fr 1fr auto auto;gap:8px;align-items:end}
+.days{display:flex;gap:4px;flex-wrap:wrap}.days label{display:inline-flex}.days input{position:absolute;opacity:0;pointer-events:none}
+.days span{border-radius:999px;padding:6px 11px;background:var(--soft);font-weight:600;font-size:.84rem;cursor:pointer;box-shadow:inset 0 0 0 1px var(--line)}.days input:checked+span{background:var(--accent);color:var(--accent-ink);box-shadow:none}
+.days input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.note{background:var(--warnbg);color:var(--warn);border-radius:12px;padding:10px 12px;font-size:.86rem;line-height:1.55}
+.info{background:var(--infobg);color:var(--info);border-radius:12px;padding:10px 12px;font-size:.86rem;line-height:1.55}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;z-index:70;max-width:calc(100vw - 32px)}
+body.kiosk header.top .nav,body.kiosk .tabs{display:none}
+#printArea{display:none}
+@media print{@page{size:A4;margin:10mm}body{background:#fff}header.top,.tabs,main,.toast,dialog,.edm-bar,.edm-gate,.edm-chip{display:none!important}#printArea{display:block}}
+.pr{font-family:"IBM Plex Sans Thai",Tahoma,sans-serif;color:#000;font-size:9.5pt}.pr h1{font-size:13pt;margin:0}.pr .hd{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:6px}
+.pr table{width:100%;border-collapse:collapse}.pr th,.pr td{border:1px solid #888;padding:2px 4px;text-align:left}.pr th{background:#eee}.pr td.r,.pr th.r{text-align:right}.pr tfoot td{font-weight:700;background:#f2f2f2}.pr tr{page-break-inside:avoid}
+.pr .mx td,.pr .mx th{padding:1px 2px;text-align:center;font-size:7.5pt}.pr .mx td:first-child,.pr .mx th:first-child{text-align:left;white-space:nowrap}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="/">⏱ Excel Data Master <small>· ลงเวลาทำงาน</small></a>
+  <nav class="nav">
+    <a class="btn sm ghost" href="/payroll/">💰 ระบบเงินเดือน</a>
+    <button class="btn sm ghost" id="kioskBtn" type="button">🔒 โหมดตอกบัตร</button>
+  </nav>
+</div></header>
+<div class="tabs" role="tablist">
+  <button data-tab="kiosk" type="button">⏱ ตอกบัตร</button>
+  <button data-tab="today" type="button">📋 วันนี้</button>
+  <button data-tab="sheet" type="button">🗓 ตารางเวลา</button>
+  <button data-tab="rep" type="button">📊 รายงาน</button>
+  <button data-tab="set" type="button">⚙️ ตั้งค่า</button>
+</div>
+<main id="main"></main>
+<dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
+<div id="printArea"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="../assets/timecalc.js?v=1"></script>
+<script>
+(function(){
+"use strict";
+const T=window.EDM_TIME,$=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const {pad,ymd,hm2m,m2hm,dur,r2,num}=T;
+const MONTHS=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+const DOW=["อา","จ","อ","พ","พฤ","ศ","ส"];
+const TYPES={m:"รายเดือน",d:"รายวัน",h:"รายชั่วโมง",p:"ตามชิ้นงาน",f:"ฟรีแลนซ์"};
+const ST={ok:["ok","ปกติ"],late:["late","สาย/ออกก่อน"],abs:["abs","ขาด"],leave:["leave","ลา"],open:["open","กำลังทำงาน"],noout:["late","ลืมตอกออก"],hol:["","วันหยุดนักขัตฯ"],off:["","วันหยุด"],nowork:["","-"],wait:["","ยังไม่มา"],future:["",""]};
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2800)}
+const thD=d=>{if(!d)return"";const x=new Date(T.midnight(d));return x.getDate()+" "+MONTHS[x.getMonth()].slice(0,3)+". "+String(x.getFullYear()+543).slice(2)};
+const thDL=d=>{const x=new Date(T.midnight(d));return "วัน"+["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"][x.getDay()]+"ที่ "+x.getDate()+" "+MONTHS[x.getMonth()]+" "+(x.getFullYear()+543)};
+const ymOf=d=>d.slice(0,7), ymTh=ym=>MONTHS[+ym.slice(5)-1]+" "+(+ym.slice(0,4)+543);
+const tm=(base,ts)=>{if(!ts)return"-";const x=new Date(ts);let s=pad(x.getHours())+":"+pad(x.getMinutes());if(ymd(x)!==base)s+=" (+1)";return s};
+const hrs=m=>m?r2(m/60).toLocaleString("th-TH",{maximumFractionDigits:2}):"-";
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+/* ---------- state ---------- */
+let c=T.cfg();
+const UIK="edm_time_ui";
+let ui=Object.assign({tab:"kiosk",ym:ymd(new Date()).slice(0,7),emp:"",rep:"sum",dept:"",br:"",from:"",to:"",q:"",kiosk:false},T.get(UIK,{}));
+const svUi=()=>T.set(UIK,ui), svCfg=()=>T.set(T.K.cfg,c);
+const emps=()=>T.emps().filter(e=>T.active(e,ui.ym));
+const brOf=id=>(c.emp[id]||{}).branch||"";
+const co=()=>T.get(T.K.co,{})||{};
+function getLog(){return T.get(T.K.log,{})||{}}
+function setLog(L){T.set(T.K.log,L)}
+function getMarks(){return T.get(T.K.day,{})||{}}
+function audit(e,d,act,before,after,note){const A=T.get(T.K.audit,[])||[];A.push({ts:Date.now(),e,d,act,before,after,note:note||""});if(A.length>3000)A.splice(0,A.length-3000);T.set(T.K.audit,A)}
+
+/* ---------- PIN เจ้าของร้าน (ใช้ PIN เดียวกับล็อกหน้าจอ) ---------- */
+function hex(b){return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+async function lockHash(salt,pin){const enc=new TextEncoder();let h=await crypto.subtle.digest("SHA-256",enc.encode(salt+"|"+pin));for(let n=1;n<2000;n++)h=await crypto.subtle.digest("SHA-256",new Uint8Array([...new Uint8Array(h),...enc.encode(salt)]));return hex(h)}
+async function empHash(pin){if(!c.salt){c.salt=hex(crypto.getRandomValues(new Uint8Array(12)));svCfg()}return hex(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(c.salt+"|"+pin)))}
+function lockCfg(){try{return JSON.parse(localStorage.getItem("edm_lock")||"null")}catch(e){return null}}
+function adminFresh(){try{return Date.now()-Number(sessionStorage.getItem("edm_time_admin")||0)<20*60000}catch(e){return false}}
+function adminOk(){if(!lockCfg()||adminFresh())return Promise.resolve(true);
+  return new Promise(res=>{openDlg(`<h3>🔒 สำหรับเจ้าของร้าน <button class="btn sm ghost" data-x type="button">ปิด</button></h3><p class="muted small" style="margin:0">ใส่ PIN ล็อกหน้าจอ (ตั้งไว้ที่หน้าสำรองข้อมูล) เพื่อเข้าเมนูนี้</p>
+    <input class="in- pin" id="apin" type="password" inputmode="numeric" autocomplete="off" aria-label="PIN เจ้าของร้าน"><button class="btn main" id="aok" type="button">ยืนยัน</button>`);
+    const go=async()=>{const L=lockCfg(),v=$("#apin").value.trim();if(!v)return;const ok=L?await lockHash(L.s,v)===L.h:true;if(ok){try{sessionStorage.setItem("edm_time_admin",String(Date.now()))}catch(e){}closeDlg();res(true)}else{toast("PIN ไม่ถูกต้อง");$("#apin").value=""}};
+    $("#aok").onclick=go;$("#apin").onkeydown=e=>{if(e.key==="Enter")go()};$("#dlg").onclose=()=>res(adminFresh());setTimeout(()=>$("#apin").focus(),50)})}
+
+/* ---------- dialog ---------- */
+function openDlg(h){const d=$("#dlg");$("#dlgBody").innerHTML=h;d.onclose=null;$$("#dlgBody [data-x]").forEach(b=>b.onclick=closeDlg);if(!d.open)d.showModal()}
+function closeDlg(){const d=$("#dlg");if(d.open)d.close()}
+
+/* ---------- ตอกบัตร ---------- */
+function openSessionOf(id){const L=getLog(),now=Date.now();for(const ym of Object.keys(L).sort().slice(-2).reverse()){const s=(L[ym]||[]).filter(x=>x.e===id&&!x.del&&!x.out&&now-x.in<20*3600000).sort((a,b)=>b.in-a.in)[0];if(s)return{ym,s}}return null}
+function todaySess(id){const d=T.today();return T.logOf(ymOf(d)).filter(s=>s.e===id&&s.d===d)}
+function shiftDateFor(id,now){const sh=T.shiftOf(c,id),sp=T.shiftSpan(sh),d=new Date(now);
+  if(sp&&sp.E>1440){const mins=d.getHours()*60+d.getMinutes();if(mins<sp.E-1440+60){const y=new Date(now-86400000);return ymd(y)}}return ymd(d)}
+function punch(id){const now=Date.now(),L=getLog(),o=openSessionOf(id);let kind,s;
+  if(o){s=L[o.ym].find(x=>x.id===o.s.id);s.out=now;kind="out"}
+  else{const d=shiftDateFor(id,now),ym=ymOf(d);(L[ym]=L[ym]||[]).push(s={id:uid(),e:id,d,in:now,out:null,src:"kiosk"});kind="in"}
+  setLog(L);return{kind,s}}
+function kioskCard(e){const o=openSessionOf(e.id),ts=todaySess(e.id),last=ts.filter(s=>s.out).sort((a,b)=>b.out-a.out)[0];
+  const st=o?`ทำงานอยู่ ตั้งแต่ ${tm(o.s.d,o.s.in)}`:last?`ออกแล้ว ${tm(last.d,last.out)}`:"ยังไม่เข้างาน";
+  return`<button class="kemp ${o?"in":""}" data-k="${esc(e.id)}" type="button"><span class="av" aria-hidden="true">${esc((e.name||"?").trim().charAt(0))}</span><b>${esc(e.name||e.code)}</b><small>${esc(e.pos||e.dept||"")}</small><small>${esc(st)}</small></button>`}
+function vKiosk(){const list=emps().filter(e=>!ui.q||(e.name+" "+e.code+" "+(e.dept||"")).toLowerCase().includes(ui.q.toLowerCase()));
+  return`<section class="card"><div class="clock" aria-live="off"><b id="clk">--:--:--</b><span id="clkD"></span></div>
+  ${T.emps().length>8?`<input class="in-" id="kq" placeholder="🔍 ค้นหาชื่อหรือรหัสพนักงาน" value="${esc(ui.q)}" aria-label="ค้นหาพนักงาน">`:""}
+  ${list.length?`<div class="kgrid">${list.map(kioskCard).join("")}</div>`:`<div class="empty">ยังไม่มีพนักงาน · เพิ่มพนักงานที่ <a href="/payroll/">ระบบเงินเดือน</a> ก่อน แล้วกลับมาที่หน้านี้</div>`}
+  <p class="muted small" style="margin:0;text-align:center">แตะชื่อตัวเองเพื่อเข้างาน / ออกงาน · เวลาอ้างอิงจากนาฬิกาของเครื่องนี้</p></section>`}
+function bindKiosk(){const tick=()=>{const n=new Date(),k=$("#clk");if(!k)return clearInterval(bindKiosk.t);k.textContent=pad(n.getHours())+":"+pad(n.getMinutes())+":"+pad(n.getSeconds());$("#clkD").textContent=thDL(ymd(n))};
+  clearInterval(bindKiosk.t);tick();bindKiosk.t=setInterval(tick,1000);
+  if($("#kq"))$("#kq").oninput=e=>{ui.q=e.target.value;svUi();const p=e.target.selectionStart;render();const q=$("#kq");q.focus();q.setSelectionRange(p,p)};
+  $$("[data-k]").forEach(b=>b.onclick=()=>kioskOpen(b.dataset.k))}
+function kioskOpen(id){const e=T.emps().find(x=>x.id===id);if(!e)return;const o=openSessionOf(id),sh=T.shiftOf(c,id),pin=(c.emp[id]||{}).pin,need=c.needPin&&pin;
+  const ts=todaySess(id);
+  openDlg(`<h3>${esc(e.name||e.code)} <button class="btn sm ghost" data-x type="button">ปิด</button></h3>
+   <div class="muted small">${esc([e.pos,e.dept,brOf(id)].filter(Boolean).join(" · "))}${sh?` · ${esc(sh.name)} ${esc(sh.start)}–${esc(sh.end)}`:" · เวลายืดหยุ่น"}</div>
+   ${ts.length?`<div class="small">วันนี้: ${ts.map(s=>tm(s.d,s.in)+" – "+(s.out?tm(s.d,s.out):"…")).join(" · ")}</div>`:""}
+   ${need?`<div class="f"><label for="kpin">PIN ของคุณ</label><input class="in- pin" id="kpin" type="password" inputmode="numeric" autocomplete="off"></div>`:""}
+   <button class="bigbtn ${o?"out":"in"}" id="kgo" type="button">${o?"ออกงาน":"เข้างาน"}</button>`);
+  if(need)setTimeout(()=>$("#kpin").focus(),50);
+  $("#kgo").onclick=async()=>{if(need){const v=($("#kpin").value||"").trim();if(!v||await empHash(v)!==pin){toast("PIN ไม่ถูกต้อง");$("#kpin").value="";return}}
+    const last=ts.concat(o?[o.s]:[]).reduce((m,s)=>Math.max(m,s.out||0,s.in||0),0);
+    if(Date.now()-last<60000&&!confirm("เพิ่งตอกบัตรไปเมื่อไม่ถึง 1 นาที ยืนยันอีกครั้ง?"))return;
+    const r=punch(id);closeDlg();done(e,r)}}
+function done(e,r){const s=r.s,R=T.day(c,e,s.d,T.logOf(ymOf(s.d)).filter(x=>x.e===e.id&&x.d===s.d),(T.marksOf(ymOf(s.d))[e.id]||{})[s.d],co());
+  let line="";if(r.kind==="in"){line=R.late?`สาย ${R.late} นาที`:"ตรงเวลา"}else{line=`ทำงาน ${dur(Math.max(0,(s.out-s.in)/60000))}`+(R.ot15?` · OT ${dur(R.ot15)}`:R.otPend?" · OT รออนุมัติ":"")}
+  const box=document.createElement("div");box.className="done";box.setAttribute("role","status");
+  box.innerHTML=`<div><div class="ic"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><b>${r.kind==="in"?"เข้างาน":"ออกงาน"} ${tm(s.d,r.kind==="in"?s.in:s.out)}</b><p>${esc(e.name||e.code)} · ${esc(line)}</p></div>`;
+  document.body.appendChild(box);box.onclick=()=>box.remove();setTimeout(()=>{box.remove();if(ui.tab==="kiosk"){ui.q="";svUi();render()}},2600)}
+
+/* ---------- วันนี้ ---------- */
+function filt(list){return list.filter(e=>(!ui.dept||(e.dept||"")===ui.dept)&&(!ui.br||brOf(e.id)===ui.br))}
+function filters(){const E=T.emps(),depts=[...new Set(E.map(e=>e.dept||"").filter(Boolean))].sort(),brs=[...new Set(E.map(e=>brOf(e.id)).filter(Boolean))].sort();
+  return(depts.length?`<div class="f"><label for="fDept">แผนก / ฝ่าย</label><select class="in-" id="fDept"><option value="">ทุกแผนก</option>${depts.map(d=>`<option ${d===ui.dept?"selected":""}>${esc(d)}</option>`).join("")}</select></div>`:"")+
+   (brs.length?`<div class="f"><label for="fBr">สาขา</label><select class="in-" id="fBr"><option value="">ทุกสาขา</option>${brs.map(d=>`<option ${d===ui.br?"selected":""}>${esc(d)}</option>`).join("")}</select></div>`:"")}
+function bindFilters(){if($("#fDept"))$("#fDept").onchange=e=>{ui.dept=e.target.value;svUi();render()};if($("#fBr"))$("#fBr").onchange=e=>{ui.br=e.target.value;svUi();render()}}
+function chip(R){const s=ST[R.status]||["",""];let t=s[1];if(R.mark&&R.mark.lv)t=(T.LEAVE[R.mark.lv]||{}).n||"ลา";if(R.status==="hol"&&R.hol)t=R.hol.n||t;return t?`<span class="chip ${s[0]}">${esc(t)}</span>`:""}
+function vToday(){const d=T.today(),ym=ymOf(d),L=T.logOf(ym),MK=T.marksOf(ym),cc=co(),list=filt(T.emps().filter(e=>T.active(e,ym)));
+  const rows=list.map(e=>({e,R:T.day(c,e,d,L.filter(s=>s.e===e.id&&s.d===d),(MK[e.id]||{})[d],cc)}));
+  const n=k=>rows.filter(x=>k(x.R)).length;
+  return`<section class="card"><h2>📋 ${esc(thDL(d))} <small>อัปเดตตามการตอกบัตรในเครื่องนี้</small></h2><div class="row">${filters()}</div>
+  <div class="stats"><div class="stat"><small>พนักงาน</small><b>${rows.length}</b></div><div class="stat"><small>กำลังทำงาน</small><b>${n(R=>R.status==="open")}</b></div>
+  <div class="stat"><small>มาแล้ว</small><b>${n(R=>R.sess.length>0)}</b></div><div class="stat"><small>มาสาย</small><b style="color:var(--warn)">${n(R=>R.late>0)}</b></div>
+  <div class="stat"><small>ยังไม่มา / ขาด</small><b style="color:var(--danger)">${n(R=>R.status==="wait"||R.status==="abs")}</b></div><div class="stat"><small>ลา</small><b>${n(R=>R.status==="leave")}</b></div></div>
+  ${rows.length?`<div class="tw"><table class="t"><thead><tr><th>พนักงาน</th><th>แผนก</th><th>กะ</th><th>เข้า</th><th>ออก</th><th class="r">ทำงาน</th><th class="r">สาย</th><th>สถานะ</th></tr></thead><tbody>
+  ${rows.sort((a,b)=>(a.e.dept||"").localeCompare(b.e.dept||"")||(a.e.name||"").localeCompare(b.e.name||"")).map(({e,R})=>`<tr class="click" data-se="${esc(e.id)}"><td><b>${esc(e.name||e.code)}</b></td><td>${esc(e.dept||"-")}</td><td>${R.sh?esc(R.sh.start+"–"+R.sh.end):"ยืดหยุ่น"}</td>
+  <td>${R.sess.length?tm(d,Math.min(...R.sess.map(s=>s.in))):"-"}</td><td>${R.open?"…":R.sess.some(s=>s.out)?tm(d,Math.max(...R.sess.map(s=>s.out||0))):"-"}</td><td class="r">${dur(R.work)}</td><td class="r">${R.late?R.late+" น.":"-"}</td><td>${chip(R)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีพนักงาน</div>`}</section>`}
+function bindToday(){bindFilters();$$("[data-se]").forEach(r=>r.onclick=()=>{ui.emp=r.dataset.se;ui.ym=T.today().slice(0,7);ui.tab="sheet";svUi();render()})}
+
+/* ---------- ตารางเวลา ---------- */
+function monthSel(){const [y,m]=ui.ym.split("-").map(Number);
+  return`<div class="f" style="flex:0 1 260px"><label>เดือน</label><div style="display:flex;gap:6px"><button class="btn sm ghost" id="mP" type="button" aria-label="เดือนก่อน">‹</button><select class="in-" id="mS">${MONTHS.map((x,i)=>`<option value="${i+1}" ${i+1===m?"selected":""}>${x}</option>`).join("")}</select><select class="in-" id="yS" style="max-width:100px">${[y-2,y-1,y,y+1].map(v=>`<option value="${v}" ${v===y?"selected":""}>${v+543}</option>`).join("")}</select><button class="btn sm ghost" id="mN" type="button" aria-label="เดือนถัดไป">›</button></div></div>`}
+function bindMonth(){const go=(y,m)=>{if(m<1){m=12;y--}if(m>12){m=1;y++}ui.ym=y+"-"+pad(m);svUi();render()};const [y,m]=ui.ym.split("-").map(Number);
+  $("#mP").onclick=()=>go(y,m-1);$("#mN").onclick=()=>go(y,m+1);$("#mS").onchange=e=>go(y,+e.target.value);$("#yS").onchange=e=>go(+e.target.value,m)}
+function vSheet(){const list=emps();if(!list.length)return`<section class="card"><div class="empty">ยังไม่มีพนักงาน · เพิ่มที่ <a href="/payroll/">ระบบเงินเดือน</a></div></section>`;
+  if(!list.some(e=>e.id===ui.emp))ui.emp=list[0].id;const e=list.find(x=>x.id===ui.emp),S=T.month(e.id,ui.ym,{c,co:co()});
+  const lv=Object.entries(S.lv).filter(([,v])=>v).map(([k,v])=>T.LEAVE[k].n+" "+v).join(" · ")||"-";
+  return`<section class="card"><h2>🗓 ตารางเวลา <small>แตะแถวเพื่อแก้ไขเวลา ลา หรืออนุมัติ OT</small></h2>
+  <div class="row">${monthSel()}<div class="f"><label for="eS">พนักงาน</label><select class="in-" id="eS">${list.map(x=>`<option value="${esc(x.id)}" ${x.id===e.id?"selected":""}>${esc(x.name||x.code)}${x.dept?" · "+esc(x.dept):""}</option>`).join("")}</select></div></div>
+  <div class="stats"><div class="stat"><small>วันทำงานตามกะ</small><b>${S.sched}</b></div><div class="stat"><small>มาทำงาน</small><b>${S.present}</b></div><div class="stat"><small>ขาด</small><b style="color:var(--danger)">${S.abs}</b></div>
+  <div class="stat"><small>สาย (ครั้ง / นาที)</small><b style="color:var(--warn)">${S.lateN} / ${Math.round(S.late)}</b></div><div class="stat"><small>OT ×1.5 / ×2 / ×3 (ชม.)</small><b>${hrs(S.ot15)} / ${hrs(S.ot2)} / ${hrs(S.ot3)}</b></div><div class="stat"><small>ลา</small><b style="font-size:1rem">${esc(lv)}</b></div></div>
+  ${S.otPend?`<div class="note">มี OT รออนุมัติ ${dur(S.otPend)} · แตะวันที่มี OT แล้วติ๊ก "อนุมัติ OT"</div>`:""}${S.noout?`<div class="note">มี ${S.noout} วันที่ลืมตอกบัตรออก · แตะวันนั้นเพื่อใส่เวลาออก</div>`:""}
+  <div class="tw"><table class="t"><thead><tr><th>วันที่</th><th>กะ</th><th>เข้า</th><th>ออก</th><th class="r">ทำงาน</th><th class="r">สาย</th><th class="r">ออกก่อน</th><th class="r">OT</th><th>สถานะ</th><th>หมายเหตุ</th></tr></thead><tbody>
+  ${S.days.map(R=>{const sh=R.sched&&R.sh?R.sh.start+"–"+R.sh.end:R.hol?"หยุด":R.sh?"หยุด":"-";const ot=R.ot15+R.ot2+R.ot3;
+   return`<tr class="click ${R.sched?"":"we"}" data-d="${R.d}"><td>${DOW[R.dow]} ${thD(R.d)}</td><td>${esc(sh)}</td><td>${R.sess.map(s=>tm(R.d,s.in)).join("<br>")||"-"}</td><td>${R.sess.map(s=>s.out?tm(R.d,s.out):"…").join("<br>")||"-"}</td>
+   <td class="r">${dur(R.work)}</td><td class="r">${R.late?R.late+" น.":"-"}</td><td class="r">${R.early?R.early+" น.":"-"}</td><td class="r">${ot?dur(ot):R.otPend?`<span class="chip late">รอ ${dur(R.otRaw)}</span>`:"-"}</td><td>${chip(R)}</td><td class="small">${esc((R.mark&&R.mark.note)||"")}</td></tr>`}).join("")}</tbody>
+  <tfoot><tr><td colspan="4">รวม</td><td class="r">${dur(S.work)}</td><td class="r">${Math.round(S.late)} น.</td><td class="r">${Math.round(S.early)} น.</td><td class="r">${dur(S.ot15+S.ot2+S.ot3)}</td><td colspan="2"></td></tr></tfoot></table></div>
+  <div class="row"><button class="btn main" id="toPay" type="button">💰 ส่งเข้าระบบเงินเดือน ${esc(ymTh(ui.ym))}</button><button class="btn ghost" id="addS" type="button">＋ เพิ่มเวลาย้อนหลัง</button></div>
+  <p class="muted small" style="margin:0">ส่งเข้าเงินเดือน: ${esc(TYPES[e.type||"m"])}${(e.type||"m")==="d"?` · วันทำงาน ${S.payDays} วัน (รวมลาที่ได้ค่าจ้างและวันหยุดนักขัตฤกษ์)`:(e.type||"m")==="h"?` · ชั่วโมงทำงาน ${S.payHrs} ชม.`:` · ขาด ${S.abs} วัน · ลาไม่รับค่าจ้าง ${S.lv.unpaid} วัน`} · สาย/ออกก่อน ${S.payLate} นาที · OT ตามจริง</p></section>`}
+function bindSheet(){bindMonth();$("#eS").onchange=e=>{ui.emp=e.target.value;svUi();render()};
+  $$("[data-d]").forEach(r=>r.onclick=()=>editDay(ui.emp,r.dataset.d));
+  $("#addS").onclick=()=>{const d=prompt("วันที่ (ปปปป-ดด-วว)",T.today());if(d&&/^\d{4}-\d{2}-\d{2}$/.test(d))editDay(ui.emp,d)};
+  $("#toPay").onclick=()=>toPayroll()}
+async function toPayroll(){if(!await adminOk())return;
+  if(!confirm(`ส่งเวลาทำงานเดือน ${ymTh(ui.ym)} เข้าระบบเงินเดือน?\n\nจะแทนที่ช่อง วันทำงาน/ชั่วโมง · ขาด · ลาไม่รับค่าจ้าง · สาย · OT ของพนักงานที่มีข้อมูลลงเวลา\n(รายได้อื่น ค่าคอม เงินหัก ไม่เปลี่ยน)`))return;
+  const r=T.apply(ui.ym);toast(`ส่งเข้าเงินเดือนแล้ว ${r.n} คน`+(r.skipped.length?` · ข้าม ${r.skipped.length} คนที่ไม่มีข้อมูลลงเวลา`:""))}
+async function editDay(id,d){if(!await adminOk())return;const e=T.emps().find(x=>x.id===id);if(!e)return;const ym=ymOf(d),L=getLog(),MK=getMarks();
+  const cur=(L[ym]||[]).filter(s=>s.e===id&&s.d===d&&!s.del),mk=Object.assign({},((MK[ym]||{})[id]||{})[d]||{});
+  const base=T.midnight(d),toT=ts=>{const m=Math.round((ts-base)/60000);return{t:m2hm(m),nx:m>=1440}};
+  let rows=cur.map(s=>({in:toT(s.in),out:s.out?toT(s.out):{t:"",nx:false}}));if(!rows.length)rows=[{in:{t:"",nx:false},out:{t:"",nx:false}}];
+  const sh=T.shiftOf(c,id);
+  const draw=()=>{openDlg(`<h3>${esc(e.name||e.code)} · ${esc(thD(d))} <button class="btn sm ghost" data-x type="button">ปิด</button></h3>
+   <div class="muted small">${sh?esc(sh.name+" "+sh.start+"–"+sh.end):"เวลายืดหยุ่น"}${T.holidayOf(c,d)?" · วันหยุด: "+esc(T.holidayOf(c,d).n):""}</div>
+   <div id="sRows">${rows.map((r,i)=>`<div class="sess" data-i="${i}"><div class="f"><label>เข้า</label><input class="in-" type="time" data-a="in" value="${esc(r.in.t)}"></div><div class="f"><label>ออก</label><input class="in-" type="time" data-a="out" value="${esc(r.out.t)}"></div>
+     <label class="chk small" style="padding-bottom:10px"><input type="checkbox" data-a="nx" ${r.out.nx?"checked":""}>ออกวันถัดไป</label><button class="btn sm ghost danger" data-del="${i}" type="button" aria-label="ลบรอบนี้">ลบ</button></div>`).join("")}</div>
+   <button class="btn sm ghost" id="sAdd" type="button" style="align-self:flex-start">＋ เพิ่มรอบ (เช่น กะแยก)</button>
+   <div class="row"><div class="f"><label for="eLv">ลา</label><select class="in-" id="eLv"><option value="">ไม่ลา</option>${Object.entries(T.LEAVE).map(([k,v])=>`<option value="${k}" ${mk.lv===k?"selected":""}>${v.n}${v.paid?"":" (หักเงิน)"}</option>`).join("")}</select></div>
+     <div class="f"><label for="eDay">วันนี้</label><select class="in-" id="eDay"><option value="">ตามกะ</option><option value="off" ${mk.off?"selected":""}>วันหยุด (ไม่ต้องมา)</option><option value="work" ${mk.work?"selected":""}>วันทำงานพิเศษ</option></select></div></div>
+   <label class="chk"><input type="checkbox" id="eHalf" ${mk.half?"checked":""}>ลาครึ่งวัน</label>
+   ${c.otMode==="approve"?`<label class="chk"><input type="checkbox" id="eOta" ${mk.ota?"checked":""}>อนุมัติ OT วันนี้</label>`:""}
+   <div class="f"><label for="eNote">เหตุผล / หมายเหตุ (บันทึกในประวัติการแก้ไข)</label><input class="in-" id="eNote" value="${esc(mk.note||"")}" placeholder="เช่น ลืมตอกบัตร, ใบรับรองแพทย์"></div>
+   <button class="btn main" id="eSave" type="button">บันทึก</button>`);
+   const grab=()=>{rows=$$("#sRows .sess").map(el=>({in:{t:el.querySelector('[data-a=in]').value,nx:false},out:{t:el.querySelector('[data-a=out]').value,nx:el.querySelector('[data-a=nx]').checked}}))};
+   $("#sAdd").onclick=()=>{grab();rows.push({in:{t:"",nx:false},out:{t:"",nx:false}});draw()};
+   $$("[data-del]").forEach(b=>b.onclick=()=>{grab();rows.splice(+b.dataset.del,1);draw()});
+   $("#eSave").onclick=()=>{grab();const note=$("#eNote").value.trim();
+     const ns=[];for(const r of rows){if(!r.in.t&&!r.out.t)continue;if(!r.in.t){toast("ใส่เวลาเข้าให้ครบ");return}
+       const i=base+hm2m(r.in.t)*60000;let o=r.out.t?base+(hm2m(r.out.t)+(r.out.nx?1440:0))*60000:null;if(o&&o<=i){toast("เวลาออกต้องหลังเวลาเข้า (ติ๊ก “ออกวันถัดไป” ถ้าเลิกหลังเที่ยงคืน)");return}ns.push({in:i,out:o})}
+     const fmtS=a=>a.map(s=>tm(d,s.in)+"-"+(s.out?tm(d,s.out):"…")).join(", ")||"ไม่มี";
+     const changed=fmtS(cur)!==fmtS(ns);if(changed&&!note){toast("ใส่เหตุผลการแก้เวลา");$("#eNote").focus();return}
+     L[ym]=(L[ym]||[]).filter(s=>!(s.e===id&&s.d===d&&!s.del));ns.forEach(s=>L[ym].push({id:uid(),e:id,d,in:s.in,out:s.out,src:"edit"}));setLog(L);
+     const nm={};const lv=$("#eLv").value,dv=$("#eDay").value;if(lv)nm.lv=lv;if(lv&&$("#eHalf").checked)nm.half=true;if(dv==="off")nm.off=true;if(dv==="work")nm.work=true;if($("#eOta")&&$("#eOta").checked)nm.ota=true;if(note)nm.note=note;
+     MK[ym]=MK[ym]||{};MK[ym][id]=MK[ym][id]||{};if(Object.keys(nm).length)MK[ym][id][d]=nm;else delete MK[ym][id][d];T.set(T.K.day,MK);
+     const bm=JSON.stringify(mk),am=JSON.stringify(nm);
+     if(changed)audit(id,d,"แก้เวลา",fmtS(cur),fmtS(ns),note);if(bm!==am)audit(id,d,"สถานะวัน",bm==="{}"?"-":describeMark(mk),am==="{}"?"-":describeMark(nm),note);
+     closeDlg();toast("บันทึกแล้ว");render()}};
+  draw()}
+function describeMark(m){return[m.lv?(T.LEAVE[m.lv]||{}).n+(m.half?" ครึ่งวัน":""):"",m.off?"วันหยุด":"",m.work?"วันทำงานพิเศษ":"",m.ota?"อนุมัติ OT":""].filter(Boolean).join(", ")||"-"}
+
+/* ---------- รายงาน ---------- */
+const REPS={sum:"สรุปรายเดือนรายคน",dept:"สรุปตามแผนก / สาขา",daily:"บันทึกเวลารายวัน",mx:"ปฏิทินการมาทำงาน",exc:"มาสาย / ขาด / ลืมตอกออก",ot:"OT และค่า OT โดยประมาณ",audit:"ประวัติการแก้ไขเวลา"};
+function hourly(e){const C=co(),dpm=num(C.dpm)||30,hpd=num(C.hpd)||8,s=num(e.salary),t=e.type||"m";return t==="m"?s/dpm/hpd:t==="d"?s/hpd:t==="h"?s:0}
+function otCost(e,S){const h=hourly(e),t=e.type||"m";return r2(h*(1.5*S.ot15+(t==="m"?1:2)*S.ot2+3*S.ot3)/60)}
+function buildRep(){const k=ui.rep,ym=ui.ym,list=filt(emps()),cc=co(),until=null;
+  const head=[],rows=[],foot=[];let note="",wide=false,mx=false;
+  if(k==="sum"||k==="ot"||k==="dept"){const MS=list.map(e=>({e,S:T.month(e.id,ym,{c,co:cc,emp:e})}));
+    if(k==="sum"){head.push("รหัส","พนักงาน","แผนก","สาขา","วันทำงานตามกะ","มาทำงาน","ขาด","ลาป่วย","ลากิจ","พักร้อน","ลาไม่รับค่าจ้าง","สาย (ครั้ง)","สาย (นาที)","ออกก่อน (นาที)","OT 1.5 (ชม.)","OT 2 (ชม.)","OT 3 (ชม.)","ชั่วโมงทำงานรวม","ลืมตอกออก");wide=true;
+      MS.forEach(({e,S})=>rows.push([e.code||"",e.name||"",e.dept||"",brOf(e.id),S.sched,S.present,S.abs,S.lv.sick,S.lv.biz,S.lv.vac,S.lv.unpaid,S.lateN,Math.round(S.late),Math.round(S.early),r2(S.ot15/60),r2(S.ot2/60),r2(S.ot3/60),r2(S.work/60),S.noout]));
+      const sum=i=>r2(rows.reduce((a,r)=>a+num(r[i]),0));foot.push("","รวม "+rows.length+" คน","","",...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18].map(sum))}
+    if(k==="ot"){head.push("รหัส","พนักงาน","แผนก","ประเภท","ค่าจ้าง/ชม.","OT 1.5 (ชม.)","OT 2 (ชม.)","OT 3 (ชม.)","OT รออนุมัติ (ชม.)","ค่า OT โดยประมาณ");
+      MS.forEach(({e,S})=>rows.push([e.code||"",e.name||"",e.dept||"",TYPES[e.type||"m"],r2(hourly(e)),r2(S.ot15/60),r2(S.ot2/60),r2(S.ot3/60),r2(S.otPend/60),otCost(e,S)]));
+      const sum=i=>r2(rows.reduce((a,r)=>a+num(r[i]),0));foot.push("","รวม","","","",sum(5),sum(6),sum(7),sum(8),sum(9));note="ค่า OT คำนวณจากค่าจ้างในระบบเงินเดือน (รายเดือน ÷ วันต่อเดือน ÷ ชม.ต่อวัน) · ยอดจริงดูที่สลิปเงินเดือน"}
+    if(k==="dept"){head.push("แผนก","สาขา","พนักงาน","วันทำงานตามกะ","มาทำงาน","อัตรามาทำงาน","ขาด (วัน)","ลา (วัน)","มาสาย (ครั้ง)","สาย (นาที)","OT รวม (ชม.)","ค่า OT โดยประมาณ");
+      const G={};MS.forEach(({e,S})=>{const g=(e.dept||"(ไม่ระบุแผนก)")+"|"+brOf(e.id);const x=G[g]||(G[g]={n:0,sc:0,pr:0,ab:0,lv:0,ln:0,lt:0,ot:0,cost:0});x.n++;x.sc+=S.sched;x.pr+=S.present;x.ab+=S.abs;x.lv+=S.lv.sick+S.lv.biz+S.lv.vac+S.lv.unpaid;x.ln+=S.lateN;x.lt+=S.late;x.ot+=S.ot15+S.ot2+S.ot3;x.cost+=otCost(e,S)});
+      Object.keys(G).sort().forEach(g=>{const[d,b]=g.split("|"),x=G[g];rows.push([d,b||"-",x.n,x.sc,x.pr,x.sc?r2(x.pr/x.sc*100)+"%":"-",x.ab,x.lv,x.ln,Math.round(x.lt),r2(x.ot/60),r2(x.cost)])});
+      const T2=Object.values(G).reduce((a,x)=>{for(const q in x)a[q]=(a[q]||0)+x[q];return a},{});if(rows.length)foot.push("รวมทั้งหมด","",T2.n,T2.sc,T2.pr,T2.sc?r2(T2.pr/T2.sc*100)+"%":"-",T2.ab,T2.lv,T2.ln,Math.round(T2.lt),r2(T2.ot/60),r2(T2.cost))}}
+  if(k==="daily"||k==="exc"){const from=ui.from||ym+"-01",to=ui.to||T.daysOf(ym).slice(-1)[0],cache={};
+    const ds=[];for(let t=T.midnight(from);t<=T.midnight(to);t+=86400000)ds.push(ymd(new Date(t+3600000)));
+    const MKc={};const L=ym2=>cache[ym2]||(cache[ym2]=T.logOf(ym2)),MKf=ym2=>MKc[ym2]||(MKc[ym2]=T.marksOf(ym2));
+    if(k==="daily")head.push("วันที่","รหัส","พนักงาน","แผนก","กะ","เข้า","ออก","ทำงาน (ชม.)","สาย (นาที)","ออกก่อน (นาที)","OT (ชม.)","สถานะ","หมายเหตุ");
+    else head.push("วันที่","รหัส","พนักงาน","แผนก","เรื่อง","รายละเอียด");
+    ds.forEach(d=>list.forEach(e=>{const y2=ymOf(d),R=T.day(c,e,d,L(y2).filter(s=>s.e===e.id&&s.d===d),(MKf(y2)[e.id]||{})[d],cc);if(R.status==="future")return;
+      const st=(R.mark&&R.mark.lv)?T.LEAVE[R.mark.lv].n:(ST[R.status]||["",""])[1];
+      if(k==="daily"){if(!R.sess.length&&!R.sched&&!(R.mark&&R.mark.lv))return;
+        rows.push([thD(d),e.code||"",e.name||"",e.dept||"",R.sh?R.sh.start+"–"+R.sh.end:"-",R.sess.map(s=>tm(d,s.in)).join(", ")||"-",R.sess.map(s=>s.out?tm(d,s.out):"…").join(", ")||"-",r2(R.work/60),R.late,R.early,r2((R.ot15+R.ot2+R.ot3)/60),st,(R.mark&&R.mark.note)||""])}
+      else{if(R.late)rows.push([thD(d),e.code||"",e.name||"",e.dept||"","มาสาย",`เข้า ${tm(d,Math.min(...R.sess.map(s=>s.in)))} · สาย ${R.late} นาที`]);
+        if(R.early)rows.push([thD(d),e.code||"",e.name||"",e.dept||"","ออกก่อนเวลา",`ออกก่อน ${R.early} นาที`]);
+        if(R.status==="abs")rows.push([thD(d),e.code||"",e.name||"",e.dept||"","ขาดงาน","ไม่มีการตอกบัตร และไม่ได้ลา"]);
+        if(R.status==="noout"||R.flagNoout)rows.push([thD(d),e.code||"",e.name||"",e.dept||"","ลืมตอกออก","มีเวลาเข้าแต่ไม่มีเวลาออก"])}}));
+    if(k==="daily"){wide=true;const sum=i=>r2(rows.reduce((a,r)=>a+num(r[i]),0));if(rows.length)foot.push("รวม","","","","","","",sum(7),sum(8),sum(9),sum(10),"","")}}
+  if(k==="mx"){const ds=T.daysOf(ym),L=T.logOf(ym),MK=T.marksOf(ym);mx=true;wide=true;head.push("พนักงาน",...ds.map(d=>String(+d.slice(8))),"มา","ขาด","ลา","สาย");
+    list.forEach(e=>{let a=0,b=0,l=0,s=0;const cells=ds.map(d=>{const R=T.day(c,e,d,L.filter(x=>x.e===e.id&&x.d===d),(MK[e.id]||{})[d],cc);
+      if(R.status==="future")return"";if(R.mark&&R.mark.lv){l++;return"ล"}if(R.status==="abs"){b++;return"ข"}if(R.status==="hol")return"น";if(R.status==="off"||R.status==="nowork")return R.work?"OT":"·";
+      if(R.work||R.open){a++;if(R.late){s++;return"ส"}return R.ot15||R.ot2||R.ot3?"✓+":"✓"}if(R.status==="noout"){a++;return"?"}return""});rows.push([e.name||e.code,...cells,a,b,l,s])});
+    note="✓ มาทำงาน · ✓+ มี OT · ส มาสาย · ข ขาด · ล ลา · น วันหยุดนักขัตฤกษ์ · · วันหยุด · OT ทำงานวันหยุด · ? ลืมตอกออก"}
+  if(k==="audit"){const A=(T.get(T.K.audit,[])||[]).filter(a=>a.d&&a.d.slice(0,7)===ym).reverse(),E=Object.fromEntries(T.emps().map(e=>[e.id,e]));
+    head.push("เวลาที่แก้","วันที่ทำงาน","พนักงาน","รายการ","เดิม","ใหม่","เหตุผล");
+    A.forEach(a=>{const x=new Date(a.ts),e=E[a.e]||{};if(ui.dept&&e.dept!==ui.dept)return;rows.push([thD(ymd(x))+" "+pad(x.getHours())+":"+pad(x.getMinutes()),thD(a.d),e.name||"(ลบแล้ว)",a.act,a.before,a.after,a.note])})}
+  return{title:REPS[k],head,rows,foot,note,wide,mx}}
+function repTable(R,pr){const isNum=v=>typeof v==="number";const cell=(v,tag)=>`<${tag}${isNum(v)?' class="r"':""}>${esc(isNum(v)?(Number.isInteger(v)?v:v.toLocaleString("th-TH",{maximumFractionDigits:2})):v)}</${tag}>`;
+  return`<table class="${pr?(R.mx?"mx":""):"t"}"><thead><tr>${R.head.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${R.rows.map(r=>`<tr>${r.map(v=>cell(v,"td")).join("")}</tr>`).join("")||`<tr><td colspan="${R.head.length}">ไม่มีข้อมูล</td></tr>`}</tbody>${R.foot.length?`<tfoot><tr>${R.foot.map(v=>cell(v,"td")).join("")}</tr></tfoot>`:""}</table>`}
+function period(){const k=ui.rep;if(k==="daily"||k==="exc")return thD(ui.from||ui.ym+"-01")+" – "+thD(ui.to||T.daysOf(ui.ym).slice(-1)[0]);return ymTh(ui.ym)}
+function vRep(){const R=buildRep(),dr=ui.rep==="daily"||ui.rep==="exc";
+  return`<section class="card"><h2>📊 รายงานเวลาทำงาน <small>เลือกแผนก / สาขาได้ · พิมพ์ ส่ง PDF หรือส่งออก Excel</small></h2>
+  <div class="row"><div class="f"><label for="rK">รายงาน</label><select class="in-" id="rK">${Object.entries(REPS).map(([k,v])=>`<option value="${k}" ${k===ui.rep?"selected":""}>${v}</option>`).join("")}</select></div>${monthSel()}
+  ${dr?`<div class="f" style="flex:0 1 170px"><label for="rF">ตั้งแต่</label><input class="in-" type="date" id="rF" value="${esc(ui.from||ui.ym+"-01")}"></div><div class="f" style="flex:0 1 170px"><label for="rT">ถึง</label><input class="in-" type="date" id="rT" value="${esc(ui.to||T.daysOf(ui.ym).slice(-1)[0])}"></div>`:""}${filters()}</div>
+  <div class="row"><button class="btn main" id="rPrint" type="button">🖨️ พิมพ์ / ส่ง PDF</button><button class="btn ghost" id="rXls" type="button">📊 Excel</button>${["sum","ot","dept"].includes(ui.rep)?`<button class="btn ghost" id="toPay2" type="button">💰 ส่งเข้าเงินเดือน</button>`:""}</div>
+  ${R.note?`<div class="info">${esc(R.note)}</div>`:""}<div class="tw">${repTable(R,false)}</div></section>`}
+function bindRep(){bindMonth();bindFilters();$("#rK").onchange=e=>{ui.rep=e.target.value;svUi();render()};
+  if($("#rF")){$("#rF").onchange=e=>{ui.from=e.target.value;svUi();render()};$("#rT").onchange=e=>{ui.to=e.target.value;svUi();render()}}
+  if($("#toPay2"))$("#toPay2").onclick=toPayroll;
+  $("#rPrint").onclick=()=>{const R=buildRep(),C=co(),land=R.wide;const flt=[ui.dept&&"แผนก "+ui.dept,ui.br&&"สาขา "+ui.br].filter(Boolean).join(" · ");
+    $("#printArea").innerHTML=`<style>@page{size:A4 ${land?"landscape":"portrait"};margin:8mm}</style><div class="pr"><div class="hd"><div><b>${esc(C.name||"")}</b><div>${esc(flt||"ทุกแผนก")}</div></div><div style="text-align:right"><h1>${esc(R.title)}</h1><div>${esc(period())}</div></div></div>${repTable(R,true)}${R.note?`<p style="font-size:8pt">${esc(R.note)}</p>`:""}<p style="font-size:7.5pt;color:#555">พิมพ์เมื่อ ${esc(thD(T.today()))} · Excel Data Master</p></div>`;
+    const name=(R.title+"-"+period()).replace(/\s+/g,"-");
+    if(window.EDM_DOCSHARE)window.EDM_DOCSHARE.open({el:$("#printArea"),pg:{roll:false,w:land?297:210,h:land?210:297,margin:8,land},name,onPrint:()=>window.EDM_DOCSHARE.print()});else window.print()};
+  $("#rXls").onclick=()=>{const R=buildRep();loadXLSX().then(X=>{const ws=X.utils.aoa_to_sheet([[R.title+" · "+period()],[],R.head,...R.rows,...(R.foot.length?[R.foot]:[])]);const wb=X.utils.book_new();X.utils.book_append_sheet(wb,ws,"รายงาน");X.writeFile(wb,(R.title+"-"+ui.ym).replace(/[\\/:*?"<>|\s]+/g,"-")+".xlsx")}).catch(()=>toast("โหลดตัวสร้าง Excel ไม่สำเร็จ"))}}
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="/assets/vendor/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+
+/* ---------- ตั้งค่า ---------- */
+const FIXED_HOL=[["01-01","วันขึ้นปีใหม่"],["04-06","วันจักรี"],["04-13","วันสงกรานต์"],["04-14","วันสงกรานต์"],["04-15","วันสงกรานต์"],["05-01","วันแรงงานแห่งชาติ"],["05-04","วันฉัตรมงคล"],["06-03","วันเฉลิมพระชนมพรรษาสมเด็จพระราชินี"],["07-28","วันเฉลิมพระชนมพรรษา ร.10"],["08-12","วันแม่แห่งชาติ"],["10-13","วันนวมินทรมหาราช"],["10-23","วันปิยมหาราช"],["12-05","วันพ่อแห่งชาติ"],["12-10","วันรัฐธรรมนูญ"],["12-31","วันสิ้นปี"]];
+function vSet(){const E=T.emps(),y=+ui.ym.slice(0,4);
+  return`<div class="grid2"><section class="card"><h2>🕘 กะการทำงาน <button class="btn sm ghost" id="shAdd" type="button">＋ เพิ่มกะ</button></h2>
+  ${c.shifts.map((s,i)=>`<div class="card" style="box-shadow:inset 0 0 0 1px var(--line)" data-sh="${i}"><div class="row"><div class="f"><label>ชื่อกะ</label><input class="in-" data-s="name" value="${esc(s.name)}"></div>
+   <div class="f" style="flex:0 1 120px"><label>เข้างาน</label><input class="in-" type="time" data-s="start" value="${esc(s.start)}"></div><div class="f" style="flex:0 1 120px"><label>เลิกงาน</label><input class="in-" type="time" data-s="end" value="${esc(s.end)}"></div>
+   <div class="f" style="flex:0 1 110px"><label>พัก (นาที)</label><input class="in-" type="number" min="0" step="5" data-s="brk" value="${esc(s.brk)}"></div></div>
+   <div class="days" role="group" aria-label="วันทำงาน">${DOW.map((d,j)=>`<label><input type="checkbox" data-dow="${j}" ${(s.days||[]).includes(j)?"checked":""}><span>${d}</span></label>`).join("")}</div>
+   <div class="row" style="justify-content:space-between"><span class="muted small">${T.hm2m(s.end)<=T.hm2m(s.start)?"กะข้ามคืน (เลิกงานวันถัดไป) · ":""}${E.filter(e=>(T.shiftOf(c,e.id)||{}).id===s.id).length} คน</span>${c.shifts.length>1?`<button class="btn sm ghost danger" data-shdel="${i}" type="button">ลบกะ</button>`:""}</div></div>`).join("")}</section>
+  <section class="card"><h2>📏 กฎการคำนวณ</h2>
+   <div class="row"><div class="f"><label for="gGrace">สายไม่เกิน (นาที) ไม่นับ</label><input class="in-" id="gGrace" type="number" min="0" value="${esc(c.grace)}"></div>
+    <div class="f"><label for="gLate">เมื่อสายเกินผ่อนผัน</label><select class="in-" id="gLate"><option value="all" ${c.lateMode==="all"?"selected":""}>นับตั้งแต่เวลาเข้างาน</option><option value="over" ${c.lateMode==="over"?"selected":""}>นับเฉพาะส่วนที่เกิน</option></select></div></div>
+   <div class="row"><div class="f"><label for="gOtA">ทำเกินเวลาเลิก (นาที) จึงนับ OT</label><input class="in-" id="gOtA" type="number" min="0" value="${esc(c.otAfter)}"></div>
+    <div class="f"><label for="gOtR">ปัด OT ลงทีละ (นาที)</label><select class="in-" id="gOtR">${[1,15,30,60].map(v=>`<option ${num(c.otRound)===v?"selected":""}>${v}</option>`).join("")}</select></div></div>
+   <div class="f"><label for="gOtM">การนับ OT</label><select class="in-" id="gOtM"><option value="auto" ${c.otMode==="auto"?"selected":""}>นับให้อัตโนมัติตามเวลาตอกบัตร</option><option value="approve" ${c.otMode==="approve"?"selected":""}>นับเฉพาะวันที่หัวหน้าอนุมัติ</option></select></div>
+   <label class="chk"><input type="checkbox" id="gEarly" ${c.earlyCount?"checked":""}>ออกก่อนเวลา หักรวมกับมาสาย</label>
+   <label class="chk"><input type="checkbox" id="gBrk" ${c.brkAuto?"checked":""}>หักเวลาพักตามกะอัตโนมัติ (ทำงานรอบเดียวเกิน 5 ชม.)</label>
+   <label class="chk"><input type="checkbox" id="gPin" ${c.needPin?"checked":""}>ต้องใส่ PIN ตอนตอกบัตร (กันตอกแทนกัน)</label>
+   <div class="info">OT วันทำงาน ×1.5 · ทำงานวันหยุด ×1 (รายเดือน) หรือ ×2 (รายวัน/รายชั่วโมง) · OT วันหยุด ×3 ตามที่ตั้งในระบบเงินเดือน</div></section></div>
+  <section class="card"><h2>👥 พนักงาน <small>ชื่อ แผนก ค่าจ้าง แก้ที่ <a href="/payroll/">ระบบเงินเดือน</a></small></h2>
+  ${E.length?`<div class="tw"><table class="t"><thead><tr><th>พนักงาน</th><th>แผนก</th><th>ประเภท</th><th>กะ</th><th>สาขา</th><th>PIN ตอกบัตร</th></tr></thead><tbody>${E.map(e=>{const x=c.emp[e.id]||{};return`<tr><td><b>${esc(e.name||e.code)}</b><div class="muted small">${esc(e.code||"")}</div></td><td>${esc(e.dept||"-")}</td><td>${esc(TYPES[e.type||"m"])}</td>
+   <td><select class="in-" data-esh="${esc(e.id)}" aria-label="กะของ ${esc(e.name)}">${c.shifts.map(s=>`<option value="${esc(s.id)}" ${(T.shiftOf(c,e.id)||{}).id===s.id?"selected":""}>${esc(s.name)} ${esc(s.start)}–${esc(s.end)}</option>`).join("")}<option value="none" ${x.shift==="none"?"selected":""}>เวลายืดหยุ่น (นับชั่วโมงจริง)</option></select></td>
+   <td><input class="in-" data-ebr="${esc(e.id)}" value="${esc(x.branch||"")}" placeholder="เช่น สาขาหลัก" aria-label="สาขาของ ${esc(e.name)}" style="min-width:130px"></td>
+   <td>${x.pin?`<button class="btn sm ghost" data-epin="${esc(e.id)}" type="button">เปลี่ยน</button> <button class="btn sm ghost danger" data-epinx="${esc(e.id)}" type="button">ลบ</button>`:`<button class="btn sm ghost" data-epin="${esc(e.id)}" type="button">ตั้ง PIN</button>`}</td></tr>`}).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีพนักงาน · <a href="/payroll/">เพิ่มที่ระบบเงินเดือน</a></div>`}</section>
+  <div class="grid2"><section class="card"><h2>🎌 วันหยุดนักขัตฤกษ์ <small>${c.hol.length} วัน</small></h2>
+   <div class="row"><div class="f" style="flex:0 1 170px"><label for="hD">วันที่</label><input class="in-" type="date" id="hD"></div><div class="f"><label for="hN">ชื่อวันหยุด</label><input class="in-" id="hN" placeholder="เช่น วันมาฆบูชา"></div><button class="btn ghost" id="hAdd" type="button">เพิ่ม</button></div>
+   <button class="btn sm ghost" id="hFix" type="button" style="align-self:flex-start">＋ ใส่วันหยุดที่วันที่ตายตัวของปี ${y+543}</button>
+   <p class="muted small" style="margin:0">วันหยุดทางศาสนา (มาฆบูชา วิสาขบูชา อาสาฬหบูชา เข้าพรรษา) และวันหยุดชดเชย เปลี่ยนทุกปี ให้เพิ่มเองตามประกาศของร้าน (กฎหมายกำหนดอย่างน้อย 13 วันต่อปี)</p>
+   ${c.hol.length?`<div class="tw"><table class="t"><tbody>${c.hol.slice().sort((a,b)=>a.d.localeCompare(b.d)).map(h=>`<tr><td>${esc(thD(h.d))}</td><td>${esc(h.n)}</td><td class="r"><button class="btn sm ghost danger" data-hdel="${esc(h.d)}" type="button">ลบ</button></td></tr>`).join("")}</tbody></table></div>`:""}</section>
+  <section class="card"><h2>💾 ข้อมูลลงเวลา</h2><p class="muted small" style="margin:0">ข้อมูลเก็บในเครื่องนี้ และสำรองขึ้นระบบอัตโนมัติเมื่อเข้าสู่ระบบสมาชิก · ใช้เครื่องเดียวเป็นจุดตอกบัตรประจำร้าน (แท็บเล็ตหรือมือถือที่ตั้งไว้หน้าร้าน)</p>
+   <div class="row"><button class="btn ghost" id="dExp" type="button">⬇️ สำรองข้อมูลลงเวลา</button><label class="btn ghost" for="dImp">⬆️ นำเข้า</label><input type="file" id="dImp" accept="application/json" hidden></div>
+   ${T.emps().length&&!Object.keys(getLog()).length?`<button class="btn ghost" id="dDemo" type="button">✨ สร้างข้อมูลตัวอย่างเดือนนี้ (ดูรายงานก่อนใช้จริง)</button>`:""}</section></div>`}
+function bindSet(){const save=()=>{svCfg();toast("บันทึกแล้ว")};
+  $$("[data-sh]").forEach(card=>{const s=c.shifts[+card.dataset.sh];card.querySelectorAll("[data-s]").forEach(i=>i.onchange=()=>{s[i.dataset.s]=i.dataset.s==="brk"?num(i.value):i.value;save();render()});
+    card.querySelectorAll("[data-dow]").forEach(i=>i.onchange=()=>{const j=+i.dataset.dow;s.days=(s.days||[]).filter(x=>x!==j);if(i.checked)s.days.push(j);s.days.sort();save()})});
+  $("#shAdd").onclick=()=>{c.shifts.push({id:"s"+uid(),name:"กะ "+(c.shifts.length+1),start:"20:00",end:"05:00",brk:60,days:[0,1,2,3,4,5,6]});save();render()};
+  $$("[data-shdel]").forEach(b=>b.onclick=()=>{const s=c.shifts[+b.dataset.shdel];if(!confirm(`ลบกะ "${s.name}"? พนักงานในกะนี้จะย้ายไปกะแรก`))return;c.shifts.splice(+b.dataset.shdel,1);Object.values(c.emp).forEach(x=>{if(x.shift===s.id)delete x.shift});save();render()});
+  const g=(id,k,f)=>{const el=$(id);el.onchange=()=>{c[k]=f(el);save()}};
+  g("#gGrace","grace",e=>num(e.value));g("#gLate","lateMode",e=>e.value);g("#gOtA","otAfter",e=>num(e.value));g("#gOtR","otRound",e=>num(e.value));g("#gOtM","otMode",e=>e.value);
+  g("#gEarly","earlyCount",e=>e.checked);g("#gBrk","brkAuto",e=>e.checked);g("#gPin","needPin",e=>e.checked);
+  const ce=id=>c.emp[id]||(c.emp[id]={});
+  $$("[data-esh]").forEach(s=>s.onchange=()=>{ce(s.dataset.esh).shift=s.value;save()});
+  $$("[data-ebr]").forEach(s=>s.onchange=()=>{ce(s.dataset.ebr).branch=s.value.trim();save()});
+  $$("[data-epin]").forEach(b=>b.onclick=async()=>{const v=prompt("ตั้ง PIN ตอกบัตร 4–6 หลัก (ตัวเลข)");if(v==null)return;if(!/^\d{4,6}$/.test(v.trim()))return toast("PIN ต้องเป็นตัวเลข 4–6 หลัก");ce(b.dataset.epin).pin=await empHash(v.trim());save();render()});
+  $$("[data-epinx]").forEach(b=>b.onclick=()=>{delete ce(b.dataset.epinx).pin;save();render()});
+  $("#hAdd").onclick=()=>{const d=$("#hD").value,n=$("#hN").value.trim()||"วันหยุด";if(!d)return toast("เลือกวันที่");c.hol=c.hol.filter(h=>h.d!==d);c.hol.push({d,n});save();render()};
+  $("#hFix").onclick=()=>{const y=ui.ym.slice(0,4);let n=0;FIXED_HOL.forEach(([md,nm])=>{const d=y+"-"+md;if(!c.hol.some(h=>h.d===d)){c.hol.push({d,n:nm});n++}});save();render();toast("เพิ่ม "+n+" วัน")};
+  $$("[data-hdel]").forEach(b=>b.onclick=()=>{c.hol=c.hol.filter(h=>h.d!==b.dataset.hdel);save();render()});
+  $("#dExp").onclick=()=>{const o={app:"edm-time",v:1};Object.values(T.K).filter(k=>k.startsWith("edm_time")).forEach(k=>o[k]=T.get(k,null));const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="time-backup-"+T.today()+".json";a.click()};
+  $("#dImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-time")throw 0;if(!confirm("นำเข้าจะแทนที่ข้อมูลลงเวลาในเครื่องนี้ ยืนยัน?"))return;Object.keys(o).filter(k=>k.startsWith("edm_time")).forEach(k=>T.set(k,o[k]));c=T.cfg();toast("นำเข้าแล้ว");render()}).catch(()=>toast("ไฟล์ไม่ถูกต้อง"))};
+  if($("#dDemo"))$("#dDemo").onclick=demo}
+function demo(){const ym=T.today().slice(0,7),L={},E=T.emps().filter(e=>T.active(e,ym)),MK={};L[ym]=[];let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  E.forEach((e,i)=>{const sh=T.shiftOf(c,e.id),sp=T.shiftSpan(sh);if(!sp)return;T.daysOf(ym,T.today()).forEach(d=>{const dow=new Date(T.midnight(d)).getDay();if(!(sh.days||[]).includes(dow)||T.holidayOf(c,d))return;
+    const r=rnd();if(r<0.04)return;if(r<0.08){(MK[e.id]=MK[e.id]||{})[d]={lv:"sick",note:"ไม่สบาย"};return}
+    const base=T.midnight(d),late=r<0.2?Math.round(5+rnd()*25):Math.round(-15+rnd()*14),ot=r>0.75?Math.round(30+rnd()*120):Math.round(rnd()*10);
+    const out=d===T.today()?null:base+(sp.E+ot)*60000;L[ym].push({id:uid(),e:e.id,d,in:base+(sp.S+late)*60000,out,src:"demo"})})});
+  setLog(L);const all=getMarks();all[ym]=MK;T.set(T.K.day,all);toast("สร้างข้อมูลตัวอย่างแล้ว");ui.tab="rep";svUi();render()}
+
+/* ---------- render ---------- */
+const V={kiosk:[vKiosk,bindKiosk],today:[vToday,bindToday],sheet:[vSheet,bindSheet],rep:[vRep,bindRep],set:[vSet,bindSet]};
+function render(){document.body.classList.toggle("kiosk",!!ui.kiosk);if(ui.kiosk)ui.tab="kiosk";if(!V[ui.tab])ui.tab="kiosk";
+  $$("[data-tab]").forEach(b=>{b.classList.toggle("on",b.dataset.tab===ui.tab);b.setAttribute("aria-selected",b.dataset.tab===ui.tab)});
+  $("#kioskBtn").textContent=ui.kiosk?"🔓 ออกจากโหมดตอกบัตร":"🔒 โหมดตอกบัตร";
+  const [v,b]=V[ui.tab];$("#main").innerHTML=v();b()}
+$$("[data-tab]").forEach(b=>b.onclick=async()=>{const t=b.dataset.tab;if(t!=="kiosk"&&!await adminOk())return;ui.tab=t;svUi();render()});
+$("#kioskBtn").onclick=async()=>{if(ui.kiosk){if(!await adminOk())return;ui.kiosk=false}else{ui.kiosk=true;ui.tab="kiosk";toast("โหมดตอกบัตร: ซ่อนเมนูอื่น · ออกจากโหมดต้องใส่ PIN เจ้าของร้าน")}svUi();render()};
+window.addEventListener("storage",e=>{if(e.key&&e.key.startsWith("edm_")){c=T.cfg();if(!$("#dlg").open)render()}});
+if(ui.tab!=="kiosk"&&lockCfg()&&!adminFresh())ui.tab="kiosk";
+// เปิดหน้าครั้งแรก: ถ้ายังไม่มีการตอกบัตรเลย ไปหน้าตั้งค่าก่อน
+if(!T.get(T.K.cfg,null)&&T.emps().length&&!lockCfg())ui.tab="set";
+render();
+})();
+</script>
+<script src="../assets/member.js?v=58" defer></script>
+<script src="../assets/docshare.js?v=1" defer></script>
+</body>
+</html>
