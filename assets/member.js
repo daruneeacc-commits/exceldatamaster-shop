@@ -5,7 +5,32 @@
 (function () {
   "use strict";
   var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbzAZLzT7BKYW8TqT-VAZ4pWYHX6Z1tnclVjutx2Lyy8_-9glJiUnSdo4p7Qs3dIaNbB/exec";
-  var TOOLS = [["app", "🏪 ระบบร้านค้า (รวมทุกระบบ)"], ["bill", "🧾 เปิดบิล"], ["stock", "📦 สต๊อกสินค้า"], ["account", "📒 บัญชีร้านค้า"]];
+  /* ---------- สิทธิ์รายระบบ ----------
+   * ระบบหลังร้านส่ง sys มากับ login/check เช่น "bill" · "payroll,time" · "shop" · "all"
+   * ไม่มี sys (บัญชีเดิม/ระบบหลังร้านรุ่นเก่า) = ใช้ได้ทุกระบบเหมือนเดิม
+   * shop = ระบบร้านค้า (เปิดบิล + สต๊อก + บัญชี) · all = ครบทุกระบบ (ไม่รวมลงเวลา ซึ่งขายแยก) */
+  var SYS = {
+    bill: { n: "เปิดบิลออนไลน์", u: "bill/" }, stock: { n: "สต๊อกสินค้า", u: "stock/" }, account: { n: "บัญชีร้านค้า", u: "account/" },
+    shop: { n: "ระบบร้านค้า (บิล · สต๊อก · บัญชี)", u: "app/" }, cafe: { n: "ร้านคาเฟ่ (POS)", u: "cafe/" }, book: { n: "จองห้อง / ให้เช่า", u: "booking/" },
+    payroll: { n: "คำนวณเงินเดือน", u: "payroll/" }, time: { n: "ลงเวลา / ตอกบัตร", u: "time/" }
+  };
+  var GROUP = { shop: ["shop", "bill", "stock", "account"], all: ["shop", "bill", "stock", "account", "cafe", "book", "payroll"] };
+  function curSys() {
+    var p = location.pathname, ed = (/[?&]ed=([a-z]+)/.exec(location.search) || [])[1];
+    if (/\/app\//.test(p)) return ed === "booking" ? "book" : ed || "shop";
+    var m = /\/(bill|stock|account|payroll|time|cafe|booking)\//.exec(p);
+    return m ? (m[1] === "booking" ? "book" : m[1]) : "";
+  }
+  function sysList(u) {
+    var raw = u && u.sys; if (raw == null || raw === "") return null;           // null = ทุกระบบ
+    var out = [];
+    String(Array.isArray(raw) ? raw.join(",") : raw).toLowerCase().split(/[\s,|]+/).forEach(function (k) {
+      if (k === "booking") k = "book";
+      (GROUP[k] || (SYS[k] ? [k] : [])).forEach(function (x) { if (out.indexOf(x) < 0) out.push(x); });
+    });
+    return out;
+  }
+  function allowed(u, k) { var L = sysList(u); return !k || !L || L.indexOf(k) >= 0; }
   var PRICE = 199, DAYS = 30, TRIAL = 7, KEY = "edm_member";
   var BASE = (document.querySelector('script[src*="member.js"]') || {}).src || "";
   BASE = BASE.replace(/assets\/member\.js.*$/, "");
@@ -83,6 +108,7 @@
     if (/@gmail\.co$|@gmial\.|@gamil\.|@hotmail\.co$/.test(E)) return "ตรวจสะกดอีเมลอีกครั้ง (เช่น @gmail.com)";
     return "";
   }
+  function perk() { var k = curSys(); return k === "shop" || !k ? "ครบในระบบเดียว: เปิดบิล · ภาษี · สต๊อก · บัญชี" : "บัญชีนี้ใช้กับระบบ " + SYS[k].n; }
   function renderGate() {
     var tool = /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /booking/.test(location.pathname) ? "ระบบจองและให้เช่า" : /cafe/.test(location.pathname) ? "ระบบร้านคาเฟ่" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
     var h = '<div class="edm-card">';
@@ -99,7 +125,7 @@
       var su = mode === "signup";
       h += '<span class="edm-badge">ทดลองใช้ฟรี ' + TRIAL + ' วัน</span><h2>' + esc(tool) + '</h2>' +
         (note ? '<div class="edm-msg err">' + esc(note) + '</div>' : '') +
-        (su ? '<ul class="edm-perks"><li>ครบในระบบเดียว: เปิดบิล · ภาษี · สต๊อก · บัญชี</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดใช้งานให้หลังสมัคร</li><li>ใช้ต่อเดือนละ ' + PRICE + ' บาท ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
+        (su ? '<ul class="edm-perks"><li>' + esc(perk()) + '</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดใช้งานให้หลังสมัคร</li><li>ใช้ต่อเดือนละ ' + PRICE + ' บาท ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
         '<div class="edm-tabs"><button data-go="signup" class="' + (su ? "on" : "") + '">สมัครใหม่</button><button data-go="login" class="' + (su ? "" : "on") + '">เข้าสู่ระบบ</button></div>' +
         (su ? '<input class="edm-in" id="edmN" autocomplete="off" placeholder="ชื่อร้าน / ชื่อของคุณ (ไม่บังคับ)">' : '') +
         '<input class="edm-in" id="edmE" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="email" placeholder="อีเมล">' +
@@ -132,7 +158,7 @@
       if (bad) { M.className = "edm-msg err"; M.textContent = bad; Ei.focus(); return; }
       if (P && P.value.length < (mode === "signup" ? 8 : 1)) { M.className = "edm-msg err"; M.textContent = mode === "signup" ? "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร" : "กรอกรหัสผ่าน"; return; }
       go.disabled = true; var t0 = go.textContent; go.textContent = "กำลังดำเนินการ..."; M.className = "edm-msg"; M.textContent = "";
-      var req = mode === "signup" ? { a: "signup", email: E, pass: P.value, name: N ? N.value : "" }
+      var req = mode === "signup" ? { a: "signup", email: E, pass: P.value, name: N ? N.value : "", sys: curSys() || "all" }
         : mode === "forgot" ? { a: "forgot", email: E }
         : { a: "login", email: E, pass: P.value, device: deviceName() };
       call(req).then(function (r) {
@@ -141,7 +167,7 @@
         if (!r.ok) { M.className = "edm-msg err"; M.textContent = r.msg || "ไม่สำเร็จ ลองอีกครั้ง"; if (r.code === "exists") { mode = "login"; note = ""; renderGate(); gate.querySelector("#edmM").className = "edm-msg err"; gate.querySelector("#edmM").textContent = r.msg; } return; }
         if (mode === "signup") { mode = "sent"; note = r.msg; renderGate(); return; }
         if (mode === "forgot") { M.className = "edm-msg ok"; M.textContent = r.msg; return; }
-        me = { email: r.email, token: r.token, name: r.name, exp: r.exp, status: r.status, paid: r.paid, ts: Date.now() };
+        me = { email: r.email, token: r.token, name: r.name, exp: r.exp, status: r.status, paid: r.paid, sys: r.sys, ts: Date.now() };
         LS.set(me); closeGate(); apply(); cloudInit(); toast(expired() ? "บัญชีหมดอายุแล้ว ต่ออายุเพื่อใช้งานต่อ" : "ยินดีต้อนรับ ใช้งานได้ถึง " + thDate(me.exp));
       }).catch(function () { go.disabled = false; go.textContent = t0; M.className = "edm-msg err"; M.textContent = "เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง"; });
     };
@@ -158,11 +184,29 @@
     if (t) { t.textContent = m; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(function () { t.hidden = true; }, 3200); }
   }
 
+  /* ---------- บัญชีนี้ไม่ได้ซื้อระบบนี้ ---------- */
+  var deny = null;
+  function showDeny() {
+    var k = curSys(), L = sysList(me) || [];
+    document.body.classList.add("edm-locked");
+    if (!deny) { deny = document.createElement("div"); deny.className = "edm-gate"; deny.setAttribute("role", "dialog"); deny.setAttribute("aria-modal", "true"); document.body.appendChild(deny); }
+    var mine = L.filter(function (x) { return x !== "bill" && x !== "stock" && x !== "account" || L.indexOf("shop") < 0; });
+    var line = "https://line.me/R/oaMessage/%40856tvnxs/?" + encodeURIComponent("ขอเพิ่มระบบ " + SYS[k].n + " ให้บัญชี " + me.email);
+    deny.innerHTML = '<div class="edm-card"><span class="edm-badge">' + esc(me.email) + '</span><h2>บัญชีนี้ยังไม่ได้เปิดใช้ ' + esc(SYS[k].n) + '</h2>' +
+      '<p class="edm-muted">บัญชีของคุณใช้ได้กับระบบต่อไปนี้</p>' +
+      mine.map(function (x) { return '<a class="edm-btn ghost" href="' + BASE + SYS[x].u + '">' + esc(SYS[x].n) + '</a>'; }).join("") +
+      '<a class="edm-btn" href="' + line + '" target="_blank" rel="noopener" style="background:#06C755;color:#fff">💬 ขอเพิ่มระบบนี้ทาง LINE</a>' +
+      '<button class="edm-link" id="edmDenyOut" type="button" style="align-self:center">ใช้อีเมลอื่น · ออกจากระบบ</button></div>';
+    deny.querySelector("#edmDenyOut").onclick = function () { call({ a: "logout", email: me.email, token: me.token }).catch(function () {}); cloudStop(); me = null; LS.set(null); hideDeny(); apply(); openGate("signup"); };
+  }
+  function hideDeny() { if (deny) { deny.remove(); deny = null; document.body.classList.remove("edm-locked"); } }
+
   /* ---------- account chip + banners ---------- */
   var chip = null, bar = null;
   function renewUrl() { return API + "?renew=1&e=" + encodeURIComponent(me.email) + "&t=" + encodeURIComponent(me.token); }
   function apply() {
-    if (!me) { document.body.classList.remove("edm-ro"); if (chip) chip.remove(), chip = null; if (bar) bar.remove(), bar = null; return; }
+    if (!me) { hideDeny(); document.body.classList.remove("edm-ro"); if (chip) chip.remove(), chip = null; if (bar) bar.remove(), bar = null; return; }
+    if (!allowed(me, curSys())) showDeny(); else hideDeny();
     var left = daysLeft(), ex = expired();
     document.body.classList.toggle("edm-ro", ex);
     var nav = document.querySelector("header .nav") || document.querySelector("header");
@@ -197,7 +241,7 @@
       '<a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">ต่ออายุสมาชิก</a>' +
       '<button class="edm-btn ghost" id="edmRe" type="button">↻ ตรวจสถานะล่าสุด</button>' +
       '<div class="edm-muted" id="edmCl">' + esc(cloudLine()) + ' <button class="edm-link" id="edmPush" type="button">สำรองตอนนี้</button></div>' +
-      TOOLS.filter(function (t) { return location.pathname.indexOf("/" + t[0] + "/") === -1; }).map(function (t) { return '<a class="edm-btn ghost" href="' + BASE + t[0] + '/">' + t[1] + '</a>'; }).join("") +
+      Object.keys(SYS).filter(function (k) { var L = sysList(me); return k !== curSys() && (L ? L.indexOf(k) >= 0 && !(L.indexOf("shop") >= 0 && /^(bill|stock|account)$/.test(k)) : k !== "time" && k !== "bill" && k !== "stock" && k !== "account"); }).map(function (k) { return '<a class="edm-btn ghost" href="' + BASE + SYS[k].u + '">' + esc(SYS[k].n) + '</a>'; }).join("") +
       '<button class="edm-link" id="edmOut" type="button" style="align-self:flex-start">ออกจากระบบ</button>' +
       '<p class="edm-muted" style="margin:0">โอนแล้วแนบสลิป ร้านตรวจแล้วจะต่ออายุให้และส่งอีเมลแจ้ง จากนั้นกด "ตรวจสถานะล่าสุด"</p>';
     chip.appendChild(menu);
@@ -221,7 +265,7 @@
         return;
       }
       var was = expired();
-      me.exp = r.exp; me.status = r.status; me.paid = r.paid; me.name = r.name; me.ts = Date.now(); LS.set(me); apply();
+      me.exp = r.exp; me.status = r.status; me.paid = r.paid; me.name = r.name; if ("sys" in r) me.sys = r.sys; me.ts = Date.now(); LS.set(me); apply();
       if (loud) toast(expired() ? "ยังไม่ได้ต่ออายุ ถ้าโอนแล้ว รอร้านตรวจสลิปสักครู่นะคะ" : "ใช้งานได้ถึง " + thDate(me.exp));
       else if (was && !expired()) toast("ต่ออายุแล้ว ใช้งานได้ถึง " + thDate(me.exp));
     }).catch(function () { if (loud) toast("เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง"); });
@@ -319,7 +363,7 @@
     apply(); check(false); cloudInit();
     document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && me && Date.now() - (me.ts || 0) > 30 * 60e3) check(false); });
   }
-  window.EDM_MEMBER = { get me() { return me; }, call: call, check: check, openGate: openGate, push: cloudPush, cloud: cGet, ping: function () { return call({ a: "ping" }); } };
+  window.EDM_MEMBER = { get me() { return me; }, allowed: function (k) { return allowed(me, k); }, sysList: function () { return sysList(me); }, call: call, check: check, openGate: openGate, push: cloudPush, cloud: cGet, ping: function () { return call({ a: "ping" }); } };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
 
