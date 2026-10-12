@@ -57,7 +57,7 @@
     cf: "cup", cfpos: "register", cfbar: "glass", cford: "list", cfmenu: "menu", cfinv: "jar", cfshift: "drawer", cfrpt: "chart", cfset: "sliders",
     bk: "home", bkcal: "calendar", bklist: "list", bkres: "bed", bkrpt: "chart", bkset: "sliders",
     g_inc: "bill", g_exp: "cart", g_stk: "box", g_fin: "coins", g_rep: "chart", g_set: "sliders", g_cf: "cup", g_bk: "calendar",
-    account: "chart", payroll: "wallet", app: "store", booking: "calendar", cafe: "cup", time: "clock", todo: "check"
+    account: "chart", payroll: "wallet", app: "store", booking: "calendar", cafe: "cup", time: "clock", todo: "check", finance: "coins"
   };
   window.EDM_ICON = icon;
   window.EDM_ICON_FOR = function (r, opt) { return icon(R[r] || R[String(r).split("?")[0]] || "more", opt); };

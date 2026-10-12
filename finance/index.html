@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#5B7DB8">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="การเงิน SME">
+<title>บริหารการเงิน SME & ฟรีแลนซ์ ออนไลน์ รายรับ-รายจ่าย แดชบอร์ด ภาษี | Excel Data Master</title>
+<meta name="description" content="ระบบบริหารการเงินสำหรับ SME และฟรีแลนซ์ แบบเดียวกับเทมเพลต Excel แต่ใช้ออนไลน์ได้ทั้งมือถือและคอม บันทึกรายรับ-รายจ่าย VAT หัก ณ ที่จ่าย แดชบอร์ดรายเดือน รายปี 5 ปี เปรียบเทียบช่วงเวลา สรุปภาษี ตั้งเป้ารายได้ ปี พ.ศ.">
+<link rel="canonical" href="https://exceldatamaster.com/finance/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
+<style id="pageSize">@page{size:A4;margin:10mm}</style>
+<style>
+:root{color-scheme:light;--bg:#F6F8FC;--card:#fff;--ink:#26303D;--muted:#6B7584;--line:#E2E7F0;--grid:#E8ECF4;--a:#5B7DB8;--a-ink:#fff;--a2:#EAF0FA;--a3:#C9D8F0;
+  --in:#6FA8DC;--inbg:#DDEBF8;--out:#A88BD0;--outbg:#ECE4F7;--pf:#4FAF83;--pfbg:#DCF2E6;--neg:#D64C5B;--negbg:#FDE6E9;--yel:#FCEBB0;--yel2:#FFF7DA;--pink:#F9D2DE;--ok:#2E8B57}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.55 "IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif}
+a{color:inherit}button,input,select,textarea{font:inherit;color:inherit}[hidden]{display:none!important}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1220px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{font-weight:700;text-decoration:none;display:flex;align-items:center;gap:6px;color:var(--a)}.brand small{font-weight:500;color:var(--muted)}
+.nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.btn{border:0;border-radius:8px;padding:7px 14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;background:var(--a2);color:var(--ink);font-size:.88rem;min-height:38px}
+.btn.main{background:var(--a);color:var(--a-ink)}.btn.buy{background:#FFE08A;color:#4A3B12}.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:4px 10px;font-size:.82rem;min-height:32px}.btn.danger{color:var(--neg)}
+.ic{width:1.35em;height:1.35em;flex:none;vertical-align:-.3em;display:inline-block}.ic.s{width:1.15em;height:1.15em;vertical-align:-.22em}.brand .ic{width:1.6em;height:1.6em}.stabs .ic{width:1.6em;height:1.6em}
+main{max-width:1220px;margin:0 auto;padding:14px 16px 110px;display:flex;flex-direction:column;gap:14px}
+/* หัวแผ่นงาน: ป้ายแบบในเทมเพลต */
+.head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tag{display:inline-block;background:#fff;border:2px solid var(--ink);border-radius:6px;padding:4px 16px;font-size:1.25rem;font-weight:700;box-shadow:3px 3px 0 var(--yel);margin:0}
+.tag small{font-size:.8rem;font-weight:500;color:var(--muted);margin-left:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
+.card h2{font-size:.95rem;margin:0 0 10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.card h2.cap{background:var(--inbg);margin:-14px -14px 12px;padding:8px 14px;border-radius:10px 10px 0 0;justify-content:center;font-weight:600}
+.card h2.cap.o{background:var(--outbg)}.card h2.cap.p{background:var(--pfbg)}.card h2.cap.y{background:var(--yel)}.card h2.cap.k{background:var(--pink)}
+.muted{color:var(--muted)}.small{font-size:.82rem}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:none;border-radius:8px;padding:6px 14px;font-weight:600;cursor:pointer;color:var(--muted);min-height:34px}
+.seg button.on{background:var(--a);color:#fff}
+.pick{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pick select,.pick input,.fld{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 8px;min-height:36px;max-width:100%}
+/* stabs แบบแท็บ Excel */
+.stabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#F3F2F1;border-top:1px solid #D6D4D2;display:flex;gap:2px;padding:0 8px env(safe-area-inset-bottom,0px);overflow-x:auto;scrollbar-width:none}
+.stabs button{flex:none;border:0;background:transparent;padding:10px 16px;font-weight:600;cursor:pointer;color:#555;border-bottom:3px solid transparent;min-height:46px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.stabs button.on{background:#fff;color:var(--a);border-bottom-color:var(--a)}
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;border-left:5px solid var(--a3)}
+.kpi span{font-size:.82rem;color:var(--muted)}.kpi b{display:block;font-size:1.35rem;line-height:1.25;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.kpi small{font-size:.76rem;color:var(--muted)}
+.kpi.in{border-left-color:var(--in)}.kpi.out{border-left-color:var(--out)}.kpi.pf{border-left-color:var(--pf)}.kpi.pf b{color:var(--pf)}.kpi.neg b{color:var(--neg)}.kpi.neg{border-left-color:var(--neg)}.kpi.mg{border-left-color:#E8C468}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.g3{display:grid;grid-template-columns:280px minmax(0,1fr);gap:12px}
+.donut{width:168px;height:168px;border-radius:50%;margin:6px auto 4px;display:grid;place-items:center;background:conic-gradient(var(--dc,var(--pf)) calc(var(--p)*1%),var(--a2) 0)}
+.donut div{width:120px;height:120px;border-radius:50%;background:var(--card);display:grid;place-items:center;text-align:center;line-height:1.15}.donut b{font-size:1.6rem}.donut small{color:var(--muted);font-size:.78rem}
+.split{display:flex;flex-direction:column;gap:6px;margin-top:8px;font-size:.86rem}.split div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--line);padding:2px 0}
+.split b{font-variant-numeric:tabular-nums}
+.bars{display:flex;flex-direction:column;gap:7px}
+.bar{display:grid;grid-template-columns:minmax(90px,150px) minmax(0,1fr) 46px 108px;gap:8px;align-items:center;font-size:.86rem}
+.bar .tr{height:14px;background:var(--a2);border-radius:4px;overflow:hidden}.bar .tr i{display:block;height:100%;border-radius:4px}
+.bar .v{text-align:right;font-weight:600}.bar .amt{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.bar .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:0}
+.goal{display:flex;flex-direction:column;gap:8px}.goal .tr{height:16px;background:var(--a2);border-radius:999px;overflow:hidden}.goal .tr i{display:block;height:100%;background:linear-gradient(90deg,var(--in),var(--pf));border-radius:999px}
+.lg{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-bottom:4px}.lg span{display:inline-flex;align-items:center;gap:5px}.lg i{width:12px;height:12px;border-radius:3px;display:inline-block}
+svg.chart{width:100%;height:auto;display:block;font-size:11px;fill:var(--muted)}
+/* ตารางสรุป */
+.tw{overflow-x:auto;border:1px solid var(--grid);border-radius:8px;background:var(--card)}
+table.st{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+.st th{background:var(--inbg);font-weight:600;padding:7px 8px;text-align:right;white-space:nowrap}.st th:first-child,.st td:first-child{text-align:left}
+.st td{border-top:1px solid var(--grid);padding:6px 8px;text-align:right;white-space:nowrap}
+.st tfoot td{background:var(--a2);font-weight:700}.st .neg{color:var(--neg)}.st .pos{color:var(--pf)}
+.st.o th{background:var(--outbg)}.st.y th{background:var(--yel)}.st.p th{background:var(--pfbg)}.st.k th{background:var(--pink)}
+.st tr.sub td{background:#FAFBFD;font-weight:600}
+/* ตารางกรอกแบบ Excel */
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filters select,.filters input[type=search]{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 8px;min-height:36px;max-width:100%}
+.filters input[type=search]{flex:1;min-width:150px}
+.sums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;background:var(--yel2);border:1px solid #F1DE9C;border-radius:10px;padding:8px 12px}
+.sums div{font-size:.8rem;color:var(--muted)}.sums b{display:block;font-size:1.05rem;color:var(--ink);font-variant-numeric:tabular-nums}
+table.sh{border-collapse:collapse;width:100%;min-width:1480px;font-size:.9rem}
+.sh th{background:var(--inbg);font-weight:600;padding:8px 6px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:1}
+.sh.o th{background:var(--outbg)}
+.sh td{border-top:1px solid var(--grid);border-left:1px solid var(--grid);padding:0;height:40px;vertical-align:middle}
+.sh td:first-child{border-left:0}.sh tr:nth-child(even) td{background:#FBFCFE}
+.sh .ix{width:38px;text-align:center;color:var(--muted);font-size:.78rem;background:#FAFAFA!important}
+.sh input.cell,.sh select.cell{width:100%;border:0;background:transparent;padding:8px;min-height:40px;outline:none;border-radius:0}
+.sh input.cell:focus,.sh select.cell:focus{box-shadow:inset 0 0 0 2px var(--a);background:#fff}
+.sh select.cell{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,#999 50%),linear-gradient(135deg,#999 50%,transparent 50%);background-position:calc(100% - 13px) 50%,calc(100% - 8px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:22px}
+.sh input.num{text-align:right;font-variant-numeric:tabular-nums}
+.sh .net{text-align:right;padding:0 8px;font-weight:700;white-space:nowrap;background:#F7FBF9!important;font-variant-numeric:tabular-nums}
+.sh .dt{position:relative;min-width:104px}.sh .dt span{display:block;padding:8px;white-space:nowrap}
+.sh .dt input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0}
+.sh .del{width:40px;text-align:center}.sh .del button{border:0;background:none;cursor:pointer;color:#bbb;font-size:1rem;min-width:36px;min-height:36px}.sh .del button:hover{color:var(--neg)}
+.sh tr.new td{background:#FFFDF2!important}.sh tr.new input::placeholder{color:#B59A55}
+.empty{padding:22px;text-align:center;color:var(--muted)}
+/* ตั้งค่า */
+.lists{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.lst{display:flex;flex-direction:column;gap:6px}
+.lst .r{display:flex;gap:6px;align-items:center}.lst .r input[type=text]{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-height:36px}
+.lst .r input[type=color]{width:36px;height:36px;border:1px solid var(--line);border-radius:8px;padding:2px;background:none}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.goals{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.goals label{display:flex;flex-direction:column;font-size:.8rem;color:var(--muted);gap:2px}.goals input{border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-height:36px;text-align:right;width:100%}
+.banner{background:var(--yel2);color:#7A5B00;border:1px solid #F1DE9C;border-radius:10px;padding:10px 14px;font-size:.88rem;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.banner .btn{background:var(--card)}
+.info{background:var(--a2);border-radius:10px;padding:10px 12px;font-size:.86rem;line-height:1.6}
+dialog{border:0;border-radius:14px;padding:0;width:min(520px,calc(100vw - 24px));max-height:calc(100dvh - 40px);box-shadow:0 30px 80px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(0,0,0,.35)}
+.dlg{padding:16px;display:flex;flex-direction:column;gap:10px}.dlg h3{margin:0;display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--a)}
+.dlg .fg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.dlg label{display:flex;flex-direction:column;gap:3px;font-size:.82rem;color:var(--muted)}.dlg label.w{grid-column:1/-1}
+.dlg .fld{width:100%;color:var(--ink);font-size:.95rem}
+.dlg .pv{background:var(--pfbg);border-radius:10px;padding:8px 12px;display:flex;justify-content:space-between;font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(64px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:999px;font-weight:600;z-index:70;max-width:calc(100vw - 32px);display:flex;gap:12px;align-items:center}
+.toast button{border:0;background:none;color:var(--a3);font-weight:700;cursor:pointer;padding:0}
+@media (max-width:900px){.g3{grid-template-columns:1fr}.lists{grid-template-columns:1fr 1fr}.goals{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:640px){.kpis,.sums{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}.lists{grid-template-columns:1fr}.goals{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .bar{grid-template-columns:minmax(70px,110px) minmax(0,1fr) 40px;}.bar .amt{display:none}
+  .top .brand small{display:none}.kpi b{font-size:1.1rem}.tag{font-size:1.05rem}
+  .stabs{padding-left:0;padding-right:0;gap:0}.stabs button{flex:1 1 0;padding:8px 2px;font-size:.8rem;min-width:0;flex-direction:column;gap:0}.stabs .ic{width:1.4em;height:1.4em}
+  .dlg .fg{grid-template-columns:1fr}}
+#printArea{display:none}
+@media print{body{background:#fff}header.top,main,.stabs,.toast,dialog,.edm-bar,.edm-gate,.edm-chip{display:none!important}#printArea{display:block}}
+.pr{font-family:"IBM Plex Sans Thai",Tahoma,sans-serif;color:#000;font-size:9.5pt;background:#fff}.pr h1{font-size:14pt;margin:0}.pr h2{font-size:11pt;margin:12px 0 4px}
+.pr .hd{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:8px}
+.pr table{width:100%;border-collapse:collapse}.pr th,.pr td{border:1px solid #999;padding:3px 5px;text-align:right;vertical-align:top}.pr th{background:#eee}.pr td:first-child,.pr th:first-child,.pr .l{text-align:left}.pr tr{page-break-inside:avoid}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="/"><span data-ic="logo"></span>Excel Data Master <small>· การเงิน SME & ฟรีแลนซ์</small></a>
+  <nav class="nav"><a class="btn sm buy" id="buyBtn" href="/finance/" target="_blank" rel="noopener"><span data-ic="cart"></span>ซื้อเลย</a><button class="btn sm ghost" id="xlsBtn" type="button" title="ดาวน์โหลดเก็บไว้ในเครื่อง (ไม่มีสูตร)"><span data-ic="dl"></span>Excel</button><button class="btn sm main" id="prBtn" type="button"><span data-ic="print"></span>พิมพ์ / PDF</button></nav>
+</div></header>
+<main id="main"></main>
+<nav class="stabs" role="tablist" aria-label="แผ่นงาน">
+  <button data-tab="dash" type="button"><span data-ic="dash"></span>แดชบอร์ด</button>
+  <button data-tab="in" type="button"><span data-ic="in"></span>รายได้</button>
+  <button data-tab="out" type="button"><span data-ic="out"></span>ค่าใช้จ่าย</button>
+  <button data-tab="tax" type="button"><span data-ic="tax"></span>ภาษี</button>
+  <button data-tab="set" type="button"><span data-ic="set"></span>ตั้งค่า</button>
+</nav>
+<dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
+<div id="printArea"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="../assets/thdate.js?v=1"></script>
+<script>
+(function(){
+"use strict";
+const TH=window.EDM_TH,$=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const K={items:"edm_fin_items",cfg:"edm_fin_cfg",ui:"edm_fin_ui"};
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast("บันทึกไม่ได้: พื้นที่ในเครื่องเต็ม");return false}}};
+const MONTHS=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const C={in:"#6FA8DC",out:"#A88BD0",pf:"#4FAF83",vin:"#F2A7BE",vout:"#9CC7E8"};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const pad=n=>String(n).padStart(2,"0");
+const today=()=>TH.today();
+const ymdOf=x=>x.getFullYear()+"-"+pad(x.getMonth()+1)+"-"+pad(x.getDate());
+const thD=d=>{if(!d)return"";const x=TH.dt(d);return x.getDate()+" "+MS[x.getMonth()]+" "+String(x.getFullYear()+543).slice(2)};
+const thDL=d=>{const x=TH.dt(d);return x.getDate()+" "+MONTHS[x.getMonth()]+" "+(x.getFullYear()+543)};
+const ymL=ym=>MONTHS[+ym.slice(5)-1]+" "+(+ym.slice(0,4)+543);
+const ymS=ym=>MS[+ym.slice(5)-1]+" "+String(+ym.slice(0,4)+543).slice(2);
+const ICO={
+ logo:'<rect x="3" y="6.5" width="18" height="13" rx="3" fill="#BFD7F2"/><path d="M3 10.2h18"/><rect x="14.3" y="12.2" width="6.7" height="4.6" rx="2.3" fill="#FFE08A"/><circle cx="17.2" cy="14.5" r=".9" fill="#3D4A5C" stroke="none"/><path d="M6.2 6.5l7.6-3 1.9 3"/>',
+ dash:'<rect x="3.5" y="3.5" width="17" height="17" rx="3.5" fill="#FCEBB0"/><path d="M7.5 16.5v-3M12 16.5V8M16.5 16.5v-5.5"/>',
+ in:'<rect x="3.5" y="13" width="17" height="7.5" rx="2.5" fill="#CFE3F7"/><path d="M12 3.5v9M8.5 9l3.5 3.5L15.5 9"/>',
+ out:'<rect x="3.5" y="13" width="17" height="7.5" rx="2.5" fill="#E6DAF5"/><path d="M12 12.5v-9M8.5 7L12 3.5 15.5 7"/>',
+ tax:'<path d="M6 3h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4L6 21z" fill="#F9D2DE"/><path d="M9.3 14.7l5.4-5.4"/><circle cx="9.6" cy="9.6" r="1.2"/><circle cx="14.4" cy="14.4" r="1.2"/>',
+ set:'<circle cx="12" cy="12" r="6.2" fill="#D4EEDF"/><circle cx="12" cy="12" r="2.6" fill="#fff"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/>',
+ dl:'<path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M4.5 19.5h15"/>',
+ print:'<rect x="6.5" y="3.5" width="11" height="5" rx="1" fill="#fff"/><rect x="3.5" y="8.5" width="17" height="8" rx="2" fill="#E3ECF8"/><rect x="7" y="13.5" width="10" height="7" rx="1" fill="#fff"/>',
+ cart:'<path d="M3.5 4.5h2.2l2 10.5h10l1.8-7.5H7"/><circle cx="9.5" cy="19" r="1.4" fill="#3D4A5C" stroke="none"/><circle cx="16.5" cy="19" r="1.4" fill="#3D4A5C" stroke="none"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ star:'<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" fill="#FFE08A"/>',
+ target:'<circle cx="12" cy="12" r="8.5" fill="#FDE4EC"/><circle cx="12" cy="12" r="5" fill="#fff"/><circle cx="12" cy="12" r="1.6" fill="#3D4A5C" stroke="none"/>'};
+const ic=(n,c)=>`<svg class="ic${c?" "+c:""}" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#3D4A5C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICO[n]||""}</svg>`;
+const CFG0={name:"",fy:1,vat:0,wht:0,
+  inCats:[{n:"ขายสินค้า",c:"#6FA8DC"},{n:"ค่าบริการ",c:"#7FC8A9"},{n:"ค่าจ้างฟรีแลนซ์ / ที่ปรึกษา",c:"#F2B880"},{n:"รายได้อื่น",c:"#C9B6E4"}],
+  outCats:[{n:"ต้นทุนสินค้า",c:"#A88BD0"},{n:"ค่าเช่า",c:"#F28FAD"},{n:"เงินเดือน / ค่าแรง",c:"#F2B880"},{n:"ค่าน้ำ ค่าไฟ ค่าเน็ต",c:"#6FA8DC"},{n:"การตลาด / โฆษณา",c:"#7FC8A9"},{n:"เดินทาง / ขนส่ง",c:"#E8C468"},{n:"อุปกรณ์ / ซอฟต์แวร์",c:"#9BB7E0"},{n:"อื่น ๆ",c:"#B8B8C8"}],
+  chans:["เงินสด","โอน / พร้อมเพย์","บัตรเครดิต","อื่น ๆ"],goal:{},demo:false};
+let cfg=Object.assign({},CFG0,LS.get(K.cfg,{}));
+let items=LS.get(K.items,[]);
+let ui=Object.assign({tab:"dash",mode:"m",ym:today().slice(0,7),fyY:null,y5:null,taxY:null,goalY:null,cmp:null,per_in:null,per_out:null,cat_in:"",cat_out:"",q_in:"",q_out:""},LS.get(K.ui,{}));
+const sv=()=>LS.set(K.items,items),svCfg=()=>LS.set(K.cfg,cfg),svUi=()=>LS.set(K.ui,ui);
+const ro=()=>!!window.EDM_READONLY;
+const can=()=>{if(ro()){toast("บัญชีหมดอายุ ดูข้อมูลได้อย่างเดียว · ต่ออายุเพื่อแก้ไข");return false}return true};
+function toast(m,undo){const t=$("#toast");t.innerHTML=esc(m)+(undo?' <button type="button" id="undo">เลิกทำ</button>':"");t.hidden=false;if(undo)$("#undo").onclick=()=>{undo();t.hidden=true};clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,undo?5000:2400)}
+function openDlg(h){const d=$("#dlg");$("#dlgBody").innerHTML=h;$$("#dlgBody [data-x]").forEach(b=>b.onclick=closeDlg);if(!d.open)d.showModal()}
+function closeDlg(){const d=$("#dlg");if(d.open)d.close()}
+
+/* ---------- ตัวเลข / ปีบัญชี ---------- */
+const r2=n=>Math.round((+n||0)*100)/100;
+const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/[,฿\s]/g,""));return isFinite(n)?n:0};
+const fm=n=>(+n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const fb=n=>(n<0?"-":"")+"฿"+fm(Math.abs(n));
+const fk=n=>{const a=Math.abs(n),s=n<0?"-":"";return s+(a>=1e6?(a/1e6).toFixed(a>=1e7?0:1).replace(/\.0$/,"")+"M":a>=1e3?(a/1e3).toFixed(a>=1e4?0:1).replace(/\.0$/,"")+"k":String(Math.round(a)))};
+const pct=(a,b)=>b?Math.round(a/b*1000)/10:0;
+const calc=i=>{const a=num(i.amt),v=r2(a*(+i.vr||0)/100),w=r2(a*(+i.wr||0)/100);return{a,v,w,n:r2(a+v-w)}};
+const fyOf=d=>{const y=+d.slice(0,4),m=+d.slice(5,7);return m>=cfg.fy?y:y-1};
+const curFY=()=>fyOf(today());
+const mRange=ym=>{const y=+ym.slice(0,4),m=+ym.slice(5,7);return[ym+"-01",ym+"-"+pad(new Date(y,m,0).getDate())]};
+const fyMonths=y=>Array.from({length:12},(_,k)=>{const x=new Date(y,cfg.fy-1+k,1);return x.getFullYear()+"-"+pad(x.getMonth()+1)});
+const fyRange=y=>{const M=fyMonths(y);return[M[0]+"-01",mRange(M[11])[1]]};
+const fyLabel=y=>cfg.fy===1?"ปี "+(y+543):"ปีบัญชี "+(y+543)+" ("+ymS(fyMonths(y)[0])+" – "+ymS(fyMonths(y)[11])+")";
+const goalM=ym=>num(cfg.goal[ym]);
+const live=()=>items.filter(i=>i.d&&(i.item||num(i.amt)));
+function agg(from,to){const r={in:0,out:0,vin:0,vout:0,win:0,wout:0,nin:0,nout:0,ci:{},co:{},cnt:0};
+  live().forEach(i=>{if(i.d<from||i.d>to)return;const c=calc(i),cat=i.cat||"ไม่ระบุหมวด";r.cnt++;
+    if(i.t==="in"){r.in+=c.a;r.vin+=c.v;r.win+=c.w;r.nin+=c.n;r.ci[cat]=(r.ci[cat]||0)+c.a}else{r.out+=c.a;r.vout+=c.v;r.wout+=c.w;r.nout+=c.n;r.co[cat]=(r.co[cat]||0)+c.a}});
+  ["in","out","vin","vout","win","wout","nin","nout"].forEach(k=>r[k]=r2(r[k]));r.pf=r2(r.in-r.out);r.mg=pct(r.pf,r.in);return r}
+const yearsAvail=()=>{const s=new Set([curFY()]);live().forEach(i=>s.add(fyOf(i.d)));return[...s].sort((a,b)=>b-a)};
+
+/* ---------- ชิ้นส่วนแดชบอร์ด ---------- */
+function nice(x){const p=Math.pow(10,Math.floor(Math.log10(x||1))),f=x/p;return(f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*p}
+function chart(labels,series,line,o){o=o||{};const sm=(window.innerWidth||1000)<640,W=sm?360:640,H=sm?Math.round((o.h||250)*.82):(o.h||250),L=sm?38:48,R=10,T=12,B=30,pw=W-L-R,ph=H-T-B,n=labels.length||1;
+  const vals=[].concat(...series.map(s=>s.v),line?line.v:[]).filter(v=>v!=null);let mx=Math.max(0,...vals),mn=Math.min(0,...vals);if(mx===mn)mx=mn+100;
+  const step=nice((mx-mn)/4);mx=Math.ceil(mx/step)*step;mn=Math.floor(mn/step)*step;const y=v=>T+ph-(v-mn)/(mx-mn)*ph;
+  const gw=pw/n,bw=Math.min(26,gw*.78/series.length);let g="",b="",ln="";
+  for(let k=0;k<=Math.round((mx-mn)/step);k++){const v=mn+k*step;g+=`<line x1="${L}" x2="${W-R}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" stroke="${Math.abs(v)<1e-9?"#9AA4B4":"#E6EAF2"}"/><text x="${L-6}" y="${(y(v)+4).toFixed(1)}" text-anchor="end">${fk(v)}</text>`}
+  series.forEach((s,si)=>s.v.forEach((v,k)=>{const x=L+gw*k+gw/2-bw*series.length/2+bw*si,y0=y(0),y1=y(v);if(!v)return;
+    b+=`<rect x="${(x+1).toFixed(1)}" y="${Math.min(y0,y1).toFixed(1)}" width="${Math.max(bw-2,1).toFixed(1)}" height="${Math.max(Math.abs(y1-y0),1).toFixed(1)}" rx="3" fill="${s.c}"><title>${esc(labels[k])} · ${esc(s.n)} ${fb(v)}</title></rect>`}));
+  if(line){const P=line.v.map((v,k)=>v==null?null:[L+gw*k+gw/2,y(v),k]).filter(Boolean);ln=`<polyline points="${P.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ")}" fill="none" stroke="${line.c}" stroke-width="2.5" stroke-linejoin="round"/>`+P.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.5" fill="#fff" stroke="${line.c}" stroke-width="2"><title>${esc(labels[p[2]])} · ${esc(line.n)} ${fb(line.v[p[2]])}</title></circle>`).join("")}
+  const ev=Math.ceil(n/((o.maxL||12)*(sm?.5:1))),xl=labels.map((t,k)=>k%ev?"":`<text x="${(L+gw*k+gw/2).toFixed(1)}" y="${H-10}" text-anchor="middle">${esc(t)}</text>`).join("");
+  const lg=series.concat(line?[line]:[]).map(s=>`<span><i style="background:${s.c}"></i>${esc(s.n)}</span>`).join("");
+  return`<div class="lg">${lg}</div><svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.title||"กราฟ")}">${g}${b}${ln}${xl}</svg>`}
+function donut(r){const p=Math.max(0,Math.min(100,r.mg));return`<div class="donut" style="--p:${p};--dc:${r.pf<0?"var(--neg)":"var(--pf)"}"><div><b style="color:${r.pf<0?"var(--neg)":"var(--pf)"}">${r.mg}%</b><small>อัตรากำไร</small></div></div>
+  <div class="split"><div><span><i class="dot" style="background:${C.in}"></i>รายได้</span><b>${fb(r.in)}</b></div><div><span><i class="dot" style="background:${C.out}"></i>ค่าใช้จ่าย</span><b>${fb(r.out)}</b></div><div><span><i class="dot" style="background:${r.pf<0?"var(--neg)":C.pf}"></i>${r.pf<0?"ขาดทุน":"กำไร"}</span><b style="color:${r.pf<0?"var(--neg)":"var(--pf)"}">${fb(r.pf)}</b></div></div>`}
+function kpis(r,goal){return`<div class="kpis"><div class="kpi in"><span>รายได้</span><b>${fb(r.in)}</b>${goal?`<small>เป้า ${fb(goal)} · ทำได้ ${pct(r.in,goal)}%</small>`:`<small>${r.cnt} รายการ</small>`}</div><div class="kpi out"><span>ค่าใช้จ่าย</span><b>${fb(r.out)}</b><small>${pct(r.out,r.in)}% ของรายได้</small></div><div class="kpi pf ${r.pf<0?"neg":""}"><span>${r.pf<0?"ขาดทุน":"กำไร"}</span><b>${fb(r.pf)}</b><small>รายได้ − ค่าใช้จ่าย</small></div><div class="kpi mg"><span>อัตรากำไร</span><b>${r.mg}%</b><small>กำไร ÷ รายได้</small></div></div>`}
+const colOf=(cats,n)=>(cats.find(c=>c.n===n)||{}).c||"#B8B8C8";
+function catCard(title,map,cats,total,cls){const L=Object.keys(map).sort((a,b)=>map[b]-map[a]);
+  return`<div class="card"><h2 class="cap ${cls||""}">${title}</h2>${L.length?`<div class="bars">${L.map(n=>`<div class="bar"><span class="nm" title="${esc(n)}"><i class="dot" style="background:${colOf(cats,n)}"></i>${esc(n)}</span><span class="tr"><i style="width:${pct(map[n],total)}%;background:${colOf(cats,n)}"></i></span><span class="v">${pct(map[n],total)}%</span><span class="amt">${fb(map[n])}</span></div>`).join("")}</div><div class="split"><div><span>รวม</span><b>${fb(total)}</b></div></div>`:`<div class="empty small">ยังไม่มีรายการในช่วงนี้</div>`}</div>`}
+function goalCard(inc,g,label){if(!g)return`<div class="card"><h2>${ic("target","s")} เป้ารายได้${label}</h2><p class="small muted" style="margin:0">ยังไม่ได้ตั้งเป้า · ตั้งได้ที่แท็บ <button class="btn sm" data-go="set" type="button">ตั้งค่า</button></p></div>`;
+  const p=pct(inc,g);return`<div class="card goal"><h2>${ic("target","s")} เป้ารายได้${label}<span class="small muted">${fb(inc)} / ${fb(g)}</span></h2><div class="tr"><i style="width:${Math.min(100,p)}%"></i></div><div class="small">${p>=100?`<b style="color:var(--pf)">ถึงเป้าแล้ว ${p}%</b> เกินเป้า ${fb(inc-g)} 🎉`:`ทำได้ <b>${p}%</b> · ขาดอีก <b>${fb(g-inc)}</b>`}</div></div>`}
+const td=(v,cls)=>`<td class="${cls||""}${v<0?" neg":""}">${fb(v)}</td>`;
+function sumTable(rows,tot,G,head){return`<div class="tw"><table class="st"><thead><tr><th>${head||"เดือน"}</th><th>รายได้</th><th>ค่าใช้จ่าย</th><th>กำไร / ขาดทุน</th><th>อัตรากำไร</th><th>เป้ารายได้</th><th>% ของเป้า</th></tr></thead><tbody>${rows.map(([l,x,g])=>`<tr><td>${esc(l)}</td>${td(x.in)}${td(x.out)}${td(x.pf,x.pf>0?"pos":"")}<td>${x.in?x.mg+"%":"-"}</td><td>${g?fb(g):"-"}</td><td>${g?pct(x.in,g)+"%":"-"}</td></tr>`).join("")}</tbody><tfoot><tr><td>รวม</td>${td(tot.in)}${td(tot.out)}${td(tot.pf)}<td>${tot.in?tot.mg+"%":"-"}</td><td>${G?fb(G):"-"}</td><td>${G?pct(tot.in,G)+"%":"-"}</td></tr></tfoot></table></div>`}
+function catYearTable(title,key,cats,cols,cls){const names=new Set(cats.map(c=>c.n));cols.forEach(c=>Object.keys(c.x[key]).forEach(n=>names.add(n)));const L=[...names].filter(n=>cols.some(c=>c.x[key][n]));
+  if(!L.length)return`<div class="card"><h2 class="cap ${cls}">${title}</h2><div class="empty small">ยังไม่มีรายการ</div></div>`;
+  return`<div class="card"><h2 class="cap ${cls}">${title}</h2><div class="tw"><table class="st ${cls}"><thead><tr><th>หมวดหมู่</th>${cols.map(c=>`<th>${esc(c.l)}</th>`).join("")}<th>รวม</th><th>เฉลี่ย</th></tr></thead><tbody>${L.map(n=>{const v=cols.map(c=>c.x[key][n]||0),s=v.reduce((a,b)=>a+b,0);return`<tr><td><i class="dot" style="background:${colOf(cats,n)}"></i>${esc(n)}</td>${v.map(x=>`<td>${x?fb(x):"-"}</td>`).join("")}<td><b>${fb(s)}</b></td><td>${fb(s/cols.length)}</td></tr>`}).join("")}</tbody></table></div></div>`}
+
+/* ---------- แดชบอร์ด ---------- */
+const MODES=[["m","รายเดือน"],["y","รายปี"],["5","5 ปี"],["c","เปรียบเทียบ"]];
+function yOpts(sel,list){return(list||yearsAvail()).map(y=>`<option value="${y}" ${y===sel?"selected":""}>${esc(fyLabel(y))}</option>`).join("")}
+function vDash(){const head=`${demoBanner()}<div class="head"><h1 class="tag">แดชบอร์ด${{m:"รายเดือน",y:"รายปี","5":" 5 ปี",c:"เปรียบเทียบ"}[ui.mode]}<small>${esc(cfg.name||"")}</small></h1><div class="seg" role="tablist">${MODES.map(([k,l])=>`<button type="button" data-mode="${k}" class="${ui.mode===k?"on":""}">${l}</button>`).join("")}</div></div>`;
+  return head+({m:vDashM,y:vDashY,"5":vDash5,c:vDashC}[ui.mode]||vDashM)()}
+function vDashM(){const ym=ui.ym,[f,t]=mRange(ym),r=agg(f,t),g=goalM(ym),y=+ym.slice(0,4),m=+ym.slice(5,7),nd=new Date(y,m,0).getDate();
+  const di=Array(nd).fill(0),dout=Array(nd).fill(0);live().forEach(i=>{if(i.d<f||i.d>t)return;(i.t==="in"?di:dout)[+i.d.slice(8)-1]+=calc(i).a});
+  const Y=[...new Set(yearsAvail().concat([y]).flatMap(q=>[q,q+1]))].sort((a,b)=>b-a);
+  return`<div class="pick"><button class="btn sm ghost" data-mv="-1" type="button" aria-label="เดือนก่อน">‹</button><select id="pM" aria-label="เดือน">${MONTHS.map((n,k)=>`<option value="${k+1}" ${k+1===m?"selected":""}>${n}</option>`).join("")}</select><select id="pY" aria-label="ปี">${Y.map(q=>`<option value="${q}" ${q===y?"selected":""}>${q+543}</option>`).join("")}</select><button class="btn sm ghost" data-mv="1" type="button" aria-label="เดือนถัดไป">›</button></div>
+  ${kpis(r,g)}<div class="g3"><div class="card"><h2 class="cap p">สัดส่วนกำไร</h2>${donut(r)}</div><div class="card"><h2 class="cap y">รายได้ & ค่าใช้จ่ายรายวัน · ${esc(ymL(ym))}</h2>${chart(di.map((_,k)=>String(k+1)),[{n:"รายได้",c:C.in,v:di},{n:"ค่าใช้จ่าย",c:C.out,v:dout}],null,{maxL:16,title:"รายวัน"})}</div></div>
+  <div class="g2">${catCard("รายได้ตามหมวดหมู่",r.ci,cfg.inCats,r.in)}${catCard("ค่าใช้จ่ายตามหมวดหมู่",r.co,cfg.outCats,r.out,"o")}</div>${goalCard(r.in,g,"เดือนนี้")}`}
+function vDashY(){const y=ui.fyY??curFY(),M=fyMonths(y),[f,t]=fyRange(y),r=agg(f,t),rows=M.map(ym=>{const[a,b]=mRange(ym);return{ym,x:agg(a,b),g:goalM(ym)}}),G=rows.reduce((s,q)=>s+q.g,0);
+  const best=rows.reduce((a,q)=>q.x.in>a.x.in?q:a,rows[0]);
+  return`<div class="pick"><select id="pFY" aria-label="ปีบัญชี">${yOpts(y)}</select>${r.in?`<span class="small muted">เดือนที่รายได้สูงสุด: <b>${esc(ymL(best.ym))}</b> ${fb(best.x.in)}</span>`:""}</div>
+  ${kpis(r,G)}<div class="g3"><div class="card"><h2 class="cap p">สัดส่วนกำไรทั้งปี</h2>${donut(r)}</div><div class="card"><h2 class="cap y">รายได้ ค่าใช้จ่าย และกำไรรายเดือน</h2>${chart(M.map(ymS),[{n:"รายได้",c:C.in,v:rows.map(q=>q.x.in)},{n:"ค่าใช้จ่าย",c:C.out,v:rows.map(q=>q.x.out)}],{n:"กำไร",c:C.pf,v:rows.map(q=>q.ym>today().slice(0,7)?null:q.x.pf)},{title:"รายเดือน"})}</div></div>
+  <div class="card"><h2 class="cap">สรุปรายเดือน · ${esc(fyLabel(y))}</h2>${sumTable(rows.map(q=>[ymL(q.ym),q.x,q.g]),r,G)}</div>
+  <div class="g2">${catCard("รายได้ตามหมวดหมู่ทั้งปี",r.ci,cfg.inCats,r.in)}${catCard("ค่าใช้จ่ายตามหมวดหมู่ทั้งปี",r.co,cfg.outCats,r.out,"o")}</div>${goalCard(r.in,G,"ทั้งปี")}`}
+function vDash5(){const y0=ui.y5??curFY()-4,Ys=[0,1,2,3,4].map(k=>y0+k),cols=Ys.map(y=>{const[a,b]=fyRange(y);return{y,l:String(y+543),x:agg(a,b),g:fyMonths(y).reduce((s,ym)=>s+goalM(ym),0)}});
+  const tot=agg(fyRange(Ys[0])[0],fyRange(Ys[4])[1]),G=cols.reduce((s,c)=>s+c.g,0),opts=[...new Set(yearsAvail().concat([curFY()-4]))].sort((a,b)=>a-b);
+  const gr=(a,b)=>a&&b?Math.round((b-a)/Math.abs(a)*1000)/10:null,last=cols.filter(c=>c.x.in).slice(-2),g1=last.length===2?gr(last[0].x.in,last[1].x.in):null;
+  return`<div class="pick"><span class="small">เริ่มปี</span><select id="p5" aria-label="ปีเริ่มต้น">${opts.map(q=>`<option value="${q}" ${q===y0?"selected":""}>${q+543}</option>`).join("")}</select><span class="small muted">ถึง ${y0+4+543}${cfg.fy!==1?" (ปีบัญชีเริ่ม "+MONTHS[cfg.fy-1]+")":""}</span>${g1!=null?`<span class="small">รายได้ปีล่าสุดเทียบปีก่อน <b style="color:${g1<0?"var(--neg)":"var(--pf)"}">${g1>0?"+":""}${g1}%</b></span>`:""}</div>
+  ${kpis(tot,G)}<div class="g3"><div class="card"><h2 class="cap p">อัตรากำไร 5 ปี</h2>${donut(tot)}</div><div class="card"><h2 class="cap y">ภาพรวมรายปี</h2>${chart(cols.map(c=>c.l),[{n:"รายได้",c:C.in,v:cols.map(c=>c.x.in)},{n:"ค่าใช้จ่าย",c:C.out,v:cols.map(c=>c.x.out)}],{n:"กำไร",c:C.pf,v:cols.map(c=>c.y>curFY()?null:c.x.pf)},{title:"รายปี"})}</div></div>
+  <div class="card"><h2 class="cap">ภาพรวมทุกปี</h2>${sumTable(cols.map(c=>[cfg.fy===1?"ปี "+c.l:fyLabel(c.y),c.x,c.g]),tot,G,"ปี")}</div>
+  ${catYearTable("รายได้ตามหมวดหมู่ 5 ปี","ci",cfg.inCats,cols,"")}${catYearTable("ค่าใช้จ่ายตามหมวดหมู่ 5 ปี","co",cfg.outCats,cols,"o")}`}
+function cmpDef(){const t=today(),ym=t.slice(0,7),pm=(()=>{const x=new Date(+ym.slice(0,4),+ym.slice(5,7)-2,1);return x.getFullYear()+"-"+pad(x.getMonth()+1)})(),ly=(+ym.slice(0,4)-1)+ym.slice(4);return[mRange(ym),mRange(pm),mRange(ly)].map(([f,t])=>({f,t}))}
+function vDashC(){if(!Array.isArray(ui.cmp)||ui.cmp.length!==3)ui.cmp=cmpDef();const P=ui.cmp.map((p,k)=>({k,f:p.f,t:p.t,l:p.f&&p.t?thD(p.f)+" – "+thD(p.t):"ช่วงที่ "+(k+1),x:p.f&&p.t&&p.f<=p.t?agg(p.f,p.t):null}));const V=P.filter(p=>p.x);
+  const row=(n,f,money)=>`<tr><td>${n}</td>${P.map(p=>p.x?`<td class="${f(p.x)<0?"neg":""}">${money?fb(f(p.x)):f(p.x)+"%"}</td>`:`<td>-</td>`).join("")}<td>${P[0].x&&P[1].x?chg(f(P[0].x),f(P[1].x),money):"-"}</td></tr>`;
+  const chg=(a,b,money)=>{if(!money)return(Math.round((a-b)*10)/10)+" จุด";if(!b)return a?"ใหม่":"-";const v=Math.round((a-b)/Math.abs(b)*1000)/10;return`<b style="color:${v<0?"var(--neg)":"var(--pf)"}">${v>0?"+":""}${v}%</b>`};
+  return`<div class="card"><h2>เลือกช่วงเวลา (สูงสุด 3 ช่วง)</h2><div class="g2" style="grid-template-columns:repeat(3,minmax(0,1fr))">${P.map(p=>`<div class="pick" style="flex-direction:column;align-items:stretch;gap:4px"><b class="small" style="color:${[C.in,C.out,C.pf][p.k]}">ช่วงที่ ${p.k+1}</b><input type="date" data-cf="${p.k}" value="${p.f||""}" aria-label="วันเริ่มช่วงที่ ${p.k+1}"><input type="date" data-ct="${p.k}" value="${p.t||""}" aria-label="วันสิ้นสุดช่วงที่ ${p.k+1}"></div>`).join("")}</div>
+   <div class="row" style="margin-top:8px"><button class="btn sm" data-cq="m" type="button">เดือนนี้ / เดือนก่อน / ปีก่อน</button><button class="btn sm" data-cq="q" type="button">ไตรมาสนี้ / ไตรมาสก่อน</button><button class="btn sm" data-cq="y" type="button">ปีนี้ / ปีก่อน / 2 ปีก่อน</button></div></div>
+  <div class="card"><h2 class="cap y">เปรียบเทียบ</h2><div class="tw"><table class="st y"><thead><tr><th></th>${P.map(p=>`<th>${esc(p.l)}</th>`).join("")}<th>ช่วง 1 เทียบ 2</th></tr></thead><tbody>
+   ${row("รายได้",x=>x.in,1)}${row("ค่าใช้จ่าย",x=>x.out,1)}${row("กำไร / ขาดทุน",x=>x.pf,1)}${row("อัตรากำไร",x=>x.mg,0)}${row("ภาษีขาย (VAT)",x=>x.vin,1)}${row("ภาษีซื้อ (VAT)",x=>x.vout,1)}</tbody></table></div></div>
+  ${V.length?`<div class="card"><h2 class="cap">กราฟเปรียบเทียบ</h2>${chart(["รายได้","ค่าใช้จ่าย","กำไร"],V.map(p=>({n:"ช่วงที่ "+(p.k+1),c:[C.in,C.out,C.pf][p.k],v:[p.x.in,p.x.out,p.x.pf]})),null,{h:220,title:"เปรียบเทียบช่วงเวลา"})}</div>
+  ${catYearTable("รายได้ตามหมวดหมู่","ci",cfg.inCats,V.map(p=>({l:"ช่วงที่ "+(p.k+1),x:p.x})),"")}${catYearTable("ค่าใช้จ่ายตามหมวดหมู่","co",cfg.outCats,V.map(p=>({l:"ช่วงที่ "+(p.k+1),x:p.x})),"o")}`:`<div class="empty">เลือกวันเริ่มและวันสิ้นสุดอย่างน้อย 1 ช่วง</div>`}`}
+function bindDash(){$$("[data-mode]").forEach(b=>b.onclick=()=>{ui.mode=b.dataset.mode;svUi();render()});
+  const pM=$("#pM"),pY=$("#pY");if(pM){const go=()=>{ui.ym=pY.value+"-"+pad(pM.value);svUi();render()};pM.onchange=go;pY.onchange=go;
+    $$("[data-mv]").forEach(b=>b.onclick=()=>{const x=new Date(+ui.ym.slice(0,4),+ui.ym.slice(5,7)-1+(+b.dataset.mv),1);ui.ym=x.getFullYear()+"-"+pad(x.getMonth()+1);svUi();render()})}
+  const pFY=$("#pFY");if(pFY)pFY.onchange=()=>{ui.fyY=+pFY.value;svUi();render()};
+  const p5=$("#p5");if(p5)p5.onchange=()=>{ui.y5=+p5.value;svUi();render()};
+  $$("[data-cf],[data-ct]").forEach(el=>el.onchange=()=>{const k=+(el.dataset.cf??el.dataset.ct);ui.cmp[k][el.dataset.cf!=null?"f":"t"]=el.value;svUi();render()});
+  $$("[data-cq]").forEach(b=>b.onclick=()=>{const t=today(),y=+t.slice(0,4),m=+t.slice(5,7),q=b.dataset.cq;
+    if(q==="m")ui.cmp=cmpDef();
+    else if(q==="q"){const qs=Math.floor((m-1)/3)*3,mk=(yy,mm)=>{const a=new Date(yy,mm,1),b2=new Date(yy,mm+3,0);return{f:ymdOf(a),t:ymdOf(b2)}};ui.cmp=[mk(y,qs),mk(y,qs-3),mk(y-1,qs)]}
+    else{const fy=curFY(),mk=k=>{const[f,t2]=fyRange(fy-k);return{f,t:t2}};ui.cmp=[mk(0),mk(1),mk(2)]}
+    svUi();render()});
+  bindCommon()}
+
+/* ---------- ตารางรายได้ / ค่าใช้จ่าย ---------- */
+function inPer(d,p){if(!p)return true;if(p.startsWith("m:"))return d.slice(0,7)===p.slice(2);if(p.startsWith("fy:")){const[a,b]=fyRange(+p.slice(3));return d>=a&&d<=b}return true}
+function perOpts(sel){let h=`<option value="all" ${sel==="all"?"selected":""}>ทุกช่วงเวลา</option>`;yearsAvail().forEach(y=>{h+=`<optgroup label="${esc(fyLabel(y))}"><option value="fy:${y}" ${sel==="fy:"+y?"selected":""}>ทั้งปี ${y+543}</option>${fyMonths(y).map(ym=>`<option value="m:${ym}" ${sel==="m:"+ym?"selected":""}>${ymL(ym)}</option>`).join("")}</optgroup>`});return h}
+const perOf=t=>{const p=ui["per_"+t];return p==null?"fy:"+curFY():p};
+const catsOf=t=>t==="in"?cfg.inCats:cfg.outCats;
+const opts=(L,v)=>(v&&L.indexOf(v)<0?[v].concat(L):L).map(x=>`<option ${x===v?"selected":""}>${esc(x)}</option>`).join("");
+const rateOpts=(L,v,a,lab)=>L.map(r=>`<option value="${r}" ${+v===r?"selected":""}>${r?r+"% · "+fm(r2(a*r/100)):lab}</option>`).join("");
+function rowsOf(t){const p=perOf(t),c=ui["cat_"+t],q=(ui["q_"+t]||"").trim().toLowerCase();
+  return items.filter(i=>i.t===t&&inPer(i.d||"",p==="all"?"":p)&&(!c||i.cat===c)&&(!q||[i.item,i.doc,i.note,i.cat,i.ch].join(" ").toLowerCase().includes(q))).sort((a,b)=>(a.d||"").localeCompare(b.d||"")||(a.c||0)-(b.c||0))}
+function defDate(t){const p=perOf(t),td=today();if(p.startsWith("m:")&&td.slice(0,7)!==p.slice(2))return p.slice(2)+"-01";return td}
+function vEnt(t){const isIn=t==="in",L=rowsOf(t),s={a:0,v:0,w:0,n:0};L.forEach(i=>{const c=calc(i);s.a+=c.a;s.v+=c.v;s.w+=c.w;s.n+=c.n});
+  const cats=catsOf(t).map(c=>c.n),o=isIn?"":" o";
+  return`${demoBanner()}<div class="head"><h1 class="tag">${isIn?"รายได้":"ค่าใช้จ่าย"}<small>${L.length} รายการ</small></h1><button class="btn main" id="addBtn" type="button">${ic("plus","s")}เพิ่ม${isIn?"รายได้":"ค่าใช้จ่าย"}</button></div>
+  <div class="filters"><select id="fPer" aria-label="ช่วงเวลา">${perOpts(perOf(t))}</select><select id="fCat" aria-label="หมวดหมู่"><option value="">ทุกหมวดหมู่</option>${cats.map(n=>`<option ${n===ui["cat_"+t]?"selected":""}>${esc(n)}</option>`).join("")}</select><input type="search" id="fQ" placeholder="ค้นหา รายการ เลขที่ หมายเหตุ" value="${esc(ui["q_"+t]||"")}" aria-label="ค้นหา"></div>
+  <div class="sums"><div>มูลค่า (ก่อน VAT)<b>${fb(s.a)}</b></div><div>${isIn?"ภาษีขาย":"ภาษีซื้อ"} (VAT)<b>${fb(s.v)}</b></div><div>หัก ณ ที่จ่าย<b>${fb(s.w)}</b></div><div>${isIn?"รับสุทธิ":"จ่ายสุทธิ"}<b>${fb(s.n)}</b></div></div>
+  <div class="tw"><table class="sh${o}"><thead><tr><th class="ix">#</th><th style="min-width:104px">วันที่</th><th style="min-width:110px">เลขที่เอกสาร</th><th style="min-width:240px">${isIn?"รายการ / ลูกค้า":"รายการ / ผู้ขาย"}</th><th style="min-width:170px">หมวดหมู่</th><th style="min-width:150px">ช่องทาง</th><th style="text-align:right;min-width:110px">มูลค่า</th><th style="min-width:140px">VAT</th><th style="min-width:150px">หัก ณ ที่จ่าย</th><th style="text-align:right;min-width:110px">${isIn?"รับสุทธิ":"จ่ายสุทธิ"}</th><th style="min-width:150px">หมายเหตุ</th><th></th></tr></thead><tbody>
+  ${L.map((i,k)=>{const c=calc(i);return`<tr data-id="${i.id}"><td class="ix">${k+1}</td><td class="dt"><span>${thD(i.d)||"—"}</span><input type="date" data-f="d" value="${esc(i.d||"")}" aria-label="วันที่"></td>
+   <td><input class="cell" data-f="doc" value="${esc(i.doc||"")}" aria-label="เลขที่เอกสาร"></td><td><input class="cell" data-f="item" value="${esc(i.item||"")}" aria-label="รายการ"></td>
+   <td><select class="cell" data-f="cat" aria-label="หมวดหมู่">${opts(cats,i.cat)}</select></td><td><select class="cell" data-f="ch" aria-label="ช่องทาง">${opts(cfg.chans,i.ch)}</select></td>
+   <td><input class="cell num" data-f="amt" inputmode="decimal" value="${i.amt===""||i.amt==null?"":fm(num(i.amt))}" aria-label="มูลค่า"></td>
+   <td><select class="cell" data-f="vr" aria-label="VAT">${rateOpts([0,7],i.vr,c.a,"ไม่มี")}</select></td><td><select class="cell" data-f="wr" aria-label="หัก ณ ที่จ่าย">${rateOpts([0,1,1.5,2,3,5,10,15],i.wr,c.a,"ไม่หัก")}</select></td>
+   <td class="net">${fm(c.n)}</td><td><input class="cell" data-f="note" value="${esc(i.note||"")}" aria-label="หมายเหตุ"></td><td class="del"><button type="button" data-del="${i.id}" aria-label="ลบ">✕</button></td></tr>`}).join("")}
+  <tr class="new"><td class="ix">+</td><td class="dt"><span>${thD(defDate(t))}</span></td><td></td><td><input class="cell" id="newItem" placeholder="+ พิมพ์รายการใหม่ แล้วกด Enter" aria-label="รายการใหม่"></td><td></td><td></td><td><input class="cell num" id="newAmt" inputmode="decimal" placeholder="0.00" aria-label="มูลค่ารายการใหม่"></td><td colspan="5"></td></tr>
+  </tbody></table></div>
+  <p class="small muted" style="margin:0">มูลค่า = ยอดก่อน VAT · ${isIn?"รับสุทธิ = มูลค่า + VAT − ภาษีที่ลูกค้าหัก ณ ที่จ่าย":"จ่ายสุทธิ = มูลค่า + VAT − ภาษีที่เราหัก ณ ที่จ่ายไว้ (ต้องนำส่งสรรพากร)"} · แก้ช่องไหนก็ได้เหมือน Excel</p>`}
+function newItem(t,o){const it=Object.assign({id:uid(),t,d:defDate(t),doc:"",item:"",cat:catsOf(t)[0]?catsOf(t)[0].n:"",ch:cfg.chans[0]||"",amt:"",vr:cfg.vat,wr:t==="in"?0:0,note:"",c:Date.now()},o||{});items.push(it);return it}
+let keepFocus=null;
+function bindEnt(t){
+  $("#fPer").onchange=e=>{ui["per_"+t]=e.target.value;svUi();render()};$("#fCat").onchange=e=>{ui["cat_"+t]=e.target.value;svUi();render()};
+  $("#fQ").oninput=e=>{ui["q_"+t]=e.target.value;svUi();clearTimeout(bindEnt.q);bindEnt.q=setTimeout(()=>{keepFocus={sel:"#fQ"};render()},250)};
+  $$("tr[data-id] [data-f]").forEach(el=>el.onchange=()=>{if(!can()){render();return}const it=items.find(x=>x.id===el.closest("tr").dataset.id);if(!it)return;const f=el.dataset.f;
+    it[f]=f==="amt"?(el.value.trim()===""?"":r2(num(el.value))):f==="vr"||f==="wr"?+el.value:el.value;sv();setTimeout(()=>{const a=document.activeElement,tr=a&&a.closest&&a.closest("tr[data-id]");keepFocus=tr&&a.dataset.f?{id:tr.dataset.id,f:a.dataset.f}:null;render()},0)});
+  $$("[data-del]").forEach(b=>b.onclick=()=>{if(!can())return;const k=items.findIndex(x=>x.id===b.dataset.del);if(k<0)return;const it=items.splice(k,1)[0];sv();render();toast("ลบแล้ว",()=>{items.splice(k,0,it);sv();render()})});
+  const ni=$("#newItem"),na=$("#newAmt");let busy=false;const add=(from)=>{if(busy)return;const v=ni.value.trim(),a=na.value.trim();if(!v&&!a)return;busy=true;ni.value="";na.value="";if(!can()){busy=false;return}const it=newItem(t,{item:v,amt:a?r2(num(a)):""});sv();keepFocus={id:it.id,f:from==="amt"?"item":"amt"};if(ui["q_"+t]){ui["q_"+t]="";svUi()}render()};
+  ni.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();add("item")}};ni.onchange=()=>add("item");na.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();add("amt")}};na.onchange=()=>add("amt");
+  $("#addBtn").onclick=()=>formDlg(t);bindCommon()}
+function formDlg(t,id){if(!can())return;const isIn=t==="in",it=id?items.find(x=>x.id===id):null,v=it||{d:defDate(t),cat:catsOf(t)[0]&&catsOf(t)[0].n,ch:cfg.chans[0],vr:cfg.vat,wr:0};
+  openDlg(`<h3>${isIn?"เพิ่มรายได้":"เพิ่มค่าใช้จ่าย"}<button class="btn sm ghost" data-x type="button" aria-label="ปิด">✕</button></h3><div class="fg">
+   <label>วันที่<input class="fld" type="date" id="xD" value="${esc(v.d||"")}"></label><label>เลขที่เอกสาร<input class="fld" id="xDoc" value="${esc(v.doc||"")}" placeholder="เช่น INV-001"></label>
+   <label class="w">${isIn?"รายการ / ลูกค้า":"รายการ / ผู้ขาย"}<input class="fld" id="xItem" value="${esc(v.item||"")}"></label>
+   <label>หมวดหมู่<select class="fld" id="xCat">${opts(catsOf(t).map(c=>c.n),v.cat)}</select></label><label>ช่องทาง<select class="fld" id="xCh">${opts(cfg.chans,v.ch)}</select></label>
+   <label>มูลค่า (ก่อน VAT)<input class="fld" id="xAmt" inputmode="decimal" value="${v.amt!=null&&v.amt!==""?num(v.amt):""}" placeholder="0.00"></label><label>VAT<select class="fld" id="xVr"><option value="0">ไม่มี</option><option value="7" ${+v.vr===7?"selected":""}>7%</option></select></label>
+   <label>หัก ณ ที่จ่าย<select class="fld" id="xWr">${[0,1,1.5,2,3,5,10,15].map(r=>`<option value="${r}" ${+v.wr===r?"selected":""}>${r?r+"%":"ไม่หัก"}</option>`).join("")}</select></label><label>หมายเหตุ<input class="fld" id="xNote" value="${esc(v.note||"")}"></label></div>
+   <div class="pv"><span>${isIn?"รับสุทธิ":"จ่ายสุทธิ"}</span><span id="xNet">฿0.00</span></div><div class="row" style="justify-content:flex-end"><button class="btn ghost" data-x type="button">ยกเลิก</button><button class="btn main" id="xSave" type="button">บันทึก</button></div>`);
+  const pv=()=>{$("#xNet").textContent=fb(calc({amt:$("#xAmt").value,vr:$("#xVr").value,wr:$("#xWr").value}).n)};["#xAmt","#xVr","#xWr"].forEach(s=>$(s).oninput=pv);pv();setTimeout(()=>$("#xItem").focus(),50);
+  $("#xSave").onclick=()=>{const o={d:$("#xD").value||today(),doc:$("#xDoc").value.trim(),item:$("#xItem").value.trim(),cat:$("#xCat").value,ch:$("#xCh").value,amt:$("#xAmt").value.trim()===""?"":r2(num($("#xAmt").value)),vr:+$("#xVr").value,wr:+$("#xWr").value,note:$("#xNote").value.trim()};
+    if(!o.item&&!o.amt){toast("ใส่รายการหรือจำนวนเงินก่อน");return}if(it)Object.assign(it,o);else newItem(t,o);sv();closeDlg();
+    if(!inPer(o.d,perOf(t)==="all"?"":perOf(t))){ui["per_"+t]="m:"+o.d.slice(0,7);svUi()}render();toast("บันทึกแล้ว")}}
+
+/* ---------- ภาษี ---------- */
+function vTax(){const y=ui.taxY??curFY(),M=fyMonths(y),rows=M.map(ym=>{const[a,b]=mRange(ym);return{ym,x:agg(a,b)}}),tot=agg(...fyRange(y));
+  const cells=(f,cls)=>rows.map(q=>{const v=f(q.x);return`<td class="${v<0?"neg":cls||""}">${v?fm(v):"-"}</td>`}).join("")+`<td class="${f(tot)<0?"neg":""}"><b>${fm(f(tot))}</b></td>`;
+  const net=tot.vin-tot.vout;
+  return`${demoBanner()}<div class="head"><h1 class="tag">รายงานภาษี<small>${esc(fyLabel(y))}</small></h1><div class="pick"><select id="pTax" aria-label="ปี">${yOpts(y)}</select></div></div>
+  <div class="kpis"><div class="kpi in"><span>ภาษีขาย (VAT) ทั้งปี</span><b>${fb(tot.vin)}</b></div><div class="kpi out"><span>ภาษีซื้อ (VAT) ทั้งปี</span><b>${fb(tot.vout)}</b></div><div class="kpi ${net>0?"neg":"pf"}"><span>${net>0?"VAT ต้องชำระ":"VAT ชำระเกิน / ขอคืน"}</span><b>${fb(Math.abs(net))}</b><small>ภาษีขาย − ภาษีซื้อ</small></div><div class="kpi mg"><span>ถูกหัก ณ ที่จ่าย (เครดิตภาษี)</span><b>${fb(tot.win)}</b><small>นำไปหักตอนยื่นภาษีเงินได้</small></div></div>
+  <div class="card"><h2 class="cap y">ภาษีขาย − ภาษีซื้อ รายเดือน</h2>${chart(M.map(ymS),[{n:"ภาษีขาย",c:C.vin,v:rows.map(q=>q.x.vin)},{n:"ภาษีซื้อ",c:C.vout,v:rows.map(q=>q.x.vout)}],{n:"ส่วนต่าง",c:"#D64C5B",v:rows.map(q=>q.ym>today().slice(0,7)?null:r2(q.x.vin-q.x.vout))},{h:220,title:"ภาษีรายเดือน"})}</div>
+  <div class="card"><h2 class="cap k">ภาษีมูลค่าเพิ่ม (ภ.พ.30)</h2><div class="tw"><table class="st k"><thead><tr><th></th>${M.map(ym=>`<th>${ymS(ym)}</th>`).join("")}<th>รวม</th></tr></thead><tbody>
+   <tr><td>ภาษีขาย</td>${cells(x=>x.vin)}</tr><tr><td>ภาษีซื้อ</td>${cells(x=>x.vout)}</tr><tr class="sub"><td>ส่วนต่าง (+ ชำระ / − เครดิต)</td>${cells(x=>r2(x.vin-x.vout))}</tr></tbody></table></div></div>
+  <div class="card"><h2 class="cap">ภาษีหัก ณ ที่จ่าย</h2><div class="tw"><table class="st"><thead><tr><th></th>${M.map(ym=>`<th>${ymS(ym)}</th>`).join("")}<th>รวม</th></tr></thead><tbody>
+   <tr><td>ลูกค้าหักเรา (เครดิตภาษี)</td>${cells(x=>x.win)}</tr><tr><td>เราหักผู้ขาย (ต้องนำส่ง ภ.ง.ด.3 / 53)</td>${cells(x=>x.wout)}</tr></tbody></table></div></div>
+  <div class="info">ตัวเลขคำนวณจากช่อง VAT และหัก ณ ที่จ่ายที่กรอกในแต่ละรายการ ใช้ประกอบการยื่นแบบและวางแผนภาษี · ยอดจริงที่ต้องยื่นให้ยึดตามใบกำกับภาษีและหนังสือรับรองการหักภาษี ณ ที่จ่าย</div>`}
+function bindTax(){$("#pTax").onchange=e=>{ui.taxY=+e.target.value;svUi();render()};bindCommon()}
+
+/* ---------- ตั้งค่า ---------- */
+function lst(k,label,hint){const L=cfg[k],obj=k!=="chans";return`<div class="card lst"><h2>${label}</h2>${L.map((v,j)=>`<div class="r">${obj?`<input type="color" value="${esc(v.c)}" data-lc="${k}" data-lj="${j}" aria-label="สี">`:""}<input type="text" value="${esc(obj?v.n:v)}" data-lk="${k}" data-lj="${j}" aria-label="${label}"><button class="btn sm ghost danger" data-ld="${k}" data-lj="${j}" type="button" aria-label="ลบ">✕</button></div>`).join("")}
+  <button class="btn sm" data-la="${k}" type="button">+ เพิ่ม</button><span class="small muted">${hint}</span></div>`}
+function vSet(){const gy=ui.goalY??curFY(),M=fyMonths(gy);
+  return`<div class="head"><h1 class="tag">ตั้งค่า</h1></div>
+  <section class="card"><h2>ข้อมูลธุรกิจ</h2><div class="row"><input class="fld" id="sName" value="${esc(cfg.name)}" placeholder="ชื่อธุรกิจ / ชื่อของคุณ" style="flex:1;min-width:200px" aria-label="ชื่อธุรกิจ">
+   <label class="small">ปีบัญชีเริ่มเดือน <select class="fld" id="sFy">${MONTHS.map((n,k)=>`<option value="${k+1}" ${cfg.fy===k+1?"selected":""}>${n}</option>`).join("")}</select></label>
+   <label class="small">VAT เริ่มต้น <select class="fld" id="sVat"><option value="0">ไม่จด VAT (0%)</option><option value="7" ${cfg.vat===7?"selected":""}>จด VAT (7%)</option></select></label></div>
+   <p class="small muted" style="margin:8px 0 0">ปีบัญชีใช้กับแดชบอร์ดรายปี 5 ปี และรายงานภาษี (ส่วนใหญ่เริ่มมกราคม) · VAT เริ่มต้นใช้กับรายการใหม่ แก้รายรายการได้</p></section>
+  <section class="card"><h2>${ic("target","s")} เป้ารายได้รายเดือน<span class="row"><select class="fld" id="sGy" aria-label="ปีของเป้า">${yOpts(gy,[...new Set(yearsAvail().concat([curFY(),curFY()+1]))].sort((a,b)=>b-a))}</select><button class="btn sm" id="sGall" type="button">ใส่เท่ากันทุกเดือน</button></span></h2>
+   <div class="goals">${M.map(ym=>`<label>${ymS(ym)}<input data-goal="${ym}" inputmode="decimal" value="${goalM(ym)?fm(goalM(ym)):""}" placeholder="0"></label>`).join("")}</div></section>
+  <div class="lists">${lst("inCats","หมวดหมู่รายได้","เปลี่ยนชื่อแล้วรายการเดิมเปลี่ยนตาม")}${lst("outCats","หมวดหมู่ค่าใช้จ่าย","สีใช้ในกราฟแดชบอร์ด")}${lst("chans","ช่องทางรับ / จ่ายเงิน","เช่น เงินสด บัญชีกสิกร บัตรเครดิต")}</div>
+  <section class="card"><h2>${ic("cart","s")} ซื้อใช้งานต่อเนื่อง</h2><div class="row"><button class="btn sm buy" data-buy="m" type="button">รายเดือน 199 บาท</button><button class="btn sm main" data-buy="y" type="button">รายปี 1,990 บาท · ฟรี 2 เดือน</button></div>
+   <p class="small muted" style="margin:8px 0 0">โอนแล้วแนบสลิปในหน้าถัดไป ร้านตรวจยอดแล้วเปิดใช้งานให้ ได้อีเมลแจ้งพร้อมใช้ทันที</p></section>
+  <section class="card"><h2>ข้อมูล</h2><div class="row"><button class="btn sm" id="demo" type="button">ใส่ข้อมูลตัวอย่าง</button><button class="btn sm ghost danger" id="wipe" type="button">ล้างข้อมูลทั้งหมด</button></div>
+   <p class="small muted" style="margin:8px 0 0">ข้อมูลเก็บในเครื่องนี้ สมาชิกที่เข้าสู่ระบบจะสำรองขึ้นคลาวด์และใช้ได้หลายเครื่อง · กด ${ic("dl","s")} Excel ด้านบนเพื่อดาวน์โหลดเก็บไว้ (ไฟล์เป็นข้อมูลอย่างเดียว ไม่มีสูตร)</p></section>`}
+function bindSet(){
+  $("#sName").onchange=e=>{if(!can())return render();cfg.name=e.target.value.trim();svCfg();toast("บันทึกแล้ว")};
+  $("#sFy").onchange=e=>{if(!can())return render();cfg.fy=+e.target.value;ui.fyY=ui.y5=ui.taxY=ui.goalY=ui.per_in=ui.per_out=null;svCfg();svUi();render();toast("เปลี่ยนเดือนเริ่มปีบัญชีแล้ว")};
+  $("#sVat").onchange=e=>{if(!can())return render();cfg.vat=+e.target.value;svCfg();toast("บันทึกแล้ว")};
+  $("#sGy").onchange=e=>{ui.goalY=+e.target.value;svUi();render()};
+  $$("[data-goal]").forEach(el=>el.onchange=()=>{if(!can())return render();const v=r2(num(el.value));if(v)cfg.goal[el.dataset.goal]=v;else delete cfg.goal[el.dataset.goal];svCfg();el.value=v?fm(v):""});
+  $("#sGall").onclick=()=>{if(!can())return;const v=prompt("เป้ารายได้ต่อเดือน (บาท)","");if(v==null)return;const n=r2(num(v));fyMonths(ui.goalY??curFY()).forEach(ym=>{if(n)cfg.goal[ym]=n;else delete cfg.goal[ym]});svCfg();render()};
+  $$("[data-lk]").forEach(el=>el.onchange=()=>{if(!can())return render();const k=el.dataset.lk,j=+el.dataset.lj,v=el.value.trim(),obj=k!=="chans";if(!v){render();return}
+    const old=obj?cfg[k][j].n:cfg[k][j];if(cfg[k].some((x,q)=>q!==j&&(obj?x.n:x)===v)){toast("มีชื่อนี้แล้ว");render();return}
+    if(obj)cfg[k][j].n=v;else cfg[k][j]=v;const t=k==="inCats"?"in":k==="outCats"?"out":null,f=obj?"cat":"ch";items.forEach(i=>{if((!t||i.t===t)&&i[f]===old)i[f]=v});sv();svCfg();toast("บันทึกแล้ว")});
+  $$("[data-lc]").forEach(el=>el.onchange=()=>{if(!can())return;cfg[el.dataset.lc][+el.dataset.lj].c=el.value;svCfg()});
+  $$("[data-ld]").forEach(b=>b.onclick=()=>{if(!can())return;const k=b.dataset.ld;if(cfg[k].length<=1){toast("ต้องมีอย่างน้อย 1 รายการ");return}cfg[k].splice(+b.dataset.lj,1);svCfg();render()});
+  $$("[data-la]").forEach(b=>b.onclick=()=>{if(!can())return;const k=b.dataset.la,obj=k!=="chans",base=obj?"หมวดใหม่":"ช่องทางใหม่";let n=base,c=2;const has=x=>cfg[k].some(v=>(obj?v.n:v)===x);while(has(n))n=base+" "+c++;
+    cfg[k].push(obj?{n,c:["#6FA8DC","#A88BD0","#7FC8A9","#F2B880","#F28FAD","#E8C468"][cfg[k].length%6]}:n);svCfg();render();const L=$$(`[data-lk="${k}"]`),e=L[L.length-1];e.focus();e.select()});
+  $$("[data-buy]").forEach(b=>b.onclick=()=>{const M=window.EDM_MEMBER;if(M&&M.buyUrl)window.open(M.buyUrl("finance",b.dataset.buy),"_blank","noopener")});
+  $("#demo").onclick=()=>{if(!can())return;if(live().length&&!cfg.demo&&!confirm("ใส่ข้อมูลตัวอย่างเพิ่มเข้าไปในข้อมูลที่มีอยู่?"))return;seed();ui.tab="dash";svUi();render();toast("ใส่ข้อมูลตัวอย่างแล้ว")};
+  $("#wipe").onclick=()=>{if(!can())return;if(!confirm("ล้างรายรับ-รายจ่ายทั้งหมดในเครื่องนี้? กู้คืนไม่ได้"))return;items=[];cfg.demo=false;sv();svCfg();render()};bindCommon()}
+function bindCommon(){$$("[data-go]").forEach(b=>b.onclick=()=>{ui.tab=b.dataset.go;svUi();render();window.scrollTo(0,0)});const dc=$("#demoClr");if(dc)dc.onclick=()=>{if(!can())return;items=[];cfg.demo=false;cfg.goal={};sv();svCfg();render();toast("ล้างตัวอย่างแล้ว เริ่มบันทึกจริงได้เลย")}}
+
+/* ---------- ตัวอย่าง ---------- */
+function seed(){let s=7;const rnd=()=>{s=(s*9301+49297)%233280;return s/233280},pick=L=>L[Math.floor(rnd()*L.length)],t=today(),cy=+t.slice(0,4),cm=+t.slice(5,7);
+  const IC=cfg.inCats.map(c=>c.n),OC=cfg.outCats.map(c=>c.n),CH=cfg.chans,ic0=IC[0],ic1=IC[1]||IC[0],ic2=IC[2]||IC[0],ic3=IC[3]||IC[0];
+  const inc=[[ic0,"ขายสินค้าออนไลน์ (Shopee)",[12000,26000],7],[ic0,"ขายสินค้าหน้าร้าน",[8000,18000],7],[ic1,"ค่าบริการออกแบบ - ร้านกาแฟบ้านสวน",[6000,15000],0],[ic2,"ค่าที่ปรึกษารายเดือน - บจก. สยามเทรด",[20000,20000],0,3],[ic3,"ดอกเบี้ยเงินฝาก",[80,300],0]];
+  const exp=[[OC[0],"ซื้อสินค้าเข้าร้าน",[9000,20000],7],[OC[1]||OC[0],"ค่าเช่าหน้าร้าน",[8000,8000],0,5],[OC[2]||OC[0],"ค่าจ้างพนักงานพาร์ทไทม์",[6000,9000],0],[OC[3]||OC[0],"ค่าไฟฟ้า / อินเทอร์เน็ต",[1800,3200],7],[OC[4]||OC[0],"ค่าโฆษณา Facebook",[1500,5000],0],[OC[5]||OC[0],"ค่าส่งของ",[700,2200],7],[OC[6]||OC[0],"ค่าโปรแกรมรายเดือน",[350,990],0]];
+  const amt=r=>r[0]===r[1]?r[0]:Math.round((r[0]+rnd()*(r[1]-r[0]))/10)*10;let n=0;
+  for(let k=23;k>=0;k--){const x=new Date(cy,cm-1-k,1),y=x.getFullYear(),m=x.getMonth()+1,ym=y+"-"+pad(m),nd=k===0?+t.slice(8):new Date(y,m,0).getDate(),g=1+(23-k)*.012;
+    const day=()=>ym+"-"+pad(1+Math.floor(rnd()*Math.max(1,nd)));
+    inc.forEach(r=>{if(k===0&&r[3]===0&&!r[4]&&rnd()<.5)return;newItem("in",{d:day(),doc:r[3]===7||r[4]?"INV-"+String(++n).padStart(4,"0"):"",item:r[1],cat:r[0],ch:pick(CH.slice(0,2)),amt:Math.round(amt(r[2])*g),vr:r[3],wr:r[4]||0})});
+    exp.forEach(r=>{newItem("out",{d:day(),doc:"",item:r[1],cat:r[0],ch:pick(CH),amt:Math.round(amt(r[2])*(1+(23-k)*.006)),vr:r[3],wr:r[4]||0})})}
+  for(let b=2;b<=4;b++){const y=curFY()-b;fyMonths(y).forEach(ym=>{const f=Math.pow(.86,b-1);newItem("in",{d:ym+"-28",item:"สรุปรายได้ประจำเดือน",cat:ic0,amt:Math.round((38000+rnd()*16000)*f),vr:0});newItem("out",{d:ym+"-28",item:"สรุปค่าใช้จ่ายประจำเดือน",cat:OC[0],amt:Math.round((29000+rnd()*9000)*f),vr:0})})}
+  fyMonths(curFY()).forEach(ym=>cfg.goal[ym]=70000);cfg.demo=true;sv();svCfg()}
+function demoBanner(){return cfg.demo?`<div class="banner"><span>${ic("star","s")} นี่คือ<b>ข้อมูลตัวอย่าง</b> ลองดูแดชบอร์ด แก้ หรือเพิ่มรายการได้เลย</span><button class="btn sm" id="demoClr" type="button">ล้างตัวอย่าง เริ่มใช้จริง</button></div>`:""}
+
+/* ---------- พิมพ์ / Excel ---------- */
+function printNow(){const pa=$("#printArea"),nm=esc(cfg.name||"การเงิน SME & ฟรีแลนซ์"),t=today();let h="";
+  if(ui.tab==="in"||ui.tab==="out"){const L=rowsOf(ui.tab),isIn=ui.tab==="in",s={a:0,v:0,w:0,n:0};
+    h=`<div class="hd"><h1>${isIn?"รายได้":"ค่าใช้จ่าย"} · ${nm}</h1><span>พิมพ์ ${thD(t)}</span></div><table><thead><tr><th>#</th><th>วันที่</th><th>เลขที่</th><th class="l">รายการ</th><th class="l">หมวดหมู่</th><th>มูลค่า</th><th>VAT</th><th>หัก ณ ที่จ่าย</th><th>สุทธิ</th></tr></thead><tbody>${L.map((i,k)=>{const c=calc(i);s.a+=c.a;s.v+=c.v;s.w+=c.w;s.n+=c.n;return`<tr><td>${k+1}</td><td>${thD(i.d)}</td><td>${esc(i.doc||"")}</td><td class="l">${esc(i.item||"")}</td><td class="l">${esc(i.cat||"")}</td><td>${fm(c.a)}</td><td>${fm(c.v)}</td><td>${fm(c.w)}</td><td>${fm(c.n)}</td></tr>`}).join("")}</tbody><tfoot><tr><th colspan="5" class="l">รวม ${L.length} รายการ</th><th>${fm(s.a)}</th><th>${fm(s.v)}</th><th>${fm(s.w)}</th><th>${fm(s.n)}</th></tr></tfoot></table>`;
+    window.EDM_DOCNAME=(isIn?"รายได้-":"ค่าใช้จ่าย-")+t}
+  else{const y=ui.tab==="tax"?(ui.taxY??curFY()):(ui.fyY??curFY()),M=fyMonths(y),tot=agg(...fyRange(y));
+    h=`<div class="hd"><h1>สรุปการเงิน ${esc(fyLabel(y))} · ${nm}</h1><span>พิมพ์ ${thD(t)}</span></div><h2>สรุปรายเดือน</h2><table><thead><tr><th>เดือน</th><th>รายได้</th><th>ค่าใช้จ่าย</th><th>กำไร</th><th>อัตรากำไร</th><th>ภาษีขาย</th><th>ภาษีซื้อ</th><th>ถูกหัก ณ ที่จ่าย</th><th>หักไว้ (นำส่ง)</th></tr></thead><tbody>${M.map(ym=>{const x=agg(...mRange(ym));return`<tr><td>${ymL(ym)}</td><td>${fm(x.in)}</td><td>${fm(x.out)}</td><td>${fm(x.pf)}</td><td>${x.in?x.mg+"%":"-"}</td><td>${fm(x.vin)}</td><td>${fm(x.vout)}</td><td>${fm(x.win)}</td><td>${fm(x.wout)}</td></tr>`}).join("")}</tbody><tfoot><tr><th>รวม</th><th>${fm(tot.in)}</th><th>${fm(tot.out)}</th><th>${fm(tot.pf)}</th><th>${tot.mg}%</th><th>${fm(tot.vin)}</th><th>${fm(tot.vout)}</th><th>${fm(tot.win)}</th><th>${fm(tot.wout)}</th></tr></tfoot></table>
+    <h2>ตามหมวดหมู่</h2><table><thead><tr><th class="l">รายได้</th><th>บาท</th><th>%</th></tr></thead><tbody>${Object.keys(tot.ci).sort((a,b)=>tot.ci[b]-tot.ci[a]).map(n=>`<tr><td class="l">${esc(n)}</td><td>${fm(tot.ci[n])}</td><td>${pct(tot.ci[n],tot.in)}%</td></tr>`).join("")}</tbody></table><br><table><thead><tr><th class="l">ค่าใช้จ่าย</th><th>บาท</th><th>%</th></tr></thead><tbody>${Object.keys(tot.co).sort((a,b)=>tot.co[b]-tot.co[a]).map(n=>`<tr><td class="l">${esc(n)}</td><td>${fm(tot.co[n])}</td><td>${pct(tot.co[n],tot.out)}%</td></tr>`).join("")}</tbody></table>`;
+    window.EDM_DOCNAME="สรุปการเงิน-"+(y+543)}
+  pa.innerHTML=`<div class="pr">${h}</div>`;window.print()}
+const serial=d=>(Date.UTC(+d.slice(0,4),+d.slice(5,7)-1,+d.slice(8,10))-Date.UTC(1899,11,30))/864e5;
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="/assets/vendor/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+function xlsx(){const t=today();toast("กำลังสร้างไฟล์ Excel...");
+  loadXLSX().then(X=>{const wb=X.utils.book_new(),y=ui.fyY??curFY();
+    const ent=tt=>{const L=items.filter(i=>i.t===tt&&(i.item||num(i.amt))).sort((a,b)=>(a.d||"").localeCompare(b.d||""));const ws=X.utils.aoa_to_sheet([["วันที่","เลขที่เอกสาร","รายการ","หมวดหมู่","ช่องทาง","มูลค่า (ก่อน VAT)","VAT %","VAT (บาท)","หัก ณ ที่จ่าย %","หัก ณ ที่จ่าย (บาท)",tt==="in"?"รับสุทธิ":"จ่ายสุทธิ","หมายเหตุ"]].concat(L.map(i=>{const c=calc(i);return[i.d?serial(i.d):"",i.doc||"",i.item||"",i.cat||"",i.ch||"",c.a,+i.vr||0,c.v,+i.wr||0,c.w,c.n,i.note||""]})),{});
+      ws["!cols"]=[{wch:12},{wch:14},{wch:36},{wch:22},{wch:16},{wch:16},{wch:7},{wch:12},{wch:10},{wch:14},{wch:14},{wch:24}];Object.keys(ws).forEach(k=>{if(/^A\d+$/.test(k)&&k!=="A1"&&ws[k].t==="n")ws[k].z="d/m/yyyy"});return ws};
+    X.utils.book_append_sheet(wb,ent("in"),"รายได้");X.utils.book_append_sheet(wb,ent("out"),"ค่าใช้จ่าย");
+    const M=fyMonths(y),tot=agg(...fyRange(y));X.utils.book_append_sheet(wb,X.utils.aoa_to_sheet([["สรุป "+fyLabel(y)+(cfg.name?" · "+cfg.name:"")],[],["เดือน","รายได้","ค่าใช้จ่าย","กำไร / ขาดทุน","อัตรากำไร %","เป้ารายได้","ภาษีขาย","ภาษีซื้อ","ถูกหัก ณ ที่จ่าย","หักไว้ (นำส่ง)"]].concat(M.map(ym=>{const x=agg(...mRange(ym));return[ymL(ym),x.in,x.out,x.pf,x.mg,goalM(ym),x.vin,x.vout,x.win,x.wout]}),[["รวม",tot.in,tot.out,tot.pf,tot.mg,M.reduce((s,ym)=>s+goalM(ym),0),tot.vin,tot.vout,tot.win,tot.wout]])),"สรุปรายเดือน");
+    const cat=(m,lab)=>Object.keys(m).sort((a,b)=>m[b]-m[a]).map(n=>[lab,n,m[n]]);X.utils.book_append_sheet(wb,X.utils.aoa_to_sheet([["ประเภท","หมวดหมู่","ยอด ("+fyLabel(y)+")"]].concat(cat(tot.ci,"รายได้"),cat(tot.co,"ค่าใช้จ่าย"))),"หมวดหมู่");
+    X.writeFile(wb,"การเงิน-"+t+".xlsx");toast("ดาวน์โหลดไฟล์ Excel แล้ว")}).catch(()=>toast("โหลดตัวสร้าง Excel ไม่สำเร็จ ลองใหม่อีกครั้ง"))}
+
+/* ---------- render ---------- */
+const V={dash:[vDash,bindDash],in:[()=>vEnt("in"),()=>bindEnt("in")],out:[()=>vEnt("out"),()=>bindEnt("out")],tax:[vTax,bindTax],set:[vSet,bindSet]};
+function render(){if(!V[ui.tab])ui.tab="dash";{const bb=$("#buyBtn"),M=window.EDM_MEMBER;if(bb)bb.hidden=!!(M&&M.me&&M.me.paid)}
+  $$("[data-tab]").forEach(b=>{b.classList.toggle("on",b.dataset.tab===ui.tab);b.setAttribute("aria-selected",b.dataset.tab===ui.tab)});
+  $("#main").innerHTML=V[ui.tab][0]();V[ui.tab][1]();
+  if(keepFocus){const k=keepFocus;keepFocus=null;const el=k.sel?$(k.sel):$(`tr[data-id="${k.id}"] [data-f="${k.f}"]`);if(el){el.focus();if(el.setSelectionRange&&el.type!=="date")try{el.setSelectionRange(el.value.length,el.value.length)}catch(e){}}}}
+$$("[data-ic]").forEach(e=>{e.outerHTML=ic(e.dataset.ic)});
+$("#buyBtn").onclick=e=>{const M=window.EDM_MEMBER;if(M&&M.buyUrl){e.preventDefault();window.open(M.buyUrl("finance"),"_blank","noopener")}};
+$$("[data-tab]").forEach(b=>b.onclick=()=>{ui.tab=b.dataset.tab;svUi();render();window.scrollTo(0,0)});
+$("#prBtn").onclick=printNow;$("#xlsBtn").onclick=xlsx;
+let rzW=window.innerWidth;window.addEventListener("resize",()=>{clearTimeout(render.rz);render.rz=setTimeout(()=>{if((rzW<640)!==(window.innerWidth<640)&&(ui.tab==="dash"||ui.tab==="tax"))render();rzW=window.innerWidth},200)});
+window.addEventListener("storage",e=>{if(e.key===K.items){items=LS.get(K.items,[]);render()}if(e.key===K.cfg){cfg=Object.assign({},CFG0,LS.get(K.cfg,{}));render()}});
+if(!items.length&&!LS.get(K.cfg,null))seed();
+render();
+})();
+</script>
+<script>window.EDM_TRY=true;</script>
+<script src="../assets/member.js?v=66" defer></script>
+<script src="../assets/docshare.js?v=1" defer></script>
+</body>
+</html>

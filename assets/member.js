@@ -12,13 +12,14 @@
   var SYS = {
     bill: { n: "เปิดบิลออนไลน์", u: "bill/" }, stock: { n: "สต๊อกสินค้า", u: "stock/" }, account: { n: "บัญชีร้านค้า", u: "account/" },
     shop: { n: "ระบบร้านค้า (บิล · สต๊อก · บัญชี)", u: "app/" }, cafe: { n: "ร้านคาเฟ่ (POS)", u: "cafe/" }, book: { n: "จองห้อง / ให้เช่า", u: "booking/" },
-    payroll: { n: "คำนวณเงินเดือน", u: "payroll/" }, time: { n: "ลงเวลา / ตอกบัตร", u: "time/" }, todo: { n: "To-Do งานที่ต้องทำ", u: "todo/" }
+    payroll: { n: "คำนวณเงินเดือน", u: "payroll/" }, time: { n: "ลงเวลา / ตอกบัตร", u: "time/" }, todo: { n: "To-Do งานที่ต้องทำ", u: "todo/" },
+    finance: { n: "การเงิน SME & ฟรีแลนซ์", u: "finance/" }
   };
-  var GROUP = { shop: ["shop", "bill", "stock", "account"], all: ["shop", "bill", "stock", "account", "cafe", "book", "payroll", "todo"] };
+  var GROUP = { shop: ["shop", "bill", "stock", "account"], all: ["shop", "bill", "stock", "account", "cafe", "book", "payroll", "todo", "finance"] };
   function curSys() {
     var p = location.pathname, ed = (/[?&]ed=([a-z]+)/.exec(location.search) || [])[1];
     if (/\/app\//.test(p)) return { bill: "bill", stock: "stock", book: "book", cafe: "cafe" }[ed] || "shop"; // รุ่นที่ edition.js รู้จักเท่านั้น อื่น ๆ = ตัวเต็ม (ระบบร้านค้า)
-    var m = /\/(bill|stock|account|payroll|time|todo|cafe|booking)\//.exec(p);
+    var m = /\/(bill|stock|account|payroll|time|todo|finance|cafe|booking)\//.exec(p);
     return m ? (m[1] === "booking" ? "book" : m[1]) : "";
   }
   function sysList(u) {
@@ -125,7 +126,7 @@
   function buyUrl(k, plan) { return API + "?buy=1&sys=" + encodeURIComponent(k || curSys() || "shop") + (plan ? "&plan=" + plan : ""); }
   function perk() { var k = curSys(); return k === "shop" || !k ? "ครบในระบบเดียว: เปิดบิล · ภาษี · สต๊อก · บัญชี" : "บัญชีนี้ใช้กับระบบ " + SYS[k].n; }
   function renderGate() {
-    var ck = curSys(), tool = ck === "todo" ? "To-Do งานที่ต้องทำ" : ck === "time" ? "ลงเวลา / ตอกบัตร" : /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /booking/.test(location.pathname) ? "ระบบจองและให้เช่า" : /cafe/.test(location.pathname) ? "ระบบร้านคาเฟ่" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
+    var ck = curSys(), tool = ck === "todo" ? "To-Do งานที่ต้องทำ" : ck === "finance" ? "บริหารการเงิน SME & ฟรีแลนซ์" : ck === "time" ? "ลงเวลา / ตอกบัตร" : /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /booking/.test(location.pathname) ? "ระบบจองและให้เช่า" : /cafe/.test(location.pathname) ? "ระบบร้านคาเฟ่" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
     var h = '<div class="edm-card">';
     if (mode === "sent") {
       h += '<div style="font-size:2.4rem;line-height:1">✅</div><h2>สมัครเรียบร้อย · รอร้านเปิดใช้งาน</h2><p>' + esc(note) + '</p>' +
@@ -292,15 +293,15 @@
   /* ---------- สำรองข้อมูลขึ้นระบบร้าน (Google Drive ของร้าน) ----------
    * เข้าสู่ระบบแล้ว: ดึงข้อมูลล่าสุดจากระบบ (ถ้าใหม่กว่า) แล้วสำรองให้อัตโนมัติทุกครั้งที่ข้อมูลเปลี่ยน
    * ใช้เปลี่ยนเครื่องได้ และข้อมูลไม่หายแม้ล้างเบราว์เซอร์ */
-  var CK = ["edm_acc", "edm_bill_docs", "edm_bill_seller", "edm_bill_counter", "edm_bill_customers", "edm_suppliers", "edm_services", "edm_stock_items", "edm_stock_tx", "edm_stock_cfg", "edm_pay_company", "edm_pay_emps", "edm_pay_records", "edm_pay_summary", "edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg", "edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit", "edm_todo_items", "edm_todo_log", "edm_todo_cfg", "edm_tdsheet_items", "edm_tdsheet_cfg"];
-  var KEEP = ["edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit", "edm_todo_items", "edm_todo_log", "edm_todo_cfg", "edm_tdsheet_items", "edm_tdsheet_cfg"]; // วัตถุดิบคาเฟ่ (เพิ่มภายหลัง): ข้อมูลบนระบบรุ่นเก่ายังไม่มี ไม่ลบของในเครื่อง
+  var CK = ["edm_acc", "edm_bill_docs", "edm_bill_seller", "edm_bill_counter", "edm_bill_customers", "edm_suppliers", "edm_services", "edm_stock_items", "edm_stock_tx", "edm_stock_cfg", "edm_pay_company", "edm_pay_emps", "edm_pay_records", "edm_pay_summary", "edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg", "edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit", "edm_todo_items", "edm_todo_log", "edm_todo_cfg", "edm_tdsheet_items", "edm_tdsheet_cfg", "edm_fin_items", "edm_fin_cfg"];
+  var KEEP = ["edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit", "edm_todo_items", "edm_todo_log", "edm_todo_cfg", "edm_tdsheet_items", "edm_tdsheet_cfg", "edm_fin_items", "edm_fin_cfg"]; // วัตถุดิบคาเฟ่ (เพิ่มภายหลัง): ข้อมูลบนระบบรุ่นเก่ายังไม่มี ไม่ลบของในเครื่อง
   var NEWK = ["edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg"]; // ระบบจอง (เพิ่มภายหลัง): ถ้าข้อมูลบนระบบยังไม่มี ไม่ลบข้อมูลในเครื่อง
   var SK = "edm_sync", cloudTimer = null, dirtySince = 0, pushing = false, cloudOn = false;
   function cGet() { try { return JSON.parse(localStorage.getItem(SK) || "{}") || {}; } catch (e) { return {}; } }
   function cSet(o) { try { localStorage.setItem(SK, JSON.stringify(o)); } catch (e) {} }
   function snap() { var o = {}; CK.forEach(function (k) { var v = null; try { v = localStorage.getItem(k); } catch (e) {} if (v != null) o[k] = v; }); return JSON.stringify({ v: 1, keys: o }); }
   function hashOf(str) { var h = 5381; for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return String(h >>> 0) + ":" + str.length; }
-  function emptyLocal() { return ["edm_bill_docs", "edm_stock_items", "edm_pay_emps", "edm_book_list", "edm_book_res", "edm_cafe_menu", "edm_time_log", "edm_todo_items", "edm_tdsheet_items"].every(function (k) { var v = localStorage.getItem(k); return !v || v === "[]"; }) && !/"pur":\[\{|"cash":\[\{/.test(localStorage.getItem("edm_acc") || ""); }
+  function emptyLocal() { return ["edm_bill_docs", "edm_stock_items", "edm_pay_emps", "edm_book_list", "edm_book_res", "edm_cafe_menu", "edm_time_log", "edm_todo_items", "edm_tdsheet_items", "edm_fin_items"].every(function (k) { var v = localStorage.getItem(k); return !v || v === "[]"; }) && !/"pur":\[\{|"cash":\[\{/.test(localStorage.getItem("edm_acc") || ""); }
   function timeTh(ts) { var d = new Date(ts); return thDate(ts) + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
   function cloudPush(force) {
     if (!me || !me.token || pushing) return Promise.resolve(false);
