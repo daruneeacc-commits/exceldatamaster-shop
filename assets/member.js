@@ -12,13 +12,13 @@
   var SYS = {
     bill: { n: "เปิดบิลออนไลน์", u: "bill/" }, stock: { n: "สต๊อกสินค้า", u: "stock/" }, account: { n: "บัญชีร้านค้า", u: "account/" },
     shop: { n: "ระบบร้านค้า (บิล · สต๊อก · บัญชี)", u: "app/" }, cafe: { n: "ร้านคาเฟ่ (POS)", u: "cafe/" }, book: { n: "จองห้อง / ให้เช่า", u: "booking/" },
-    payroll: { n: "คำนวณเงินเดือน", u: "payroll/" }, time: { n: "ลงเวลา / ตอกบัตร", u: "time/" }
+    payroll: { n: "คำนวณเงินเดือน", u: "payroll/" }, time: { n: "ลงเวลา / ตอกบัตร", u: "time/" }, todo: { n: "To-Do งานที่ต้องทำ", u: "todo/" }
   };
-  var GROUP = { shop: ["shop", "bill", "stock", "account"], all: ["shop", "bill", "stock", "account", "cafe", "book", "payroll"] };
+  var GROUP = { shop: ["shop", "bill", "stock", "account"], all: ["shop", "bill", "stock", "account", "cafe", "book", "payroll", "todo"] };
   function curSys() {
     var p = location.pathname, ed = (/[?&]ed=([a-z]+)/.exec(location.search) || [])[1];
     if (/\/app\//.test(p)) return ed === "booking" ? "book" : ed || "shop";
-    var m = /\/(bill|stock|account|payroll|time|cafe|booking)\//.exec(p);
+    var m = /\/(bill|stock|account|payroll|time|todo|cafe|booking)\//.exec(p);
     return m ? (m[1] === "booking" ? "book" : m[1]) : "";
   }
   function sysList(u) {
@@ -108,9 +108,23 @@
     if (/@gmail\.co$|@gmial\.|@gamil\.|@hotmail\.co$/.test(E)) return "ตรวจสะกดอีเมลอีกครั้ง (เช่น @gmail.com)";
     return "";
   }
+  /* ---------- ลองใช้ก่อนไม่ต้องสมัคร (หน้าที่ตั้ง window.EDM_TRY) 7 วัน ข้อมูลอยู่ในเครื่องเท่านั้น ---------- */
+  var TRY_DAYS = 7, tryBarEl = null;
+  function tryKey() { return "edm_try_" + (curSys() || "x"); }
+  function tryStart() { try { if (!localStorage.getItem(tryKey())) localStorage.setItem(tryKey(), String(Date.now())); } catch (e) {} }
+  function tryLeft() { var t = 0; try { t = Number(localStorage.getItem(tryKey()) || 0); } catch (e) {} return t ? Math.ceil((t + TRY_DAYS * 864e5 - Date.now()) / 864e5) : TRY_DAYS; }
+  function tryOk() { return !!window.EDM_TRY && tryLeft() > 0; }
+  function tryUsed() { try { return !!localStorage.getItem(tryKey()); } catch (e) { return false; } }
+  function tryBar() {
+    if (tryBarEl) tryBarEl.remove();
+    tryBarEl = document.createElement("div"); tryBarEl.className = "edm-bar warn";
+    tryBarEl.innerHTML = "🧪 โหมดลองใช้ เหลือ " + tryLeft() + " วัน · ข้อมูลอยู่ในเครื่องนี้เท่านั้น <button class=\"edm-btn\" type=\"button\">สมัครเพื่อเก็บข้อมูลถาวร</button>";
+    tryBarEl.querySelector("button").onclick = function () { openGate("signup"); };
+    var hd = document.querySelector("header.top"); if (hd) hd.parentNode.insertBefore(tryBarEl, hd.nextSibling);
+  }
   function perk() { var k = curSys(); return k === "shop" || !k ? "ครบในระบบเดียว: เปิดบิล · ภาษี · สต๊อก · บัญชี" : "บัญชีนี้ใช้กับระบบ " + SYS[k].n; }
   function renderGate() {
-    var tool = /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /booking/.test(location.pathname) ? "ระบบจองและให้เช่า" : /cafe/.test(location.pathname) ? "ระบบร้านคาเฟ่" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
+    var ck = curSys(), tool = ck === "todo" ? "To-Do งานที่ต้องทำ" : ck === "time" ? "ลงเวลา / ตอกบัตร" : /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /booking/.test(location.pathname) ? "ระบบจองและให้เช่า" : /cafe/.test(location.pathname) ? "ระบบร้านคาเฟ่" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
     var h = '<div class="edm-card">';
     if (mode === "sent") {
       h += '<div style="font-size:2.4rem;line-height:1">✅</div><h2>สมัครเรียบร้อย · รอร้านเปิดใช้งาน</h2><p>' + esc(note) + '</p>' +
@@ -125,13 +139,14 @@
       var su = mode === "signup";
       h += '<span class="edm-badge">ทดลองใช้ฟรี ' + TRIAL + ' วัน</span><h2>' + esc(tool) + '</h2>' +
         (note ? '<div class="edm-msg err">' + esc(note) + '</div>' : '') +
-        (su ? '<ul class="edm-perks"><li>' + esc(perk()) + '</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดใช้งานให้หลังสมัคร</li><li>ใช้ต่อเดือนละ ' + PRICE + ' บาท ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
+        (su ? '<ul class="edm-perks"><li>' + esc(perk()) + '</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดใช้งานให้หลังสมัคร</li><li>ไม่ผูกสัญญา ไม่ตัดบัตรอัตโนมัติ ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
         '<div class="edm-tabs"><button data-go="signup" class="' + (su ? "on" : "") + '">สมัครใหม่</button><button data-go="login" class="' + (su ? "" : "on") + '">เข้าสู่ระบบ</button></div>' +
         (su ? '<input class="edm-in" id="edmN" autocomplete="off" placeholder="ชื่อร้าน / ชื่อของคุณ (ไม่บังคับ)">' : '') +
         '<input class="edm-in" id="edmE" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="email" placeholder="อีเมล">' +
         '<input class="edm-in" id="edmP" type="password" autocomplete="new-password" placeholder="' + (su ? "ตั้งรหัสผ่าน (อย่างน้อย 8 ตัว)" : "รหัสผ่าน") + '">' +
         '<button class="edm-btn" id="edmGo">' + (su ? "สมัครทดลองใช้ฟรี" : "เข้าสู่ระบบ") + '</button><div class="edm-msg" id="edmM"></div>' +
         (su ? '' : '<button class="edm-link" data-go="forgot" style="align-self:flex-start">ลืมรหัสผ่าน?</button>') +
+        (tryOk() ? '<button class="edm-btn ghost" data-go="try" type="button">' + (tryUsed() ? "ใช้ต่อแบบไม่สมัคร (เหลือ " + tryLeft() + " วัน)" : "ลองใช้ก่อน ไม่ต้องสมัคร") + '</button>' : (window.EDM_TRY && tryUsed() ? '<p class="edm-muted">ครบ ' + TRY_DAYS + ' วันของโหมดลองใช้แล้ว สมัครเพื่อใช้งานต่อ ข้อมูลที่ทำไว้ยังอยู่ในเครื่องนี้</p>' : '')) +
         '<p class="edm-muted">ข้อมูลของคุณบันทึกในเครื่องนี้ และสำรองไว้ในระบบของร้าน (เฉพาะคุณที่เรียกกลับได้) เพื่อใช้ต่อจากเครื่องอื่น · <a href="' + BASE + 'privacy/" target="_blank" rel="noopener" style="color:inherit">นโยบายความเป็นส่วนตัว</a></p>' +
         '<a class="edm-link" href="' + BASE + '" style="align-self:center;color:var(--muted,#66706B)">← กลับไปร้าน Excel Data Master</a>';
     }
@@ -145,7 +160,7 @@
       pw.setAttribute("autocapitalize", "off"); pw.setAttribute("autocorrect", "off"); pw.setAttribute("spellcheck", "false");
       pw.setAttribute("data-lpignore", "true"); pw.setAttribute("data-1p-ignore", "true"); pw.setAttribute("data-form-type", "other");
     }
-    gate.querySelectorAll("[data-go]").forEach(function (b) { b.onclick = function () { mode = b.dataset.go; note = ""; renderGate(); }; });
+    gate.querySelectorAll("[data-go]").forEach(function (b) { b.onclick = function () { if (b.dataset.go === "try") { tryStart(); closeGate(); tryBar(); return; } mode = b.dataset.go; note = ""; renderGate(); }; });
     var go = gate.querySelector("#edmGo"), M = gate.querySelector("#edmM");
     if (!go) return;
     var first = gate.querySelector(mode === "signup" ? "#edmN" : "#edmE");
@@ -168,7 +183,7 @@
         if (mode === "signup") { mode = "sent"; note = r.msg; renderGate(); return; }
         if (mode === "forgot") { M.className = "edm-msg ok"; M.textContent = r.msg; return; }
         me = { email: r.email, token: r.token, name: r.name, exp: r.exp, status: r.status, paid: r.paid, sys: r.sys, ts: Date.now() };
-        LS.set(me); closeGate(); apply(); cloudInit(); toast(expired() ? "บัญชีหมดอายุแล้ว ต่ออายุเพื่อใช้งานต่อ" : "ยินดีต้อนรับ ใช้งานได้ถึง " + thDate(me.exp));
+        LS.set(me); closeGate(); if (tryBarEl) { tryBarEl.remove(); tryBarEl = null; } apply(); cloudInit(); toast(expired() ? "บัญชีหมดอายุแล้ว ต่ออายุเพื่อใช้งานต่อ" : "ยินดีต้อนรับ ใช้งานได้ถึง " + thDate(me.exp));
       }).catch(function () { go.disabled = false; go.textContent = t0; M.className = "edm-msg err"; M.textContent = "เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง"; });
     };
   }
@@ -274,8 +289,8 @@
   /* ---------- สำรองข้อมูลขึ้นระบบร้าน (Google Drive ของร้าน) ----------
    * เข้าสู่ระบบแล้ว: ดึงข้อมูลล่าสุดจากระบบ (ถ้าใหม่กว่า) แล้วสำรองให้อัตโนมัติทุกครั้งที่ข้อมูลเปลี่ยน
    * ใช้เปลี่ยนเครื่องได้ และข้อมูลไม่หายแม้ล้างเบราว์เซอร์ */
-  var CK = ["edm_acc", "edm_bill_docs", "edm_bill_seller", "edm_bill_counter", "edm_bill_customers", "edm_suppliers", "edm_services", "edm_stock_items", "edm_stock_tx", "edm_stock_cfg", "edm_pay_company", "edm_pay_emps", "edm_pay_records", "edm_pay_summary", "edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg", "edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit"];
-  var KEEP = ["edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit"]; // วัตถุดิบคาเฟ่ (เพิ่มภายหลัง): ข้อมูลบนระบบรุ่นเก่ายังไม่มี ไม่ลบของในเครื่อง
+  var CK = ["edm_acc", "edm_bill_docs", "edm_bill_seller", "edm_bill_counter", "edm_bill_customers", "edm_suppliers", "edm_services", "edm_stock_items", "edm_stock_tx", "edm_stock_cfg", "edm_pay_company", "edm_pay_emps", "edm_pay_records", "edm_pay_summary", "edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg", "edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit", "edm_todo_items", "edm_todo_log", "edm_todo_cfg"];
+  var KEEP = ["edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit", "edm_todo_items", "edm_todo_log", "edm_todo_cfg"]; // วัตถุดิบคาเฟ่ (เพิ่มภายหลัง): ข้อมูลบนระบบรุ่นเก่ายังไม่มี ไม่ลบของในเครื่อง
   var NEWK = ["edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg"]; // ระบบจอง (เพิ่มภายหลัง): ถ้าข้อมูลบนระบบยังไม่มี ไม่ลบข้อมูลในเครื่อง
   var SK = "edm_sync", cloudTimer = null, dirtySince = 0, pushing = false, cloudOn = false;
   function cGet() { try { return JSON.parse(localStorage.getItem(SK) || "{}") || {}; } catch (e) { return {}; } }
@@ -357,6 +372,7 @@
       // เปิดหน้าสมัคร/เข้าสู่ระบบ เมื่อระบบหลังร้านพร้อมแล้วเท่านั้น
       // (ถ้ายังไม่ได้ติดตั้งโค้ดสมาชิก จะไม่ขึ้นหน้าต่างเลย และใช้งานได้ตามปกติ — ไม่มีหน้าต่างขึ้นแล้วเด้งหาย)
       var want = (/[?&]start=(signup|login)/.exec(location.search) || [])[1]; // ลิงก์จากหน้าร้าน: ?start=signup (ทดลองใช้) / ?start=login
+      if (!want && tryOk() && tryUsed()) { tryBar(); return; }   // กำลังลองใช้แบบไม่สมัคร
       call({ a: "ping" }).then(function (r) { if (r && r.ok && !me) openGate(want); }).catch(function () {});
       return;
     }
