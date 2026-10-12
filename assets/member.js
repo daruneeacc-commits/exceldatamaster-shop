@@ -265,8 +265,9 @@
     menu.querySelector("#edmPush").onclick = function () { var b = this; b.textContent = "กำลังสำรอง..."; cloudPush(true).then(function (ok) { var c = menu && menu.querySelector("#edmCl"); if (c) c.firstChild.textContent = ok ? cloudLine() + " " : "สำรองไม่สำเร็จ ลองใหม่อีกครั้ง "; b.textContent = "สำรองตอนนี้"; }); };
     menu.querySelector("#edmOut").onclick = function () {
       if (!confirm("ออกจากระบบ? (ข้อมูลในเครื่องนี้ยังอยู่ครบ)")) return;
-      call({ a: "logout", email: me.email, token: me.token }).catch(function () {});
-      cloudPush(); cloudStop(); me = null; LS.set(null); menu.remove(); menu = null; apply(); openGate("login");
+      var em = me.email, tk = me.token;
+      cloudPush(true).catch(function () {}).then(function () { call({ a: "logout", email: em, token: tk }).catch(function () {}); }); // สำรองครั้งสุดท้ายก่อนออก
+      cloudStop(); me = null; LS.set(null); menu.remove(); menu = null; apply(); openGate("login");
     };
   }
   document.addEventListener("click", function () { if (menu) { menu.remove(); menu = null; } });
@@ -297,7 +298,7 @@
   function cSet(o) { try { localStorage.setItem(SK, JSON.stringify(o)); } catch (e) {} }
   function snap() { var o = {}; CK.forEach(function (k) { var v = null; try { v = localStorage.getItem(k); } catch (e) {} if (v != null) o[k] = v; }); return JSON.stringify({ v: 1, keys: o }); }
   function hashOf(str) { var h = 5381; for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return String(h >>> 0) + ":" + str.length; }
-  function emptyLocal() { return ["edm_bill_docs", "edm_stock_items", "edm_pay_emps", "edm_book_list", "edm_book_res", "edm_cafe_menu"].every(function (k) { var v = localStorage.getItem(k); return !v || v === "[]"; }) && !/"pur":\[\{|"cash":\[\{/.test(localStorage.getItem("edm_acc") || ""); }
+  function emptyLocal() { return ["edm_bill_docs", "edm_stock_items", "edm_pay_emps", "edm_book_list", "edm_book_res", "edm_cafe_menu", "edm_time_log", "edm_todo_items", "edm_tdsheet_items"].every(function (k) { var v = localStorage.getItem(k); return !v || v === "[]"; }) && !/"pur":\[\{|"cash":\[\{/.test(localStorage.getItem("edm_acc") || ""); }
   function timeTh(ts) { var d = new Date(ts); return thDate(ts) + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
   function cloudPush(force) {
     if (!me || !me.token || pushing) return Promise.resolve(false);
@@ -333,12 +334,21 @@
   }
   function cloudInit() {
     if (cloudOn || !me || !me.token) return; cloudOn = true;
-    var S = cGet(), mine = S.email === me.email;
+    var S = cGet(), mine = S.email === me.email, other = !mine && S.email ? S.email : ""; // other = เครื่องนี้เคยเป็นข้อมูลของอีเมลอื่น
     if (!mine) S = { email: me.email, h: "", at: 0 };
     var wipe = localStorage.getItem("edm_sync_wipe") === "1";
     var begin = function () { if (!cloudTimer) cloudTimer = setInterval(cloudTick, 15000); if (!cGet().h) cloudPush(); else cloudTick(); };
     if (wipe) { cloudPush(true).then(begin); return; }
     call({ a: "pull", email: me.email, token: me.token, since: mine ? S.at || 0 : 0 }).then(function (r) {
+      if (other && r && r.ok && !emptyLocal()) {
+        // เปลี่ยนบัญชีบนเครื่องเดียวกัน: ไม่เอาข้อมูลของบัญชีเดิมไปปนกับบัญชีนี้
+        if (r.data && !r.none) { CK.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} }); return cloudRestore(r); }
+        if (confirm("เครื่องนี้มีข้อมูลของบัญชี " + other + "\n\nตกลง = เริ่มบัญชีนี้แบบว่าง (ข้อมูลของ " + other + " ยังอยู่ในระบบของบัญชีนั้น)\nยกเลิก = ใช้ข้อมูลในเครื่องนี้ต่อกับบัญชีนี้")) {
+          CK.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+          cSet({ email: me.email, h: "", at: 0 }); setTimeout(function () { location.reload(); }, 300); return;
+        }
+        cSet(S); cloudPush(true).then(begin); return;
+      }
       if (!r || !r.ok || r.none || r.same || !r.data) { if (r && r.ok && (r.same || r.none) && !mine) cSet(S); begin(); return; }
       var local = snap();
       if (emptyLocal() || (mine && hashOf(local) === S.h)) return cloudRestore(r); // เครื่องนี้ไม่มีอะไรใหม่ → ใช้ข้อมูลจากระบบ

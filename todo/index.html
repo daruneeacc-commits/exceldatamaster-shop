@@ -135,7 +135,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 <body>
 <header class="top"><div class="in">
   <a class="brand" href="/">📋 Excel Data Master <small>· To-Do List</small></a>
-  <nav class="nav"><button class="btn sm ghost" id="csvBtn" type="button">⬇️ CSV</button><button class="btn sm main" id="prBtn" type="button">🖨 พิมพ์ / PDF</button></nav>
+  <nav class="nav"><button class="btn sm ghost" id="csvBtn" type="button" title="ดาวน์โหลดเก็บไว้ในเครื่อง (ไม่มีสูตร)">⬇️ Excel</button><button class="btn sm main" id="prBtn" type="button">🖨 พิมพ์ / PDF</button></nav>
 </div></header>
 <main id="main"></main>
 <nav class="stabs" role="tablist" aria-label="แผ่นงาน">
@@ -300,7 +300,7 @@ function vSet(){return`<div class="band"><h1>ตั้งค่า (TO-DO LIST T
    <div class="skins" style="margin-top:10px"><button type="button" class="skin ${cfg.skin==="pink"?"on":""}" data-skin="pink"><i style="background:#E8779F"></i>โทนชมพู (แบบ Excel)</button><button type="button" class="skin ${cfg.skin==="beige"?"on":""}" data-skin="beige"><i style="background:#A9805E"></i>โทนน้ำตาล (แบบ Google Sheets)</button></div></section>
   <div class="lists">${lst("cats","หมวดหมู่","เพิ่มหมวดเร็ว ๆ ได้ด้วย #ชื่อหมวด ตอนพิมพ์งาน")}${lst("pris","ความสำคัญ","เรียงจากสำคัญมาก → น้อย · คำว่า “ด่วน” = อันดับแรก")}${lst("sts","สถานะ","สถานะ “เสร็จสิ้น” ใช้การติ๊ก ✓ · “ยกเลิก” ไม่นับในความคืบหน้า")}</div>
   <section class="card"><h2>ข้อมูล</h2><div class="row"><button class="btn sm" id="demo" type="button">ใส่งานตัวอย่าง</button><button class="btn sm" id="clrDone" type="button">ลบงานที่เสร็จแล้ว</button><button class="btn sm ghost danger" id="wipe" type="button">ล้างข้อมูลทั้งหมด</button></div>
-   <p class="small muted" style="margin:8px 0 0">ข้อมูลเก็บในเครื่องนี้ สมาชิกที่เข้าสู่ระบบจะสำรองขึ้นคลาวด์และใช้ได้หลายเครื่อง · ปุ่ม ⬇️ CSV เปิดต่อใน Excel / Google Sheets ได้</p></section>`}
+   <p class="small muted" style="margin:8px 0 0">ข้อมูลเก็บในเครื่องนี้ สมาชิกที่เข้าสู่ระบบจะสำรองขึ้นคลาวด์และใช้ได้หลายเครื่อง · กด ⬇️ Excel ด้านบนเพื่อดาวน์โหลดเก็บไว้ในเครื่องกันพลาด (ไฟล์เป็นข้อมูลอย่างเดียว ไม่มีสูตร)</p></section>`}
 function bindSet(){
   $("#ttl").onchange=e=>{cfg.title=e.target.value.trim()||"TO-DO LIST";svCfg()};$("#soon").onchange=e=>{cfg.soon=+e.target.value;svCfg()};
   $$("[data-skin]").forEach(b=>b.onclick=()=>{cfg.skin=b.dataset.skin;svCfg();document.documentElement.dataset.skin=cfg.skin;render()});
@@ -328,9 +328,14 @@ function printNow(){const t=today(),pa=$("#printArea");
     pa.innerHTML=`<div class="pr"><div class="hd"><h1>${esc(cfg.title)}</h1><span>พิมพ์ ${thD(t)} · เสร็จ ${dn}/${A.length} (${A.length?Math.round(dn/A.length*100):0}%) · เกินกำหนด ${items.filter(isLate).length}</span></div>
     <table><thead><tr><th>#</th><th>✓</th><th>รายการ</th><th>ความสำคัญ</th><th>หมวดหมู่</th><th>กำหนดเสร็จ</th><th>สถานะ</th><th>วันคงเหลือ</th></tr></thead><tbody>${L.map((i,k)=>{const n=daysLeft(i);return`<tr><td>${k+1}</td><td>${i.done?"☑":"☐"}</td><td class="${i.done?"s":""}">${esc(i.t)}</td><td>${esc(i.pri)}</td><td>${esc(i.cat)}</td><td>${thD(i.due)}</td><td>${esc(stOf(i))}</td><td>${i.done||n==null?"":n<0?"เลย "+(-n)+" วัน":n===0?"วันนี้":"เหลือ "+n+" วัน"}</td></tr>`}).join("")}</tbody></table></div>`;window.EDM_DOCNAME="ToDo-"+t}
   window.print()}
-function csv(){const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"',L=items.filter(i=>i.t);
-  const s="﻿"+[["เสร็จ","รายการ","ความสำคัญ","หมวดหมู่","วันที่กำหนดเสร็จ","สถานะ","วันคงเหลือ"]].concat(L.map(i=>[i.done?"✓":"",i.t,i.pri,i.cat,i.due?thD(i.due):"",stOf(i),i.done||daysLeft(i)==null?"":daysLeft(i)])).map(r=>r.map(q).join(",")).join("\r\n");
-  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([s],{type:"text/csv;charset=utf-8"}));a.download="todo-"+today()+".csv";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="/assets/vendor/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+function xlsx(){const L=items.filter(i=>i.t),A=live(),dn=A.filter(i=>i.done).length,t=today();toast("กำลังสร้างไฟล์ Excel...");
+  loadXLSX().then(X=>{const rows=L.map((i,k)=>{const n=daysLeft(i);return[k+1,i.done?"✓":"",i.t,i.pri,i.cat,i.due?thD(i.due):"",stOf(i),i.done||n==null?"":n<0?"เลย "+(-n)+" วัน":n===0?"วันนี้":"เหลือ "+n+" วัน"]});
+    const ws=X.utils.aoa_to_sheet([[cfg.title+" · ข้อมูล ณ "+thDL(t)],["งานทั้งหมด "+A.length+" · เสร็จ "+dn+" ("+(A.length?Math.round(dn/A.length*100):0)+"%) · เกินกำหนด "+items.filter(isLate).length],[],["#","เสร็จ","รายการ","ความสำคัญ","หมวดหมู่","วันที่กำหนดเสร็จ","สถานะ","วันคงเหลือ"]].concat(rows));
+    ws["!cols"]=[{wch:5},{wch:6},{wch:42},{wch:12},{wch:14},{wch:16},{wch:16},{wch:14}];ws["!merges"]=[{s:{r:0,c:0},e:{r:0,c:7}},{s:{r:1,c:0},e:{r:1,c:7}}];
+    const cnt=(f,v)=>L.filter(i=>f(i)===v).length,S=[["สรุป ณ "+thDL(t)],[],["ความสำคัญ","จำนวนงานที่ยังไม่เสร็จ"]].concat(cfg.pris.map(p=>[p,A.filter(i=>!i.done&&i.pri===p).length]),[[],["สถานะ","จำนวน"]],cfg.sts.concat([DONE]).map(x=>[x,cnt(stOf,x)]),[[],["หมวดหมู่","จำนวน"]],cfg.cats.map(c=>[c.n,cnt(i=>i.cat,c.n)]));
+    const ws2=X.utils.aoa_to_sheet(S);ws2["!cols"]=[{wch:22},{wch:22}];
+    const wb=X.utils.book_new();X.utils.book_append_sheet(wb,ws,"รายการ");X.utils.book_append_sheet(wb,ws2,"สรุป");X.writeFile(wb,"ToDo-"+t+".xlsx");toast("ดาวน์โหลดไฟล์ Excel แล้ว")}).catch(()=>toast("โหลดตัวสร้าง Excel ไม่สำเร็จ ลองใหม่อีกครั้ง"))}
 
 /* ---------- render ---------- */
 const V={dash:[vDash,bindDash],list:[vList,bindList],cal:[vCal,bindCal],set:[vSet,bindSet]};
@@ -339,7 +344,7 @@ function render(){if(!V[ui.tab])ui.tab="dash";const late=items.filter(isLate).le
   $("#main").innerHTML=V[ui.tab][0]();V[ui.tab][1]();
   const dc=$("#demoClr");if(dc)dc.onclick=()=>{items=[];cfg.demo=false;sv();svCfg();render();toast("ล้างตัวอย่างแล้ว เริ่มเพิ่มงานจริงได้เลย")}}
 $$("[data-tab]").forEach(b=>b.onclick=()=>{ui.tab=b.dataset.tab;svUi();render();window.scrollTo(0,0)});
-$("#prBtn").onclick=printNow;$("#csvBtn").onclick=csv;
+$("#prBtn").onclick=printNow;$("#csvBtn").onclick=xlsx;
 window.addEventListener("storage",e=>{if(e.key===K.items){items=LS.get(K.items,[]);render()}if(e.key===K.cfg){cfg=Object.assign({},CFG0,LS.get(K.cfg,{}));document.documentElement.dataset.skin=cfg.skin;render()}});
 (function migrate(){if(items.length||LS.get(K.cfg,null))return;const old=LS.get("edm_todo_items",[]),oc=LS.get("edm_todo_cfg",{});if(!old.length||oc.demo)return;
   old.forEach(o=>{if(!o||!o.t)return;if(o.cat&&!catOf(o.cat))cfg.cats.push({n:o.cat,c:"#E8779F"});items.push({id:o.id||uid(),t:o.t,pri:o.pri?cfg.pris[0]:cfg.pris[1],cat:o.cat||"",due:o.d||"",st:cfg.sts[0],done:!!o.done,c:o.c||Date.now()})});sv();svCfg()})();
@@ -348,7 +353,7 @@ render();
 })();
 </script>
 <script>window.EDM_TRY=true;</script>
-<script src="../assets/member.js?v=61" defer></script>
+<script src="../assets/member.js?v=62" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>
