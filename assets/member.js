@@ -17,7 +17,7 @@
   var GROUP = { shop: ["shop", "bill", "stock", "account"], all: ["shop", "bill", "stock", "account", "cafe", "book", "payroll", "todo"] };
   function curSys() {
     var p = location.pathname, ed = (/[?&]ed=([a-z]+)/.exec(location.search) || [])[1];
-    if (/\/app\//.test(p)) return ed === "booking" ? "book" : ed || "shop";
+    if (/\/app\//.test(p)) return { bill: "bill", stock: "stock", book: "book", cafe: "cafe" }[ed] || "shop"; // รุ่นที่ edition.js รู้จักเท่านั้น อื่น ๆ = ตัวเต็ม (ระบบร้านค้า)
     var m = /\/(bill|stock|account|payroll|time|todo|cafe|booking)\//.exec(p);
     return m ? (m[1] === "booking" ? "book" : m[1]) : "";
   }
@@ -43,7 +43,7 @@
   try { localStorage.removeItem(KEY); localStorage.removeItem("edm_known"); } catch (e) {} // ล้างค่าที่เวอร์ชันก่อนเคยจำไว้
   var me = LS.get();
   // เปิดอยู่ในกรอบของ "ระบบร้านค้า" (/app/) บนเว็บเดียวกัน → หน้าหลักจัดการเข้าสู่ระบบให้
-  var EMBED = false; try { EMBED = window.top !== window && window.top.location.origin === location.origin; } catch (e) {}
+  var EMBED = false; try { EMBED = window.top !== window && window.top.location.origin === location.origin && /\/app\//.test(window.top.location.pathname); } catch (e) {} // อยู่ในกรอบ /app/ เท่านั้น (หน้า /app/ ตรวจสิทธิ์แล้ว)
   function tellFrames() { for (var i = 0; i < window.frames.length; i++) { try { window.frames[i].postMessage({ edm: "member" }, location.origin); } catch (e) {} } }
   var _set = LS.set; LS.set = function (v) { _set(v); tellFrames(); };
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -173,7 +173,7 @@
       if (bad) { M.className = "edm-msg err"; M.textContent = bad; Ei.focus(); return; }
       if (P && P.value.length < (mode === "signup" ? 8 : 1)) { M.className = "edm-msg err"; M.textContent = mode === "signup" ? "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร" : "กรอกรหัสผ่าน"; return; }
       go.disabled = true; var t0 = go.textContent; go.textContent = "กำลังดำเนินการ..."; M.className = "edm-msg"; M.textContent = "";
-      var req = mode === "signup" ? { a: "signup", email: E, pass: P.value, name: N ? N.value : "", sys: curSys() || "all" }
+      var req = mode === "signup" ? { a: "signup", email: E, pass: P.value, name: N ? N.value : "", sys: curSys() }
         : mode === "forgot" ? { a: "forgot", email: E }
         : { a: "login", email: E, pass: P.value, device: deviceName() };
       call(req).then(function (r) {
