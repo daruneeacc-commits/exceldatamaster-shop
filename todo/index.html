@@ -25,7 +25,7 @@ header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom
 .brand{font-weight:700;text-decoration:none;display:flex;align-items:center;gap:6px;color:var(--a)}.brand small{font-weight:500;color:var(--muted)}
 .nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
 .btn{border:0;border-radius:8px;padding:7px 14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;background:var(--a2);color:var(--ink);font-size:.88rem;min-height:38px}
-.btn.main{background:var(--a);color:var(--a-ink)}.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:4px 10px;font-size:.82rem;min-height:32px}.btn.danger{color:var(--late)}
+.btn.main{background:var(--a);color:var(--a-ink)}[hidden]{display:none!important}.btn.buy{background:#FFE08A;color:#5A3443}.ic{width:1.35em;height:1.35em;flex:none;vertical-align:-.3em;display:inline-block}.ic.s{width:1.15em;height:1.15em;vertical-align:-.22em}.ic.xs{width:1em;height:1em;vertical-align:-.15em}.brand .ic{width:1.6em;height:1.6em}.stabs .ic{width:1.6em;height:1.6em}.stabs button{display:inline-flex;align-items:center;justify-content:center;gap:6px}.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:4px 10px;font-size:.82rem;min-height:32px}.btn.danger{color:var(--late)}
 main{max-width:1180px;margin:0 auto;padding:14px 16px 110px;display:flex;flex-direction:column;gap:14px}
 .band{background:var(--head);color:#fff;border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .band h1{margin:0;font-size:1.25rem;letter-spacing:.06em}.band small{opacity:.9}
@@ -134,15 +134,15 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 </head>
 <body>
 <header class="top"><div class="in">
-  <a class="brand" href="/">📋 Excel Data Master <small>· To-Do List</small></a>
-  <nav class="nav"><button class="btn sm ghost" id="csvBtn" type="button" title="ดาวน์โหลดเก็บไว้ในเครื่อง (ไม่มีสูตร)">⬇️ Excel</button><button class="btn sm main" id="prBtn" type="button">🖨 พิมพ์ / PDF</button></nav>
+  <a class="brand" href="/"><span data-ic="logo"></span>Excel Data Master <small>· To-Do List</small></a>
+  <nav class="nav"><a class="btn sm buy" id="buyBtn" href="/todo/" target="_blank" rel="noopener"><span data-ic="cart"></span>ซื้อเลย</a><button class="btn sm ghost" id="csvBtn" type="button" title="ดาวน์โหลดเก็บไว้ในเครื่อง (ไม่มีสูตร)"><span data-ic="dl"></span>Excel</button><button class="btn sm main" id="prBtn" type="button"><span data-ic="print"></span>พิมพ์ / PDF</button></nav>
 </div></header>
 <main id="main"></main>
 <nav class="stabs" role="tablist" aria-label="แผ่นงาน">
-  <button data-tab="dash" type="button">📊 แดชบอร์ด</button>
-  <button data-tab="list" type="button">📋 รายการ</button>
-  <button data-tab="cal" type="button">📅 ปฏิทิน</button>
-  <button data-tab="set" type="button">⚙️ ตั้งค่า</button>
+  <button data-tab="dash" type="button"><span data-ic="dash"></span>แดชบอร์ด</button>
+  <button data-tab="list" type="button"><span data-ic="list"></span>รายการ</button>
+  <button data-tab="cal" type="button"><span data-ic="cal"></span>ปฏิทิน</button>
+  <button data-tab="set" type="button"><span data-ic="set"></span>ตั้งค่า</button>
 </nav>
 <dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
 <div id="printArea"></div>
@@ -163,6 +163,8 @@ const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const today=()=>TH.today();
 const thD=d=>{if(!d)return"";const x=TH.dt(d);return x.getDate()+" "+MS[x.getMonth()]+" "+String(x.getFullYear()+543).slice(2)};
 const thDL=d=>{const x=TH.dt(d);return"วัน"+DW[x.getDay()]+"ที่ "+x.getDate()+" "+MONTHS[x.getMonth()]+" "+(x.getFullYear()+543)};
+const ICO={"logo": "<rect x=\"4.5\" y=\"4\" width=\"15\" height=\"17.5\" rx=\"3.5\" fill=\"#F9B8CF\" stroke=\"#5A3443\"/><rect x=\"8.5\" y=\"2.5\" width=\"7\" height=\"3.6\" rx=\"1.6\" fill=\"#FFE08A\" stroke=\"#5A3443\"/><circle cx=\"9.6\" cy=\"12.3\" r=\"1\" fill=\"#5A3443\" stroke=\"none\"/><circle cx=\"14.4\" cy=\"12.3\" r=\"1\" fill=\"#5A3443\" stroke=\"none\"/><path d=\"M10.8 14.5q1.2 1 2.4 0\"/><ellipse cx=\"7.9\" cy=\"14.6\" rx=\"1.1\" ry=\".7\" fill=\"#FF8FB1\" stroke=\"none\"/><ellipse cx=\"16.1\" cy=\"14.6\" rx=\"1.1\" ry=\".7\" fill=\"#FF8FB1\" stroke=\"none\"/>", "dash": "<circle cx=\"12\" cy=\"12.5\" r=\"8\" fill=\"#FFE3EC\"/><path d=\"M12 4.5a8 8 0 0 1 8 8h-8z\" fill=\"#F9B8CF\"/><circle cx=\"12\" cy=\"12.5\" r=\"3\" fill=\"#fff\"/><path d=\"M19.5 3.2v2.4M18.3 4.4h2.4\"/>", "list": "<rect x=\"4\" y=\"3.5\" width=\"16\" height=\"18\" rx=\"3.5\" fill=\"#BFE8D4\"/><path d=\"M7.6 9.2l1.3 1.3 2.2-2.4M13.2 9.2h3.6M7.6 15.2l1.3 1.3 2.2-2.4M13.2 15.2h3.6\"/>", "cal": "<rect x=\"3.5\" y=\"5\" width=\"17\" height=\"16\" rx=\"3.5\" fill=\"#fff\"/><path d=\"M3.5 8.5A3.5 3.5 0 0 1 7 5h10a3.5 3.5 0 0 1 3.5 3.5V10h-17z\" fill=\"#F9B8CF\"/><path d=\"M8 3v3.6M16 3v3.6\"/><path d=\"M12 18.4s-3.1-1.8-3.1-3.9a1.6 1.6 0 0 1 3.1-.7 1.6 1.6 0 0 1 3.1.7c0 2.1-3.1 3.9-3.1 3.9z\" fill=\"#FF8FB1\" stroke-width=\"1.2\"/>", "set": "<circle cx=\"17.5\" cy=\"12\" r=\"3\" fill=\"#DCCBFF\"/><circle cx=\"14.75\" cy=\"16.76\" r=\"3\" fill=\"#DCCBFF\"/><circle cx=\"9.25\" cy=\"16.76\" r=\"3\" fill=\"#DCCBFF\"/><circle cx=\"6.5\" cy=\"12\" r=\"3\" fill=\"#DCCBFF\"/><circle cx=\"9.25\" cy=\"7.24\" r=\"3\" fill=\"#DCCBFF\"/><circle cx=\"14.75\" cy=\"7.24\" r=\"3\" fill=\"#DCCBFF\"/><circle cx=\"12\" cy=\"12\" r=\"3.4\" fill=\"#FFE08A\"/>", "dl": "<path d=\"M7 18h10.5a3.8 3.8 0 0 0 .4-7.6A5.5 5.5 0 0 0 7.3 9.7 4.2 4.2 0 0 0 7 18z\" fill=\"#BFD8FF\"/><path d=\"M12 10.5v5.6M9.8 14l2.2 2.2 2.2-2.2\"/>", "print": "<rect x=\"7\" y=\"3.5\" width=\"10\" height=\"5\" rx=\"1.2\" fill=\"#fff\"/><rect x=\"3.5\" y=\"8\" width=\"17\" height=\"9\" rx=\"3\" fill=\"#F9B8CF\"/><rect x=\"7\" y=\"14\" width=\"10\" height=\"6.5\" rx=\"1.2\" fill=\"#fff\"/><circle cx=\"17\" cy=\"11\" r=\".9\" fill=\"#5A3443\" stroke=\"none\"/>", "cart": "<path d=\"M4 10h16l-1.6 8.3a2.5 2.5 0 0 1-2.5 2H8.1a2.5 2.5 0 0 1-2.5-2z\" fill=\"#FFE08A\"/><path d=\"M8.5 10L11 5M15.5 10L13 5M9 13.5V17M12 13.5V17M15 13.5V17\"/>", "hol": "<path d=\"M6 21V4\"/><path d=\"M6 4.5h11l-2.5 3.5 2.5 3.5H6z\" fill=\"#FF8FB1\"/>", "warn": "<circle cx=\"12\" cy=\"12\" r=\"8.5\" fill=\"#FFE08A\"/><path d=\"M12 7.5V13\" stroke-width=\"2\"/><circle cx=\"12\" cy=\"16.3\" r=\"1.1\" fill=\"#5A3443\" stroke=\"none\"/>", "star": "<path d=\"M12 3.5l2.3 5 5.2.6-3.9 3.6 1.1 5.3L12 15.4 7.3 18l1.1-5.3-3.9-3.6 5.2-.6z\" fill=\"#FFE08A\"/><path d=\"M19.5 15.5v3M18 17h3\"/>"};
+const ic=(n,c)=>`<svg class="ic${c?" "+c:""}" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#5A3443" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICO[n]||""}</svg>`;
 const DONE="เสร็จสิ้น";
 const CFG0={cats:[{n:"งาน",c:"#E8779F"},{n:"การเงิน",c:"#5BA37A"},{n:"ลูกค้า",c:"#5B8BD6"},{n:"ส่วนตัว",c:"#B07CC6"}],pris:["สูง","ปานกลาง","ต่ำ"],sts:["รอดำเนินการ","กำลังแก้ไข","รอข้อมูลเพิ่ม","ยกเลิก"],lines:3,start:0,skin:"pink",title:"TO-DO LIST",soon:3};
 let cfg=Object.assign({},CFG0,LS.get(K.cfg,{}));
@@ -196,7 +198,7 @@ function miniCal(){const [y,m]=ui.ym.split("-").map(Number),first=new Date(y,m-1
     h+=`<button type="button" data-d="${d}" class="${o?"o ":""}${d===t?"td ":""}${d===ui.sel?"sel ":""}${H||x.getDay()===0?"hol":""}" title="${esc(H)}">${x.getDate()}${has[d]?"<i></i>":""}</button>`}
   return`<div class="mhd"><button class="btn sm ghost" data-mv="-1" type="button" aria-label="เดือนก่อน">‹</button><b>${MONTHS[m-1]} ${y+543}</b><button class="btn sm ghost" data-mv="1" type="button" aria-label="เดือนถัดไป">›</button></div><div class="mini">${h}</div>`}
 function dayList(d){const L=items.filter(i=>i.t&&i.due===d).sort((a,b)=>priIx(a.pri)-priIx(b.pri)),H=TH.hol(d);
-  return`<div class="dlist"><b>${thDL(d)}</b>${H?`<span class="small" style="color:var(--hol)">🎌 ${esc(H)}</span>`:""}${L.length?L.map(i=>`<div><input type="checkbox" data-ck="${i.id}" ${i.done?"checked":""} aria-label="เสร็จ"><span style="${i.done?"text-decoration:line-through;color:var(--muted)":""}">${esc(i.t)}</span><span class="small pr-${Math.min(priIx(i.pri),2)}" style="margin-left:auto">${esc(i.pri)}</span></div>`).join(""):`<span class="muted small">ไม่มีงานวันนี้</span>`}</div>`}
+  return`<div class="dlist"><b>${thDL(d)}</b>${H?`<span class="small" style="color:var(--hol)">${ic("hol","s")} ${esc(H)}</span>`:""}${L.length?L.map(i=>`<div><input type="checkbox" data-ck="${i.id}" ${i.done?"checked":""} aria-label="เสร็จ"><span style="${i.done?"text-decoration:line-through;color:var(--muted)":""}">${esc(i.t)}</span><span class="small pr-${Math.min(priIx(i.pri),2)}" style="margin-left:auto">${esc(i.pri)}</span></div>`).join(""):`<span class="muted small">ไม่มีงานวันนี้</span>`}</div>`}
 function vDash(){const L=live(),dn=L.filter(i=>i.done).length,tot=L.length,p=tot?Math.round(dn/tot*100):0,late=items.filter(isLate).length,wait=tot-dn,t=today();
   const soon=items.filter(i=>i.t&&!i.done&&i.due&&stOf(i)!=="ยกเลิก").sort((a,b)=>a.due<b.due?-1:1).slice(0,6);
   return demoBanner()+`<div class="band"><h1>${esc(cfg.title)}</h1><small>${thDL(t)}</small></div>
@@ -208,7 +210,7 @@ function vDash(){const L=live(),dn=L.filter(i=>i.done).length,tot=L.length,p=tot
      <h2 style="margin-top:14px">ความสำคัญ <small class="muted">งานที่ยังไม่เสร็จ</small></h2>${bars(cfg.pris.map((n,k)=>[n,L.filter(i=>!i.done&&i.pri===n).length,["var(--late)","var(--soon)","var(--ok)"][k]]))}</section>
    <section class="card"><h2>สถานะ</h2>${bars(cfg.sts.map(n=>[n,items.filter(i=>i.t&&!i.done&&(i.st||cfg.sts[0])===n).length]).concat([[DONE,items.filter(i=>i.t&&i.done).length,"var(--ok)"]]))}
      <h2 style="margin-top:14px">หมวดหมู่</h2>${bars(cfg.cats.map(c=>[c.n,L.filter(i=>i.cat===c.n).length,c.c]).concat(L.some(i=>!i.cat)?[["ไม่ระบุ",L.filter(i=>!i.cat).length,"#bbb"]]:[]))}
-     <h2 style="margin-top:14px">ใกล้ถึงกำหนด</h2>${soon.length?`<div class="dlist">${soon.map(i=>`<div><span>${esc(i.t)}</span><span style="margin-left:auto">${leftPill(i)}</span></div>`).join("")}</div>`:`<span class="muted small">ไม่มีงานค้าง 🎉</span>`}</section>
+     <h2 style="margin-top:14px">ใกล้ถึงกำหนด</h2>${soon.length?`<div class="dlist">${soon.map(i=>`<div><span>${esc(i.t)}</span><span style="margin-left:auto">${leftPill(i)}</span></div>`).join("")}</div>`:`<span class="muted small">ไม่มีงานค้าง ${ic("star","s")}</span>`}</section>
   </div>`}
 function bindDash(){$$("[data-mv]").forEach(b=>b.onclick=()=>{mvMonth(+b.dataset.mv)});$$(".mini [data-d]").forEach(b=>b.onclick=()=>{ui.sel=b.dataset.d;svUi();render()});bindChecks()}
 function bindChecks(){$$("[data-ck]").forEach(c=>c.onchange=()=>{const it=items.find(x=>x.id===c.dataset.ck);if(it){setDone(it,c.checked);render()}})}
@@ -235,7 +237,7 @@ function vList(){const L=filtered(),A=live(),dn=A.filter(i=>i.done).length,p=A.l
   <div class="qa"><input id="qa" autocomplete="off" enterkeyhint="done" placeholder="พิมพ์งานแล้วกด Enter เช่น ส่งใบเสนอราคา พรุ่งนี้ ด่วน #ลูกค้า" aria-label="เพิ่มงาน"><button class="btn main" id="qaGo" type="button">+ เพิ่ม</button></div>
   <div class="prog"><span>ความคืบหน้า</span><span class="tr"><i style="width:${p}%"></i></span><b>${p}%</b></div>
   <div class="filters">
-   <input type="search" id="q" placeholder="🔎 ค้นหารายการ" value="${esc(ui.q)}">
+   <input type="search" id="q" placeholder="ค้นหารายการ" value="${esc(ui.q)}">
    <select id="fp" aria-label="กรองความสำคัญ">${opts(cfg.pris,ui.fp,"ความสำคัญ: ทั้งหมด")}</select>
    <select id="fc" aria-label="กรองหมวดหมู่">${opts(cfg.cats.map(c=>c.n),ui.fc,"หมวดหมู่: ทั้งหมด")}</select>
    <select id="fs" aria-label="กรองสถานะ">${opts(cfg.sts.concat([DONE]),ui.fs,"สถานะ: ทั้งหมด")}</select>
@@ -268,7 +270,7 @@ const byDay=d=>items.filter(i=>i.t&&i.due===d&&stOf(i)!=="ยกเลิก").s
 function vCal(){const [y,m]=ui.ym.split("-").map(Number),t=today(),ln=cfg.lines,ys=[];for(let k=y-2;k<=y+3;k++)ys.push(k);
   let h="";for(let k=0;k<7;k++)h+=`<div class="h">${DW[(k+cfg.start)%7]}</div>`;
   calCells().forEach(({d,o})=>{const x=TH.dt(d),H=TH.hol(d),L=byDay(d),sh=L.slice(0,ln),more=L.length-sh.length;
-    h+=`<button type="button" class="c${o?" o":""}${d===t?" td":""}${H?" hol":""}${x.getDay()===0||x.getDay()===6?" wk":""}" data-day="${d}"><span class="dn"><span>${x.getDate()}</span>${L.length?`<span class="small muted">${L.filter(i=>i.done).length}/${L.length}</span>`:""}</span>${H?`<span class="hn">${esc(H)}</span>`:""}${sh.map(i=>`<span class="t${i.done?" dn2":isLate(i)?" lt":""}" title="${esc(i.t)}" style="${!i.done&&!isLate(i)&&catOf(i.cat)?"box-shadow:inset 3px 0 0 "+catOf(i.cat).c:""}">${esc(i.t)}</span>`).join("")}${more>0?`<span class="more">⚠ อีก ${more} งาน</span>`:""}</button>`});
+    h+=`<button type="button" class="c${o?" o":""}${d===t?" td":""}${H?" hol":""}${x.getDay()===0||x.getDay()===6?" wk":""}" data-day="${d}"><span class="dn"><span>${x.getDate()}</span>${L.length?`<span class="small muted">${L.filter(i=>i.done).length}/${L.length}</span>`:""}</span>${H?`<span class="hn">${esc(H)}</span>`:""}${sh.map(i=>`<span class="t${i.done?" dn2":isLate(i)?" lt":""}" title="${esc(i.t)}" style="${!i.done&&!isLate(i)&&catOf(i.cat)?"box-shadow:inset 3px 0 0 "+catOf(i.cat).c:""}">${esc(i.t)}</span>`).join("")}${more>0?`<span class="more">${ic("warn","xs")} อีก ${more} งาน</span>`:""}</button>`});
   return`<div class="band"><h1>ปฏิทินงาน ${MONTHS[m-1]} ${y+543}</h1><small>แตะช่องวันเพื่อดู / เพิ่มงาน</small></div>
   <div class="calbar"><button class="btn sm ghost" data-mv="-1" type="button">‹ เดือนก่อน</button>
    <select id="cm" aria-label="เดือน">${MONTHS.map((n,k)=>`<option value="${k+1}" ${k+1===m?"selected":""}>${n}</option>`).join("")}</select>
@@ -277,9 +279,9 @@ function vCal(){const [y,m]=ui.ym.split("-").map(Number),t=today(),ln=cfg.lines,
    <button class="btn sm" id="cToday" type="button">เดือนนี้</button>
    <span class="small muted" style="margin-left:auto">เริ่มสัปดาห์ <select id="cs">${[0,1].map(k=>`<option value="${k}" ${cfg.start===k?"selected":""}>${DW[k]}</option>`).join("")}</select> · แสดง <select id="cl">${[1,2,3,4,5].map(k=>`<option ${cfg.lines===k?"selected":""}>${k}</option>`).join("")}</select> บรรทัด/วัน</span></div>
   <div class="cal" style="--ln:${ln}">${h}</div>
-  <p class="small muted" style="margin:0">งานเกินจำนวนบรรทัดจะขึ้น <b style="color:var(--late)">⚠ อีก N งาน</b> สีแดง · วันหยุดราชการไทยแสดงให้อัตโนมัติ</p>`}
+  <p class="small muted" style="margin:0">งานเกินจำนวนบรรทัดจะขึ้น <b style="color:var(--late)">${ic("warn","xs")} อีก N งาน</b> สีแดง · วันหยุดราชการไทยแสดงให้อัตโนมัติ</p>`}
 function dayDlg(d){const L=byDay(d),H=TH.hol(d);
-  openDlg(`<h3>${thDL(d)} <button class="btn sm ghost" data-x type="button">ปิด</button></h3>${H?`<div class="info">🎌 ${esc(H)}</div>`:""}
+  openDlg(`<h3>${thDL(d)} <button class="btn sm ghost" data-x type="button">ปิด</button></h3>${H?`<div class="info">${ic("hol","s")} ${esc(H)}</div>`:""}
   <div>${L.length?L.map(i=>`<label class="it${i.done?" done":""}"><input type="checkbox" data-ck="${i.id}" ${i.done?"checked":""}><span>${esc(i.t)}</span><span class="small pr-${Math.min(priIx(i.pri),2)}" style="margin-left:auto">${esc(i.pri)}</span></label>`).join(""):`<p class="muted small" style="margin:0">ยังไม่มีงานวันนี้</p>`}</div>
   <div class="qa"><input id="dqa" placeholder="เพิ่มงานวันนี้ เช่น โทรหาลูกค้า ด่วน" autocomplete="off"><button class="btn main" id="dqaGo" type="button">เพิ่ม</button></div>`);
   $$("#dlgBody [data-ck]").forEach(c=>c.onchange=()=>{const it=items.find(x=>x.id===c.dataset.ck);if(it){setDone(it,c.checked);render();dayDlg(d)}});
@@ -299,8 +301,10 @@ function vSet(){return`<div class="band"><h1>ตั้งค่า (TO-DO LIST T
    <span class="small">เตือนใกล้ถึงกำหนดล่วงหน้า <select id="soon">${[1,2,3,5,7].map(k=>`<option ${cfg.soon===k?"selected":""}>${k}</option>`).join("")}</select> วัน</span></div>
    <div class="skins" style="margin-top:10px"><button type="button" class="skin ${cfg.skin==="pink"?"on":""}" data-skin="pink"><i style="background:#E8779F"></i>โทนชมพู (แบบ Excel)</button><button type="button" class="skin ${cfg.skin==="beige"?"on":""}" data-skin="beige"><i style="background:#A9805E"></i>โทนน้ำตาล (แบบ Google Sheets)</button></div></section>
   <div class="lists">${lst("cats","หมวดหมู่","เพิ่มหมวดเร็ว ๆ ได้ด้วย #ชื่อหมวด ตอนพิมพ์งาน")}${lst("pris","ความสำคัญ","เรียงจากสำคัญมาก → น้อย · คำว่า “ด่วน” = อันดับแรก")}${lst("sts","สถานะ","สถานะ “เสร็จสิ้น” ใช้การติ๊ก ✓ · “ยกเลิก” ไม่นับในความคืบหน้า")}</div>
+  <section class="card"><h2>${ic("cart","s")} ซื้อใช้งานต่อเนื่อง</h2><div class="row"><button class="btn sm buy" data-buy="m" type="button">รายเดือน 49 บาท</button><button class="btn sm main" data-buy="y" type="button">รายปี 490 บาท · ฟรี 2 เดือน</button></div>
+   <p class="small muted" style="margin:8px 0 0">โอนแล้วแนบสลิปในหน้าถัดไป ร้านตรวจยอดแล้วเปิดใช้งานให้ ได้อีเมลแจ้งพร้อมใช้ทันที</p></section>
   <section class="card"><h2>ข้อมูล</h2><div class="row"><button class="btn sm" id="demo" type="button">ใส่งานตัวอย่าง</button><button class="btn sm" id="clrDone" type="button">ลบงานที่เสร็จแล้ว</button><button class="btn sm ghost danger" id="wipe" type="button">ล้างข้อมูลทั้งหมด</button></div>
-   <p class="small muted" style="margin:8px 0 0">ข้อมูลเก็บในเครื่องนี้ สมาชิกที่เข้าสู่ระบบจะสำรองขึ้นคลาวด์และใช้ได้หลายเครื่อง · กด ⬇️ Excel ด้านบนเพื่อดาวน์โหลดเก็บไว้ในเครื่องกันพลาด (ไฟล์เป็นข้อมูลอย่างเดียว ไม่มีสูตร)</p></section>`}
+   <p class="small muted" style="margin:8px 0 0">ข้อมูลเก็บในเครื่องนี้ สมาชิกที่เข้าสู่ระบบจะสำรองขึ้นคลาวด์และใช้ได้หลายเครื่อง · กด ${ic("dl","s")} Excel ด้านบนเพื่อดาวน์โหลดเก็บไว้ในเครื่องกันพลาด (ไฟล์เป็นข้อมูลอย่างเดียว ไม่มีสูตร)</p></section>`}
 function bindSet(){
   $("#ttl").onchange=e=>{cfg.title=e.target.value.trim()||"TO-DO LIST";svCfg()};$("#soon").onchange=e=>{cfg.soon=+e.target.value;svCfg()};
   $$("[data-skin]").forEach(b=>b.onclick=()=>{cfg.skin=b.dataset.skin;svCfg();document.documentElement.dataset.skin=cfg.skin;render()});
@@ -310,6 +314,7 @@ function bindSet(){
   $$("[data-lc]").forEach(el=>el.onchange=()=>{cfg.cats[+el.dataset.lc].c=el.value;svCfg()});
   $$("[data-ld]").forEach(b=>b.onclick=()=>{const k=b.dataset.ld;if(cfg[k].length<=1){toast("ต้องมีอย่างน้อย 1 รายการ");return}cfg[k].splice(+b.dataset.lj,1);svCfg();render()});
   $$("[data-la]").forEach(b=>b.onclick=()=>{const k=b.dataset.la,base=k==="cats"?"หมวดใหม่":k==="pris"?"ระดับใหม่":"สถานะใหม่";let n=base,c=2;const has=x=>cfg[k].some(v=>(k==="cats"?v.n:v)===x);while(has(n))n=base+" "+c++;cfg[k].push(k==="cats"?{n,c:"#E8779F"}:n);svCfg();render();const L=$$(`[data-lk="${k}"]`);const e=L[L.length-1];e.focus();e.select()});
+  $$("[data-buy]").forEach(b=>b.onclick=()=>{const M=window.EDM_MEMBER;if(M&&M.buyUrl)window.open(M.buyUrl("todo",b.dataset.buy),"_blank","noopener")});
   $("#demo").onclick=()=>{seed();ui.tab="list";svUi();render();toast("ใส่งานตัวอย่างแล้ว")};
   $("#clrDone").onclick=()=>{const n=items.filter(i=>i.done).length;if(!n){toast("ยังไม่มีงานที่เสร็จ");return}if(!confirm("ลบงานที่เสร็จแล้ว "+n+" รายการ?"))return;items=items.filter(i=>!i.done);sv();render()};
   $("#wipe").onclick=()=>{if(!confirm("ล้างงานทั้งหมดในเครื่องนี้? กู้คืนไม่ได้"))return;items=[];cfg.demo=false;sv();svCfg();render()}}
@@ -320,7 +325,7 @@ function seed(){const t=today(),A=n=>TH.add(t,n),P=cfg.pris,S=cfg.sts,C=cfg.cats
   .forEach(r=>newItem({t:r[0],pri:r[1],cat:r[2],due:r[3],st:r[4]}));
   newItem({t:"สรุปยอดขายเดือนก่อน",pri:P[1],cat:C[0],due:A(-3),done:true});newItem({t:"จ่ายค่าไฟสำนักงาน",pri:P[0],cat:C[1]||C[0],due:A(-2),done:true});
   cfg.demo=true;svCfg()}
-function demoBanner(){return cfg.demo?`<div class="banner"><span>👋 นี่คือ<b>งานตัวอย่าง</b> ลองติ๊ก แก้ หรือเพิ่มงานได้เลย</span><button class="btn sm" id="demoClr" type="button">ล้างตัวอย่าง เริ่มใช้จริง</button></div>`:""}
+function demoBanner(){return cfg.demo?`<div class="banner"><span>${ic("star","s")} นี่คือ<b>งานตัวอย่าง</b> ลองติ๊ก แก้ หรือเพิ่มงานได้เลย</span><button class="btn sm" id="demoClr" type="button">ล้างตัวอย่าง เริ่มใช้จริง</button></div>`:""}
 function printNow(){const t=today(),pa=$("#printArea");
   if(ui.tab==="cal"){const [y,m]=ui.ym.split("-").map(Number),cells=calCells();let rows="";for(let r=0;r<cells.length;r+=7)rows+="<tr>"+cells.slice(r,r+7).map(({d,o})=>{const L=byDay(d),H=TH.hol(d);return`<td style="${o?"color:#aaa":""}"><b>${TH.dt(d).getDate()}</b>${H?`<span style="color:#c00">${esc(H)}</span><br>`:""}${L.map(i=>`<span class="${i.done?"s":""}">• ${esc(i.t)}</span>`).join("<br>")}</td>`}).join("")+"</tr>";
     pa.innerHTML=`<div class="pr"><div class="hd"><h1>ปฏิทินงาน ${MONTHS[m-1]} ${y+543}</h1><span>${esc(cfg.title)}</span></div><table class="cl"><thead><tr>${[0,1,2,3,4,5,6].map(k=>`<th>${DW[(k+cfg.start)%7]}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`;window.EDM_DOCNAME="ปฏิทินงาน-"+MONTHS[m-1]+"-"+(y+543)}
@@ -339,10 +344,12 @@ function xlsx(){const L=items.filter(i=>i.t),A=live(),dn=A.filter(i=>i.done).len
 
 /* ---------- render ---------- */
 const V={dash:[vDash,bindDash],list:[vList,bindList],cal:[vCal,bindCal],set:[vSet,bindSet]};
-function render(){if(!V[ui.tab])ui.tab="dash";const late=items.filter(isLate).length;
-  $$("[data-tab]").forEach(b=>{b.classList.toggle("on",b.dataset.tab===ui.tab);b.setAttribute("aria-selected",b.dataset.tab===ui.tab);if(b.dataset.tab==="list")b.innerHTML="📋 รายการ"+(late?`<span class="n">${late}</span>`:"")});
+function render(){if(!V[ui.tab])ui.tab="dash";{const bb=$("#buyBtn"),M=window.EDM_MEMBER;if(bb)bb.hidden=!!(M&&M.me&&M.me.paid)}const late=items.filter(isLate).length;
+  $$("[data-tab]").forEach(b=>{b.classList.toggle("on",b.dataset.tab===ui.tab);b.setAttribute("aria-selected",b.dataset.tab===ui.tab);if(b.dataset.tab==="list")b.innerHTML=ic("list")+"รายการ"+(late?`<span class="n">${late}</span>`:"")});
   $("#main").innerHTML=V[ui.tab][0]();V[ui.tab][1]();
   const dc=$("#demoClr");if(dc)dc.onclick=()=>{items=[];cfg.demo=false;sv();svCfg();render();toast("ล้างตัวอย่างแล้ว เริ่มเพิ่มงานจริงได้เลย")}}
+$$("[data-ic]").forEach(e=>{e.outerHTML=ic(e.dataset.ic)});
+$("#buyBtn").onclick=e=>{const M=window.EDM_MEMBER;if(M&&M.buyUrl){e.preventDefault();window.open(M.buyUrl("todo"),"_blank","noopener")}};
 $$("[data-tab]").forEach(b=>b.onclick=()=>{ui.tab=b.dataset.tab;svUi();render();window.scrollTo(0,0)});
 $("#prBtn").onclick=printNow;$("#csvBtn").onclick=xlsx;
 window.addEventListener("storage",e=>{if(e.key===K.items){items=LS.get(K.items,[]);render()}if(e.key===K.cfg){cfg=Object.assign({},CFG0,LS.get(K.cfg,{}));document.documentElement.dataset.skin=cfg.skin;render()}});
@@ -353,7 +360,7 @@ render();
 })();
 </script>
 <script>window.EDM_TRY=true;</script>
-<script src="../assets/member.js?v=63" defer></script>
+<script src="../assets/member.js?v=64" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

@@ -118,10 +118,11 @@
   function tryBar() {
     if (tryBarEl) tryBarEl.remove();
     tryBarEl = document.createElement("div"); tryBarEl.className = "edm-bar warn";
-    tryBarEl.innerHTML = "🧪 โหมดลองใช้ เหลือ " + tryLeft() + " วัน · ข้อมูลอยู่ในเครื่องนี้เท่านั้น <button class=\"edm-btn\" type=\"button\">สมัครเพื่อเก็บข้อมูลถาวร</button>";
+    tryBarEl.innerHTML = "🧪 โหมดลองใช้ เหลือ " + tryLeft() + " วัน · ข้อมูลอยู่ในเครื่องนี้เท่านั้น <button class=\"edm-btn\" type=\"button\">สมัครเพื่อเก็บข้อมูลถาวร</button> <a class=\"edm-btn\" href=\"" + buyUrl() + "\" target=\"_blank\" rel=\"noopener\" style=\"background:#D6457A;color:#fff;text-decoration:none\">🛒 ซื้อเลย</a>";
     tryBarEl.querySelector("button").onclick = function () { openGate("signup"); };
     var hd = document.querySelector("header.top"); if (hd) hd.parentNode.insertBefore(tryBarEl, hd.nextSibling);
   }
+  function buyUrl(k, plan) { return API + "?buy=1&sys=" + encodeURIComponent(k || curSys() || "shop") + (plan ? "&plan=" + plan : ""); }
   function perk() { var k = curSys(); return k === "shop" || !k ? "ครบในระบบเดียว: เปิดบิล · ภาษี · สต๊อก · บัญชี" : "บัญชีนี้ใช้กับระบบ " + SYS[k].n; }
   function renderGate() {
     var ck = curSys(), tool = ck === "todo" ? "To-Do งานที่ต้องทำ" : ck === "time" ? "ลงเวลา / ตอกบัตร" : /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /booking/.test(location.pathname) ? "ระบบจองและให้เช่า" : /cafe/.test(location.pathname) ? "ระบบร้านคาเฟ่" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
@@ -148,6 +149,7 @@
         (su ? '' : '<button class="edm-link" data-go="forgot" style="align-self:flex-start">ลืมรหัสผ่าน?</button>') +
         (tryOk() ? '<button class="edm-btn ghost" data-go="try" type="button">' + (tryUsed() ? "ใช้ต่อแบบไม่สมัคร (เหลือ " + tryLeft() + " วัน)" : "ลองใช้ก่อน ไม่ต้องสมัคร") + '</button>' : (window.EDM_TRY && tryUsed() ? '<p class="edm-muted">ครบ ' + TRY_DAYS + ' วันของโหมดลองใช้แล้ว สมัครเพื่อใช้งานต่อ ข้อมูลที่ทำไว้ยังอยู่ในเครื่องนี้</p>' : '')) +
         '<p class="edm-muted">ข้อมูลของคุณบันทึกในเครื่องนี้ และสำรองไว้ในระบบของร้าน (เฉพาะคุณที่เรียกกลับได้) เพื่อใช้ต่อจากเครื่องอื่น · <a href="' + BASE + 'privacy/" target="_blank" rel="noopener" style="color:inherit">นโยบายความเป็นส่วนตัว</a></p>' +
+        '<a class="edm-btn ghost" href="' + buyUrl() + '" target="_blank" rel="noopener">🛒 ซื้อเลย · โอนแล้วแนบสลิป ใช้ได้ทันทีหลังร้านตรวจ</a>' +
         '<a class="edm-link" href="' + BASE + '" style="align-self:center;color:var(--muted,#66706B)">← กลับไปร้าน Excel Data Master</a>';
     }
     h += '</div>';
@@ -389,7 +391,7 @@
     apply(); check(false); cloudInit();
     document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && me && Date.now() - (me.ts || 0) > 30 * 60e3) check(false); });
   }
-  window.EDM_MEMBER = { get me() { return me; }, allowed: function (k) { return allowed(me, k); }, sysList: function () { return sysList(me); }, call: call, check: check, openGate: openGate, push: cloudPush, cloud: cGet, ping: function () { return call({ a: "ping" }); } };
+  window.EDM_MEMBER = { get me() { return me; }, allowed: function (k) { return allowed(me, k); }, buyUrl: buyUrl, sysList: function () { return sysList(me); }, call: call, check: check, openGate: openGate, push: cloudPush, cloud: cGet, ping: function () { return call({ a: "ping" }); } };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
 
