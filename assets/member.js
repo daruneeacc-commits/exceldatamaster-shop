@@ -1,5 +1,5 @@
 /* Excel Data Master · ระบบสมาชิกสำหรับเครื่องมือออนไลน์ (เปิดบิล / คำนวณเงินเดือน)
- * - ทดลองใช้ฟรี 7 วัน แล้วต่ออายุ (ระบบเดี่ยว 149 · ร้านค้า 249 · ครบทุกระบบ 349 บาท / 30 วัน; สมาชิกเดิม 199)
+ * - ทดลองใช้ฟรี 7 วัน แล้วซื้อแยกตามระบบ (ระบบละ 149 · ร้านค้า 249 · To-Do 49 · การเงิน 199 บาท / 30 วัน; สมาชิกเดิม 199 / ครบทุกระบบ ใช้ต่อได้)
  * - บัญชีและวันหมดอายุเก็บที่ระบบหลังร้าน (Google Apps Script) · ข้อมูลบิล/เงินเดือนอยู่ในเบราว์เซอร์ของผู้ใช้เท่านั้น
  */
 (function () {
@@ -15,7 +15,7 @@
     payroll: { n: "คำนวณเงินเดือน", u: "payroll/" }, time: { n: "ลงเวลา / ตอกบัตร", u: "time/" }, todo: { n: "To-Do งานที่ต้องทำ", u: "todo/" },
     finance: { n: "การเงิน SME & ฟรีแลนซ์", u: "finance/" }
   };
-  var GROUP = { shop: ["shop", "bill", "stock", "account"], all: ["shop", "bill", "stock", "account", "cafe", "book", "payroll", "todo", "finance"] };
+  var GROUP = { shop: ["shop", "bill", "stock", "account"], all: ["shop", "bill", "stock", "account", "cafe", "book", "payroll", "todo"] }   // all = แพ็กเดิม (ยกเลิกขายแล้ว ใช้ต่อได้) ไม่รวม time / finance;
   function curSys() {
     var p = location.pathname, ed = (/[?&]ed=([a-z]+)/.exec(location.search) || [])[1];
     if (/\/app\//.test(p)) return { bill: "bill", stock: "stock", book: "book", cafe: "cafe" }[ed] || "shop"; // รุ่นที่ edition.js รู้จักเท่านั้น อื่น ๆ = ตัวเต็ม (ระบบร้านค้า)

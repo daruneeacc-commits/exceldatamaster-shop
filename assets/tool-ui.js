@@ -26,7 +26,7 @@
       has: function () { return arr("edm_pay_emps") > 0; }, demo: function () { clickDemo("#demo"); } }
   };
   var T = TOOLS[key];
-  var LINKS = [["app", "🏪", "ระบบร้านค้า", "ครบทุกระบบในที่เดียว"], ["bill", "🧾", "เปิดบิล", ""], ["stock", "📦", "สต๊อก", ""], ["account", "📒", "บัญชี", ""], ["payroll", "💰", "เงินเดือน", ""]];
+  var LINKS = [["app", "🏪", "ระบบร้านค้า", "บิล · สต๊อก · บัญชี ในที่เดียว"], ["bill", "🧾", "เปิดบิล", ""], ["stock", "📦", "สต๊อก", ""], ["account", "📒", "บัญชี", ""], ["payroll", "💰", "เงินเดือน", ""]];
 
   var css = document.createElement("style");
   css.textContent =
