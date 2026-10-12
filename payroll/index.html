@@ -198,6 +198,26 @@ header.top{border-bottom:1px solid var(--line)}
   body{padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))}
   .toast{bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 }
+
+/* ===== กรอกง่าย ===== */
+[hidden]{display:none!important}
+.emp-acts{display:flex;gap:8px;flex-wrap:wrap}.emp-acts .btn.main{flex:1;min-width:200px;justify-content:center;font-size:.98rem;padding:11px 16px}.emp-acts.sm{gap:6px}
+.mbar{display:flex;align-items:center;gap:10px;background:var(--mint);border-radius:12px;padding:9px 12px;font-size:.88rem}.mbar:empty{display:none}.mbar.todo{background:var(--yel)}
+.mbar .pg{flex:1;height:8px;background:#fff;border-radius:999px;overflow:hidden}.mbar .pg i{display:block;height:100%;background:var(--ok);border-radius:999px}
+.emp .pill{display:inline-block;border-radius:999px;padding:0 8px;font-size:.72rem;font-weight:600;margin-top:2px}.pill.ok{background:var(--mint);color:#22704A}.pill.no{background:#F2EEEA;color:#8A7A70}.pill.need{background:var(--yel);color:#7A5B00}
+.mstat{border-radius:12px;padding:10px 12px;font-size:.88rem;line-height:1.5;background:var(--mint);color:#1F5E3E}.mstat.need{background:var(--yel);color:#6B5310}.mstat b{font-size:1.05rem}
+details.rh summary{cursor:pointer;font-size:.8rem;color:var(--muted)}details.rh[open] summary{margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 4px}.chips:empty{display:none}
+.chip{border:1px dashed #D9BBA8;background:#fff;border-radius:999px;padding:6px 12px;font-size:.84rem;font-weight:600;cursor:pointer;color:var(--ink)}
+#chIn .chip:hover{background:var(--mint);border-color:#7FC8A9}#chDed .chip:hover{background:var(--rose);border-color:#E9A0AE}
+.chip-off{display:none!important}
+.eq{font-size:.76rem;color:var(--ok);font-weight:600;min-height:1em}.eq.n{color:var(--danger)}
+details.adv{border:1px solid var(--line);border-radius:10px;padding:8px 12px}details.adv summary{cursor:pointer;font-weight:600;font-size:.88rem}
+.wz{display:flex;flex-direction:column;gap:12px}.wz .q{font-weight:700;font-size:.92rem;display:flex;gap:8px;align-items:center}.wz .q i{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:inline-grid;place-items:center;font-size:.8rem;flex:none}
+.wtypes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.wtypes button{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:9px 11px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.wtypes button b{font-size:.92rem}.wtypes button small{font-size:.76rem;color:var(--muted);line-height:1.35}.wtypes button.on{border-color:var(--accent);background:#FFF3EA;box-shadow:inset 0 0 0 1px var(--accent)}
+.wz .acts{display:flex;gap:8px;justify-content:flex-end}
 </style>
 </head>
 <body>
@@ -227,7 +247,9 @@ header.top{border-bottom:1px solid var(--line)}
     <div class="card">
       <h2>พนักงาน <small id="empCount"></small></h2>
       <div class="emps" id="emps"></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="addEmp">＋ เพิ่มพนักงาน</button><button class="btn ghost" id="bulkBtn">📋 กรอกทั้งเดือนแบบตาราง</button><button class="btn ghost" id="copyPrev">↻ คัดลอกจากเดือนก่อน</button></div>
+      <div class="mbar" id="mBar"></div>
+      <div class="emp-acts"><button class="btn main" id="fillAll">✓ คิดเงินเดือนให้ทุกคน</button><button class="btn ghost" id="addEmp">＋ เพิ่มพนักงาน</button></div>
+      <div class="emp-acts sm"><button class="btn sm ghost" id="bulkBtn">📋 กรอกทุกคนแบบตาราง</button><button class="btn sm ghost" id="copyPrev">↻ คัดลอกจากเดือนก่อน</button></div>
     </div>
 
     <div class="card" id="empCard" hidden>
@@ -238,37 +260,38 @@ header.top{border-bottom:1px solid var(--line)}
         <div class="f qf" id="hrsF"><label>ชั่วโมงทำงาน (ชม.)</label><input class="in-" data-m="hrs" type="number" min="0" step="0.5" inputmode="decimal"></div>
         <div class="f qf" id="pcsF"><label>จำนวนชิ้น / งาน</label><input class="in-" data-m="pcs" type="number" min="0" step="1" inputmode="decimal"></div>
       </div>
-      <div class="rate-hint" id="rateHint"></div>
+      <div class="mstat" id="mStat"></div>
+      <details class="rh"><summary>ดูวิธีคิดค่าจ้าง / ค่า OT ต่อชั่วโมง</summary><div class="rate-hint" id="rateHint"></div></details>
       <div id="incBox">
-      <h3>➕ รายได้เพิ่ม</h3>
+      <h3>เดือนนี้มีรายได้เพิ่มไหม?</h3><div class="chips" id="chIn"></div>
       <div class="row3">
-        <div class="f otf"><label>OT วันทำงาน ×1.5 (ชม.)</label><input class="in-" data-m="ot15" type="number" min="0" step="0.5" inputmode="decimal"></div>
-        <div class="f otf"><label id="hwLabel">ทำงานวันหยุด (ชม.)</label><input class="in-" data-m="ot2" type="number" min="0" step="0.5" inputmode="decimal"></div>
-        <div class="f otf"><label>OT วันหยุด ×3 (ชม.)</label><input class="in-" data-m="ot3" type="number" min="0" step="0.5" inputmode="decimal"></div>
-        <div class="f"><label>เบี้ยขยัน</label><input class="in-" data-m="dil" type="number" min="0" step="0.01" inputmode="decimal"></div>
-        <div class="f" id="salesF"><label id="salesLabel">ยอดขาย (คิดคอม %)</label><input class="in-" data-m="sales" type="number" min="0" step="0.01" inputmode="decimal"></div>
-        <div class="f"><label>ค่าคอม / Incentive</label><input class="in-" data-m="com" type="number" min="0" step="0.01" inputmode="decimal"></div>
-        <div class="f"><label>โบนัส</label><input class="in-" data-m="bonus" type="number" min="0" step="0.01" inputmode="decimal"></div>
-        <div class="f"><label>รายได้อื่น</label><input class="in-" data-m="oth" type="number" min="0" step="0.01" inputmode="decimal"></div>
-        <div class="f"><label>ชื่อรายได้อื่น</label><input class="in-" data-m="othL" placeholder="เช่น ค่าเดินทาง Service charge"></div>
+        <div class="f otf" data-g="ot"><label>OT หลังเลิกงาน (1.5 เท่า) · ชั่วโมง</label><input class="in-" data-m="ot15" type="number" min="0" step="0.5" inputmode="decimal"><small class="eq" data-eq="ot15"></small></div>
+        <div class="f otf" data-g="ot"><label id="hwLabel">ทำงานวันหยุด (ชม.)</label><input class="in-" data-m="ot2" type="number" min="0" step="0.5" inputmode="decimal"><small class="eq" data-eq="ot2"></small></div>
+        <div class="f otf" data-g="ot"><label>OT วันหยุด หลังเลิกงาน (3 เท่า) · ชั่วโมง</label><input class="in-" data-m="ot3" type="number" min="0" step="0.5" inputmode="decimal"><small class="eq" data-eq="ot3"></small></div>
+        <div class="f" data-g="dil"><label>เบี้ยขยัน (บาท)</label><input class="in-" data-m="dil" type="number" min="0" step="0.01" inputmode="decimal"></div>
+        <div class="f" id="salesF" data-g="com"><label id="salesLabel">ยอดขาย (คิดคอม %)</label><input class="in-" data-m="sales" type="number" min="0" step="0.01" inputmode="decimal"><small class="eq" data-eq="sales"></small></div>
+        <div class="f" data-g="com"><label>ค่าคอม / Incentive (บาท)</label><input class="in-" data-m="com" type="number" min="0" step="0.01" inputmode="decimal"></div>
+        <div class="f" data-g="bonus"><label>โบนัส (บาท)</label><input class="in-" data-m="bonus" type="number" min="0" step="0.01" inputmode="decimal"></div>
+        <div class="f" data-g="oth"><label>รายได้อื่น (บาท)</label><input class="in-" data-m="oth" type="number" min="0" step="0.01" inputmode="decimal"></div>
+        <div class="f" data-g="oth"><label>ชื่อรายได้อื่น</label><input class="in-" data-m="othL" placeholder="เช่น ค่าเดินทาง Service charge"></div>
       </div>
       </div>
-      <h3>➖ รายการหัก</h3>
+      <h3>เดือนนี้มีรายการหักไหม?</h3><div class="chips" id="chDed"></div>
       <div class="row3">
-        <div class="f mf"><label>ขาดงาน (วัน)</label><input class="in-" data-m="abs" type="number" min="0" step="0.5" inputmode="decimal"></div>
-        <div class="f mf"><label>ลาไม่รับค่าจ้าง (วัน)</label><input class="in-" data-m="leave" type="number" min="0" step="0.5" inputmode="decimal"></div>
-        <div class="f otf"><label>มาสาย (นาที)</label><input class="in-" data-m="late" type="number" min="0" step="1" inputmode="numeric"></div>
-        <div class="f"><label>เบิกล่วงหน้า</label><input class="in-" data-m="adv" type="number" min="0" step="0.01" inputmode="decimal"></div>
-        <div class="f nf"><label>กยศ. (บาท)</label><input class="in-" data-m="slf" type="number" min="0" step="0.01" inputmode="decimal" placeholder="ตามหนังสือแจ้ง"></div>
-        <div class="f"><label>เงินกู้ / ผ่อนชำระ</label><input class="in-" data-m="loan" type="number" min="0" step="0.01" inputmode="decimal"></div>
-        <div class="f"><label>หักอื่น</label><input class="in-" data-m="ded" type="number" min="0" step="0.01" inputmode="decimal"></div>
-        <div class="f"><label>ชื่อรายการหักอื่น</label><input class="in-" data-m="dedL" placeholder="เช่น ค่าเสียหาย ค่าชุด"></div>
+        <div class="f mf" data-g="abs"><label>ขาดงาน (วัน)</label><input class="in-" data-m="abs" type="number" min="0" step="0.5" inputmode="decimal"><small class="eq" data-eq="abs"></small></div>
+        <div class="f mf" data-g="abs"><label>ลาไม่รับค่าจ้าง (วัน)</label><input class="in-" data-m="leave" type="number" min="0" step="0.5" inputmode="decimal"><small class="eq" data-eq="leave"></small></div>
+        <div class="f otf" data-g="late"><label>มาสายรวม (นาที)</label><input class="in-" data-m="late" type="number" min="0" step="1" inputmode="numeric"><small class="eq" data-eq="late"></small></div>
+        <div class="f" data-g="adv"><label>เบิกล่วงหน้า (บาท)</label><input class="in-" data-m="adv" type="number" min="0" step="0.01" inputmode="decimal"></div>
+        <div class="f nf" data-g="slf"><label>กยศ. (บาท)</label><input class="in-" data-m="slf" type="number" min="0" step="0.01" inputmode="decimal" placeholder="ตามหนังสือแจ้ง"></div>
+        <div class="f" data-g="loan"><label>ผ่อนเงินกู้ (บาท)</label><input class="in-" data-m="loan" type="number" min="0" step="0.01" inputmode="decimal"></div>
+        <div class="f" data-g="ded"><label>หักอื่น (บาท)</label><input class="in-" data-m="ded" type="number" min="0" step="0.01" inputmode="decimal"></div>
+        <div class="f" data-g="ded"><label>ชื่อรายการหักอื่น</label><input class="in-" data-m="dedL" placeholder="เช่น ค่าเสียหาย ค่าชุด"></div>
       </div>
       <div class="totals" id="empTotals"></div>
       <div id="empWarn"></div>
 
       <details class="more" id="empMore">
-        <summary>👤 ข้อมูลพนักงานและค่าลดหย่อนภาษี</summary>
+        <summary>👤 ข้อมูลพนักงาน · รูปแบบค่าจ้าง · ค่าลดหย่อน <small class="note">(ตั้งครั้งเดียว)</small></summary>
         <div style="display:flex;flex-direction:column;gap:10px">
           <div class="row">
             <div class="f"><label>รหัสพนักงาน</label><input class="in-" data-e="code"></div>
@@ -311,7 +334,7 @@ header.top{border-bottom:1px solid var(--line)}
 
     <div class="card">
       <details class="more" id="coMore" style="border:0;padding:0">
-        <summary>🏢 ข้อมูลบริษัทและการตั้งค่า <small class="note" id="coSum"></small></summary>
+        <summary>🏢 ข้อมูลบริษัท (ใช้พิมพ์สลิป) <small class="note" id="coSum"></small></summary>
         <div style="display:flex;flex-direction:column;gap:10px">
           <div class="logo-pick"><div class="pv" id="logoPv"></div><div style="display:flex;gap:6px;flex-wrap:wrap"><label class="btn sm ghost">📷 เลือกโลโก้<input type="file" id="logoIn" accept="image/*" hidden></label><button class="btn sm ghost" id="logoClr" type="button">ลบโลโก้</button></div></div>
           <div class="f"><label>ชื่อบริษัท / ร้าน</label><input class="in-" data-c="name"></div>
@@ -330,6 +353,7 @@ header.top{border-bottom:1px solid var(--line)}
           </div>
           <h3>ประเภทธุรกิจ</h3>
           <div class="f"><label>เลือกให้ใกล้ที่สุด ระบบจะตั้งค่าเริ่มต้นให้ (แก้เองได้)</label><select class="in-" id="bizSel"><option value="">— เลือกประเภทธุรกิจ —</option></select><div class="note" id="bizNote"></div></div>
+          <details class="adv"><summary>⚙️ ตั้งค่าสูตรขั้นสูง <small class="note">(ปกติไม่ต้องแก้ ค่าเริ่มต้นตามกฎหมายแล้ว)</small></summary><div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
           <h3>สูตรคำนวณ</h3>
           <div class="row">
             <div class="f"><label>หารวันต่อเดือน (คิดค่าจ้างรายวัน)</label><input class="in-" data-c="dpm" type="number" min="1" step="1"></div>
@@ -346,6 +370,7 @@ header.top{border-bottom:1px solid var(--line)}
             <div class="f"><label>หัก ณ ที่จ่ายฟรีแลนซ์ (%)</label><input class="in-" data-c="whtF" type="number" min="0" step="0.5"></div>
           </div>
           <p class="note">ค่าเริ่มต้นตามกฎหมาย: ประกันสังคม 5% ฐานค่าจ้าง (ไม่รวมโบนัส) ขั้นต่ำ 1,650 บาท เพดานตามปีของงวด: ก่อน 2569 = 15,000 (หักสูงสุด 750) · 2569–2571 = 17,500 (875) · 2572–2574 = 20,000 (1,000) · 2575 ขึ้นไป = 23,000 (1,150) · ค่าจ้างต่อวัน = เงินเดือน ÷ 30 · ค่าจ้างต่อชั่วโมง = ค่าจ้างต่อวัน ÷ 8</p>
+          </div></details>
         </div>
       </details>
     </div>
@@ -488,11 +513,16 @@ function renderPeriod(){
 }
 const AVC=[["#FFE3D2","#A8481F"],["#DDEBF8","#2F6299"],["#DCF2E6","#22704A"],["#ECE4F7","#6B4A9E"],["#FCEBB0","#7A5B00"],["#FDE2E7","#A3283E"]];
 function avStyle(s){let h=0;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))>>>0;const c=AVC[h%AVC.length];return"background:"+c[0]+";color:"+c[1]}
+function needQty(e){const r=(recs[key()]||{})[e.id];if(!r)return false;return(e.type==="h"&&!num(r.hrs))||(e.type==="p"&&!num(r.pcs))}
+function activeEmps(){const s=ymKey(ui.y,ui.m)+"-01",l=ymKey(ui.y,ui.m)+"-"+pad(new Date(ui.y,ui.m+1,0).getDate());return emps.filter(e=>!(e.end&&e.end<s)&&!(e.start&&e.start>l))}
 function renderEmps(){
   $("#empCount").textContent=emps.length?emps.length+" คน":"";
-  if(!emps.length){$("#emps").innerHTML=`<div class="empty"><div>ยังไม่มีพนักงาน</div><button class="btn main" id="demo">✨ ลองใส่ข้อมูลตัวอย่าง</button></div>`;$("#demo").onclick=demo;return}
+  if(!emps.length){$("#mBar").innerHTML="";$("#emps").innerHTML=`<div class="empty"><div>ยังไม่มีพนักงาน · กด <b>＋ เพิ่มพนักงาน</b> ตอบ 4 ข้อก็เริ่มได้เลย</div><button class="btn ghost" id="demo">✨ ลองใส่ข้อมูลตัวอย่าง</button></div>`;$("#demo").onclick=demo;$("#fillAll").hidden=true;return}
+  $("#fillAll").hidden=false;
   $("#emps").innerHTML=emps.map(e=>{const{res}=calcUpTo(e,ui.y,ui.m);const has=recs[key()]&&recs[key()][e.id];
-    return`<button class="emp ${ui.sel===e.id?"on":""}" data-id="${e.id}"><span class="av" style="${avStyle(e.name||e.id||"")}">${esc((e.name||"?").trim().charAt(0))}</span><span><b>${esc(e.name||"(ยังไม่ใส่ชื่อ)")}</b><small>${esc(e.code)}${e.pos?" · "+esc(e.pos):""}</small></span><span class="amt">${has&&res?fmt(res.net):"–"}<small class="note">${has?"รับสุทธิ":"ยังไม่คิดเดือนนี้"}</small></span></button>`}).join("");
+    return`<button class="emp ${ui.sel===e.id?"on":""}" data-id="${e.id}"><span class="av" style="${avStyle(e.name||e.id||"")}">${esc((e.name||"?").trim().charAt(0))}</span><span><b>${esc(e.name||"(ยังไม่ใส่ชื่อ)")}</b><small>${esc(e.code)}${e.pos?" · "+esc(e.pos):""}</small><br>${has?(needQty(e)?`<span class="pill need">${e.type==="h"?"ใส่ชั่วโมงก่อน":"ใส่จำนวนชิ้นก่อน"}</span>`:`<span class="pill ok">คิดแล้ว</span>`):`<span class="pill no">ยังไม่คิดเดือนนี้</span>`}</span><span class="amt">${has&&res?fmt(res.net):"–"}<small class="note">${has?"รับสุทธิ":""}</small></span></button>`}).join("");
+  const act=activeEmps(),done=act.filter(e=>recs[key()]&&recs[key()][e.id]&&!needQty(e)).length;
+  $("#mBar").className="mbar"+(done<act.length?" todo":"");$("#mBar").innerHTML=act.length?`<span>${done===act.length?"✓ คิดครบทุกคนแล้ว":"คิดแล้ว "+done+" จาก "+act.length+" คน"}</span><span class="pg"><i style="width:${act.length?done/act.length*100:0}%"></i></span>`:"";
   $$("#emps .emp").forEach(b=>b.onclick=()=>{ui.sel=b.dataset.id;rec(ui.sel,null,true);svRecs();svUi();if(ui.view!=="all"&&ui.view!=="month"&&ui.view!=="year")ui.view="slip";renderAll();if(innerWidth<980)$("#empCard").scrollIntoView({behavior:"smooth",block:"start"})});
 }
 function renderEmpCard(){
@@ -503,13 +533,13 @@ function renderEmpCard(){
   $("#daysF").style.display=t==="d"?"":"none";$("#hrsF").style.display=t==="h"?"":"none";$("#pcsF").style.display=t==="p"?"":"none";
   $$("#empCard .otf").forEach(x=>x.style.display=t==="m"||t==="d"||t==="h"?"":"none");$$("#empCard .mf").forEach(x=>x.style.display=t==="m"?"":"none");$$("#empCard .nf").forEach(x=>x.style.display=t==="f"?"none":"");
   $("#fIncF").style.display=t==="f"?"":"none";$("#salesF").style.display=num(e.comPct)>0?"":"none";$("#salesLabel").textContent="ยอดขาย (คิดคอม "+fmt0(e.comPct)+"%)";
-  $("#hwLabel").textContent=t==="m"?"ทำงานวันหยุด ×1 (ชม.)":"ทำงานวันหยุด ×2 (ชม.)";
+  $("#hwLabel").textContent=t==="m"?"มาทำงานวันหยุด (1 เท่า) · ชั่วโมง":"มาทำงานวันหยุด (2 เท่า) · ชั่วโมง";
   $("#baseLabel").textContent={m:"เงินเดือนประจำ",d:"ค่าจ้างต่อวันประจำ",h:"ค่าจ้างต่อชั่วโมงประจำ",p:"ค่าจ้างต่อชิ้นประจำ",f:"ค่าจ้างต่องวด (ค่าเริ่มต้น)"}[t]+" (ใช้เป็นค่าเริ่มต้นทุกเดือน)";
   $("#typeNote").textContent={m:"ได้เงินเดือนเท่ากันทุกเดือน หักขาด/ลาไม่รับค่าจ้างเป็นรายวัน · ทำงานวันหยุดได้เพิ่ม 1 เท่า",d:"ได้ตามวันที่มาทำงานจริง · ทำงานวันหยุดได้ 2 เท่า",h:"พาร์ทไทม์ ได้ตามชั่วโมงที่ทำงาน",p:"ได้ตามจำนวนชิ้น/งานที่ทำได้ เช่น ช่างเย็บ แพ็กของ",f:"จ้างทำของ/ฟรีแลนซ์ หัก ณ ที่จ่าย "+(num(co.whtF)||3)+"% (ภ.ง.ด.3) ไม่หักประกันสังคม"}[t];
   $$("[data-m]").forEach(i=>{const v=r[i.dataset.m];if(document.activeElement!==i)i.value=v==null||v===0&&i.type==="number"&&i.dataset.m!=="rate"?"":v});
   $$("[data-e]").forEach(i=>{if(i.type==="checkbox")i.checked=!!e[i.dataset.e];else if(document.activeElement!==i)i.value=e[i.dataset.e]==null||(i.type==="number"&&!num(e[i.dataset.e])&&i.dataset.e!=="salary")?"":e[i.dataset.e]});
   $$("#typeSeg button").forEach(b=>b.classList.toggle("on",b.dataset.type===t));
-  renderEmpTotals();
+  renderEmpTotals();applyChips();
 }
 function renderEmpTotals(){
   const e=empById(ui.sel);if(!e)return;const{res:c,ytd}=calcUpTo(e,ui.y,ui.m);if(!c)return;const t=c.t;
@@ -526,7 +556,25 @@ function renderEmpTotals(){
   else if(t==="p")h=`ค่าจ้าง = จำนวนชิ้น × ${fmt(c.rate)} บาท`;else h=`หัก ณ ที่จ่าย ${num(co.whtF)||3}% ออกหนังสือรับรอง 50 ทวิ และยื่น ภ.ง.ด.3 · ไม่หักประกันสังคม`;
   const mw=num(co.minWage);if(mw&&(t==="m"||t==="d"||t==="h")&&c.daily>0&&c.daily<mw)h+=`<div class="warn" style="margin-top:6px">⚠️ ค่าจ้างต่อวัน ${fmt(c.daily)} ต่ำกว่าค่าแรงขั้นต่ำที่ตั้งไว้ ${fmt0(mw)} บาท/วัน</div>`;
   $("#rateHint").innerHTML=h;
+  const EQ={ot15:c.ot15,ot2:c.ot2,ot3:c.ot3,abs:-c.absD,leave:-c.leaveD,late:-c.lateD,sales:c.comP};
+  $$("[data-eq]").forEach(x=>{const v=EQ[x.dataset.eq]||0;x.textContent=v?(v<0?"หัก ":"ได้ ")+"฿"+fmt(Math.abs(v)):"";x.classList.toggle("n",v<0)});
+  const r=rec(e.id)||{},q=t==="h"?num(r.hrs):t==="p"?num(r.pcs):1,extra=r2(c.ot15+c.ot2+c.ot3+c.dil+c.com+c.bonus+c.oth),cut=r2(c.absD+c.leaveD+c.lateD+c.adv+c.ded+c.loan);
+  $("#mStat").className="mstat"+(q?"":" need");
+  $("#mStat").innerHTML=!q?`⚠️ ใส่${t==="h"?"จำนวนชั่วโมงที่ทำงาน":"จำนวนชิ้นงานที่ทำได้"}เดือนนี้ในช่องด้านบน แล้วระบบคิดเงินให้ทันที`
+    :`✓ คิดยอดเดือนนี้ให้แล้ว · รับสุทธิ <b>฿${fmt(c.net)}</b>`+(extra||cut?`<br><small>${extra?"รายได้เพิ่ม ฿"+fmt(extra):""}${extra&&cut?" · ":""}${cut?"รายการหัก ฿"+fmt(cut):""}</small>`:`<br><small>ถ้าเดือนนี้ไม่มี OT ขาด ลา หรือรายการพิเศษ ไม่ต้องกรอกอะไรเพิ่ม</small>`);
 }
+/* ---------- ช่องกรอกแบบกดเพิ่มเฉพาะที่มี ---------- */
+const GRP=[["ot","OT / ทำงานวันหยุด","in"],["dil","เบี้ยขยัน","in"],["com","ค่าคอม / ยอดขาย","in"],["bonus","โบนัส","in"],["oth","รายได้อื่น","in"],["abs","ขาด / ลา","ded"],["late","มาสาย","ded"],["adv","เบิกล่วงหน้า","ded"],["slf","กยศ.","ded"],["loan","ผ่อนเงินกู้","ded"],["ded","หักอื่น","ded"]];
+const openG=new Set();openG.k="";
+function applyChips(){const e=empById(ui.sel);if(!e)return;const k=e.id+key();if(openG.k!==k){openG.clear();openG.k=k}
+  const ch={in:[],ded:[]};
+  GRP.forEach(([g,n,side])=>{const F=$$(`#empCard [data-g="${g}"]`);F.forEach(f=>f.classList.remove("chip-off"));
+    const avail=F.some(f=>f.style.display!=="none");
+    const has=F.some(f=>{const i=f.querySelector("input");return i&&i.type==="number"&&num(i.value)!==0});
+    if(has)openG.add(g);const show=avail&&openG.has(g);
+    F.forEach(f=>f.classList.toggle("chip-off",!show));if(avail&&!show)ch[side].push(`<button type="button" class="chip" data-chip="${g}">${side==="in"?"+":"−"} ${n}</button>`)});
+  $("#chIn").innerHTML=ch.in.join("");$("#chDed").innerHTML=ch.ded.join("");
+  $$("[data-chip]").forEach(b=>b.onclick=()=>{const g=b.dataset.chip;openG.add(g);applyChips();const i=$(`#empCard [data-g="${g}"]:not(.chip-off) input`);i&&i.focus()})}
 function renderCo(){
   $$("[data-c]").forEach(i=>{if(document.activeElement!==i)i.value=co[i.dataset.c]==null||(i.dataset.c==="ssoMax"&&!(num(co.ssoMax)>0))?"":co[i.dataset.c]});
   $('[data-c="ssoMax"]').placeholder="อัตโนมัติ "+fmt0(ssoCap(ui.y));
@@ -713,7 +761,26 @@ $$("#typeSeg button").forEach(b=>b.onclick=()=>{const e=empById(ui.sel);if(!e)re
 $$("[data-c]").forEach(i=>{const h=()=>{co[i.dataset.c]=i.type==="number"?num(i.value):i.value;svCo();$("#coSum").textContent=co.name?"· "+co.name:"· ยังไม่ได้กรอก";update()};i.oninput=h;i.onchange=h});
 $("#logoIn").onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image(),u=URL.createObjectURL(f);img.onload=()=>{const m=200,s=Math.min(1,m/Math.max(img.width,img.height)),cv=document.createElement("canvas");cv.width=Math.round(img.width*s);cv.height=Math.round(img.height*s);cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);co.logo=cv.toDataURL("image/png");svCo();renderCo();renderPaper();URL.revokeObjectURL(u)};img.src=u};
 $("#logoClr").onclick=()=>{co.logo="";svCo();renderCo();renderPaper()};
-$("#addEmp").onclick=()=>{const e=newEmp();emps.push(e);svEmps();ui.sel=e.id;rec(e.id,null,true);svRecs();svUi();renderAll();$("#empMore").open=true;setTimeout(()=>{const n=$('[data-e="name"]');n&&n.focus()},50)};
+const WT=[["m","รายเดือน","เงินเดือนเท่ากันทุกเดือน"],["d","รายวัน","ได้ตามวันที่มาทำงาน"],["h","รายชั่วโมง","พาร์ทไทม์ ได้ตามชั่วโมง"],["p","ตามชิ้นงาน","ได้ตามจำนวนชิ้น เช่น เย็บ แพ็ก"],["f","ฟรีแลนซ์","จ้างเป็นงาน หัก ณ ที่จ่าย 3%"]];
+const WAMT={m:"เงินเดือน (บาท / เดือน)",d:"ค่าจ้างต่อวัน (บาท)",h:"ค่าจ้างต่อชั่วโมง (บาท)",p:"ค่าจ้างต่อชิ้น (บาท)",f:"ค่าจ้างต่องวด (บาท)"};
+function openWizard(){let ty=(BIZ[co.biz]||{}).type||"m";$("#dlgTitle").textContent="เพิ่มพนักงาน · ตอบ 4 ข้อ";
+  $("#dlgBody").innerHTML=`<div class="wz">
+    <div class="f"><span class="q"><i>1</i>ชื่อพนักงาน</span><input class="in-" id="wName" placeholder="เช่น สมชาย ใจดี" autocomplete="off"><input class="in-" id="wPos" placeholder="ตำแหน่ง (ไม่ใส่ก็ได้)"></div>
+    <div class="f"><span class="q"><i>2</i>จ่ายเงินแบบไหน</span><div class="wtypes">${WT.map(([k,n,d])=>`<button type="button" data-wt="${k}"><b>${n}</b><small>${d}</small></button>`).join("")}</div></div>
+    <div class="f"><span class="q"><i>3</i><span id="wAmtL"></span></span><input class="in-" id="wAmt" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0"></div>
+    <div class="f"><span class="q"><i>4</i>หักอะไรบ้าง</span><div id="wDed"><label class="chk"><input type="checkbox" id="wSso" checked> หักประกันสังคม (5% ระบบคิดให้)</label><label class="chk"><input type="checkbox" id="wTax" checked> หักภาษี ณ ที่จ่าย (คิดให้เองตามรายได้ทั้งปี)</label></div><div class="note" id="wFN" hidden>ฟรีแลนซ์: ระบบหัก ณ ที่จ่าย ${num(co.whtF)||3}% ให้อัตโนมัติ ไม่หักประกันสังคม และออกใบ 50 ทวิ ได้</div></div>
+    <div class="acts"><button type="button" class="btn ghost" id="wCancel">ยกเลิก</button><button type="button" class="btn main" id="wSave">บันทึกพนักงาน</button></div>
+    <p class="note" style="margin:0">เลขบัตรประชาชน บัญชีธนาคาร ค่าลดหย่อนภาษี ใส่เพิ่มทีหลังได้ใน "ข้อมูลพนักงาน"</p></div>`;
+  const setT=t=>{ty=t;$$("[data-wt]").forEach(b=>b.classList.toggle("on",b.dataset.wt===t));$("#wAmtL").textContent=WAMT[t];$("#wDed").hidden=t==="f";$("#wFN").hidden=t!=="f"};setT(ty);
+  $$("[data-wt]").forEach(b=>b.onclick=()=>{setT(b.dataset.wt);$("#wAmt").focus()});$("#wCancel").onclick=()=>dlg.close();
+  $("#wSave").onclick=()=>{const name=$("#wName").value.trim(),amt=num($("#wAmt").value);if(!name){toast("ใส่ชื่อพนักงานก่อน");$("#wName").focus();return}if(!(amt>0)){toast("ใส่จำนวนเงินก่อน");$("#wAmt").focus();return}
+    const e=newEmp({name,pos:$("#wPos").value.trim(),type:ty,salary:amt,sso:ty!=="f"&&$("#wSso").checked,tax:ty==="f"?false:$("#wTax").checked});emps.push(e);svEmps();ui.sel=e.id;rec(e.id,null,true);svRecs();svUi();dlg.close();renderAll();
+    toast(ty==="h"||ty==="p"?"เพิ่ม "+name+" แล้ว · ใส่จำนวน"+(ty==="h"?"ชั่วโมง":"ชิ้น")+"ของเดือนนี้ได้เลย":"เพิ่ม "+name+" แล้ว · คิดเงินเดือนเดือนนี้ให้แล้ว");
+    setTimeout(()=>{if(dlg.open)return;const i=$(ty==="h"?'[data-m="hrs"]':ty==="p"?'[data-m="pcs"]':'[data-m="rate"]');if(i&&innerWidth>=980)i.focus()},80)};
+  dlg.showModal();setTimeout(()=>$("#wName").focus(),60)}
+$("#addEmp").onclick=openWizard;
+$("#fillAll").onclick=()=>{const act=activeEmps();if(!act.length)return toast("ยังไม่มีพนักงาน");if(!recs[key()])recs[key()]={};let n=0;act.forEach(e=>{if(!recs[key()][e.id]){rec(e.id,null,true);n++}});svRecs();if(!ui.sel&&act[0])ui.sel=act[0].id;renderAll();
+  const need=act.filter(needQty).map(e=>e.name||e.code);toast((n?"คิดยอดปกติให้ "+n+" คนแล้ว":"ทุกคนคิดเดือนนี้แล้ว")+(need.length?" · ใส่ชั่วโมง/ชิ้นงานให้: "+need.join(", "):" · แก้เฉพาะคนที่มี OT ขาด หรือลา"))};
 $("#delEmp").onclick=()=>{const e=empById(ui.sel);if(!e)return;if(!confirm(`ลบ "${e.name||e.code}" และประวัติเงินเดือนทั้งหมดของคนนี้?`))return;
   emps=emps.filter(x=>x.id!==e.id);Object.values(recs).forEach(R=>delete R[e.id]);svEmps();svRecs();ui.sel=emps[0]?emps[0].id:null;svUi();renderAll();toast("ลบแล้ว")};
 $("#certDate").onchange=e=>{certDate=e.target.value;renderPaper()};
