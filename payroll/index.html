@@ -12,8 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
 <style>
-:root{--bg:#F4F6F5;--card:#fff;--ink:#0F1513;--muted:#66706B;--line:#E2E6E4;--soft:#F4F6F5;--accent:#127A4B;--accent-ink:#fff;--warn:#8A5A00;--warnbg:#FFF4DC;--danger:#B3261E}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1110;--card:#161C1A;--ink:#EEF2F0;--muted:#97A29D;--line:#26302C;--soft:#1C2421;--accent:#4CC48A;--accent-ink:#06120C;--warn:#F0C27A;--warnbg:#2A2416;--danger:#F2867E}}
+:root{color-scheme:light;--bg:#FFF8F2;--card:#fff;--ink:#3A2A22;--muted:#86716A;--line:#F1DFD3;--soft:#FFF1E7;--accent:#C8582A;--accent-ink:#fff;--warn:#8A5A00;--warnbg:#FFF4DC;--danger:#C2364A;--peach:#FFE3D2;--yel:#FCEBB0;--sky:#DDEBF8;--mint:#DCF2E6;--lav:#ECE4F7;--rose:#FDE2E7;--ok:#2E8B57}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif}
 a{color:inherit}
@@ -153,18 +152,64 @@ dialog.wide{max-width:min(1100px,96vw);width:96vw}
 .c50 table{width:100%;border-collapse:collapse}.c50 th,.c50 td{border:1px solid #000;padding:.7mm 1.6mm;vertical-align:top;font-size:7.9pt}.c50 thead th{text-align:center;font-weight:600}.c50 td.n{text-align:right;white-space:nowrap;width:24mm}.c50 td.d{text-align:center;width:22mm}.c50 tr.s td{font-size:7.1pt;padding-top:.2mm;padding-bottom:.2mm}.c50 tr.s td:first-child{padding-left:6mm}.c50 tr.s2 td:first-child{padding-left:10mm}.c50 tbody td{border-top:0;border-bottom:0}.c50 tfoot td{font-weight:700}
 .c50 .ft{display:grid;grid-template-columns:1fr 1.35fr;border-top:1px solid #000;margin-top:auto}.c50 .ft>div{padding:2mm 3mm}.c50 .ft>div+div{border-left:1px solid #000;text-align:center}.c50 .seal{width:17mm;height:17mm;border:1px dashed #555;border-radius:50%;display:grid;place-items:center;font-size:6.4pt;color:#444;float:right;text-align:center;line-height:1.2}
 .c50 .rm{font-size:6.7pt;margin-top:1.6mm;line-height:1.35}
+
+/* ===== โทนพาสเทล (เข้าชุดกับ To-Do / การเงิน SME) ===== */
+body{font-size:14.5px}
+header.top{border-bottom:1px solid var(--line)}
+.brand{color:var(--accent)}
+.ic{width:1.3em;height:1.3em;flex:none;display:inline-block;vertical-align:-.28em}
+.btn{border-radius:10px}.btn.main{background:var(--accent);box-shadow:0 2px 0 #9E4119}.btn.ghost{background:#fff}
+.btn.buy{background:#FFE08A;color:#4A3B12}
+.card{border-radius:14px;box-shadow:none;border:1px solid var(--line)}
+.editor>.card>h2:first-child{margin:-16px -16px 0;padding:11px 16px 11px 54px;background:var(--cap,var(--peach));border-radius:14px 14px 0 0;min-height:46px}
+.editor>.card>h2:first-child::before{left:16px;width:28px;height:28px;border-radius:50%;background:#fff;color:var(--capi,var(--accent));box-shadow:0 0 0 2px var(--capi,var(--accent));font-size:.85rem}
+.editor>.card>h2:first-child small{color:var(--ink);opacity:.7}
+.editor>.card:nth-of-type(1){--cap:var(--yel);--capi:#A0740A}
+.editor>.card:nth-of-type(2){--cap:var(--sky);--capi:#3E77B5}
+.editor>.card:nth-of-type(3){--cap:var(--peach);--capi:#C8582A}
+.editor>.card:nth-of-type(4){border-color:#E2D6F2}
+.editor>.card:nth-of-type(4) details.more>summary,#empMore>summary{background:var(--lav);border-radius:10px;padding:9px 12px;list-style-position:inside}
+#empMore>summary{background:var(--soft)}
+.in-{border-color:#EADBD0;border-radius:9px}.in-:focus{border-color:var(--accent);box-shadow:0 0 0 3px #FBE0D2}
+.f label{color:#8A6B5E}
+.seg{background:var(--soft)}.seg button.on{background:var(--accent);color:#fff;box-shadow:none}
+.seg.chips button{border-radius:999px}.seg.chips button.on{background:var(--accent);color:#fff;box-shadow:none}
+#viewSeg button[data-v="dash"]{--cc:var(--yel)}#viewSeg button[data-v="slip"],#viewSeg button[data-v="all"]{--cc:var(--peach)}#viewSeg button[data-v="month"],#viewSeg button[data-v="year"]{--cc:var(--sky)}#viewSeg button[data-v="sso"]{--cc:var(--mint)}#viewSeg button[data-v="cert"],#viewSeg button[data-v="tax"]{--cc:var(--lav)}
+#viewSeg button:not(.on){background:var(--cc,#fff);box-shadow:none;color:var(--ink)}
+.emp{border-radius:12px;border-color:var(--line);transition:background .15s}.emp:hover{background:#FFFBF7}
+.emp.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:#FFF6EF}
+.emp .av{width:38px;height:38px;font-size:1rem}
+.emp .amt{color:var(--ok)}.emp .amt small{color:var(--muted)}
+#incBox h3,#incBox+h3{display:inline-flex;align-self:flex-start;align-items:center;gap:6px;border-radius:999px;padding:4px 12px;font-size:.84rem;margin-top:6px}
+#incBox h3{background:var(--mint);color:#22704A}#incBox+h3{background:var(--rose);color:#A3283E}
+.totals{background:var(--soft);border:1px dashed #EBC7B2;border-radius:12px;padding:10px 14px}
+.totals .big{color:var(--accent);font-size:1.25rem;border-top:1px dashed #EBC7B2}
+.rate-hint{background:var(--yel);color:#6B5310}
+.cta{background:linear-gradient(135deg,#FFE3D2,#FCEBB0);border:0;box-shadow:none}
+.paper-scroll{background:#F4E6DB}
+.kgrid div{border:0!important;border-radius:10px}.kgrid div:nth-child(1){background:#FFF3C9}.kgrid div:nth-child(2){background:#DFF3E7}.kgrid div:nth-child(3){background:#FFE7DA}.kgrid div:nth-child(4){background:#EEE6F8}.kgrid div:nth-child(5){background:#E2EEF9}.kgrid div:nth-child(6){background:#FDE6EA}
+.kgrid b{color:#3A2A22}
+.toast{background:var(--ink);color:#fff}
+@media(max-width:980px){
+  .mtabs{position:fixed;left:0;right:0;bottom:0;z-index:30;margin:0;padding:0 0 env(safe-area-inset-bottom,0px);gap:0;background:#F3F2F1;border-top:1px solid #D6D4D2;max-width:none}
+  .mtabs button{border-radius:0;background:transparent;box-shadow:none;padding:9px 4px;min-height:52px;color:#555;border-bottom:3px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+  .mtabs button.on{background:#fff;color:var(--accent);border-bottom-color:var(--accent)}
+  .mtabs .ic{width:1.5em;height:1.5em}
+  body{padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))}
+  .toast{bottom:calc(66px + env(safe-area-inset-bottom,0px))}
+}
 </style>
 </head>
 <body>
 <header class="top"><div class="in">
-  <a class="brand" href="/">📊 Excel Data Master <small>· คำนวณเงินเดือน</small></a>
+  <a class="brand" href="/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#4A3A30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="6" width="18.4" height="12" rx="2.5" fill="#FFD3BA"/><circle cx="12" cy="12" r="2.8" fill="#FFE08A"/><path d="M6 9v6M18 9v6"/></svg>Excel Data Master <small>· คำนวณเงินเดือน</small></a>
   <nav class="nav">
-    <button class="btn sm ghost" id="dataBtn">💾 สำรอง / นำเข้า</button>
-    <a class="btn sm ghost" href="/">🛒 ร้านเทมเพลต</a>
+    <button class="btn sm ghost" id="dataBtn"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#4A3A30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3.5h11l3.5 3.5v13H5z" fill="#DDEBF8"/><path d="M8 3.5v5h7v-5M8 20.5v-6h8v6"/></svg>สำรอง / นำเข้า</button>
+    <a class="btn sm ghost" href="/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#4A3A30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16v10H4z" fill="#FCEBB0"/><path d="M3 10l2-5.5h14L21 10M9.5 20v-5h5v5"/></svg>ร้านเทมเพลต</a>
   </nav>
 </div></header>
 
-<div class="mtabs"><button data-mt="edit" class="on">✏️ กรอกข้อมูล</button><button data-mt="view">📄 สลิป / สรุป</button></div>
+<div class="mtabs"><button data-mt="edit" class="on"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#4A3A30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4.2L15.6 5.2a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.2 19z" fill="#FFE3D2"/><path d="M13.8 7l3.2 3.2"/></svg>กรอกข้อมูล</button><button data-mt="view"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#4A3A30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4L6 21z" fill="#DCF2E6"/><path d="M9 8h6M9 11.5h6M9 15h3.5"/></svg>สลิป / สรุป</button></div>
 
 <main>
   <section class="editor" id="editor">
@@ -441,11 +486,13 @@ function renderPeriod(){
   const R=recs[key()]||{};$("#payDate").value=(R._payDate)||defaultPayDate(ui.y,ui.m);
   const n=emps.filter(e=>R[e.id]).length;$("#periodInfo").textContent=n?`คิดแล้ว ${n} คน`:"";
 }
+const AVC=[["#FFE3D2","#A8481F"],["#DDEBF8","#2F6299"],["#DCF2E6","#22704A"],["#ECE4F7","#6B4A9E"],["#FCEBB0","#7A5B00"],["#FDE2E7","#A3283E"]];
+function avStyle(s){let h=0;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))>>>0;const c=AVC[h%AVC.length];return"background:"+c[0]+";color:"+c[1]}
 function renderEmps(){
   $("#empCount").textContent=emps.length?emps.length+" คน":"";
   if(!emps.length){$("#emps").innerHTML=`<div class="empty"><div>ยังไม่มีพนักงาน</div><button class="btn main" id="demo">✨ ลองใส่ข้อมูลตัวอย่าง</button></div>`;$("#demo").onclick=demo;return}
   $("#emps").innerHTML=emps.map(e=>{const{res}=calcUpTo(e,ui.y,ui.m);const has=recs[key()]&&recs[key()][e.id];
-    return`<button class="emp ${ui.sel===e.id?"on":""}" data-id="${e.id}"><span class="av">${esc((e.name||"?").trim().charAt(0))}</span><span><b>${esc(e.name||"(ยังไม่ใส่ชื่อ)")}</b><small>${esc(e.code)}${e.pos?" · "+esc(e.pos):""}</small></span><span class="amt">${has&&res?fmt(res.net):"–"}<small class="note">${has?"รับสุทธิ":"ยังไม่คิดเดือนนี้"}</small></span></button>`}).join("");
+    return`<button class="emp ${ui.sel===e.id?"on":""}" data-id="${e.id}"><span class="av" style="${avStyle(e.name||e.id||"")}">${esc((e.name||"?").trim().charAt(0))}</span><span><b>${esc(e.name||"(ยังไม่ใส่ชื่อ)")}</b><small>${esc(e.code)}${e.pos?" · "+esc(e.pos):""}</small></span><span class="amt">${has&&res?fmt(res.net):"–"}<small class="note">${has?"รับสุทธิ":"ยังไม่คิดเดือนนี้"}</small></span></button>`}).join("");
   $$("#emps .emp").forEach(b=>b.onclick=()=>{ui.sel=b.dataset.id;rec(ui.sel,null,true);svRecs();svUi();if(ui.view!=="all"&&ui.view!=="month"&&ui.view!=="year")ui.view="slip";renderAll();if(innerWidth<980)$("#empCard").scrollIntoView({behavior:"smooth",block:"start"})});
 }
 function renderEmpCard(){

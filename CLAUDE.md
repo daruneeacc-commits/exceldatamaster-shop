@@ -9,6 +9,7 @@
 - `index.html` หน้าร้าน/หน้าหลัก (มี SEO + prerender: `tools/seo-home.py`, `tools/prerender.js`)
 - `app/` เชลล์ระบบออนไลน์ (เมนู, iframe ระบบย่อย) · `app/edition.js` รุ่นแยก (bill, stock, cafe, book)
 - `bill/` เปิดบิล/ใบกำกับภาษี/CN/DN · `account/` VAT, ลูกหนี้, 50 ทวิ · `payroll/` เงินเดือน/ประกันสังคม
+- หน้าตาโทนพาสเทล (ไอคอนวาดเอง แท็บล่างแบบ Excel บนมือถือ): `todo/` ชมพู · `finance/` ฟ้า · `payroll/` พีช (ปรับแค่ CSS/ไอคอน ไม่แตะสูตร)
 - `cafe/` POS คาเฟ่ (ข้อมูลแยก edm_cafe_*) · `booking/` จองห้องพัก
 - `todo/` To-Do แบบตาราง (edm_tdsheet_*) · `finance/` การเงิน SME & ฟรีแลนซ์ (edm_fin_items/cfg) 199/1,990
 - **ขายแยกทุกระบบ** (12 ต.ค. 2569): หน้าราคาเป็นรายการสินค้า (`PLANS` ใน index.html) ระบบละ 149 · ร้านค้า 249 · To-Do 49 · การเงิน 199 · ยกเลิกขายแพ็ก all (ครบทุกระบบ 349) สมาชิกเดิมใช้/ต่ออายุได้ · all ไม่รวม time/finance
