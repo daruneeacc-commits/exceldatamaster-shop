@@ -97,7 +97,7 @@ table.t tfoot td{font-weight:700;border-top:1.5px solid var(--ink)}
 .li small{display:block;color:var(--muted);font-size:.8rem}
 .li .r{text-align:right;white-space:nowrap;display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .li.click{cursor:pointer}
-.kinds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.kinds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media(max-width:700px){.kinds{grid-template-columns:1fr}}
 .kinds button{border:0;background:var(--soft);border-radius:14px;padding:14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:3px}
 .kinds button i{font-style:normal;font-size:1.6rem}
@@ -350,9 +350,9 @@ function vHome(){const V=$("#view"),t=today(),nw=nowT();
   if(!res.length){V.innerHTML=`<div class="hello"><h1>📅 ระบบจองและให้เช่า</h1><p>จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า ระบบเช็กว่างให้ ไม่จองซ้อน และพิมพ์ใบเสร็จได้ทันที</p></div>
     <div class="card"><h2>เริ่มต้นใน 3 ขั้นตอน</h2><div class="hint">1) เพิ่มห้องหรืออุปกรณ์ที่ให้เช่า พร้อมราคา &nbsp;·&nbsp; 2) กด "＋ จองใหม่" ระบบแสดงเฉพาะที่ว่างและคิดราคาให้ &nbsp;·&nbsp; 3) เช็คอิน/รับคืน รับเงิน แล้วพิมพ์ใบเสร็จ ยอดเข้ารายงานการจองอัตโนมัติ</div>
     <b>ธุรกิจของคุณให้เช่าแบบไหน? (เลือกเพื่อเพิ่มรายการแรก)</b>
-    <div class="kinds">${KO.map(k=>`<button type="button" data-addres="${k}" class="edm-lock"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}</div>
+    <div class="kinds">${KO.map(k=>`<button type="button" data-addres="${k}" class="edm-lock"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}<button type="button" id="goLease" class="edm-lock"><i>🏢</i><b>หอพัก / อพาร์ตเมนต์ (รายเดือน)</b><span>สัญญาเช่า เงินประกัน จดมิเตอร์น้ำไฟ ออกบิลทุกเดือน</span></button></div>
     <div class="acts"><button class="btn ghost" id="demoB" type="button">✨ ลองใส่ข้อมูลตัวอย่าง</button><span class="note">ข้อมูลตัวอย่างใส่เฉพาะระบบจอง ลบทิ้งได้ที่หน้าตั้งค่า</span></div></div>`;
-    $$("[data-addres]").forEach(b=>b.onclick=()=>resDlg(null,b.dataset.addres));$("#demoB").onclick=demo;return}
+    $$("[data-addres]").forEach(b=>b.onclick=()=>resDlg(null,b.dataset.addres));$("#goLease").onclick=()=>{show("lease");setTimeout(()=>leaseDlg(null),60)};$("#demoB").onclick=demo;return}
   const A=list.filter(ACT);
   const arr=A.filter(b=>(b.st==="hold"||b.st==="conf")&&bStart(b).slice(0,10)<=t).sort((a,b)=>bStart(a).localeCompare(bStart(b)));
   const dep=A.filter(b=>b.st==="in"&&(bEnd(b).length>10?bEnd(b)<=nw.slice(0,10)+"T23:59":bEnd(b)<=t)).sort((a,b)=>bEnd(a).localeCompare(bEnd(b)));
