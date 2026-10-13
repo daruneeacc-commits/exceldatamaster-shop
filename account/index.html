@@ -599,7 +599,7 @@ const shopName=()=>D.seller.name||(LS.get(KEY.scfg,{}).name)||"กิจกา�
 function printPnl(P){$("#printArea").innerHTML=`<div class="page"><div class="ph"><div><b style="font-size:11pt">${esc(shopName())}</b>${D.seller.tax?`<div>เลขผู้เสียภาษี ${esc(D.seller.tax)}</div>`:""}</div><div style="text-align:right"><h1>งบกำไรขาดทุน</h1><div>ประจำเดือน ${ymLabel(ui.ym)}</div></div></div>
   <table><tbody><tr><td><b>รายได้จากการขาย</b></td><td class="r"><b>${fmt(P.sales)}</b></td></tr><tr><td>หัก ต้นทุนขาย</td><td class="r">(${fmt(P.cogs)})</td></tr><tr><td><b>กำไรขั้นต้น</b></td><td class="r"><b>${fmt(P.gross)}</b></td></tr>
   ${P.other?`<tr><td>บวก รายได้อื่น</td><td class="r">${fmt(P.other)}</td></tr>`:""}<tr><td>หัก เงินเดือนและประกันสังคม</td><td class="r">(${fmt(P.payroll)})</td></tr>${Object.entries(P.exp).map(([k,v])=>`<tr><td>หัก ${esc(k)}</td><td class="r">(${fmt(v)})</td></tr>`).join("")}</tbody>
-  <tfoot><tr><td>กำไร (ขาดทุน) สุทธิ</td><td class="r">${fmt(P.net)}</td></tr></tfoot></table><div class="pf">สร้างด้วย exceldatamaster.com · งบสำหรับใช้ภายในกิจการ</div></div>`}
+  <tfoot><tr><td>กำไร (ขาดทุน) สุทธิ</td><td class="r">${fmt(P.net)}</td></tr></tfoot></table><div class="pf"><span class="edm-brand">สร้างด้วย exceldatamaster.com · </span>งบสำหรับใช้ภายในกิจการ</div></div>`}
 function tinBoxes(t){t=String(t||"").replace(/\D/g,"");const g=[1,5,10,12];return Array.from({length:13},(_,k)=>`<i${g.includes(k)?' class="g"':""}>${t[k]||""}</i>`).join("")}
 function rdReport(kind,rows){const out=kind==="out",title=out?"รายงานภาษีขาย":"รายงานภาษีซื้อ",who=out?"ผู้ซื้อสินค้า/ผู้รับบริการ":"ผู้ขายสินค้า/ผู้ให้บริการ";
   const per=15,pages=Math.max(1,Math.ceil(rows.length/per)),[y,m]=ui.ym.split("-"),sb=sellerBr(),ck=v=>`<span class="ck">${v?"✓":""}</span>`;
@@ -618,7 +618,7 @@ function rdReport(kind,rows){const out=kind==="out",title=out?"รายงา�
     ${rows.length?"":`<tr><td colspan="12" class="c" style="padding:14px">ไม่มีรายการในเดือนภาษีนี้</td></tr>`}
     </tbody><tfoot><tr><td colspan="8" class="r">${last?"รวมทั้งสิ้น":"ยอดยกไป"}</td><td class="r">${fmt(cb)}</td><td class="r">${fmt(cv)}</td><td class="r">${fmt(r2(cb+cv))}</td><td></td></tr></tfoot></table>
     ${last?`<div class="rd-note">จัดทำตามแบบรายงานภาษี${out?"ขาย":"ซื้อ"}ของกรมสรรพากร (ประกาศอธิบดีกรมสรรพากรเกี่ยวกับภาษีมูลค่าเพิ่ม ฉบับที่ 89) · สถานประกอบการ: สำนักงานใหญ่ทำเครื่องหมาย ✓ สาขาใส่เลขสาขา 5 หลักตาม ภ.พ.20 · ต้องลงรายการภายใน 3 วันทำการนับแต่วันที่${out?"ขายสินค้าหรือให้บริการ":"ได้รับสินค้าหรือบริการ"} และเก็บรักษาไว้ ณ สถานประกอบการ</div>`:""}
-    <div class="pf">สร้างด้วย exceldatamaster.com</div></div>`}
+    <div class="pf edm-brand">สร้างด้วย exceldatamaster.com</div></div>`}
   return html}
 function rdSummary(T){const nx=ymShift(ui.ym,1);return`<div class="page rd"><div class="rd-h"><h1>สรุปภาษีมูลค่าเพิ่มเพื่อยื่น ภ.พ.30</h1></div>
   <div class="rd-c"><span>เดือนภาษี <u>${MONTHS[+ui.ym.slice(5)-1]}</u></span><span>ปี <u>${+ui.ym.slice(0,4)+543}</u></span></div>
@@ -631,7 +631,7 @@ function rdSummary(T){const nx=ymShift(ui.ym,1);return`<div class="page rd"><div
   <tfoot><tr><td>${T.due>=0?"ภาษีที่ต้องชำระ":"ภาษีชำระเกิน (ขอคืน / ยกไปเดือนถัดไป)"}</td><td></td><td class="r">${fmt(Math.abs(T.due))}</td></tr></tfoot></table>
   ${T.inpX.length?`<p class="rd-c" style="margin-top:8px">ไม่รวมภาษีซื้อที่ขอคืนไม่ได้/เอกสารไม่ครบ ${T.inpX.length} รายการ ภาษี ${fmt(T.xv)} บาท</p>`:""}
   <p class="rd-c" style="margin-top:12px">กำหนดยื่นแบบ ภ.พ.30 ภายในวันที่ 15 ${MONTHS[+nx.slice(5)-1]} ${+nx.slice(0,4)+543} (ยื่นทางอินเทอร์เน็ตได้ถึงวันที่ 23)</p>
-  <div class="rd-note" style="text-align:center">ตัวเลขสรุปจากข้อมูลที่บันทึกในระบบ ภาษีซื้อเกินยกมาคำนวณจากเดือนก่อนๆ ในระบบ (กรณีไม่ได้ขอคืนเป็นเงินสด) ควรตรวจสอบกับเอกสารจริงก่อนยื่นแบบ</div><div class="pf">สร้างด้วย exceldatamaster.com</div></div>`}
+  <div class="rd-note" style="text-align:center">ตัวเลขสรุปจากข้อมูลที่บันทึกในระบบ ภาษีซื้อเกินยกมาคำนวณจากเดือนก่อนๆ ในระบบ (กรณีไม่ได้ขอคืนเป็นเงินสด) ควรตรวจสอบกับเอกสารจริงก่อนยื่นแบบ</div><div class="pf edm-brand">สร้างด้วย exceldatamaster.com</div></div>`}
 function printTax(T,what){what=what||"all";
   $("#printArea").innerHTML=`<style>@page{size:A4 landscape;margin:10mm}</style>`+(what!=="inp"?rdReport("out",vatRows(T,"out")):"")+(what!=="out"?rdReport("inp",vatRows(T,"inp")):"")+(what==="all"?rdSummary(T):"")}
 // ใบแนบ ภ.ง.ด.3 / ภ.ง.ด.53 รายเดือน
@@ -643,7 +643,7 @@ function printWhtList(T,k){const L=k==="ind"?T.w3:T.w53,[y,m]=ui.ym.split("-");l
   <thead><tr><th>ลำดับ</th><th>เลขประจำตัวผู้เสียภาษีอากร</th><th>ชื่อผู้มีเงินได้</th><th>ที่อยู่</th><th>วันที่จ่าย</th><th>ประเภทเงินได้</th><th>อัตรา %</th><th>จำนวนเงินที่จ่าย</th><th>ภาษีที่หักและนำส่ง</th></tr></thead><tbody>
   ${L.map(r=>`<tr><td class="c">${r.seq}</td><td class="c">${esc(r.tax)||"⚠️ ไม่มี"}</td><td>${esc(r.name)}</td><td>${esc(r.addr)}</td><td class="c">${dTH(r.p.date)}</td><td>${esc(whtTName(r.type))}</td><td class="c">${r.rate}</td><td class="r">${fmt(r.base)}</td><td class="r">${fmt(r.wht)}</td></tr>`).join("")||`<tr><td colspan="9" class="c" style="padding:14px">ไม่มีรายการในเดือนนี้</td></tr>`}
   </tbody><tfoot><tr><td colspan="7" class="r">รวม ${L.length} ราย</td><td class="r">${fmt(b)}</td><td class="r">${fmt(w)}</td></tr></tfoot></table>
-  <div class="rd-note">รวมภาษีที่นำส่ง ${fmt(w)} บาท (${bahtText(w)}) · นำส่งภายในวันที่ 7 ของเดือนถัดไป (ยื่นทางอินเทอร์เน็ตได้ถึงวันที่ 15) · ใช้ประกอบการกรอกใบแนบ ${PND[k]}</div><div class="pf">สร้างด้วย exceldatamaster.com</div></div>`}
+  <div class="rd-note">รวมภาษีที่นำส่ง ${fmt(w)} บาท (${bahtText(w)}) · นำส่งภายในวันที่ 7 ของเดือนถัดไป (ยื่นทางอินเทอร์เน็ตได้ถึงวันที่ 15) · ใช้ประกอบการกรอกใบแนบ ${PND[k]}</div><div class="pf edm-brand">สร้างด้วย exceldatamaster.com</div></div>`}
 function bahtText(n){
   n=r2(Math.abs(n));const D=["","หนึ่ง","สอง","สาม","สี่","ห้า","หก","เจ็ด","แปด","เก้า"],P=["","สิบ","ร้อย","พัน","หมื่น","แสน"];
   const grp=s=>{let out="";const L=s.length;for(let i=0;i<L;i++){const d=+s[i],pos=L-i-1;if(!d)continue;
@@ -699,7 +699,7 @@ function printPO(id){const p=A.pur.find(x=>x.id===id),c=calcPur(p);
   <table><thead><tr><th>#</th><th>รายการ</th><th class="r">จำนวน</th><th class="r">ราคา/หน่วย</th><th class="r">จำนวนเงิน</th></tr></thead><tbody>${p.lines.map((l,i)=>`<tr><td>${i+1}</td><td>${esc(l.d)}</td><td class="r">${fq(l.q)} ${esc(l.u||"")}</td><td class="r">${fmt(l.p)}</td><td class="r">${fmt(num(l.q)*num(l.p))}</td></tr>`).join("")}</tbody>
   <tfoot><tr><td colspan="4" class="r">มูลค่าก่อน VAT</td><td class="r">${fmt(c.base)}</td></tr>${c.vat?`<tr><td colspan="4" class="r">VAT 7%</td><td class="r">${fmt(c.vat)}</td></tr>`:""}<tr><td colspan="4" class="r">ยอดรวม</td><td class="r">${fmt(c.total)}</td></tr></tfoot></table>
   ${p.note?`<p><b>หมายเหตุ</b> ${esc(p.note)}</p>`:""}<p>กำหนดส่งของ / ชำระเงิน: ${thD(p.due)}</p>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:60px;text-align:center"><div>________________________<br>ผู้สั่งซื้อ</div><div>________________________<br>ผู้อนุมัติ</div></div><div class="pf">สร้างด้วย exceldatamaster.com</div></div>`;setTimeout(()=>window.print(),80)}
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:60px;text-align:center"><div>________________________<br>ผู้สั่งซื้อ</div><div>________________________<br>ผู้อนุมัติ</div></div><div class="pf edm-brand">สร้างด้วย exceldatamaster.com</div></div>`;setTimeout(()=>window.print(),80)}
 window.addEventListener("afterprint",()=>$("#printArea").innerHTML="");
 
 /* ---------- Excel รวมทุกระบบ ---------- */
@@ -865,7 +865,7 @@ window.__acc={pnl,arInfo,apInfo,taxData,balances,stockCalc,demo,exportExcel,whtL
 })();
 </script>
 <script src="../assets/tool-ui.js?v=5" defer></script>
-<script src="../assets/member.js?v=68" defer></script>
+<script src="../assets/member.js?v=69" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

@@ -389,7 +389,7 @@ function printReport(){
   <table><thead><tr><th>รหัส</th><th>สินค้า</th><th>หน่วย</th><th>ยกมา</th><th>รับเข้า</th><th>จ่ายออก</th><th>ปรับยอด</th><th>คงเหลือ</th><th>ทุนเฉลี่ย</th><th>มูลค่า</th></tr></thead><tbody>
   ${list.map(i=>{const p=P[i.id];tv+=p.value;return`<tr><td>${esc(i.sku||"")}</td><td>${esc(i.name)}</td><td>${esc(i.unit)}</td><td>${fq(p.open)}</td><td>${p.inQ?fq(p.inQ):"-"}</td><td>${p.outQ?fq(p.outQ):"-"}</td><td>${p.adjQ?fq(p.adjQ):"-"}</td><td>${fq(p.close)}</td><td>${fmt(p.avg)}</td><td>${fmt(p.value)}</td></tr>`}).join("")}
   </tbody><tfoot><tr><td></td><td>รวม ${list.length} รายการ</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>${fmt(tv)}</td></tr></tfoot></table>
-  <div class="pf">สร้างด้วย exceldatamaster.com · ต้นทุนถัวเฉลี่ยถ่วงน้ำหนัก</div></div>`;
+  <div class="pf"><span class="edm-brand">สร้างด้วย exceldatamaster.com · </span>ต้นทุนถัวเฉลี่ยถ่วงน้ำหนัก</div></div>`;
 }
 
 /* ---------- dialogs ---------- */
@@ -475,7 +475,7 @@ window.addEventListener("hashchange",cardFromHash);setTimeout(cardFromHash,0);
 $("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;svU();render();scrollTo(0,0)};
 document.addEventListener("click",e=>{const b=e.target.closest("[data-act],[data-card],[data-in],[data-outq],[data-adjq],[data-edit],[data-deltx],[data-go]");if(!b)return;
   if(b.dataset.act==="add")return itemForm();
-  if(b.dataset.act==="demo"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=54#demo&back=/stock/";return}
+  if(b.dataset.act==="demo"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=55#demo&back=/stock/";return}
   if(b.dataset.go){ui.v=b.dataset.go;svU();render();tellShell(ui.v);return}
   if(b.dataset.card)return stockCard(b.dataset.card);
   if(b.dataset.edit)return itemForm(b.dataset.edit);
@@ -500,7 +500,7 @@ window.__stock={compute,period,demo,exportExcel,get items(){return items},get tx
 })();
 </script>
 <script src="../assets/tool-ui.js?v=5" defer></script>
-<script src="../assets/member.js?v=68" defer></script>
+<script src="../assets/member.js?v=69" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

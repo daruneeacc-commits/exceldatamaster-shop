@@ -317,7 +317,7 @@ function bindRep(){bindMonth();bindFilters();$("#rK").onchange=e=>{ui.rep=e.targ
   if($("#rF")){$("#rF").onchange=e=>{ui.from=e.target.value;svUi();render()};$("#rT").onchange=e=>{ui.to=e.target.value;svUi();render()}}
   if($("#toPay2"))$("#toPay2").onclick=toPayroll;
   $("#rPrint").onclick=()=>{const R=buildRep(),C=co(),land=R.wide;const flt=[ui.dept&&"แผนก "+ui.dept,ui.br&&"สาขา "+ui.br].filter(Boolean).join(" · ");
-    $("#printArea").innerHTML=`<style>@page{size:A4 ${land?"landscape":"portrait"};margin:8mm}</style><div class="pr"><div class="hd"><div><b>${esc(C.name||"")}</b><div>${esc(flt||"ทุกแผนก")}</div></div><div style="text-align:right"><h1>${esc(R.title)}</h1><div>${esc(period())}</div></div></div>${repTable(R,true)}${R.note?`<p style="font-size:8pt">${esc(R.note)}</p>`:""}<p style="font-size:7.5pt;color:#555">พิมพ์เมื่อ ${esc(thD(T.today()))} · Excel Data Master</p></div>`;
+    $("#printArea").innerHTML=`<style>@page{size:A4 ${land?"landscape":"portrait"};margin:8mm}</style><div class="pr"><div class="hd"><div><b>${esc(C.name||"")}</b><div>${esc(flt||"ทุกแผนก")}</div></div><div style="text-align:right"><h1>${esc(R.title)}</h1><div>${esc(period())}</div></div></div>${repTable(R,true)}${R.note?`<p style="font-size:8pt">${esc(R.note)}</p>`:""}<p style="font-size:7.5pt;color:#555">พิมพ์เมื่อ ${esc(thD(T.today()))}<span class="edm-brand"> · Excel Data Master</span></p></div>`;
     const name=(R.title+"-"+period()).replace(/\s+/g,"-");
     if(window.EDM_DOCSHARE)window.EDM_DOCSHARE.open({el:$("#printArea"),pg:{roll:false,w:land?297:210,h:land?210:297,margin:8,land},name,onPrint:()=>window.EDM_DOCSHARE.print()});else window.print()};
   $("#rXls").onclick=()=>{const R=buildRep();loadXLSX().then(X=>{const ws=X.utils.aoa_to_sheet([[R.title+" · "+period()],[],R.head,...R.rows,...(R.foot.length?[R.foot]:[])]);const wb=X.utils.book_new();X.utils.book_append_sheet(wb,ws,"รายงาน");X.writeFile(wb,(R.title+"-"+ui.ym).replace(/[\\/:*?"<>|\s]+/g,"-")+".xlsx")}).catch(()=>toast("โหลดตัวสร้าง Excel ไม่สำเร็จ"))}}
@@ -411,7 +411,7 @@ if(!T.get(T.K.cfg,null)&&!lockCfg())ui.tab="set";
 render();
 })();
 </script>
-<script src="../assets/member.js?v=68" defer></script>
+<script src="../assets/member.js?v=69" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

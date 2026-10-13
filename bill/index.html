@@ -572,7 +572,7 @@ function renderPaper(c){
   ${doc.notes||(seller.pay&&tm!=="cash"&&doc.type!=="RC"&&doc.type!=="TX"&&!adj)?`<div class="p-notes">${doc.notes?`<b>หมายเหตุ</b>\n${esc(doc.notes)}\n`:""}${seller.pay&&tm!=="cash"&&doc.type!=="RC"&&doc.type!=="TX"&&!adj?`<b>ช่องทางชำระเงิน</b>\n${esc(seller.pay)}`:""}</div>`:""}
   ${seller.pp&&dueAmt(c)>0&&ppPayload(seller.pp,dueAmt(c))?`<div class="p-pp"><div class="p-qr">${qrSvg(ppPayload(seller.pp,dueAmt(c)))}</div><div><b>สแกนจ่ายด้วยพร้อมเพย์</b><br>ยอดชำระ ${fmt(dueAmt(c))} บาท<br>พร้อมเพย์ ${esc(seller.pp)}${S.name?"<br>"+esc(S.name):""}</div></div>`:""}
   <div class="p-sign"><div><div class="ln"></div>${T.sign[1]}<br>วันที่ ____/____/______</div><div><div class="ln"></div>${T.sign[0]}<br>วันที่ ____/____/______</div></div>
-  <div class="p-foot">สร้างด้วย exceldatamaster.com</div>${doc.void?`<div class="p-void">ยกเลิก<small>${esc(doc.void.reason||"")}</small></div>`:""}`;
+  <div class="p-foot edm-brand">สร้างด้วย exceldatamaster.com</div>${doc.void?`<div class="p-void">ยกเลิก<small>${esc(doc.void.reason||"")}</small></div>`:""}`;
   fitPaper();
 }
 // ย่อตัวอักษรที่ยาวเกินจำนวนบรรทัดที่กำหนด (data-fit="ขนาดปกติ,ขนาดเล็กสุด,จำนวนบรรทัด" หน่วย pt)
@@ -715,7 +715,7 @@ const DEMO={
       ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
 };
 function loadDemo(mode){
-  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=54#demo&back=/bill/";return}
+  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=55#demo&back=/bill/";return}
   const has=LS.get(K.docs,[]).length;
   if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
   const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);
@@ -812,7 +812,7 @@ renderAll();bindSuggest();
 })();
 </script>
 <script src="../assets/tool-ui.js?v=5" defer></script>
-<script src="../assets/member.js?v=68" defer></script>
+<script src="../assets/member.js?v=69" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

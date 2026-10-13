@@ -56,7 +56,7 @@
   }
 
   /* ---------- styles ---------- */
-  var css = "" +
+  var css = ".edm-paid .edm-brand{display:none!important}" +
     ".edm-gate{position:fixed;inset:0;z-index:100;background:rgba(244,246,245,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px;overflow:auto}" +
     "@media (prefers-color-scheme:dark){.edm-gate{background:rgba(13,17,16,.75)}}" +
     ".edm-card{background:var(--card,#fff);color:var(--ink,#0F1513);border-radius:22px;box-shadow:0 0 0 1px var(--line,#E2E6E4),0 30px 60px -30px rgba(0,0,0,.35);width:100%;max-width:420px;padding:26px 22px;display:flex;flex-direction:column;gap:12px;font:15px/1.6 'IBM Plex Sans Thai','Noto Sans Thai',system-ui,sans-serif}" +
@@ -222,7 +222,10 @@
   /* ---------- account chip + banners ---------- */
   var chip = null, bar = null;
   function renewUrl() { return API + "?renew=1&e=" + encodeURIComponent(me.email) + "&t=" + encodeURIComponent(me.token); }
+  // สมาชิกที่จ่ายเงินแล้ว (ยังไม่หมดอายุ): ซ่อนข้อความ "สร้างด้วย exceldatamaster.com" บนเอกสาร (.edm-brand) · ทดลองใช้ / ยังไม่สมัคร = แสดง
+  function paidFlag() { try { document.documentElement.classList.toggle("edm-paid", !!(me && me.paid && !expired())); } catch (e) {} }
   function apply() {
+    paidFlag();
     if (!me) { hideDeny(); document.body.classList.remove("edm-ro"); if (chip) chip.remove(), chip = null; if (bar) bar.remove(), bar = null; return; }
     if (!allowed(me, curSys())) showDeny(); else hideDeny();
     var left = daysLeft(), ex = expired();
@@ -367,7 +370,7 @@
     document.documentElement.classList.add("edm-embed");
     var hd = document.querySelector("header.top"), nav = hd && hd.querySelector(".nav");
     if (hd && (!nav || ![].some.call(nav.querySelectorAll("button"), function (b) { return getComputedStyle(b).display !== "none"; }))) hd.style.display = "none";
-    var lite = function () { me = LS.get(); document.body.classList.toggle("edm-ro", !!me && expired()); markFree(); };
+    var lite = function () { me = LS.get(); paidFlag(); document.body.classList.toggle("edm-ro", !!me && expired()); markFree(); };
     lite();
     window.addEventListener("message", function (e) { if (e.origin === location.origin && e.data && e.data.edm === "member") lite(); });
     // ลิงก์ไปหน้าอื่นของระบบ → ให้ระบบร้านค้าเปลี่ยนเมนู
@@ -380,6 +383,7 @@
     }, true);
   }
   function start() {
+    paidFlag();
     if (EMBED) return startEmbed();
     if (!me || !me.token) {
       // เปิดหน้าสมัคร/เข้าสู่ระบบ เมื่อระบบหลังร้านพร้อมแล้วเท่านั้น

@@ -16,6 +16,7 @@
 - `cafe/` POS คาเฟ่ (ข้อมูลแยก edm_cafe_*) · `booking/` จองห้องพัก
 - `todo/` To-Do แบบตาราง (edm_tdsheet_*) · `finance/` การเงิน SME & ฟรีแลนซ์ (edm_fin_items/cfg) 199/1,990 · ยืดหยุ่นทุกธุรกิจ: กระเป๋าเงิน cfg.chans+cfg.open (โอน = item t:"tr" ch→ch2 ไม่นับรายได้/จ่าย) · แยกกำไร cfg.tagName/cfg.tags (item.tag) · ประเภทธุรกิจ BT (bizDlg) · รายการประจำ cfg.rec (runRecur ตอนเปิดหน้า, item.rid) · ปุ่ม + ลอย = formDlg
 - **ขายแยกทุกระบบ** (12 ต.ค. 2569): หน้าราคาเป็นรายการสินค้า (`PLANS` ใน index.html) ระบบละ 149 · ร้านค้า 249 · To-Do 49 · การเงิน 199 · ยกเลิกขายแพ็ก all (ครบทุกระบบ 349) สมาชิกเดิมใช้/ต่ออายุได้ · all ไม่รวม time/finance
+- ข้อความ "สร้างด้วย exceldatamaster.com" บนเอกสาร/รายงานใส่ class `edm-brand` · member.js paidFlag() ใส่ `html.edm-paid` เมื่อ me.paid และยังไม่หมดอายุ → ซ่อน (ทดลองใช้/ไม่สมัคร/หมดอายุ = แสดง) · เอกสารใหม่ที่มีข้อความนี้ต้องใส่ class นี้ด้วย
 - `assets/icons.js` ไอคอน · `assets/member.js` ซิงก์คลาวด์ · ข้อมูลเก็บใน localStorage (edm_*)
 - ทดสอบ: `python3 -m http.server 8772` + Playwright
 

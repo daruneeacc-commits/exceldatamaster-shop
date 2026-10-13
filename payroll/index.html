@@ -665,7 +665,7 @@ function monthRows(){const R=recs[key()]||{};return emps.filter(e=>R[e.id]).map(
 function listPage(title,sub,head,rows,foot){
   return`<div class="page list"><div class="l-head">${coHead()}<div class="s-title"><h1>${title}</h1><div>${sub}</div></div></div>
     <table class="t big"><thead><tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")||`<tr><td colspan="${head.length}" style="color:#999;text-align:center;padding:14px">ยังไม่มีข้อมูล</td></tr>`}</tbody>${foot?`<tfoot>${foot}</tfoot>`:""}</table>
-    <div class="l-foot">สร้างด้วย exceldatamaster.com · ผลคำนวณภาษีเป็นการประมาณการ</div></div>`;
+    <div class="l-foot"><span class="edm-brand">สร้างด้วย exceldatamaster.com · </span>ผลคำนวณภาษีเป็นการประมาณการ</div></div>`;
 }
 function renderPaper(){
   document.documentElement.style.setProperty("--paper-accent",co.color||"#127A4B");
@@ -699,7 +699,7 @@ function renderPaper(){
         <li>สิ้นปี: ยื่น <b>ภ.ง.ด.1ก</b> และให้ <b>50 ทวิ</b> แก่พนักงานภายในเดือนกุมภาพันธ์ ${ui.y+544}</li></ul>
       <h3 style="margin:10px 0 4px;font-size:10.5pt">🏷️ ต้นทุนค่าแรงตามแผนก</h3>
       <table class="t big"><tbody>${DL.map(([k,d])=>`<tr><td style="width:30%">${esc(k)} <small>(${d.n} คน)</small></td><td><div style="height:10px;border-radius:5px;background:var(--paper-accent);width:${Math.max(2,d.cost/mx*100)}%"></div></td><td class="r" style="width:22%">${fmt(d.cost)}</td></tr>`).join("")}</tbody></table>
-      <div class="l-foot">ตัวเลขภาษีเป็นการประมาณการตามเกณฑ์กรมสรรพากร · ตรวจสอบก่อนยื่นจริง · exceldatamaster.com</div></div>`}}
+      <div class="l-foot">ตัวเลขภาษีเป็นการประมาณการตามเกณฑ์กรมสรรพากร · ตรวจสอบก่อนยื่นจริง<span class="edm-brand"> · exceldatamaster.com</span></div></div>`}}
   else if(ui.view==="month"){const T={earn:0,ded:0,sso:0,tax:0,net:0};
     const rows=list.map(({e,c})=>{const tx=r2(c.tax+c.wht),oth=r2(c.dedTotal-c.sso-tx);T.earn+=c.earn;T.sso+=c.sso;T.tax+=tx;T.ded+=oth;T.net+=c.net;
       return`<tr><td>${esc(e.code)}</td><td>${esc(e.name)}<br><small>${TYPES[c.t]}${e.dept?" · "+esc(e.dept):""}</small></td><td class="r">${fmt(c.earn)}</td><td class="r">${fmt(oth)}</td><td class="r">${fmt(c.sso)}</td><td class="r">${fmt(tx)}</td><td class="r"><b>${fmt(c.net)}</b></td></tr>`});
@@ -895,7 +895,7 @@ window.__pay={pit,bahtText,calcMonth,calcUpTo,exportExcel,get emps(){return emps
 })();
 </script>
 <script src="../assets/tool-ui.js?v=5" defer></script>
-<script src="../assets/member.js?v=68" defer></script>
+<script src="../assets/member.js?v=69" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>
