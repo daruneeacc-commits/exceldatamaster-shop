@@ -22,7 +22,7 @@ html[data-tone] .card>h2:first-child small{color:var(--ink);opacity:.72}
 html[data-tone] .hello h1{display:inline-block;background:#fff;border:2px solid var(--ink);border-radius:8px;padding:3px 16px;box-shadow:4px 4px 0 var(--tag);font-size:1.28rem;line-height:1.45;margin-bottom:6px}
 html[data-tone] .hello p{color:var(--muted)}
 /* ตัวเลขสรุป: แถบสีซ้าย */
-html[data-tone] .kpi{box-shadow:none;border:1px solid var(--line);border-left:5px solid var(--kc,var(--accent));border-radius:12px;background:#fff}
+html[data-tone] .kpi{box-shadow:none;border:1px solid var(--line);border-left:5px solid var(--kc,var(--accent));border-radius:12px}
 html[data-tone] .kpi:nth-child(4n+1){--kc:#6FA8DC}html[data-tone] .kpi:nth-child(4n+2){--kc:#A88BD0}html[data-tone] .kpi:nth-child(4n+3){--kc:#4FAF83}html[data-tone] .kpi:nth-child(4n){--kc:#E3BC4E}
 html[data-tone] .kpi.bad,html[data-tone] .kpi.warn{--kc:#E07A5F}
 /* ปุ่ม / ช่องกรอก / ตัวเลือก */
@@ -71,3 +71,7 @@ html[data-tone] .tabs button .edm-ic{width:22px;height:22px;flex:none}
 html[data-tone] .tabs button:has(.edm-ic){display:inline-flex;align-items:center;gap:7px}
 @media(max-width:760px){html[data-tone]:not(.edm-embed) body:not(.kiosk) .tabs button:has(.edm-ic){flex-direction:column;gap:2px;font-size:.74rem;padding:7px 8px}html[data-tone]:not(.edm-embed) body:not(.kiosk) .tabs button .edm-ic{width:24px;height:24px}}
 html[data-tone] .brand .edm-ic{width:26px;height:26px;flex:none;margin-right:2px}html[data-tone] .brand:has(.edm-ic){display:inline-flex;align-items:center;gap:6px}
+/* ตัวเลขเด่น (เช่น กำไรสุทธิในบัญชีร้านค้า) */
+html[data-tone] .kpi.big{background:var(--accent);color:#fff;--kc:var(--accent-d);border-color:var(--accent)}
+html[data-tone] .kpi.big span,html[data-tone] .kpi.big small,html[data-tone] .kpi.big b{color:#fff!important;opacity:1}
+html[data-tone=sage]{--c1:#4FAF83;--c2:#E39B57;--c3:#6FA8DC}
