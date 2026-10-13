@@ -1897,7 +1897,7 @@ document.addEventListener("click",async e=>{
   try{const pm=window.claude&&window.claude.use?await window.claude.use("permissions"):null;if(pm)await pm.request(["artifact","user","db"]);}catch{}
   await initOwner();
   if(canAdmin)openAdmin();
-  else toast("หลังร้านเปิดได้เฉพาะเจ้าของร้าน: เปิดลิงก์นี้ใน claude.ai ด้วยบัญชีของคุณ");
+  else alert("หลังร้าน (จัดการสมาชิก · ออเดอร์ · กดได้รับเงินแล้ว)\n\nเปิดจาก Google ชีต \"ออเดอร์ Excel Data Master\" → เมนู \"ส่งของอัตโนมัติ\" → \"เปิดหลังร้าน (ลิงก์สำหรับมือถือ)\"\nหรือกดปุ่ม \"เปิดหลังร้าน\" ในอีเมลแจ้งออเดอร์\n\n(ลิงก์หลังร้านเป็นลิงก์ลับ จึงไม่ใส่ไว้ในหน้าเว็บ)");
 });
 })();
 </script>
