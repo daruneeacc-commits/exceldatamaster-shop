@@ -1,0 +1,24 @@
+{
+ "name": "สต๊อกสินค้า · Excel Data Master",
+ "short_name": "สต๊อกสินค้า",
+ "start_url": "/app/?ed=stock",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#FFFCF2",
+ "theme_color": "#C08A0E",
+ "lang": "th",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  }
+ ],
+ "id": "/app/?ed=stock"
+}

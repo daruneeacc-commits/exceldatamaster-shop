@@ -10,7 +10,7 @@
 <script src="../assets/vendor/qrcode.js"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>โปรแกรมเปิดบิลออนไลน์ ใบกำกับภาษี ใบเสร็จ ใบเสนอราคา | Excel Data Master</title>
-<meta name="description" content="เปิดบิล ใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ ใบกำกับภาษี สำหรับธุรกิจซื้อมาขายไปและงานบริการ คำนวณ VAT และหัก ณ ที่จ่ายให้อัตโนมัติ พิมพ์เป็น PDF ได้ทันที"><link rel="canonical" href="https://exceldatamaster.com/bill/"><meta property="og:type" content="website"><meta property="og:site_name" content="Excel Data Master"><meta property="og:locale" content="th_TH"><meta property="og:title" content="โปรแกรมเปิดบิลออนไลน์ ใบกำกับภาษี ใบเสร็จ ใบเสนอราคา | Excel Data Master"><meta property="og:description" content="เปิดบิล ใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ ใบกำกับภาษี สำหรับธุรกิจซื้อมาขายไปและงานบริการ คำนวณ VAT และหัก ณ ที่จ่ายให้อัตโนมัติ พิมพ์เป็น PDF ได้ทันที"><meta property="og:url" content="https://exceldatamaster.com/bill/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og.jpg"><meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="เปิดบิล ใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ ใบกำกับภาษี สำหรับธุรกิจซื้อมาขายไปและงานบริการ คำนวณ VAT และหัก ณ ที่จ่ายให้อัตโนมัติ พิมพ์เป็น PDF ได้ทันที"><link rel="canonical" href="https://exceldatamaster.com/bill/"><meta property="og:type" content="website"><meta property="og:site_name" content="Excel Data Master"><meta property="og:locale" content="th_TH"><meta property="og:title" content="โปรแกรมเปิดบิลออนไลน์ ใบกำกับภาษี ใบเสร็จ ใบเสนอราคา | Excel Data Master"><meta property="og:description" content="เปิดบิล ใบเสนอราคา ใบแจ้งหนี้ ใบเสร็จ ใบกำกับภาษี สำหรับธุรกิจซื้อมาขายไปและงานบริการ คำนวณ VAT และหัก ณ ที่จ่ายให้อัตโนมัติ พิมพ์เป็น PDF ได้ทันที"><meta property="og:url" content="https://exceldatamaster.com/bill/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-bill.jpg?v=1"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
 <style>
@@ -191,6 +191,10 @@ details.opt{border:1px dashed var(--line);border-radius:12px;padding:8px 12px}de
 <script src="../assets/suggest.js?v=50"></script>
 <link rel="stylesheet" href="../assets/pastel.css?v=5">
 <script src="../assets/pastel.js?v=2" defer></script>
+<link rel="stylesheet" href="../assets/skin.css?v=1">
+<script src="../assets/skin.js?v=1"></script>
+<meta name="theme-color" content="#2E9468">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="เปิดบิล">
 </head>
 <body>
 <header class="top"><div class="in">
@@ -776,7 +780,7 @@ const DEMO={
       ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
 };
 function loadDemo(mode){
-  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=60#demo&back=/bill/";return}
+  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=61#demo&back=/bill/";return}
   const has=LS.get(K.docs,[]).length;
   if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
   const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);

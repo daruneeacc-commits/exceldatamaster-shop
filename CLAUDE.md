@@ -21,6 +21,9 @@
 - **ขายแยกทุกระบบ** (12 ต.ค. 2569): หน้าราคาเป็นรายการสินค้า (`PLANS` ใน index.html) ระบบละ 149 · ร้านค้า 249 · To-Do 49 · การเงิน 199 · ยกเลิกขายแพ็ก all (ครบทุกระบบ 349) สมาชิกเดิมใช้/ต่ออายุได้ · all ไม่รวม time/finance
 - ข้อความ "สร้างด้วย exceldatamaster.com" บนเอกสาร/รายงานใส่ class `edm-brand` · member.js paidFlag() ใส่ `html.edm-paid` เมื่อ me.paid และยังไม่หมดอายุ → ซ่อน (ทดลองใช้/ไม่สมัคร/หมดอายุ = แสดง) · เอกสารใหม่ที่มีข้อความนี้ต้องใส่ class นี้ด้วย
 - **ผู้ใช้หลายคน + สิทธิ์** (13 ต.ค.): `assets/lock.js` v3 · ข้อมูล `edm_users` {on, idle, owner:{name,s,h}, list:[{id,name,s,h,perm}]} ซิงก์คลาวด์ (CK/KEEP ใน member.js) · ผู้ใช้ปัจจุบัน sessionStorage edm_user · EDM_LOCK.user()/can()/switchUser() · สิทธิ์ PERMS: inc cf bk stk exp fin pay rpt set del · app: การ์ดใน #data (renderUsers, เจ้าของเท่านั้น) · PERM_R route→สิทธิ์ + canR/applyPerm ซ่อนเมนู กันเปิด route · bill pinOk: del/เจ้าของ ไม่ต้อง PIN · หน้าเดี่ยวใช้ `data-perm` (payroll=pay, account=inc,exp,fin,rpt) · ยังไม่ครอบ time/finance/todo และป้องกันฝั่งเครื่องเท่านั้น
+- **ธีมสีให้ผู้ใช้เลือก** ปุ่ม 🎨 ธีม ที่หัวเว็บ: `assets/skin.js` + `skin.css` (localStorage edm_skin → `<html data-look="minimal|cream|navy">`, ไม่ใส่ = พาสเทล) ใช้ทุกระบบรวม finance/todo/payroll · todo มี data-skin (ชมพู/น้ำตาล) ของตัวเองแยกต่างหาก
+- **ไอคอนแอป + ภาพตอนแชร์ลิงก์**: แต่ละระบบมี `icon-192/512.png` + `manifest.webmanifest` + `og:image` = `assets/shop/og-<ระบบ>.jpg` (1200×630) · หน้าหลัก `og.jpg?v=2` · app ?ed= สลับ manifest/ไอคอนตามรุ่น · สร้างใหม่ด้วยสคริปต์ Playwright (นอก repo) ถ้าเปลี่ยนหน้าตา
+- ภาพสินค้าหน้าร้าน `assets/shop/ui-*.webp?v=2` ถ่ายจากข้อมูลตัวอย่าง 1280×800 (มือถือ 585×1266)
 - `assets/icons.js` ไอคอน · `assets/member.js` ซิงก์คลาวด์ · ข้อมูลเก็บใน localStorage (edm_*)
 - ทดสอบ: `python3 -m http.server 8772` + Playwright
 

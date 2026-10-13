@@ -9,7 +9,7 @@
 <script src="../assets/lock.js?v=3"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ระบบร้านค้า · Excel Data Master</title>
-<meta name="description" content="ระบบร้านค้าออนไลน์ครบในที่เดียว: เปิดบิล ใบกำกับภาษี ขายเงินสด/ขายเชื่อ ภาษีซื้อ-ขาย สต๊อกสินค้า ซื้อสินค้า ลูกหนี้ เงินสด-ธนาคาร และกำไรขาดทุน"><link rel="canonical" href="https://exceldatamaster.com/app/"><meta property="og:type" content="website"><meta property="og:site_name" content="Excel Data Master"><meta property="og:locale" content="th_TH"><meta property="og:title" content="ระบบร้านค้า · Excel Data Master"><meta property="og:description" content="ระบบร้านค้าออนไลน์ครบในที่เดียว: เปิดบิล ใบกำกับภาษี ขายเงินสด/ขายเชื่อ ภาษีซื้อ-ขาย สต๊อกสินค้า ซื้อสินค้า ลูกหนี้ เงินสด-ธนาคาร และกำไรขาดทุน"><meta property="og:url" content="https://exceldatamaster.com/app/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og.jpg"><meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="ระบบร้านค้าออนไลน์ครบในที่เดียว: เปิดบิล ใบกำกับภาษี ขายเงินสด/ขายเชื่อ ภาษีซื้อ-ขาย สต๊อกสินค้า ซื้อสินค้า ลูกหนี้ เงินสด-ธนาคาร และกำไรขาดทุน"><link rel="canonical" href="https://exceldatamaster.com/app/"><meta property="og:type" content="website"><meta property="og:site_name" content="Excel Data Master"><meta property="og:locale" content="th_TH"><meta property="og:title" content="ระบบร้านค้า · Excel Data Master"><meta property="og:description" content="ระบบร้านค้าออนไลน์ครบในที่เดียว: เปิดบิล ใบกำกับภาษี ขายเงินสด/ขายเชื่อ ภาษีซื้อ-ขาย สต๊อกสินค้า ซื้อสินค้า ลูกหนี้ เงินสด-ธนาคาร และกำไรขาดทุน"><meta property="og:url" content="https://exceldatamaster.com/app/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-app.jpg?v=1"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"></noscript>
 <style>
@@ -329,7 +329,7 @@ svg.bd-ch{width:100%;height:auto;display:block;font-size:11px;fill:var(--muted)}
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261013-2000";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261013-2100";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -338,6 +338,11 @@ svg.bd-ch{width:100%;height:auto;display:block;font-size:11px;fill:var(--muted)}
 </script>
 <link rel="stylesheet" href="../assets/pastel.css?v=5">
 <script src="../assets/pastel.js?v=2" defer></script>
+<link rel="stylesheet" href="../assets/skin.css?v=1">
+<script src="../assets/skin.js?v=1"></script>
+<meta name="theme-color" content="#2E9468">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ระบบร้านค้า">
+<script>/* รุ่นแยก (?ed=): ไอคอน/ชื่อแอปตอนเพิ่มลงหน้าจอโฮม ตามระบบที่เปิด */(function(){var e=(new URLSearchParams(location.search).get("ed")||"").toLowerCase(),D={bill:"bill",stock:"stock",cafe:"cafe",book:"booking",booking:"booking"}[e],N={bill:"เปิดบิล",stock:"สต๊อกสินค้า",cafe:"ร้านคาเฟ่",booking:"จอง / ให้เช่า"},C={bill:"#2E9468",stock:"#C08A0E",cafe:"#BF6E2C",booking:"#6E55C0"};if(!D)return;var q=function(x){return document.querySelector(x)};q('link[rel="manifest"]').href="/"+D+"/manifest.webmanifest";q('link[rel="icon"]').href="/"+D+"/icon-192.png";q('link[rel="apple-touch-icon"]').href="/"+D+"/icon-192.png";q('meta[name="apple-mobile-web-app-title"]').content=N[D];q('meta[name="theme-color"]').content=C[D]})()</script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -575,11 +580,11 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=62"},stock:{src:"/stock/?v=58",sv:"home"},stockrep:{src:"/stock/?v=58",sv:"report"},stkitems:{src:"/stock/?v=58",sv:"items"},stkin:{src:"/stock/?v=58",sv:"in"},stkout:{src:"/stock/?v=58",sv:"out"},stkadj:{src:"/stock/?v=58",sv:"adj"},stkhist:{src:"/stock/?v=58",sv:"hist"},stkre:{src:"/stock/?v=58",sv:"reorder"},
-  ar:{src:"/account/?v=60",v:"ar"},tax:{src:"/account/?v=60",v:"tax"},buy:{src:"/account/?v=60",v:"buy"},cash:{src:"/account/?v=60",v:"cash"},pnl:{src:"/account/?v=60",v:"home"},
-  cf:{src:"/cafe/?v=11",cv:"home"},cfpos:{src:"/cafe/?v=11",cv:"pos"},cfbar:{src:"/cafe/?v=11",cv:"bar"},cford:{src:"/cafe/?v=11",cv:"orders"},cfmenu:{src:"/cafe/?v=11",cv:"menu"},cfinv:{src:"/cafe/?v=11",cv:"inv"},cfshift:{src:"/cafe/?v=11",cv:"shift"},cfrpt:{src:"/cafe/?v=11",cv:"rpt"},cfset:{src:"/cafe/?v=11",cv:"set"},
-  bk:{src:"/booking/?v=12",bv:"home"},bkcal:{src:"/booking/?v=12",bv:"cal"},bklist:{src:"/booking/?v=12",bv:"list"},bkres:{src:"/booking/?v=12",bv:"res"},bkrpt:{src:"/booking/?v=12",bv:"rpt"},bklease:{src:"/booking/?v=12",bv:"lease"},bkset:{src:"/booking/?v=12",bv:"set"},
-  cost:{src:"/account/?v=60",v:"cost"},exp:{src:"/account/?v=60",v:"exp"},bank:{src:"/account/?v=60",v:"bank"},cashv:{src:"/account/?v=60",v:"cashv"},petty:{src:"/account/?v=60",v:"petty"},ap:{src:"/account/?v=60",v:"ap"}};
+const ROUTES={bill:{src:"/bill/?v=63"},stock:{src:"/stock/?v=59",sv:"home"},stockrep:{src:"/stock/?v=59",sv:"report"},stkitems:{src:"/stock/?v=59",sv:"items"},stkin:{src:"/stock/?v=59",sv:"in"},stkout:{src:"/stock/?v=59",sv:"out"},stkadj:{src:"/stock/?v=59",sv:"adj"},stkhist:{src:"/stock/?v=59",sv:"hist"},stkre:{src:"/stock/?v=59",sv:"reorder"},
+  ar:{src:"/account/?v=61",v:"ar"},tax:{src:"/account/?v=61",v:"tax"},buy:{src:"/account/?v=61",v:"buy"},cash:{src:"/account/?v=61",v:"cash"},pnl:{src:"/account/?v=61",v:"home"},
+  cf:{src:"/cafe/?v=12",cv:"home"},cfpos:{src:"/cafe/?v=12",cv:"pos"},cfbar:{src:"/cafe/?v=12",cv:"bar"},cford:{src:"/cafe/?v=12",cv:"orders"},cfmenu:{src:"/cafe/?v=12",cv:"menu"},cfinv:{src:"/cafe/?v=12",cv:"inv"},cfshift:{src:"/cafe/?v=12",cv:"shift"},cfrpt:{src:"/cafe/?v=12",cv:"rpt"},cfset:{src:"/cafe/?v=12",cv:"set"},
+  bk:{src:"/booking/?v=13",bv:"home"},bkcal:{src:"/booking/?v=13",bv:"cal"},bklist:{src:"/booking/?v=13",bv:"list"},bkres:{src:"/booking/?v=13",bv:"res"},bkrpt:{src:"/booking/?v=13",bv:"rpt"},bklease:{src:"/booking/?v=13",bv:"lease"},bkset:{src:"/booking/?v=13",bv:"set"},
+  cost:{src:"/account/?v=61",v:"cost"},exp:{src:"/account/?v=61",v:"exp"},bank:{src:"/account/?v=61",v:"bank"},cashv:{src:"/account/?v=61",v:"cashv"},petty:{src:"/account/?v=61",v:"petty"},ap:{src:"/account/?v=61",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.allow="web-share; clipboard-write";f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -746,7 +751,7 @@ function renderHome(){
   if(window.EDM_ED&&EDM_ED.home)EDM_ED.home({docs,seller,items,A,ym,sales,s,sc,n,vat,ar,arN,B,low,m});
   try{renderBillDash()}catch(e){console.error(e);$("#bdash").innerHTML=""}
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=60#demo&back=/app/"+(window.EDM_ED?"&ed="+EDM_ED.key:"")};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=61#demo&back=/app/"+(window.EDM_ED?"&ed="+EDM_ED.key:"")};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- แดชบอร์ดบิล: ยอดขาย · รับเงิน · ลูกหนี้ (ใช้ docStatus / calcDoc เดียวกับหน้าลูกหนี้) ---------- */
 const BDC={sale:"#6FA8DC",rcv:"#4FAF83",open:"#E8C468",late:"#D64C5B",ag:["#9CC7E8","#F2C46B","#F29F66","#E5767F","#C2364A"]};

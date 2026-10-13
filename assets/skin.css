@@ -1,0 +1,41 @@
+/* ===== ธีมสีที่ผู้ใช้เลือกได้ (ปุ่ม 🎨 ธีม) · <html data-look="minimal|cream|navy"> · ไม่ใส่ = พาสเทล (ค่าเริ่มต้น)
+   ใช้ได้ทุกระบบ: ชุดพาสเทลกลาง (--accent…) · การเงิน SME / To-Do (--a…) · เงินเดือน (--accent, --peach…) */
+html[data-look=minimal]{
+  --bg:#F6F6F6!important;--card:#fff!important;--ink:#161616!important;--muted:#6E6E6E!important;--line:#E3E3E3!important;--grid:#ECECEC!important;--soft:#F1F1F1!important;
+  --accent:#1C1C1C!important;--accent-d:#000!important;--accent-ink:#fff!important;--accent-soft:#EFEFEF!important;--tag:#E2E2E2!important;
+  --a:#1C1C1C!important;--a-ink:#fff!important;--a2:#F1F1F1!important;--a3:#D6D6D6!important;--head:#2A2A2A!important;
+  --yel:#F2F2F2!important;--sky:#EFEFEF!important;--lav:#F2F2F2!important;--peach:#EFEFEF!important;--mintc:#F2F2F2!important;--mint:#EFEFEF!important;--rose:#F2F2F2!important;--pink:#EFEFEF!important;
+  --inbg:#F1F1F1!important;--outbg:#F1F1F1!important;--pfbg:#F1F1F1!important;--yel2:#F7F7F7!important;
+  --side:#F1F1F1!important;--side-on:#E4E4E4!important;--side-ink:#161616!important}
+html[data-look=cream]{
+  --bg:#FAF7F1!important;--card:#FFFDF9!important;--ink:#2E2721!important;--muted:#7D7266!important;--line:#E9E1D4!important;--grid:#EFE8DC!important;--soft:#F3EDE3!important;
+  --accent:#7A6450!important;--accent-d:#5B4A3B!important;--accent-ink:#fff!important;--accent-soft:#EFE7DA!important;--tag:#E8DCC8!important;
+  --a:#7A6450!important;--a-ink:#fff!important;--a2:#F1EADF!important;--a3:#DCCDB8!important;--head:#8C7560!important;
+  --yel:#F2EADB!important;--sky:#ECE7DE!important;--lav:#EEE6DD!important;--peach:#F3E6D8!important;--mintc:#E7EBDF!important;--mint:#E7EBDF!important;--rose:#F1E4DF!important;--pink:#F1E4DF!important;
+  --inbg:#EFE7DA!important;--outbg:#F1E6DD!important;--pfbg:#E7EBDF!important;--yel2:#F8F2E7!important;
+  --side:#F1EADF!important;--side-on:#E5D9C7!important;--side-ink:#2E2721!important}
+html[data-look=navy]{
+  --bg:#F5F7FA!important;--card:#fff!important;--ink:#1B2433!important;--muted:#667085!important;--line:#E1E6EE!important;--grid:#E8ECF2!important;--soft:#EEF2F7!important;
+  --accent:#1F3A5F!important;--accent-d:#122640!important;--accent-ink:#fff!important;--accent-soft:#E6ECF4!important;--tag:#D3DDEA!important;
+  --a:#1F3A5F!important;--a-ink:#fff!important;--a2:#E9EEF5!important;--a3:#C8D4E4!important;--head:#2B4A73!important;
+  --yel:#EEF2F7!important;--sky:#E6ECF4!important;--lav:#ECEFF5!important;--peach:#EEF1F6!important;--mintc:#E8EEF3!important;--mint:#E8EEF3!important;--rose:#EEF0F5!important;--pink:#EEF0F5!important;
+  --inbg:#E6ECF4!important;--outbg:#ECEFF5!important;--pfbg:#E8EEF3!important;--yel2:#F4F6FA!important;
+  --side:#E9EEF5!important;--side-on:#D8E1EE!important;--side-ink:#1B2433!important}
+/* มินิมอล: ป้ายหัวข้อ/ตัวเลขสรุปเรียบขึ้น */
+html[data-look] .hello h1,html[data-look] .tag{box-shadow:3px 3px 0 var(--tag)}
+html[data-look] .kpi{--kc:var(--a3,#D6D6D6)!important;border-left-color:var(--accent,var(--a))!important}
+html[data-look=minimal] .btn.main{box-shadow:none}
+html[data-look] .card>h2:first-child{border-bottom:1px solid var(--line)}
+
+/* ปุ่มเลือกธีม */
+.edm-skin-btn{border:0;border-radius:10px;min-height:36px;padding:6px 11px;font:inherit;font-size:.84rem;font-weight:600;cursor:pointer;background:var(--soft,var(--a2,#F1F1F1));color:var(--ink,#222);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.edm-skin-btn i{width:16px;height:16px;border-radius:50%;display:inline-block;background:conic-gradient(#F6B5C8 0 25%,#BFD9F2 0 50%,#FCEBB0 0 75%,#CDEBD9 0);box-shadow:0 0 0 1.5px #fff,0 0 0 2.5px rgba(0,0,0,.15)}
+.edm-skin-pop{position:fixed;z-index:2147481000;background:#fff;color:#222;border-radius:16px;box-shadow:0 18px 50px -12px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.06);padding:12px;width:270px;font-family:inherit}
+.edm-skin-pop b{display:block;font-size:.92rem;margin:2px 4px 8px}
+.edm-skin-pop button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;border-radius:10px;padding:8px;font:inherit;font-size:.9rem;cursor:pointer;text-align:left;color:#222}
+.edm-skin-pop button:hover{background:#F4F4F4}.edm-skin-pop button.on{background:#F0F0F0;font-weight:700}
+.edm-skin-pop button span.sw{display:flex;flex:none;border-radius:8px;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.1)}
+.edm-skin-pop button span.sw i{width:14px;height:26px;display:block}
+.edm-skin-pop small{display:block;color:#888;font-size:.74rem;font-weight:400}
+@media print{.edm-skin-btn,.edm-skin-pop{display:none!important}}
+@media(max-width:560px){.edm-skin-btn .edm-skin-t{display:none}.edm-skin-btn{padding:6px 9px}}

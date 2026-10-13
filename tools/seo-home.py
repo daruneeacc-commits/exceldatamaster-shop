@@ -59,8 +59,8 @@ def main():
              '<meta name="theme-color" content="#127A4B">'
              f'<meta property="og:type" content="website"><meta property="og:site_name" content="Excel Data Master"><meta property="og:locale" content="th_TH">'
              f'<meta property="og:title" content="{e(TITLE)}"><meta property="og:description" content="{e(DESC)}"><meta property="og:url" content="{SITE}/">'
-             f'<meta property="og:image" content="{SITE}/assets/shop/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
-             f'<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{e(TITLE)}"><meta name="twitter:description" content="{e(DESC)}"><meta name="twitter:image" content="{SITE}/assets/shop/og.jpg">'
+             f'<meta property="og:image" content="{SITE}/assets/shop/og.jpg?v=2"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
+             f'<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{e(TITLE)}"><meta name="twitter:description" content="{e(DESC)}"><meta name="twitter:image" content="{SITE}/assets/shop/og.jpg?v=2">'
              + "".join('<script type="application/ld+json">' + json.dumps(x, ensure_ascii=False).replace("</", "<\\/") + "</script>" for x in ld)
              + "<!--/seo-->")
     s = re.sub(r"<!--seo-->.*?<!--/seo-->", "", s, count=1, flags=re.S)
