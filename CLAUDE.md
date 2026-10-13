@@ -19,6 +19,7 @@
 - `todo/` To-Do แบบตาราง (edm_tdsheet_*) · `finance/` การเงิน SME & ฟรีแลนซ์ (edm_fin_items/cfg) 199/1,990 · ยืดหยุ่นทุกธุรกิจ: กระเป๋าเงิน cfg.chans+cfg.open (โอน = item t:"tr" ch→ch2 ไม่นับรายได้/จ่าย) · แยกกำไร cfg.tagName/cfg.tags (item.tag) · ประเภทธุรกิจ BT (bizDlg) · รายการประจำ cfg.rec (runRecur ตอนเปิดหน้า, item.rid) · ปุ่ม + ลอย = formDlg
 - **ขายแยกทุกระบบ** (12 ต.ค. 2569): หน้าราคาเป็นรายการสินค้า (`PLANS` ใน index.html) ระบบละ 149 · ร้านค้า 249 · To-Do 49 · การเงิน 199 · ยกเลิกขายแพ็ก all (ครบทุกระบบ 349) สมาชิกเดิมใช้/ต่ออายุได้ · all ไม่รวม time/finance
 - ข้อความ "สร้างด้วย exceldatamaster.com" บนเอกสาร/รายงานใส่ class `edm-brand` · member.js paidFlag() ใส่ `html.edm-paid` เมื่อ me.paid และยังไม่หมดอายุ → ซ่อน (ทดลองใช้/ไม่สมัคร/หมดอายุ = แสดง) · เอกสารใหม่ที่มีข้อความนี้ต้องใส่ class นี้ด้วย
+- **ผู้ใช้หลายคน + สิทธิ์** (13 ต.ค.): `assets/lock.js` v3 · ข้อมูล `edm_users` {on, idle, owner:{name,s,h}, list:[{id,name,s,h,perm}]} ซิงก์คลาวด์ (CK/KEEP ใน member.js) · ผู้ใช้ปัจจุบัน sessionStorage edm_user · EDM_LOCK.user()/can()/switchUser() · สิทธิ์ PERMS: inc cf bk stk exp fin pay rpt set del · app: การ์ดใน #data (renderUsers, เจ้าของเท่านั้น) · PERM_R route→สิทธิ์ + canR/applyPerm ซ่อนเมนู กันเปิด route · bill pinOk: del/เจ้าของ ไม่ต้อง PIN · หน้าเดี่ยวใช้ `data-perm` (payroll=pay, account=inc,exp,fin,rpt) · ยังไม่ครอบ time/finance/todo และป้องกันฝั่งเครื่องเท่านั้น
 - `assets/icons.js` ไอคอน · `assets/member.js` ซิงก์คลาวด์ · ข้อมูลเก็บใน localStorage (edm_*)
 - ทดสอบ: `python3 -m http.server 8772` + Playwright
 

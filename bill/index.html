@@ -6,7 +6,7 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
 <script>/* เปิดตรง /bill/ → ไปรุ่นตัวแยกแบบมีเมนูและรายงาน (/app/?ed=bill) · ใส่ ?solo=1 เพื่อเปิดหน้าเดี่ยวแบบเดิม */(function(){var emb=false;try{emb=window.top!==window.self}catch(e){emb=true}if(emb||/[?&]solo=1/.test(location.search))return;var h=location.hash.replace(/^#/,"");try{if(h)sessionStorage.setItem("edm_pend",JSON.stringify({t:"bill",h:h}))}catch(e){}document.documentElement.style.visibility="hidden";location.replace("/app/?ed=bill")})()</script>
-<script src="../assets/lock.js?v=2"></script>
+<script src="../assets/lock.js?v=3"></script>
 <script src="../assets/vendor/qrcode.js"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>โปรแกรมเปิดบิลออนไลน์ ใบกำกับภาษี ใบเสร็จ ใบเสนอราคา | Excel Data Master</title>
@@ -578,7 +578,9 @@ function dueAmt(c){if(curOf(doc)!=="THB"||doc.void||ADJ(doc.type)||doc.type==="Q
 /* ---------- ประวัติการทำงานกับเอกสาร (ใครทำอะไร เมื่อไร) ---------- */
 function audit(act,d,note){try{const L=LS.get("edm_audit",[])||[];const c=calc(d);L.unshift({at:Date.now(),act,type:d.type,no:d.no,cust:d.cust&&d.cust.name||"",total:r2(c.total),note:note||"",by:localStorage.getItem("edm_who")||""});LS.set("edm_audit",L.slice(0,3000))}catch(e){}}
 // ขอ PIN เจ้าของร้านก่อนยกเลิก/ลดหนี้/ลบ (ถ้าเปิดใช้ที่หน้า สำรอง/กู้คืนข้อมูล)
-async function pinOk(why){const cfg=LS.get("edm_audit_cfg",{})||{};if(!cfg.pin)return true;let L=null;try{L=window.top.EDM_LOCK}catch(e){}L=L||window.EDM_LOCK;if(!L||!L.check||!L.get||!L.get())return true;
+async function pinOk(why){const cfg=LS.get("edm_audit_cfg",{})||{};let L=null;try{L=window.top.EDM_LOCK}catch(e){}L=L||window.EDM_LOCK;
+  /* ผู้ใช้หลายคน: เจ้าของ/คนที่มีสิทธิ์ "ยกเลิก/ลบ" ทำได้เลย · คนอื่นต้องให้เจ้าของใส่ PIN */
+  const u=L&&L.user&&L.user();if(u&&!u.none){if(u.owner||u.perm.del)return true}else if(!cfg.pin)return true;if(!L||!L.check||!L.get||!L.get())return true;
   const v=prompt("🔒 "+why+"\nใส่ PIN เจ้าของร้าน");if(v==null)return false;const ok=await L.check(v.trim());if(!ok)alert("PIN ไม่ถูกต้อง");return ok}
 async function shareDoc(){if(!locked()&&!isStored(doc)&&!save(true))return;const c=calc(doc),S=sOf(doc),due=dueAmt(c);
   const t=[`เรียน ${doc.cust.name||"ลูกค้า"}`,`${tName(doc.type,doc)} เลขที่ ${doc.no} ลงวันที่ ${thDate(doc.date)}`,`ยอดรวม ${fmt(c.total)} ${curOf(doc)==="THB"?"บาท":curOf(doc)}`+(c.wht?` · หัก ณ ที่จ่าย ${fmt(c.wht)} · ชำระสุทธิ ${fmt(c.net)} ${curOf(doc)==="THB"?"บาท":curOf(doc)}`:""),
@@ -772,7 +774,7 @@ const DEMO={
       ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
 };
 function loadDemo(mode){
-  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=56#demo&back=/bill/";return}
+  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=57#demo&back=/bill/";return}
   const has=LS.get(K.docs,[]).length;
   if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
   const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);
@@ -869,7 +871,7 @@ renderAll();bindSuggest();
 })();
 </script>
 <script src="../assets/tool-ui.js?v=5" defer></script>
-<script src="../assets/member.js?v=71" defer></script>
+<script src="../assets/member.js?v=72" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

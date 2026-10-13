@@ -6,7 +6,7 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน (clickjacking) */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
 <script>/* เปิดตรง /booking/ → ไปรุ่นตัวแยกแบบมีเมนู (/app/?ed=book) · ใส่ ?solo=1 เพื่อเปิดหน้าเดี่ยว */(function(){var emb=false;try{emb=window.top!==window.self}catch(e){emb=true}if(emb||/[?&]solo=1/.test(location.search))return;var h=location.hash.replace(/^#/,"");try{if(h)sessionStorage.setItem("edm_pend",JSON.stringify({t:"booking",h:h}))}catch(e){}document.documentElement.style.visibility="hidden";location.replace("/app/?ed=book")})()</script>
-<script src="../assets/lock.js?v=2"></script>
+<script src="../assets/lock.js?v=3"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ระบบจองห้องพัก โฮมสเตย์ ห้องประชุม อุปกรณ์ให้เช่า | Excel Data Master</title>
 <meta name="description" content="ระบบจองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า เช็กห้องว่างอัตโนมัติ ปฏิทินผัง มัดจำ ค่าประกัน ค่าปรับคืนช้า ออกใบเสร็จได้ทันที"><link rel="canonical" href="https://exceldatamaster.com/booking/"><meta property="og:type" content="website"><meta property="og:site_name" content="Excel Data Master"><meta property="og:locale" content="th_TH"><meta property="og:title" content="ระบบจองห้องพัก โฮมสเตย์ ห้องประชุม อุปกรณ์ให้เช่า | Excel Data Master"><meta property="og:description" content="ระบบจองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า เช็กห้องว่างอัตโนมัติ ปฏิทินผัง มัดจำ ค่าประกัน ค่าปรับคืนช้า ออกใบเสร็จได้ทันที"><meta property="og:url" content="https://exceldatamaster.com/booking/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og.jpg"><meta name="twitter:card" content="summary_large_image">
@@ -1022,7 +1022,7 @@ setInterval(()=>{if(document.visibilityState==="visible"&&cfg.online.on){publish
 window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.edm==="member"&&cfg.online.on)setTimeout(()=>publish(false).then(()=>pull()),300)});
 })();
 </script>
-<script src="../assets/member.js?v=71" defer></script>
+<script src="../assets/member.js?v=72" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>
