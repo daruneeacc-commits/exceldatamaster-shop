@@ -101,7 +101,7 @@ body.kiosk header.top .nav,body.kiosk .tabs{display:none}
   <button data-tab="set" type="button">⚙️ ตั้งค่า</button>
 </div>
 <main id="main"></main>
-<script src="../assets/icons.js?v=5"></script>
+<script src="../assets/icons.js?v=6"></script>
 <script>/* ไอคอนวาดเองบนแท็บ (ชุดเดียวกับระบบร้าน) */(function(){if(!window.EDM_ICON)return;var I={kiosk:["clock","#0E7490"],today:["check","#3D6FB2"],sheet:["calendar","#7A4FC2"],rep:["chart","#2F6FD6"],set:["sliders","#5B6B7F"]};document.querySelectorAll(".tabs [data-tab]").forEach(function(b){var k=I[b.dataset.tab];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON("clock",{color:"#3D6FB2"}))}})()</script>
 <dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
 <div id="printArea"></div>

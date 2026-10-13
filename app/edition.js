@@ -14,10 +14,10 @@
     stock: {
       name: "ระบบสต๊อกสินค้า", ic: "📦",
       sub: "รู้ยอดคงเหลือ ต้นทุนถัวเฉลี่ย รับเข้า-เบิกออก ตรวจนับ และสั่งซื้อสินค้าได้ในที่เดียว",
-      allow: ["home", "setup", "data", "prod", "sup", "stock", "stkitems", "stkin", "stkout", "stkadj", "stkhist", "stkre", "stockrep", "cost", "rpt"],
+      allow: ["home", "setup", "data", "prod", "sup", "stock", "stkdash", "stkitems", "stkin", "stkout", "stkadj", "stkhist", "stkre", "stockrep", "cost", "ap", "rpt"],
       rpt: { stk: 0, exp: ["cost", "po", "pursup", "purbrand"], mst: ["suplist", "pricelist"] },
       labels: { cost: "ซื้อสินค้า / ใบสั่งซื้อ" }, groups: { exp: "ซื้อสินค้า" }, rptLabels: { exp: "ซื้อสินค้า" },
-      tab: [["home", "🏠", "หน้าหลัก"], ["stkitems", "📦", "สินค้า"], ["stkin", "⬇️", "รับเข้า"], ["rpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]
+      tab: [["home", "🏠", "หน้าหลัก"], ["stkitems", "📦", "สินค้า"], ["stkin", "⬇️", "รับเข้า"], ["stkdash", "📈", "แดชบอร์ด"], ["more", "☰", "เมนู"]]
     }
     ,book: {
       name: "ระบบจองและให้เช่า", ic: "📅",

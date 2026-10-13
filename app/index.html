@@ -335,7 +335,7 @@ body>.tabbar{order:2}
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261014-0600";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261014-0700";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -396,6 +396,7 @@ body>.tabbar{order:2}
     </div></div>
     <div class="mg" data-g="stk"><button class="mg-h" type="button"><span class="step">📦</span>สต๊อก<i>▾</i></button><div class="mg-b">
       <a href="#/stock" data-r="stock">ภาพรวม</a>
+      <a href="#/stkdash" data-r="stkdash">แดชบอร์ดสต๊อก</a>
       <a href="#/stkitems" data-r="stkitems">รายการสินค้า</a>
       <a href="#/stkin" data-r="stkin">รับเข้า</a>
       <a href="#/stkout" data-r="stkout">เบิก / จ่ายออก</a>
@@ -574,8 +575,8 @@ body>.tabbar{order:2}
 </nav>
 <div id="toast" hidden style="position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:90;font-size:.9rem"></div>
 
-<script src="../assets/icons.js?v=5"></script>
-<script src="edition.js?v=9"></script>
+<script src="../assets/icons.js?v=6"></script>
+<script src="edition.js?v=10"></script>
 <script>
 "use strict";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -590,7 +591,7 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=64"},stock:{src:"/stock/?v=60",sv:"home"},stockrep:{src:"/stock/?v=60",sv:"report"},stkitems:{src:"/stock/?v=60",sv:"items"},stkin:{src:"/stock/?v=60",sv:"in"},stkout:{src:"/stock/?v=60",sv:"out"},stkadj:{src:"/stock/?v=60",sv:"adj"},stkhist:{src:"/stock/?v=60",sv:"hist"},stkre:{src:"/stock/?v=60",sv:"reorder"},
+const ROUTES={bill:{src:"/bill/?v=64"},stock:{src:"/stock/?v=61",sv:"home"},stockrep:{src:"/stock/?v=61",sv:"report"},stkdash:{src:"/stock/?v=61",sv:"dash"},stkitems:{src:"/stock/?v=61",sv:"items"},stkin:{src:"/stock/?v=61",sv:"in"},stkout:{src:"/stock/?v=61",sv:"out"},stkadj:{src:"/stock/?v=61",sv:"adj"},stkhist:{src:"/stock/?v=61",sv:"hist"},stkre:{src:"/stock/?v=61",sv:"reorder"},
   ar:{src:"/account/?v=62",v:"ar"},tax:{src:"/account/?v=62",v:"tax"},buy:{src:"/account/?v=62",v:"buy"},cash:{src:"/account/?v=62",v:"cash"},pnl:{src:"/account/?v=62",v:"home"},
   cf:{src:"/cafe/?v=13",cv:"home"},cfpos:{src:"/cafe/?v=13",cv:"pos"},cfbar:{src:"/cafe/?v=13",cv:"bar"},cford:{src:"/cafe/?v=13",cv:"orders"},cfmenu:{src:"/cafe/?v=13",cv:"menu"},cfinv:{src:"/cafe/?v=13",cv:"inv"},cfshift:{src:"/cafe/?v=13",cv:"shift"},cfrpt:{src:"/cafe/?v=13",cv:"rpt"},cfset:{src:"/cafe/?v=13",cv:"set"},
   bk:{src:"/booking/?v=17",bv:"home"},bkcal:{src:"/booking/?v=17",bv:"cal"},bklist:{src:"/booking/?v=17",bv:"list"},bkres:{src:"/booking/?v=17",bv:"res"},bkrpt:{src:"/booking/?v=17",bv:"rpt"},bklease:{src:"/booking/?v=17",bv:"lease"},bkset:{src:"/booking/?v=17",bv:"set"},
@@ -614,7 +615,7 @@ function route0(){let r=(location.hash.replace(/^#\/?/,"")||"home").split("?")[0
   /* สีของระบบตามหน้าที่เปิด (เข้าชุดกับหน้าย่อย) */document.documentElement.dataset.tone=/^(stk|stock)/.test(r)?"mustard":/^cf/.test(r)?"caramel":/^bk/.test(r)?"lav":ROUTES[r]&&/^\/account\//.test(ROUTES[r].src)?"sage":"mint";
   document.body.classList.remove("menu");
   $$("aside a").forEach(a=>a.classList.toggle("on",a.dataset.r===r));
-  const tr=/^stk|^stock/.test(r)?"stock":r;const tbs=$$("#tabbar button");tbs.forEach(b=>b.classList.toggle("on",b.dataset.go===tr||(b.dataset.go==="more"&&!tbs.some(x=>x.dataset.go===tr))));
+  const tr=/^stk|^stock/.test(r)&&r!=="stkdash"?"stock":r;const tbs=$$("#tabbar button");tbs.forEach(b=>b.classList.toggle("on",b.dataset.go===tr||(b.dataset.go==="more"&&!tbs.some(x=>x.dataset.go===tr))));
   $$(".pane").forEach(x=>x.classList.toggle("show",x.id===r));
   $$(".mg").forEach(g=>{const on=!!g.querySelector(`a[data-r="${r}"]`);g.classList.toggle("has-on",on);if(on)g.classList.remove("closed")});
   Object.values(frames).forEach(f=>f.classList.remove("show"));
@@ -710,7 +711,7 @@ window.addEventListener("message",e=>{if(e.origin!==location.origin||!e.data||e.
   {const rv=/recv=([\w-]+)/.exec(e.data.hash||"");if(t==="account"&&rv&&ROUTES.ar){openIn("ar","recv="+rv[1]);return}}
   if(t==="cafe"){const M={home:"cf",pos:"cfpos",bar:"cfbar",orders:"cford",menu:"cfmenu",inv:"cfinv",shift:"cfshift",rpt:"cfrpt",set:"cfset"};const to=M[v]||"cf";if(cur!==to){if(e.data.quiet)quietNav=1;go(to)}return}
   if(t==="booking"){const M={home:"bk",cal:"bkcal",list:"bklist",res:"bkres",rpt:"bkrpt",lease:"bklease",set:"bkset"};const to=M[v]||"bk";if(cur!==to){if(e.data.quiet)quietNav=1;go(to)}return}
-  if(t==="stock"&&v){const M={home:"stock",items:"stkitems",in:"stkin",out:"stkout",adj:"stkadj",hist:"stkhist",reorder:"stkre",report:"stockrep",move:"stkin"};if(M[v]&&cur!==M[v]){if(e.data.quiet){quietNav=1;}go(M[v])}return}
+  if(t==="stock"&&v){const M={home:"stock",dash:"stkdash",items:"stkitems",in:"stkin",out:"stkout",adj:"stkadj",hist:"stkhist",reorder:"stkre",report:"stockrep",move:"stkin"};if(M[v]&&cur!==M[v]){if(e.data.quiet){quietNav=1;}go(M[v])}return}
   if(t==="account"){go(v==="ar"||v==="tax"||v==="ap"?v:v==="buy"?"cost":v==="cash"?"bank":"pnl")}else if(ROUTES[t])go(t);else go("home")});
 
 /* ---------- หน้าหลัก ---------- */
@@ -1014,7 +1015,7 @@ function renderUsers(){const L=window.EDM_LOCK;if(!L||!L.users){$("#usCard").hid
 const PERM_R={cf:"cf",cfpos:"cf",cfbar:"cf",cford:"cf",cfinv:"cf",cfshift:"cf",cfmenu:"set",cfset:"set",cfrpt:"rpt",
   bk:"bk",bkcal:"bk",bklist:"bk",bklease:"bk",bkres:"set",bkset:"set",bkrpt:"rpt",
   quotes:"inc",invoices:"inc",billing:"inc",receipts:"inc",bill:"inc",bills:"inc",ar:"inc",
-  cost:"exp",exp:"exp",ap:"exp",buy:"exp",stock:"stk",stkitems:"stk",stkin:"stk",stkout:"stk",stkadj:"stk",stkhist:"stk",stkre:"stk",stockrep:"rpt",
+  cost:"exp",exp:"exp",ap:"exp",buy:"exp",stock:"stk",stkitems:"stk",stkin:"stk",stkout:"stk",stkadj:"stk",stkhist:"stk",stkre:"stk",stkdash:"rpt",stockrep:"rpt",
   bank:"fin",cashv:"fin",petty:"fin",cash:"fin",home:"rpt",rpt:"rpt",tax:"rpt",pnl:"rpt",setup:"set",cust:"set",sup:"set",prod:"set",data:"set"};
 function canR(r){const L=window.EDM_LOCK,u=L&&L.user&&L.user();if(!u||u.owner)return true;if(u.none)return r==="home";const k=PERM_R[r];return !k||!!u.perm[k]}
 function firstOk(){const a=$$("aside a[data-r]").find(x=>canR(x.dataset.r));return a?a.dataset.r:"home"}

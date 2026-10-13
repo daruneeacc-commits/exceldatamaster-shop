@@ -53,7 +53,7 @@
     home: "home", setup: "sliders", data: "data", cust: "users", sup: "users", prod: "box",
     quotes: "doc", invoices: "bill", billing: "doc", receipts: "bill", ar: "coins", bill: "bill", bills: "list",
     cost: "cart", exp: "cart", ap: "coins", bank: "coins", cashv: "coins", petty: "coins",
-    stock: "box", stkitems: "box", stkin: "boxin", stkout: "box", stkadj: "list", stkhist: "list", stkre: "cart", stockrep: "chart",
+    stock: "box", stkitems: "box", stkin: "boxin", stkout: "box", stkadj: "list", stkhist: "list", stkre: "cart", stkdash: "chart", stockrep: "chart",
     rpt: "chart", more: "more",
     cf: "cup", cfpos: "register", cfbar: "glass", cford: "list", cfmenu: "menu", cfinv: "jar", cfshift: "drawer", cfrpt: "chart", cfset: "sliders",
     bk: "home", bkcal: "calendar", bklist: "list", bkres: "bed", bkrpt: "chart", bkset: "sliders",

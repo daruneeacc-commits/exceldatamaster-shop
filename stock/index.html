@@ -44,6 +44,10 @@ table.ro td{vertical-align:middle}
 .card h2{font-size:1.05rem;margin:0;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .card h2 small{font-weight:400;color:var(--muted);font-size:.82rem}
 .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.sdg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:14px}@media(max-width:900px){.sdg{grid-template-columns:1fr}}
+.sdc{width:100%;height:auto;display:block}.sdl{display:flex;gap:14px;font-size:.8rem;color:var(--muted)}.sdl i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}
+.sdd{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.sdd .ring{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;flex:none}.sdd .ring>div{width:104px;height:104px;border-radius:50%;background:var(--card);display:grid;place-items:center;text-align:center;line-height:1.1}.sdd .ring b{font-size:1.5rem}.sdd .ring small{color:var(--muted)}.sdd .lg{display:flex;flex-direction:column;gap:6px;font-size:.9rem;flex:1;min-width:120px}.sdd .lg div{display:flex;align-items:center;gap:8px}.sdd .lg i{width:12px;height:12px;border-radius:3px}.sdd .lg b{margin-left:auto}
+.sdk .kpi b{display:block}.sdk .kpi small{display:block;color:var(--muted)}.sdx .sub{display:block;color:var(--muted);font-size:.78rem}.sdp{margin-top:10px}.sdp .kpi b{font-size:1.15rem}.sdbar{height:10px;background:var(--soft);border-radius:99px;overflow:hidden}.sdbar i{display:block;height:100%;background:#6FA8DC;border-radius:99px}
 @media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .kpi{background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:0 0 0 1px var(--line)}
 .kpi span{font-size:.8rem;color:var(--muted);display:block}
@@ -140,6 +144,7 @@ html{overscroll-behavior-y:contain}
 <main>
   <div class="tabs" id="tabs">
     <button data-v="home">📊 ภาพรวม</button>
+    <button data-v="dash">📈 แดชบอร์ด</button>
     <button data-v="items">📦 สินค้า</button>
     <button data-v="in">⬇️ รับเข้า</button>
     <button data-v="out">⬆️ เบิกออก</button>
@@ -209,7 +214,7 @@ const ymLabel=ym=>{const[y,m]=ym.split("-").map(Number);return MONTHS[m-1]+" "+(
 function render(){
   $$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));
   if(ui.v==="move")ui.v=ui.mtype||"in";if(["in","out","adj"].includes(ui.v))ui.mtype=ui.v;
-  ({home:vHome,items:vItems,in:vMove,out:vMove,adj:vMove,hist:vHist,reorder:vReorder,report:vReport}[ui.v]||vHome)();
+  ({home:vHome,dash:vDash,items:vItems,in:vMove,out:vMove,adj:vMove,hist:vHist,reorder:vReorder,report:vReport}[ui.v]||vHome)();
   refreshList();
 }
 function refreshList(){$("#plist").innerHTML=items.slice().sort((a,b)=>a.name.localeCompare(b.name,"th")).map(i=>`<option value="${esc(label(i))}"></option>`).join("")}
@@ -218,6 +223,48 @@ const findByLabel=v=>{v=String(v||"").trim();return items.find(i=>label(i)===v)|
 
 function emptyState(){return`<div class="card"><div class="empty"><div style="font-size:2rem">📦</div><b>ยังไม่มีสินค้าในสต๊อก</b><div>เริ่มเพิ่มสินค้าชิ้นแรก หรือลองดูระบบด้วยข้อมูลตัวอย่าง</div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="btn main edm-lock" data-act="add">＋ เพิ่มสินค้า</button><button class="btn ghost edm-lock" data-act="demo">✨ ลองใส่ข้อมูลตัวอย่าง</button></div></div></div>`}
+
+/* ---------- แดชบอร์ดสต๊อก (แบบเทมเพลต StockEasy): ภาพรวม · เบิกออกรายเดือน/รายวัน · Top 20 · ดูรายสินค้า · ผู้ขาย/เจ้าหนี้ ---------- */
+function sdBars(data,opt){opt=opt||{};const W=560,H=200,pl=44,pb=26,pt=12,max=Math.max(1,...data.map(d=>Math.max(d.a||0,d.b||0))),bw=(W-pl-8)/data.length,two=data.some(d=>d.b!=null);
+  const y=v=>H-pb-(v/max)*(H-pb-pt),tk=[0,.5,1].map(f=>max*f);
+  return`<svg viewBox="0 0 ${W} ${H}" class="sdc" role="img">${tk.map(v=>`<line x1="${pl}" x2="${W-4}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${pl-6}" y="${y(v)+4}" text-anchor="end" font-size="12" fill="var(--muted)">${v>=1000?Math.round(v/1000)+"k":Math.round(v)}</text>`).join("")}
+  ${data.map((d,i)=>{const x=pl+i*bw,w=two?bw*.36:bw*.6;return`<rect x="${x+(two?bw*.12:bw*.2)}" y="${y(d.a||0)}" width="${w}" height="${Math.max(0,H-pb-y(d.a||0))}" rx="3" fill="${opt.ca||"#6FA8DC"}"><title>${esc(d.l)} ${fq(d.a||0)}</title></rect>${two?`<rect x="${x+bw*.5}" y="${y(d.b||0)}" width="${w}" height="${Math.max(0,H-pb-y(d.b||0))}" rx="3" fill="${opt.cb||"#4FAF83"}"><title>${esc(d.l)} ${fq(d.b||0)}</title></rect>`:""}${data.length<=16||i%2===0?`<text x="${x+bw/2}" y="${H-8}" text-anchor="middle" font-size="12" fill="var(--muted)">${esc(d.l)}</text>`:""}`}).join("")}</svg>`}
+function sdLine(vals,labels){const W=560,H=170,pl=36,pb=22,pt=10,max=Math.max(1,...vals),n=vals.length,x=i=>pl+i*(W-pl-8)/Math.max(1,n-1),y=v=>H-pb-(v/max)*(H-pb-pt);
+  const pts=vals.map((v,i)=>x(i)+","+y(v)).join(" ");
+  return`<svg viewBox="0 0 ${W} ${H}" class="sdc"><line x1="${pl}" x2="${W-4}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line)"/><text x="${pl-6}" y="${y(max)+4}" text-anchor="end" font-size="12" fill="var(--muted)">${fq(max)}</text>
+  <polygon points="${x(0)},${y(0)} ${pts} ${x(n-1)},${y(0)}" fill="#6FA8DC" opacity=".18"/><polyline points="${pts}" fill="none" stroke="#3D7CC0" stroke-width="2"/>
+  ${labels.map((l,i)=>i%5===0||i===n-1?`<text x="${x(i)}" y="${H-6}" text-anchor="middle" font-size="12" fill="var(--muted)">${l}</text>`:"").join("")}</svg>`}
+function sdDonut(parts){const tot=parts.reduce((a,p)=>a+p.v,0)||1;let acc=0;const g=parts.map(p=>{const s=acc/tot*100;acc+=p.v;return`${p.c} ${s}% ${acc/tot*100}%`}).join(",");
+  return`<div class="sdd"><div class="ring" style="background:conic-gradient(${g})"><div><b>${fq(tot)}</b><small>รายการ</small></div></div><div class="lg">${parts.map(p=>`<div><i style="background:${p.c}"></i>${p.n}<b>${fq(p.v)}</b></div>`).join("")}</div></div>`}
+function vDash(){const V=$("#view"),S=compute(),A=LS.get("edm_acc",{})||{},pur=(A.pur||[]).filter(p=>p.status!=="cancel"&&p.status!=="void"),pays=A.pay||[];
+  if(!items.length){V.innerHTML=emptyState();return}
+  const m0=ui.dm||today().slice(0,7);ui.dm=m0;
+  const ym=d=>d.slice(0,7),months=[];{let y=+m0.slice(0,4),m=+m0.slice(5,7);for(let k=11;k>=0;k--){let mm=m-k,yy=y;while(mm<1){mm+=12;yy--}months.push(yy+"-"+String(mm).padStart(2,"0"))}}
+  const outM={},inM={},outByP={},cntByP={};tx.forEach(t=>{const q=num(t.qty),k=ym(t.date||"");if(t.type==="out"){outM[k]=(outM[k]||0)+q;if(k===m0){outByP[t.pid]=(outByP[t.pid]||0)+q;cntByP[t.pid]=(cntByP[t.pid]||0)+1}}else if(t.type==="in")inM[k]=(inM[k]||0)+q});
+  const days=new Date(+m0.slice(0,4),+m0.slice(5,7),0).getDate(),daily=Array(days).fill(0);tx.forEach(t=>{if(t.type==="out"&&ym(t.date||"")===m0)daily[+t.date.slice(8,10)-1]+=num(t.qty)});
+  let nOk=0,nLow=0,nOut=0,qty=0,val=0;items.forEach(i=>{const s=S[i.id];if(!s)return;const st=status(i,s)[0];if(st==="หมด")nOut++;else if(st==="ใกล้หมด")nLow++;else nOk++;qty+=Math.max(0,s.bal);val+=s.value});
+  const outTot=Object.values(outByP).reduce((a,b)=>a+b,0),top=Object.keys(outByP).map(id=>({i:byId(id),q:outByP[id]})).filter(x=>x.i).sort((a,b)=>b.q-a.q).slice(0,20);
+  // ผู้ขาย / เจ้าหนี้: ยอดซื้อ (จากใบสั่งซื้อในบัญชีร้าน) และยอดค้างจ่าย
+  const pv=p=>(p.lines||[]).reduce((a,l)=>a+num(l.q)*num(l.p),0)*(p.vat==="ex"?1.07:1),paid=p=>pays.filter(y=>y.dir==="out"&&(y.purId===p.id||y.docId===p.id)).reduce((a,y)=>a+num(y.amount)+num(y.wht),0);
+  const supM={},bySup={};pur.forEach(p=>{const v=pv(p),k=ym(p.date||"");supM[k]=(supM[k]||0)+v;const n=(p.sup&&p.sup.name)||"(ไม่ระบุผู้ขาย)",o=bySup[n]=bySup[n]||{n,buy:0,owe:0,cnt:0};o.buy+=v;o.cnt++;if(p.status!=="ordered")o.owe+=Math.max(0,v-paid(p))});
+  const sups=Object.values(bySup).sort((a,b)=>b.buy-a.buy).slice(0,10),oweTot=Object.values(bySup).reduce((a,s)=>a+s.owe,0);
+  const pick=ui.dp&&byId(ui.dp)?ui.dp:(top[0]&&top[0].i.id)||items[0].id,pi=byId(pick),ps=S[pick]||{bal:0,avg:0,value:0};
+  const pOut=tx.filter(t=>t.pid===pick&&t.type==="out"),pOutM=pOut.filter(t=>ym(t.date||"")===m0);
+  const ml=k=>MS[+k.slice(5,7)-1]+" "+String(+k.slice(0,4)+543).slice(2);
+  V.innerHTML=`<div class="hello"><h1>📈 แดชบอร์ดสต๊อก</h1><p>สรุปอัตโนมัติจากรายการรับเข้า เบิกออก และใบสั่งซื้อ · เลือกเดือนเพื่อดูยอดเบิกออกรายวันและ Top 20</p></div>
+  <div class="card"><div class="tools" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b>เดือน</b><input class="in-" type="month" id="dm" value="${m0}" style="max-width:180px"></div>
+  <div class="kpis sdk" style="margin-top:10px"><div class="kpi"><span>สินค้าทั้งหมด</span><b>${fq(items.length)}</b><small>คงเหลือรวม ${fq(qty)} หน่วย</small></div><div class="kpi"><span>มูลค่าสต๊อก (ทุน)</span><b>฿${fmt(val)}</b><small>ต้นทุนเฉลี่ย</small></div>
+    <div class="kpi"><span>เบิกออก ${ml(m0)}</span><b>${fq(outTot)}</b><small>${Object.keys(outByP).length} สินค้า</small></div><div class="kpi"><span>เจ้าหนี้ค้างจ่าย</span><b>฿${fmt(oweTot)}</b><small>${Object.values(bySup).filter(s=>s.owe>0.009).length} ผู้ขาย</small></div></div></div>
+  <div class="sdg"><div class="card"><h2>สถานะสินค้า</h2>${sdDonut([{n:"ปกติ",v:nOk,c:"#4FAF83"},{n:"ใกล้หมด",v:nLow,c:"#E3BC4E"},{n:"หมด",v:nOut,c:"#E07A5F"}])}</div>
+    <div class="card"><h2>รับเข้า vs เบิกออก (จำนวน) 12 เดือน</h2><div class="sdl"><span><i style="background:#4FAF83"></i>รับเข้า</span><span><i style="background:#6FA8DC"></i>เบิกออก</span></div>${sdBars(months.map(k=>({l:ml(k),a:outM[k]||0,b:inM[k]||0})),{ca:"#6FA8DC",cb:"#4FAF83"})}</div></div>
+  <div class="sdg"><div class="card"><h2>เบิกออกรายวัน · ${ml(m0)}</h2>${sdLine(daily,daily.map((_,i)=>i+1))}</div>
+    <div class="card"><h2>ดูรายสินค้า</h2><select class="in-" id="dp">${items.map(i=>`<option value="${esc(i.id)}" ${i.id===pick?"selected":""}>${esc((i.sku?i.sku+" · ":"")+i.name)}</option>`).join("")}</select>
+      <div class="kpis sdk sdp"><div class="kpi"><span>คงเหลือ</span><b>${fq(ps.bal)}</b><small>${esc(pi&&pi.unit||"")}</small></div><div class="kpi"><span>เบิกออกเดือนนี้</span><b>${fq(pOutM.reduce((a,t)=>a+num(t.qty),0))}</b><small>${pOutM.length} ครั้ง</small></div><div class="kpi"><span>เบิกออกทั้งหมด</span><b>${fq(pOut.reduce((a,t)=>a+num(t.qty),0))}</b><small>${pOut.length} ครั้ง</small></div><div class="kpi"><span>มูลค่าคงเหลือ</span><b>฿${fmt(ps.value)}</b><small>ทุนเฉลี่ย ${fmt(ps.avg)}</small></div></div></div></div>
+  <div class="card sdx"><h2>Top 20 สินค้าเบิกออก · ${ml(m0)} <small>${fq(outTot)} หน่วย</small></h2>${top.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>#</th><th>สินค้า</th><th class="r">จำนวน</th><th class="r">สัดส่วน</th><th></th></tr></thead><tbody>${top.map((x,k)=>`<tr><td>${k+1}</td><td><b>${esc(x.i.name)}</b><span class="sub">${esc(x.i.sku||"")}</span></td><td class="r">${fq(x.q)} ${esc(x.i.unit||"")}</td><td class="r">${(x.q/outTot*100).toFixed(1)}%</td><td style="width:30%"><div class="sdbar"><i style="width:${x.q/top[0].q*100}%"></i></div></td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีการเบิกออกในเดือนนี้</div>`}</div>
+  <div class="sdg"><div class="card"><h2>ยอดซื้อจากผู้ขาย 12 เดือน (บาท)</h2>${sdBars(months.map(k=>({l:ml(k),a:Math.round(supM[k]||0)})),{ca:"#A88BD0"})}<p class="note">มาจากใบสั่งซื้อ/ซื้อสินค้าในระบบบัญชีร้าน (ปุ่ม "ต้องสั่งซื้อ" สร้างให้ได้)</p></div>
+    <div class="card sdx"><h2>ผู้ขาย / เจ้าหนี้ <small>ค้างจ่าย ฿${fmt(oweTot)}</small></h2>${sups.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>ผู้ขาย</th><th class="r">ใบ</th><th class="r">ยอดซื้อ</th><th class="r">ค้างจ่าย</th></tr></thead><tbody>${sups.map(s=>`<tr><td><b>${esc(s.n)}</b></td><td class="r">${s.cnt}</td><td class="r">${fmt(s.buy)}</td><td class="r" style="${s.owe>0.009?"color:var(--danger);font-weight:700":""}">${fmt(s.owe)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ยังไม่มีใบสั่งซื้อ · บันทึกซื้อสินค้าที่ระบบบัญชีร้าน หรือกด "ต้องสั่งซื้อ" เพื่อสร้างใบสั่งซื้อ</div>`}</div></div>`;
+  $("#dm").onchange=e=>{if(/^\d{4}-\d{2}$/.test(e.target.value)){ui.dm=e.target.value;svU();vDash()}};
+  $("#dp").onchange=e=>{ui.dp=e.target.value;svU();vDash()}}
 
 function vHome(){
   if(!items.length){$("#view").innerHTML=emptyState();return}
@@ -475,7 +522,7 @@ function demo(){
 /* ---------- events ---------- */
 // เปิดบัญชีคุมสต๊อกของสินค้าจากการค้นหาในระบบร้านค้า (#card=<id>)
 function tellShell(v){if(window.top!==window){try{window.parent.postMessage({edm:"go",tool:"stock",hash:"v="+v,quiet:1},location.origin)}catch(e){}}}
-window.edmStockView=v=>{if(!["home","items","move","in","out","adj","hist","reorder","report"].includes(v))return;ui.v=v;svU();render();scrollTo(0,0)};
+window.edmStockView=v=>{if(!["home","dash","items","move","in","out","adj","hist","reorder","report"].includes(v))return;ui.v=v;svU();render();scrollTo(0,0)};
 const cardFromHash=()=>{const m=/card=([\w-]+)/.exec(location.hash);if(!m)return;history.replaceState(null,"",location.pathname+location.search);if(items.some(i=>i.id===m[1]))stockCard(m[1])};
 window.addEventListener("hashchange",cardFromHash);setTimeout(cardFromHash,0);
 $("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;svU();render();scrollTo(0,0)};
