@@ -317,7 +317,7 @@ function chk(l,b){const r=rOf(l.rid);if(!r)return{ok:false,msg:"เลือก�
 const isWeN=s=>(cfg.we||[]).includes(dow(s));
 function peak(s){let p=0;(cfg.peaks||[]).forEach(x=>{if(okD(x.s)&&okD(x.e)&&s>=x.s&&s<=x.e)p=Math.max(p,num(x.pct))});return p}
 function quote(l){const r=rOf(l.rid);if(!r||!okLine(l,r))return{n:0,amt:0};const q=num(l.qty)||1;
-  if(r.kind==="night"){let amt=0,n=0;for(let d=dn(l.s);d<dn(l.e);d++){const s=fromDn(d);let p=isWeN(s)&&num(r.rateWe)?num(r.rateWe):num(r.rate);p*=1+peak(s)/100;amt+=p;n++}return{n,amt:r2(amt*q)}}
+  if(r.kind==="night"){let amt=0,n=0;for(let d=dn(l.s);d<dn(l.e);d++){const s=fromDn(d);let p=isWeN(s)&&num(r.rateWe)?num(r.rateWe):num(r.rate);p*=1+peak(s)/100;amt+=p;n++}const ex=Math.max(0,(num(l.pax)||0)-(num(r.inc)||0)*q);if(num(r.pp)&&ex)amt+=num(r.pp)*ex*n/q;return{n,amt:r2(amt*q)}}
   if(r.kind==="hour"){const h=(mins(l.e)-mins(l.s))/60,d=l.s.slice(0,10),we=dow(d)===0||dow(d)===6;let p=we&&num(r.rateWe)?num(r.rateWe):num(r.rate);p*=1+peak(d)/100;return{n:r2(h),amt:r2(p*h*q)}}
   const n=Math.max(1,dn(l.e)-dn(l.s)),p=num(r.rate);let amt=n*p;if(num(r.rate7)&&n>=7){const w=Math.floor(n/7);amt=w*num(r.rate7)+(n-w*7)*p}return{n,amt:r2(amt*q)}}
 function upd(l){const r=rOf(l.rid);const Q=quote(l);l.n=Q.n;if(!l.ov)l.amt=Q.amt;if(!l.gov&&r)l.g=r2(num(r.dep)*(num(l.qty)||1))}
@@ -642,11 +642,12 @@ function resDlg(id,kind){const old=id?rOf(id):null;const r=old?Object.assign({},
     <div class="row"><div class="f"><label>ราคาต่อ${Kd.u} *</label><input class="in- r" id="rR" inputmode="decimal" value="${esc(r.rate||"")}" placeholder="0"></div>
       ${r.kind==="item"?`<div class="f"><label>ราคาเหมาสัปดาห์ (7 วัน) ไม่บังคับ</label><input class="in- r" id="r7" inputmode="decimal" value="${esc(r.rate7||"")}" placeholder="ไม่มี"></div>`
       :`<div class="f"><label>${r.kind==="night"?"ราคาคืนวันหยุด (ตามที่ตั้งค่า)":"ราคาวันเสาร์-อาทิตย์"} ไม่บังคับ</label><input class="in- r" id="rW" inputmode="decimal" value="${esc(r.rateWe||"")}" placeholder="ใช้ราคาปกติ"></div>`}</div>
+    ${r.kind==="night"?`<div class="row"><div class="f"><label>ราคารวมกี่คน (ต่อห้อง/หลัง) ไม่บังคับ</label><input class="in- r" id="rI" inputmode="numeric" value="${esc(r.inc||"")}" placeholder="เช่น 2"></div><div class="f"><label>คนเพิ่ม คิดคนละ / คืน</label><input class="in- r" id="rP" inputmode="decimal" value="${esc(r.pp||"")}" placeholder="เช่น 500 (รีสอร์ท / บ้านพัก)"></div></div>`:""}
     <div class="f"><label>รายละเอียด (แสดงในใบยืนยัน)</label><input class="in-" id="rT" value="${esc(r.note||"")}" placeholder="${r.kind==="night"?"เช่น เตียงคิง 2 ท่าน รวมอาหารเช้า":r.kind==="hour"?"เช่น จุ 20 คน มีโปรเจกเตอร์":"เช่น พร้อมเลนส์ 24-105 และแบต 2 ก้อน"}"></div>
     <label class="ck"><input type="checkbox" id="rA" ${r.active!==false?"checked":""}> เปิดให้จอง</label>
     <div class="acts"><button class="btn main edm-lock" id="rSave">บันทึก</button>${old?`<button class="btn ghost danger" id="rDel">ลบ</button>`:""}</div></div>`,"sm");
   $$("#dlgBody .kinds [data-k]").forEach(b=>b.onclick=()=>{grab();r.kind=b.dataset.k;draw()});
-  const grab=()=>{r.name=$("#rN").value.trim();r.cat=$("#rC").value.trim();r.qty=Math.max(1,Math.round(num($("#rQ").value))||1);r.unit=$("#rU").value.trim();r.dep=num($("#rD").value)||"";r.rate=num($("#rR").value)||"";if($("#rW"))r.rateWe=num($("#rW").value)||"";if($("#r7"))r.rate7=num($("#r7").value)||"";r.note=$("#rT").value.trim();r.active=$("#rA").checked};
+  const grab=()=>{r.name=$("#rN").value.trim();r.cat=$("#rC").value.trim();r.qty=Math.max(1,Math.round(num($("#rQ").value))||1);r.unit=$("#rU").value.trim();r.dep=num($("#rD").value)||"";r.rate=num($("#rR").value)||"";if($("#rI")){r.inc=Math.round(num($("#rI").value))||"";r.pp=num($("#rP").value)||""}if($("#rW"))r.rateWe=num($("#rW").value)||"";if($("#r7"))r.rate7=num($("#r7").value)||"";r.note=$("#rT").value.trim();r.active=$("#rA").checked};
   $("#rSave").onclick=()=>{grab();if(!r.name)return toast("ใส่ชื่อก่อน");if(!num(r.rate)&&!confirm("ยังไม่ได้ใส่ราคา บันทึกเป็นราคา 0 บาท?"))return;
     if(old&&(num(old.qty)||1)>r.qty){const over=list.some(b=>ACT(b)&&b.st!=="out"&&(b.lines||[]).some(l=>l.rid===r.id&&usage(r.id,...span(l,old,b),"").max>r.qty));if(over&&!confirm("มีการจองที่ใช้เกินจำนวนใหม่อยู่ ยืนยันลดจำนวน?"))return}
     const i=res.findIndex(x=>x.id===r.id);if(i>=0)res[i]=r;else res.push(r);if(saveRes()){closeDlg();toast("บันทึกแล้ว ✓");render()}};
@@ -670,6 +671,7 @@ function lineHtml(l,i){const r=rOf(l.rid),k=r?r.kind:"night",Kd=KIND[k],cap=r?nu
     :`<div class="dates"><div class="f"><label>${Kd.s}${k==="night"?" ("+esc(cfg.ci)+" น.)":""}</label><input class="in-" type="date" data-i="${i}" data-f="s" value="${esc(l.s)}" ${lock?"disabled":""}></div><div class="f"><label>${Kd.e}${k==="night"?" ("+esc(cfg.co)+" น.)":""}</label><input class="in-" type="date" data-i="${i}" data-f="e" value="${esc(l.e)}" ${lock?"disabled":""}></div></div>`;
   return`<div class="bl" id="bl${i}"><div class="top ${cap>1?"":"noq"}"><div class="f"><label>${Kd.ic} ห้อง / อุปกรณ์</label><select class="in-" data-i="${i}" data-f="rid" ${lock?"disabled":""}>${r?"":`<option value="">— เลือก —</option>`}${resOpts(l.rid)}</select></div>
     ${cap>1?`<div class="f"><label>จำนวน</label><input class="in- r" inputmode="numeric" data-i="${i}" data-f="qty" value="${esc(l.qty)}" ${lock?"disabled":""}></div>`:""}
+    ${r&&k==="night"&&num(r.pp)?`<div class="f"><label>จำนวนคน (รวม ${num(r.inc)*(num(l.qty)||1)} คน)</label><input class="in- r" inputmode="numeric" data-i="${i}" data-f="pax" value="${esc(l.pax||"")}" placeholder="${num(r.inc)*(num(l.qty)||1)}" ${lock?"disabled":""}></div>`:""}
     ${cur.lines.length>1&&!lock?`<button class="x" type="button" data-rm="${i}" aria-label="ลบรายการ">✕</button>`:""}</div>
     ${dates}
     <div class="bot"><div class="av" id="av${i}"></div><div class="f"><label>ค่าเช่า <span id="ln${i}"></span></label><input class="in- r ${l.ov?"ov":""}" inputmode="decimal" data-i="${i}" data-f="amt" id="la${i}" value="${esc(l.amt)}" title="แก้ราคาเองได้"></div><div class="f"><label>ค่าประกัน</label><input class="in- r" inputmode="decimal" data-i="${i}" data-f="g" id="lg${i}" value="${esc(l.g||0)}"></div></div>
@@ -734,6 +736,7 @@ function wireBk(){const D=$("#dlgBody"),b=cur;
 function lineInput(x,full){const b=cur,i=+x.dataset.i,l=b.lines[i],f=x.dataset.f;if(!l)return;
   if(f==="rid"){const old=rOf(l.rid),r=rOf(x.value);l.rid=x.value;l.ov=false;l.gov=false;if(!old||!r||old.kind!==r.kind)setDates(l,r,(l.s||"").slice(0,10)||today());if(r&&l.qty>(num(r.qty)||1))l.qty=1;upd(l);grabC();drawBk();return}
   if(f==="qty"){l.qty=Math.max(1,Math.round(num(x.value))||1)}
+  else if(f==="pax"){l.pax=Math.max(0,Math.round(num(x.value))||0)}
   else if(f==="s"||f==="e"){l[f]=x.value;const r=rOf(l.rid);if(f==="s"&&okD(l.s)&&r&&(!okD(l.e)||dn(l.e)<dn(l.s)+(r.kind==="night"?1:0))){l.e=addDays(l.s,r.kind==="night"?1:1);const el=$(`[data-i="${i}"][data-f="e"]`);if(el)el.value=l.e}}
   else if(f==="hd"){const d=x.value;if(okD(d)){l.s=d+"T"+((l.s||"").slice(11,16)||"09:00");l.e=d+"T"+((l.e||"").slice(11,16)||"10:00")}}
   else if(f==="hs"||f==="he"){const d=(l.s||today()).slice(0,10);if(/^\d{2}:\d{2}/.test(x.value)){if(f==="hs"){const len=okDT(l.s)&&okDT(l.e)?mins(l.e)-mins(l.s):60;l.s=d+"T"+x.value.slice(0,5);if(full||!okDT(l.e)||mins(l.e)<=mins(l.s)){const m=Math.min(mins(l.s)+Math.max(30,len),dn(d)*1440+23*60+59),hh=Math.floor((m%1440)/60),mm=m%60;l.e=d+"T"+pad(hh)+":"+pad(mm);const el=$(`[data-i="${i}"][data-f="he"]`);if(el)el.value=l.e.slice(11,16)}}else l.e=d+"T"+x.value.slice(0,5)}}
