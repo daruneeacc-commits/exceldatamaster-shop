@@ -302,7 +302,7 @@ function vSet(){return`<div class="band"><h1>ตั้งค่า (TO-DO LIST T
    <div class="skins" style="margin-top:10px"><button type="button" class="skin ${cfg.skin==="pink"?"on":""}" data-skin="pink"><i style="background:#E8779F"></i>โทนชมพู (แบบ Excel)</button><button type="button" class="skin ${cfg.skin==="beige"?"on":""}" data-skin="beige"><i style="background:#A9805E"></i>โทนน้ำตาล (แบบ Google Sheets)</button></div></section>
   <div class="lists">${lst("cats","หมวดหมู่","เพิ่มหมวดเร็ว ๆ ได้ด้วย #ชื่อหมวด ตอนพิมพ์งาน")}${lst("pris","ความสำคัญ","เรียงจากสำคัญมาก → น้อย · คำว่า “ด่วน” = อันดับแรก")}${lst("sts","สถานะ","สถานะ “เสร็จสิ้น” ใช้การติ๊ก ✓ · “ยกเลิก” ไม่นับในความคืบหน้า")}</div>
   <section class="card"><h2>${ic("cart","s")} ซื้อใช้งานต่อเนื่อง</h2><div class="row"><button class="btn sm buy" data-buy="m" type="button">รายเดือน 49 บาท</button><button class="btn sm main" data-buy="y" type="button">รายปี 490 บาท · ฟรี 2 เดือน</button></div>
-   <p class="small muted" style="margin:8px 0 0">โอนแล้วแนบสลิปในหน้าถัดไป ร้านตรวจยอดแล้วเปิดใช้งานให้ ได้อีเมลแจ้งพร้อมใช้ทันที</p></section>
+   <p class="small muted" style="margin:8px 0 0">โอนแล้วแนบสลิปในหน้าถัดไป ใช้งานต่อได้ทันที 24 ชม. ระหว่างร้านตรวจยอด แล้วได้อีเมลแจ้งวันใช้งานเต็มแพ็ก</p></section>
   <section class="card"><h2>ข้อมูล</h2><div class="row"><button class="btn sm" id="demo" type="button">ใส่งานตัวอย่าง</button><button class="btn sm" id="clrDone" type="button">ลบงานที่เสร็จแล้ว</button><button class="btn sm ghost danger" id="wipe" type="button">ล้างข้อมูลทั้งหมด</button></div>
    <p class="small muted" style="margin:8px 0 0">ข้อมูลเก็บในเครื่องนี้ สมาชิกที่เข้าสู่ระบบจะสำรองขึ้นคลาวด์และใช้ได้หลายเครื่อง · กด ${ic("dl","s")} Excel ด้านบนเพื่อดาวน์โหลดเก็บไว้ในเครื่องกันพลาด (ไฟล์เป็นข้อมูลอย่างเดียว ไม่มีสูตร)</p></section>`}
 function bindSet(){
@@ -360,7 +360,7 @@ render();
 })();
 </script>
 <script>window.EDM_TRY=true;</script>
-<script src="../assets/member.js?v=69" defer></script>
+<script src="../assets/member.js?v=70" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

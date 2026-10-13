@@ -129,7 +129,7 @@
     var ck = curSys(), tool = ck === "todo" ? "To-Do งานที่ต้องทำ" : ck === "finance" ? "บริหารการเงิน SME & ฟรีแลนซ์" : ck === "time" ? "ลงเวลา / ตอกบัตร" : /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /booking/.test(location.pathname) ? "ระบบจองและให้เช่า" : /cafe/.test(location.pathname) ? "ระบบร้านคาเฟ่" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
     var h = '<div class="edm-card">';
     if (mode === "sent") {
-      h += '<div style="font-size:2.4rem;line-height:1">✅</div><h2>สมัครเรียบร้อย · รอร้านเปิดใช้งาน</h2><p>' + esc(note) + '</p>' +
+      h += '<div style="font-size:2.4rem;line-height:1">✅</div><h2>' + (/ยืนยัน/.test(note) ? '📧 เช็กอีเมล แล้วกดยืนยัน' : 'สมัครเรียบร้อย · รอร้านเปิดใช้งาน') + '</h2><p>' + esc(note) + '</p>' +
         '<p class="edm-muted">ร้านจะตรวจและเปิดใช้งานให้โดยเร็ว เมื่อได้อีเมลแจ้งแล้ว กลับมาเข้าสู่ระบบที่หน้านี้ได้เลย</p>' +
         '<a class="edm-btn" href="https://line.me/R/ti/p/%40856tvnxs" target="_blank" rel="noopener" style="background:#06C755;color:#fff">💬 แจ้งร้านทาง LINE ให้เปิดเร็วขึ้น</a>' +
         '<button class="edm-btn ghost" data-go="login">เปิดใช้งานแล้ว · เข้าสู่ระบบ</button>';
@@ -141,7 +141,7 @@
       var su = mode === "signup";
       h += '<span class="edm-badge">ทดลองใช้ฟรี ' + TRIAL + ' วัน</span><h2>' + esc(tool) + '</h2>' +
         (note ? '<div class="edm-msg err">' + esc(note) + '</div>' : '') +
-        (su ? '<ul class="edm-perks"><li>' + esc(perk()) + '</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดใช้งานให้หลังสมัคร</li><li>ไม่ผูกสัญญา ไม่ตัดบัตรอัตโนมัติ ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
+        (su ? '<ul class="edm-perks"><li>' + esc(perk()) + '</li><li>ไม่ต้องใส่บัตรเครดิต · ยืนยันอีเมลแล้วใช้ได้ทันที</li><li>ไม่ผูกสัญญา ไม่ตัดบัตรอัตโนมัติ ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
         '<div class="edm-tabs"><button data-go="signup" class="' + (su ? "on" : "") + '">สมัครใหม่</button><button data-go="login" class="' + (su ? "" : "on") + '">เข้าสู่ระบบ</button></div>' +
         (su ? '<input class="edm-in" id="edmN" autocomplete="off" placeholder="ชื่อร้าน / ชื่อของคุณ (ไม่บังคับ)">' : '') +
         '<input class="edm-in" id="edmE" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="email" placeholder="อีเมล">' +

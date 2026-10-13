@@ -471,7 +471,7 @@ function vSet(){const gy=ui.goalY??curFY(),M=fyMonths(gy),B=BT[cfg.biz];
   <div class="lists">${lst("inCats","หมวดหมู่รายได้","เปลี่ยนชื่อแล้วรายการเดิมเปลี่ยนตาม")}${lst("outCats","หมวดหมู่ค่าใช้จ่าย","สีใช้ในกราฟแดชบอร์ด")}${lst("chans","กระเป๋าเงิน / บัญชี","เช่น เงินสด กสิกร SCB บัตรเครดิต · ใส่ยอดยกมาที่แท็บกระเป๋าเงิน")}</div>
   <section class="card"><h2>↻ รายการประจำ (ลงให้อัตโนมัติทุกเดือน)</h2>${cfg.rec.length?`<div class="recl">${cfg.rec.map(r=>`<div><span><b>${r.t==="in"?"+":"−"} ${fb(num(r.amt))}</b> · ${esc(r.item||r.cat)} <span class="muted small">· ทุกวันที่ ${r.day} · ${esc(r.ch||"")}</span></span><button class="btn sm ghost danger" data-rdel="${r.id}" type="button">หยุด</button></div>`).join("")}</div>`:`<p class="small muted" style="margin:0">ยังไม่มี · ตอนบันทึกรายการ ติ๊ก "ลงรายการนี้ให้อัตโนมัติทุกเดือน" เช่น ค่าเช่า ค่าเน็ต เงินเดือน</p>`}</section>
   <section class="card"><h2>${ic("cart","s")} ซื้อใช้งานต่อเนื่อง</h2><div class="row"><button class="btn sm buy" data-buy="m" type="button">รายเดือน 199 บาท</button><button class="btn sm main" data-buy="y" type="button">รายปี 1,990 บาท · ฟรี 2 เดือน</button></div>
-   <p class="small muted" style="margin:8px 0 0">โอนแล้วแนบสลิปในหน้าถัดไป ร้านตรวจยอดแล้วเปิดใช้งานให้ ได้อีเมลแจ้งพร้อมใช้ทันที</p></section>
+   <p class="small muted" style="margin:8px 0 0">โอนแล้วแนบสลิปในหน้าถัดไป ใช้งานต่อได้ทันที 24 ชม. ระหว่างร้านตรวจยอด แล้วได้อีเมลแจ้งวันใช้งานเต็มแพ็ก</p></section>
   <section class="card"><h2>ข้อมูล</h2><div class="row"><button class="btn sm" id="demo" type="button">ใส่ข้อมูลตัวอย่าง</button><button class="btn sm ghost danger" id="wipe" type="button">ล้างข้อมูลทั้งหมด</button></div>
    <p class="small muted" style="margin:8px 0 0">ข้อมูลเก็บในเครื่องนี้ สมาชิกที่เข้าสู่ระบบจะสำรองขึ้นคลาวด์และใช้ได้หลายเครื่อง · กด ${ic("dl","s")} Excel ด้านบนเพื่อดาวน์โหลดเก็บไว้ (ไฟล์เป็นข้อมูลอย่างเดียว ไม่มีสูตร)</p></section>`}
 function bindSet(){
@@ -564,7 +564,7 @@ render();
 })();
 </script>
 <script>window.EDM_TRY=true;</script>
-<script src="../assets/member.js?v=69" defer></script>
+<script src="../assets/member.js?v=70" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>
