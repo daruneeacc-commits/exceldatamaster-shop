@@ -24,6 +24,7 @@
 - **ธีมสีให้ผู้ใช้เลือก** ปุ่ม 🎨 ธีม ที่หัวเว็บ: `assets/skin.js` + `skin.css` (localStorage edm_skin → `<html data-look="minimal|cream|navy">`, ไม่ใส่ = พาสเทล) ใช้ทุกระบบรวม finance/todo/payroll · todo มี data-skin (ชมพู/น้ำตาล) ของตัวเองแยกต่างหาก
 - **ไอคอนแอป + ภาพตอนแชร์ลิงก์**: แต่ละระบบมี `icon-192/512.png` + `manifest.webmanifest` + `og:image` = `assets/shop/og-<ระบบ>.jpg` (1200×630) · หน้าหลัก `og.jpg?v=2` · app ?ed= สลับ manifest/ไอคอนตามรุ่น · สร้างใหม่ด้วยสคริปต์ Playwright (นอก repo) ถ้าเปลี่ยนหน้าตา
 - ภาพสินค้าหน้าร้าน `assets/shop/ui-*.webp?v=2` ถ่ายจากข้อมูลตัวอย่าง 1280×800 (มือถือ 585×1266)
+- เชลล์ app เลย์เอาต์ body flex column (header → แถบแจ้งเตือน .edm-bar → .shell flex:1 → #tabbar) ห้ามกลับไปใช้ความสูงคงที่ calc(100dvh-…) เพราะแถบทดลองใช้ดันเนื้อหาล่างหาย · มือถือมีตัวแก้หน้าค้างหลังคีย์บอร์ดปิด (visualViewport → scrollTo 0)
 - `assets/icons.js` ไอคอน · `assets/member.js` ซิงก์คลาวด์ · ข้อมูลเก็บใน localStorage (edm_*)
 - ทดสอบ: `python3 -m http.server 8772` + Playwright
 
