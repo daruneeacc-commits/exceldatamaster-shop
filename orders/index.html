@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="th" data-theme="light" data-tone="coral">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>/* กันเว็บอื่นเอาหน้านี้ไปซ้อน */if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ระบบจัดการออเดอร์ร้านออนไลน์ รับออเดอร์ แพ็ก ส่ง ใบปะหน้า COD | Excel Data Master</title>
+<meta name="description" content="จัดการออเดอร์จาก Facebook LINE TikTok Shopee ในที่เดียว วางข้อความจากแชตแล้วดึงชื่อ ที่อยู่ เบอร์ให้อัตโนมัติ ติดตามสถานะ รอโอน แพ็ก ส่ง พิมพ์ใบปะหน้า แยก COD ตัดสต๊อกอัตโนมัติ">
+<link rel="canonical" href="https://exceldatamaster.com/orders/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{--bg:#FFF7F4;--card:#fff;--ink:#2E211D;--muted:#7D6A63;--line:#F0DED7;--soft:#FBEEE9;--accent:#D45D45;--accent-ink:#fff;--warn:#8A5A00;--warnbg:#FFF4DC;--danger:#B3261E;--dangerbg:#FDE8E7;--okbg:#E3F4EA;--ok:#2E8B57}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}a{color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1200px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px}
+.brand{font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px;color:var(--accent)}.brand small{color:var(--muted);font-weight:500}
+.nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.tabs{max-width:1200px;margin:12px auto 0;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:none;border:0;border-radius:999px;padding:9px 16px;background:var(--card);box-shadow:0 0 0 1px var(--line);font-weight:600;cursor:pointer;white-space:nowrap}
+.tabs button .n{display:inline-block;min-width:18px;padding:0 5px;border-radius:99px;background:var(--danger);color:#fff;font-size:.72rem;margin-left:4px}
+main{max-width:1200px;margin:0 auto;padding:14px 16px 90px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}
+.card h2{font-size:1.05rem;margin:0;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.card h2 small{font-weight:400;color:var(--muted);font-size:.82rem}
+.hello h1{margin:0;font-size:1.3rem}.hello p{margin:4px 0 0;color:var(--muted)}
+.btn{border:0;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;background:var(--soft);justify-content:center;text-decoration:none}
+.btn.main{background:var(--accent);color:var(--accent-ink)}.btn.ghost{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:6px 12px;font-size:.85rem}.btn.danger{color:var(--danger)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--card);border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px var(--line);cursor:pointer;border:0;text-align:left}
+.kpi span{display:block;font-size:.8rem;color:var(--muted)}.kpi b{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums}.kpi small{color:var(--muted);font-size:.76rem}
+.g2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px}@media(max-width:900px){.g2{grid-template-columns:1fr}}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;outline:none}.in-:focus{border-color:var(--accent)}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}.f label{font-size:.8rem;font-weight:600;color:var(--muted)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}@media(max-width:620px){.row3{grid-template-columns:1fr 1fr}}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chips button{border:0;border-radius:999px;padding:6px 12px;background:var(--soft);cursor:pointer;font-weight:600;font-size:.86rem}.chips button.on{background:var(--accent);color:#fff}
+.ol{display:flex;flex-direction:column}.oi{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:11px 2px;border-bottom:1px solid var(--line);align-items:center}
+.oi b{font-weight:600}.oi small{display:block;color:var(--muted);font-size:.82rem}.oi .r{display:flex;flex-direction:column;align-items:flex-end;gap:6px;text-align:right}
+.pill{font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap;display:inline-block}
+.s-new{background:#FFF4DC;color:#8A5A00}.s-paid{background:#E6EEFB;color:#1F4FA3}.s-packed{background:#EEE6F8;color:#5B3FA0}.s-shipped{background:#E3F4EA;color:#127A4B}.s-done{background:#ECEFF1;color:#5B6470}.s-cancel{background:#FDE8E7;color:#B3261E}
+.cod{background:#FDE2E7;color:#A3283E}
+.empty{text-align:center;padding:26px 10px;color:var(--muted)}
+.note{font-size:.8rem;color:var(--muted)}
+.lines .ln{display:grid;grid-template-columns:minmax(0,1fr) 70px 90px 32px;gap:6px;align-items:center;margin-bottom:6px}
+.tot{display:grid;grid-template-columns:1fr auto;gap:4px 14px;font-variant-numeric:tabular-nums}.tot .big{font-weight:700;font-size:1.1rem}
+dialog{border:0;border-radius:18px;padding:0;width:min(640px,96vw);max-height:92vh}dialog::backdrop{background:rgba(30,15,10,.45)}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}.db{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100}
+.bars{display:flex;align-items:flex-end;gap:4px;height:130px}.bars div{flex:1;background:#F2A493;border-radius:4px 4px 0 0;min-height:2px;position:relative}.bars div.t{background:var(--accent)}
+.bl{display:flex;gap:4px;font-size:.66rem;color:var(--muted)}.bl span{flex:1;text-align:center}
+.ch{display:flex;flex-direction:column;gap:6px}.ch div{display:grid;grid-template-columns:90px 1fr 70px;gap:8px;align-items:center;font-size:.86rem}.ch i{display:block;height:10px;border-radius:99px;background:var(--accent)}
+.fab{position:fixed;right:18px;bottom:calc(20px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;background:var(--accent);color:#fff;font-size:1.9rem;box-shadow:0 10px 24px -8px rgba(160,60,40,.6);cursor:pointer;z-index:30}
+#printArea{display:none}
+.lab{border:1.5px dashed #999;border-radius:6px;padding:10px 12px;break-inside:avoid;font-size:11pt;line-height:1.45;position:relative;min-height:88mm}
+.lab .to{font-size:13pt}.lab .to b{font-size:15pt}.lab .codb{position:absolute;right:10px;top:10px;border:2px solid #000;padding:2px 8px;font-weight:700;font-size:14pt}
+.lab .fr{font-size:9pt;color:#333;border-top:1px solid #ccc;margin-top:6px;padding-top:4px}.lab .it{font-size:8.5pt;color:#444;margin-top:4px}
+.labs{display:grid;grid-template-columns:1fr 1fr;gap:6mm}
+@media print{@page{size:A4;margin:8mm}header.top,.tabs,main,.toast,dialog,.fab,.edm-bar{display:none!important}#printArea{display:block}body{background:#fff}}
+</style>
+<link rel="stylesheet" href="../assets/pastel.css?v=8">
+<script src="../assets/pastel.js?v=2" defer></script>
+<link rel="stylesheet" href="../assets/skin.css?v=1">
+<script src="../assets/skin.js?v=1"></script>
+<script src="../assets/lock.js?v=3"></script>
+<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="ระบบจัดการออเดอร์ร้านออนไลน์ | Excel Data Master"><meta property="og:description" content="รับออเดอร์จากแชต ดึงชื่อ ที่อยู่ เบอร์อัตโนมัติ ติดตามสถานะ พิมพ์ใบปะหน้า COD ตัดสต๊อก"><meta property="og:url" content="https://exceldatamaster.com/orders/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-orders.jpg?v=1"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-orders.jpg?v=1">
+<meta name="theme-color" content="#D45D45">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ออเดอร์">
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="/">📦 Excel Data Master <small>· ออเดอร์ร้านออนไลน์</small></a>
+  <nav class="nav"></nav>
+</div></header>
+<div class="tabs" id="tabs">
+  <button data-v="home">📊 ภาพรวม</button>
+  <button data-v="list">🧾 ออเดอร์</button>
+  <button data-v="pack">📦 รอแพ็ก/ส่ง</button>
+  <button data-v="set">⚙️ ตั้งค่า</button>
+</div>
+<main id="main"></main>
+<button class="fab edm-lock" id="fab" type="button" aria-label="เพิ่มออเดอร์">＋</button>
+<div id="printArea"></div>
+<dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" type="button" id="dlgX">✕</button></div><div class="db" id="dlgB"></div></dialog>
+<div class="toast" id="toast" hidden></div>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่ในเบราว์เซอร์เต็ม)");return false}}};
+const K={o:"edm_ord_items",cfg:"edm_ord_cfg",ui:"edm_ord_ui",si:"edm_stock_items",stx:"edm_stock_tx"};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0};
+const r2=n=>Math.round((n+Number.EPSILON)*100)/100;
+const fmt=n=>(+n||0).toLocaleString("th-TH",{minimumFractionDigits:0,maximumFractionDigits:2});
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const today=()=>ymd(new Date());
+const addDays=(s,n)=>{const d=new Date(s+"T00:00:00");d.setDate(d.getDate()+n);return ymd(d)};
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const thD=s=>{if(!s)return"";const[y,m,d]=s.slice(0,10).split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
+const CH={fb:"Facebook",line:"LINE",tiktok:"TikTok",shopee:"Shopee",lazada:"Lazada",ig:"Instagram",web:"เว็บไซต์",walk:"หน้าร้าน",other:"อื่น ๆ"};
+const ST={new:["รอโอน / ยืนยัน","s-new"],paid:["ชำระแล้ว รอแพ็ก","s-paid"],packed:["แพ็กแล้ว รอส่ง","s-packed"],shipped:["ส่งแล้ว","s-shipped"],done:["ลูกค้าได้รับแล้ว","s-done"],cancel:["ยกเลิก","s-cancel"]};
+const NEXT={new:["paid","✅ ได้รับเงิน"],paid:["packed","📦 แพ็กแล้ว"],packed:["shipped","🚚 ส่งแล้ว"],shipped:["done","🏁 ลูกค้าได้รับ"]};
+const CFG0={shop:{name:"",phone:"",addr:""},carriers:["Flash Express","Kerry Express","J&T Express","ไปรษณีย์ไทย (EMS)","ไปรษณีย์ไทย (ลงทะเบียน)","Shopee Xpress","Lalamove / Grab"],ship:40,prefix:"OD"};
+let O=LS.get(K.o,[])||[],cfg=Object.assign({},CFG0,LS.get(K.cfg,{})||{}),ui=Object.assign({v:"home",f:"open",q:""},LS.get(K.ui,{})||{});
+cfg.shop=Object.assign({},CFG0.shop,cfg.shop||{});
+const save=()=>LS.set(K.o,O),saveCfg=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,ui);
+const tot=o=>{const sub=r2((o.lines||[]).reduce((a,l)=>a+num(l.q)*num(l.p),0));const t=r2(Math.max(0,sub+num(o.ship)-num(o.disc)));return{sub,total:t}};
+const items=()=>LS.get(K.si,[])||[];
+function nextNo(d){const ym=(d||today()).slice(2,7).replace("-",""),p=(cfg.prefix||"OD").replace(/[^A-Za-z]/g,"")||"OD",k=p+ym+"-";let m=0;O.forEach(o=>{if(o.no&&o.no.startsWith(k))m=Math.max(m,+o.no.slice(k.length)||0)});return k+String(m+1).padStart(3,"0")}
+
+/* ---------- ตัดสต๊อก: ตอนแพ็ก (ครั้งแรก) · ยกเลิกหลังตัดแล้ว = คืนสต๊อก ---------- */
+function stockCut(o,back){const L=(o.lines||[]).filter(l=>l.pid&&num(l.q)>0);if(!L.length)return;const tx=LS.get(K.stx,[])||[];
+  L.forEach(l=>tx.push({id:uid("t"),type:back?"in":"out",date:today(),pid:l.pid,qty:num(l.q),cost:0,note:(back?"คืนสต๊อก ยกเลิกออเดอร์ ":"ขายออนไลน์ ออเดอร์ ")+o.no,ts:Date.now(),src:"orders",ref:o.id}));
+  LS.set(K.stx,tx);o.cut=!back}
+function setSt(o,st){if(st==="cancel"){if(o.cut)stockCut(o,true)}else if(["packed","shipped","done"].includes(st)&&!o.cut)stockCut(o,false);
+  if(st==="paid"&&!o.paidAt)o.paidAt=today();if(st==="shipped"&&!o.shipAt)o.shipAt=today();o.st=st;o.upd=Date.now();save()}
+
+/* ---------- วางข้อความจากแชต → ชื่อ เบอร์ ที่อยู่ ---------- */
+function parseChat(t){const out={name:"",phone:"",addr:""};t=String(t||"").replace(/\r/g,"").trim();if(!t)return out;
+  const ph=/(?:\+?66|0)[\s-]?\d(?:[\s-]?\d){7,8}/.exec(t);if(ph){out.phone=ph[0].replace(/[\s-]/g,"").replace(/^\+?66/,"0");t=t.replace(ph[0]," ")}
+  let lines=t.split(/\n+/).map(s=>s.replace(/^(ชื่อ|ผู้รับ|name|ที่อยู่|address|เบอร์|โทร|tel)\s*[:：]?\s*/i,"").trim()).filter(Boolean);
+  const nameIdx=lines.findIndex(s=>!/\d/.test(s)&&s.length<=40);if(nameIdx>=0){out.name=lines[nameIdx].replace(/^(คุณ|K\.|k\.)\s*/,"คุณ");lines.splice(nameIdx,1)}
+  out.addr=lines.join(" ").replace(/\s+/g," ").trim();if(!out.name&&out.addr){const m=/^(\D{2,30}?)\s+(\d.*)$/.exec(out.addr);if(m){out.name=m[1];out.addr=m[2]}}
+  return out}
+
+/* ---------- หน้าจอ ---------- */
+const VIEWS=["home","list","pack","set"];
+function render(){if(!VIEWS.includes(ui.v))ui.v="home";const nPack=O.filter(o=>o.st==="paid"||o.st==="packed"||(o.st==="new"&&o.pay==="cod")).length;
+  $$("#tabs button").forEach(b=>{b.classList.toggle("on",b.dataset.v===ui.v);if(b.dataset.v==="pack")b.innerHTML="📦 รอแพ็ก/ส่ง"+(nPack?`<span class="n">${nPack}</span>`:"")});
+  ({home:vHome,list:vList,pack:vPack,set:vSet})[ui.v]()}
+function show(v){ui.v=v;saveUi();render();scrollTo(0,0)}
+$("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b)show(b.dataset.v)};
+$("#fab").onclick=()=>orderDlg(null);
+const live=()=>O.filter(o=>o.st!=="cancel");
+function vHome(){const M=$("#main"),t=today(),m=t.slice(0,7),L=live();
+  if(!O.length){M.innerHTML=`<div class="hello"><h1>📦 จัดการออเดอร์ร้านออนไลน์</h1><p>รับออเดอร์จาก Facebook LINE TikTok Shopee ในที่เดียว · วางข้อความจากแชต ระบบดึงชื่อ เบอร์ ที่อยู่ให้ · ติดตามสถานะ พิมพ์ใบปะหน้า แยก COD ตัดสต๊อกอัตโนมัติ</p></div>
+    <div class="card"><h2>เริ่มใน 3 ขั้นตอน</h2><div class="note" style="font-size:.92rem;line-height:1.8">1) กด <b>＋</b> มุมขวาล่าง วางข้อความลูกค้าจากแชต แล้วใส่สินค้า<br>2) ลูกค้าโอนแล้วกด "ได้รับเงิน" → แพ็ก → ใส่เลขพัสดุ "ส่งแล้ว"<br>3) พิมพ์ใบปะหน้าทีละหลายออเดอร์ ส่งเลขพัสดุให้ลูกค้าทาง LINE ในคลิกเดียว</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="b1" type="button">＋ เพิ่มออเดอร์แรก</button><button class="btn ghost" id="bd" type="button">✨ ลองข้อมูลตัวอย่าง</button></div></div>`;
+    $("#b1").onclick=()=>orderDlg(null);$("#bd").onclick=demo;return}
+  const td=L.filter(o=>o.date===t),mo=L.filter(o=>o.date.slice(0,7)===m),sum=a=>a.reduce((s,o)=>s+tot(o).total,0);
+  const toPack=O.filter(o=>o.st==="paid"||(o.st==="new"&&o.pay==="cod")).length,toShip=O.filter(o=>o.st==="packed").length,waitPay=O.filter(o=>o.st==="new"&&o.pay!=="cod").length;
+  const codOut=L.filter(o=>o.pay==="cod"&&(o.st==="shipped"||o.st==="packed")&&!o.codGot).reduce((s,o)=>s+tot(o).total,0);
+  const days=[];for(let i=13;i>=0;i--){const d=addDays(t,-i);days.push({d,v:sum(L.filter(o=>o.date===d))})}const mx=Math.max(1,...days.map(x=>x.v));
+  const chs={};mo.forEach(o=>{chs[o.ch]=(chs[o.ch]||0)+tot(o).total});const chL=Object.entries(chs).sort((a,b)=>b[1]-a[1]),cmx=Math.max(1,...chL.map(x=>x[1]));
+  const top={};mo.forEach(o=>(o.lines||[]).forEach(l=>{if(l.d)top[l.d]=(top[l.d]||0)+num(l.q)}));const tL=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  M.innerHTML=`<div class="hello"><h1>📊 ภาพรวมออเดอร์</h1><p>${thD(t)} · ยอดเดือนนี้ ฿${fmt(sum(mo))} จาก ${mo.length} ออเดอร์</p></div>
+  <div class="kpis"><button class="kpi" data-go="list"><span>ยอดขายวันนี้</span><b>฿${fmt(sum(td))}</b><small>${td.length} ออเดอร์</small></button>
+    <button class="kpi" data-go="list" data-f="new"><span>รอลูกค้าโอน</span><b>${waitPay}</b><small>ออเดอร์</small></button>
+    <button class="kpi" data-go="pack"><span>รอแพ็ก / รอส่ง</span><b>${toPack} / ${toShip}</b><small>ออเดอร์</small></button>
+    <button class="kpi" data-go="list" data-f="cod"><span>COD ยังไม่ได้เงิน</span><b>฿${fmt(codOut)}</b><small>ส่งแล้ว รอขนส่งโอน</small></button></div>
+  <div class="g2"><div class="card"><h2>ยอดขาย 14 วัน <small>฿${fmt(days.reduce((a,x)=>a+x.v,0))}</small></h2><div class="bars">${days.map(x=>`<div class="${x.d===t?"t":""}" style="height:${x.v/mx*100}%" title="${thD(x.d)} ฿${fmt(x.v)}"></div>`).join("")}</div><div class="bl">${days.map(x=>`<span>${+x.d.slice(8)}</span>`).join("")}</div></div>
+    <div class="card"><h2>ยอดตามช่องทาง <small>เดือนนี้</small></h2>${chL.length?`<div class="ch">${chL.map(([k,v])=>`<div><span>${esc(CH[k]||k)}</span><i style="width:${v/cmx*100}%"></i><b style="text-align:right">${fmt(v)}</b></div>`).join("")}</div>`:`<div class="empty">ยังไม่มีออเดอร์เดือนนี้</div>`}</div></div>
+  <div class="g2"><div class="card"><h2>ออเดอร์ล่าสุด <button class="btn sm ghost" data-go="list" type="button">ดูทั้งหมด →</button></h2><div class="ol">${O.slice().sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,6).map(row).join("")}</div></div>
+    <div class="card"><h2>สินค้าขายดี <small>เดือนนี้</small></h2>${tL.length?tL.map(([n,q],i)=>`<div class="oi" style="grid-template-columns:24px 1fr auto"><b>${i+1}</b><span>${esc(n)}</span><b>${fmt(q)}</b></div>`).join(""):`<div class="empty">-</div>`}</div></div>`;
+  bindRows()}
+function row(o){const T=tot(o),s=ST[o.st]||ST.new,nx=NEXT[o.st];
+  return`<div class="oi"><div style="cursor:pointer" data-op="${o.id}"><b>${esc(o.cust.name||"-")}</b> <span class="pill ${s[1]}">${s[0]}</span>${o.pay==="cod"?` <span class="pill cod">COD</span>`:""}<small>${esc(o.no)} · ${thD(o.date)} · ${esc(CH[o.ch]||"")}${o.track?" · 🚚 "+esc(o.track):""}</small><small>${esc((o.lines||[]).filter(l=>l.d).map(l=>l.d+(num(l.q)>1?" ×"+fmt(l.q):"")).join(", "))}</small></div>
+  <div class="r"><b>฿${fmt(T.total)}</b>${nx&&!(o.st==="new"&&o.pay==="cod"&&nx[0]==="paid")?`<button class="btn sm main edm-lock" data-nx="${o.id}" type="button">${nx[1]}</button>`:o.st==="new"&&o.pay==="cod"?`<button class="btn sm main edm-lock" data-nx="${o.id}" data-to="packed" type="button">📦 แพ็กแล้ว</button>`:""}</div></div>`}
+function bindRows(){$$("[data-go]").forEach(b=>b.onclick=()=>{if(b.dataset.f){ui.f=b.dataset.f}show(b.dataset.go)});
+  $$("[data-op]").forEach(x=>x.onclick=()=>orderDlg(x.dataset.op));
+  $$("[data-nx]").forEach(b=>b.onclick=()=>{const o=O.find(x=>x.id===b.dataset.nx);if(!o)return;const to=b.dataset.to||NEXT[o.st][0];
+    if(to==="shipped")return shipDlg(o);setSt(o,to);toast(ST[to][0]+" ✓");render()})}
+function vList(){const M=$("#main"),q=(ui.q||"").trim().toLowerCase();
+  const F={open:o=>!["done","cancel"].includes(o.st),new:o=>o.st==="new",paid:o=>o.st==="paid",packed:o=>o.st==="packed",shipped:o=>o.st==="shipped",cod:o=>o.pay==="cod"&&o.st!=="cancel"&&!o.codGot,done:o=>o.st==="done",cancel:o=>o.st==="cancel",all:()=>true};
+  const f=F[ui.f]?ui.f:"open",L=O.filter(F[f]).filter(o=>!q||[o.no,o.cust.name,o.cust.phone,o.track,(o.lines||[]).map(l=>l.d).join(" ")].join(" ").toLowerCase().includes(q)).sort((a,b)=>(b.ts||0)-(a.ts||0));
+  const lab={open:"ยังไม่จบ",new:"รอโอน",paid:"รอแพ็ก",packed:"รอส่ง",shipped:"ส่งแล้ว",cod:"COD ค้างเงิน",done:"จบแล้ว",cancel:"ยกเลิก",all:"ทั้งหมด"};
+  M.innerHTML=`<div class="hello"><h1>🧾 ออเดอร์</h1><p>กดชื่อลูกค้าเพื่อแก้ไข · ปุ่มสีเพื่อไปขั้นถัดไป</p></div>
+  <div class="card"><div class="chips" id="fl">${Object.keys(lab).map(k=>`<button class="${k===f?"on":""}" data-k="${k}" type="button">${lab[k]} (${O.filter(F[k]).length})</button>`).join("")}</div>
+  <input class="in-" id="q" placeholder="🔎 ค้นหา ชื่อ เบอร์ เลขที่ เลขพัสดุ สินค้า" value="${esc(ui.q||"")}">
+  <div class="ol">${L.map(row).join("")||`<div class="empty">ไม่พบออเดอร์</div>`}</div>
+  <div class="note">${L.length} ออเดอร์ · รวม ฿${fmt(L.reduce((s,o)=>s+tot(o).total,0))}</div></div>`;
+  $("#fl").onclick=e=>{const b=e.target.closest("[data-k]");if(b){ui.f=b.dataset.k;saveUi();vList()}};
+  $("#q").oninput=e=>{ui.q=e.target.value;clearTimeout(vList.t);vList.t=setTimeout(()=>{vList();const x=$("#q");x.focus();x.setSelectionRange(x.value.length,x.value.length)},250)};bindRows()}
+function vPack(){const M=$("#main"),P=O.filter(o=>o.st==="paid"||(o.st==="new"&&o.pay==="cod")),S=O.filter(o=>o.st==="packed");
+  const need={};P.forEach(o=>(o.lines||[]).forEach(l=>{if(l.d)need[l.d]=(need[l.d]||0)+num(l.q)}));
+  M.innerHTML=`<div class="hello"><h1>📦 รอแพ็ก / รอส่ง</h1><p>ติ๊กเลือกออเดอร์แล้วพิมพ์ใบปะหน้าทีเดียวหลายใบ · ใส่เลขพัสดุตอนกด "ส่งแล้ว"</p></div>
+  <div class="g2"><div class="card"><h2>รอแพ็ก <small>${P.length} ออเดอร์</small></h2>${P.length?P.map(o=>`<label class="oi" style="grid-template-columns:24px 1fr auto"><input type="checkbox" class="pk" value="${o.id}" checked><div><b>${esc(o.cust.name)}</b>${o.pay==="cod"?` <span class="pill cod">COD ฿${fmt(tot(o).total)}</span>`:""}<small>${esc(o.no)} · ${esc((o.lines||[]).map(l=>l.d+" ×"+fmt(l.q)).join(", "))}</small></div><button class="btn sm main edm-lock" data-nx="${o.id}" data-to="packed" type="button">📦 แพ็กแล้ว</button></label>`).join(""):`<div class="empty">ไม่มีออเดอร์รอแพ็ก 🎉</div>`}
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="plab" type="button">🖨️ พิมพ์ใบปะหน้าที่เลือก</button><button class="btn ghost" id="pall" type="button">📦 แพ็กแล้วทั้งหมดที่เลือก</button></div></div>
+    <div class="card"><h2>ของที่ต้องหยิบ <small>รวมทุกออเดอร์รอแพ็ก</small></h2>${Object.keys(need).length?Object.entries(need).sort((a,b)=>b[1]-a[1]).map(([n,q])=>`<div class="oi" style="grid-template-columns:1fr auto"><span>${esc(n)}</span><b>${fmt(q)}</b></div>`).join(""):`<div class="empty">-</div>`}</div></div>
+  <div class="card"><h2>แพ็กแล้ว รอส่ง <small>${S.length} ออเดอร์</small></h2><div class="ol">${S.map(row).join("")||`<div class="empty">-</div>`}</div>${S.length?`<button class="btn ghost" id="slab" type="button">🖨️ พิมพ์ใบปะหน้าออเดอร์รอส่งทั้งหมด</button>`:""}</div>`;
+  const sel=()=>$$(".pk").filter(x=>x.checked).map(x=>O.find(o=>o.id===x.value)).filter(Boolean);
+  if($("#plab"))$("#plab").onclick=()=>{const L=sel();if(!L.length)return toast("เลือกออเดอร์ก่อน");labels(L)};
+  if($("#pall"))$("#pall").onclick=()=>{const L=sel();if(!L.length)return toast("เลือกออเดอร์ก่อน");L.forEach(o=>setSt(o,"packed"));toast("แพ็กแล้ว "+L.length+" ออเดอร์ ✓ ตัดสต๊อกแล้ว");render()};
+  if($("#slab"))$("#slab").onclick=()=>labels(S);bindRows()}
+function vSet(){const M=$("#main");
+  M.innerHTML=`<div class="hello"><h1>⚙️ ตั้งค่า</h1><p>ข้อมูลผู้ส่งบนใบปะหน้า ค่าส่งเริ่มต้น และขนส่งที่ใช้</p></div>
+  <div class="card"><h2>ผู้ส่ง (พิมพ์บนใบปะหน้า)</h2><div class="row"><div class="f"><label>ชื่อร้าน / ผู้ส่ง</label><input class="in-" id="sN" value="${esc(cfg.shop.name)}"></div><div class="f"><label>เบอร์โทร</label><input class="in-" id="sP" value="${esc(cfg.shop.phone)}" inputmode="tel"></div></div>
+    <div class="f"><label>ที่อยู่ผู้ส่ง</label><textarea class="in-" id="sA" rows="2">${esc(cfg.shop.addr)}</textarea></div>
+    <div class="row"><div class="f"><label>ค่าส่งเริ่มต้น (บาท)</label><input class="in-" id="sS" type="number" inputmode="decimal" value="${esc(cfg.ship)}"></div><div class="f"><label>ตัวอักษรนำหน้าเลขออเดอร์</label><input class="in-" id="sX" value="${esc(cfg.prefix)}" maxlength="4"></div></div>
+    <div class="f"><label>ขนส่งที่ใช้ (บรรทัดละ 1 เจ้า)</label><textarea class="in-" id="sC" rows="4">${esc(cfg.carriers.join("\n"))}</textarea></div>
+    <div><button class="btn main" id="sv" type="button">💾 บันทึก</button></div></div>
+  <div class="card"><h2>ข้อมูล</h2><p class="note">สินค้าและสต๊อกใช้ร่วมกับ "ระบบสต๊อกสินค้า" (ถ้ามี) · ออเดอร์ที่แพ็กแล้วจะตัดสต๊อกให้อัตโนมัติ ยกเลิกแล้วคืนสต๊อก</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="xl" type="button">📊 ดาวน์โหลดออเดอร์ (CSV เปิดใน Excel)</button><button class="btn ghost" id="dm" type="button">✨ ใส่ข้อมูลตัวอย่าง</button><button class="btn ghost danger" id="wp" type="button">🗑️ ลบออเดอร์ทั้งหมด</button></div></div>`;
+  $("#sv").onclick=()=>{cfg.shop={name:$("#sN").value.trim(),phone:$("#sP").value.trim(),addr:$("#sA").value.trim()};cfg.ship=num($("#sS").value);cfg.prefix=$("#sX").value.trim()||"OD";cfg.carriers=$("#sC").value.split("\n").map(s=>s.trim()).filter(Boolean);saveCfg();toast("บันทึกแล้ว ✓")};
+  $("#xl").onclick=()=>{const rows=[["เลขที่","วันที่","ช่องทาง","ลูกค้า","เบอร์","ที่อยู่","สินค้า","ยอดรวม","ชำระ","สถานะ","ขนส่ง","เลขพัสดุ","หมายเหตุ"]].concat(O.map(o=>[o.no,o.date,CH[o.ch]||"",o.cust.name,o.cust.phone,o.cust.addr,(o.lines||[]).map(l=>l.d+" x"+l.q).join(", "),tot(o).total,o.pay==="cod"?"COD":"โอน",(ST[o.st]||ST.new)[0],o.carrier||"",o.track||"",o.note||""]));
+    const csv="﻿"+rows.map(r=>r.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",")).join("\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="ออเดอร์-"+today()+".csv";a.click()};
+  $("#dm").onclick=demo;$("#wp").onclick=()=>{if(!confirm("ลบออเดอร์ทั้งหมด? (กู้คืนไม่ได้)"))return;O=[];save();toast("ลบแล้ว");render()}}
+
+/* ---------- ฟอร์มออเดอร์ ---------- */
+function openDlg(t,h){$("#dlgT").textContent=t;$("#dlgB").innerHTML=h;const d=$("#dlg");if(!d.open)d.showModal();$("#dlgB").scrollTop=0}
+$("#dlgX").onclick=()=>$("#dlg").close();
+function orderDlg(id){const old=id?O.find(o=>o.id===id):null,o=old?JSON.parse(JSON.stringify(old)):{id:uid("o"),no:nextNo(),date:today(),ch:ui.lastCh||"fb",cust:{name:"",phone:"",addr:""},lines:[{d:"",q:1,p:0}],ship:cfg.ship,disc:0,pay:"transfer",st:"new",note:""};
+  const SI=items();
+  const draw=()=>{const T=tot(o);openDlg(old?"ออเดอร์ "+o.no:"เพิ่มออเดอร์",`
+   ${old?"":`<div class="f"><label>📋 วางข้อความลูกค้าจากแชต (ชื่อ ที่อยู่ เบอร์) แล้วกด "ดึงข้อมูล"</label><textarea class="in-" id="paste" rows="3" placeholder="เช่น&#10;สมใจ ใจดี&#10;99/1 ม.2 ต.บางพูด อ.ปากเกร็ด นนทบุรี 11120&#10;081-234-5678"></textarea><div><button class="btn sm ghost" id="doP" type="button">✨ ดึงข้อมูล</button></div></div>`}
+   <div class="row"><div class="f"><label>ชื่อลูกค้า</label><input class="in-" id="cN" value="${esc(o.cust.name)}"></div><div class="f"><label>เบอร์โทร</label><input class="in-" id="cP" inputmode="tel" value="${esc(o.cust.phone)}"></div></div>
+   <div class="f"><label>ที่อยู่จัดส่ง</label><textarea class="in-" id="cA" rows="2">${esc(o.cust.addr)}</textarea></div>
+   <div class="row3"><div class="f"><label>ช่องทาง</label><select class="in-" id="oC">${Object.keys(CH).map(k=>`<option value="${k}" ${o.ch===k?"selected":""}>${CH[k]}</option>`).join("")}</select></div>
+     <div class="f"><label>วันที่</label><input class="in-" type="date" id="oD" value="${esc(o.date)}"></div>
+     <div class="f"><label>การชำระ</label><select class="in-" id="oPay"><option value="transfer" ${o.pay!=="cod"?"selected":""}>โอน / พร้อมเพย์</option><option value="cod" ${o.pay==="cod"?"selected":""}>เก็บเงินปลายทาง (COD)</option></select></div></div>
+   <div class="f"><label>สินค้า ${SI.length?"(พิมพ์ชื่อ เลือกจากสต๊อกได้ · ตัดสต๊อกตอนแพ็ก)":""}</label><div class="lines">${o.lines.map((l,i)=>`<div class="ln"><input class="in-" data-i="${i}" data-f="d" list="sil" value="${esc(l.d)}" placeholder="ชื่อสินค้า"><input class="in-" data-i="${i}" data-f="q" type="number" inputmode="decimal" value="${esc(l.q)}" placeholder="จำนวน"><input class="in-" data-i="${i}" data-f="p" type="number" inputmode="decimal" value="${esc(l.p)}" placeholder="ราคา"><button class="btn sm ghost" data-rm="${i}" type="button">✕</button></div>`).join("")}</div>
+     <datalist id="sil">${SI.map(s=>`<option value="${esc(s.name)}">${esc((s.sku||"")+" ฿"+fmt(s.price||0))}</option>`).join("")}</datalist><div><button class="btn sm ghost" id="addL" type="button">＋ เพิ่มสินค้า</button></div></div>
+   <div class="row"><div class="f"><label>ค่าส่ง</label><input class="in-" id="oS" type="number" inputmode="decimal" value="${esc(o.ship)}"></div><div class="f"><label>ส่วนลด</label><input class="in-" id="oX" type="number" inputmode="decimal" value="${esc(o.disc||"")}"></div></div>
+   <div class="tot"><span>ค่าสินค้า</span><span>${fmt(T.sub)}</span><span class="big">ยอดรวม${o.pay==="cod"?" (เก็บปลายทาง)":""}</span><span class="big" id="tt">฿${fmt(T.total)}</span></div>
+   ${old?`<div class="row"><div class="f"><label>ขนส่ง</label><select class="in-" id="oK"><option value="">—</option>${cfg.carriers.map(c=>`<option ${o.carrier===c?"selected":""}>${esc(c)}</option>`).join("")}</select></div><div class="f"><label>เลขพัสดุ</label><input class="in-" id="oT" value="${esc(o.track||"")}"></div></div>
+     <div class="f"><label>สถานะ</label><select class="in-" id="oSt">${Object.keys(ST).map(k=>`<option value="${k}" ${o.st===k?"selected":""}>${ST[k][0]}</option>`).join("")}</select></div>
+     ${o.pay==="cod"?`<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="oCg" ${o.codGot?"checked":""}> ได้รับเงิน COD จากขนส่งแล้ว</label>`:""}`:""}
+   <div class="f"><label>หมายเหตุ</label><input class="in-" id="oN" value="${esc(o.note||"")}"></div>
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main edm-lock" id="oSave" type="button">💾 บันทึก</button>${old?`<button class="btn ghost" id="oLab" type="button">🖨️ ใบปะหน้า</button><button class="btn ghost" id="oMsg" type="button">💬 ข้อความถึงลูกค้า</button><button class="btn ghost danger edm-lock" id="oDel" type="button">ลบ</button>`:""}</div>`);
+   bind()};
+  const grab=()=>{o.cust={name:$("#cN").value.trim(),phone:$("#cP").value.trim(),addr:$("#cA").value.trim()};o.ch=$("#oC").value;o.date=$("#oD").value||today();o.pay=$("#oPay").value;o.ship=num($("#oS").value);o.disc=num($("#oX").value);o.note=$("#oN").value.trim();
+    $$(".lines [data-i]").forEach(x=>{const l=o.lines[+x.dataset.i];if(!l)return;const f=x.dataset.f;l[f]=f==="d"?x.value:num(x.value)});
+    o.lines.forEach(l=>{const s=SI.find(x=>x.name===l.d);if(s){l.pid=s.id;if(!num(l.p))l.p=num(s.price)}else delete l.pid});
+    if($("#oK")){o.carrier=$("#oK").value;o.track=$("#oT").value.trim()}if($("#oCg"))o.codGot=$("#oCg").checked};
+  const bind=()=>{if($("#doP"))$("#doP").onclick=()=>{const r=parseChat($("#paste").value);if(r.name)$("#cN").value=r.name;if(r.phone)$("#cP").value=r.phone;if(r.addr)$("#cA").value=r.addr;toast(r.phone||r.addr?"ดึงข้อมูลแล้ว ตรวจอีกครั้งนะ":"ไม่พบข้อมูล ลองแยกบรรทัด ชื่อ / ที่อยู่ / เบอร์")};
+    $("#addL").onclick=()=>{grab();o.lines.push({d:"",q:1,p:0});draw()};
+    $$("[data-rm]").forEach(b=>b.onclick=()=>{grab();o.lines.splice(+b.dataset.rm,1);if(!o.lines.length)o.lines.push({d:"",q:1,p:0});draw()});
+    $$(".lines [data-f='d']").forEach(x=>x.onchange=()=>{grab();draw()});
+    ["#oS","#oX","#oPay"].forEach(s=>$(s).onchange=()=>{grab();draw()});$$(".lines [data-f='q'],.lines [data-f='p']").forEach(x=>x.onchange=()=>{grab();draw()});
+    $("#oSave").onclick=()=>{grab();o.lines=o.lines.filter(l=>l.d||num(l.p));if(!o.cust.name)return toast("ใส่ชื่อลูกค้า");if(!o.lines.length)return toast("ใส่สินค้าอย่างน้อย 1 รายการ");
+      const st=$("#oSt")?$("#oSt").value:o.st;o.ts=o.ts||Date.now();ui.lastCh=o.ch;saveUi();
+      const i=O.findIndex(x=>x.id===o.id);if(i>=0)O[i]=o;else O.push(o);if(st!==(old&&old.st)&&old)setSt(o,st);else save();$("#dlg").close();toast("บันทึกออเดอร์ "+o.no+" ✓");render()};
+    if(old){$("#oLab").onclick=()=>{grab();labels([o])};$("#oMsg").onclick=()=>{grab();copyMsg(o)};$("#oDel").onclick=()=>{if(!confirm("ลบออเดอร์ "+o.no+"?"))return;if(o.cut)stockCut(o,true);O=O.filter(x=>x.id!==o.id);save();$("#dlg").close();render()}}};
+  draw()}
+function shipDlg(o){openDlg("ส่งแล้ว · "+o.no,`<div class="row"><div class="f"><label>ขนส่ง</label><select class="in-" id="kC">${cfg.carriers.map(c=>`<option ${o.carrier===c?"selected":""}>${esc(c)}</option>`).join("")}</select></div><div class="f"><label>เลขพัสดุ</label><input class="in-" id="kT" value="${esc(o.track||"")}" placeholder="ไม่บังคับ"></div></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="kOk" type="button">🚚 บันทึกส่งแล้ว</button><button class="btn ghost" id="kMsg" type="button">🚚 บันทึก + คัดลอกข้อความแจ้งลูกค้า</button></div>`);
+  const go=m=>{o.carrier=$("#kC").value;o.track=$("#kT").value.trim();setSt(o,"shipped");$("#dlg").close();if(m)copyMsg(o);else toast("ส่งแล้ว ✓");render()};$("#kOk").onclick=()=>go(false);$("#kMsg").onclick=()=>go(true);setTimeout(()=>$("#kT").focus(),50)}
+function copyMsg(o){const T=tot(o),t=[`สวัสดีค่ะ คุณ${o.cust.name.replace(/^คุณ/,"")} 🙏`,`ออเดอร์ ${o.no}`].concat((o.lines||[]).map(l=>`• ${l.d} ×${fmt(l.q)} = ${fmt(num(l.q)*num(l.p))}`),[num(o.ship)?`ค่าส่ง ${fmt(o.ship)}`:"",num(o.disc)?`ส่วนลด -${fmt(o.disc)}`:"",`รวม ${fmt(T.total)} บาท${o.pay==="cod"?" (เก็บเงินปลายทาง)":""}`,
+  o.st==="shipped"||o.st==="done"?`📦 ส่งแล้วทาง ${o.carrier||""}${o.track?"\nเลขพัสดุ: "+o.track:""}`:o.st==="new"&&o.pay!=="cod"?"รบกวนโอนตามยอดแล้วส่งสลิปได้เลยค่ะ":"กำลังเตรียมจัดส่งค่ะ","ขอบคุณที่อุดหนุนค่ะ 💕"]).filter(Boolean).join("\n");
+  const ok=()=>toast("คัดลอกข้อความแล้ว ✓ วางในแชตลูกค้าได้เลย");try{navigator.clipboard.writeText(t).then(ok,()=>prompt("คัดลอกข้อความ",t))}catch(e){prompt("คัดลอกข้อความ",t)}}
+function labels(L){const S=cfg.shop;window.EDM_DOCNAME="ใบปะหน้า-"+today();
+  $("#printArea").innerHTML=`<div class="labs">${L.map(o=>{const T=tot(o);return`<div class="lab">${o.pay==="cod"?`<div class="codb">COD ฿${fmt(T.total)}</div>`:""}<div class="to">ผู้รับ<br><b>${esc(o.cust.name)}</b><br>${esc(o.cust.addr)}<br>โทร ${esc(o.cust.phone)}</div>
+    <div class="it">${esc(o.no)} · ${esc((o.lines||[]).map(l=>l.d+" ×"+fmt(l.q)).join(", "))}${o.carrier?" · "+esc(o.carrier):""}${o.track?" · "+esc(o.track):""}</div>
+    <div class="fr">ผู้ส่ง: <b>${esc(S.name||"-")}</b> ${esc(S.phone||"")}<br>${esc(S.addr||"")}</div></div>`}).join("")}</div><div class="edm-brand" style="font-size:8pt;color:#999;text-align:right;margin-top:4mm">สร้างด้วย exceldatamaster.com</div>`;
+  if(!S.name)toast("ยังไม่ได้ตั้งค่าผู้ส่ง (แท็บ ตั้งค่า)");setTimeout(()=>window.print(),60)}
+
+function demo(){if(O.length&&!confirm("ใส่ข้อมูลตัวอย่างแทนออเดอร์เดิม?"))return;const t=today(),d=n=>addDays(t,-n);
+  const P=[["เซรั่มหน้าใส 30ml",390],["ครีมกันแดด SPF50",290],["สบู่ส้มใส",120],["ลิปทินท์ #03",159]];
+  const C=[["คุณสมใจ ใจดี","0812345678","99/1 ม.2 ต.บางพูด อ.ปากเกร็ด จ.นนทบุรี 11120","fb"],["คุณมานี มีสุข","0899991111","12 ซ.ลาดพร้าว 71 แขวงสะพานสอง เขตวังทองหลาง กรุงเทพฯ 10310","line"],["คุณปิติ ยินดี","0861112222","45 ถ.นิมมานเหมินท์ ต.สุเทพ อ.เมือง จ.เชียงใหม่ 50200","tiktok"],["คุณชูใจ รักเรียน","0923334444","8/2 ถ.ศรีนครินทร์ ต.บางเมือง อ.เมือง จ.สมุทรปราการ 10270","shopee"],["คุณวีระ กล้าหาญ","0845556666","77 ม.5 ต.หาดใหญ่ อ.หาดใหญ่ จ.สงขลา 90110","fb"]];
+  const st=["done","done","shipped","shipped","packed","paid","paid","new","new","done","shipped","done","done","shipped"];O=[];
+  st.forEach((s,i)=>{const c=C[i%C.length],ls=[{d:P[i%4][0],q:1+(i%3===0?1:0),p:P[i%4][1]}];if(i%4===1)ls.push({d:P[(i+2)%4][0],q:1,p:P[(i+2)%4][1]});
+    const day=i<9?Math.floor(i/3):i-5,o={id:uid("o"),no:"",date:d(day),ch:c[3],cust:{name:c[0],phone:c[1],addr:c[2]},lines:ls,ship:40,disc:0,pay:i%4===2?"cod":"transfer",st:s,note:"",ts:Date.now()-i*3600e3,cut:false};
+    if(["shipped","done"].includes(s)){o.carrier="Flash Express";o.track="TH"+(4810000000+i*7919)}o.no=nextNo(o.date);O.push(o)});
+  cfg.shop=Object.assign({},cfg.shop,{name:cfg.shop.name||"ร้านสวยใส (ตัวอย่าง)",phone:cfg.shop.phone||"0811112222",addr:cfg.shop.addr||"123 ถ.พหลโยธิน แขวงสามเสนใน เขตพญาไท กรุงเทพฯ 10400"});saveCfg();save();ui.v="home";saveUi();render();toast("ใส่ข้อมูลตัวอย่างแล้ว ✓")}
+
+window.addEventListener("storage",e=>{if(e.key===K.o||e.key===K.cfg){O=LS.get(K.o,[])||[];cfg=Object.assign({},CFG0,LS.get(K.cfg,{})||{});if(!$("#dlg").open)render()}});
+render();
+})();
+</script>
+<script src="../assets/icons.js?v=6"></script>
+<script src="../assets/member.js?v=77" defer></script>
+<script src="../assets/docshare.js?v=1" defer></script>
+</body>
+</html>
