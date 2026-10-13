@@ -329,14 +329,15 @@ svg.bd-ch{width:100%;height:auto;display:block;font-size:11px;fill:var(--muted)}
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261013-1800";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261013-1900";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
     var b=document.getElementById("updBar");if(b){b.hidden=false;b.querySelector("button").onclick=function(){var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash)}}}).catch(function(){})}
   check(true);setInterval(function(){check(false)},5*60*1000);document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")check(false)});})();
 </script>
-<link rel="stylesheet" href="../assets/pastel.css?v=1">
+<link rel="stylesheet" href="../assets/pastel.css?v=3">
+<script src="../assets/pastel.js?v=2" defer></script>
 </head>
 <body>
 <header class="top"><div class="in">
@@ -574,11 +575,11 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=60"},stock:{src:"/stock/?v=56",sv:"home"},stockrep:{src:"/stock/?v=56",sv:"report"},stkitems:{src:"/stock/?v=56",sv:"items"},stkin:{src:"/stock/?v=56",sv:"in"},stkout:{src:"/stock/?v=56",sv:"out"},stkadj:{src:"/stock/?v=56",sv:"adj"},stkhist:{src:"/stock/?v=56",sv:"hist"},stkre:{src:"/stock/?v=56",sv:"reorder"},
-  ar:{src:"/account/?v=58",v:"ar"},tax:{src:"/account/?v=58",v:"tax"},buy:{src:"/account/?v=58",v:"buy"},cash:{src:"/account/?v=58",v:"cash"},pnl:{src:"/account/?v=58",v:"home"},
-  cf:{src:"/cafe/?v=9",cv:"home"},cfpos:{src:"/cafe/?v=9",cv:"pos"},cfbar:{src:"/cafe/?v=9",cv:"bar"},cford:{src:"/cafe/?v=9",cv:"orders"},cfmenu:{src:"/cafe/?v=9",cv:"menu"},cfinv:{src:"/cafe/?v=9",cv:"inv"},cfshift:{src:"/cafe/?v=9",cv:"shift"},cfrpt:{src:"/cafe/?v=9",cv:"rpt"},cfset:{src:"/cafe/?v=9",cv:"set"},
-  bk:{src:"/booking/?v=10",bv:"home"},bkcal:{src:"/booking/?v=10",bv:"cal"},bklist:{src:"/booking/?v=10",bv:"list"},bkres:{src:"/booking/?v=10",bv:"res"},bkrpt:{src:"/booking/?v=10",bv:"rpt"},bklease:{src:"/booking/?v=10",bv:"lease"},bkset:{src:"/booking/?v=10",bv:"set"},
-  cost:{src:"/account/?v=58",v:"cost"},exp:{src:"/account/?v=58",v:"exp"},bank:{src:"/account/?v=58",v:"bank"},cashv:{src:"/account/?v=58",v:"cashv"},petty:{src:"/account/?v=58",v:"petty"},ap:{src:"/account/?v=58",v:"ap"}};
+const ROUTES={bill:{src:"/bill/?v=61"},stock:{src:"/stock/?v=57",sv:"home"},stockrep:{src:"/stock/?v=57",sv:"report"},stkitems:{src:"/stock/?v=57",sv:"items"},stkin:{src:"/stock/?v=57",sv:"in"},stkout:{src:"/stock/?v=57",sv:"out"},stkadj:{src:"/stock/?v=57",sv:"adj"},stkhist:{src:"/stock/?v=57",sv:"hist"},stkre:{src:"/stock/?v=57",sv:"reorder"},
+  ar:{src:"/account/?v=59",v:"ar"},tax:{src:"/account/?v=59",v:"tax"},buy:{src:"/account/?v=59",v:"buy"},cash:{src:"/account/?v=59",v:"cash"},pnl:{src:"/account/?v=59",v:"home"},
+  cf:{src:"/cafe/?v=10",cv:"home"},cfpos:{src:"/cafe/?v=10",cv:"pos"},cfbar:{src:"/cafe/?v=10",cv:"bar"},cford:{src:"/cafe/?v=10",cv:"orders"},cfmenu:{src:"/cafe/?v=10",cv:"menu"},cfinv:{src:"/cafe/?v=10",cv:"inv"},cfshift:{src:"/cafe/?v=10",cv:"shift"},cfrpt:{src:"/cafe/?v=10",cv:"rpt"},cfset:{src:"/cafe/?v=10",cv:"set"},
+  bk:{src:"/booking/?v=11",bv:"home"},bkcal:{src:"/booking/?v=11",bv:"cal"},bklist:{src:"/booking/?v=11",bv:"list"},bkres:{src:"/booking/?v=11",bv:"res"},bkrpt:{src:"/booking/?v=11",bv:"rpt"},bklease:{src:"/booking/?v=11",bv:"lease"},bkset:{src:"/booking/?v=11",bv:"set"},
+  cost:{src:"/account/?v=59",v:"cost"},exp:{src:"/account/?v=59",v:"exp"},bank:{src:"/account/?v=59",v:"bank"},cashv:{src:"/account/?v=59",v:"cashv"},petty:{src:"/account/?v=59",v:"petty"},ap:{src:"/account/?v=59",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.allow="web-share; clipboard-write";f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
 function setAccView(f,v){const go=()=>{try{f.contentWindow.edmView?f.contentWindow.edmView(v):(f.contentWindow.location.hash="v="+v)}catch(e){}};if(f.dataset.ready)go();else f.addEventListener("load",go,{once:true})}
@@ -745,7 +746,7 @@ function renderHome(){
   if(window.EDM_ED&&EDM_ED.home)EDM_ED.home({docs,seller,items,A,ym,sales,s,sc,n,vat,ar,arN,B,low,m});
   try{renderBillDash()}catch(e){console.error(e);$("#bdash").innerHTML=""}
 }
-$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=58#demo&back=/app/"+(window.EDM_ED?"&ed="+EDM_ED.key:"")};
+$("#demoBtn").onclick=()=>{if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=59#demo&back=/app/"+(window.EDM_ED?"&ed="+EDM_ED.key:"")};
 window.addEventListener("storage",()=>{if(cur==="home")renderHome();else renderBadges()});
 /* ---------- แดชบอร์ดบิล: ยอดขาย · รับเงิน · ลูกหนี้ (ใช้ docStatus / calcDoc เดียวกับหน้าลูกหนี้) ---------- */
 const BDC={sale:"#6FA8DC",rcv:"#4FAF83",open:"#E8C468",late:"#D64C5B",ag:["#9CC7E8","#F2C46B","#F29F66","#E5767F","#C2364A"]};
