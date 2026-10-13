@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="th" data-theme="light" data-tone="sky">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>POS ร้านค้าปลีก มินิมาร์ท ยิงบาร์โค้ด ทอนเงิน ตัดสต๊อก | Excel Data Master</title>
+<meta name="description" content="โปรแกรมขายหน้าร้านออนไลน์ สำหรับร้านขายของชำ มินิมาร์ท ร้านค้าปลีก ยิงบาร์โค้ดด้วยเครื่องสแกนหรือกล้องมือถือ คิดเงิน ทอนเงิน พิมพ์ใบเสร็จ ตัดสต๊อก สรุปยอดรายวัน">
+<link rel="canonical" href="https://exceldatamaster.com/pos/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{--bg:#F5F8FD;--card:#fff;--ink:#22303F;--muted:#5F6E87;--line:#DCE5F2;--soft:#EBF1FA;--accent:#3D6FB2;--accent-ink:#fff;--danger:#B3261E;--ok:#2E8B57}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}a{color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1300px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px}.brand{font-weight:700;text-decoration:none;color:var(--accent)}.brand small{color:var(--muted);font-weight:500}.nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.tabs{max-width:1300px;margin:10px auto 0;padding:0 16px;display:flex;gap:6px;overflow-x:auto}.tabs button{flex:none;border:0;border-radius:999px;padding:8px 16px;background:var(--card);box-shadow:0 0 0 1px var(--line);font-weight:600;cursor:pointer}
+main{max-width:1300px;margin:0 auto;padding:12px 16px 40px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}.card h2{font-size:1.05rem;margin:0;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.card h2 small{font-weight:400;color:var(--muted);font-size:.82rem}
+.hello h1{margin:0;font-size:1.3rem}.hello p{margin:4px 0 0;color:var(--muted)}
+.btn{border:0;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;background:var(--soft);justify-content:center}.btn.main{background:var(--accent);color:#fff}.btn.ghost{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:6px 12px;font-size:.85rem}.btn.lg{padding:14px;font-size:1.15rem;width:100%}.btn.danger{color:var(--danger)}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;outline:none}.in-:focus{border-color:var(--accent)}
+.f{display:flex;flex-direction:column;gap:4px}.f label{font-size:.8rem;font-weight:600;color:var(--muted)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pos{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(320px,1fr);gap:14px;align-items:start}@media(max-width:860px){.pos{grid-template-columns:1fr}.pos .cart{order:-1}}
+.seg.cats{flex-wrap:nowrap;overflow-x:auto}.seg.cats button{flex:0 0 auto;white-space:nowrap;padding-left:14px;padding-right:14px}
+.scan{display:flex;gap:8px}.scan .in-{font-size:1.1rem;padding:12px 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.pi{border:0;background:#fff;box-shadow:0 0 0 1px var(--line);border-radius:12px;padding:10px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-height:78px}.pi:hover{box-shadow:0 0 0 2px var(--accent)}
+.pi b{font-size:.9rem;line-height:1.3}.pi span{color:var(--accent);font-weight:700}.pi small{color:var(--muted);font-size:.74rem}.pi.out{opacity:.5}
+.cart{position:sticky;top:70px}.cl{display:flex;flex-direction:column;max-height:46vh;overflow:auto}
+.ci{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}.ci small{display:block;color:var(--muted)}
+.qty{display:flex;align-items:center;gap:4px}.qty button{width:30px;height:30px;border-radius:8px;border:0;background:var(--soft);cursor:pointer;font-weight:700}.qty input{width:52px;text-align:center}
+.sum{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-variant-numeric:tabular-nums}.sum .big{font-size:1.6rem;font-weight:700;color:var(--accent)}
+.seg{display:flex;gap:6px}.seg button{flex:1;border:0;border-radius:10px;padding:9px;background:var(--soft);cursor:pointer;font-weight:600}.seg button.on{background:var(--accent);color:#fff}
+.cash{display:flex;gap:6px;flex-wrap:wrap}.cash button{flex:1;min-width:60px;border:0;border-radius:10px;padding:8px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);cursor:pointer;font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px var(--line)}.kpi span{display:block;font-size:.8rem;color:var(--muted)}.kpi b{display:block;font-size:1.35rem}.kpi small{color:var(--muted);font-size:.76rem}
+.li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);align-items:center}.li small{display:block;color:var(--muted)}
+.empty{text-align:center;padding:24px;color:var(--muted)}.note{font-size:.8rem;color:var(--muted)}
+dialog{border:0;border-radius:18px;padding:0;width:min(520px,96vw)}dialog::backdrop{background:rgba(20,30,50,.45)}.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}.db{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100}
+#cam{width:100%;border-radius:12px;background:#000;max-height:260px;object-fit:cover}
+#printArea{display:none}.rc{width:72mm;font-size:10pt;line-height:1.4;margin:0 auto}.rc h3{text-align:center;margin:0 0 2px;font-size:12pt}.rc .c{text-align:center}.rc table{width:100%;border-collapse:collapse}.rc td{padding:1px 0;vertical-align:top}.rc .r{text-align:right}.rc hr{border:0;border-top:1px dashed #000;margin:4px 0}
+@media print{@page{size:80mm auto;margin:3mm}header.top,.tabs,main,.toast,dialog,.edm-bar{display:none!important}#printArea{display:block}body{background:#fff}}
+</style>
+<link rel="stylesheet" href="../assets/pastel.css?v=8">
+<script src="../assets/pastel.js?v=2" defer></script>
+<link rel="stylesheet" href="../assets/skin.css?v=1">
+<script src="../assets/skin.js?v=1"></script>
+<script src="../assets/lock.js?v=3"></script>
+<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="POS ร้านค้าปลีก / มินิมาร์ท | Excel Data Master"><meta property="og:description" content="ยิงบาร์โค้ด คิดเงิน ทอนเงิน ใบเสร็จ ตัดสต๊อก สรุปยอดรายวัน"><meta property="og:url" content="https://exceldatamaster.com/pos/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-pos.jpg?v=1"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-pos.jpg?v=1">
+<meta name="theme-color" content="#3D6FB2">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="POS ร้านค้า">
+</head>
+<body>
+<header class="top"><div class="in"><a class="brand" href="/">🏪 Excel Data Master <small>· POS ร้านค้าปลีก</small></a><nav class="nav"></nav></div></header>
+<div class="tabs" id="tabs"><button data-v="sell">🧾 ขาย</button><button data-v="hist">🕘 ประวัติการขาย</button><button data-v="sum">📊 สรุปยอด</button><button data-v="set">⚙️ ตั้งค่า / สินค้า</button></div>
+<main id="main"></main>
+<div id="printArea"></div>
+<dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button">✕</button></div><div class="db" id="dlgB"></div></dialog>
+<div class="toast" id="toast" hidden></div>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่เต็ม)");return false}}};
+const K={sales:"edm_pos_sales",cfg:"edm_pos_cfg",ui:"edm_pos_ui",items:"edm_stock_items",tx:"edm_stock_tx"};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0};
+const r2=n=>Math.round((n+Number.EPSILON)*100)/100,fmt=n=>(+n||0).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2}),fq=n=>(+n||0).toLocaleString("th-TH",{maximumFractionDigits:3});
+const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),today=()=>ymd(new Date());
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],thD=s=>{const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
+const PAY={cash:"เงินสด",transfer:"โอน / QR",card:"บัตร"};
+let S=LS.get(K.sales,[])||[],cfg=Object.assign({shop:{name:"",phone:"",addr:"",tax:""},foot:"ขอบคุณที่อุดหนุนค่ะ",vat:false},LS.get(K.cfg,{})||{}),ui=Object.assign({v:"sell",q:"",cat:""},LS.get(K.ui,{})||{});
+let cart=[],pay="cash",disc=0;
+const items=()=>LS.get(K.items,[])||[];
+function bal(){const B={};(LS.get(K.tx,[])||[]).forEach(t=>{const q=num(t.qty);B[t.pid]=(B[t.pid]||0)+(t.type==="out"?-q:q)});return B}
+const saveS=()=>LS.set(K.sales,S),saveUi=()=>LS.set(K.ui,ui);
+const cTot=()=>{const sub=r2(cart.reduce((a,l)=>a+num(l.q)*num(l.p),0));return{sub,total:r2(Math.max(0,sub-num(disc)))}};
+function nextNo(){const k="RC"+today().slice(2,10).replace(/-/g,"")+"-";let m=0;S.forEach(s=>{if(s.no.startsWith(k))m=Math.max(m,+s.no.slice(k.length)||0)});return k+String(m+1).padStart(3,"0")}
+function render(){$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));({sell:vSell,hist:vHist,sum:vSum,set:vSet}[ui.v]||vSell)()}
+$("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b){ui.v=b.dataset.v;saveUi();render()}};
+const code=i=>String(i.barcode||i.sku||"").trim();
+function addByCode(c){c=String(c||"").trim();if(!c)return false;const I=items(),i=I.find(x=>code(x)&&code(x).toLowerCase()===c.toLowerCase())||I.find(x=>x.name===c);if(!i)return false;addItem(i);return true}
+function addItem(i){const l=cart.find(x=>x.pid===i.id);if(l)l.q=num(l.q)+1;else cart.push({pid:i.id,d:i.name,q:1,p:num(i.price),u:i.unit||""});drawCart();beep()}
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.frequency.value=1200;g.gain.value=.05;o.connect(g);g.connect(a.destination);o.start();setTimeout(()=>{o.stop();a.close()},70)}catch(e){}}
+function vSell(){const M=$("#main"),I=items();
+  if(!I.length){M.innerHTML=`<div class="hello"><h1>🏪 POS ร้านค้าปลีก</h1><p>ยิงบาร์โค้ดหรือแตะสินค้า คิดเงิน ทอนเงิน พิมพ์ใบเสร็จ ตัดสต๊อกอัตโนมัติ</p></div><div class="card"><h2>ยังไม่มีสินค้า</h2><p class="note">เพิ่มสินค้าพร้อมบาร์โค้ดและราคาขาย (ใช้รายการเดียวกับระบบสต๊อกสินค้า)</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="ad" type="button">＋ เพิ่มสินค้า</button><button class="btn ghost" id="dm" type="button">✨ ลองข้อมูลตัวอย่าง</button></div></div>`;$("#ad").onclick=()=>itemDlg();$("#dm").onclick=demo;return}
+  const B=bal(),cats=[...new Set(I.map(i=>i.cat).filter(Boolean))],q=(ui.q||"").trim().toLowerCase(),L=I.filter(i=>(!ui.cat||i.cat===ui.cat)&&(!q||(i.name+" "+code(i)).toLowerCase().includes(q))).slice(0,120);
+  M.innerHTML=`<div class="pos"><div class="card"><div class="scan"><input class="in-" id="sc" placeholder="🔎 ยิงบาร์โค้ด / พิมพ์รหัสหรือชื่อ แล้วกด Enter" autocomplete="off" value="${esc(ui.q||"")}"><button class="btn ghost" id="camB" type="button" title="สแกนด้วยกล้อง">📷</button></div>
+    ${cats.length?`<div class="seg cats"><button class="${!ui.cat?"on":""}" data-c="" type="button">ทั้งหมด</button>${cats.map(c=>`<button class="${ui.cat===c?"on":""}" data-c="${esc(c)}" type="button">${esc(c)}</button>`).join("")}</div>`:""}
+    <div class="grid">${L.map(i=>`<button class="pi ${(B[i.id]||0)<=0?"out":""}" data-a="${esc(i.id)}" type="button"><b>${esc(i.name)}</b><span>฿${fmt(i.price)}</span><small>${esc(code(i))} · เหลือ ${fq(B[i.id]||0)}</small></button>`).join("")||`<div class="empty">ไม่พบสินค้า</div>`}</div></div>
+    <div class="card cart" id="cartC"></div></div>`;
+  const sc=$("#sc");sc.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();if(addByCode(sc.value)){sc.value="";ui.q="";filt()}else toast("ไม่พบรหัส "+sc.value)}};
+  const filt=()=>{const q2=sc.value.trim().toLowerCase();$$(".pi").forEach(b=>{const i=I.find(x=>x.id===b.dataset.a);b.hidden=!!q2&&!(i.name+" "+code(i)).toLowerCase().includes(q2)})};
+  sc.oninput=()=>{ui.q=sc.value;filt()};
+  $$("[data-c]").forEach(b=>b.onclick=()=>{ui.cat=b.dataset.c;saveUi();vSell()});$$("[data-a]").forEach(b=>b.onclick=()=>{addItem(I.find(x=>x.id===b.dataset.a));sc.focus()});
+  $("#camB").onclick=camScan;drawCart();setTimeout(()=>sc.focus(),30)}
+function drawCart(){const C=$("#cartC");if(!C)return;const T=cTot();
+  C.innerHTML=`<h2>ตะกร้า <small>${cart.reduce((a,l)=>a+num(l.q),0)} ชิ้น</small></h2><div class="cl">${cart.map((l,i)=>`<div class="ci"><div><b>${esc(l.d)}</b><small>฿${fmt(l.p)} ${esc(l.u)}</small></div><div class="qty"><button data-m="${i}" type="button">−</button><input class="in-" data-q="${i}" value="${fq(l.q)}" inputmode="decimal"><button data-p="${i}" type="button">+</button></div><b>${fmt(num(l.q)*num(l.p))}</b></div>`).join("")||`<div class="empty">ยิงบาร์โค้ดหรือแตะสินค้าเพื่อเริ่มขาย</div>`}</div>
+   <div class="sum"><span>รวม</span><span>${fmt(T.sub)}</span><span>ส่วนลด</span><span><input class="in-" id="ds" value="${disc||""}" inputmode="decimal" placeholder="0" style="width:90px;text-align:right;padding:4px 8px"></span><span class="big">ยอดชำระ</span><span class="big">฿${fmt(T.total)}</span></div>
+   <div class="seg">${Object.keys(PAY).map(k=>`<button class="${pay===k?"on":""}" data-pay="${k}" type="button">${PAY[k]}</button>`).join("")}</div>
+   ${pay==="cash"?`<div class="f"><label>รับเงินมา</label><input class="in-" id="rv" inputmode="decimal" placeholder="${fmt(T.total)}" style="font-size:1.2rem"></div><div class="cash">${[20,50,100,500,1000].map(v=>`<button data-r="${v}" type="button">${v}</button>`).join("")}<button data-r="x" type="button">พอดี</button></div><div class="sum"><span>เงินทอน</span><span class="big" id="chg">฿0.00</span></div>`:""}
+   <button class="btn main lg edm-lock" id="pay" type="button" ${cart.length?"":"disabled"}>✅ รับเงิน ฿${fmt(T.total)}</button>${cart.length?`<button class="btn ghost sm danger" id="clr" type="button">ล้างตะกร้า</button>`:""}`;
+  const re=()=>{const r=num($("#rv")&&$("#rv").value),c=r-T.total;if($("#chg"))$("#chg").textContent=r?(c>=0?"฿"+fmt(c):"ขาด ฿"+fmt(-c)):"฿0.00"};
+  $$("[data-m]").forEach(b=>b.onclick=()=>{const l=cart[+b.dataset.m];l.q=num(l.q)-1;if(l.q<=0)cart.splice(+b.dataset.m,1);drawCart()});
+  $$("[data-p]").forEach(b=>b.onclick=()=>{cart[+b.dataset.p].q=num(cart[+b.dataset.p].q)+1;drawCart()});
+  $$("[data-q]").forEach(x=>x.onchange=()=>{const l=cart[+x.dataset.q];l.q=num(x.value);if(l.q<=0)cart.splice(+x.dataset.q,1);drawCart()});
+  $("#ds").onchange=e=>{disc=num(e.target.value);drawCart()};$$("[data-pay]").forEach(b=>b.onclick=()=>{pay=b.dataset.pay;drawCart()});
+  if($("#rv")){$("#rv").oninput=re;$$("[data-r]").forEach(b=>b.onclick=()=>{$("#rv").value=b.dataset.r==="x"?T.total:num($("#rv").value)+num(b.dataset.r);re()});$("#rv").onkeydown=e=>{if(e.key==="Enter")$("#pay").click()}}
+  if($("#clr"))$("#clr").onclick=()=>{if(confirm("ล้างตะกร้า?")){cart=[];disc=0;drawCart()}};
+  $("#pay").onclick=()=>{if(!cart.length)return;const T2=cTot();let recv=T2.total;if(pay==="cash"){recv=num($("#rv").value)||T2.total;if(recv<T2.total)return toast("รับเงินไม่พอ")}
+    const s={id:uid("s"),no:nextNo(),ts:Date.now(),date:today(),lines:cart.map(l=>({pid:l.pid,d:l.d,q:num(l.q),p:num(l.p)})),sub:T2.sub,disc:num(disc),total:T2.total,pay,recv,change:r2(recv-T2.total),by:localStorage.getItem("edm_who")||""};
+    const tx=LS.get(K.tx,[])||[];s.lines.forEach(l=>{if(l.pid)tx.push({id:uid("t"),type:"out",date:s.date,pid:l.pid,qty:l.q,cost:0,note:"ขายหน้าร้าน "+s.no,ts:Date.now(),src:"pos",ref:s.id})});LS.set(K.tx,tx);
+    S.push(s);saveS();cart=[];disc=0;toast("ขายแล้ว "+s.no+(s.change?" · ทอน ฿"+fmt(s.change):""));vSell();
+    if(cfg.autoPrint)receipt(s);else{const t=$("#cartC");t.insertAdjacentHTML("afterbegin",`<div class="li" style="background:#E3F4EA;border-radius:10px;padding:10px"><div><b>✅ ${esc(s.no)} · ฿${fmt(s.total)}</b><small>${PAY[s.pay]}${s.change?" · ทอน ฿"+fmt(s.change):""}</small></div><button class="btn sm main" id="prc" type="button">🧾 ใบเสร็จ</button></div>`);$("#prc").onclick=()=>receipt(s)}}}
+/* สแกนด้วยกล้อง (Chrome บน Android / คอม) */
+let stream=null;
+async function camScan(){if(!("BarcodeDetector" in window)){toast("เครื่องนี้สแกนด้วยกล้องไม่ได้ ใช้เครื่องยิงบาร์โค้ด หรือพิมพ์รหัสแทน");return}
+  openDlg("📷 สแกนบาร์โค้ด",`<video id="cam" playsinline muted></video><p class="note">เล็งบาร์โค้ดให้อยู่กลางจอ ระบบเพิ่มเข้าตะกร้าให้เอง</p>`);
+  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});const v=$("#cam");v.srcObject=stream;await v.play();const det=new BarcodeDetector();let last="",lastT=0;
+    const tick=async()=>{if(!stream)return;try{const r=await det.detect(v);if(r[0]){const c=r[0].rawValue;if(c!==last||Date.now()-lastT>1500){last=c;lastT=Date.now();if(addByCode(c))toast("เพิ่ม "+c);else toast("ไม่พบรหัส "+c)}}}catch(e){}requestAnimationFrame(tick)};tick()}catch(e){toast("เปิดกล้องไม่ได้");closeCam()}}
+function closeCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}}
+function receipt(s){const sh=cfg.shop;window.EDM_DOCNAME=s.no;$("#printArea").innerHTML=`<div class="rc"><h3>${esc(sh.name||"ร้านค้า")}</h3>${sh.addr?`<div class="c">${esc(sh.addr)}</div>`:""}${sh.phone?`<div class="c">โทร ${esc(sh.phone)}</div>`:""}${sh.tax?`<div class="c">เลขผู้เสียภาษี ${esc(sh.tax)}</div>`:""}<hr>
+  <div>ใบเสร็จรับเงิน ${esc(s.no)}<br>${thD(s.date)} ${new Date(s.ts).toTimeString().slice(0,5)} น.</div><hr><table>${s.lines.map(l=>`<tr><td>${esc(l.d)}<br>${fq(l.q)} × ${fmt(l.p)}</td><td class="r">${fmt(l.q*l.p)}</td></tr>`).join("")}</table><hr>
+  <table><tr><td>รวม</td><td class="r">${fmt(s.sub)}</td></tr>${s.disc?`<tr><td>ส่วนลด</td><td class="r">-${fmt(s.disc)}</td></tr>`:""}<tr><td><b>ยอดชำระ</b></td><td class="r"><b>${fmt(s.total)}</b></td></tr><tr><td>${PAY[s.pay]}</td><td class="r">${fmt(s.recv)}</td></tr>${s.change?`<tr><td>เงินทอน</td><td class="r">${fmt(s.change)}</td></tr>`:""}</table><hr><div class="c">${esc(cfg.foot||"")}</div><div class="c edm-brand" style="font-size:7pt;color:#888">สร้างด้วย exceldatamaster.com</div></div>`;setTimeout(()=>window.print(),50)}
+function vHist(){const M=$("#main"),d=ui.hd||today(),L=S.filter(s=>s.date===d).sort((a,b)=>b.ts-a.ts),ok=L.filter(s=>!s.void);
+  M.innerHTML=`<div class="hello"><h1>🕘 ประวัติการขาย</h1><p>กดรายการเพื่อพิมพ์ใบเสร็จซ้ำ หรือยกเลิกบิล (คืนสต๊อก)</p></div><div class="card"><div class="row"><div class="f"><label>วันที่</label><input class="in-" type="date" id="hd" value="${d}"></div><div class="f"><label>รวมวันนี้</label><b style="font-size:1.3rem">฿${fmt(ok.reduce((a,s)=>a+s.total,0))} · ${ok.length} บิล</b></div></div>
+  ${L.map(s=>`<div class="li"><div><b>${esc(s.no)}</b> ${s.void?`<span style="color:var(--danger)">ยกเลิก</span>`:""}<small>${new Date(s.ts).toTimeString().slice(0,5)} น. · ${PAY[s.pay]} · ${esc(s.lines.map(l=>l.d+" ×"+fq(l.q)).join(", "))}${s.by?" · "+esc(s.by):""}</small></div><div style="display:flex;gap:6px;align-items:center"><b>${fmt(s.total)}</b><button class="btn sm ghost" data-pr="${s.id}" type="button">🧾</button>${s.void?"":`<button class="btn sm ghost danger edm-lock" data-vd="${s.id}" type="button">ยกเลิก</button>`}</div></div>`).join("")||`<div class="empty">ไม่มีการขายวันนี้</div>`}</div>`;
+  $("#hd").onchange=e=>{ui.hd=e.target.value;saveUi();vHist()};$$("[data-pr]").forEach(b=>b.onclick=()=>receipt(S.find(s=>s.id===b.dataset.pr)));
+  $$("[data-vd]").forEach(b=>b.onclick=async()=>{const s=S.find(x=>x.id===b.dataset.vd);if(!confirm("ยกเลิกบิล "+s.no+"? (คืนสต๊อก)"))return;let L2=null;try{L2=window.EDM_LOCK}catch(e){}const u=L2&&L2.user&&L2.user();if(u&&!u.none&&!u.owner&&!u.perm.del){const v=prompt("ใส่ PIN เจ้าของร้านเพื่อยกเลิกบิล");if(v==null||!(await L2.check(v.trim())))return toast("PIN ไม่ถูกต้อง")}
+    s.void={at:Date.now(),by:localStorage.getItem("edm_who")||""};const tx=LS.get(K.tx,[])||[];s.lines.forEach(l=>{if(l.pid)tx.push({id:uid("t"),type:"in",date:today(),pid:l.pid,qty:l.q,cost:0,note:"ยกเลิกบิล "+s.no,ts:Date.now(),src:"pos",ref:s.id})});LS.set(K.tx,tx);saveS();toast("ยกเลิกแล้ว คืนสต๊อกแล้ว");vHist()})}
+function vSum(){const M=$("#main"),t=today(),m=t.slice(0,7),ok=S.filter(s=>!s.void),td=ok.filter(s=>s.date===t),mo=ok.filter(s=>s.date.slice(0,7)===m),sum=a=>a.reduce((x,s)=>x+s.total,0);
+  const byPay=k=>sum(td.filter(s=>s.pay===k)),top={};mo.forEach(s=>s.lines.forEach(l=>{top[l.d]=(top[l.d]||0)+l.q}));const tL=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const days={};mo.forEach(s=>days[s.date]=(days[s.date]||0)+s.total);const B=bal(),low=items().filter(i=>num(i.min)>0&&(B[i.id]||0)<=num(i.min));
+  M.innerHTML=`<div class="hello"><h1>📊 สรุปยอดขาย</h1><p>${thD(t)} · ปิดร้านแล้วนับเงินในลิ้นชักเทียบกับยอด "เงินสด" ได้เลย</p></div>
+  <div class="kpis"><div class="kpi"><span>ยอดขายวันนี้</span><b>฿${fmt(sum(td))}</b><small>${td.length} บิล · เฉลี่ย ${fmt(td.length?sum(td)/td.length:0)}</small></div><div class="kpi"><span>เงินสด (ควรมีในลิ้นชัก)</span><b>฿${fmt(byPay("cash"))}</b><small>โอน ${fmt(byPay("transfer"))} · บัตร ${fmt(byPay("card"))}</small></div><div class="kpi"><span>ยอดขายเดือนนี้</span><b>฿${fmt(sum(mo))}</b><small>${mo.length} บิล</small></div><div class="kpi"><span>สินค้าใกล้หมด</span><b>${low.length}</b><small>${esc(low.slice(0,3).map(i=>i.name).join(", "))}</small></div></div>
+  <div class="card"><h2>ยอดขายรายวัน <small>เดือนนี้</small></h2>${Object.keys(days).sort().reverse().map(d=>`<div class="li"><span>${thD(d)}</span><b>฿${fmt(days[d])}</b></div>`).join("")||`<div class="empty">-</div>`}</div>
+  <div class="card"><h2>สินค้าขายดี <small>เดือนนี้</small></h2>${tL.map(([n,q],i)=>`<div class="li"><span>${i+1}. ${esc(n)}</span><b>${fq(q)}</b></div>`).join("")||`<div class="empty">-</div>`}</div>`}
+function vSet(){const M=$("#main"),I=items(),B=bal();
+  M.innerHTML=`<div class="hello"><h1>⚙️ ตั้งค่า / สินค้า</h1><p>สินค้าใช้รายการเดียวกับระบบสต๊อก · บาร์โค้ด = ช่อง "รหัส / บาร์โค้ด"</p></div>
+  <div class="card"><h2>หัวใบเสร็จ</h2><div class="row"><div class="f"><label>ชื่อร้าน</label><input class="in-" id="n" value="${esc(cfg.shop.name)}"></div><div class="f"><label>เบอร์โทร</label><input class="in-" id="p" value="${esc(cfg.shop.phone)}"></div></div><div class="f"><label>ที่อยู่</label><input class="in-" id="a" value="${esc(cfg.shop.addr)}"></div><div class="row"><div class="f"><label>เลขผู้เสียภาษี (ถ้ามี)</label><input class="in-" id="tx" value="${esc(cfg.shop.tax)}"></div><div class="f"><label>ข้อความท้ายใบเสร็จ</label><input class="in-" id="ft" value="${esc(cfg.foot)}"></div></div>
+   <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="ap" ${cfg.autoPrint?"checked":""}> พิมพ์ใบเสร็จอัตโนมัติทุกบิล (เครื่องพิมพ์ใบเสร็จ 80 มม.)</label><div><button class="btn main" id="sv" type="button">💾 บันทึก</button></div></div>
+  <div class="card"><h2>สินค้า <small>${I.length} รายการ</small><button class="btn sm main" id="ad" type="button">＋ เพิ่มสินค้า</button></h2>${I.map(i=>`<div class="li"><div><b>${esc(i.name)}</b><small>${esc(code(i)||"ไม่มีบาร์โค้ด")} · คงเหลือ ${fq(B[i.id]||0)} ${esc(i.unit||"")}</small></div><div style="display:flex;gap:6px;align-items:center"><b>฿${fmt(i.price)}</b><button class="btn sm ghost" data-ed="${esc(i.id)}" type="button">แก้ไข</button></div></div>`).join("")||`<div class="empty">ยังไม่มีสินค้า</div>`}
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="dm" type="button">✨ ใส่ข้อมูลตัวอย่าง</button><a class="btn ghost" href="/app/?ed=stock#/stkin">⬇️ รับสินค้าเข้าสต๊อก</a></div></div>`;
+  $("#sv").onclick=()=>{cfg.shop={name:$("#n").value.trim(),phone:$("#p").value.trim(),addr:$("#a").value.trim(),tax:$("#tx").value.trim()};cfg.foot=$("#ft").value;cfg.autoPrint=$("#ap").checked;LS.set(K.cfg,cfg);toast("บันทึกแล้ว ✓")};
+  $("#ad").onclick=()=>itemDlg();$$("[data-ed]").forEach(b=>b.onclick=()=>itemDlg(b.dataset.ed));$("#dm").onclick=demo}
+function openDlg(t,h){$("#dlgT").textContent=t;$("#dlgB").innerHTML=h;if(!$("#dlg").open)$("#dlg").showModal()}
+$("#dlgX").onclick=()=>$("#dlg").close();$("#dlg").addEventListener("close",closeCam);
+function itemDlg(id){const I=items(),o=id?I.find(x=>x.id===id):null,i=o?Object.assign({},o):{id:uid("p"),name:"",sku:"",cat:"",unit:"ชิ้น",price:"",cost:"",min:""};
+  openDlg(o?"แก้ไขสินค้า":"เพิ่มสินค้า",`<div class="f"><label>ชื่อสินค้า</label><input class="in-" id="iN" value="${esc(i.name)}"></div><div class="row"><div class="f"><label>รหัส / บาร์โค้ด (ยิงใส่ได้)</label><input class="in-" id="iS" value="${esc(i.barcode||i.sku||"")}"></div><div class="f"><label>หมวด</label><input class="in-" id="iC" value="${esc(i.cat||"")}"></div></div>
+  <div class="row"><div class="f"><label>ราคาขาย</label><input class="in-" id="iP" inputmode="decimal" value="${esc(i.price)}"></div><div class="f"><label>ต้นทุน</label><input class="in-" id="iK" inputmode="decimal" value="${esc(i.cost||"")}"></div></div>
+  <div class="row"><div class="f"><label>หน่วย</label><input class="in-" id="iU" value="${esc(i.unit||"")}"></div><div class="f"><label>${o?"จุดสั่งซื้อ (เตือนใกล้หมด)":"จำนวนตั้งต้นในสต๊อก"}</label><input class="in-" id="iQ" inputmode="decimal" value="${o?esc(i.min||""):""}"></div></div><button class="btn main" id="iOk" type="button">💾 บันทึก</button>`);
+  $("#iOk").onclick=()=>{i.name=$("#iN").value.trim();if(!i.name)return toast("ใส่ชื่อสินค้า");i.sku=$("#iS").value.trim();i.cat=$("#iC").value.trim();i.price=num($("#iP").value);i.cost=num($("#iK").value);i.unit=$("#iU").value.trim();
+    const L=items(),k=L.findIndex(x=>x.id===i.id);if(o)i.min=num($("#iQ").value)||"";if(k>=0)L[k]=Object.assign(L[k],i);else{L.push(i);const q=num($("#iQ").value);if(q){const tx=LS.get(K.tx,[])||[];tx.push({id:uid("t"),type:"in",date:today(),pid:i.id,qty:q,cost:i.cost,note:"ยอดยกมา",ts:Date.now()});LS.set(K.tx,tx)}}
+    LS.set(K.items,L);$("#dlg").close();toast("บันทึกสินค้าแล้ว ✓");render()};setTimeout(()=>$("#iN").focus(),40)}
+function demo(){if(items().length&&!confirm("เพิ่มสินค้าตัวอย่างเข้าสต๊อก?"))return;const P=[["น้ำดื่ม 600ml","8851234500011","เครื่องดื่ม",7,4.5],["โค้ก 325ml","8851959132012","เครื่องดื่ม",17,12],["มาม่า ต้มยำกุ้ง","8850987101021","อาหารแห้ง",7,5.2],["ไข่ไก่ เบอร์ 2 (แผง 10)","2000000000011","ของสด",45,38],["นมจืด 225ml","8851717040013","เครื่องดื่ม",14,10.5],["ขนมปังแผ่น","8850123456789","เบเกอรี่",27,20],["สบู่ก้อน","8851932330012","ของใช้",15,10],["ยาสีฟัน 160g","8850002021012","ของใช้",55,42]];
+  const L=items(),tx=LS.get(K.tx,[])||[];P.forEach(([n,b,c,p,k],i)=>{const id="pos_"+i;if(L.some(x=>x.id===id))return;L.push({id,name:n,sku:b,cat:c,unit:"ชิ้น",price:p,cost:k,min:10});tx.push({id:uid("t"),type:"in",date:today(),pid:id,qty:48,cost:k,note:"ยอดยกมา",ts:Date.now()})});
+  LS.set(K.items,L);LS.set(K.tx,tx);if(!cfg.shop.name){cfg.shop.name="มินิมาร์ท ใกล้บ้าน (ตัวอย่าง)";LS.set(K.cfg,cfg)}
+  const t=today();[[0,1,2],[1,4],[3,0,0],[6,7,2]].forEach((ix,k)=>{const lines=ix.map(i=>({pid:"pos_"+i,d:P[i][0],q:1,p:P[i][3]})),tot=lines.reduce((a,l)=>a+l.p,0);S.push({id:uid("s"),no:nextNo(),ts:Date.now()-k*1800e3,date:t,lines,sub:tot,disc:0,total:tot,pay:k%2?"transfer":"cash",recv:k%2?tot:Math.ceil(tot/20)*20,change:k%2?0:Math.ceil(tot/20)*20-tot})});saveS();ui.v="sell";saveUi();render();toast("ใส่ข้อมูลตัวอย่างแล้ว ✓")}
+window.addEventListener("storage",e=>{if([K.sales,K.items,K.tx,K.cfg].includes(e.key)){S=LS.get(K.sales,[])||[];if(!$("#dlg").open&&!cart.length)render()}});
+render();
+})();
+</script>
+<script src="../assets/member.js?v=78" defer></script>
+<script src="../assets/docshare.js?v=1" defer></script>
+</body>
+</html>
