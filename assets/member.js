@@ -11,14 +11,14 @@
    * shop = ระบบร้านค้า (เปิดบิล + สต๊อก + บัญชี) · all = ครบทุกระบบ (ไม่รวมลงเวลา ซึ่งขายแยก) */
   var SYS = {
     bill: { n: "เปิดบิลออนไลน์", u: "bill/" }, stock: { n: "สต๊อกสินค้า", u: "stock/" }, account: { n: "บัญชีร้านค้า", u: "account/" },
-    shop: { n: "ระบบร้านค้า (บิล · สต๊อก · บัญชี)", u: "app/" }, cafe: { n: "ร้านคาเฟ่ (POS)", u: "cafe/" }, book: { n: "จองห้อง / ให้เช่า", u: "booking/" },
+    shop: { n: "ระบบร้านค้า (บิล · สต๊อก · บัญชี)", u: "app/" }, cafe: { n: "ร้านคาเฟ่ (POS)", u: "cafe/" }, book: { n: "จองห้อง / ให้เช่า", u: "booking/" }, dorm: { n: "ระบบหอพัก / อพาร์ตเมนต์", u: "app/?ed=dorm" },
     payroll: { n: "คำนวณเงินเดือน", u: "payroll/" }, time: { n: "ลงเวลา / ตอกบัตร", u: "time/" }, todo: { n: "To-Do งานที่ต้องทำ", u: "todo/" },
     finance: { n: "การเงิน SME & ฟรีแลนซ์", u: "finance/" }
   };
-  var GROUP = { shop: ["shop", "bill", "stock", "account"], all: ["shop", "bill", "stock", "account", "cafe", "book", "payroll", "todo"] }   // all = แพ็กเดิม (ยกเลิกขายแล้ว ใช้ต่อได้) ไม่รวม time / finance;
+  var GROUP = { shop: ["shop", "bill", "stock", "account"], book: ["book", "dorm"], all: ["shop", "bill", "stock", "account", "cafe", "book", "dorm", "payroll", "todo"] }   // all = แพ็กเดิม (ยกเลิกขายแล้ว ใช้ต่อได้) ไม่รวม time / finance;
   function curSys() {
     var p = location.pathname, ed = (/[?&]ed=([a-z]+)/.exec(location.search) || [])[1];
-    if (/\/app\//.test(p)) return { bill: "bill", stock: "stock", book: "book", cafe: "cafe", hotel: "book", resort: "book", dorm: "book", meet: "book" }[ed] || "shop"; // รุ่นที่ edition.js รู้จักเท่านั้น อื่น ๆ = ตัวเต็ม (ระบบร้านค้า)
+    if (/\/app\//.test(p)) return { bill: "bill", stock: "stock", book: "book", cafe: "cafe", hotel: "book", resort: "book", dorm: "dorm", meet: "book" }[ed] || "shop"; // รุ่นที่ edition.js รู้จักเท่านั้น อื่น ๆ = ตัวเต็ม (ระบบร้านค้า)
     var m = /\/(bill|stock|account|payroll|time|todo|finance|cafe|booking)\//.exec(p);
     return m ? (m[1] === "booking" ? "book" : m[1]) : "";
   }
