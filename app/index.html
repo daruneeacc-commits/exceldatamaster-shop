@@ -327,7 +327,7 @@ svg.bd-ch{width:100%;height:auto;display:block;font-size:11px;fill:var(--muted)}
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261013-1200";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261013-1400";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -363,6 +363,7 @@ svg.bd-ch{width:100%;height:auto;display:block;font-size:11px;fill:var(--muted)}
       <a href="#/bkcal" data-r="bkcal">ปฏิทิน</a>
       <a href="#/bklist" data-r="bklist">รายการจอง</a>
       <a href="#/bkres" data-r="bkres">ห้อง / อุปกรณ์</a>
+      <a href="#/bklease" data-r="bklease">เช่ารายเดือน (หอพัก)</a>
       <a href="#/bkrpt" data-r="bkrpt">รายงานการจอง</a>
       <a href="#/bkset" data-r="bkset">ตั้งค่าการจอง</a>
     </div></div>
@@ -552,7 +553,7 @@ svg.bd-ch{width:100%;height:auto;display:block;font-size:11px;fill:var(--muted)}
 <div id="toast" hidden style="position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:90;font-size:.9rem"></div>
 
 <script src="../assets/icons.js?v=4"></script>
-<script src="edition.js?v=7"></script>
+<script src="edition.js?v=8"></script>
 <script>
 "use strict";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -570,7 +571,7 @@ const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" 
 const ROUTES={bill:{src:"/bill/?v=58"},stock:{src:"/stock/?v=54",sv:"home"},stockrep:{src:"/stock/?v=54",sv:"report"},stkitems:{src:"/stock/?v=54",sv:"items"},stkin:{src:"/stock/?v=54",sv:"in"},stkout:{src:"/stock/?v=54",sv:"out"},stkadj:{src:"/stock/?v=54",sv:"adj"},stkhist:{src:"/stock/?v=54",sv:"hist"},stkre:{src:"/stock/?v=54",sv:"reorder"},
   ar:{src:"/account/?v=56",v:"ar"},tax:{src:"/account/?v=56",v:"tax"},buy:{src:"/account/?v=56",v:"buy"},cash:{src:"/account/?v=56",v:"cash"},pnl:{src:"/account/?v=56",v:"home"},
   cf:{src:"/cafe/?v=7",cv:"home"},cfpos:{src:"/cafe/?v=7",cv:"pos"},cfbar:{src:"/cafe/?v=7",cv:"bar"},cford:{src:"/cafe/?v=7",cv:"orders"},cfmenu:{src:"/cafe/?v=7",cv:"menu"},cfinv:{src:"/cafe/?v=7",cv:"inv"},cfshift:{src:"/cafe/?v=7",cv:"shift"},cfrpt:{src:"/cafe/?v=7",cv:"rpt"},cfset:{src:"/cafe/?v=7",cv:"set"},
-  bk:{src:"/booking/?v=7",bv:"home"},bkcal:{src:"/booking/?v=7",bv:"cal"},bklist:{src:"/booking/?v=7",bv:"list"},bkres:{src:"/booking/?v=7",bv:"res"},bkrpt:{src:"/booking/?v=7",bv:"rpt"},bkset:{src:"/booking/?v=7",bv:"set"},
+  bk:{src:"/booking/?v=8",bv:"home"},bkcal:{src:"/booking/?v=8",bv:"cal"},bklist:{src:"/booking/?v=8",bv:"list"},bkres:{src:"/booking/?v=8",bv:"res"},bkrpt:{src:"/booking/?v=8",bv:"rpt"},bklease:{src:"/booking/?v=8",bv:"lease"},bkset:{src:"/booking/?v=8",bv:"set"},
   cost:{src:"/account/?v=56",v:"cost"},exp:{src:"/account/?v=56",v:"exp"},bank:{src:"/account/?v=56",v:"bank"},cashv:{src:"/account/?v=56",v:"cashv"},petty:{src:"/account/?v=56",v:"petty"},ap:{src:"/account/?v=56",v:"ap"}};
 const frames={};
 function frameFor(src){if(frames[src])return frames[src];const f=document.createElement("iframe");f.title=src;f.allow="web-share; clipboard-write";f.src=src;$("#stage").appendChild(f);frames[src]=f;return f}
@@ -685,7 +686,7 @@ window.addEventListener("message",e=>{if(e.origin!==location.origin||!e.data||e.
   if(e.data.open&&t==="bill"&&/^(open|new)=[\w-]+$/.test(e.data.hash||"")){openIn("bill",e.data.hash);return}
   {const rv=/recv=([\w-]+)/.exec(e.data.hash||"");if(t==="account"&&rv&&ROUTES.ar){openIn("ar","recv="+rv[1]);return}}
   if(t==="cafe"){const M={home:"cf",pos:"cfpos",bar:"cfbar",orders:"cford",menu:"cfmenu",inv:"cfinv",shift:"cfshift",rpt:"cfrpt",set:"cfset"};const to=M[v]||"cf";if(cur!==to){if(e.data.quiet)quietNav=1;go(to)}return}
-  if(t==="booking"){const M={home:"bk",cal:"bkcal",list:"bklist",res:"bkres",rpt:"bkrpt",set:"bkset"};const to=M[v]||"bk";if(cur!==to){if(e.data.quiet)quietNav=1;go(to)}return}
+  if(t==="booking"){const M={home:"bk",cal:"bkcal",list:"bklist",res:"bkres",rpt:"bkrpt",lease:"bklease",set:"bkset"};const to=M[v]||"bk";if(cur!==to){if(e.data.quiet)quietNav=1;go(to)}return}
   if(t==="stock"&&v){const M={home:"stock",items:"stkitems",in:"stkin",out:"stkout",adj:"stkadj",hist:"stkhist",reorder:"stkre",report:"stockrep",move:"stkin"};if(M[v]&&cur!==M[v]){if(e.data.quiet){quietNav=1;}go(M[v])}return}
   if(t==="account"){go(v==="ar"||v==="tax"||v==="ap"?v:v==="buy"?"cost":v==="cash"?"bank":"pnl")}else if(ROUTES[t])go(t);else go("home")});
 
@@ -982,7 +983,7 @@ route();if(window.EDM_ED&&EDM_ED.solo)renderBadges();
 try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h)){const t=P.t==="stock"?"stock":P.t==="booking"?"bk":P.t==="cafe"?"cf":"bill";if(!window.EDM_ED||EDM_ED.ok(t))openIn(t,P.h)}}catch(e){}
 </script>
 <script src="reports.js?v=52"></script>
-<script src="../assets/member.js?v=70" defer></script>
+<script src="../assets/member.js?v=71" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 <script>/* โหมดออฟไลน์: เก็บหน้าระบบไว้ในเครื่อง เน็ตหลุดแล้วยังเปิดได้ */if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){})});</script>
 </body>

@@ -40,6 +40,7 @@ main{max-width:1200px;margin:0 auto;padding:16px;display:flex;flex-direction:col
 .edm-embed #tabs{display:none!important}
 @media(max-width:520px){.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;border-radius:16px}.tabs button{padding:8px 2px!important;font-size:.78rem!important;white-space:normal!important;line-height:1.2;border-radius:12px!important}}
 #view{display:flex;flex-direction:column;gap:14px}
+[hidden]{display:none!important}
 .hello h1{font-size:1.35rem;margin:0}.hello p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
 .card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}
 .card h2{font-size:1.05rem;margin:0;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
@@ -120,7 +121,7 @@ table.t tfoot td{font-weight:700;border-top:1.5px solid var(--ink)}
 .cal .c.past{opacity:.55}
 .cal .bar{color:#fff;font-weight:600;justify-content:flex-start;overflow:hidden;white-space:nowrap;padding:0 4px;border-right-color:transparent}
 .cal .bar span{overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.cal .bar.hold{background:#C8901A}.cal .bar.conf{background:#2F66C9}.cal .bar.in{background:#127A4B}.cal .bar.out{background:#7C8691}
+.cal .bar.hold{background:#C8901A}.cal .bar.conf{background:#2F66C9}.cal .bar.in{background:#127A4B}.cal .bar.out{background:#7C8691}.cal .bar.lease{background:#8B5CF6}
 .cal .bar.bs{border-top-left-radius:10px;border-bottom-left-radius:10px;margin-left:3px}
 .cal .bar.be{border-top-right-radius:10px;border-bottom-right-radius:10px;margin-right:3px;border-right-color:var(--line)}
 .cal .cnt{font-weight:700;font-variant-numeric:tabular-nums}
@@ -212,6 +213,7 @@ html{overscroll-behavior-y:contain}
     <button data-v="cal">📅 ปฏิทิน</button>
     <button data-v="list">📋 การจอง</button>
     <button data-v="res">🏷️ ห้อง / อุปกรณ์</button>
+    <button data-v="lease">🏢 เช่ารายเดือน</button>
     <button data-v="rpt">📊 รายงาน</button>
     <button data-v="set">⚙️ ตั้งค่า</button>
   </div>
@@ -262,7 +264,7 @@ const KIND={
   hour:{n:"รายชั่วโมง / รอบ",ic:"⏰",u:"ชม.",s:"เริ่ม",e:"ถึง",in:"▶️ เริ่มใช้งาน",out:"🏁 ใช้งานเสร็จ",inS:"กำลังใช้งาน",outS:"ใช้งานเสร็จ",ex:"ห้องประชุม สนามกีฬา สตูดิโอ ห้องซ้อมดนตรี",unit:"ห้อง"},
   item:{n:"อุปกรณ์ / ของให้เช่า",ic:"🧰",u:"วัน",s:"รับของ",e:"คืนของ",in:"📦 ส่งมอบของ",out:"↩️ รับคืนของ",inS:"ลูกค้ายืมอยู่",outS:"คืนของแล้ว",ex:"กล้อง เต็นท์ ชุดไทย เครื่องมือช่าง รถเข็น",unit:"ชิ้น"}};
 const KO=["night","hour","item"];
-const ST={hold:["จองไว้ (รอมัดจำ)","p-hold"],conf:["ยืนยันแล้ว","p-conf"],in:["","p-in"],out:["","p-out"],cancel:["ยกเลิก","p-x"],noshow:["ไม่มา","p-x"]};
+const ST={lease:["เช่ารายเดือน","p-in"],hold:["จองไว้ (รอมัดจำ)","p-hold"],conf:["ยืนยันแล้ว","p-conf"],in:["","p-in"],out:["","p-out"],cancel:["ยกเลิก","p-x"],noshow:["ไม่มา","p-x"]};
 const ACT=b=>b.st==="hold"||b.st==="conf"||b.st==="in"||b.st==="out";
 const CH={walkin:"หน้าร้าน",phone:"โทรศัพท์",line:"LINE",fb:"Facebook",web:"เว็บไซต์",ota:"Agoda / Booking",other:"อื่นๆ"};
 const PK={pay:"รับชำระ / มัดจำ",ref:"คืนเงินให้ลูกค้า",g:"รับค่าประกัน",gr:"คืนค่าประกัน",gx:"หักค่าประกันเป็นค่าเสียหาย"};
@@ -294,6 +296,7 @@ function span(l,r,b){
   return[a,Math.max(a,z)]}
 function usage(rid,a,z,skip){const r=rOf(rid),buf=r.kind==="hour"?num(cfg.buf):0,ev=[],clash=new Set();
   list.forEach(b=>{if(b.id===skip||!ACT(b))return;(b.lines||[]).forEach(l=>{if(l.rid!==rid||!okLine(l,r))return;const[x,y]=span(l,r,b);if(x<z+buf&&a<y+buf){const q=num(l.qty)||1;ev.push([Math.max(x,a-buf),q],[Math.min(y+buf,z+buf),-q]);clash.add(b.no||"(ใบจองนี้)")}})});
+  if(r.kind==="night")LZ.L.forEach(L=>{if(L.rid!==rid||!okD(L.start))return;const[x,y]=lzSpan(L);if(x<z&&a<y){ev.push([Math.max(x,a),num(r.qty)||1],[Math.min(y,z),-(num(r.qty)||1)]);clash.add("ผู้เช่ารายเดือน "+L.name)}});
   ev.sort((p,q)=>p[0]-q[0]||p[1]-q[1]);let c=0,m=0;ev.forEach(e=>{c+=e[1];if(c>m)m=c});return{max:m,clash:[...clash]}}
 function chk(l,b){const r=rOf(l.rid);if(!r)return{ok:false,msg:"เลือกห้อง / อุปกรณ์"};if(!okLine(l,r))return{ok:false,msg:r.kind==="hour"?"เวลาสิ้นสุดต้องหลังเวลาเริ่ม":r.kind==="night"?"วันออกต้องหลังวันเข้าพัก":"วันคืนต้องไม่ก่อนวันรับ"};
   const[a,z]=span(l,r,null),cap=num(r.qty)||1,q=num(l.qty)||1;const u=usage(l.rid,a,z,b.id);
@@ -325,9 +328,9 @@ function goBill(hash){if(EMB){try{window.parent.postMessage({edm:"go",tool:"bill
 function seller(){return cfg.shop||{}}
 
 /* ---------- เปลี่ยนหน้า ---------- */
-const VIEWS=["home","cal","list","res","rpt","set"];
+const VIEWS=["home","cal","list","res","lease","rpt","set"];
 function render(){const v=VIEWS.includes(ui.v)?ui.v:"home";$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
-  ({home:vHome,cal:vCal,list:vList,res:vRes,rpt:vRpt,set:vSet})[v]();custDL()}
+  ({home:vHome,cal:vCal,list:vList,res:vRes,lease:vLease,rpt:vRpt,set:vSet})[v]();custDL()}
 function show(v,quiet){{const D0=document.getElementById("dlg");if(D0&&D0.open)D0.close()}ui.v=v;saveUi();render();scrollTo(0,0);if(!quiet)tell(v)}
 $("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b)show(b.dataset.v)};
 window.edmBookView=v=>{if(!VIEWS.includes(v))return;{const D0=document.getElementById("dlg");if(D0&&D0.open)D0.close()}load();ui.v=v;saveUi();render();scrollTo(0,0)};
@@ -404,7 +407,7 @@ function vCal(){const V=$("#view"),t=today();if(!ui.cs)ui.cs=addDays(t,-1);const
   if($("#cKind"))$("#cKind").onclick=e=>{const b=e.target.closest("[data-k]");if(b){ui.kf=b.dataset.k;saveUi();vCal()}};
   $$("[data-day]").forEach(x=>x.onclick=()=>{const o=JSON.parse(x.dataset.day);dayDlg(o.rid,o.d)});
   $$("[data-er]").forEach(x=>x.onclick=()=>resDlg(x.dataset.er))}
-function cover(r,d){const x=dn(d);for(const b of list){if(!ACT(b))continue;for(const l of b.lines||[]){if(l.rid!==r.id||!okLine(l,r))continue;const[a,z]=span(l,r,b);if(a<=x&&x<z)return{b,l}}}return null}
+function cover(r,d){const x=dn(d);for(const L of LZ.L){if(L.rid!==r.id||!okD(L.start))continue;const[a,z]=lzSpan(L);if(a<=x&&x<z)return{b:{id:"lease:"+L.id,st:"lease",no:"เช่ารายเดือน",cust:{name:"🏢 "+L.name}},l:null}}for(const b of list){if(!ACT(b))continue;for(const l of b.lines||[]){if(l.rid!==r.id||!okLine(l,r))continue;const[a,z]=span(l,r,b);if(a<=x&&x<z)return{b,l}}}return null}
 function dayLines(r,d){const o=[],x=dn(d);list.forEach(b=>{if(!ACT(b))return;(b.lines||[]).forEach(l=>{if(l.rid!==r.id||!okLine(l,r))return;if(r.kind==="hour"){if(l.s.slice(0,10)===d)o.push({b,l})}else{const[a,z]=span(l,r,b);if(a<=x&&x<z)o.push({b,l})}})});return o.sort((p,q)=>p.l.s.localeCompare(q.l.s))}
 function dayDlg(rid,d){const r=rOf(rid);if(!r)return;const L=dayLines(r,d),cap=num(r.qty)||1;
   openDlg(`${KIND[r.kind].ic} ${r.name} · ${thD(d)}`,`<div class="db">${r.kind==="hour"?`<div class="hint">ช่วงเวลาที่ถูกจองแล้ว${num(cfg.buf)?` (เผื่อเวลาเตรียมห้อง ${num(cfg.buf)} นาที)`:""}</div>`:`<div class="hint">มีทั้งหมด ${cap} ${esc(r.unit||KIND[r.kind].unit)} · ว่างวันนี้ ${Math.max(0,cap-usage(r.id,dn(d),dn(d)+1,"").max)}</div>`}
@@ -428,6 +431,186 @@ function vList(){const V=$("#view"),t=today(),q=(ui.q||"").trim().toLowerCase();
     </tbody><tfoot><tr><td colspan="3">${L.length} ใบจอง</td><td class="r">${fm(sT)}</td><td class="r">${fm(sB)}</td><td></td></tr></tfoot></table></div>`:`<div class="empty">ไม่พบใบจอง${q?" ที่ค้นหา":""}</div>`}</div>`;
   $("#lf").onclick=e=>{const b=e.target.closest("[data-k]");if(b){ui.lf=b.dataset.k;saveUi();vList()}};
   const lq=$("#lq");lq.oninput=()=>{ui.q=lq.value;clearTimeout(vList.t);vList.t=setTimeout(()=>{vList();const x=$("#lq");x.focus();x.setSelectionRange(x.value.length,x.value.length)},250)}}
+
+/* ---------- เช่ารายเดือน: สัญญา · จดมิเตอร์ · บิลค่าเช่า+น้ำไฟทุกเดือน (ข้อมูล edm_book_lease แยกจากใบจองรายคืน) ---------- */
+const LK="edm_book_lease";
+let LZ={L:[],B:{}};
+function loadLZ(){const o=LS.get(LK,null)||{};LZ={L:Array.isArray(o.L)?o.L:[],B:o.B&&typeof o.B==="object"?o.B:{}};return LZ}
+const saveLZ=()=>pubAfter(LS.set(LK,LZ));
+loadLZ();
+const ymOf=s=>String(s||"").slice(0,7);
+const ymAdd=(m,n)=>{let y=+m.slice(0,4),mo=+m.slice(5,7)-1+n;y+=Math.floor(mo/12);mo=((mo%12)+12)%12;return y+"-"+pad(mo+1)};
+const ymTh=m=>MF[+m.slice(5)-1]+" "+(+m.slice(0,4)+543);
+const ymDays=m=>{const[a,z]=monthRange(m);return z-a};
+const lzRoom=L=>{const r=rOf(L.rid);return r?r.name:(L.room||"-")};
+const lzEnd=L=>L.st==="end"&&okD(L.out)?L.out:"";
+/* ช่วงที่ห้องถูกเช่า [วันเริ่ม, วันหลังวันสุดท้าย) ใช้กันจองรายคืนซ้อน */
+function lzSpan(L){const a=dn(L.start),e=lzEnd(L);return[a,e?Math.max(a+1,dn(e)):a+36500]}   // กำลังเช่าอยู่ = ถือว่าเช่าต่อจนกว่าจะกดย้ายออก (วันสิ้นสุดสัญญาใช้เตือนต่อสัญญา)
+function lzOn(L,m){if(!okD(L.start))return false;const[a,z]=monthRange(m);const[x,y]=lzSpan(L);return x<z&&a<y}
+const lzKey=(L,m)=>L.id+"|"+m;
+function lzPrev(L,m){let best=null;Object.keys(LZ.B).forEach(k=>{const[id,mm]=k.split("|");if(id!==L.id||mm>=m)return;const b=LZ.B[k];if(b&&(b.w!=null||b.e!=null)&&(!best||mm>best[0]))best=[mm,b]});
+  return{w:best&&best[1].w!=null?num(best[1].w):num(L.w0),e:best&&best[1].e!=null?num(best[1].e):num(L.e0)}}
+/* คิดบิลเดือน m: ค่าเช่า (เดือนแรก/เดือนย้ายออกคิดตามวัน) + น้ำ + ไฟ + ค่าบริการอื่น + รายการเพิ่ม */
+function lzCalc(L,m,B){B=B||LZ.B[lzKey(L,m)]||{};if(B.no&&B.items)return{items:B.items,total:B.total,wu:B.wu,eu:B.eu,wp:B.wp,ep:B.ep};
+  const P=lzPrev(L,m),items=[],[a,z]=monthRange(m),[x,y]=lzSpan(L),from=Math.max(a,x),to=Math.min(z,y),dd=Math.max(0,to-from),days=z-a;
+  const rent=num(L.rent);if(rent)items.push(dd>=days||L.noPro?{n:"ค่าเช่าห้อง "+ymTh(m),amt:rent}:{n:"ค่าเช่าห้อง "+ymTh(m)+" ("+dd+"/"+days+" วัน)",amt:r2(rent*dd/days)});
+  let wu=null,eu=null;
+  if(L.wMode==="flat"){if(num(L.wFlat))items.push({n:"ค่าน้ำ (เหมาจ่าย)",amt:num(L.wFlat)})}
+  else if(num(L.wRate)&&B.w!=null&&B.w!==""){wu=Math.max(0,r2(num(B.w)-P.w));items.push({n:`ค่าน้ำ ${fm(P.w)}→${fm(num(B.w))} = ${fm(wu)} หน่วย × ${fm(num(L.wRate))}`+(num(L.wMin)>wu*num(L.wRate)?" (ขั้นต่ำ)":""),amt:r2(Math.max(wu*num(L.wRate),num(L.wMin)))})}
+  if(num(L.eRate)&&B.e!=null&&B.e!==""){eu=Math.max(0,r2(num(B.e)-P.e));items.push({n:`ค่าไฟ ${fm(P.e)}→${fm(num(B.e))} = ${fm(eu)} หน่วย × ${fm(num(L.eRate))}`+(num(L.eMin)>eu*num(L.eRate)?" (ขั้นต่ำ)":""),amt:r2(Math.max(eu*num(L.eRate),num(L.eMin)))})}
+  (L.fees||[]).forEach(f=>{if(f.n&&num(f.amt))items.push({n:f.n,amt:num(f.amt)})});
+  (B.extra||[]).forEach(f=>{if(f.n&&num(f.amt))items.push({n:f.n,amt:num(f.amt)})});
+  return{items,total:r2(items.reduce((s,i)=>s+num(i.amt),0)),wu,eu,wp:P.w,ep:P.e}}
+const needW=L=>L.wMode!=="flat"&&num(L.wRate)>0,needE=L=>num(L.eRate)>0;
+const lzReady=(L,B)=>(!needW(L)||(B&&B.w!=null&&B.w!==""))&&(!needE(L)||(B&&B.e!=null&&B.e!==""));
+const lzPaid=B=>r2((B&&B.pays||[]).reduce((s,p)=>s+num(p.amt),0));
+/* ครบกำหนด: วันที่ชำระของเดือนนั้น ถ้าเลยมาแล้ว (ออกบิลปลายเดือน) ใช้วันเดียวกันของเดือนถัดไป */
+function lzDue(L,m,iss){const d=pad(Math.min(28,Math.max(1,num(L.dueDay)||5))),a=m+"-"+d;return a>=(iss||today())?a:ymAdd(m,1)+"-"+d}
+function lzSt(L,m){const B=LZ.B[lzKey(L,m)];if(!B||!B.no)return["ยังไม่ออกบิล","p-hold","wait"];const p=lzPaid(B);if(p>=num(B.total)-0.009)return["ชำระแล้ว","p-in","paid"];
+  return today()>B.due?["เกินกำหนด"+(p>0?" (จ่ายบางส่วน)":""),"p-x","late"]:[p>0?"จ่ายบางส่วน":"รอชำระ","p-conf","due"]}
+function lzNo(m){const k="RT"+m.slice(2,4)+m.slice(5,7)+"-";let n=0;Object.values(LZ.B).forEach(b=>{if(b&&b.no&&b.no.startsWith(k))n=Math.max(n,+b.no.slice(k.length)||0)});return k+String(n+1).padStart(3,"0")}
+function lzIssue(L,m){const k=lzKey(L,m),B=LZ.B[k]=LZ.B[k]||{};if(B.no)return false;if(!lzReady(L,B))return false;const C=lzCalc(L,m,B);
+  Object.assign(B,{no:lzNo(m),date:today(),due:lzDue(L,m),items:C.items,total:C.total,wu:C.wu,eu:C.eu,wp:C.wp,ep:C.ep,pays:B.pays||[]});return true}
+/* ยอดค้างทั้งหมดของผู้เช่า (ทุกเดือนที่ออกบิลแล้ว) */
+function lzOwe(L){let o=0;Object.keys(LZ.B).forEach(k=>{if(k.split("|")[0]!==L.id)return;const B=LZ.B[k];if(B&&B.no)o+=Math.max(0,num(B.total)-lzPaid(B))});return r2(o)}
+const lzRooms=()=>res.filter(r=>r.kind==="night"&&r.active!==false);
+
+function vLease(){const V=$("#view");loadLZ();if(!ui.lm)ui.lm=today().slice(0,7);const m=ui.lm,t=today();
+  const act=LZ.L.filter(L=>lzOn(L,m)).sort((a,b)=>lzRoom(a).localeCompare(lzRoom(b),"th",{numeric:true}));
+  let billed=0,got=0,nIss=0,nReady=0;act.forEach(L=>{const B=LZ.B[lzKey(L,m)];if(B&&B.no){billed+=num(B.total);got+=Math.min(num(B.total),lzPaid(B));nIss++}else if(lzReady(L,B))nReady++});
+  const oweAll=r2(LZ.L.reduce((s,L)=>s+lzOwe(L),0)),soon=LZ.L.filter(L=>L.st!=="end"&&okD(L.end)&&dn(L.end)-dn(t)<=30);
+  const ended=LZ.L.filter(L=>L.st==="end");
+  V.innerHTML=`<div class="hello"><h1>🏢 เช่ารายเดือน</h1><p>หอพัก อพาร์ตเมนต์ ห้องเช่า ร้านค้าให้เช่า · ทำสัญญา จดมิเตอร์น้ำไฟ ออกบิลทุกเดือนในคลิกเดียว</p></div>
+  <div class="card"><div class="tools"><button class="btn sm ghost" id="lmP" type="button">‹</button><b style="min-width:130px;text-align:center">${ymTh(m)}</b><button class="btn sm ghost" id="lmN" type="button">›</button>${m!==t.slice(0,7)?`<button class="btn sm ghost" id="lmT" type="button">เดือนนี้</button>`:""}<span class="grow"></span>
+    <button class="btn ghost edm-lock" id="lzMeter" type="button" ${act.some(L=>needW(L)||needE(L))?"":"hidden"}>📟 จดมิเตอร์</button><button class="btn ghost edm-lock" id="lzAll" type="button" ${nReady?"":"hidden"}>🧾 ออกบิลทั้งหมด (${nReady})</button><button class="btn main edm-lock" id="lzNew" type="button">＋ ผู้เช่าใหม่</button></div>
+  <div class="kpis"><div class="kpi"><span>ห้องที่มีผู้เช่า</span><b>${act.length}</b><small>${lzRooms().length?"จากห้องทั้งหมด "+lzRooms().length+" ห้อง":"ผู้เช่าในเดือนนี้"}</small></div>
+    <div class="kpi"><span>บิล ${ymTh(m)}</span><b>฿${fmt0(billed)}</b><small>ออกแล้ว ${nIss} / ${act.length} ห้อง</small></div>
+    <div class="kpi"><span>รับเงินแล้ว (เดือนนี้)</span><b>฿${fmt0(got)}</b><small>${billed?Math.round(got/billed*100)+"% ของบิล":"-"}</small></div>
+    <div class="kpi ${oweAll>0?"warn":""}"><span>ค้างชำระ (ทุกเดือน)</span><b>฿${fmt0(oweAll)}</b><small>${LZ.L.filter(L=>lzOwe(L)>0).length} ผู้เช่า</small></div></div>
+  ${act.length?`<div class="tbl-wrap"><table class="t"><thead><tr><th>ห้อง / ผู้เช่า</th><th class="r">ค่าเช่า</th><th class="r">น้ำ</th><th class="r">ไฟ</th><th class="r">ยอดบิล</th><th>สถานะ</th></tr></thead><tbody>
+  ${act.map(L=>{const B=LZ.B[lzKey(L,m)]||{},C=lzCalc(L,m,B),S=lzSt(L,m),ow=lzOwe(L)-(B.no?Math.max(0,num(B.total)-lzPaid(B)):0);
+    const u=(need,v,unit)=>!need?"-":v==null?`<span style="color:var(--warn)">ยังไม่จด</span>`:fm(v)+" "+unit;
+    return`<tr class="click" data-lb="${L.id}"><td><b>${esc(lzRoom(L))}</b><span class="sub">${esc(L.name||"-")}${L.phone?" · "+esc(L.phone):""}${ow>0.009?` · <span style="color:var(--danger)">ค้างเดือนก่อน ฿${fm(ow)}</span>`:""}</span></td><td class="r">${fm(num(L.rent))}</td><td class="r">${L.wMode==="flat"?"เหมา":u(needW(L),C.wu,"หน่วย")}</td><td class="r">${u(needE(L),C.eu,"หน่วย")}</td><td class="r"><b>${fm(C.total)}</b></td><td><span class="pill ${S[1]}">${S[0]}</span></td></tr>`}).join("")}
+  </tbody></table></div>`:`<div class="empty">${LZ.L.length?"ไม่มีผู้เช่าในเดือนนี้":"ยังไม่มีผู้เช่ารายเดือน · กด \"＋ ผู้เช่าใหม่\" ใส่ห้อง ค่าเช่า เงินประกัน และอัตราน้ำไฟครั้งเดียว ระบบออกบิลให้ทุกเดือน"}</div>`}
+  <div class="hint">ขั้นตอนทุกเดือน: 1) 📟 จดมิเตอร์ (ใส่เลขล่าสุด ระบบจำเลขเดือนก่อนให้) → 2) 🧾 ออกบิลทั้งหมด → 3) กดแถวผู้เช่าเพื่อส่ง LINE / พิมพ์บิล / รับเงิน แล้วพิมพ์ใบเสร็จ</div></div>
+  ${soon.length?`<div class="card"><h2>⏰ สัญญาใกล้หมด / หมดแล้ว</h2>${soon.map(L=>`<div class="li click" data-le="${L.id}"><div><b>${esc(lzRoom(L))} · ${esc(L.name)}</b><small>สัญญาถึง ${thD(L.end)} ${dn(L.end)<dn(t)?"(หมดแล้ว)":"(อีก "+(dn(L.end)-dn(t))+" วัน)"}</small></div><div class="r"><button class="btn sm ghost" type="button" data-le="${L.id}">ต่อสัญญา / ย้ายออก</button></div></div>`).join("")}</div>`:""}
+  <div class="card"><h2>👥 ผู้เช่าทั้งหมด <small>${LZ.L.length-ended.length} กำลังเช่า · ${ended.length} ย้ายออกแล้ว</small></h2>
+  ${LZ.L.length?LZ.L.slice().sort((a,b)=>(a.st==="end")-(b.st==="end")||lzRoom(a).localeCompare(lzRoom(b),"th",{numeric:true})).map(L=>`<div class="li click" data-le="${L.id}"><div><b>${esc(lzRoom(L))} · ${esc(L.name||"-")}</b><small>เริ่ม ${thD(L.start)}${L.end?" · สัญญาถึง "+thD(L.end):""}${L.st==="end"?" · ย้ายออก "+thD(L.out):""} · ค่าเช่า ${fm(num(L.rent))} · ประกัน ${fm(num(L.dep))}</small></div><div class="r">${L.st==="end"?`<span class="pill p-out">ย้ายออกแล้ว</span>`:`<span class="pill p-in">กำลังเช่า</span>`}${lzOwe(L)>0.009?`<span class="pill p-x">ค้าง ฿${fm(lzOwe(L))}</span>`:""}</div></div>`).join(""):`<div class="note">ยังไม่มี</div>`}</div>`;
+  const go=n=>{ui.lm=n;saveUi();vLease()};$("#lmP").onclick=()=>go(ymAdd(m,-1));$("#lmN").onclick=()=>go(ymAdd(m,1));if($("#lmT"))$("#lmT").onclick=()=>go(t.slice(0,7));
+  $("#lzNew").onclick=()=>leaseDlg(null);$("#lzMeter").onclick=()=>meterDlg(m);
+  $("#lzAll").onclick=()=>{let n=0;act.forEach(L=>{if(lzIssue(L,m))n++});saveLZ();toast("ออกบิล "+n+" ห้องแล้ว ✓ กดแถวเพื่อส่ง LINE / พิมพ์");vLease()};
+  $$("[data-lb]").forEach(x=>x.onclick=()=>lzBillDlg(x.dataset.lb,m));
+  $$("[data-le]").forEach(x=>x.onclick=e=>{e.stopPropagation();leaseDlg(x.dataset.le)})}
+
+function leaseDlg(id){loadLZ();const old=id?LZ.L.find(x=>x.id===id):null;const L=old?JSON.parse(JSON.stringify(old)):{id:uid("ls"),rid:"",room:"",name:"",phone:"",idno:"",addr:"",start:today(),end:"",rent:"",dep:"",adv:"",wMode:"unit",wRate:18,wMin:0,wFlat:"",eRate:7,eMin:0,fees:[{n:"ค่าส่วนกลาง",amt:""},{n:"ค่าอินเทอร์เน็ต",amt:""}],dueDay:5,w0:"",e0:"",st:"on",note:""};
+  while((L.fees||[]).length<3)(L.fees=L.fees||[]).push({n:"",amt:""});
+  const R=lzRooms(),f=(k,lb,type,ex)=>`<div class="f"><label>${lb}</label><input class="in-${type==="number"?" r":""}" data-lf="${k}" type="${type||"text"}" ${type==="number"?'inputmode="decimal" step="any" min="0"':""} value="${esc(L[k]==null?"":L[k])}" ${ex||""}></div>`;
+  openDlg(old?"ผู้เช่า · "+lzRoom(L):"ผู้เช่ารายเดือนใหม่",`<div class="db">
+    <div class="row"><div class="f"><label>ห้อง</label><select class="in-" data-lf="rid"><option value="">— พิมพ์ชื่อห้องเอง —</option>${R.map(r=>`<option value="${r.id}" ${r.id===L.rid?"selected":""}>${esc(r.name)}</option>`).join("")}</select></div>${f("room","ชื่อห้อง (ถ้าไม่ได้เลือก)","text",'placeholder="เช่น 305"')}</div>
+    <div class="row">${f("name","ชื่อผู้เช่า")}${f("phone","เบอร์โทร / LINE")}</div>
+    <div class="row">${f("idno","เลขบัตรประชาชน (สำหรับสัญญา)")}${f("addr","ที่อยู่ตามบัตร")}</div>
+    <div class="row3">${f("start","วันเริ่มเช่า","date")}${f("end","สัญญาถึง (ถ้ามี)","date")}${f("dueDay","ชำระทุกวันที่","number",'max="28"')}</div>
+    <div class="row3">${f("rent","ค่าเช่า / เดือน","number")}${f("dep","เงินประกัน","number")}${f("adv","ค่าเช่าล่วงหน้า (รับแล้ว)","number")}</div>
+    <b>💧 ค่าน้ำ</b><div class="seg" id="wm"><button type="button" data-w="unit" class="${L.wMode!=="flat"?"on":""}">ตามมิเตอร์</button><button type="button" data-w="flat" class="${L.wMode==="flat"?"on":""}">เหมาจ่าย</button></div>
+    <div class="row3" id="wU" ${L.wMode==="flat"?"hidden":""}>${f("wRate","บาท / หน่วย","number")}${f("wMin","ขั้นต่ำ / เดือน","number")}${f("w0","เลขมิเตอร์ตอนเข้า","number")}</div>
+    <div class="row3" id="wF" ${L.wMode==="flat"?"":"hidden"}>${f("wFlat","ค่าน้ำเหมา / เดือน","number")}</div>
+    <b>⚡ ค่าไฟ</b><div class="row3">${f("eRate","บาท / หน่วย (0 = ไม่คิด)","number")}${f("eMin","ขั้นต่ำ / เดือน","number")}${f("e0","เลขมิเตอร์ตอนเข้า","number")}</div>
+    <b>➕ ค่าบริการรายเดือนอื่น</b>${L.fees.map((x,i)=>`<div class="row"><input class="in-" data-fn="${i}" placeholder="เช่น ค่าจอดรถ" value="${esc(x.n||"")}"><input class="in- r" data-fa="${i}" type="number" inputmode="decimal" step="any" min="0" placeholder="บาท" value="${esc(x.amt==null?"":x.amt)}"></div>`).join("")}
+    <label style="display:flex;gap:8px;align-items:center;font-size:.86rem"><input type="checkbox" id="noPro" ${L.noPro?"checked":""}> เดือนแรก/เดือนย้ายออก คิดค่าเช่าเต็มเดือน (ไม่เฉลี่ยตามวัน)</label>
+    ${f("note","หมายเหตุ / เงื่อนไขเพิ่มในสัญญา")}
+    <div id="lzWarn"></div>
+    <div class="tools"><button class="btn main" id="lzSave" type="button">💾 บันทึก</button>${old?`<button class="btn ghost" id="lzCt" type="button">📄 พิมพ์สัญญาเช่า</button>${L.st!=="end"?`<button class="btn ghost" id="lzOut" type="button">🚪 ย้ายออก / คืนประกัน</button>`:`<button class="btn ghost" id="lzBack" type="button">↩️ ยกเลิกการย้ายออก</button>`}<button class="btn ghost danger" id="lzDel" type="button">ลบ</button>`:""}</div></div>`);
+  const D=$("#dlgBody");
+  $("#wm").onclick=e=>{const b=e.target.closest("[data-w]");if(!b)return;$$("#wm button").forEach(x=>x.classList.toggle("on",x===b));$("#wU").hidden=b.dataset.w==="flat";$("#wF").hidden=b.dataset.w!=="flat"};
+  const grab=()=>{[...D.querySelectorAll("[data-lf]")].forEach(x=>{const k=x.dataset.lf;L[k]=x.type==="number"?(x.value===""?"":num(x.value)):x.value.trim()});L.wMode=$("#wm .on").dataset.w;L.noPro=$("#noPro").checked;
+    L.fees=L.fees.map((x,i)=>({n:D.querySelector(`[data-fn="${i}"]`).value.trim(),amt:num(D.querySelector(`[data-fa="${i}"]`).value)})).filter(x=>x.n);return L};
+  $("#lzSave").onclick=()=>{grab();if(!L.rid&&!L.room)return toast("เลือกหรือพิมพ์ชื่อห้อง");if(!L.name)return toast("ใส่ชื่อผู้เช่า");if(!okD(L.start))return toast("ใส่วันเริ่มเช่า");if(L.end&&L.end<L.start)return toast("วันสิ้นสุดสัญญาต้องหลังวันเริ่ม");
+    const[a,z]=lzSpan(L),same=LZ.L.filter(o=>o.id!==L.id&&(L.rid?o.rid===L.rid:(!o.rid&&o.room===L.room))).find(o=>{const[x,y]=lzSpan(o);return x<z&&a<y});
+    if(same)return toast("ห้องนี้มีผู้เช่า "+same.name+" อยู่ในช่วงเวลานี้");
+    if(L.rid){const u=usage(L.rid,a,Math.min(z,a+3650),"");if(u.max>0&&!confirm("ห้องนี้มีการจองรายคืนในช่วงที่เช่า ("+u.clash.join(", ")+")\nบันทึกต่อไหม? (ควรย้ายใบจองนั้นไปห้องอื่น)"))return}
+    const i=LZ.L.findIndex(o=>o.id===L.id);if(i>=0)LZ.L[i]=L;else LZ.L.push(L);saveLZ();closeDlg();toast("บันทึกผู้เช่าแล้ว ✓");if(ui.v==="lease")vLease();else render()};
+  if(old){$("#lzCt").onclick=()=>{grab();printContract(L)};
+    if($("#lzOut"))$("#lzOut").onclick=()=>moveOutDlg(L.id);
+    if($("#lzBack"))$("#lzBack").onclick=()=>{const o=LZ.L.find(x=>x.id===L.id);o.st="on";delete o.out;delete o.settle;saveLZ();closeDlg();vLease()};
+    $("#lzDel").onclick=()=>{if(!confirm("ลบผู้เช่า "+L.name+" และบิลทั้งหมดของผู้เช่านี้?"))return;LZ.L=LZ.L.filter(x=>x.id!==L.id);Object.keys(LZ.B).forEach(k=>{if(k.split("|")[0]===L.id)delete LZ.B[k]});saveLZ();closeDlg();vLease()}}}
+
+function meterDlg(m){loadLZ();const act=LZ.L.filter(L=>lzOn(L,m)&&(needW(L)||needE(L))).sort((a,b)=>lzRoom(a).localeCompare(lzRoom(b),"th",{numeric:true}));
+  openDlg("📟 จดมิเตอร์ "+ymTh(m),`<div class="db"><p class="note">ใส่เลขบนมิเตอร์ตอนนี้ ระบบลบเลขเดือนก่อนให้ · กด Enter ไปช่องถัดไป · ห้องที่ออกบิลแล้วแก้ไม่ได้</p>
+  <div class="tbl-wrap"><table class="t"><thead><tr><th>ห้อง</th><th class="r">💧 เดือนก่อน</th><th class="r">💧 ล่าสุด</th><th class="r">⚡ เดือนก่อน</th><th class="r">⚡ ล่าสุด</th></tr></thead><tbody>
+  ${act.map(L=>{const B=LZ.B[lzKey(L,m)]||{},P=lzPrev(L,m),lock=!!B.no,inp=(k,on)=>on?`<input class="in- r mt" style="width:96px" data-mid="${L.id}" data-mk="${k}" type="number" inputmode="decimal" step="any" min="0" value="${B[k]==null?"":esc(B[k])}" ${lock?"disabled":""}>`:"-";
+    return`<tr><td><b>${esc(lzRoom(L))}</b><span class="sub">${esc(L.name)}</span><span class="sub mu" data-mu="${L.id}"></span></td><td class="r">${needW(L)?fm(P.w):"-"}</td><td class="r">${inp("w",needW(L))}</td><td class="r">${needE(L)?fm(P.e):"-"}</td><td class="r">${inp("e",needE(L))}</td></tr>`}).join("")}</tbody></table></div>
+  <div class="tools"><button class="btn main" id="mtSave" type="button">💾 บันทึกเลขมิเตอร์</button><button class="btn ghost" id="mtIss" type="button">💾 บันทึก + ออกบิลทั้งหมด</button></div></div>`);
+  const D=$("#dlgBody"),I=[...D.querySelectorAll(".mt")].filter(x=>!x.disabled);
+  const show=id=>{const L=LZ.L.find(x=>x.id===id),P=lzPrev(L,m),v=k=>{const x=D.querySelector(`[data-mid="${id}"][data-mk="${k}"]`);return x&&x.value!==""?num(x.value):null},w=v("w"),e=v("e");
+    const s=[];if(w!=null)s.push(w<P.w?"⚠️ น้ำน้อยกว่าเดือนก่อน":"💧 "+fm(r2(w-P.w))+" หน่วย");if(e!=null)s.push(e<P.e?"⚠️ ไฟน้อยกว่าเดือนก่อน":"⚡ "+fm(r2(e-P.e))+" หน่วย");D.querySelector(`[data-mu="${id}"]`).textContent=s.join(" · ")};
+  I.forEach((x,i)=>{x.oninput=()=>show(x.dataset.mid);x.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();(I[i+1]||$("#mtSave")).focus()}}});act.forEach(L=>show(L.id));
+  const save=()=>{I.forEach(x=>{const k=lzKey({id:x.dataset.mid},m),B=LZ.B[k]=LZ.B[k]||{};if(x.value==="")delete B[x.dataset.mk];else B[x.dataset.mk]=num(x.value)});saveLZ()};
+  $("#mtSave").onclick=()=>{save();closeDlg();toast("บันทึกเลขมิเตอร์แล้ว ✓");vLease()};
+  $("#mtIss").onclick=()=>{save();let n=0,miss=0;LZ.L.filter(L=>lzOn(L,m)).forEach(L=>{const B=LZ.B[lzKey(L,m)];if(B&&B.no)return;if(lzIssue(L,m))n++;else miss++});saveLZ();closeDlg();toast("ออกบิล "+n+" ห้อง"+(miss?" · ยังไม่จดมิเตอร์ "+miss+" ห้อง":"")+" ✓");vLease()};
+  setTimeout(()=>I[0]&&I[0].focus(),60)}
+
+function lzBillDlg(id,m){loadLZ();const L=LZ.L.find(x=>x.id===id);if(!L)return;const k=lzKey(L,m),B=LZ.B[k]=LZ.B[k]||{},C=lzCalc(L,m,B),paid=lzPaid(B),left=r2(Math.max(0,num(C.total)-paid)),S=lzSt(L,m),ow=r2(lzOwe(L)-(B.no?left:0));
+  openDlg(lzRoom(L)+" · "+ymTh(m),`<div class="db">
+   <div class="li"><div><b>${esc(L.name)}</b><small>${esc(L.phone||"")}${B.no?" · บิลเลขที่ "+esc(B.no)+" · ครบกำหนด "+thD(B.due):""}</small></div><div class="r"><span class="pill ${S[1]}">${S[0]}</span></div></div>
+   ${!B.no&&(needW(L)||needE(L))?`<div class="row">${needW(L)?`<div class="f"><label>💧 เลขมิเตอร์น้ำล่าสุด (ก่อน ${fm(C.wp)})</label><input class="in- r" id="bw" type="number" inputmode="decimal" step="any" value="${B.w==null?"":esc(B.w)}"></div>`:""}${needE(L)?`<div class="f"><label>⚡ เลขมิเตอร์ไฟล่าสุด (ก่อน ${fm(C.ep)})</label><input class="in- r" id="be" type="number" inputmode="decimal" step="any" value="${B.e==null?"":esc(B.e)}"></div>`:""}</div>`:""}
+   <div class="tbl-wrap"><table class="t"><tbody id="bItems">${C.items.map(i=>`<tr><td>${esc(i.n)}</td><td class="r">${fmt(num(i.amt))}</td></tr>`).join("")||`<tr><td class="note">ยังไม่มีรายการ</td><td></td></tr>`}</tbody><tfoot><tr><td>รวมเดือนนี้</td><td class="r" id="bTot">${fmt(C.total)}</td></tr>${ow>0.009?`<tr><td style="color:var(--danger)">ค้างจากเดือนก่อน</td><td class="r" style="color:var(--danger)">${fmt(ow)}</td></tr>`:""}</tfoot></table></div>
+   ${!B.no?`<details class="opt"><summary class="note">➕ เพิ่มรายการเดือนนี้ (ค่าซ่อม ค่าปรับ ส่วนลด ใส่ติดลบได้)</summary><div class="row" style="margin-top:8px"><input class="in-" id="xN" placeholder="เช่น ค่าปรับจ่ายช้า"><input class="in- r" id="xA" type="number" inputmode="decimal" step="any" placeholder="บาท"></div><button class="btn sm ghost" id="xAdd" type="button" style="margin-top:6px">เพิ่ม</button></details>`:""}
+   ${(B.pays||[]).length?`<div class="hint"><b>รับเงินแล้ว</b><br>${B.pays.map((p,i)=>`${thD(p.d)} · ${esc(p.m)} · ${fmt(num(p.amt))} บาท <button class="btn sm ghost" type="button" data-pdel="${i}">ลบ</button>`).join("<br>")}</div>`:""}
+   ${B.no&&left>0.009?`<div class="row3"><div class="f"><label>รับเงิน (บาท)</label><input class="in- r" id="pA" type="number" inputmode="decimal" step="any" value="${left}"></div><div class="f"><label>วันที่</label><input class="in-" id="pD" type="date" value="${today()}"></div><div class="f"><label>วิธี</label><select class="in-" id="pM">${["โอนเงิน","เงินสด","QR พร้อมเพย์","อื่นๆ"].map(x=>`<option>${x}</option>`).join("")}</select></div></div>`:""}
+   <div class="tools">${!B.no?`<button class="btn main" id="bIss" type="button">🧾 ออกบิล</button>`:`${left>0.009?`<button class="btn main" id="bPay" type="button">💵 บันทึกรับเงิน</button>`:""}<button class="btn ghost" id="bLine" type="button">💬 ข้อความ LINE</button><button class="btn ghost" id="bPrint" type="button">🖨️ ใบแจ้งค่าเช่า</button>${paid>0?`<button class="btn ghost" id="bRc" type="button">🧾 ใบเสร็จ</button>`:""}${!paid?`<button class="btn ghost danger" id="bUn" type="button">ยกเลิกบิล</button>`:""}`}</div></div>`);
+  const again=()=>lzBillDlg(id,m),refreshV=()=>{if(ui.v==="lease")vLease()};
+  const rd=()=>{if($("#bw"))B.w=$("#bw").value===""?undefined:num($("#bw").value);if($("#be"))B.e=$("#be").value===""?undefined:num($("#be").value);["w","e"].forEach(x=>{if(B[x]===undefined)delete B[x]})};
+  ["#bw","#be"].forEach(s=>{const x=$(s);if(x)x.onchange=()=>{rd();saveLZ();again();refreshV()}});
+  if($("#xAdd"))$("#xAdd").onclick=()=>{const n=$("#xN").value.trim(),a=num($("#xA").value);if(!n||!a)return toast("ใส่ชื่อรายการและจำนวนเงิน");rd();(B.extra=B.extra||[]).push({n,amt:a});saveLZ();again();refreshV()};
+  if($("#bIss"))$("#bIss").onclick=()=>{rd();if(!lzReady(L,B)){saveLZ();return toast("ใส่เลขมิเตอร์ก่อนออกบิล")}lzIssue(L,m);saveLZ();toast("ออกบิลแล้ว ✓");again();refreshV()};
+  if($("#bUn"))$("#bUn").onclick=()=>{if(!confirm("ยกเลิกบิลนี้เพื่อแก้ไข? (เลขมิเตอร์ยังอยู่)"))return;["no","date","due","items","total","wu","eu","wp","ep"].forEach(x=>delete B[x]);saveLZ();again();refreshV()};
+  if($("#bPay"))$("#bPay").onclick=()=>{const a=num($("#pA").value);if(!(a>0))return toast("ใส่จำนวนเงิน");(B.pays=B.pays||[]).push({d:$("#pD").value||today(),amt:a,m:$("#pM").value});saveLZ();toast("บันทึกรับเงินแล้ว ✓");again();refreshV()};
+  $$("[data-pdel]").forEach(x=>x.onclick=()=>{if(!confirm("ลบรายการรับเงินนี้?"))return;B.pays.splice(+x.dataset.pdel,1);saveLZ();again();refreshV()});
+  if($("#bPrint"))$("#bPrint").onclick=()=>printLzBill(L,m,"iv");if($("#bRc"))$("#bRc").onclick=()=>printLzBill(L,m,"rc");
+  if($("#bLine"))$("#bLine").onclick=()=>{const Sx=seller(),t=[`🏢 ${Sx.name||""} แจ้งค่าเช่า ${ymTh(m)}`,`ห้อง ${lzRoom(L)} · คุณ${L.name}`].concat(B.items.map(i=>`• ${i.n} ${fmt(num(i.amt))}`),[`รวม ${fmt(num(B.total))} บาท`+(ow>0.009?` (+ค้างเดือนก่อน ${fmt(ow)})`:""),paid>0?`ชำระแล้ว ${fmt(paid)} · คงเหลือ ${fmt(left)} บาท`:"",`กรุณาชำระภายใน ${thD(B.due)}`,Sx.pay?"ช่องทางชำระ: "+Sx.pay.replace(/\n/g," "):"","ขอบคุณค่ะ 🙏"]).filter(Boolean).join("\n");
+    const ok=()=>toast("คัดลอกข้อความแล้ว ✓ วางในแชต LINE ผู้เช่าได้เลย");if(navigator.clipboard)navigator.clipboard.writeText(t).then(ok,()=>prompt("คัดลอกข้อความ",t));else prompt("คัดลอกข้อความ",t)}}
+
+function lzHead(S,title,en,rows){return`<div class="ph"><div class="shop">${S.logo&&/^data:image\//.test(S.logo)?`<img src="${esc(S.logo)}" alt="">`:""}<b>${esc(S.name||"")}</b><div>${esc(S.addr||"").replace(/\n/g,"<br>")}</div>${S.tel||S.phone?`<div>โทร ${esc(S.tel||S.phone)}</div>`:""}${S.tax?`<div>เลขประจำตัวผู้เสียภาษี ${esc(S.tax)}</div>`:""}</div>
+  <div style="text-align:right"><h1>${title}</h1><div>${en}</div>${rows}</div></div>`}
+function printLzBill(L,m,kind){const S=seller(),B=LZ.B[lzKey(L,m)];if(!B||!B.no)return;const paid=lzPaid(B),rc=kind==="rc";window.EDM_DOCNAME=B.no+(rc?"-ใบเสร็จ":"");
+  $("#printArea").innerHTML=`<div class="page">${lzHead(S,rc?"ใบเสร็จรับเงิน":"ใบแจ้งค่าเช่า",rc?"Receipt":"Rental Invoice",`<div style="margin-top:6px">เลขที่ <b>${esc(rc?"RC-"+B.no:B.no)}</b></div><div>วันที่ ${thD(rc?(B.pays[B.pays.length-1]||{}).d:B.date)}</div>${rc?"":`<div>ครบกำหนดชำระ ${thD(B.due)}</div>`}`)}
+  <div class="box"><b>ผู้เช่า</b> ${esc(L.name)}${L.phone?" · โทร "+esc(L.phone):""}<br><b>ห้อง</b> ${esc(lzRoom(L))} · ประจำเดือน ${ymTh(m)}</div>
+  <table><thead><tr><th>รายการ</th><th class="r">จำนวนเงิน</th></tr></thead><tbody>${B.items.map(i=>`<tr><td>${esc(i.n)}</td><td class="r">${fmt(num(i.amt))}</td></tr>`).join("")}</tbody></table>
+  <table class="tot"><tr class="g"><td>รวมทั้งสิ้น</td><td class="r">${fmt(num(B.total))}</td></tr>${paid?`<tr><td>ชำระแล้ว</td><td class="r">${fmt(paid)}</td></tr><tr class="g"><td>คงเหลือ</td><td class="r">${fmt(Math.max(0,num(B.total)-paid))}</td></tr>`:""}</table>
+  ${rc?`<div class="box"><b>รับชำระ</b><br>${B.pays.map(p=>`${thD(p.d)} · ${esc(p.m)} · ${fmt(num(p.amt))} บาท`).join("<br>")}</div>`:S.pay?`<div class="box"><b>ช่องทางชำระเงิน</b><br>${esc(S.pay).replace(/\n/g,"<br>")}</div>`:""}
+  <div class="sig">${rc?"<div>ผู้จ่ายเงิน</div><div>ผู้รับเงิน</div>":"<div>ผู้เช่า</div><div>ผู้ให้เช่า</div>"}</div></div>`;setTimeout(()=>window.print(),60)}
+
+function printContract(L){const S=seller(),fee=(L.fees||[]).filter(f=>f.n&&num(f.amt));window.EDM_DOCNAME="สัญญาเช่า-"+lzRoom(L);
+  const mo=okD(L.end)?Math.max(1,Math.round((dn(L.end)-dn(L.start))/30.4)):0;
+  $("#printArea").innerHTML=`<div class="page" style="font-size:10.5pt;line-height:1.75">${lzHead(S,"สัญญาเช่าห้อง","Room Rental Agreement",`<div style="margin-top:6px">ทำที่ ${esc(S.name||"")}</div><div>วันที่ ${thD(today())}</div>`)}
+  <p>สัญญานี้ทำขึ้นระหว่าง <b>${esc(S.name||"……………………")}</b> ซึ่งต่อไปเรียกว่า "ผู้ให้เช่า" ฝ่ายหนึ่ง กับ <b>${esc(L.name)}</b>${L.idno?" เลขประจำตัวประชาชน "+esc(L.idno):""}${L.addr?" ที่อยู่ "+esc(L.addr):""}${L.phone?" โทร "+esc(L.phone):""} ซึ่งต่อไปเรียกว่า "ผู้เช่า" อีกฝ่ายหนึ่ง ทั้งสองฝ่ายตกลงกันดังนี้</p>
+  <p><b>ข้อ 1</b> ผู้ให้เช่าตกลงให้เช่าและผู้เช่าตกลงเช่า ห้อง <b>${esc(lzRoom(L))}</b> เพื่อใช้เป็นที่อยู่อาศัย ตั้งแต่วันที่ <b>${thD(L.start)}</b>${okD(L.end)?` ถึงวันที่ <b>${thD(L.end)}</b> (ประมาณ ${mo} เดือน)`:" เป็นรายเดือน"}</p>
+  <p><b>ข้อ 2</b> ค่าเช่าเดือนละ <b>${fmt(num(L.rent))} บาท</b> ชำระล่วงหน้าภายในวันที่ <b>${num(L.dueDay)||5}</b> ของทุกเดือน${fee.length?" พร้อมค่าบริการรายเดือน "+fee.map(f=>esc(f.n)+" "+fmt(num(f.amt))+" บาท").join(", "):""}</p>
+  <p><b>ข้อ 3</b> ค่าน้ำประปา ${L.wMode==="flat"?"เหมาจ่ายเดือนละ "+fmt(num(L.wFlat))+" บาท":"หน่วยละ "+fmt(num(L.wRate))+" บาท"+(num(L.wMin)?" ขั้นต่ำเดือนละ "+fmt(num(L.wMin))+" บาท":"")} · ค่าไฟฟ้า ${num(L.eRate)?"หน่วยละ "+fmt(num(L.eRate))+" บาท"+(num(L.eMin)?" ขั้นต่ำเดือนละ "+fmt(num(L.eMin))+" บาท":""):"ตามที่ตกลง"}${L.wMode!=="flat"||num(L.eRate)?` · เลขมิเตอร์วันเข้า: น้ำ ${fm(num(L.w0))} ไฟ ${fm(num(L.e0))}`:""}</p>
+  <p><b>ข้อ 4</b> ผู้เช่าได้วางเงินประกันการเช่า <b>${fmt(num(L.dep))} บาท</b>${num(L.adv)?` และชำระค่าเช่าล่วงหน้า <b>${fmt(num(L.adv))} บาท</b>`:""} ผู้ให้เช่าจะคืนเงินประกันเมื่อสิ้นสุดสัญญา หลังหักค่าเช่าค้างชำระ ค่าน้ำค่าไฟ และค่าเสียหายที่เกิดจากผู้เช่า (ถ้ามี)</p>
+  <p><b>ข้อ 5</b> ผู้เช่าต้องดูแลรักษาห้องและทรัพย์สินที่เช่าเสมือนวิญญูชนจะพึงดูแลทรัพย์สินของตนเอง ไม่ดัดแปลงต่อเติม ไม่ให้ผู้อื่นเช่าช่วง และไม่กระทำการใดที่ผิดกฎหมายหรือรบกวนผู้อื่น</p>
+  <p><b>ข้อ 6</b> หากผู้เช่าประสงค์จะเลิกสัญญาก่อนกำหนด ให้แจ้งผู้ให้เช่าเป็นลายลักษณ์อักษรล่วงหน้าไม่น้อยกว่า 30 วัน</p>
+  ${L.note?`<p><b>ข้อ 7</b> ${esc(L.note)}</p>`:""}
+  <p>ทั้งสองฝ่ายได้อ่านและเข้าใจข้อความในสัญญานี้โดยตลอดแล้ว จึงลงลายมือชื่อไว้เป็นสำคัญ</p>
+  <div class="sig" style="margin-top:46px"><div>ผู้ให้เช่า<br>(${esc(S.name||"……………………")})</div><div>ผู้เช่า<br>(${esc(L.name)})</div></div>
+  <div class="sig" style="margin-top:40px"><div>พยาน</div><div>พยาน</div></div>
+  <p class="note" style="font-size:8pt;color:#888;margin-top:14px">แบบสัญญาอย่างง่าย ควรตรวจสอบและปรับให้เหมาะกับข้อตกลงจริงก่อนใช้</p></div>`;setTimeout(()=>window.print(),60)}
+
+function moveOutDlg(id){const L=LZ.L.find(x=>x.id===id);if(!L)return;const owe=lzOwe(L),dep=num(L.dep)+num(L.adv);
+  openDlg("🚪 ย้ายออก · "+lzRoom(L),`<div class="db">
+   <div class="row"><div class="f"><label>วันย้ายออก</label><input class="in-" id="moD" type="date" value="${today()}"></div><div class="f"><label>หักค่าเสียหาย / ทำความสะอาด (บาท)</label><input class="in- r" id="moX" type="number" inputmode="decimal" step="any" min="0" value="0"></div></div>
+   <div class="f"><label>รายละเอียดที่หัก</label><input class="in-" id="moN" placeholder="เช่น ทาสีผนัง เปลี่ยนกุญแจ"></div>
+   <div class="hint">เงินประกัน + ค่าเช่าล่วงหน้า <b>${fmt(dep)}</b><br>หักค่าเช่า/น้ำไฟค้างชำระ <b>−${fmt(owe)}</b><br>หักค่าเสียหาย <b id="moXv">−0.00</b><br><b>คืนผู้เช่า <span id="moR">${fmt(dep-owe)}</span> บาท</b></div>
+   <p class="note">บิลเดือนสุดท้าย: ออกบิลเดือนที่ย้ายออกก่อน (ค่าเช่าคิดตามวันที่อยู่จริง) แล้วค่อยกดยืนยันย้ายออก ยอดค้างจะถูกหักจากเงินประกัน</p>
+   <div class="tools"><button class="btn main" id="moOk" type="button">ยืนยันย้ายออก + พิมพ์ใบคืนเงินประกัน</button></div></div>`);
+  const upd2=()=>{const x=num($("#moX").value);$("#moXv").textContent="−"+fmt(x);$("#moR").textContent=fmt(dep-owe-x)};$("#moX").oninput=upd2;
+  $("#moOk").onclick=()=>{const d=$("#moD").value;if(!okD(d)||d<L.start)return toast("วันย้ายออกไม่ถูกต้อง");const x=num($("#moX").value);
+    L.st="end";L.out=d;L.settle={dep,owe,x,note:$("#moN").value.trim(),back:r2(dep-owe-x),at:today()};
+    Object.keys(LZ.B).forEach(k=>{if(k.split("|")[0]!==L.id)return;const B=LZ.B[k];if(B&&B.no){const l=r2(num(B.total)-lzPaid(B));if(l>0.009)(B.pays=B.pays||[]).push({d,amt:l,m:"หักเงินประกัน"})}});saveLZ();closeDlg();vLease();
+    const S=seller();window.EDM_DOCNAME="คืนเงินประกัน-"+lzRoom(L);$("#printArea").innerHTML=`<div class="page">${lzHead(S,"ใบสรุปคืนเงินประกัน","Deposit Refund",`<div>วันที่ ${thD(d)}</div>`)}
+      <div class="box"><b>ผู้เช่า</b> ${esc(L.name)} · <b>ห้อง</b> ${esc(lzRoom(L))}<br>เช่าตั้งแต่ ${thD(L.start)} ถึง ${thD(d)}</div>
+      <table class="tot" style="width:100%"><tr><td>เงินประกัน + ค่าเช่าล่วงหน้า</td><td class="r">${fmt(dep)}</td></tr><tr><td>หัก ค่าเช่า/ค่าน้ำไฟค้างชำระ</td><td class="r">−${fmt(owe)}</td></tr><tr><td>หัก ค่าเสียหาย${L.settle.note?" ("+esc(L.settle.note)+")":""}</td><td class="r">−${fmt(x)}</td></tr><tr class="g"><td>${L.settle.back>=0?"คืนให้ผู้เช่า":"ผู้เช่าต้องชำระเพิ่ม"}</td><td class="r">${fmt(Math.abs(L.settle.back))}</td></tr></table>
+      <div class="sig"><div>ผู้เช่า</div><div>ผู้ให้เช่า</div></div></div>`;setTimeout(()=>window.print(),60)}}
 
 /* ---------- ห้อง / อุปกรณ์ ---------- */
 function vRes(){const V=$("#view");const ks=KO.filter(kOn);
@@ -470,7 +653,7 @@ function setDates(l,r,s){const t=s||today();if(!r){l.s=t;l.e=addDays(t,1);return
   else{l.s=t;l.e=addDays(t,1)}}
 function newBk(p){if(!res.some(r=>r.active!==false)){toast("เพิ่มห้องหรืออุปกรณ์ก่อน");show("res");return}
   cur={id:uid("b"),no:"",date:today(),cust:{name:"",contact:"",addr:"",tax:"",branch:""},ch:"walkin",guests:"",st:"hold",lines:[blankLine(p||{})],ext:[],disc:0,pays:[],note:""};isNew=true;drawBk()}
-function openBk(id){const b=list.find(x=>x.id===id);if(!b)return toast("ไม่พบใบจอง");cur=JSON.parse(JSON.stringify(b));cur.ext=cur.ext||[];cur.pays=cur.pays||[];isNew=false;drawBk()}
+function openBk(id){if(String(id).startsWith("lease:"))return leaseDlg(id.slice(6));const b=list.find(x=>x.id===id);if(!b)return toast("ไม่พบใบจอง");cur=JSON.parse(JSON.stringify(b));cur.ext=cur.ext||[];cur.pays=cur.pays||[];isNew=false;drawBk()}
 function resOpts(sel){return KO.filter(k=>kOn(k)||res.some(r=>r.id===sel&&r.kind===k)).map(k=>{const R=res.filter(r=>r.kind===k&&(r.active!==false||r.id===sel));return R.length?`<optgroup label="${KIND[k].ic} ${KIND[k].n}">${R.map(r=>`<option value="${r.id}" ${r.id===sel?"selected":""}>${esc(r.name)}${num(r.qty)>1?" ("+r.qty+" "+esc(r.unit||KIND[k].unit)+")":""} · ฿${fm(num(r.rate))}/${KIND[k].u}</option>`).join("")}</optgroup>`:""}).join("")}
 function lineHtml(l,i){const r=rOf(l.rid),k=r?r.kind:"night",Kd=KIND[k],cap=r?num(r.qty)||1:1,lock=cur.st==="out";
   const dates=k==="hour"?`<div class="dates h"><div class="f"><label>วันที่</label><input class="in-" type="date" data-i="${i}" data-f="hd" value="${esc((l.s||"").slice(0,10))}" ${lock?"disabled":""}></div><div class="f"><label>เริ่ม</label><input class="in-" type="time" step="900" data-i="${i}" data-f="hs" value="${esc((l.s||"").slice(11,16))}" ${lock?"disabled":""}></div><div class="f"><label>ถึง</label><input class="in-" type="time" step="900" data-i="${i}" data-f="he" value="${esc((l.e||"").slice(11,16))}" ${lock?"disabled":""}></div></div>`
@@ -726,7 +909,7 @@ function vSet(){const V=$("#view");
   $("#sExp").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({app:"edm-booking",v:1,res,list,cfg})],{type:"application/json"}));a.download="สำรองระบบจอง-"+today()+".json";a.click()};
   $("#sImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-booking"||!Array.isArray(o.res)||!Array.isArray(o.list))throw 0;if(!confirm("นำเข้าข้อมูลระบบจอง? ข้อมูลระบบจองในเครื่องนี้จะถูกแทนที่"))return;res=o.res;list=o.list;cfg=Object.assign({},CFG0,o.cfg||{});saveRes();saveList();saveCfg();load();toast("นำเข้าแล้ว ✓");render()}).catch(()=>toast("ไฟล์ไม่ถูกต้อง ต้องเป็นไฟล์สำรองระบบจอง"))};
   if($("#sDemo"))$("#sDemo").onclick=demo;
-  $("#sWipe").onclick=()=>{if(!confirm("ล้างห้อง/อุปกรณ์ และใบจองทั้งหมด?"))return;if(!confirm("ยืนยันอีกครั้ง: ลบข้อมูลระบบจองทั้งหมด"))return;res=[];list=[];saveRes();saveList();toast("ล้างข้อมูลแล้ว");render()}}
+  $("#sWipe").onclick=()=>{if(!confirm("ล้างห้อง/อุปกรณ์ และใบจองทั้งหมด?"))return;if(!confirm("ยืนยันอีกครั้ง: ลบข้อมูลระบบจองทั้งหมด (รวมผู้เช่ารายเดือน)"))return;res=[];list=[];LZ={L:[],B:{}};saveLZ();saveRes();saveList();toast("ล้างข้อมูลแล้ว");render()}}
 
 /* ---------- ข้อมูลตัวอย่าง ---------- */
 function demo(){if((res.length||list.length)&&!confirm("ใส่ข้อมูลตัวอย่างแทนข้อมูลระบบจองเดิม?"))return;const t=today(),d=n=>addDays(t,n),h=(n,x)=>d(n)+"T"+x;
@@ -745,6 +928,12 @@ function demo(){if((res.length||list.length)&&!confirm("ใส่ข้อมู
   add(mk(5,"ชมรมเดินป่าเชียงดาว","090-123-4567","line","hold",[["rTNT",d(3),d(5),4]],[]));
   add(mk(6,"คุณปรีชา รักษ์ดี","085-000-1111","walkin","conf",[["r102",d(2),d(5)]],[["pay",1000,"QR พร้อมเพย์",-1]]));
   add(mk(7,"คุณอรุณี แสงทอง","082-345-6789","walkin","out",[["r102",d(-4),d(-2)]],[["pay",2400,"เงินสด",-4]]));
+  /* เช่ารายเดือน: 2 ห้อง มีบิลเดือนก่อน และเลขมิเตอร์เดือนนี้รอออกบิล */
+  res.push({id:"r301",kind:"night",name:"ห้อง 301 รายเดือน",cat:"รายเดือน",qty:1,rate:600,rateWe:600,dep:0,note:"ห้องพักรายเดือน มีแอร์ ตู้เย็น",active:true},{id:"r302",kind:"night",name:"ห้อง 302 รายเดือน",cat:"รายเดือน",qty:1,rate:600,rateWe:600,dep:0,note:"ห้องพักรายเดือน",active:true});
+  {const cm=t.slice(0,7),M=n=>ymAdd(cm,n);LZ={L:[{id:"lsD1",rid:"r301",room:"",name:"คุณนภา ขยันดี",phone:"081-999-1111",idno:"",addr:"",start:M(-3)+"-01",end:M(9)+"-01",rent:4500,dep:9000,adv:4500,wMode:"unit",wRate:18,wMin:100,wFlat:"",eRate:7,eMin:0,fees:[{n:"ค่าส่วนกลาง",amt:300},{n:"ค่าอินเทอร์เน็ต",amt:200}],dueDay:5,w0:120,e0:3400,st:"on",note:""},
+    {id:"lsD2",rid:"r302",room:"",name:"คุณกิตติ เรียนดี",phone:"089-222-3333",idno:"",addr:"",start:M(-1)+"-15",end:addDays(t,25),rent:4000,dep:8000,adv:0,wMode:"flat",wRate:0,wMin:0,wFlat:150,eRate:8,eMin:0,fees:[],dueDay:5,w0:"",e0:1200,st:"on",note:""}],B:{}};
+    const L1=LZ.L[0],L2=LZ.L[1];[[-3,128,3520],[-2,137,3655],[-1,145,3790]].forEach(([n,w,e],i)=>{LZ.B[lzKey(L1,M(n))]={w,e};lzIssue(L1,M(n));const B=LZ.B[lzKey(L1,M(n))];B.date=M(n)+"-01";B.due=lzDue(L1,M(n),M(n)+"-01");if(i<2)B.pays=[{d:M(n)+"-04",amt:B.total,m:"โอนเงิน"}]});
+    LZ.B[lzKey(L1,cm)]={w:153,e:3921};LZ.B[lzKey(L2,M(-1))]={e:1290};lzIssue(L2,M(-1));LZ.B[lzKey(L2,M(-1))].due=lzDue(L2,M(-1),M(-1)+"-01");LZ.B[lzKey(L2,cm)]={e:1395};saveLZ()}
   saveRes();saveList();toast("ใส่ข้อมูลตัวอย่างแล้ว ✓");ui.v="home";saveUi();render()}
 
 /* ---------- รับจองออนไลน์ (ลูกค้าจองเองที่ /book/?s=รหัสร้าน) ---------- */
@@ -755,6 +944,7 @@ const hashS=s=>{let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i
 const pubRes=()=>{const O=cfg.online;return res.filter(r=>r.active!==false&&kOn(r.kind)&&!(O.hide||[]).includes(r.id))};
 function buildProfile(){const O=cfg.online,S=seller(),R=pubRes(),ids=R.map(r=>r.id),t=dn(today()),nm=mins(nowT()),busy=[];
   list.forEach(b=>{if(b.st!=="hold"&&b.st!=="conf"&&b.st!=="in")return;(b.lines||[]).forEach(l=>{const r=rOf(l.rid);if(!r||!ids.includes(r.id)||!okLine(l,r))return;const[a,z]=span(l,r,b);if(z<=(r.kind==="hour"?nm:t))return;busy.push([r.id,a,z,num(l.qty)||1])})});
+  loadLZ().L.forEach(L=>{const r=rOf(L.rid);if(!r||!ids.includes(r.id)||!okD(L.start))return;const[a,z]=lzSpan(L);if(z<=t)return;busy.push([r.id,a,Math.min(z,t+400),num(r.qty)||1])});   // ห้องที่มีผู้เช่ารายเดือน = ไม่ว่าง
   return{on:!!O.on,shop:{name:O.name||S.name||"",tel:O.tel||S.tel||S.phone||"",line:O.line||"",addr:O.addr||"",note:O.note||""},
     cfg:{ci:cfg.ci,co:cfg.co,buf:num(cfg.buf),we:cfg.we||[],depPct:num(cfg.depPct),lead:num(O.lead),max:num(O.max)||90,open:O.open||"08:00",close:O.close||"20:00",cancel:cfg.cancel||"",vatIn:!!cfg.vatIn,peaks:(cfg.peaks||[]).filter(x=>okD(x.s)&&okD(x.e))},
     res:R.map(r=>({id:r.id,kind:r.kind,name:r.name,cat:r.cat||"",qty:num(r.qty)||1,unit:r.unit||KIND[r.kind].unit,rate:num(r.rate),rateWe:num(r.rateWe),rate7:num(r.rate7),dep:num(r.dep),note:r.note||""})),busy}}
@@ -823,7 +1013,7 @@ function fromHash(){const h=location.hash;if(!h)return;const m=/(open|new)=([\w-
   if(v&&VIEWS.includes(v[1])){ui.v=v[1];render()}
   if(m&&m[1]==="open")openBk(m[2]);else if(m&&m[1]==="new")newBk({})}
 window.addEventListener("hashchange",fromHash);
-window.addEventListener("storage",e=>{if(!e.key||/^edm_(book_|bill_docs|bill_seller|bill_customers)/.test(e.key)){const keep=cur;load();if(!dlg.open)render();else cur=keep}});
+window.addEventListener("storage",e=>{if(!e.key||e.key===LK)loadLZ();if(!e.key||/^edm_(book_|bill_docs|bill_seller|bill_customers)/.test(e.key)){const keep=cur;load();if(!dlg.open)render();else cur=keep}});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&!dlg.open){load();render()}});
 render();setTimeout(fromHash,0);
 // รับจองออนไลน์: ส่งข้อมูลว่างเมื่อเปิดหน้า แล้วดึงคำขอใหม่ทุก 2 นาทีระหว่างเปิดหน้าไว้
@@ -832,7 +1022,7 @@ setInterval(()=>{if(document.visibilityState==="visible"&&cfg.online.on){publish
 window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.edm==="member"&&cfg.online.on)setTimeout(()=>publish(false).then(()=>pull()),300)});
 })();
 </script>
-<script src="../assets/member.js?v=70" defer></script>
+<script src="../assets/member.js?v=71" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

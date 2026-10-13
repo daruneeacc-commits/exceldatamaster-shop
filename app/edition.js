@@ -21,8 +21,8 @@
     }
     ,book: {
       name: "ระบบจองและให้เช่า", ic: "📅",
-      sub: "จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า เช็กว่างอัตโนมัติ มัดจำ ค่าประกัน แล้วออกบิลต่อได้ทันที",
-      allow: ["bk", "bkcal", "bklist", "bkres", "bkrpt", "bkset"], solo: "bk", start: "bk",
+      sub: "จองห้องพัก ห้องประชุม สนาม อุปกรณ์ให้เช่า และห้องเช่ารายเดือน (สัญญา จดมิเตอร์ บิลน้ำไฟ) เช็กว่างอัตโนมัติ",
+      allow: ["bk", "bkcal", "bklist", "bkres", "bklease", "bkrpt", "bkset"], solo: "bk", start: "bk",
       shopName: function () { try { return ((JSON.parse(localStorage.getItem("edm_book_cfg") || "{}") || {}).shop || {}).name || ""; } catch (e) { return ""; } },
       rpt: {},
       tab: [["bk", "🏠", "หน้าหลัก"], ["bkcal", "📅", "ปฏิทิน"], ["bklist", "📋", "การจอง"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]
@@ -54,8 +54,8 @@
   });
   // ระบบเดี่ยว (คาเฟ่ / จอง): เมนูของระบบนั้นขึ้นเป็นปุ่มหลักบนแถบดำ ไม่มีเมนูของระบบอื่น
   if (E.solo) {
-    var IC = { cf: "☕", cfpos: "🧾", cfbar: "🍹", cford: "📋", cfmenu: "📖", cfinv: "🧂", cfshift: "💰", cfrpt: "📊", cfset: "⚙️", bk: "🏠", bkcal: "📅", bklist: "📋", bkres: "🛏️", bkrpt: "📊", bkset: "⚙️" };
-    var NM = { cf: "ภาพรวม", cfpos: "ขาย", cfbar: "จอบาร์", cford: "ออเดอร์", cfmenu: "เมนู", cfinv: "วัตถุดิบ", cfshift: "กะ", cfrpt: "รายงาน", cfset: "ตั้งค่า", bk: "ภาพรวม", bkcal: "ปฏิทิน", bklist: "การจอง", bkres: "ห้อง / อุปกรณ์", bkrpt: "รายงาน", bkset: "ตั้งค่า" };
+    var IC = { cf: "☕", cfpos: "🧾", cfbar: "🍹", cford: "📋", cfmenu: "📖", cfinv: "🧂", cfshift: "💰", cfrpt: "📊", cfset: "⚙️", bk: "🏠", bkcal: "📅", bklist: "📋", bkres: "🛏️", bklease: "🏢", bkrpt: "📊", bkset: "⚙️" };
+    var NM = { cf: "ภาพรวม", cfpos: "ขาย", cfbar: "จอบาร์", cford: "ออเดอร์", cfmenu: "เมนู", cfinv: "วัตถุดิบ", cfshift: "กะ", cfrpt: "รายงาน", cfset: "ตั้งค่า", bk: "ภาพรวม", bkcal: "ปฏิทิน", bklist: "การจอง", bkres: "ห้อง / อุปกรณ์", bklease: "เช่ารายเดือน", bkrpt: "รายงาน", bkset: "ตั้งค่า" };
     var sg = $('aside .mg[data-g="' + E.solo + '"]'), foot = $("aside .foot");
     if (sg && foot) $$(".mg-b a", sg).forEach(function (a) { setText(a, NM[a.dataset.r] || ""); var i = document.createElement("span"); i.className = "step"; i.textContent = IC[a.dataset.r] || "•"; a.insertBefore(i, a.firstChild); foot.parentNode.insertBefore(a, foot); });
     $$("aside > a[data-r], aside .mg").forEach(function (x) { if (x.tagName === "A" ? E.allow.indexOf(x.dataset.r) < 0 : true) x.remove(); });
