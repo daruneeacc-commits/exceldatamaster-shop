@@ -264,7 +264,15 @@ details.opt{border:1px dashed var(--line);border-radius:12px;padding:8px 12px}de
         <div class="f"><label>เลขผู้เสียภาษี</label><input class="in-" id="cTax" inputmode="numeric" maxlength="13"></div>
         <div class="f"><label>สาขา</label><input class="in-" id="cBranch"></div>
       </div>
-      <div class="f"><label>ผู้ติดต่อ / โทร</label><input class="in-" id="cContact"></div></div></details>
+      <div class="f"><label>ผู้ติดต่อ / โทร</label><input class="in-" id="cContact"></div>
+      <div class="f"><label>ส่วนลดประจำลูกค้านี้ (%)</label><input class="in-" id="cPd" type="number" min="0" max="100" step="0.5" inputmode="decimal" placeholder="เช่น ลูกค้าส่ง 10"><small class="note">ใส่ไว้ครั้งเดียว ครั้งหน้าเลือกสินค้าให้ลูกค้านี้ ราคาจะลดให้อัตโนมัติ (ถ้าเคยขายให้ลูกค้านี้ จะใช้ราคาเดิมที่เคยขาย)</small></div></div></details>
+      <details class="opt" id="intlMore"><summary id="intlSum">🌐 ภาษาอังกฤษ · สกุลเงินต่างประเทศ</summary><div class="optb">
+      <div class="f"><label>ภาษาบนเอกสาร</label><div class="seg" id="langSeg"><button type="button" data-lang="th">ไทย</button><button type="button" data-lang="en">English</button></div></div>
+      <div class="row">
+        <div class="f"><label>สกุลเงิน</label><select class="in-" id="cur"></select></div>
+        <div class="f" id="fxF"><label id="fxLb">อัตราแลกเปลี่ยน (บาท)</label><input class="in-" id="fx" type="number" min="0" step="0.0001" inputmode="decimal" placeholder="เช่น 36.50"></div>
+      </div>
+      <p class="note" id="intlNote">ใส่ราคาเป็นสกุลเงินที่เลือก · ระบบบัญชี/ลูกหนี้จะแปลงเป็นบาทตามอัตรานี้</p></div></details>
     </div>
 
     <div class="card">
@@ -332,6 +340,23 @@ function bahtText(n){
   if(+s===0)return(t||"ศูนย์บาท")+"ถ้วน";return t+words(s)+"สตางค์";
 }
 
+/* ---------- ภาษาอังกฤษ / สกุลเงินต่างประเทศ (เฉพาะเอกสารที่ไม่ใช่ใบกำกับภาษี) ---------- */
+const CUR={THB:["บาท","สตางค์","Thai Baht","Satang"],USD:["ดอลลาร์สหรัฐ","เซนต์","US Dollars","Cents"],EUR:["ยูโร","เซนต์","Euros","Cents"],GBP:["ปอนด์สเตอร์ลิง","เพนนี","Pounds Sterling","Pence"],JPY:["เยน","","Japanese Yen",""],CNY:["หยวน","เฟิน","Chinese Yuan","Fen"],SGD:["ดอลลาร์สิงคโปร์","เซนต์","Singapore Dollars","Cents"],AUD:["ดอลลาร์ออสเตรเลีย","เซนต์","Australian Dollars","Cents"],HKD:["ดอลลาร์ฮ่องกง","เซนต์","Hong Kong Dollars","Cents"],MYR:["ริงกิต","เซน","Malaysian Ringgit","Sen"],LAK:["กีบ","","Lao Kip",""],MMK:["จ๊าด","","Myanmar Kyat",""]};
+const curOf=d=>d&&d.cur&&CUR[d.cur]&&d.cur!=="THB"?d.cur:"THB";
+const fxOf=d=>curOf(d)!=="THB"&&num(d.fx)>0?num(d.fx):1;
+const enOf=d=>d&&d.lang==="en"&&!isTax(d);
+/* ยอดเป็นบาท (ใช้กับบัญชี ลูกหนี้ แดชบอร์ด) */
+function calcTHB(d){const c=calc(d),f=fxOf(d);if(f===1)return c;const o=Object.assign({},c);["sub","disc","after","base","vat","total","wht","net"].forEach(k=>o[k]=r2(c[k]*f));return o}
+function curText(n,cur){const C=CUR[cur]||CUR.THB;if(cur==="THB")return bahtText(n);let t=bahtText(n).replace(/สตางค์$/,"").replace(/ถ้วน$/,"");const [b,s0]=r2(Math.abs(n)).toFixed(2).split(".");
+  const i=t.indexOf("บาท");const bw=i>=0?t.slice(0,i):"",sw=i>=0?t.slice(i+3):t;return(bw||"ศูนย์")+C[0]+(+s0&&C[1]?sw+C[1]:"ถ้วน")}
+function enWords(n){n=Math.floor(Math.abs(n));if(!n)return"Zero";const A=["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"],T=["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+  const h=x=>{let o=[];if(x>=100){o.push(A[Math.floor(x/100)]+" Hundred");x%=100}if(x>=20){o.push(T[Math.floor(x/10)]+(x%10?"-"+A[x%10]:""))}else if(x)o.push(A[x]);return o.join(" ")};
+  const S=["","Thousand","Million","Billion","Trillion"];let out=[],i=0;while(n>0){const g=n%1000;if(g)out.unshift(h(g)+(S[i]?" "+S[i]:""));n=Math.floor(n/1000);i++}return out.join(" ")}
+function enAmount(n,cur){const C=CUR[cur]||CUR.THB;const[b,s0]=r2(Math.abs(n)).toFixed(2).split(".");return enWords(+b)+" "+C[2]+(+s0&&C[3]?" and "+enWords(+s0)+" "+C[3]:" Only")}
+const enDate=d=>{if(!d)return"";const x=new Date(d+"T00:00:00");return x.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})};
+const SIGN_EN={"ผู้เสนอราคา":"Prepared by","ผู้อนุมัติสั่งซื้อ":"Accepted by","ผู้วางบิล":"Issued by","ผู้รับวางบิล":"Received by","ผู้รับเงิน":"Received by (Collector)","ผู้จ่ายเงิน":"Paid by","ผู้ส่งสินค้า":"Delivered by","ผู้รับสินค้า":"Received by"};
+const DUE_EN={"ยืนราคาถึง":"Valid until","ครบกำหนดชำระ":"Due date","กำหนดชำระ":"Payment due"};
+const METH_EN={"เงินสด":"Cash","โอนเงิน":"Bank transfer","พร้อมเพย์":"PromptPay","บัตรเครดิต":"Credit card","เช็ค":"Cheque"};
 /* ---------- document types ---------- */
 const TYPES={
   QT:{name:"ใบเสนอราคา",en:"QUOTATION",due:"ยืนราคาถึง",sign:["ผู้เสนอราคา","ผู้อนุมัติสั่งซื้อ"]},
@@ -368,7 +393,7 @@ function accList(){const A=LS.get("edm_acc",null);return A&&A.accounts&&A.accoun
 function syncPay(d,remove){const t=termOf(d);let A=LS.get("edm_acc",null);
   if(!A){if(remove||t!=="cash")return;A={accounts:[{id:"cash",name:"เงินสด",type:"cash",open:0},{id:"bank1",name:"บัญชีธนาคาร",type:"bank",open:0}],pay:[],pur:[],cash:[],cnt:{}}}
   A.pay=(A.pay||[]).filter(p=>!(p.src==="bill"&&p.docId===d.id));
-  if(!remove&&!d.void&&t==="cash"){const c=calc(d);if(c.total>0)A.pay.push({id:"yb"+d.id,dir:"in",docId:d.id,date:d.date,amount:c.net,wht:c.wht,accId:d.payAcc||"cash",method:d.payMeth||"เงินสด",note:"ขายเงินสด",src:"bill"})}
+  if(!remove&&!d.void&&t==="cash"){const c=calcTHB(d);if(c.total>0)A.pay.push({id:"yb"+d.id,dir:"in",docId:d.id,date:d.date,amount:c.net,wht:c.wht,accId:d.payAcc||"cash",method:d.payMeth||"เงินสด",note:"ขายเงินสด",src:"bill"})}
   LS.set("edm_acc",A)}
 
 /* ---------- state ---------- */
@@ -413,8 +438,20 @@ function renderTypes(){
   {const need=isTax(doc)&&vatOf(doc),c=doc.cust||{},has=!!(c.addr||c.tax||c.branch||c.contact),tk=doc.id+doc.type;if(renderTypes.k!==tk){$("#custMore").open=need||has;renderTypes.k=tk}else if(need||has)$("#custMore").open=true;
    $("#custSum").innerHTML=need?"ที่อยู่ · เลขผู้เสียภาษี <b>(ใบกำกับภาษีต้องมีที่อยู่ผู้ซื้อ)</b>":has?"ที่อยู่ · เลขผู้เสียภาษี · ผู้ติดต่อ <b>✓ มีข้อมูล</b>":"ที่อยู่ · เลขผู้เสียภาษี · ผู้ติดต่อ (ไม่บังคับ)";
    const t2=num(doc.billDisc)||+doc.wht||doc.notes;if(t2)$("#taxMore").open=true;$("#taxSum").innerHTML="ส่วนลดท้ายบิล · หัก ณ ที่จ่าย · หมายเหตุ"+(t2?" <b>✓ มีข้อมูล</b>":" (ถ้ามี)")}
+  renderIntl();
   renderTerm();
 }
+/* ใบกำกับภาษีต้องเป็นภาษาไทยและเงินบาท: แปลงราคาเป็นบาทให้ */
+function renderIntl(){const tax=isTax(doc);
+  if(tax&&(doc.lang||(doc.cur&&doc.cur!=="THB"))&&!isStored(doc)){const f=fxOf(doc);if(f!==1){doc.items.forEach(it=>{it.p=r2(num(it.p)*f);if(num(it.disc))it.disc=r2(num(it.disc)*f)});if(num(doc.billDisc))doc.billDisc=r2(num(doc.billDisc)*f)}
+    const was=doc.cur;delete doc.lang;delete doc.cur;delete doc.fx;if(was&&was!=="THB")setTimeout(()=>{fillForm();renderItems();update();toast("ใบกำกับภาษีต้องเป็นภาษาไทย/เงินบาท · แปลงราคาเป็นบาทให้แล้ว")},0)}
+  const cur=curOf(doc),en=doc.lang==="en";
+  $("#cur").innerHTML=Object.keys(CUR).map(k=>`<option value="${k}">${k} · ${CUR[k][0]}</option>`).join("");$("#cur").value=cur;$("#cur").disabled=tax;
+  $$("#langSeg button").forEach(b=>{b.classList.toggle("on",b.dataset.lang===(en?"en":"th"));b.disabled=tax});
+  $("#fxF").hidden=cur==="THB";$("#fxLb").textContent="อัตราแลกเปลี่ยน: 1 "+cur+" = ? บาท";$("#fx").value=doc.fx||"";
+  $("#intlNote").textContent=tax?"ใบกำกับภาษีต้องเป็นภาษาไทยและเงินบาท (ประมวลรัษฎากร) · ใช้ภาษาอังกฤษ/สกุลเงินอื่นได้กับใบเสนอราคา ใบแจ้งหนี้ ใบวางบิล ใบเสร็จ":cur==="THB"?"เลือกสกุลเงินอื่นเมื่อลูกค้าต่างประเทศจ่ายเป็นเงินตราต่างประเทศ":"ใส่ราคาเป็น "+cur+" · ระบบบัญชี/ลูกหนี้แปลงเป็นบาทตามอัตรานี้"+(num(doc.fx)>0?"":" (ต้องใส่อัตราก่อนบันทึก)");
+  const on=en||cur!=="THB";if(on&&!tax)$("#intlMore").open=true;
+  $("#intlSum").innerHTML="🌐 ภาษาอังกฤษ · สกุลเงินต่างประเทศ"+(on&&!tax?` <b>✓ ${en?"English":"ไทย"} · ${cur}</b>`:tax?" (ไม่ใช้กับใบกำกับภาษี)":" (ถ้ามี)")}
 function renderTerm(){const t=termOf(doc);$("#termBox").hidden=!t;if(!t)return;
   $$("#termSeg button").forEach(b=>b.classList.toggle("on",b.dataset.term===t));
   $("#cashRow").hidden=t!=="cash";$("#creditRow").hidden=t!=="credit";
@@ -446,8 +483,8 @@ $("#adjRestock").onchange=e=>{doc.restock=e.target.checked;update()};
 /* ---------- เอกสารที่บันทึกแล้ว: แถบบอกสถานะ ล็อกใบกำกับภาษี ---------- */
 const isStored=d=>!!d.saved&&LS.get(K.docs,[]).some(x=>x.id===d.id);
 const locked=()=>isStored(doc)&&(isTax(doc)||!!doc.void);
-function payState(d){const docs=LS.get(K.docs,[]),A=LS.get("edm_acc",null),total=r2(calc(d).total);let got=0;(A&&A.pay||[]).forEach(p=>{if(p.dir==="in"&&p.docId===d.id)got+=num(p.amount)+num(p.wht)});
-  docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&!x.void&&x.ref===d.no&&!(A&&A.pay||[]).some(p=>p.rcDocId===x.id))got+=calc(x).total});return{total,got:r2(got),left:r2(Math.max(0,total-got))}}
+function payState(d){const docs=LS.get(K.docs,[]),A=LS.get("edm_acc",null),total=r2(calcTHB(d).total);let got=0;(A&&A.pay||[]).forEach(p=>{if(p.dir==="in"&&p.docId===d.id)got+=num(p.amount)+num(p.wht)});
+  docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&!x.void&&x.ref===d.no&&!(A&&A.pay||[]).some(p=>p.rcDocId===x.id))got+=calcTHB(x).total});return{total,got:r2(got),left:r2(Math.max(0,total-got))}}
 const inApp=()=>{try{return window.top!==window.self}catch(e){return false}};
 function goRecv(d){if(inApp()){parent.postMessage({edm:"go",tool:"account",hash:"v=ar&recv="+d.id},location.origin);return}location.href="/app/?ed=bill#/ar"}
 /* แผงขั้นต่อไป: เสนอราคา → ออกบิล → รับเงิน กดต่อได้ทันที */
@@ -514,6 +551,7 @@ function fillForm(){
   $$("#vatSeg button").forEach(b=>b.classList.toggle("on",b.dataset.vat===doc.vat));
   $("#docNo").value=doc.no;$("#docDate").value=doc.date;$("#docDue").value=doc.due||"";$("#docRef").value=doc.ref||"";
   ["name","addr","tax","branch","contact"].forEach(k=>$("#c"+k[0].toUpperCase()+k.slice(1)).value=doc.cust[k]||"");
+  $("#cPd").value=doc.cust.pd||"";
   $("#billDisc").value=doc.billDisc||"";$("#wht").value=String(doc.wht||0);$("#notes").value=doc.notes||"";
   $("#sName").value=seller.name;$("#sAddr").value=seller.addr;$("#sTax").value=seller.tax;$("#sBranch").value=seller.branch;$("#sPhone").value=seller.phone;$("#sContact").value=seller.contact;$("#sVat").checked=!!seller.vat;$("#sPay").value=seller.pay;$("#sPP").value=seller.pp||"";$("#sColor").value=seller.color||"#127A4B";
   $("#logoPv").style.backgroundImage=seller.logo?`url(${seller.logo})`:"none";
@@ -523,7 +561,8 @@ function renderTotals(c){
   $("#discWarn").innerHTML=c.discOver?`<div class="warn">ส่วนลดท้ายบิลเกินยอดรวม ใช้ได้สูงสุด ${fmt(c.disc)} บาท</div>`:"";
   $("#totals").innerHTML=`<span>รวมเป็นเงิน</span><span>${fmt(c.sub)}</span>`+(c.disc?`<span>ส่วนลด</span><span>-${fmt(c.disc)}</span><span>ยอดหลังหักส่วนลด</span><span>${fmt(c.after)}</span>`:"")+
     (doc.vat!=="none"?`<span>${doc.vat==="in"?"มูลค่าก่อน VAT":"ภาษีมูลค่าเพิ่ม 7%"}</span><span>${fmt(doc.vat==="in"?c.base:c.vat)}</span>`+(doc.vat==="in"?`<span>ภาษีมูลค่าเพิ่ม 7%</span><span>${fmt(c.vat)}</span>`:""):"")+
-    `<span class="big">ยอดรวมทั้งสิ้น</span><span class="big">${fmt(c.total)}</span>`+(c.wht?`<span>หัก ณ ที่จ่าย ${doc.wht}%</span><span>-${fmt(c.wht)}</span><span class="big">ยอดชำระสุทธิ</span><span class="big">${fmt(c.net)}</span>`:"");
+    `<span class="big">ยอดรวมทั้งสิ้น${curOf(doc)!=="THB"?" ("+curOf(doc)+")":""}</span><span class="big">${fmt(c.total)}</span>`+(c.wht?`<span>หัก ณ ที่จ่าย ${doc.wht}%</span><span>-${fmt(c.wht)}</span><span class="big">ยอดชำระสุทธิ</span><span class="big">${fmt(c.net)}</span>`:"")+
+    (curOf(doc)!=="THB"?`<span>ยอดสุทธิเป็นเงินบาท</span><span>${num(doc.fx)>0?"฿"+fmt(calcTHB(doc).net):"ใส่อัตราแลกเปลี่ยน"}</span>`:"");
 }
 
 /* ---------- render paper ---------- */
@@ -535,44 +574,49 @@ function ppPayload(target,amount){const f=(id,v)=>id+("0"+v.length).slice(-2)+v,
   return body+("0000"+c.toString(16).toUpperCase()).slice(-4)}
 function qrSvg(t){try{const q=qrcode(0,"M");q.addData(t);q.make();return q.createSvgTag({cellSize:4,margin:0,scalable:true})}catch(e){return""}}
 // ยอดที่ลูกค้าต้องจ่ายตามเอกสารนี้ (0 = ไม่ต้องแสดง QR)
-function dueAmt(c){if(doc.void||ADJ(doc.type)||doc.type==="QT"||doc.type==="RC"||doc.type==="TX"||termOf(doc)==="cash")return 0;return r2(doc.type==="BN"?c.lines.reduce((a,l)=>a+num(l.amt),0):c.net)}
+function dueAmt(c){if(curOf(doc)!=="THB"||doc.void||ADJ(doc.type)||doc.type==="QT"||doc.type==="RC"||doc.type==="TX"||termOf(doc)==="cash")return 0;return r2(doc.type==="BN"?c.lines.reduce((a,l)=>a+num(l.amt),0):c.net)}
 /* ---------- ประวัติการทำงานกับเอกสาร (ใครทำอะไร เมื่อไร) ---------- */
 function audit(act,d,note){try{const L=LS.get("edm_audit",[])||[];const c=calc(d);L.unshift({at:Date.now(),act,type:d.type,no:d.no,cust:d.cust&&d.cust.name||"",total:r2(c.total),note:note||"",by:localStorage.getItem("edm_who")||""});LS.set("edm_audit",L.slice(0,3000))}catch(e){}}
 // ขอ PIN เจ้าของร้านก่อนยกเลิก/ลดหนี้/ลบ (ถ้าเปิดใช้ที่หน้า สำรอง/กู้คืนข้อมูล)
 async function pinOk(why){const cfg=LS.get("edm_audit_cfg",{})||{};if(!cfg.pin)return true;let L=null;try{L=window.top.EDM_LOCK}catch(e){}L=L||window.EDM_LOCK;if(!L||!L.check||!L.get||!L.get())return true;
   const v=prompt("🔒 "+why+"\nใส่ PIN เจ้าของร้าน");if(v==null)return false;const ok=await L.check(v.trim());if(!ok)alert("PIN ไม่ถูกต้อง");return ok}
 async function shareDoc(){if(!locked()&&!isStored(doc)&&!save(true))return;const c=calc(doc),S=sOf(doc),due=dueAmt(c);
-  const t=[`เรียน ${doc.cust.name||"ลูกค้า"}`,`${tName(doc.type,doc)} เลขที่ ${doc.no} ลงวันที่ ${thDate(doc.date)}`,`ยอดรวม ${fmt(c.total)} บาท`+(c.wht?` · หัก ณ ที่จ่าย ${fmt(c.wht)} · ชำระสุทธิ ${fmt(c.net)} บาท`:""),
+  const t=[`เรียน ${doc.cust.name||"ลูกค้า"}`,`${tName(doc.type,doc)} เลขที่ ${doc.no} ลงวันที่ ${thDate(doc.date)}`,`ยอดรวม ${fmt(c.total)} ${curOf(doc)==="THB"?"บาท":curOf(doc)}`+(c.wht?` · หัก ณ ที่จ่าย ${fmt(c.wht)} · ชำระสุทธิ ${fmt(c.net)} ${curOf(doc)==="THB"?"บาท":curOf(doc)}`:""),
     doc.due&&due?`ครบกำหนดชำระ ${thDate(doc.due)}`:"",due&&seller.pp?`ชำระผ่านพร้อมเพย์ ${seller.pp}`:"",due&&seller.pay?`ช่องทางชำระ: ${oneLine(seller.pay)}`:"",`ขอบคุณค่ะ · ${S.name||""}`,"(แนบไฟล์ PDF: กดพิมพ์ แล้วเลือกบันทึกเป็น PDF)"].filter(Boolean).join("\n");
   audit("ส่งให้ลูกค้า",doc);
   if(navigator.share){try{await navigator.share({title:doc.no,text:t});return}catch(e){if(e&&e.name==="AbortError")return}}
   try{await navigator.clipboard.writeText(t)}catch(e){}window.open("https://line.me/R/share?text="+encodeURIComponent(t),"_blank","noopener");toast("คัดลอกข้อความแล้ว · เปิด LINE ให้เลือกผู้รับ")}
 function renderPaper(c){
   const S=sOf(doc),tm=termOf(doc),T=Object.assign({},TYPES[doc.type],doc.type==="IT"&&tm==="cash"?{due:"",sign:["ผู้รับเงิน","ผู้รับสินค้า"]}:{}),g=doc.mode==="goods",col=seller.color||"#127A4B",adj=ADJ(doc.type);
+  const EN=enOf(doc),tt=(th,en)=>EN?en:th,dt=EN?enDate:thDate,cur=curOf(doc),fc=cur!=="THB",cu=EN?cur:fc?cur:"บาท",amtH=tt("จำนวนเงิน","Amount")+(fc?" ("+cur+")":"");
   const cdays=tm==="credit"&&doc.due?Math.round((new Date(doc.due+"T00:00:00")-new Date(doc.date+"T00:00:00"))/864e5):0;
   const p=$("#paper");p.style.setProperty("--paper-accent",col);
   const bn=doc.type==="BN",o=adj?(doc.orig||(()=>{const x=LS.get(K.docs,[]).find(y=>y.id===doc.refId);return x?{no:x.no,date:x.date,val:adjOrigVal(x,doc.id)}:{no:doc.ref,date:"",val:0}})()):null;
-  const rows=bn?(c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}</td><td class="c">${l.idate?thDate(l.idate):"-"}</td><td class="c">${l.idue?thDate(l.idue):"-"}</td><td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="5" style="color:#999;text-align:center;padding:18px">ยังไม่มีรายการ</td></tr>`):c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}${l.brand?`<div class="p-brand">แบรนด์ ${esc(l.brand)}</div>`:""}</td><td class="r">${(+num(l.q)).toLocaleString("th-TH")}${g&&l.u?" "+esc(l.u):""}</td><td class="r">${fmt(num(l.p))}</td>${g?`<td class="r">${num(l.disc)?fmt(num(l.disc)):"-"}</td>`:""}<td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="${g?6:5}" style="color:#999;text-align:center;padding:18px">ยังไม่มีรายการ</td></tr>`;
+  const none=tt("ยังไม่มีรายการ","No items");
+  const rows=bn?(c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}</td><td class="c">${l.idate?dt(l.idate):"-"}</td><td class="c">${l.idue?dt(l.idue):"-"}</td><td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="5" style="color:#999;text-align:center;padding:18px">${none}</td></tr>`):c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}${l.brand?`<div class="p-brand">${tt("แบรนด์","Brand")} ${esc(l.brand)}</div>`:""}</td><td class="r">${(+num(l.q)).toLocaleString("th-TH")}${g&&l.u?" "+esc(l.u):""}</td><td class="r">${fmt(num(l.p))}</td>${g?`<td class="r">${num(l.disc)?fmt(num(l.disc)):"-"}</td>`:""}<td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="${g?6:5}" style="color:#999;text-align:center;padding:18px">${none}</td></tr>`;
+  const taxLb=tt("เลขประจำตัวผู้เสียภาษี","Tax ID"),meth=doc.payMeth||"เงินสด";
+  const words=EN?enAmount(c.total,cur):fc?curText(c.total,cur):bahtText(c.total);
+  const fxLine=fc&&num(doc.fx)>0?`<div style="font-weight:400;font-size:8.5pt;color:#666">${tt("อัตราแลกเปลี่ยน","Exchange rate")} 1 ${cur} = ${(+num(doc.fx)).toLocaleString("en-US",{maximumFractionDigits:4})} ${tt("บาท","THB")} · ${tt("เทียบเท่า","approx.")} ${fmt(calcTHB(doc).total)} ${tt("บาท","THB")}</div>`:"";
   p.innerHTML=`<div class="p-head">
-    <div class="p-brand">${seller.logo?`<img src="${seller.logo}" alt="" onload="logoShape(this)">`:""}<b class="p-name" data-fit="15,9,2">${esc(S.name||"ชื่อกิจการของคุณ")}</b></div>
+    <div class="p-brand">${seller.logo?`<img src="${seller.logo}" alt="" onload="logoShape(this)">`:""}<b class="p-name" data-fit="15,9,2">${esc(S.name||tt("ชื่อกิจการของคุณ","Your business name"))}</b></div>
     <div class="p-row"><div class="p-seller">${S.addr?`<div class="p-addr" data-fit="9,7.5,3">${esc(oneLine(S.addr))}</div>`:""}
-      ${S.tax?`<div class="p-line" data-fit="9,7,1">เลขประจำตัวผู้เสียภาษี ${esc(S.tax)}${S.branch?" ("+esc(S.branch)+")":""}</div>`:""}${S.phone?`<div class="p-line" data-fit="9,7,1">โทร ${esc(S.phone)}</div>`:""}${S.contact?`<div class="p-line" data-fit="9,7,1">${esc(S.contact)}</div>`:""}</div>
-    <div class="p-title"><h1 data-fit="17,11,1">${adj?(doc.type==="CN"?"ใบลดหนี้ / Credit Note":"ใบเพิ่มหนี้ / Debit Note"):tName(doc.type,doc)}</h1><div class="sub">${adj?"ใบกำกับภาษี":tEn(doc.type,doc)}</div>${T.tax&&S.vat?`<span class="copy">ต้นฉบับ</span>`:""}</div></div></div>
+      ${S.tax?`<div class="p-line" data-fit="9,7,1">${taxLb} ${esc(S.tax)}${S.branch?" ("+esc(EN&&S.branch==="สำนักงานใหญ่"?"Head office":S.branch)+")":""}</div>`:""}${S.phone?`<div class="p-line" data-fit="9,7,1">${tt("โทร","Tel.")} ${esc(S.phone)}</div>`:""}${S.contact?`<div class="p-line" data-fit="9,7,1">${esc(S.contact)}</div>`:""}</div>
+    <div class="p-title"><h1 data-fit="17,11,1">${adj?(doc.type==="CN"?"ใบลดหนี้ / Credit Note":"ใบเพิ่มหนี้ / Debit Note"):EN?tEn(doc.type,doc):tName(doc.type,doc)}</h1><div class="sub">${adj?"ใบกำกับภาษี":EN?tName(doc.type,doc):tEn(doc.type,doc)}</div>${T.tax&&S.vat?`<span class="copy">ต้นฉบับ</span>`:""}</div></div></div>
   <div class="p-meta">
-    <div class="p-box"><div class="lb">${doc.type==="QT"?"เสนอราคาให้":"ลูกค้า"}</div><b class="p-cname" data-fit="11,8.5,2">${esc(doc.cust.name||"-")}</b>${doc.cust.addr?`<div class="p-addr" data-fit="9.5,7.5,3">${esc(oneLine(doc.cust.addr))}</div>`:""}
-      ${doc.cust.tax?`<div class="p-line" data-fit="9,7,1">เลขประจำตัวผู้เสียภาษี ${esc(doc.cust.tax)}${doc.cust.branch?" ("+esc(doc.cust.branch)+")":""}</div>`:""}${doc.cust.contact?`<div class="p-line" data-fit="9,7,1">${esc(doc.cust.contact)}</div>`:""}</div>
-    <div class="p-box p-kv"><span>เลขที่</span><b>${esc(doc.no)}</b><span>วันที่</span><span>${thDate(doc.date)}</span>${tm==="cash"?`<span>การชำระ</span><span>ขายเงินสด · ${esc(doc.payMeth||"เงินสด")}</span>`:cdays>0?`<span>เงื่อนไข</span><span>ขายเชื่อ ${cdays} วัน</span>`:""}${T.due&&doc.due?`<span>${T.due}</span><span>${thDate(doc.due)}</span>`:""}${doc.ref&&!adj?`<span>อ้างอิง</span><span>${esc(doc.ref)}</span>`:""}</div></div>
+    <div class="p-box"><div class="lb">${doc.type==="QT"?tt("เสนอราคาให้","Quotation to"):tt("ลูกค้า","Bill to")}</div><b class="p-cname" data-fit="11,8.5,2">${esc(doc.cust.name||"-")}</b>${doc.cust.addr?`<div class="p-addr" data-fit="9.5,7.5,3">${esc(oneLine(doc.cust.addr))}</div>`:""}
+      ${doc.cust.tax?`<div class="p-line" data-fit="9,7,1">${taxLb} ${esc(doc.cust.tax)}${doc.cust.branch?" ("+esc(doc.cust.branch)+")":""}</div>`:""}${doc.cust.contact?`<div class="p-line" data-fit="9,7,1">${esc(doc.cust.contact)}</div>`:""}</div>
+    <div class="p-box p-kv"><span>${tt("เลขที่","No.")}</span><b>${esc(doc.no)}</b><span>${tt("วันที่","Date")}</span><span>${dt(doc.date)}</span>${tm==="cash"?`<span>${tt("การชำระ","Payment")}</span><span>${EN?"Cash sale · "+esc(METH_EN[meth]||meth):"ขายเงินสด · "+esc(meth)}</span>`:cdays>0?`<span>${tt("เงื่อนไข","Terms")}</span><span>${EN?"Net "+cdays+" days":"ขายเชื่อ "+cdays+" วัน"}</span>`:""}${T.due&&doc.due?`<span>${EN?DUE_EN[T.due]||T.due:T.due}</span><span>${dt(doc.due)}</span>`:""}${doc.ref&&!adj?`<span>${tt("อ้างอิง","Reference")}</span><span>${esc(doc.ref)}</span>`:""}${fc&&!EN?`<span>สกุลเงิน</span><span>${cur} · ${CUR[cur][0]}</span>`:fc?`<span>Currency</span><span>${cur}</span>`:""}</div></div>
   ${adj?`<div class="p-box" style="margin-top:3mm;font-size:9.5pt">อ้างถึงใบกำกับภาษีเลขที่ <b>${esc(doc.ref||"-")}</b> ลงวันที่ ${o.date?thDate(o.date):"-"}<br>เหตุผล: ${esc(doc.reason||"-")}</div>`:""}
-  <table class="p-items"><thead><tr><th class="c" style="width:34px">#</th>${bn?`<th>เลขที่ใบแจ้งหนี้ / รายการ</th><th class="c">ลงวันที่</th><th class="c">ครบกำหนด</th><th class="r">จำนวนเงิน</th>`:`<th>${g?"รายการสินค้า":"รายการบริการ"}</th><th class="r">จำนวน</th><th class="r">ราคา/หน่วย</th>${g?`<th class="r">ส่วนลด</th>`:""}<th class="r">จำนวนเงิน</th>`}</tr></thead><tbody>${rows}</tbody></table>
-  <div class="p-sum"><div class="p-words">(${bahtText(c.total)})${c.wht?`<div style="font-weight:400;font-size:8.5pt;color:#666">ยอดรวมทั้งสิ้น · ยอดชำระสุทธิหลังหัก ณ ที่จ่าย ${fmt(c.net)} บาท</div>`:""}${tm==="cash"&&doc.type==="IT"?`<div class="p-paid">✓ ได้รับเงินถูกต้องแล้ว</div>`:""}</div>
-    ${adj?`<div class="p-tot"><span>มูลค่าตามใบกำกับภาษีเดิม</span><span>${fmt(o.val)}</span><span>มูลค่าที่ถูกต้อง</span><span>${fmt(o.val+(doc.type==="CN"?-c.base:c.base))}</span><span>ผลต่าง</span><span>${fmt(c.base)}</span><span>ภาษีมูลค่าเพิ่ม 7%</span><span>${fmt(c.vat)}</span><span class="grand">รวม</span><span class="grand">${fmt(c.total)}</span></div></div>`:`<div class="p-tot"><span>รวมเป็นเงิน</span><span>${fmt(c.sub)}</span>${c.disc?`<span>ส่วนลด</span><span>-${fmt(c.disc)}</span><span>หลังหักส่วนลด</span><span>${fmt(c.after)}</span>`:""}
-      ${doc.vat!=="none"?`<span>มูลค่าสินค้า/บริการ</span><span>${fmt(c.base)}</span><span>ภาษีมูลค่าเพิ่ม 7%</span><span>${fmt(c.vat)}</span>`:""}
-      <span class="grand">ยอดรวมทั้งสิ้น</span><span class="grand">${fmt(c.total)}</span>
-      ${c.wht?`<span>หัก ณ ที่จ่าย ${doc.wht}%</span><span>-${fmt(c.wht)}</span><span style="font-weight:700">ยอดชำระสุทธิ</span><span style="font-weight:700">${fmt(c.net)}</span>`:""}</div></div>`}
-  ${doc.notes||(seller.pay&&tm!=="cash"&&doc.type!=="RC"&&doc.type!=="TX"&&!adj)?`<div class="p-notes">${doc.notes?`<b>หมายเหตุ</b>\n${esc(doc.notes)}\n`:""}${seller.pay&&tm!=="cash"&&doc.type!=="RC"&&doc.type!=="TX"&&!adj?`<b>ช่องทางชำระเงิน</b>\n${esc(seller.pay)}`:""}</div>`:""}
-  ${seller.pp&&dueAmt(c)>0&&ppPayload(seller.pp,dueAmt(c))?`<div class="p-pp"><div class="p-qr">${qrSvg(ppPayload(seller.pp,dueAmt(c)))}</div><div><b>สแกนจ่ายด้วยพร้อมเพย์</b><br>ยอดชำระ ${fmt(dueAmt(c))} บาท<br>พร้อมเพย์ ${esc(seller.pp)}${S.name?"<br>"+esc(S.name):""}</div></div>`:""}
-  <div class="p-sign"><div><div class="ln"></div>${T.sign[1]}<br>วันที่ ____/____/______</div><div><div class="ln"></div>${T.sign[0]}<br>วันที่ ____/____/______</div></div>
-  <div class="p-foot edm-brand">สร้างด้วย exceldatamaster.com</div>${doc.void?`<div class="p-void">ยกเลิก<small>${esc(doc.void.reason||"")}</small></div>`:""}`;
+  <table class="p-items"><thead><tr><th class="c" style="width:34px">#</th>${bn?`<th>${tt("เลขที่ใบแจ้งหนี้ / รายการ","Invoice no. / Description")}</th><th class="c">${tt("ลงวันที่","Date")}</th><th class="c">${tt("ครบกำหนด","Due")}</th><th class="r">${amtH}</th>`:`<th>${EN?"Description":g?"รายการสินค้า":"รายการบริการ"}</th><th class="r">${tt("จำนวน","Qty")}</th><th class="r">${tt("ราคา/หน่วย","Unit price")}</th>${g?`<th class="r">${tt("ส่วนลด","Discount")}</th>`:""}<th class="r">${amtH}</th>`}</tr></thead><tbody>${rows}</tbody></table>
+  <div class="p-sum"><div class="p-words">(${words})${c.wht?`<div style="font-weight:400;font-size:8.5pt;color:#666">${EN?"Grand total · Net payable after withholding tax "+fmt(c.net)+" "+cu:"ยอดรวมทั้งสิ้น · ยอดชำระสุทธิหลังหัก ณ ที่จ่าย "+fmt(c.net)+" "+cu}</div>`:""}${fxLine}${tm==="cash"&&doc.type==="IT"?`<div class="p-paid">${tt("✓ ได้รับเงินถูกต้องแล้ว","✓ Paid in full")}</div>`:""}</div>
+    ${adj?`<div class="p-tot"><span>มูลค่าตามใบกำกับภาษีเดิม</span><span>${fmt(o.val)}</span><span>มูลค่าที่ถูกต้อง</span><span>${fmt(o.val+(doc.type==="CN"?-c.base:c.base))}</span><span>ผลต่าง</span><span>${fmt(c.base)}</span><span>ภาษีมูลค่าเพิ่ม 7%</span><span>${fmt(c.vat)}</span><span class="grand">รวม</span><span class="grand">${fmt(c.total)}</span></div></div>`:`<div class="p-tot"><span>${tt("รวมเป็นเงิน","Subtotal")}</span><span>${fmt(c.sub)}</span>${c.disc?`<span>${tt("ส่วนลด","Discount")}</span><span>-${fmt(c.disc)}</span><span>${tt("หลังหักส่วนลด","After discount")}</span><span>${fmt(c.after)}</span>`:""}
+      ${doc.vat!=="none"?`<span>${tt("มูลค่าสินค้า/บริการ","Value before VAT")}</span><span>${fmt(c.base)}</span><span>${tt("ภาษีมูลค่าเพิ่ม 7%","VAT 7%")}</span><span>${fmt(c.vat)}</span>`:""}
+      <span class="grand">${tt("ยอดรวมทั้งสิ้น","Grand total")}${fc?" ("+cur+")":""}</span><span class="grand">${fmt(c.total)}</span>
+      ${c.wht?`<span>${tt("หัก ณ ที่จ่าย","Withholding tax")} ${doc.wht}%</span><span>-${fmt(c.wht)}</span><span style="font-weight:700">${tt("ยอดชำระสุทธิ","Net payable")}</span><span style="font-weight:700">${fmt(c.net)}</span>`:""}</div></div>`}
+  ${doc.notes||(seller.pay&&tm!=="cash"&&doc.type!=="RC"&&doc.type!=="TX"&&!adj)?`<div class="p-notes">${doc.notes?`<b>${tt("หมายเหตุ","Remarks")}</b>\n${esc(doc.notes)}\n`:""}${seller.pay&&tm!=="cash"&&doc.type!=="RC"&&doc.type!=="TX"&&!adj?`<b>${tt("ช่องทางชำระเงิน","Payment details")}</b>\n${esc(seller.pay)}`:""}</div>`:""}
+  ${seller.pp&&dueAmt(c)>0&&ppPayload(seller.pp,dueAmt(c))?`<div class="p-pp"><div class="p-qr">${qrSvg(ppPayload(seller.pp,dueAmt(c)))}</div><div><b>${tt("สแกนจ่ายด้วยพร้อมเพย์","Scan to pay (PromptPay)")}</b><br>${tt("ยอดชำระ","Amount")} ${fmt(dueAmt(c))} ${tt("บาท","THB")}<br>${tt("พร้อมเพย์","PromptPay")} ${esc(seller.pp)}${S.name?"<br>"+esc(S.name):""}</div></div>`:""}
+  <div class="p-sign"><div><div class="ln"></div>${EN?SIGN_EN[T.sign[1]]||T.sign[1]:T.sign[1]}<br>${tt("วันที่","Date")} ____/____/______</div><div><div class="ln"></div>${EN?SIGN_EN[T.sign[0]]||T.sign[0]:T.sign[0]}<br>${tt("วันที่","Date")} ____/____/______</div></div>
+  <div class="p-foot edm-brand">${tt("สร้างด้วย","Made with")} exceldatamaster.com</div>${doc.void?`<div class="p-void">${tt("ยกเลิก","VOID")}<small>${esc(doc.void.reason||"")}</small></div>`:""}`;
   fitPaper();
 }
 // ย่อตัวอักษรที่ยาวเกินจำนวนบรรทัดที่กำหนด (data-fit="ขนาดปกติ,ขนาดเล็กสุด,จำนวนบรรทัด" หน่วย pt)
@@ -593,14 +637,21 @@ function renderAll(){renderTypes();fillForm();renderItems();renderBanner();updat
 /* ---------- พิมพ์ชื่อแล้วขึ้นรายการให้เลือก: ลูกค้า / สินค้า / บริการ ---------- */
 function bindSuggest(){if(!window.edmSuggest)return;
   edmSuggest($("#cName"),{title:"ลูกค้าที่บันทึกไว้",source:q=>edmMatch(q,LS.get(K.cust,[]),["name","tax","contact"]).map(c=>({t:c.name,s:[c.tax,c.contact].filter(Boolean).join(" · "),v:c})),
-    pick:c=>{doc.cust=Object.assign({},c);renderAll()}});
+    pick:c=>{doc.cust=Object.assign({},c);custPrefs(c);renderAll()}});
   bindItemSuggest()}
+/* ราคาตามลูกค้า: ราคาล่าสุดที่เคยขายลูกค้านี้ (สกุลเงินเดียวกัน) ก่อน · ไม่มีก็ใช้ส่วนลดประจำลูกค้า % */
+function custPrices(){const n=(doc.cust.name||"").trim(),M={};if(!n)return M;const cur=curOf(doc);
+  LS.get(K.docs,[]).filter(x=>!x.void&&!ADJ(x.type)&&x.id!==doc.id&&x.cust&&(x.cust.name||"").trim()===n&&curOf(x)===cur).sort((a,b)=>(a.date+(a.updated||0))<(b.date+(b.updated||0))?-1:1)
+    .forEach(x=>(x.items||[]).forEach(it=>{if(it.d&&num(it.p)>0)M[it.d.trim()]={p:num(it.p),no:x.no}}));return M}
+function custPrice(v){const L=custPrices()[(v.d||"").trim()];if(L)return{p:L.p,why:"ราคาเดิมที่เคยขายลูกค้านี้ ("+L.no+")"};const pd=num(doc.cust.pd);
+  if(pd>0)return{p:r2(num(v.p)*(1-pd/100)),why:"ส่วนลดประจำลูกค้า "+pd+"%"};return{p:num(v.p),why:""}}
+function custPrefs(c){if(isTax(doc))return;if(c.lang==="en")doc.lang="en";else delete doc.lang;if(c.cur&&c.cur!=="THB"){if(doc.cur!==c.cur){doc.cur=c.cur;delete doc.fx;doc.fxCur=c.cur}}else{delete doc.cur;delete doc.fx}}
 function itemPool(){SI=LS.get(SK.items,[]);const sv=(LS.get("edm_services",[])||[]).map(x=>({t:x.name,s:"🧰 บริการ · "+fmt(x.price)+(x.unit?" / "+x.unit:""),v:{d:x.name,u:x.unit||"",p:num(x.price)},k:x.name+" "+(x.note||"")}));
   const st=SI.map(x=>({t:x.name,s:"📦 "+(x.brand?x.brand+" · ":"")+(x.sku?x.sku+" · ":"")+"คงเหลือ "+stockBal(x.id)+" "+(x.unit||"")+" · "+fmt(x.price),v:{pid:x.id,d:x.name,u:x.unit||"",p:num(x.price),brand:x.brand||""},k:x.name+" "+(x.sku||"")+" "+(x.brand||"")}));
   return doc.mode==="service"?sv.concat(st):st.concat(sv)}
 function bindItemSuggest(){if(!window.edmSuggest)return;$$('#items [data-k="d"]').forEach(inp=>edmSuggest(inp,{title:"สินค้า / บริการที่บันทึกไว้",onFocus:false,max:10,
   source:q=>q?edmMatch(q,itemPool(),["k"]):[],
-  pick:(v,el)=>{const i=+el.closest(".item").dataset.i;const it=doc.items[i];if(!it)return;Object.assign(it,{d:v.d,u:v.u,p:v.p});if(v.brand)it.brand=v.brand;else delete it.brand;if(v.pid&&doc.mode==="goods")it.pid=v.pid;else delete it.pid;if(!num(it.q))it.q=1;renderItems();update()}}))}
+  pick:(v,el)=>{const i=+el.closest(".item").dataset.i;const it=doc.items[i];if(!it)return;const cp=curOf(doc)==="THB"||custPrices()[(v.d||"").trim()]?custPrice(v):{p:num(v.p),why:""};Object.assign(it,{d:v.d,u:v.u,p:cp.p});if(cp.why)toast("💡 ใช้"+cp.why+" · "+fmt(cp.p));if(v.brand)it.brand=v.brand;else delete it.brand;if(v.pid&&doc.mode==="goods")it.pid=v.pid;else delete it.pid;if(!num(it.q))it.q=1;renderItems();update()}}))}
 
 /* ---------- bindings ---------- */
 $$("#modeSeg button").forEach(b=>b.onclick=()=>{if(b.dataset.mode===doc.mode)return;if(isStored(doc)&&!ADJ(doc.type)){const nt0=fitType(b.dataset.mode,doc.type);if(nt0!==doc.type)return convertTo(nt0,b.dataset.mode)}doc.mode=b.dataset.mode;doc.items.forEach(it=>{if(!it.d&&!num(it.p))it.u=doc.mode==="goods"?"ชิ้น":"งาน"});if(doc.mode==="service"&&!+doc.wht)doc.wht=3;if(doc.mode==="goods"&&+doc.wht===3)doc.wht=0;const nt=ADJ(doc.type)?doc.type:fitType(doc.mode,doc.type);if(nt!==doc.type){doc.type=nt;doc.no=nextNo(nt,doc.date);doc.due=TYPES[nt].due?(doc.due||addDays(doc.date,30)):"";if(TYPES[nt].tax&&vatOf(doc)&&doc.vat==="none")doc.vat="ex"}renderAll()});
@@ -608,6 +659,11 @@ $$("#vatSeg button").forEach(b=>b.onclick=()=>{doc.vat=b.dataset.vat;renderAll()
 const bindVal=(sel,fn)=>{$(sel).oninput=e=>{fn(e.target.value);renderTypes();update()}};
 bindVal("#docNo",v=>doc.no=v);bindVal("#docDate",v=>doc.date=v);bindVal("#docDue",v=>doc.due=v);bindVal("#docRef",v=>doc.ref=v);
 ["name","addr","tax","branch","contact"].forEach(k=>bindVal("#c"+k[0].toUpperCase()+k.slice(1),v=>doc.cust[k]=v));
+bindVal("#cPd",v=>{const x=num(v);if(x>0)doc.cust.pd=Math.min(100,x);else delete doc.cust.pd});
+$$("#langSeg button").forEach(b=>b.onclick=()=>{if(b.dataset.lang==="en")doc.lang="en";else delete doc.lang;renderTypes();update()});
+$("#cur").onchange=e=>{const v=e.target.value;if(v==="THB"){delete doc.cur;delete doc.fx}else{doc.cur=v;if(doc.fxCur!==v){delete doc.fx;doc.fxCur=v}}renderTypes();update();if(v!=="THB")setTimeout(()=>$("#fx").focus(),50)};
+$("#fx").oninput=e=>{const v=num(e.target.value);if(v>0)doc.fx=v;else delete doc.fx;update();$("#intlSum")&&renderIntlSumOnly()};
+function renderIntlSumOnly(){const n=$("#intlNote"),cur=curOf(doc);if(cur!=="THB")n.textContent="ใส่ราคาเป็น "+cur+" · ระบบบัญชี/ลูกหนี้แปลงเป็นบาทตามอัตรานี้"+(num(doc.fx)>0?"":" (ต้องใส่อัตราก่อนบันทึก)")}
 bindVal("#billDisc",v=>doc.billDisc=v);$("#wht").onchange=e=>{doc.wht=+e.target.value;update()};bindVal("#notes",v=>doc.notes=v);
 const sv=()=>{LS.set(K.seller,seller);$("#sellerSum").textContent=seller.name?"· "+seller.name:"· ยังไม่ได้กรอก"};
 [["#sName","name"],["#sAddr","addr"],["#sTax","tax"],["#sBranch","branch"],["#sPhone","phone"],["#sContact","contact"],["#sPay","pay"],["#sPP","pp"],["#sColor","color"]].forEach(([s,k])=>$(s).oninput=e=>{seller[k]=e.target.value;sv();renderTypes();update()});
@@ -632,6 +688,7 @@ function stockShort(d){if(!localStorage.getItem(SK.items)||d.void||d.mode!=="goo
   d.items.forEach(l=>{if(l.pid&&num(l.q)>0&&stockItem(l.pid))need[l.pid]=(need[l.pid]||0)+num(l.q)});
   return Object.keys(need).map(pid=>{let b=0;T.forEach(t=>{if(t.pid!==pid||t.docId===d.id)return;const q=num(t.qty);b+=t.type==="out"?-q:q});b=Math.round(b*1000)/1000;const x=stockItem(pid);return b-need[pid]<0?{n:x.name,u:x.unit||"",need:need[pid],bal:b}:null}).filter(Boolean)}
 function save(silent){
+  if(curOf(doc)!=="THB"&&!(num(doc.fx)>0)){$("#intlMore").open=true;$("#fx").focus();toast("ใส่อัตราแลกเปลี่ยนก่อนบันทึก (1 "+doc.cur+" = กี่บาท)");return false}
   if(locked()){toast(doc.void?"เอกสารนี้ยกเลิกแล้ว":"ใบกำกับภาษีที่ออกแล้วแก้ไม่ได้");return false}
   const ct=String(doc.cust.tax||"").replace(/\D/g,"");if(/^0\d{12}$/.test(ct)&&!String(doc.cust.branch||"").trim()){doc.cust.branch="สำนักงานใหญ่";$("#cBranch").value=doc.cust.branch;toast("ผู้ซื้อเป็นนิติบุคคล ใส่สาขาเป็น \"สำนักงานใหญ่\" ให้แล้ว")}
   const E=validate(doc);if(E.length){showErrs(E);return false}
@@ -641,10 +698,10 @@ function save(silent){
   doc.items.forEach(it=>{if(num(it.disc)>lineDisc(it))it.disc=lineDisc(it)});{const c0=calc(doc);if(c0.discOver)doc.billDisc=c0.disc}
   if(ADJ(doc.type)){const k=doc.items.filter(it=>r2(num(it.q)*num(it.p)-lineDisc(it))>0);if(k.length)doc.items=k;const o=LS.get(K.docs,[]).find(x=>x.id===doc.refId);if(o&&!doc.orig)doc.orig={no:o.no,date:o.date,val:adjOrigVal(o,doc.id)}}
   if(!doc.seller)doc.seller={name:seller.name||"",addr:seller.addr||"",tax:seller.tax||"",branch:seller.branch||"",phone:seller.phone||"",vat:!!seller.vat};
-  const docs=LS.get(K.docs,[]);doc.saved=true;doc.updated=Date.now();const c=calc(doc);doc._total=c.net;
+  const docs=LS.get(K.docs,[]);doc.saved=true;doc.updated=Date.now();const c=calc(doc);doc._total=calcTHB(doc).net;
   const i=docs.findIndex(d=>d.id===doc.id);if(i>=0)docs[i]=JSON.parse(JSON.stringify(doc));else docs.unshift(JSON.parse(JSON.stringify(doc)));
   if(LS.set(K.docs,docs)){bumpNo(doc.no);
-    if(doc.cust.name){const cs=LS.get(K.cust,[]);const j=cs.findIndex(x=>x.name===doc.cust.name);if(j>=0)cs[j]=doc.cust;else cs.unshift(doc.cust);LS.set(K.cust,cs)}
+    if(doc.cust.name){if(doc.lang==="en")doc.cust.lang="en";else delete doc.cust.lang;if(curOf(doc)!=="THB")doc.cust.cur=doc.cur;else delete doc.cust.cur;const cs=LS.get(K.cust,[]);const j=cs.findIndex(x=>x.name===doc.cust.name);if(j>=0)cs[j]=doc.cust;else cs.unshift(doc.cust);LS.set(K.cust,cs)}
     const ns=syncStock(doc);syncPay(doc);const tm=termOf(doc);audit(first?"สร้าง":"แก้ไข",doc);renderAll();
     if(!silent)toast("บันทึกแล้ว ✓"+(ns?(doc.type==="CN"?" รับคืนเข้าสต๊อก ":" ตัดสต๊อก ")+ns+" รายการ":"")+(tm==="cash"?" · รับเงินเข้าบัญชีแล้ว":tm==="credit"?" · ตั้งเป็นลูกหนี้":""));return true}
   doc.saved=isStored(doc);return false;
@@ -733,8 +790,8 @@ function loadDemo(mode){
 $("#demoBtn").onclick=()=>loadDemo(doc.mode);
 // สถานะรับชำระ (จากหน้าบัญชีร้านค้า)
 function payTag(d,docs){if(d.type==="IT"&&d.term==="cash")return" · 💵 ขายเงินสด";if(d.type!=="IV"&&d.type!=="IT")return"";const A=LS.get("edm_acc",null);
-  const total=r2(calc(d).total);let got=0;(A&&A.pay||[]).forEach(p=>{if(p.dir==="in"&&p.docId===d.id)got+=num(p.amount)+num(p.wht)});
-  docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&!x.void&&x.ref===d.no&&!(A&&A.pay||[]).some(p=>p.rcDocId===x.id))got+=calc(x).total});
+  const total=r2(calcTHB(d).total);let got=0;(A&&A.pay||[]).forEach(p=>{if(p.dir==="in"&&p.docId===d.id)got+=num(p.amount)+num(p.wht)});
+  docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&!x.void&&x.ref===d.no&&!(A&&A.pay||[]).some(p=>p.rcDocId===x.id))got+=calcTHB(x).total});
   return got>=total-0.01?" · ✅ รับชำระแล้ว":got>0?" · 🟡 รับบางส่วน":" · ⏳ ค้างชำระ"}
 // เปิดเอกสารจากการค้นหาในระบบร้านค้า (#open=<id>)
 // #open=<id> = เปิดดู · #edit=<id> = เปิดแก้ไข · #new = เอกสารใหม่ (จากหน้ารายงานบิลในระบบร้านค้า)

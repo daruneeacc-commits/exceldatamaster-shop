@@ -194,7 +194,9 @@ window.addEventListener("storage",()=>{load();render()});
 /* ---------- คำนวณเอกสาร (สูตรเดียวกับหน้าเปิดบิล) ---------- */
 function calcDoc(d){const sub=r2((d.items||[]).reduce((a,it)=>a+r2(num(it.q)*num(it.p)-num(it.disc)),0));const after=r2(Math.max(0,sub-num(d.billDisc)));
   let vat=0,total=after,base=after;if(d.vat==="ex"){vat=r2(after*.07);total=r2(after+vat)}else if(d.vat==="in"){base=r2(after/1.07);vat=r2(after-base);total=after}
-  const wht=r2(base*num(d.wht)/100);return{sub,base,vat,total,wht,net:r2(total-wht)}}
+  const wht=r2(base*num(d.wht)/100),R={sub,base,vat,total,wht,net:r2(total-wht)};
+  /* บิลสกุลเงินต่างประเทศ: แปลงเป็นบาทตามอัตราในเอกสาร (บัญชี/ลูกหนี้เป็นบาทเสมอ) */
+  const fx=d.cur&&d.cur!=="THB"&&num(d.fx)>0?num(d.fx):1;if(fx!==1)for(const k in R)R[k]=r2(R[k]*fx);return R}
 const calcPur=p=>calcDoc({items:(p.lines||[]).map(l=>({q:l.q,p:l.p})),vat:p.vat,wht:p.wht,billDisc:0});
 const BT={QT:"ใบเสนอราคา",IV:"ใบแจ้งหนี้",IT:"ใบแจ้งหนี้/ใบกำกับภาษี",RC:"ใบเสร็จรับเงิน",TX:"ใบกำกับภาษี/ใบเสร็จ",CN:"ใบลดหนี้",DN:"ใบเพิ่มหนี้"};
 const isInvoice=d=>d.type==="IV"||d.type==="IT";
@@ -382,8 +384,9 @@ function makeReceipt(d,type,p){
   const docs=LS.get(KEY.bdocs,[]),cnt=LS.get(KEY.bcnt,{});const ym=p.date.slice(2,7).replace("-","");const k=type+ym;cnt[k]=(cnt[k]||0)+1;
   const c=calcDoc(d),part=r2(num(p.amount)+num(p.wht));const full=part>=calcDoc(d).total-0.01&&!A.pay.some(x=>x.docId===d.id)&&!adjFor(d).length;
   let items=JSON.parse(JSON.stringify(d.items||[]));let billDisc=d.billDisc;
-  if(!full){const base=d.vat==="ex"?r2(part/1.07):part;items=[{d:"รับชำระตาม "+BT[d.type]+" เลขที่ "+d.no,q:1,u:"งาน",p:d.vat==="ex"?base:part,disc:0}];billDisc=0}
-  const rc={id:"d"+Date.now().toString(36)+"r",mode:d.mode,type,no:k+"-"+String(cnt[k]).padStart(3,"0"),date:p.date,due:"",ref:d.no,cust:JSON.parse(JSON.stringify(d.cust)),items,vat:d.vat,billDisc,wht:full?d.wht:(num(p.wht)>0?d.wht:0),notes:"รับชำระโดย"+(p.method||"โอนเงิน")+(p.note?" · "+p.note:""),saved:true,updated:Date.now(),auto:"acc"};
+  const fxd=d.cur&&d.cur!=="THB"&&num(d.fx)>0;  /* บิลสกุลเงินต่างประเทศ: ใบเสร็จออกเป็นบาทตามยอดที่รับจริง */
+  if(!full||fxd){const base=d.vat==="ex"?r2(part/1.07):part;items=[{d:"รับชำระตาม "+BT[d.type]+" เลขที่ "+d.no,q:1,u:"งาน",p:d.vat==="ex"?base:part,disc:0}];billDisc=0}
+  const rc={id:"d"+Date.now().toString(36)+"r",mode:d.mode,type,no:k+"-"+String(cnt[k]).padStart(3,"0"),date:p.date,due:"",ref:d.no,cust:JSON.parse(JSON.stringify(d.cust)),items,vat:d.vat,billDisc,wht:full?d.wht:(num(p.wht)>0?d.wht:0),notes:"รับชำระโดย"+(p.method||"โอนเงิน")+(p.note?" · "+p.note:""),saved:true,updated:Date.now(),auto:"acc"};if(d.lang==="en"&&type==="RC")rc.lang="en";
   rc._total=calcDoc(rc).net;docs.unshift(rc);LS.set(KEY.bdocs,docs);LS.set(KEY.bcnt,cnt);D.docs=docs;return rc}
 
 function vBuy(){
