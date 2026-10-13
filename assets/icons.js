@@ -8,7 +8,7 @@
     check: '<rect ' + F + ' x="3.5" y="3.5" width="17" height="17" rx="4"/><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M7.5 12.3l3 3 6-6.3"/>',
     clock: '<circle ' + F + ' cx="12" cy="12.5" r="8.5"/><circle cx="12" cy="12.5" r="8.5"/><path d="M12 8v4.8l3.2 2M9.5 2.8h5"/>',
     home: '<path ' + F + ' d="M4.5 11 12 4.6l7.5 6.4V20h-15z"/><path d="M3 11.6 12 4l9 7.6M5.5 10v10h13V10M10 20v-5.5h4V20"/>',
-    bill: '<path ' + F + ' d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 15.5h3.5"/>',
+    bill: '<path ' + F + ' d="M3.8 2.5h11.5v14.5"/><path d="M3.8 2.5h11.5v8.3M3.8 2.5v18.2l2-1.4 2 1.4 2-1.4 1.6 1.1M7 7h5.2M7 10.4h4"/><circle cx="16.4" cy="16.6" r="5.4" fill="#fff" stroke="none"/><path d="M16.6 12.9v7.4M15 14.1h2.3a1.25 1.25 0 0 1 0 2.5H15zm0 2.5h2.6a1.25 1.25 0 0 1 0 2.5H15z" stroke="CLR" stroke-width="1.5"/>',
     cart: '<path ' + F + ' d="M6.6 7h13.6l-2.1 8.2H8.3z"/><path d="M2.8 4h2.6l2.4 11.2h10.4l2.2-8.4H6.4"/><circle cx="9" cy="19.6" r="1.4" fill="#fff"/><circle cx="17" cy="19.6" r="1.4" fill="#fff"/>',
     box: '<path ' + F + ' d="M12 3 20.5 7.5 12 12 3.5 7.5z"/><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5zM3.5 7.5 12 12l8.5-4.5M12 12v9"/>',
     boxin: '<path ' + F + ' d="M4 11h16v9H4z"/><path d="M4 11h16v9H4zM9 14.5h6M12 2.5v6M9.2 5.8 12 8.6l2.8-2.8"/>',
@@ -42,6 +42,7 @@
   function icon(k, opt) {
     var g = G[k]; if (!g) return "";
     var c = (opt && opt.color) || C[k] || "#0E6B43", cls = (opt && opt.cls) || "";
+    g = g.replace(/CLR/g, c);   // ส่วนที่ใช้สีพื้นของไอคอน (เช่น เหรียญ ฿ บนบิล)
     return '<svg class="edm-ic ' + cls + '" viewBox="0 0 32 32" aria-hidden="true" focusable="false">' +
       '<path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="' + c + '"/>' +
       '<path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"/>' +
