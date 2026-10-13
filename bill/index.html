@@ -55,7 +55,8 @@ textarea.in-{resize:vertical;min-height:60px}
 @media(max-width:600px){#actBar{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px!important;padding:8px!important;bottom:6px!important}#actBar .btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 2px;font-size:.74rem;line-height:1.15;min-height:54px;text-align:center;white-space:normal}#actBar .btn i{font-size:1.15rem}#actBar .lg{display:none}#actBar .sh{display:inline}}
 .dflt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.dflt .in-{padding:7px 8px;font-size:.84rem}
 .seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-#termBox{margin:10px 0 2px}#termBox[hidden],#termBox [hidden]{display:none!important}#termBox .row{margin-top:8px}.cdays{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;font-size:.84rem;color:var(--muted)}
+#termBox{margin:10px 0 2px}#termBox[hidden],#termBox [hidden]{display:none!important}
+#nxView{margin-bottom:10px}#nxView:empty{display:none}@media(min-width:980px){#nxView{display:none}}#termBox .row{margin-top:8px}.cdays{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;font-size:.84rem;color:var(--muted)}
 #termSeg button.on[data-term=cash]{color:#127A4B}#termSeg button.on[data-term=credit]{color:#B4570B}
 .p-paid{display:block;width:fit-content;margin-top:8px;border:1.5px solid var(--paper-accent,#127A4B);color:var(--paper-accent,#127A4B);border-radius:6px;padding:2px 10px;font-weight:700;font-size:9pt}
 .doctypes{display:grid;grid-template-columns:1fr 1fr;gap:6px}
@@ -173,6 +174,12 @@ details.more summary{font-size:.86rem}
 html{overscroll-behavior-y:contain}
 /* เอกสารที่บันทึกแล้ว · ใบกำกับภาษีล็อก · ยกเลิก · ใบลด/เพิ่มหนี้ */
 #docBanner{background:var(--soft);border-radius:12px;padding:8px 12px;font-size:.84rem;display:flex;flex-direction:column;gap:6px}#docBanner[hidden]{display:none}
+[hidden]{display:none!important}
+details.opt{border:1px dashed var(--line);border-radius:12px;padding:8px 12px}details.opt>summary{cursor:pointer;font-size:.84rem;font-weight:600;color:var(--muted)}details.opt[open]>summary{margin-bottom:8px}details.opt .optb{display:flex;flex-direction:column;gap:10px}details.opt summary b{color:var(--ink);font-weight:600}
+.nx{border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:#EAF6EF;border:1px solid #BFE3CC}.nx.wait{background:#FFF6DA;border-color:#F1DE9C}.nx.done{background:#EEF3FB;border-color:#CCDAF0}
+.nx .nh{font-weight:700;font-size:.95rem;display:flex;gap:8px;align-items:center}.nx .nh small{font-weight:500;color:var(--muted)}.nx .steps{display:flex;gap:4px;flex-wrap:wrap;font-size:.74rem}.nx .steps span{padding:2px 9px;border-radius:999px;background:#fff;color:var(--muted)}.nx .steps span.on{background:var(--accent);color:#fff}.nx .steps span.ok{background:#CDEBD9;color:#1F6B44}
+.nx .acts{display:flex;gap:6px;flex-wrap:wrap}.nx .acts .btn{font-size:.86rem}
+
 #docBanner .bh{display:flex;gap:8px;align-items:center;flex-wrap:wrap}#docBanner .bh b{flex:1;min-width:160px}#docBanner .acts{display:flex;gap:6px;flex-wrap:wrap}
 .vtag{display:inline-block;background:#B3261E;color:#fff;border-radius:6px;padding:0 6px;font-size:.74rem;font-weight:700;margin-left:4px}
 #adjBox{display:flex;flex-direction:column;gap:8px}#adjBox[hidden]{display:none}
@@ -222,8 +229,8 @@ html{overscroll-behavior-y:contain}
         <div class="f"><label>วันที่</label><input class="in-" type="date" id="docDate"></div>
       </div>
       <div class="row">
-        <div class="f"><label id="dueLabel">ครบกำหนด / ยืนราคาถึง</label><input class="in-" type="date" id="docDue"></div>
-        <div class="f"><label>อ้างอิง (ถ้ามี)</label><input class="in-" id="docRef" placeholder="เช่น เลขที่ใบเสนอราคา"></div>
+        <div class="f" id="dueF"><label id="dueLabel">ครบกำหนด / ยืนราคาถึง</label><input class="in-" type="date" id="docDue"></div>
+        <div class="f" id="refF"><label>อ้างอิง (ถ้ามี)</label><input class="in-" id="docRef" placeholder="เช่น เลขที่ใบเสนอราคา"></div>
       </div>
     </div>
 
@@ -250,13 +257,14 @@ html{overscroll-behavior-y:contain}
 
     <div class="card">
       <h2>ลูกค้า <button class="btn sm ghost" id="pickCust" type="button">เลือกลูกค้าเดิม</button></h2>
-      <div class="f"><label>ชื่อลูกค้า / บริษัท</label><input class="in-" id="cName"></div>
+      <div class="f"><label>ชื่อลูกค้า / บริษัท</label><input class="in-" id="cName" placeholder="พิมพ์ชื่อ ลูกค้าเดิมจะขึ้นให้เลือก"></div>
+      <details class="opt" id="custMore"><summary id="custSum">ที่อยู่ · เลขผู้เสียภาษี · ผู้ติดต่อ</summary><div class="optb">
       <div class="f"><label>ที่อยู่</label><textarea class="in-" id="cAddr"></textarea></div>
       <div class="row">
         <div class="f"><label>เลขผู้เสียภาษี</label><input class="in-" id="cTax" inputmode="numeric" maxlength="13"></div>
         <div class="f"><label>สาขา</label><input class="in-" id="cBranch"></div>
       </div>
-      <div class="f"><label>ผู้ติดต่อ / โทร</label><input class="in-" id="cContact"></div>
+      <div class="f"><label>ผู้ติดต่อ / โทร</label><input class="in-" id="cContact"></div></div></details>
     </div>
 
     <div class="card">
@@ -269,13 +277,14 @@ html{overscroll-behavior-y:contain}
       <h2>ภาษีและส่วนลด</h2>
       <div class="f"><label>ภาษีมูลค่าเพิ่ม</label>
         <div class="seg" id="vatSeg"><button data-vat="none">ไม่มี VAT</button><button data-vat="ex">แยก VAT 7%</button><button data-vat="in">รวม VAT แล้ว</button></div></div>
+      <details class="opt" id="taxMore"><summary id="taxSum">ส่วนลดท้ายบิล · หัก ณ ที่จ่าย · หมายเหตุ</summary><div class="optb">
       <div class="row">
         <div class="f"><label>ส่วนลดท้ายบิล (บาท)</label><input class="in-" id="billDisc" type="number" min="0" step="0.01" inputmode="decimal"></div>
         <div class="f"><label>หัก ณ ที่จ่าย</label><select class="in-" id="wht"><option value="0">ไม่หัก</option><option value="1">1% (ขนส่ง)</option><option value="2">2% (โฆษณา)</option><option value="3">3% (บริการ/จ้างทำของ)</option><option value="5">5% (ค่าเช่า)</option></select></div>
       </div>
+      <div class="f"><label>หมายเหตุ</label><textarea class="in-" id="notes" placeholder="เงื่อนไขการชำระเงิน การรับประกัน ฯลฯ"></textarea></div></div></details>
       <div id="discWarn"></div>
       <div class="totals" id="totals"></div>
-      <div class="f"><label>หมายเหตุ</label><textarea class="in-" id="notes" placeholder="เงื่อนไขการชำระเงิน การรับประกัน ฯลฯ"></textarea></div>
     </div>
 
     <div class="card no-print" id="actBar" style="position:sticky;bottom:10px;z-index:5;flex-direction:row;flex-wrap:wrap;gap:8px">
@@ -290,6 +299,7 @@ html{overscroll-behavior-y:contain}
   </section>
 
   <section class="preview-wrap" id="previewWrap">
+    <div id="nxView" class="no-print"></div>
     <div class="paper-scroll"><div class="paper" id="paper"></div></div>
   </section>
 </main>
@@ -399,6 +409,10 @@ function renderTypes(){
   $("#typeWarn").innerHTML=w.map(x=>`<div class="warn">⚠️ ${esc(x)}</div>`).join("");
   renderAdj();
   $("#dueLabel").textContent=hasDue(doc)?TYPES[doc.type].due:"ครบกำหนด (ไม่ใช้กับเอกสารนี้)";$("#docDue").disabled=!hasDue(doc);
+  $("#dueF").hidden=!hasDue(doc);$("#refF").hidden=!(doc.ref||ADJ(doc.type)||doc.type==="IV"||doc.type==="IT"||doc.type==="RC"||doc.type==="TX"||doc.type==="BN");
+  {const need=isTax(doc)&&vatOf(doc),c=doc.cust||{},has=!!(c.addr||c.tax||c.branch||c.contact),tk=doc.id+doc.type;if(renderTypes.k!==tk){$("#custMore").open=need||has;renderTypes.k=tk}else if(need||has)$("#custMore").open=true;
+   $("#custSum").innerHTML=need?"ที่อยู่ · เลขผู้เสียภาษี <b>(ใบกำกับภาษีต้องมีที่อยู่ผู้ซื้อ)</b>":has?"ที่อยู่ · เลขผู้เสียภาษี · ผู้ติดต่อ <b>✓ มีข้อมูล</b>":"ที่อยู่ · เลขผู้เสียภาษี · ผู้ติดต่อ (ไม่บังคับ)";
+   const t2=num(doc.billDisc)||+doc.wht||doc.notes;if(t2)$("#taxMore").open=true;$("#taxSum").innerHTML="ส่วนลดท้ายบิล · หัก ณ ที่จ่าย · หมายเหตุ"+(t2?" <b>✓ มีข้อมูล</b>":" (ถ้ามี)")}
   renderTerm();
 }
 function renderTerm(){const t=termOf(doc);$("#termBox").hidden=!t;if(!t)return;
@@ -432,11 +446,27 @@ $("#adjRestock").onchange=e=>{doc.restock=e.target.checked;update()};
 /* ---------- เอกสารที่บันทึกแล้ว: แถบบอกสถานะ ล็อกใบกำกับภาษี ---------- */
 const isStored=d=>!!d.saved&&LS.get(K.docs,[]).some(x=>x.id===d.id);
 const locked=()=>isStored(doc)&&(isTax(doc)||!!doc.void);
-function renderBanner(){const b=$("#docBanner"),st=isStored(doc);b.hidden=!st;if(!st){b.innerHTML="";return}
+function payState(d){const docs=LS.get(K.docs,[]),A=LS.get("edm_acc",null),total=r2(calc(d).total);let got=0;(A&&A.pay||[]).forEach(p=>{if(p.dir==="in"&&p.docId===d.id)got+=num(p.amount)+num(p.wht)});
+  docs.forEach(x=>{if((x.type==="RC"||x.type==="TX")&&!x.void&&x.ref===d.no&&!(A&&A.pay||[]).some(p=>p.rcDocId===x.id))got+=calc(x).total});return{total,got:r2(got),left:r2(Math.max(0,total-got))}}
+const inApp=()=>{try{return window.top!==window.self}catch(e){return false}};
+function goRecv(d){if(inApp()){parent.postMessage({edm:"go",tool:"account",hash:"v=ar&recv="+d.id},location.origin);return}location.href="/app/?ed=bill#/ar"}
+/* แผงขั้นต่อไป: เสนอราคา → ออกบิล → รับเงิน กดต่อได้ทันที */
+function nextStep(){if(!isStored(doc)||doc.void||ADJ(doc.type)||doc.type==="BN")return"";const T=doc.type,cash=termOf(doc)==="cash",sale=doc.mode==="goods"?"IT":"IV",saleName=tName(sale,Object.assign({},doc,{type:sale,term:"credit"}));
+  const flow=(a,b,c)=>`<div class="steps"><span class="${a}">1 เสนอราคา</span><span class="${b}">2 ออกบิล</span><span class="${c}">3 รับเงิน</span></div>`;
+  if(T==="QT")return`<div class="nx wait"><div class="nh">ขั้นต่อไป: ลูกค้าตอบรับแล้วหรือยัง?</div>${flow("ok","on","")}<div class="acts"><button class="btn sm main" type="button" data-nx="sale">✓ ลูกค้าตกลง · ออก${esc(saleName)}</button><button class="btn sm ghost" type="button" data-nx="share">📤 ส่งใบเสนอราคาให้ลูกค้า</button></div></div>`;
+  if(T==="IV"||T==="IT"){if(cash)return`<div class="nx done"><div class="nh">✓ ขายเงินสด รับเงินแล้ว</div>${flow("ok","ok","ok")}<div class="acts"><button class="btn sm ghost" type="button" data-nx="share">📤 ส่งให้ลูกค้า</button><button class="btn sm main" type="button" data-nx="new">＋ ออกบิลใบต่อไป</button></div></div>`;
+    const P=payState(doc);if(P.left<=0.009)return`<div class="nx done"><div class="nh">✓ รับชำระครบแล้ว <small>฿${fmt(P.got)}</small></div>${flow("ok","ok","ok")}<div class="acts"><button class="btn sm main" type="button" data-nx="new">＋ ออกบิลใบต่อไป</button></div></div>`;
+    const late=doc.due&&doc.due<today();return`<div class="nx wait"><div class="nh">ขั้นต่อไป: รอรับเงิน ฿${fmt(P.left)} <small>${P.got>0?"รับแล้ว ฿"+fmt(P.got)+" · ":""}${doc.due?(late?"⚠️ เกินกำหนด "+thDate(doc.due):"ครบกำหนด "+thDate(doc.due)):""}</small></div>${flow("ok","ok","on")}<div class="acts"><button class="btn sm main" type="button" data-nx="recv">💰 ลูกค้าจ่ายแล้ว · บันทึกรับเงิน</button><button class="btn sm ghost" type="button" data-nx="share">📤 ส่งบิล / ทวงถาม</button></div></div>`}
+  if(T==="RC"||T==="TX")return`<div class="nx done"><div class="nh">✓ ออกใบเสร็จแล้ว</div>${flow("ok","ok","ok")}<div class="acts"><button class="btn sm ghost" type="button" data-nx="share">📤 ส่งให้ลูกค้า</button><button class="btn sm main" type="button" data-nx="new">＋ เอกสารใหม่</button></div></div>`;return""}
+function bindNext(){const sale=doc.mode==="goods"?"IT":"IV",F={sale:()=>{convertTo(sale);setTerm("credit");edMode()},share:()=>shareDoc(),new:()=>{newDoc(true);edMode()},recv:()=>goRecv(doc)};
+  $$("[data-nx]").forEach(b=>b.onclick=F[b.dataset.nx])}
+function edMode(){const e=document.querySelector('.mtabs [data-mt="edit"]');if(e&&innerWidth<980&&!e.classList.contains("on"))e.click()}
+function renderBanner(){const b=$("#docBanner"),st=isStored(doc);b.hidden=!st;$("#nxView").innerHTML="";if(!st){b.innerHTML="";return}
   const tx=isTax(doc),canAdj=tx&&!doc.void&&(doc.type==="IT"||doc.type==="TX");
   b.innerHTML=`<div class="bh"><b>📄 กำลังดูเอกสารที่บันทึกแล้ว เลขที่ ${esc(doc.no)}${doc.void?`<span class="vtag">ยกเลิก</span>`:""}</b><button class="btn sm main" type="button" id="bnNew">＋ เอกสารใหม่</button></div>`+
     (doc.void?`<div class="warn">ยกเลิกเมื่อ ${new Date(doc.void.at).toLocaleString("th-TH")} · เหตุผล: ${esc(doc.void.reason||"-")}</div>`:tx?`<div class="warn">🔒 ใบกำกับภาษีที่ออกแล้วแก้ไม่ได้ ถ้าต้องแก้ยอด ให้ออกใบลดหนี้/ใบเพิ่มหนี้ หรือยกเลิกแล้วออกใบใหม่</div>`:"")+
     (!doc.void&&(canAdj||tx)?`<div class="acts">${canAdj?`<button class="btn sm ghost" type="button" id="bnCN">ออกใบลดหนี้</button><button class="btn sm ghost" type="button" id="bnDN">ออกใบเพิ่มหนี้</button>`:""}<button class="btn sm ghost danger" type="button" id="bnVoid">ยกเลิกเอกสาร</button></div>`:"");
+  const nx=nextStep();b.insertAdjacentHTML("afterbegin",nx);$("#nxView").innerHTML=nx;bindNext();
   $("#bnNew").onclick=()=>newDoc(true);if($("#bnCN")){$("#bnCN").onclick=()=>adjFrom(doc,"CN");$("#bnDN").onclick=()=>adjFrom(doc,"DN")}if($("#bnVoid"))$("#bnVoid").onclick=()=>askVoid(doc.id)}
 function applyLock(){const L=locked();$$("#editor input,#editor textarea,#editor select,#editor button").forEach(e=>{if(e.closest(".keep"))return;if(L)e.disabled=true;else if(e.dataset.lk!==undefined)e.disabled=false;if(L)e.dataset.lk=""});
   if(!L){$$("#editor [data-lk]").forEach(e=>delete e.dataset.lk);$("#docDue").disabled=!hasDue(doc);$("#docRef").disabled=ADJ(doc.type);$$("#vatSeg button").forEach(x=>x.disabled=(ADJ(doc.type)&&!!doc.refId)||(x.dataset.vat==="none"&&isTax(doc)))}
@@ -685,7 +715,7 @@ const DEMO={
       ["RC",1,0,[["ค่ามัดจำงานถ่ายวิดีโอโปรโมต 50%",1,"งาน",8000,0]],0,"รับมัดจำ งานถ่ายวิดีโอเดือน พ.ย."]]}
 };
 function loadDemo(mode){
-  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=52#demo&back=/bill/";return}
+  if(mode==="goods"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=54#demo&back=/bill/";return}
   const has=LS.get(K.docs,[]).length;
   if(!confirm("ใส่ข้อมูลตัวอย่าง "+(mode==="goods"?"ธุรกิจซื้อมาขายไป":"ธุรกิจบริการ")+"?"+(has?"\n\nเอกสาร ข้อมูลกิจการ และรายชื่อลูกค้าในเครื่องนี้จะถูกแทนที่ด้วยข้อมูลตัวอย่าง (ถ้ามีข้อมูลจริง ให้กด \"สำรองข้อมูล\" ก่อน)":"")))return;
   const D=DEMO[mode];seller=Object.assign({},seller,D.seller,{logo:""});LS.set(K.seller,seller);

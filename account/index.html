@@ -832,6 +832,7 @@ if(EMB)$("#tabs").style.display="none";
 window.edmDemo=()=>demo();window.edmExcel=()=>exportExcel();
 window.edmView=v=>{const M={cost:["buy","cost"],exp:["buy","exp"],buy:["buy",""],bank:["cash","bank"],cashv:["cash","cash"],petty:["cash","petty"],cash:["cash",""]};let sub=null;if(M[v]){sub=M[v][1];v=M[v][0]}if(!["home","ar","ap","buy","cash","tax"].includes(v))return;load();ui.v=v;if(sub!=null){if(v==="buy")ui.bk=sub;else ui.ck=sub}svU();render();scrollTo(0,0)};
 const fromHash=()=>{if(/^#demo/.test(location.hash)){const back=(/back=([\w\/]+)/.exec(location.hash)||[])[1];const edq=(/ed=(bill|stock)/.exec(location.hash)||[])[1];history.replaceState(null,"",location.pathname);demo(true);if(back&&/^\/(bill|stock|payroll|app)\/$/.test(back)){location.replace(back+(edq?"?ed="+edq:""))}return}
+  const rv=/recv=([\w-]+)/.exec(location.hash);if(rv){history.replaceState(null,"",location.pathname+location.search);load();edmView("ar");const d=D.docs.find(x=>x.id===rv[1]);if(d&&arInfo(d).left>0.009)setTimeout(()=>receiveDlg(rv[1]),60);return}
   const pu=/pur=([\w-]+)/.exec(location.hash);if(pu){history.replaceState(null,"",location.pathname+location.search);edmView("buy");if(A.pur.some(p=>p.id===pu[1]))purDlg(pu[1]);return}
   const m=/v=(\w+)/.exec(location.hash);if(m)edmView(m[1])};
 window.addEventListener("hashchange",fromHash);fromHash();
