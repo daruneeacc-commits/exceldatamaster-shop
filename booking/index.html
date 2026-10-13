@@ -281,6 +281,10 @@ const CFG0={ci:"14:00",co:"12:00",buf:0,we:[5,6],late:100,depPct:30,vatIn:true,p
 let res=[],list=[],cfg={},ui={};
 function load(){res=LS.get(K.res,[])||[];list=LS.get(K.list,[])||[];cfg=Object.assign({},CFG0,LS.get(K.cfg,{})||{});cfg.kinds=Object.assign({},CFG0.kinds,cfg.kinds||{});cfg.online=Object.assign({},CFG0.online,cfg.online||{});if(!cfg.shop){const s0=LS.get("edm_bill_seller",{})||{};cfg.shop={name:s0.name||"",addr:s0.addr||"",tax:s0.tax||"",phone:s0.phone||s0.tel||"",vat:!!s0.vat,logo:s0.logo||"",pay:s0.pay||""};LS.set(K.cfg,cfg)}ui=Object.assign({v:"home",cs:"",span:14,kf:"all",lf:"act",q:"",rm:""},LS.get(K.ui,{})||{})}
 load();
+/* ระบบแยกตามประเภทธุรกิจ (/app/?ed=hotel|resort|dorm|meet): ตั้งแบบการเช่าให้ตรงธุรกิจครั้งแรก */
+(function(){let ed="";try{ed=(new URLSearchParams(window.top.location.search).get("ed")||"").toLowerCase()}catch(e){}
+  const KD={hotel:{night:true,hour:false,item:false},resort:{night:true,hour:false,item:true},dorm:{night:true,hour:false,item:false},meet:{night:false,hour:true,item:true}}[ed];
+  if(KD&&cfg.biz!==ed){cfg.biz=ed;cfg.kinds=Object.assign({},cfg.kinds,KD);LS.set(K.cfg,cfg)}})();
 const saveRes=()=>pubAfter(LS.set(K.res,res)),saveList=()=>pubAfter(LS.set(K.list,list)),saveCfg=()=>pubAfter(LS.set(K.cfg,cfg)),saveUi=()=>LS.set(K.ui,{v:ui.v,span:ui.span,kf:ui.kf,lf:ui.lf});
 const rOf=id=>res.find(r=>r.id===id);
 const kOn=k=>cfg.kinds[k]!==false;
@@ -350,7 +354,7 @@ function vHome(){const V=$("#view"),t=today(),nw=nowT();
   if(!res.length){V.innerHTML=`<div class="hello"><h1>📅 ระบบจองและให้เช่า</h1><p>จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า ระบบเช็กว่างให้ ไม่จองซ้อน และพิมพ์ใบเสร็จได้ทันที</p></div>
     <div class="card"><h2>เริ่มต้นใน 3 ขั้นตอน</h2><div class="hint">1) เพิ่มห้องหรืออุปกรณ์ที่ให้เช่า พร้อมราคา &nbsp;·&nbsp; 2) กด "＋ จองใหม่" ระบบแสดงเฉพาะที่ว่างและคิดราคาให้ &nbsp;·&nbsp; 3) เช็คอิน/รับคืน รับเงิน แล้วพิมพ์ใบเสร็จ ยอดเข้ารายงานการจองอัตโนมัติ</div>
     <b>ธุรกิจของคุณให้เช่าแบบไหน? (เลือกเพื่อเพิ่มรายการแรก)</b>
-    <div class="kinds">${KO.map(k=>`<button type="button" data-addres="${k}" class="edm-lock"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}<button type="button" id="goLease" class="edm-lock"><i>🏢</i><b>หอพัก / อพาร์ตเมนต์ (รายเดือน)</b><span>สัญญาเช่า เงินประกัน จดมิเตอร์น้ำไฟ ออกบิลทุกเดือน</span></button></div>
+    <div class="kinds">${KO.filter(kOn).map(k=>`<button type="button" data-addres="${k}" class="edm-lock"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}<button type="button" id="goLease" class="edm-lock"><i>🏢</i><b>หอพัก / อพาร์ตเมนต์ (รายเดือน)</b><span>สัญญาเช่า เงินประกัน จดมิเตอร์น้ำไฟ ออกบิลทุกเดือน</span></button></div>
     <div class="acts"><button class="btn ghost" id="demoB" type="button">✨ ลองใส่ข้อมูลตัวอย่าง</button><span class="note">ข้อมูลตัวอย่างใส่เฉพาะระบบจอง ลบทิ้งได้ที่หน้าตั้งค่า</span></div></div>`;
     $$("[data-addres]").forEach(b=>b.onclick=()=>resDlg(null,b.dataset.addres));$("#goLease").onclick=()=>{show("lease");setTimeout(()=>leaseDlg(null),60)};$("#demoB").onclick=demo;return}
   const A=list.filter(ACT);
@@ -1028,7 +1032,7 @@ setInterval(()=>{if(document.visibilityState==="visible"&&cfg.online.on){publish
 window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.edm==="member"&&cfg.online.on)setTimeout(()=>publish(false).then(()=>pull()),300)});
 })();
 </script>
-<script src="../assets/member.js?v=73" defer></script>
+<script src="../assets/member.js?v=74" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>
