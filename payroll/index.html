@@ -200,6 +200,7 @@ header.top{border-bottom:1px solid var(--line)}
 }
 
 /* ===== กรอกง่าย ===== */
+.tbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--sky);border-radius:12px;padding:8px 12px;font-size:.86rem}
 [hidden]{display:none!important}
 .emp-acts{display:flex;gap:8px;flex-wrap:wrap}.emp-acts .btn.main{flex:1;min-width:200px;justify-content:center;font-size:.98rem;padding:11px 16px}.emp-acts.sm{gap:6px}
 .mbar{display:flex;align-items:center;gap:10px;background:var(--mint);border-radius:12px;padding:9px 12px;font-size:.88rem}.mbar:empty{display:none}.mbar.todo{background:var(--yel)}
@@ -249,7 +250,8 @@ details.adv{border:1px solid var(--line);border-radius:10px;padding:8px 12px}det
       <div class="emps" id="emps"></div>
       <div class="mbar" id="mBar"></div>
       <div class="emp-acts"><button class="btn main" id="fillAll">✓ คิดเงินเดือนให้ทุกคน</button><button class="btn ghost" id="addEmp">＋ เพิ่มพนักงาน</button></div>
-      <div class="emp-acts sm"><button class="btn sm ghost" id="bulkBtn">📋 กรอกทุกคนแบบตาราง</button><button class="btn sm ghost" id="copyPrev">↻ คัดลอกจากเดือนก่อน</button></div>
+      <div class="emp-acts sm"><button class="btn sm ghost" id="bulkBtn">📋 กรอกทุกคนแบบตาราง</button><button class="btn sm ghost" id="copyPrev">↻ คัดลอกจากเดือนก่อน</button><button class="btn sm ghost" id="midBtn">💵 จ่ายงวดกลางเดือน (1–15)</button></div>
+      <div class="tbar" id="timeBar" hidden></div>
     </div>
 
     <div class="card" id="empCard" hidden>
@@ -382,7 +384,7 @@ details.adv{border:1px solid var(--line);border-radius:10px;padding:8px 12px}det
 
   <section class="preview-wrap" id="previewWrap">
     <div class="vtabs no-print">
-      <div class="seg chips" id="viewSeg"><button data-v="dash">📊 ภาพรวม</button><button data-v="slip">🧾 สลิปคนนี้</button><button data-v="all">สลิปทุกคน</button><button data-v="month">สรุปเงินเดือน</button><button data-v="sso">ประกันสังคม สปส.1-10</button><button data-v="tax">ภ.ง.ด.1 / ภ.ง.ด.3</button><button data-v="bank">รายการโอนเงิน</button><button data-v="dept">ต้นทุนตามแผนก</button><button data-v="year">สะสมทั้งปี</button><button data-v="cert">50 ทวิ (รายปี)</button></div>
+      <div class="seg chips" id="viewSeg"><button data-v="dash">📊 ภาพรวม</button><button data-v="slip">🧾 สลิปคนนี้</button><button data-v="all">สลิปทุกคน</button><button data-v="month">สรุปเงินเดือน</button><button data-v="sso">ประกันสังคม สปส.1-10</button><button data-v="tax">ภ.ง.ด.1 / ภ.ง.ด.3</button><button data-v="bank">รายการโอนเงิน</button><button data-v="mid" id="vMid" hidden>จ่ายกลางเดือน</button><button data-v="dept">ต้นทุนตามแผนก</button><button data-v="year">สะสมทั้งปี</button><button data-v="cert">50 ทวิ (รายปี)</button></div>
       <label class="note" id="certDateF" style="display:none;align-items:center;gap:6px">วันที่ออกหนังสือรับรอง <input class="in-" type="date" id="certDate" style="width:auto;padding:5px 8px"></label>
       <button class="btn sm main" id="printBtn">🖨️ พิมพ์ / ส่ง PDF</button>
       <button class="btn sm ghost" id="csvBtn">📊 Excel</button>
@@ -394,6 +396,7 @@ details.adv{border:1px solid var(--line);border-radius:10px;padding:8px 12px}det
 <dialog id="dlg"><div class="dh"><b id="dlgTitle"></b><button class="btn sm ghost" onclick="dlg.close()">✕</button></div><div class="db" id="dlgBody"></div></dialog>
 <div class="toast" id="toast" hidden></div>
 
+<script src="../assets/timecalc.js?v=1"></script>
 <script>
 (function(){
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -485,10 +488,10 @@ function calcMonth(e,r,prev,monthIdx,ctx){
     const nR=proj(incR,ssoY,pvdY),nA=proj(incR+bonus,ssoY,pvdY);netInc=nA;yearTax=pit(nA);
     if(e.tax&&income>0)tax=r2(Math.max(0,(pit(nR)-prev.tax)/left+(pit(nA)-pit(nR))));
   }
-  const adv=r2(num(r.adv)),ded=r2(num(r.ded)),loan=r2(num(r.loan)),slf=fr?0:r2(r.slf==null||r.slf===""?num(e.slf):num(r.slf));
-  const dedTotal=r2(absD+leaveD+lateD+sso+tax+wht+pvd+slf+loan+adv+ded);
+  const adv=r2(num(r.adv)),mid=r2(num(r.mid)),ded=r2(num(r.ded)),loan=r2(num(r.loan)),slf=fr?0:r2(r.slf==null||r.slf===""?num(e.slf):num(r.slf));
+  const dedTotal=r2(absD+leaveD+lateD+sso+tax+wht+pvd+slf+loan+adv+ded+mid);
   const net=r2(earn-dedTotal),cost=r2(income+sso+erPvd);
-  return{t,rate,daily:r2(daily),hourly:r2(hourly),qty,hwMul,base,posA,fixA,ot15,ot2,ot3,dil,comP,com,bonus,oth,absD,leaveD,lateD,earn,income,ssoWage,ssoBase,sso,erSso:sso,pvd,erPvd,tax,wht,slf,loan,adv,ded,dedTotal,net,cost,yearTax,netInc};
+  return{t,rate,daily:r2(daily),hourly:r2(hourly),qty,hwMul,base,posA,fixA,ot15,ot2,ot3,dil,comP,com,bonus,oth,absD,leaveD,lateD,earn,income,ssoWage,ssoBase,sso,erSso:sso,pvd,erPvd,tax,wht,slf,loan,adv,mid,ded,dedTotal,net,cost,yearTax,netInc};
 }
 // เดือนที่คาดว่าจะจ่าย ตั้งแต่เดือน m ถึงธันวาคม (หรือถึงเดือนที่พ้นสภาพ ถ้าพ้นสภาพในปีนี้) · ตามวิธีคำนวณภาษีหัก ณ ที่จ่ายของกรมสรรพากร
 function payCtx(e,y,m){let last=11;const en=e.end?new Date(e.end+"T00:00:00"):null;
@@ -547,7 +550,7 @@ function renderEmpTotals(){
   add({m:"เงินเดือน",d:"ค่าจ้าง",h:"ค่าจ้างรายชั่วโมง",p:"ค่าจ้างตามชิ้นงาน",f:"ค่าจ้าง"}[t],c.base,0,1);add("ค่าตำแหน่ง",c.posA);add("เงินเพิ่มประจำ",c.fixA);add("OT / ทำงานวันหยุด",r2(c.ot15+c.ot2+c.ot3));add("เบี้ยขยัน",c.dil);add("ค่าคอม",c.com);add("โบนัส",c.bonus);add("รายได้อื่น",c.oth);
   add("ขาด / ลา / สาย",r2(c.absD+c.leaveD+c.lateD),1);
   if(t==="f")add("หัก ณ ที่จ่าย "+(num(co.whtF)||3)+"%",c.wht,1,1);else{add("ประกันสังคม",c.sso,1,e.sso);add("ภาษีหัก ณ ที่จ่าย",c.tax,1,e.tax)}
-  add("กองทุนสำรองเลี้ยงชีพ",c.pvd,1);add("กยศ.",c.slf,1);add("เงินกู้ / ผ่อน",c.loan,1);add("เบิกล่วงหน้า / หักอื่น",r2(c.adv+c.ded),1);
+  add("กองทุนสำรองเลี้ยงชีพ",c.pvd,1);add("กยศ.",c.slf,1);add("เงินกู้ / ผ่อน",c.loan,1);add("เบิกล่วงหน้า / หักอื่น",r2(c.adv+c.ded),1);add("จ่ายงวดกลางเดือนไปแล้ว",c.mid,1);
   $("#empTotals").innerHTML=L.join("")+`<span class="big">รับสุทธิ</span><span class="big">${fmt(c.net)}</span><span class="note">ต้นทุนนายจ้าง ${fmt(c.cost)} · สะสมทั้งปี: เงินได้ ${fmt(ytd.income)} · ภาษี ${fmt(r2(ytd.tax+ytd.wht))} · ประกันสังคม ${fmt(ytd.sso)}</span><span></span>`;
   const w=[];if(c.net<0)w.push("ยอดรับสุทธิติดลบ ตรวจสอบรายการหักอีกครั้ง");if(t!=="f"&&e.tax&&c.tax===0&&c.income>0)w.push("เดือนนี้ยังไม่ต้องหักภาษี เพราะเงินได้ทั้งปีหลังหักค่าใช้จ่ายและค่าลดหย่อนไม่เกิน 150,000 บาท");
   $("#empWarn").innerHTML=w.map(x=>`<div class="${c.net<0&&x.startsWith("ยอด")?"warn":"note"}">${esc(x)}</div>`).join("");
@@ -558,7 +561,7 @@ function renderEmpTotals(){
   $("#rateHint").innerHTML=h;
   const EQ={ot15:c.ot15,ot2:c.ot2,ot3:c.ot3,abs:-c.absD,leave:-c.leaveD,late:-c.lateD,sales:c.comP};
   $$("[data-eq]").forEach(x=>{const v=EQ[x.dataset.eq]||0;x.textContent=v?(v<0?"หัก ":"ได้ ")+"฿"+fmt(Math.abs(v)):"";x.classList.toggle("n",v<0)});
-  const r=rec(e.id)||{},q=t==="h"?num(r.hrs):t==="p"?num(r.pcs):1,extra=r2(c.ot15+c.ot2+c.ot3+c.dil+c.com+c.bonus+c.oth),cut=r2(c.absD+c.leaveD+c.lateD+c.adv+c.ded+c.loan);
+  const r=rec(e.id)||{},q=t==="h"?num(r.hrs):t==="p"?num(r.pcs):1,extra=r2(c.ot15+c.ot2+c.ot3+c.dil+c.com+c.bonus+c.oth),cut=r2(c.absD+c.leaveD+c.lateD+c.adv+c.mid+c.ded+c.loan);
   $("#mStat").className="mstat"+(q?"":" need");
   $("#mStat").innerHTML=!q?`⚠️ ใส่${t==="h"?"จำนวนชั่วโมงที่ทำงาน":"จำนวนชิ้นงานที่ทำได้"}เดือนนี้ในช่องด้านบน แล้วระบบคิดเงินให้ทันที`
     :`✓ คิดยอดเดือนนี้ให้แล้ว · รับสุทธิ <b>฿${fmt(c.net)}</b>`+(extra||cut?`<br><small>${extra?"รายได้เพิ่ม ฿"+fmt(extra):""}${extra&&cut?" · ":""}${cut?"รายการหัก ฿"+fmt(cut):""}</small>`:`<br><small>ถ้าเดือนนี้ไม่มี OT ขาด ลา หรือรายการพิเศษ ไม่ต้องกรอกอะไรเพิ่ม</small>`);
@@ -595,7 +598,7 @@ function slipHTML(e){
   if(c.absD)row(dr,"ขาดงาน",c.absD,`(${fmt0(r.abs)} วัน)`);if(c.leaveD)row(dr,"ลาไม่รับค่าจ้าง",c.leaveD,`(${fmt0(r.leave)} วัน)`);if(c.lateD)row(dr,"มาสาย",c.lateD,`(${fmt0(r.late)} นาที)`);
   if(t==="f")row(dr,"ภาษีหัก ณ ที่จ่าย "+(num(co.whtF)||3)+"%",c.wht);else{if(e.sso)row(dr,"ประกันสังคม "+fmt0(co.ssoRate)+"%",c.sso);if(e.tax)row(dr,"ภาษีหัก ณ ที่จ่าย",c.tax)}
   if(c.pvd)row(dr,"กองทุนสำรองเลี้ยงชีพ "+fmt0(e.pvd)+"%",c.pvd);if(c.slf)row(dr,"กยศ.",c.slf);if(c.loan)row(dr,"เงินกู้ / ผ่อนชำระ",c.loan);
-  if(c.adv)row(dr,"เบิกล่วงหน้า",c.adv);if(c.ded)row(dr,esc(r.dedL||"หักอื่น"),c.ded);
+  if(c.adv)row(dr,"เบิกล่วงหน้า",c.adv);if(c.mid)row(dr,"จ่ายงวดกลางเดือนแล้ว",c.mid);if(c.ded)row(dr,esc(r.dedL||"หักอื่น"),c.ded);
   if(!dr.length)dr.push(`<tr><td colspan="2" style="color:#999">ไม่มีรายการหัก</td></tr>`);
   return`<div class="slip">
     <div class="s-head">${coHead()}<div class="s-title"><h1>${t==="f"?"ใบแจ้งค่าจ้าง":"สลิปเงินเดือน"}</h1><div>${t==="f"?"PAYMENT ADVICE":"PAYSLIP"} · งวด ${MONTHS[ui.m]} ${ui.y+543}</div><div>วันที่จ่าย ${thDate(pd)}</div></div></div>
@@ -667,7 +670,7 @@ function listPage(title,sub,head,rows,foot){
     <table class="t big"><thead><tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")||`<tr><td colspan="${head.length}" style="color:#999;text-align:center;padding:14px">ยังไม่มีข้อมูล</td></tr>`}</tbody>${foot?`<tfoot>${foot}</tfoot>`:""}</table>
     <div class="l-foot"><span class="edm-brand">สร้างด้วย exceldatamaster.com · </span>ผลคำนวณภาษีเป็นการประมาณการ</div></div>`;
 }
-function renderPaper(){
+function renderPaper(){{const R0=recs[key()]||{},hm=emps.some(e=>R0[e.id]&&num(R0[e.id].mid)>0);const vb=$("#vMid");if(vb)vb.hidden=!hm;if(!hm&&ui.view==="mid")ui.view="dash"}
   document.documentElement.style.setProperty("--paper-accent",co.color||"#127A4B");
   $$("#viewSeg button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.view));
   $("#certDateF").style.display=ui.view==="cert"?"flex":"none";if(document.activeElement!==$("#certDate"))$("#certDate").value=certDate||todayISO();
@@ -715,6 +718,9 @@ function renderPaper(){
       `<tr><td></td><td></td><td>รวม ${r1.length} ราย</td><td></td><td class="r">${fmt(I)}</td><td class="r">${fmt(T)}</td><td></td></tr><tr><td></td><td colspan="6" style="font-weight:400">ยื่นภายในวันที่ 7 ${nm} (ยื่นออนไลน์ได้ถึงวันที่ 15)</td></tr>`);
     if(fl.length){let I3=0,T3=0;const r3=fl.map(({e,c},i)=>{I3+=c.earn;T3+=c.wht;return`<tr><td>${i+1}</td><td>${esc(e.idc||"-")}</td><td>${esc(e.name)}</td><td>${thDate(pd)}</td><td>ค่าจ้างทำของ / บริการ</td><td class="r">${fmt(c.earn)}</td><td class="r">${fmt0(co.whtF||3)}%</td><td class="r">${fmt(c.wht)}</td></tr>`});
       html+=listPage("ใบแนบ ภ.ง.ด.3 · ภาษีหัก ณ ที่จ่ายผู้รับจ้าง / ฟรีแลนซ์",`${per} · มาตรา 3 เตรส`,["ลำดับ","เลขประจำตัวผู้เสียภาษี","ชื่อผู้มีเงินได้","วันที่จ่าย","ประเภทเงินได้","จำนวนเงินที่จ่าย","อัตรา","ภาษีที่หัก"],r3,`<tr><td></td><td></td><td>รวม ${r3.length} ราย</td><td></td><td></td><td class="r">${fmt(I3)}</td><td></td><td class="r">${fmt(T3)}</td></tr>`)}}
+  else if(ui.view==="mid"){const R2=recs[key()]||{},L2=emps.filter(e=>R2[e.id]&&num(R2[e.id].mid)>0);let T2=0;
+    const rows=L2.map((e,i)=>{const r=R2[e.id];T2+=num(r.mid);return`<tr><td>${i+1}</td><td>${esc(e.code)}</td><td>${esc(e.name)}<br><small>${esc(r.midNote||TYPES[e.type||"m"])}</small></td><td>${esc(e.bank||"-")}</td><td class="r"><b>${fmt(num(r.mid))}</b></td><td style="width:22%"></td></tr>`});
+    html=listPage("จ่ายเงินงวดกลางเดือน (1–15)",`${per} · จ่ายวันที่ ${thDate(R2._midDate||ymKey(ui.y,ui.m)+"-15")}`,["ลำดับ","รหัส","ชื่อ-นามสกุล","บัญชีธนาคาร","จำนวนเงิน","ลายมือชื่อผู้รับเงิน"],rows,`<tr><td></td><td></td><td>รวม ${L2.length} คน</td><td></td><td class="r">${fmt(T2)}</td><td></td></tr><tr><td></td><td colspan="5" style="font-weight:400;font-size:8pt;color:#555">ยอดนี้จะหักออกจากเงินเดือนสิ้นเดือนให้อัตโนมัติ · ประกันสังคมและภาษีคิดครั้งเดียวตอนสิ้นเดือนจากค่าจ้างทั้งเดือน</td></tr>`)}
   else if(ui.view==="bank"){let T=0;const rows=list.filter(x=>x.c.net>0).map(({e,c},i)=>{T+=c.net;return`<tr><td>${i+1}</td><td>${esc(e.code)}</td><td>${esc(e.name)}</td><td>${esc(e.bank||"⚠️ ยังไม่ใส่เลขบัญชี")}</td><td class="r"><b>${fmt(c.net)}</b></td></tr>`});
     html=listPage("รายการโอนเงินเดือนเข้าบัญชี",`${per} · โอนวันที่ ${thDate(pd)}`,["ลำดับ","รหัส","ชื่อ-นามสกุล","ธนาคาร / เลขที่บัญชี","จำนวนเงินโอน"],rows,
       `<tr><td></td><td></td><td>รวม ${rows.length} รายการ</td><td></td><td class="r">${fmt(T)}</td></tr><tr><td></td><td colspan="4" style="font-weight:400">(${bahtText(T)})<div style="display:flex;justify-content:space-around;margin-top:26px;text-align:center"><div style="width:180px;border-top:1px solid #333;padding-top:3px">ผู้จัดทำ</div><div style="width:180px;border-top:1px solid #333;padding-top:3px">ผู้อนุมัติ</div></div></td></tr>`)}
@@ -743,7 +749,7 @@ function fitPaper(){const P=$("#pages");P.style.zoom="";const w=$(".paper-scroll
 function writeSummary(){try{const out={};Object.keys(recs).forEach(k=>{if(!/^\d{4}-\d{2}$/.test(k))return;const[y,m]=k.split("-").map(Number);let earn=0,net=0,sso=0,tax=0,n=0;
   emps.forEach(e=>{if(!recs[k][e.id])return;const c=calcUpTo(e,y,m-1).res;if(!c)return;earn+=c.earn;net+=c.net;sso+=c.sso;tax+=c.tax;n++});if(n)out[k]={earn:r2(earn),net:r2(net),sso:r2(sso),tax:r2(tax),n}});
   LS.set("edm_pay_summary",out)}catch(e){}}
-function renderAll(){renderPeriod();renderEmps();renderEmpCard();renderCo();renderPaper();writeSummary()}
+function renderAll(){renderTimeBar();renderPeriod();renderEmps();renderEmpCard();renderCo();renderPaper();writeSummary()}
 const update=()=>{renderEmps();renderEmpTotals();renderPaper();renderPeriod();clearTimeout(update.t);update.t=setTimeout(writeSummary,400)};
 
 /* ---------- events ---------- */
@@ -797,9 +803,9 @@ function exportExcel(){
       for(let r=1;r<=R.e.r;r++)for(let c=0;c<=R.e.c;c++){if(c<money||(skip&&skip.includes(c)))continue;const a=X.utils.encode_cell({r,c});if(ws[a]&&ws[a].t==="n")ws[a].z="#,##0.00"}return ws};
     const per=MONTHS[ui.m]+" "+(ui.y+543);
     // 1) งวดนี้
-    const H=["รหัส","ชื่อ-นามสกุล","ตำแหน่ง","แผนก","รูปแบบ","เลขบัตรประชาชน","บัญชีธนาคาร","จำนวน (วัน/ชม./ชิ้น)","ค่าจ้าง/เงินเดือน","ค่าตำแหน่ง","เงินประจำอื่น","OT ×1.5","ทำงานวันหยุด","OT วันหยุด ×3","เบี้ยขยัน","ค่าคอม","โบนัส","รายได้อื่น","รวมรายได้","หักขาด/ลา/สาย","ประกันสังคม","ภาษี (ภ.ง.ด.1)","หัก ณ ที่จ่าย (ภ.ง.ด.3)","กองทุนสำรองฯ","กยศ.","เงินกู้","เบิกล่วงหน้า","หักอื่น","รวมรายการหัก","รับสุทธิ","สมทบประกันสังคม (นายจ้าง)","สมทบกองทุน (นายจ้าง)","ต้นทุนบริษัท"];
+    const H=["รหัส","ชื่อ-นามสกุล","ตำแหน่ง","แผนก","รูปแบบ","เลขบัตรประชาชน","บัญชีธนาคาร","จำนวน (วัน/ชม./ชิ้น)","ค่าจ้าง/เงินเดือน","ค่าตำแหน่ง","เงินประจำอื่น","OT ×1.5","ทำงานวันหยุด","OT วันหยุด ×3","เบี้ยขยัน","ค่าคอม","โบนัส","รายได้อื่น","รวมรายได้","หักขาด/ลา/สาย","ประกันสังคม","ภาษี (ภ.ง.ด.1)","หัก ณ ที่จ่าย (ภ.ง.ด.3)","กองทุนสำรองฯ","กยศ.","เงินกู้","เบิกล่วงหน้า / จ่ายกลางเดือน","หักอื่น","รวมรายการหัก","รับสุทธิ","สมทบประกันสังคม (นายจ้าง)","สมทบกองทุน (นายจ้าง)","ต้นทุนบริษัท"];
     const rows=[["สรุปเงินเดือน งวด "+per+(co.name?" · "+co.name:"")],H];const T=new Array(H.length).fill(0),M0=8;
-    monthRows().forEach(({e,c})=>{const v=[c.base,c.posA,c.fixA,c.ot15,c.ot2,c.ot3,c.dil,c.com,c.bonus,c.oth,c.earn,r2(c.absD+c.leaveD+c.lateD),c.sso,c.tax,c.wht,c.pvd,c.slf,c.loan,c.adv,c.ded,c.dedTotal,c.net,c.erSso,c.erPvd,c.cost];v.forEach((x,i)=>T[M0+i]+=x);
+    monthRows().forEach(({e,c})=>{const v=[c.base,c.posA,c.fixA,c.ot15,c.ot2,c.ot3,c.dil,c.com,c.bonus,c.oth,c.earn,r2(c.absD+c.leaveD+c.lateD),c.sso,c.tax,c.wht,c.pvd,c.slf,c.loan,r2(c.adv+c.mid),c.ded,c.dedTotal,c.net,c.erSso,c.erPvd,c.cost];v.forEach((x,i)=>T[M0+i]+=x);
       rows.push([e.code,e.name,e.pos,e.dept,TYPES[e.type||"m"],e.idc||"",e.bank||"",c.t==="m"||c.t==="f"?"":c.qty].concat(v))});
     rows.push(["","รวม","","","","","",""].concat(T.slice(M0).map(r2)));
     const w1=mk(rows,[9,24,16,12,11,16,22,10].concat(new Array(H.length-8).fill(13)),M0);w1["!merges"]=[{s:{r:0,c:0},e:{r:0,c:8}}];
@@ -847,6 +853,30 @@ window.addEventListener("resize",fitPaper);
 /* ---------- กรอกทั้งเดือนแบบตาราง ---------- */
 const BULK=[["rate","อัตรา / เงินเดือน","all"],["days","วัน","d"],["hrs","ชม.","h"],["pcs","ชิ้น","p"],["ot15","OT ×1.5","ot"],["ot2","วันหยุด","ot"],["ot3","OT วันหยุด","ot"],["dil","เบี้ยขยัน","nf"],["sales","ยอดขาย","com"],["com","ค่าคอม","all"],["bonus","โบนัส","all"],["oth","รายได้อื่น","all"],["abs","ขาด(วัน)","m"],["leave","ลา(วัน)","m"],["late","สาย(นาที)","ot"],["adv","เบิก","all"],["loan","เงินกู้","nf"],["ded","หักอื่น","all"]];
 function bulkOk(e,w){const t=e.type||"m";return w==="all"||(w==="ot"?t==="m"||t==="d"||t==="h":w==="nf"?t!=="f":w==="com"?num(e.comPct)>0:w===t)}
+/* ---------- ระบบลงเวลา → เงินเดือน ---------- */
+const TM=()=>window.EDM_TIME||null;
+function timeCount(){const T=TM();if(!T)return 0;try{const ym=key(),L=T.logOf(ym),MK=T.marksOf(ym);return T.emps().filter(e=>T.active(e,ym)&&(e.type||"m")!=="p"&&(e.type||"m")!=="f"&&(L.some(s=>s.e===e.id)||MK[e.id])).length}catch(e){return 0}}
+function renderTimeBar(){const n=timeCount(),b=$("#timeBar");if(!b)return;b.hidden=!n;if(!n)return;const R=recs[key()]||{},done=emps.filter(e=>R[e.id]&&R[e.id].fromTime).length;
+  b.innerHTML=`<span>⏱ มีข้อมูลลงเวลาเดือนนี้ <b>${n} คน</b>${done?` · ดึงแล้ว ${done} คน`:""}</span><button class="btn sm main" id="pullTime" type="button">${done?"ดึงใหม่":"ดึงวันทำงาน OT สาย ขาด ลา"}</button>`;
+  $("#pullTime").onclick=()=>{if(!confirm("ดึงเวลาทำงานเดือน "+MONTHS[ui.m]+" "+(ui.y+543)+" จากระบบลงเวลา?\n\nจะแทนที่ วันทำงาน/ชั่วโมง · ขาด · ลาไม่รับค่าจ้าง · สาย · OT\n(ค่าคอม โบนัส รายการหักอื่น ไม่เปลี่ยน)"))return;
+    const r=TM().apply(key());recs=LS.get(K.recs,{});renderAll();toast("ดึงเวลาแล้ว "+r.n+" คน"+(r.skipped.length?" · ข้าม "+r.skipped.length+" คนที่ไม่มีข้อมูล":""))}}
+/* ---------- จ่ายงวดกลางเดือน: จ่ายก่อนวันที่ 15 แล้วหักออกตอนสิ้นเดือน (ประกันสังคม/ภาษีคิดครั้งเดียวทั้งเดือน) ---------- */
+function midSuggest(e){const t=e.type||"m",rate=num(e.salary),T=TM(),ym=key(),until=ym+"-15";
+  if(t==="m")return{a:r2(rate/2),n:"ครึ่งหนึ่งของเงินเดือน"};
+  if((t==="d"||t==="h")&&T){try{const S=T.month(e.id,ym,{until});if(S&&S.sessions){return t==="d"?{a:r2(S.payDays*rate),n:S.payDays+" วัน × "+fmt0(rate)+" (จากระบบลงเวลา 1–15)"}:{a:r2(S.payHrs*rate),n:S.payHrs+" ชม. × "+fmt0(rate)+" (จากระบบลงเวลา 1–15)"}}}catch(x){}}
+  return{a:0,n:t==="d"?"ใส่จำนวนเงิน (วันทำงาน 1–15 × ค่าจ้าง)":t==="h"?"ใส่จำนวนเงิน (ชั่วโมง 1–15 × ค่าจ้าง)":"ใส่จำนวนเงิน"}}
+function openMid(){const act=activeEmps();if(!act.length)return toast("ยังไม่มีพนักงาน");const R=recs[key()]||{};
+  $("#dlgTitle").textContent="จ่ายงวดกลางเดือน · "+MONTHS[ui.m]+" "+(ui.y+543);dlg.classList.add("wide");
+  $("#dlgBody").innerHTML=`<p class="note" style="margin:0">จ่ายเงินก่อนบางส่วนช่วงกลางเดือน แล้ว<b>หักออกจากเงินเดือนสิ้นเดือนให้อัตโนมัติ</b> · ประกันสังคมและภาษีคิดครั้งเดียวตอนสิ้นเดือนจากค่าจ้างทั้งเดือน (ถูกต้องตามกฎหมาย) · แก้ยอดได้ทุกช่อง ใส่ 0 = ไม่จ่ายกลางเดือน</p>
+    <div class="f" style="max-width:220px"><label>วันที่จ่าย</label><input class="in-" type="date" id="midDate" value="${esc(R._midDate||key()+"-15")}"></div>
+    <div class="bulk"><table><thead><tr><th>พนักงาน</th><th>ที่มาของยอด</th><th>จ่ายกลางเดือน (บาท)</th></tr></thead><tbody>${act.map(e=>{const r=R[e.id],sg=midSuggest(e),cur=r&&r.mid!=null&&r.mid!==""?num(r.mid):null;
+      return`<tr data-id="${e.id}"><td>${esc(e.name||e.code)}<br><small class="note">${TYPES[e.type||"m"]}</small></td><td><small class="note">${esc(cur!=null?(r.midNote||sg.n):sg.n)}</small></td><td><input type="number" step="any" min="0" inputmode="decimal" data-mid value="${cur!=null?cur:sg.a||""}" data-note="${esc(sg.n)}" data-sg="${sg.a||0}"></td></tr>`}).join("")}</tbody></table></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn main" id="midSave">💾 บันทึกจ่ายกลางเดือน</button><span class="note" id="midSum"></span></div>`;
+  const sum=()=>{let n=0,t=0;$$("#dlgBody [data-mid]").forEach(i=>{const v=num(i.value);if(v>0){n++;t+=v}});$("#midSum").textContent=n?`${n} คน · รวม ${fmt(t)} บาท`:"ยังไม่มียอด"};sum();$$("#dlgBody [data-mid]").forEach(i=>i.oninput=sum);
+  $("#midSave").onclick=()=>{if(!recs[key()])recs[key()]={};let n=0;$$("#dlgBody tr[data-id]").forEach(tr=>{const id=tr.dataset.id,i=tr.querySelector("[data-mid]"),v=r2(num(i.value));
+      if(v>0){const r=rec(id,null,true);r.mid=v;r.midNote=Math.abs(v-num(i.dataset.sg))<0.01?i.dataset.note:"กำหนดเอง";n++}else if(recs[key()][id]){delete recs[key()][id].mid;delete recs[key()][id].midNote}});
+    recs[key()]._midDate=$("#midDate").value||key()+"-15";svRecs();dlg.close();if(n){ui.view="mid";svUi()}renderAll();toast(n?"บันทึกจ่ายกลางเดือน "+n+" คน · พิมพ์ใบจ่ายได้ที่มุมขวา · สิ้นเดือนหักให้อัตโนมัติ":"ล้างยอดจ่ายกลางเดือนแล้ว")};
+  dlg.showModal()}
 function openBulk(){if(!emps.length)return toast("ยังไม่มีพนักงาน");
   $("#dlgTitle").textContent="กรอกทั้งเดือนแบบตาราง · "+MONTHS[ui.m]+" "+(ui.y+543);dlg.classList.add("wide");
   $("#dlgBody").innerHTML=`<p class="note" style="margin:0">กรอกได้ทุกคนในหน้าเดียว · ช่องสีเทาคือไม่ใช้กับรูปแบบค่าจ้างของคนนั้น · กด Tab เพื่อไปช่องถัดไป</p>
@@ -864,8 +894,8 @@ function openBulk(){if(!emps.length)return toast("ยังไม่มีพน
 dlg.addEventListener("close",()=>dlg.classList.remove("wide"));
 function copyPrev(){const pk=ymKey(ui.m?ui.y:ui.y-1,ui.m?ui.m-1:11),P=recs[pk]||{};const ids=Object.keys(P).filter(k=>!k.startsWith("_")&&empById(k));if(!ids.length)return toast("เดือนก่อนยังไม่มีข้อมูล");
   if(!recs[key()])recs[key()]={};const has=ids.filter(id=>recs[key()][id]);if(has.length&&!confirm(`มีข้อมูลเดือนนี้แล้ว ${has.length} คน · คัดลอกทับด้วยข้อมูลเดือนก่อน?\n(กดยกเลิก = คัดลอกเฉพาะคนที่ยังไม่มีข้อมูล)`))ids.splice(0,ids.length,...ids.filter(id=>!recs[key()][id]));
-  ids.forEach(id=>{const o=Object.assign({},P[id]);delete o.bonus;delete o.adv;recs[key()][id]=o});svRecs();renderAll();toast("คัดลอกแล้ว "+ids.length+" คน (ไม่รวมโบนัสและเบิกล่วงหน้า)")}
-$("#bulkBtn").onclick=openBulk;$("#copyPrev").onclick=copyPrev;
+  ids.forEach(id=>{const o=Object.assign({},P[id]);delete o.bonus;delete o.adv;delete o.mid;recs[key()][id]=o});svRecs();renderAll();toast("คัดลอกแล้ว "+ids.length+" คน (ไม่รวมโบนัสและเบิกล่วงหน้า)")}
+$("#bulkBtn").onclick=openBulk;$("#midBtn").onclick=openMid;$("#copyPrev").onclick=copyPrev;
 $("#bizSel").innerHTML=`<option value="">— เลือกประเภทธุรกิจ —</option>`+Object.entries(BIZ).map(([k,b])=>`<option value="${k}">${b.n}</option>`).join("");
 function bizNote(){const b=BIZ[co.biz];$("#bizSel").value=co.biz||"";$("#bizNote").textContent=b?"💡 "+b.tip:""}
 $("#bizSel").onchange=e=>{co.biz=e.target.value;const b=BIZ[co.biz];if(b){co.hpd=b.hpd;co.dpm=b.dpm}svCo();renderCo();bizNote();toast(b?"ตั้งค่าเริ่มต้นสำหรับ "+b.n.replace(/^\S+ /,"")+" แล้ว":"")};
