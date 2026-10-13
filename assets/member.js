@@ -319,9 +319,21 @@
       return true;
     }).catch(function () { pushing = false; return false; });
   }
+  /* สรุปข้อมูลชุดหนึ่ง (ใช้ถามผู้ใช้ตอนข้อมูลในเครื่องกับในระบบไม่ตรงกัน) */
+  function keysNow() { var o = {}; CK.forEach(function (k) { var v = null; try { v = localStorage.getItem(k); } catch (e) {} if (v != null) o[k] = v; }); return o; }
+  function summ(K) {
+    var P = function (k) { try { return JSON.parse(K[k] || "null"); } catch (e) { return null; } }, n = function (k) { var v = P(k); return Array.isArray(v) ? v.length : 0; };
+    var sel = P("edm_bill_seller") || {}, bk = P("edm_book_cfg") || {}, fin = P("edm_fin_cfg") || {}, td = P("edm_todo_cfg") || {}, shop = sel.name || (bk.shop && bk.shop.name) || "";
+    var parts = [["บิล", n("edm_bill_docs")], ["สินค้า", n("edm_stock_items")], ["ออเดอร์คาเฟ่", n("edm_cafe_orders")], ["ใบจอง", n("edm_book_list")], ["พนักงาน", n("edm_pay_emps")], ["รายการการเงิน", n("edm_fin_items")], ["งาน To-Do", n("edm_tdsheet_items") + n("edm_todo_items")]].filter(function (x) { return x[1]; });
+    var demo = /ตัวอย่าง/.test(shop) || fin.demo === true || td.demo === true;
+    return { shop: shop, demo: demo, total: parts.reduce(function (a, x) { return a + x[1]; }, 0), txt: (shop ? "ร้าน: " + shop + "\n" : "") + (parts.length ? parts.map(function (x) { return x[0] + " " + x[1]; }).join(" · ") : "ไม่มีข้อมูล") + (demo ? "\n(เป็นข้อมูลตัวอย่าง)" : "") };
+  }
+  /* เก็บข้อมูลในเครื่องไว้ก่อนถูกแทน (ย้อนกลับได้ที่หน้า สำรอง / กู้คืนข้อมูล) */
+  function keepPrev(why) { try { var d = snap(); if (emptyLocal() || d.length > 2500000) return; localStorage.setItem("edm_sync_prev", JSON.stringify({ at: Date.now(), why: why, data: d })); } catch (e) {} }
   function cloudRestore(r) {
     var o; try { o = JSON.parse(r.data); } catch (e) { return; }
     if (!o || !o.keys) return;
+    keepPrev("ก่อนดึงข้อมูลจากระบบ (บันทึกในระบบเมื่อ " + timeTh(r.ts) + ")");
     // ระบบที่เพิ่มภายหลัง (จอง / คาเฟ่): ถ้าข้อมูลบนระบบยังไม่มีระบบนั้นเลย ให้เก็บข้อมูลในเครื่องไว้ ไม่ลบทิ้ง
     var fam = function (k) { return k.split("_").slice(0, 2).join("_"); };
     var hasFam = function (k) { return NEWK.some(function (x) { return fam(x) === fam(k) && o.keys[x] != null; }); };
@@ -358,7 +370,15 @@
       if (!r || !r.ok || r.none || r.same || !r.data) { if (r && r.ok && (r.same || r.none) && !mine) cSet(S); begin(); return; }
       var local = snap();
       if (emptyLocal() || (mine && hashOf(local) === S.h)) return cloudRestore(r); // เครื่องนี้ไม่มีอะไรใหม่ → ใช้ข้อมูลจากระบบ
-      if (confirm("พบข้อมูลที่บันทึกจากอีกเครื่องเมื่อ " + timeTh(r.ts) + "\n\nตกลง = ใช้ข้อมูลล่าสุดจากระบบ (แทนข้อมูลในเครื่องนี้)\nยกเลิก = ใช้ข้อมูลในเครื่องนี้ แล้วสำรองทับข้อมูลในระบบ")) return cloudRestore(r);
+      var cl = {}; try { cl = summ(JSON.parse(r.data).keys || {}); } catch (e) { cl = { txt: "", total: 0 }; }
+      var lo = summ(keysNow());
+      // ข้อมูลตัวอย่าง ไม่ทับข้อมูลจริง: เครื่องนี้มีแต่ตัวอย่าง → ใช้ข้อมูลจากระบบ · ระบบมีแต่ตัวอย่าง → สำรองข้อมูลจริงในเครื่องขึ้นระบบ
+      if (lo.demo && !cl.demo && cl.total) return cloudRestore(r);
+      if (cl.demo && !lo.demo && lo.total) { cSet(S); cloudPush(true).then(begin); return; }
+      var msg = "ข้อมูลในเครื่องนี้ ไม่ตรงกับข้อมูลที่สำรองไว้ในระบบ\n\n☁️ ในระบบ (บันทึกเมื่อ " + timeTh(r.ts) + ")\n" + cl.txt + "\n\n📱 ในเครื่องนี้\n" + lo.txt +
+        "\n\nตกลง = ใช้ข้อมูลในระบบ ☁️\nยกเลิก = ใช้ข้อมูลในเครื่องนี้ 📱 แล้วสำรองทับในระบบ\n\n(ข้อมูลอีกชุดเก็บสำรองไว้ ย้อนกลับได้ที่ สำรอง / กู้คืนข้อมูล)";
+      if (confirm(msg)) return cloudRestore(r);
+      try { localStorage.setItem("edm_sync_prev", JSON.stringify({ at: Date.now(), why: "ข้อมูลในระบบที่ถูกแทน (บันทึกเมื่อ " + timeTh(r.ts) + ")", data: r.data })); } catch (e) {}
       cSet(S); cloudPush(true).then(begin);
     }).catch(begin);
     document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") cloudPush(); });
@@ -396,7 +416,14 @@
     apply(); check(false); cloudInit();
     document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && me && Date.now() - (me.ts || 0) > 30 * 60e3) check(false); });
   }
-  window.EDM_MEMBER = { get me() { return me; }, allowed: function (k) { return allowed(me, k); }, buyUrl: buyUrl, sysList: function () { return sysList(me); }, call: call, check: check, openGate: openGate, push: cloudPush, cloud: cGet, ping: function () { return call({ a: "ping" }); } };
+  function prevGet() { try { return JSON.parse(localStorage.getItem("edm_sync_prev") || "null"); } catch (e) { return null; } }
+  function prevRestore() {
+    var p = prevGet(); if (!p) return false; var o; try { o = JSON.parse(p.data); } catch (e) { return false; } if (!o || !o.keys) return false;
+    var cur = snap(); CK.forEach(function (k) { try { if (o.keys[k] != null) localStorage.setItem(k, o.keys[k]); else localStorage.removeItem(k); } catch (e) {} });
+    try { localStorage.setItem("edm_sync_prev", JSON.stringify({ at: Date.now(), why: "ข้อมูลก่อนกดย้อนกลับ", data: cur })); localStorage.removeItem("edm_bill_draft"); } catch (e) {}
+    if (me && me.token) cloudPush(true); return true;
+  }
+  window.EDM_MEMBER = { get me() { return me; }, prev: prevGet, prevRestore: prevRestore, summ: function (data) { try { return summ(JSON.parse(data).keys || {}); } catch (e) { return null; } }, allowed: function (k) { return allowed(me, k); }, buyUrl: buyUrl, sysList: function () { return sysList(me); }, call: call, check: check, openGate: openGate, push: cloudPush, cloud: cGet, ping: function () { return call({ a: "ping" }); } };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
 

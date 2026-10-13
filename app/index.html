@@ -335,7 +335,7 @@ body>.tabbar{order:2}
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261013-2200";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261013-2300";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -485,8 +485,12 @@ body>.tabbar{order:2}
     <section id="data" class="pane"><div class="wrap" style="max-width:820px">
       <div class="hello"><h1>💾 สำรอง / กู้คืนข้อมูล</h1><p>ข้อมูลทุกระบบบันทึกในเครื่องนี้ และเมื่อเข้าสู่ระบบสมาชิก จะสำรองขึ้นระบบร้านให้อัตโนมัติ ใช้ต่อจากเครื่องอื่นได้</p></div>
       <div class="card"><h2>ข้อมูลในเครื่องนี้ <small id="dtLast"></small></h2><div class="stats" id="dtStats"></div>
-        <div class="acts"><button class="btn main" id="dtBk">⬇️ ดาวน์โหลดไฟล์สำรองทั้งหมด</button><label class="btn ghost">⬆️ กู้คืนจากไฟล์สำรอง<input type="file" id="dtImp" accept=".json" hidden></label><button class="btn ghost" id="dtXls">📊 ดาวน์โหลด Excel</button></div>
+        <div class="acts"><button class="btn main" id="dtBk">⬇️ ดาวน์โหลดไฟล์สำรองทั้งหมด</button><label class="btn ghost">⬆️ กู้คืนจากไฟล์สำรอง<input type="file" id="dtImp" accept=".json,.txt,application/json,text/plain" hidden></label><button class="btn ghost" id="dtXls">📊 ดาวน์โหลด Excel</button></div>
         <p class="help" id="dtCloud" style="margin-top:10px"></p><p class="help" id="dtVer" style="margin-top:4px"></p><p class="help" style="margin-top:8px">ไฟล์สำรองเก็บได้ข้อมูลระบบร้านค้าครบในไฟล์เดียว ใช้ย้ายไปเครื่องใหม่ได้ · ไฟล์ Excel ใช้ส่งผู้ทำบัญชีหรือเปิดใน Google ชีต</p></div>
+      <div class="card" id="prevCard" hidden><h2>↩️ ย้อนกลับข้อมูลชุดก่อน <small id="prevAt"></small></h2>
+        <p class="help" id="prevWhy"></p><pre class="help" id="prevSum" style="white-space:pre-wrap;margin:6px 0;font-family:inherit"></pre>
+        <div class="acts"><button class="btn ghost" id="prevGo" type="button">↩️ ใช้ข้อมูลชุดนี้แทนข้อมูลตอนนี้</button></div>
+        <p class="help">ระบบเก็บข้อมูลชุดที่ถูกแทนไว้ 1 ชุดล่าสุด (เช่น ตอนดึงข้อมูลจากอีกเครื่อง) · กดแล้วข้อมูลตอนนี้จะถูกเก็บไว้แทน สลับกลับได้</p></div>
       <div class="card"><h2>🔒 ล็อกหน้าจอด้วย PIN <small id="lkState"></small></h2>
         <p class="help">กันคนอื่นเปิดดูข้อมูลร้านจากเครื่องนี้ เช่น คอมที่ใช้ร่วมกันหน้าร้าน · ระบบจะล็อกเมื่อเปิดเบราว์เซอร์ใหม่ และเมื่อไม่ได้ใช้งานตามเวลาที่ตั้ง · เก็บเฉพาะค่าเข้ารหัสของ PIN ไม่เก็บ PIN จริง</p>
         <div class="form" style="margin-top:10px"><div class="fl"><label id="lkL1">ตั้ง PIN (ตัวเลข 4–12 หลัก)</label><input class="in" id="lkPin" inputmode="numeric" maxlength="12" autocomplete="off" style="-webkit-text-security:disc"></div>
@@ -1022,7 +1026,10 @@ function applyPerm(){const L=window.EDM_LOCK,u=L&&L.user&&L.user();
   if(cur&&!canR(cur))location.hash="#/"+firstOk()}
 const ROUTES_ALL=r=>PANES.includes(r)||!!ROUTES[r];
 window.addEventListener("edm-user",()=>{applyPerm();if($("#data").classList.contains("show"))renderUsers();route()});
-function renderData(){wipeClose();renderLock();renderUsers();renderAudit();
+function renderPrev(){const M=window.EDM_MEMBER,p=M&&M.prev&&M.prev();$("#prevCard").hidden=!p;if(!p)return;const d=new Date(p.at),sm=M.summ(p.data);
+  $("#prevAt").textContent="เก็บไว้ "+thD(d.toISOString().slice(0,10))+" "+d.toTimeString().slice(0,5)+" น.";$("#prevWhy").textContent=p.why||"";$("#prevSum").textContent=sm?sm.txt:""}
+$("#prevGo").onclick=()=>{const M=window.EDM_MEMBER;if(!M||!confirm("ใช้ข้อมูลชุดก่อนแทนข้อมูลตอนนี้?\n(ข้อมูลตอนนี้จะถูกเก็บไว้ สลับกลับได้)"))return;if(M.prevRestore()){toast("ย้อนกลับข้อมูลแล้ว ✓ กำลังโหลดใหม่");setTimeout(()=>location.reload(),800)}else toast("ย้อนกลับไม่ได้")};
+function renderData(){wipeClose();renderLock();renderUsers();renderAudit();renderPrev();
   {const el=$("#dtVer");el.textContent="ระบบหลังร้าน: กำลังตรวจ...";new Promise((ok,no)=>{let n=0;const t=setInterval(()=>{const M=window.EDM_MEMBER;if(M&&M.ping){clearInterval(t);ok(M.ping())}else if(++n>40){clearInterval(t);no()}},100)}).then(x=>x).then(r=>{const v=String(r&&r.version||"");const ok=/^v(1[89]|[2-9]\d)/.test(v);el.innerHTML="ระบบหลังร้าน: <b>"+esc(v||"ไม่ทราบเวอร์ชัน")+"</b> "+(ok?"✅ ระบบความปลอดภัยล่าสุด":"⚠️ ยังเป็นเวอร์ชันเก่า · วางโค้ด v18 แล้วทำให้ใช้งานได้ (เวอร์ชันใหม่)")}).catch(()=>{el.textContent="ระบบหลังร้าน: เชื่อมต่อไม่ได้ (ตรวจอินเทอร์เน็ต)"})}const A=LS.get("edm_acc",{})||{};const n=(k)=>(LS.get(k,[])||[]).length;
   const SE=window.EDM_ED?EDM_ED.key:"";$("#dtStats").innerHTML=(SE==="bill"?[["เอกสารขาย",n("edm_bill_docs")],["ลูกค้า",n("edm_bill_customers")],["สินค้า / บริการ",n("edm_stock_items")+n("edm_services")]]:SE==="stock"?[["สินค้า",n("edm_stock_items")],["ความเคลื่อนไหว",n("edm_stock_tx")],["ใบสั่งซื้อ",(A.pur||[]).filter(p=>p.kind==="stock").length],["ผู้ขาย",n("edm_suppliers")]]:[["เอกสารขาย",n("edm_bill_docs")],["สินค้า",n("edm_stock_items")],["ซื้อ / ค่าใช้จ่าย",(A.pur||[]).length],["ลูกค้า",n("edm_bill_customers")]]).map(([t,v])=>`<div><b>${v}</b><span>${t}</span></div>`).join("");
   const last=LS.get("edm_last_backup","");$("#dtLast").textContent=last?"ดาวน์โหลดไฟล์สำรองล่าสุด "+thD(last):"";
@@ -1031,7 +1038,7 @@ function renderData(){wipeClose();renderLock();renderUsers();renderAudit();
   $("#dtCloud").innerHTML=me&&me.token?(C.email===me.email&&C.ok?`☁️ <b>สำรองขึ้นระบบร้านอัตโนมัติ</b> · ล่าสุด ${thD(new Date(C.ok).toISOString().slice(0,10))} ${new Date(C.ok).toTimeString().slice(0,5)} · เข้าสู่ระบบจากเครื่องอื่นได้ ข้อมูลตามไปด้วย`:C.err?"⚠️ <b>ยังสำรองขึ้นระบบร้านไม่ได้</b> · ระบบหลังร้านยังไม่พร้อม ระหว่างนี้ข้อมูลอยู่ในเครื่องนี้ ควรดาวน์โหลดไฟล์สำรองเก็บไว้":"☁️ <b>สำรองขึ้นระบบร้านอัตโนมัติ</b> · กำลังสำรองครั้งแรก"):"⚠️ ยังไม่ได้เข้าสู่ระบบ ข้อมูลอยู่แค่ในเครื่องนี้ ควรดาวน์โหลดไฟล์สำรองเก็บไว้"}
 function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,3000)}
 $("#dtBk").onclick=()=>{const o={app:"edm-all",v:1};KS.forEach(k=>o[k]=LS.get(k,null));const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="สำรองระบบร้านค้า-"+today()+".json";a.click();LSset("edm_last_backup",today());renderData();toast("ดาวน์โหลดไฟล์สำรองแล้ว ✓")};
-$("#dtImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-all")throw 0;if(!confirm("กู้คืนข้อมูลจากไฟล์? ข้อมูลระบบร้านค้าในเครื่องนี้จะถูกแทนที่"))return;KS.forEach(k=>{if(o[k]!=null)LSset(k,o[k])});KS_UI.forEach(k=>localStorage.removeItem(k));reloadFrames();renderData();toast("กู้คืนข้อมูลแล้ว ✓")}).catch(()=>toast("ไฟล์ไม่ถูกต้อง ต้องเป็นไฟล์สำรองทุกระบบ (.json)"));e.target.value=""};
+$("#dtImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o&&o.keys&&typeof o.keys==="object"&&o.app!=="edm-all"){if(!confirm("กู้คืนจากไฟล์สำรองในระบบ (Google Drive)? ข้อมูลทุกระบบในเครื่องนี้จะถูกแทนที่"))return;Object.keys(o.keys).forEach(k=>{if(/^edm_/.test(k)&&typeof o.keys[k]==="string")try{localStorage.setItem(k,o.keys[k])}catch(e){}});localStorage.removeItem("edm_bill_draft");toast("กู้คืนข้อมูลแล้ว ✓ กำลังโหลดใหม่");setTimeout(()=>location.reload(),800);return}if(o.app!=="edm-all")throw 0;if(!confirm("กู้คืนข้อมูลจากไฟล์? ข้อมูลระบบร้านค้าในเครื่องนี้จะถูกแทนที่"))return;KS.forEach(k=>{if(o[k]!=null)LSset(k,o[k])});KS_UI.forEach(k=>localStorage.removeItem(k));reloadFrames();renderData();toast("กู้คืนข้อมูลแล้ว ✓")}).catch(()=>toast("ไฟล์ไม่ถูกต้อง ต้องเป็นไฟล์สำรองทุกระบบ (.json)"));e.target.value=""};
 $("#dtXls").onclick=()=>{const f=frameFor(ROUTES.pnl.src);const run=()=>{try{f.contentWindow.edmExcel()}catch(e){toast("ลองใหม่อีกครั้ง")}};toast("กำลังสร้างไฟล์ Excel...");f.dataset.ready?run():f.addEventListener("load",()=>setTimeout(run,100),{once:true})};
 $("#dtDemo").onclick=()=>$("#demoBtn").click();
 // ล้างข้อมูล: ต้องพิมพ์รหัส 4 หลักที่สุ่มขึ้นมาก่อน กันกดพลาด
@@ -1057,7 +1064,7 @@ applyPerm();route();if(window.EDM_ED&&EDM_ED.solo)renderBadges();
 try{const P=JSON.parse(sessionStorage.getItem("edm_pend")||"null");sessionStorage.removeItem("edm_pend");if(P&&P.h&&/^(open|edit|new|card)=[\w-]+$/.test(P.h)){const t=P.t==="stock"?"stock":P.t==="booking"?"bk":P.t==="cafe"?"cf":"bill";if(!window.EDM_ED||EDM_ED.ok(t))openIn(t,P.h)}}catch(e){}
 </script>
 <script src="reports.js?v=52"></script>
-<script src="../assets/member.js?v=72" defer></script>
+<script src="../assets/member.js?v=73" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 <script>/* โหมดออฟไลน์: เก็บหน้าระบบไว้ในเครื่อง เน็ตหลุดแล้วยังเปิดได้ */if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){})});</script>
 </body>
