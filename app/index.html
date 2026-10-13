@@ -567,7 +567,7 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=57"},stock:{src:"/stock/?v=53",sv:"home"},stockrep:{src:"/stock/?v=53",sv:"report"},stkitems:{src:"/stock/?v=53",sv:"items"},stkin:{src:"/stock/?v=53",sv:"in"},stkout:{src:"/stock/?v=53",sv:"out"},stkadj:{src:"/stock/?v=53",sv:"adj"},stkhist:{src:"/stock/?v=53",sv:"hist"},stkre:{src:"/stock/?v=53",sv:"reorder"},
+const ROUTES={bill:{src:"/bill/?v=58"},stock:{src:"/stock/?v=54",sv:"home"},stockrep:{src:"/stock/?v=54",sv:"report"},stkitems:{src:"/stock/?v=54",sv:"items"},stkin:{src:"/stock/?v=54",sv:"in"},stkout:{src:"/stock/?v=54",sv:"out"},stkadj:{src:"/stock/?v=54",sv:"adj"},stkhist:{src:"/stock/?v=54",sv:"hist"},stkre:{src:"/stock/?v=54",sv:"reorder"},
   ar:{src:"/account/?v=56",v:"ar"},tax:{src:"/account/?v=56",v:"tax"},buy:{src:"/account/?v=56",v:"buy"},cash:{src:"/account/?v=56",v:"cash"},pnl:{src:"/account/?v=56",v:"home"},
   cf:{src:"/cafe/?v=7",cv:"home"},cfpos:{src:"/cafe/?v=7",cv:"pos"},cfbar:{src:"/cafe/?v=7",cv:"bar"},cford:{src:"/cafe/?v=7",cv:"orders"},cfmenu:{src:"/cafe/?v=7",cv:"menu"},cfinv:{src:"/cafe/?v=7",cv:"inv"},cfshift:{src:"/cafe/?v=7",cv:"shift"},cfrpt:{src:"/cafe/?v=7",cv:"rpt"},cfset:{src:"/cafe/?v=7",cv:"set"},
   bk:{src:"/booking/?v=7",bv:"home"},bkcal:{src:"/booking/?v=7",bv:"cal"},bklist:{src:"/booking/?v=7",bv:"list"},bkres:{src:"/booking/?v=7",bv:"res"},bkrpt:{src:"/booking/?v=7",bv:"rpt"},bkset:{src:"/booking/?v=7",bv:"set"},
