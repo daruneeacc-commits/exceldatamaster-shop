@@ -6,7 +6,7 @@
 - ประหยัดโควตา: อ่านเฉพาะส่วนไฟล์ที่ต้องแก้ (ใช้ Grep หาก่อน) ไม่ทดสอบทั้งระบบถ้าไม่ได้ขอ ไม่ใช้ subagent ถ้าไม่ได้ขอ
 
 ## แผนที่โปรเจกต์ (GitHub Pages: exceldatamaster.com)
-- `index.html` หน้าร้าน/หน้าหลัก (มี SEO + prerender: `tools/seo-home.py`, `tools/prerender.js`)
+- `index.html` หน้าร้าน/หน้าหลัก (มี SEO + prerender: `tools/seo-home.py`, `tools/prerender.js`) · ปุ่มทดลองใช้ `a[data-pick]` เปิดหน้าต่าง "อยากใช้ทำอะไร" (ท้ายไฟล์, รายการ O) พาไป <ระบบ>?start=signup
 - `app/` เชลล์ระบบออนไลน์ (เมนู, iframe ระบบย่อย) · `app/edition.js` รุ่นแยก (bill, stock, cafe, book)
 - `bill/` เปิดบิล/ใบกำกับภาษี/CN/DN · `account/` VAT, ลูกหนี้, 50 ทวิ · `payroll/` เงินเดือน/ประกันสังคม
 - หน้าตาโทนพาสเทล (ไอคอนวาดเอง แท็บล่างแบบ Excel บนมือถือ): `todo/` ชมพู · `finance/` ฟ้า · `payroll/` พีช (ปรับแค่ CSS/ไอคอน ไม่แตะสูตร)
@@ -46,4 +46,5 @@
 - เจ้าของกดเมนู "จัดไฟล์สำรองลูกค้าเป็นโฟลเดอร์ตามระบบ" 1 ครั้ง (ถ้ายังไม่ได้กด)
 - เช็กชีตสมาชิก คอลัมน์ "ระบบ" ที่ว่าง ควรเหลือเฉพาะสมาชิกเดิม 199
 - ระบบจองแยกประเภทธุรกิจ: ทำแล้ว = รุ่น /app/?ed=hotel|resort|dorm|meet (edition.js BV, ใช้สิทธิ์ sys book เดียวกัน, booking ตั้ง cfg.biz/kinds ครั้งแรก) · หน้าร้านขาย 4 การ์ด (PLANS hotel/resort/meet sys book · dorm = สินค้าแยก sys dorm (member.js GROUP.book ครอบ dorm)) · รีสอร์ทคิดคนเพิ่ม r.inc/r.pp × line.pax · ที่ยังขาด: อุปกรณ์เสริมผูกห้องประชุมอัตโนมัติ · เปลี่ยนคำเรียกตามประเภท · หน้าขาย/ภาพ og แยก 4 แบบ · แจ้งเตือน LINE · OTA ต้องใช้ channel manager
+- ไอเดีย: "การเงินแบบง่าย 99" = finance ซ่อนเมนูซับซ้อน (ต้องเพิ่มสินค้าใน Apps Script ต่อจาก v29)
 - ไอเดียชุด "ไฟล์ Excel To-Do + ออนไลน์ 1 ปี" (+150 จาก 749)
