@@ -133,7 +133,7 @@
   function buyUrl(k, plan) { return API + "?buy=1&sys=" + encodeURIComponent(k || curSys() || "shop") + (plan ? "&plan=" + plan : ""); }
   function perk() { var k = curSys(); return k === "shop" || !k ? "ครบในระบบเดียว: เปิดบิล · ภาษี · สต๊อก · บัญชี" : "บัญชีนี้ใช้กับระบบ " + SYS[k].n; }
   function renderGate() {
-    var ck = curSys(), tool = ck === "todo" ? "To-Do งานที่ต้องทำ" : ck === "finance" ? "บริหารการเงิน SME & ฟรีแลนซ์" : ck === "time" ? "ลงเวลา / ตอกบัตร" : /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /booking/.test(location.pathname) ? "ระบบจองและให้เช่า" : /cafe/.test(location.pathname) ? "ระบบร้านคาเฟ่" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
+    var ck = curSys(), tool = ck && ck !== "shop" && SYS[ck] ? SYS[ck].n : ck === "todo" ? "To-Do งานที่ต้องทำ" : ck === "finance" ? "บริหารการเงิน SME & ฟรีแลนซ์" : ck === "time" ? "ลงเวลา / ตอกบัตร" : /payroll/.test(location.pathname) ? "คำนวณเงินเดือนพร้อมสลิป" : /\/app\//.test(location.pathname) ? "ระบบร้านค้า" : /booking/.test(location.pathname) ? "ระบบจองและให้เช่า" : /cafe/.test(location.pathname) ? "ระบบร้านคาเฟ่" : /stock/.test(location.pathname) ? "ระบบสต๊อกสินค้า" : /account/.test(location.pathname) ? "บัญชีร้านค้า" : "เปิดบิลออนไลน์";
     var h = '<div class="edm-card">';
     if (mode === "sent") {
       h += '<div style="font-size:2.4rem;line-height:1">✅</div><h2>' + (/ยืนยัน/.test(note) ? '📧 เช็กอีเมล แล้วกดยืนยัน' : 'สมัครเรียบร้อย · รอร้านเปิดใช้งาน') + '</h2><p>' + esc(note) + '</p>' +
@@ -217,18 +217,18 @@
     if (!deny) { deny = document.createElement("div"); deny.className = "edm-gate"; deny.setAttribute("role", "dialog"); deny.setAttribute("aria-modal", "true"); document.body.appendChild(deny); }
     var mine = L.filter(function (x) { return x !== "bill" && x !== "stock" && x !== "account" || L.indexOf("shop") < 0; });
     var line = "https://line.me/R/oaMessage/%40856tvnxs/?" + encodeURIComponent("ขอเพิ่มระบบ " + SYS[k].n + " ให้บัญชี " + me.email);
-    deny.innerHTML = '<div class="edm-card"><span class="edm-badge">' + esc(me.email) + '</span><h2>บัญชีนี้ยังไม่ได้เปิดใช้ ' + esc(SYS[k].n) + '</h2>' +
-      '<p class="edm-muted">บัญชีของคุณใช้ได้กับระบบต่อไปนี้</p>' +
-      mine.map(function (x) { return '<a class="edm-btn ghost" href="' + BASE + SYS[x].u + '">' + esc(SYS[x].n) + '</a>'; }).join("") +
-      '<button class="edm-btn" id="edmTry" type="button">🎁 ขอทดลองใช้ระบบนี้ฟรี 7 วัน</button><div class="edm-msg" id="edmTryM" hidden></div>' +
-      '<a class="edm-btn ghost" href="' + esc(buyUrl(k)) + '" target="_blank" rel="noopener">🛒 ซื้อ ' + esc(SYS[k].n) + ' เพิ่มในบัญชีนี้</a>' +
+    deny.innerHTML = '<div class="edm-card"><span class="edm-badge">' + esc(me.email) + '</span><h2>' + esc(SYS[k].n) + '</h2>' +
+      '<p class="edm-muted">บัญชีนี้ยังไม่ได้เปิดใช้ระบบนี้ · เลือก 1 อย่าง</p>' +
+      '<button class="edm-btn" id="edmTry" type="button">🎁 ขอทดลองฟรี 7 วัน (ร้านอนุมัติ แล้วแจ้งทางอีเมล)</button><div class="edm-msg" id="edmTryM" hidden></div>' +
+      '<a class="edm-btn ghost" href="' + esc(buyUrl(k)) + '" target="_blank" rel="noopener">🛒 ซื้อเลย</a>' +
+      (mine.length ? '<p class="edm-muted" style="font-size:.8rem;margin:6px 0 0">ระบบที่บัญชีนี้ใช้อยู่: ' + mine.map(function (x) { return '<a href="' + BASE + SYS[x].u + '">' + esc(SYS[x].n) + '</a>'; }).join(" · ") + '</p>' : '') +
       '<button class="edm-link" id="edmDenyOut" type="button" style="align-self:center">ใช้อีเมลอื่น · ออกจากระบบ</button></div>';
     deny.querySelector("#edmDenyOut").onclick = function () { call({ a: "logout", email: me.email, token: me.token }).catch(function () {}); cloudStop(); me = null; LS.set(null); hideDeny(); apply(); openGate("signup"); };
     deny.querySelector("#edmTry").onclick = function () {
       var bt = this, M = deny.querySelector("#edmTryM"); bt.disabled = true; bt.textContent = "กำลังส่งคำขอ…";
       // ใช้ช่องทางสมัครเดิม (หลังบ้าน v31 ขึ้นไป): บัญชีที่ยืนยันแล้ว = แจ้งร้านทางอีเมล ไม่เปลี่ยนรหัสผ่าน
       call({ a: "signup", email: me.email, pass: "rq-" + Math.random().toString(36).slice(2) + Date.now().toString(36), sys: k }).then(function (r) {
-        if (r && !r.ok && r.code === "exists") r = { ok: true, msg: /คำขอ/.test(r.msg || "") ? "ส่งคำขอทดลองใช้ " + SYS[k].n + " ให้ร้านแล้ว ร้านจะเปิดให้และแจ้งทางอีเมล" : r.msg };
+        if (r && !r.ok && r.code === "exists") r = { ok: true, msg: /คำขอ/.test(r.msg || "") ? "✓ ส่งคำขอแล้ว รอร้านอนุมัติ ระบบจะแจ้งทางอีเมล" : r.msg };
         M.hidden = false; M.className = "edm-msg" + (r && r.ok ? " ok" : " err"); M.textContent = (r && r.msg) || "ส่งไม่สำเร็จ ลองใหม่ หรือทัก LINE ร้าน";
         bt.textContent = r && r.ok ? "✓ ส่งคำขอแล้ว" : "🎁 ขอทดลองใช้ระบบนี้ฟรี 7 วัน"; bt.disabled = !!(r && r.ok);
       }).catch(function () { M.hidden = false; M.className = "edm-msg err"; M.textContent = "เชื่อมต่อไม่ได้ ลองใหม่ หรือทัก LINE ร้าน"; bt.disabled = false; bt.textContent = "🎁 ขอทดลองใช้ระบบนี้ฟรี 7 วัน"; });
