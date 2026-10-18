@@ -213,10 +213,18 @@
     deny.innerHTML = '<div class="edm-card"><span class="edm-badge">' + esc(me.email) + '</span><h2>บัญชีนี้ยังไม่ได้เปิดใช้ ' + esc(SYS[k].n) + '</h2>' +
       '<p class="edm-muted">บัญชีของคุณใช้ได้กับระบบต่อไปนี้</p>' +
       mine.map(function (x) { return '<a class="edm-btn ghost" href="' + BASE + SYS[x].u + '">' + esc(SYS[x].n) + '</a>'; }).join("") +
-      '<a class="edm-btn" href="' + esc(buyUrl(k)) + '" target="_blank" rel="noopener">🛒 ซื้อ ' + esc(SYS[k].n) + ' เพิ่มในบัญชีนี้</a>' +
-      '<a class="edm-btn ghost" href="' + line + '" target="_blank" rel="noopener">💬 ขอทดลองระบบนี้ทาง LINE</a>' +
+      '<button class="edm-btn" id="edmTry" type="button">🎁 ขอทดลองใช้ระบบนี้ฟรี 7 วัน</button><div class="edm-msg" id="edmTryM" hidden></div>' +
+      '<a class="edm-btn ghost" href="' + esc(buyUrl(k)) + '" target="_blank" rel="noopener">🛒 ซื้อ ' + esc(SYS[k].n) + ' เพิ่มในบัญชีนี้</a>' +
+      '<a class="edm-btn ghost" href="' + line + '" target="_blank" rel="noopener">💬 สอบถามทาง LINE</a>' +
       '<button class="edm-link" id="edmDenyOut" type="button" style="align-self:center">ใช้อีเมลอื่น · ออกจากระบบ</button></div>';
     deny.querySelector("#edmDenyOut").onclick = function () { call({ a: "logout", email: me.email, token: me.token }).catch(function () {}); cloudStop(); me = null; LS.set(null); hideDeny(); apply(); openGate("signup"); };
+    deny.querySelector("#edmTry").onclick = function () {
+      var bt = this, M = deny.querySelector("#edmTryM"); bt.disabled = true; bt.textContent = "กำลังส่งคำขอ…";
+      call({ a: "trialreq", email: me.email, token: me.token, sys: k }).then(function (r) {
+        M.hidden = false; M.className = "edm-msg" + (r && r.ok ? " ok" : " err"); M.textContent = (r && r.msg) || "ส่งไม่สำเร็จ ลองใหม่ หรือทัก LINE ร้าน";
+        bt.textContent = r && r.ok ? "✓ ส่งคำขอแล้ว" : "🎁 ขอทดลองใช้ระบบนี้ฟรี 7 วัน"; bt.disabled = !!(r && r.ok);
+      }).catch(function () { M.hidden = false; M.className = "edm-msg err"; M.textContent = "เชื่อมต่อไม่ได้ ลองใหม่ หรือทัก LINE ร้าน"; bt.disabled = false; bt.textContent = "🎁 ขอทดลองใช้ระบบนี้ฟรี 7 วัน"; });
+    };
   }
   /* หมดอายุ = ปิดการใช้งานทั้งหน้า จนกว่าจะต่ออายุ/ซื้อ (ทุกระบบ รวมหน้าในระบบร้านค้า) */
   function showExp() {
