@@ -49,8 +49,15 @@
   var _set = LS.set; LS.set = function (v) { _set(v); tellFrames(); };
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function thDate(ms) { var d = new Date(ms); return d.getDate() + " " + ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."][d.getMonth()] + " " + (d.getFullYear() + 543); }
-  function daysLeft() { return me && me.exp ? Math.ceil((me.exp - Date.now()) / 864e5) : 0; }
-  function expired() { return !me || !me.exp || me.exp < Date.now(); }
+  // v32: วันหมดอายุของระบบที่เปิดอยู่ (บัญชีที่แยกวันรายระบบ me.sx) · ไม่แยก = วันหมดอายุของบัญชี
+  function expAt() {
+    if (!me) return 0; var X = me.sx, k = curSys(), mx = 0;
+    if (!X || !Object.keys(X).length || !k) return me.exp || 0;
+    Object.keys(X).forEach(function (c) { if ((GROUP[c] || [c]).indexOf(k) >= 0) mx = Math.max(mx, Number(X[c]) || 0); });
+    return mx;
+  }
+  function daysLeft() { var e = expAt(); return e ? Math.ceil((e - Date.now()) / 864e5) : 0; }
+  function expired() { var e = expAt(); return !me || !e || e < Date.now(); }
   function call(o) {
     return fetch(API, { method: "POST", body: JSON.stringify(o) }).then(function (r) { return r.json(); });
   }
@@ -185,8 +192,8 @@
         if (!r.ok) { M.className = "edm-msg err"; M.textContent = r.msg || "ไม่สำเร็จ ลองอีกครั้ง"; if (r.code === "exists") { mode = "login"; note = ""; renderGate(); gate.querySelector("#edmM").className = "edm-msg err"; gate.querySelector("#edmM").textContent = r.msg; } return; }
         if (mode === "signup") { mode = "sent"; note = r.msg; renderGate(); return; }
         if (mode === "forgot") { M.className = "edm-msg ok"; M.textContent = r.msg; return; }
-        me = { email: r.email, token: r.token, name: r.name, exp: r.exp, status: r.status, paid: r.paid, sys: r.sys, ts: Date.now() };
-        LS.set(me); closeGate(); if (tryBarEl) { tryBarEl.remove(); tryBarEl = null; } apply(); cloudInit(); toast(expired() ? "บัญชีหมดอายุแล้ว ต่ออายุเพื่อใช้งานต่อ" : "ยินดีต้อนรับ ใช้งานได้ถึง " + thDate(me.exp));
+        me = { email: r.email, token: r.token, name: r.name, exp: r.exp, status: r.status, paid: r.paid, sys: r.sys, sx: r.sx || null, ts: Date.now() };
+        LS.set(me); closeGate(); if (tryBarEl) { tryBarEl.remove(); tryBarEl = null; } apply(); cloudInit(); toast(expired() ? "บัญชีหมดอายุแล้ว ต่ออายุเพื่อใช้งานต่อ" : "ยินดีต้อนรับ ใช้งานได้ถึง " + thDate(expAt()));
       }).catch(function () { go.disabled = false; go.textContent = t0; M.className = "edm-msg err"; M.textContent = "เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง"; });
     };
   }
@@ -233,7 +240,7 @@
     if (!deny) { deny = document.createElement("div"); deny.className = "edm-gate"; deny.setAttribute("role", "dialog"); deny.setAttribute("aria-modal", "true"); document.body.appendChild(deny); }
     var tr = me.status === "ทดลองใช้" || !me.paid;
     deny.innerHTML = '<div class="edm-card"><span class="edm-badge">' + esc(me.email) + '</span><h2>' + (tr ? "หมดช่วงทดลองใช้แล้ว" : "บัญชีหมดอายุแล้ว") + '</h2>' +
-      '<p class="edm-muted">หมดอายุเมื่อ ' + thDate(me.exp) + ' · ' + (tr ? "สั่งซื้อเพื่อใช้งานต่อ" : "ต่ออายุเพื่อใช้งานต่อ") + ' ข้อมูลเดิมยังอยู่ครบ ใช้ต่อได้ทันทีเมื่อร้านตรวจสลิปแล้ว</p>' +
+      '<p class="edm-muted">หมดอายุเมื่อ ' + thDate(expAt()) + ' · ' + (tr ? "สั่งซื้อเพื่อใช้งานต่อ" : "ต่ออายุเพื่อใช้งานต่อ") + ' ข้อมูลเดิมยังอยู่ครบ ใช้ต่อได้ทันทีเมื่อร้านตรวจสลิปแล้ว</p>' +
       '<a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">' + (tr ? "🛒 สั่งซื้อ / ใช้งานต่อ" : "🔄 ต่ออายุสมาชิก") + '</a>' +
       '<button class="edm-btn ghost" id="edmExpChk" type="button">โอนแล้ว · ตรวจสอบอีกครั้ง</button>' +
       '<button class="edm-link" id="edmDenyOut" type="button" style="align-self:center">ใช้อีเมลอื่น · ออกจากระบบ</button></div>';
@@ -264,7 +271,7 @@
       if (!bar) { bar = document.createElement("div"); var hd = document.querySelector("header.top"); hd.parentNode.insertBefore(bar, hd.nextSibling); }
       bar.className = "edm-bar" + (ex ? "" : " warn");
       bar.innerHTML = (ex ? "บัญชีหมดอายุแล้ว · ต่ออายุหรือสั่งซื้อเพื่อใช้งานต่อ"
-        : (me.status === "ทดลองใช้" ? "ช่วงทดลองใช้" : "บัญชีของคุณ") + "จะหมดอายุใน " + left + " วัน (" + thDate(me.exp) + ")") +
+        : (me.status === "ทดลองใช้" ? "ช่วงทดลองใช้" : "บัญชีของคุณ") + "จะหมดอายุใน " + left + " วัน (" + thDate(expAt()) + ")") +
         ' <a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">ต่ออายุสมาชิก</a>';
     } else if (bar) { bar.remove(); bar = null; }
     markFree();
@@ -281,7 +288,7 @@
     if (menu) { menu.remove(); menu = null; return; }
     menu = document.createElement("div"); menu.className = "edm-menu";
     menu.innerHTML = '<div><span class="edm-muted">บัญชี</span><br><b>' + esc(me.email) + '</b></div>' +
-      '<div class="edm-muted">' + esc(expired() ? "หมดอายุเมื่อ " : (me.status === "ทดลองใช้" ? "ทดลองใช้ถึง " : "ใช้งานได้ถึง ")) + thDate(me.exp) + '</div>' +
+      '<div class="edm-muted">' + esc(expired() ? "หมดอายุเมื่อ " : (me.status === "ทดลองใช้" ? "ทดลองใช้ถึง " : "ใช้งานได้ถึง ")) + thDate(expAt()) + '</div>' +
       '<a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">ต่ออายุสมาชิก</a>' +
       '<button class="edm-btn ghost" id="edmRe" type="button">↻ ตรวจสถานะล่าสุด</button>' +
       '<div class="edm-muted" id="edmCl">' + esc(cloudLine()) + ' <button class="edm-link" id="edmPush" type="button">สำรองตอนนี้</button></div>' +
@@ -310,9 +317,9 @@
         return;
       }
       var was = expired();
-      me.exp = r.exp; me.status = r.status; me.paid = r.paid; me.name = r.name; if ("sys" in r) me.sys = r.sys; me.ts = Date.now(); LS.set(me); apply();
-      if (loud) toast(expired() ? "ยังไม่ได้ต่ออายุ ถ้าโอนแล้ว รอร้านตรวจสลิปสักครู่นะคะ" : "ใช้งานได้ถึง " + thDate(me.exp));
-      else if (was && !expired()) toast("ต่ออายุแล้ว ใช้งานได้ถึง " + thDate(me.exp));
+      me.exp = r.exp; me.sx = r.sx || null; me.status = r.status; me.paid = r.paid; me.name = r.name; if ("sys" in r) me.sys = r.sys; me.ts = Date.now(); LS.set(me); apply();
+      if (loud) toast(expired() ? "ยังไม่ได้ต่ออายุ ถ้าโอนแล้ว รอร้านตรวจสลิปสักครู่นะคะ" : "ใช้งานได้ถึง " + thDate(expAt()));
+      else if (was && !expired()) toast("ต่ออายุแล้ว ใช้งานได้ถึง " + thDate(expAt()));
     }).catch(function () { if (loud) toast("เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง"); });
   }
 
