@@ -52,7 +52,7 @@ textarea.in-{resize:vertical;min-height:60px}
 .seg{display:flex;background:var(--soft);border-radius:999px;padding:3px;gap:3px}
 .seg button{flex:1;border:0;background:none;border-radius:999px;padding:8px 6px;cursor:pointer;font-weight:600;font-size:.86rem;color:var(--muted)}
 #actBar i{font-style:normal}#actBar .sh{display:none}
-@media(max-width:600px){#actBar{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px!important;padding:8px!important;bottom:6px!important}#actBar .btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 2px;font-size:.74rem;line-height:1.15;min-height:54px;text-align:center;white-space:normal}#actBar .btn i{font-size:1.15rem}#actBar .lg{display:none}#actBar .sh{display:inline}}
+@media(max-width:600px){#actBar{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px!important;padding:8px!important;bottom:6px!important}#actBar .btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 2px;font-size:.74rem;line-height:1.15;min-height:54px;text-align:center;white-space:normal}#actBar .btn i{font-size:1.15rem}#actBar .lg{display:none}#actBar .sh{display:inline}}
 .dflt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.dflt .in-{padding:7px 8px;font-size:.84rem}
 .seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 #termBox{margin:10px 0 2px}#termBox[hidden],#termBox [hidden]{display:none!important}
@@ -305,7 +305,7 @@ details.opt{border:1px dashed var(--line);border-radius:12px;padding:8px 12px}de
       <button class="btn main" id="saveBtn"><i>💾</i> บันทึก</button>
       <button class="btn main keep" id="printBtn"><i>🖨️</i> พิมพ์<span class="lg"> / ส่ง PDF</span></button>
       <button class="btn ghost keep" id="shareBtn"><i>📤</i> <span class="lg">ส่งให้ลูกค้า</span><span class="sh">ส่ง</span></button>
-      <button class="btn ghost keep" id="convertBtn"><i>🔁</i> <span class="lg">แปลงเป็นเอกสารอื่น</span><span class="sh">แปลงเอกสาร</span></button>
+      <button class="btn ghost keep" id="convertBtn"><i>🔁</i> <span class="lg">แปลงเป็นเอกสารอื่น</span><span class="sh">แปลง</span></button>
       <button class="btn ghost keep" id="newBtn"><i>＋</i> <span class="lg">เอกสารใหม่</span><span class="sh">ใหม่</span></button>
     </div>
 
@@ -877,7 +877,7 @@ renderAll();bindSuggest();
 })();
 </script>
 <script src="../assets/tool-ui.js?v=5" defer></script>
-<script src="../assets/member.js?v=89" defer></script>
+<script src="../assets/member.js?v=90" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
 </body>
 </html>

@@ -262,7 +262,7 @@
     document.body.classList.toggle("edm-ro", ex);
     var nav = document.querySelector("header .nav") || document.querySelector("header");
     if (!chip) { chip = document.createElement("div"); chip.className = "edm-chip"; nav.insertBefore(chip, nav.firstChild); }
-    var lbl = ex ? "⛔ หมดอายุ" : (me.status === "ทดลองใช้" ? "🎁 ทดลองใช้ · เหลือ " + left + " วัน" : "👤 สมาชิก · เหลือ " + left + " วัน");
+    var nar = window.innerWidth < 560, lbl = ex ? "⛔ หมดอายุ" : nar ? (me.status === "ทดลองใช้" ? "🎁 " : "👤 ") + left + " วัน" : (me.status === "ทดลองใช้" ? "🎁 ทดลองใช้ · เหลือ " + left + " วัน" : "👤 สมาชิก · เหลือ " + left + " วัน");
     chip.innerHTML = '<button type="button" class="' + (ex ? "bad" : left <= 3 ? "warn" : "") + '" aria-haspopup="true">' + esc(lbl) + '</button>';
     chip.firstChild.onclick = function (e) { e.stopPropagation(); toggleMenu(); };
     // banner
