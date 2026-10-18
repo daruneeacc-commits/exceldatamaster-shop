@@ -215,7 +215,6 @@
       mine.map(function (x) { return '<a class="edm-btn ghost" href="' + BASE + SYS[x].u + '">' + esc(SYS[x].n) + '</a>'; }).join("") +
       '<button class="edm-btn" id="edmTry" type="button">🎁 ขอทดลองใช้ระบบนี้ฟรี 7 วัน</button><div class="edm-msg" id="edmTryM" hidden></div>' +
       '<a class="edm-btn ghost" href="' + esc(buyUrl(k)) + '" target="_blank" rel="noopener">🛒 ซื้อ ' + esc(SYS[k].n) + ' เพิ่มในบัญชีนี้</a>' +
-      '<a class="edm-btn ghost" href="' + line + '" target="_blank" rel="noopener">💬 สอบถามทาง LINE</a>' +
       '<button class="edm-link" id="edmDenyOut" type="button" style="align-self:center">ใช้อีเมลอื่น · ออกจากระบบ</button></div>';
     deny.querySelector("#edmDenyOut").onclick = function () { call({ a: "logout", email: me.email, token: me.token }).catch(function () {}); cloudStop(); me = null; LS.set(null); hideDeny(); apply(); openGate("signup"); };
     deny.querySelector("#edmTry").onclick = function () {
