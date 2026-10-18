@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="th" data-theme="light" data-tone="lav">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ตัวช่วยตั้งเป้าหมาย Smart Goal ภาษาไทย ติดตามความคืบหน้า ใช้ออนไลน์ | Excel Data Master</title>
+<meta name="description" content="ตั้งเป้าหมายชีวิตได้หลายด้าน แตกเป็นขั้นตอนที่ต้องทำ ติ๊กแล้วเห็น % ความคืบหน้าเป็นกราฟวงกลม นับวันถึงเส้นตาย ตั้งรางวัลให้ตัวเอง จดบันทึก ใช้ได้ทั้งมือถือและคอม">
+<link rel="canonical" href="https://exceldatamaster.com/goals/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{--bg:#F8F6FD;--card:#fff;--ink:#2B2540;--muted:#6E6787;--line:#E4DEF3;--soft:#F1EDFA;--accent:#6E55C0;--accent-ink:#fff;--danger:#B3261E;--ok:#2E8B57}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}a{color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1300px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px}.brand{font-weight:700;text-decoration:none;color:var(--accent)}.brand small{color:var(--muted);font-weight:500}.nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.tabs{max-width:1300px;margin:10px auto 0;padding:0 16px;display:flex;gap:6px;overflow-x:auto}.tabs button{flex:none;border:0;border-radius:999px;padding:8px 16px;background:var(--card);box-shadow:0 0 0 1px var(--line);font-weight:600;cursor:pointer}
+main{max-width:1300px;margin:0 auto;padding:12px 16px 40px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}.card h2{font-size:1.05rem;margin:0;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.card h2 small{font-weight:400;color:var(--muted);font-size:.8rem}
+.hello{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}.hello h1{margin:0;font-size:1.3rem}.hello p{margin:4px 0 0;color:var(--muted)}
+.btn{border:0;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;background:var(--soft);justify-content:center;text-decoration:none}.btn.main{background:var(--accent);color:#fff}.btn.ghost{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:6px 12px;font-size:.85rem}.btn.danger{color:var(--danger)}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;outline:none}.in-:focus{border-color:var(--accent)}textarea.in-{min-height:70px;resize:vertical}
+.f{display:flex;flex-direction:column;gap:4px}.f label{font-size:.8rem;font-weight:600;color:var(--muted)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px var(--line)}.kpi span{display:block;font-size:.8rem;color:var(--muted)}.kpi b{display:block;font-size:1.35rem}.kpi small{color:var(--muted);font-size:.76rem}
+.empty{text-align:center;padding:24px;color:var(--muted)}
+dialog{border:0;border-radius:18px;padding:0;width:min(520px,96vw)}dialog::backdrop{background:rgba(30,20,50,.45)}.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}.db{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100}
+/* การ์ดเป้าหมาย: แต่ละใบมีสีของตัวเอง */
+.gg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.g{--c:#E8896A;--cs:#FDEBE4;--cm:#FFF8F5;background:var(--cm);border-radius:16px;box-shadow:0 0 0 1px color-mix(in srgb,var(--c) 30%,transparent);display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.g[data-c="1"]{--c:#E0A21C;--cs:#FDF0CF;--cm:#FFFCF2}.g[data-c="2"]{--c:#3FA98A;--cs:#DDF3EC;--cm:#F6FCFA}.g[data-c="3"]{--c:#5B86D6;--cs:#E2EBFA;--cm:#F7FAFE}.g[data-c="4"]{--c:#9A6FD6;--cs:#EEE5FA;--cm:#FBF8FE}.g[data-c="5"]{--c:#D6578A;--cs:#FBE3EC;--cm:#FFF7FA}
+.gh{background:var(--cs);padding:10px 12px;display:flex;gap:6px;align-items:flex-start}.gh b{flex:1;font-size:.98rem;line-height:1.35;min-width:0;overflow-wrap:anywhere}.gh button{border:0;background:#fff8;border-radius:8px;width:30px;height:30px;cursor:pointer;flex:none}
+.gb{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.cat{align-self:center;background:var(--c);color:#fff;border-radius:999px;padding:3px 12px;font-size:.78rem;font-weight:600}
+.dt{display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:.76rem;color:var(--muted);text-align:center}.dt b{display:block;color:var(--ink);font-size:.84rem}
+.left{text-align:center;font-size:.82rem;font-weight:600;color:var(--c)}.left.late{color:var(--danger)}.left.ok{color:var(--ok)}
+.ring{width:120px;height:120px;border-radius:50%;margin:2px auto;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--cs) 0);display:grid;place-items:center}.ring i{width:80px;height:80px;border-radius:50%;background:var(--cm);display:grid;place-items:center;font-style:normal;font-weight:700;font-size:1.25rem}
+.ap{display:grid;grid-template-columns:1fr 1fr;text-align:center;font-size:.78rem;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px var(--cs)}.ap div{padding:5px}.ap div+div{border-left:1px solid var(--cs)}.ap b{display:block;font-size:1rem}
+.acts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}.acts li{display:flex;gap:8px;align-items:flex-start;padding:5px 4px;border-bottom:1px dashed var(--cs);font-size:.88rem}
+.acts input[type=checkbox]{width:18px;height:18px;accent-color:var(--c);flex:none;margin-top:2px;cursor:pointer}.acts span{flex:1;min-width:0;overflow-wrap:anywhere}.acts li.done span{text-decoration:line-through;color:var(--muted)}.acts .x{border:0;background:none;color:var(--muted);cursor:pointer;padding:0 2px;opacity:.6}
+.add{display:flex;gap:6px}.add input{flex:1;min-width:0;border:1px dashed var(--c);background:#fff;border-radius:8px;padding:6px 9px;font-size:.86rem;outline:none}.add button{border:0;background:var(--c);color:#fff;border-radius:8px;padding:0 10px;cursor:pointer;font-weight:700}
+.gt{font-size:.74rem;font-weight:700;letter-spacing:.04em;color:var(--c);text-align:center;margin-top:2px}
+.rw{text-align:center;background:#fff;border-radius:12px;padding:10px;box-shadow:0 0 0 1px var(--cs)}.rw .big{font-size:1.6rem}.rw p{margin:4px 0;font-weight:600;overflow-wrap:anywhere}.rw.got{background:var(--cs)}
+.nt{background:#fff;border-radius:12px;padding:10px;box-shadow:0 0 0 1px var(--cs);font-size:.88rem;white-space:pre-wrap;min-height:60px;overflow-wrap:anywhere;color:var(--ink)}
+.sw{display:flex;gap:8px;flex-wrap:wrap}.sw label{cursor:pointer}.sw input{display:none}.sw i{display:block;width:30px;height:30px;border-radius:50%;box-shadow:0 0 0 2px #fff,0 0 0 3px transparent}.sw input:checked+i{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
+.cl{display:flex;flex-direction:column;gap:6px}.cl div{display:flex;gap:6px;align-items:center}
+.fl{display:flex;gap:4px;overflow-x:auto;padding:3px;border-radius:12px}.fl .btn{flex:none;white-space:nowrap}
+.bar{height:8px;border-radius:99px;background:var(--soft);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+@media print{header.top,.tabs,.toast,dialog,.edm-bar,.add,.gh button,.acts .x,.hello .btn{display:none!important}body{background:#fff}.g{break-inside:avoid}}
+</style>
+<link rel="stylesheet" href="../assets/pastel.css?v=8">
+<script src="../assets/pastel.js?v=2" defer></script>
+<link rel="stylesheet" href="../assets/skin.css?v=1">
+<script src="../assets/skin.js?v=1"></script>
+<script src="../assets/lock.js?v=3"></script>
+<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="ตัวช่วยตั้งเป้าหมาย Smart Goal | Excel Data Master"><meta property="og:description" content="ตั้งเป้าหมายหลายด้าน แตกเป็นขั้นตอน ติ๊กแล้วเห็น % ความคืบหน้า นับวันถึงเส้นตาย ตั้งรางวัลให้ตัวเอง"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-goals.jpg?v=1"><meta property="og:url" content="https://exceldatamaster.com/goals/">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-goals.jpg?v=1">
+<meta name="theme-color" content="#6E55C0">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="เป้าหมาย">
+</head>
+<body>
+<header class="top"><div class="in"><a class="brand" href="/">🎯 Excel Data Master <small>· ตั้งเป้าหมาย Smart Goal</small></a><nav class="nav"></nav></div></header>
+<div class="tabs" id="tabs"><button data-v="dash">🎯 เป้าหมาย</button><button data-v="rw">🎁 รางวัล & บันทึก</button><button data-v="set">⚙️ ตั้งค่า</button></div>
+<main id="main"></main>
+<dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button">✕</button></div><div class="db" id="dlgB"></div></dialog>
+<div class="toast" id="toast" hidden></div>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่เต็ม)");return false}}};
+const K={items:"edm_goal_items",cfg:"edm_goal_cfg",ui:"edm_goal_ui"};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),today=()=>ymd(new Date());
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],thD=s=>{if(!s)return"-";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const addD=(s,n)=>{const d=new Date(s+"T00:00");d.setDate(d.getDate()+n);return ymd(d)},dDiff=(a,b)=>Math.round((new Date(b+"T00:00")-new Date(a+"T00:00"))/864e5);
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
+const COL=["#E8896A","#E0A21C","#3FA98A","#5B86D6","#9A6FD6","#D6578A"];
+const DCATS=["สุขภาพ & ออกกำลังกาย","การเรียน & พัฒนาตัวเอง","การเงิน & ออมเงิน","งาน & อาชีพ","ครอบครัว & ความสัมพันธ์","ท่องเที่ยว & ประสบการณ์ใหม่","งานอดิเรก","จิตใจ & สมดุลชีวิต"];
+let G=LS.get(K.items,[])||[],cfg=Object.assign({name:"",cats:DCATS.slice(),demo:false},LS.get(K.cfg,{})||{}),ui=Object.assign({v:"dash",f:""},LS.get(K.ui,{})||{});
+const save=()=>LS.set(K.items,G),saveC=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,ui);
+const st=g=>{const n=g.acts.length,d=g.acts.filter(a=>a.done).length;return{n,d,p:n?Math.round(d/n*100):(g.done?100:0)}};
+function left(g){const t=today();if(st(g).p>=100||g.done)return['ok',"🎉 สำเร็จแล้ว"];if(!g.end)return['',"ยังไม่กำหนดวัน"];const n=dDiff(t,g.end);if(n<0)return['late',"⏰ เลยกำหนด "+(-n)+" วัน"];if(n===0)return['late',"⏰ ครบกำหนดวันนี้"];return['',"📅 เหลืออีก "+n+" วัน"]}
+function render(){$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));({dash:vDash,rw:vRw,set:vSet}[ui.v]||vDash)()}
+$("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b){ui.v=b.dataset.v;saveUi();render()}};
+function emptyHello(M){M.innerHTML=`<div class="card" style="text-align:center;align-items:center;padding:30px 16px"><div style="font-size:3rem">🎯</div><h2 style="justify-content:center">เริ่มตั้งเป้าหมายแรกของคุณ</h2><p style="color:var(--muted);margin:0;max-width:520px">ตั้งเป้าหมายให้ชัด (เช่น "วิ่งให้ได้ 21 กม." "สอบ TOEIC 750") แตกเป็นสิ่งที่ต้องทำทีละข้อ ติ๊กเมื่อทำเสร็จ แล้วดู % ความคืบหน้าเพิ่มขึ้นเรื่อย ๆ</p><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="btn main" id="nw" type="button">＋ ตั้งเป้าหมายใหม่</button><button class="btn ghost" id="dm" type="button">✨ ดูตัวอย่าง 5 เป้าหมาย</button></div></div>`;$("#nw").onclick=()=>goalDlg();$("#dm").onclick=demo}
+function vDash(){const M=$("#main");if(!G.length)return emptyHello(M);
+  const L=G.filter(g=>!ui.f||g.cat===ui.f),S=G.map(st),avg=Math.round(S.reduce((a,s)=>a+s.p,0)/G.length),dn=S.reduce((a,s)=>a+s.d,0),tot=S.reduce((a,s)=>a+s.n,0),fin=G.filter(g=>st(g).p>=100).length;
+  const near=G.filter(g=>g.end&&st(g).p<100&&g.end>=today()).sort((a,b)=>a.end<b.end?-1:1)[0];const cats=[...new Set(G.map(g=>g.cat).filter(Boolean))];
+  M.innerHTML=`<div class="hello"><div><h1>🎯 ${esc(cfg.name?"เป้าหมายของ "+cfg.name:"เป้าหมายของฉัน")}</h1><p>ติ๊กสิ่งที่ทำเสร็จ ความคืบหน้าจะคำนวณให้เอง</p></div><div style="display:flex;gap:6px"><button class="btn ghost sm" id="pr" type="button">🖨 พิมพ์</button><button class="btn main" id="nw" type="button">＋ เป้าหมายใหม่</button></div></div>
+  <div class="kpis"><div class="kpi"><span>ความคืบหน้าเฉลี่ย</span><b>${avg}%</b><div class="bar"><i style="width:${avg}%"></i></div></div><div class="kpi"><span>เป้าหมายที่สำเร็จ</span><b>${fin} / ${G.length}</b><small>เป้าหมาย</small></div><div class="kpi"><span>สิ่งที่ทำเสร็จแล้ว</span><b>${dn} / ${tot}</b><small>รายการ</small></div><div class="kpi"><span>ใกล้ครบกำหนด</span><b style="font-size:1rem">${near?esc(near.title):"-"}</b><small>${near?thD(near.end)+" · อีก "+dDiff(today(),near.end)+" วัน":"ไม่มี"}</small></div></div>
+  ${cats.length>1?`<div class="seg fl"><button class="btn sm ${!ui.f?"main":""}" data-f="" type="button">ทั้งหมด</button>${cats.map(c=>`<button class="btn sm ${ui.f===c?"main":""}" data-f="${esc(c)}" type="button">${esc(c)}</button>`).join("")}</div>`:""}
+  <div class="gg">${L.map(card).join("")}</div>`;
+  $("#nw").onclick=()=>goalDlg();$("#pr").onclick=()=>print();$$("[data-f]").forEach(b=>b.onclick=()=>{ui.f=b.dataset.f;saveUi();vDash()});bindCards()}
+function card(g){const s=st(g),[lc,lt]=left(g);
+  return`<div class="g" data-c="${g.c||0}" data-g="${g.id}"><div class="gh"><b>${esc(g.title)}</b><button data-ed="${g.id}" type="button" title="แก้ไข">✏️</button></div><div class="gb">
+  ${g.cat?`<span class="cat">${esc(g.cat)}</span>`:""}<div class="dt"><div>วันที่เริ่ม<b>${thD(g.start)}</b></div><div>วันเป้าหมาย<b>${thD(g.end)}</b></div></div>
+  <div class="left ${lc}">${lt}</div><div class="ring" style="--p:${s.p}"><i>${s.p}%</i></div>
+  <div class="ap"><div>✅ ทำแล้ว<b>${s.d}</b></div><div>⏳ ยังไม่ทำ<b>${s.n-s.d}</b></div></div>
+  <div class="gt">สิ่งที่ต้องทำ</div><ul class="acts">${g.acts.map((a,i)=>`<li class="${a.done?"done":""}"><input type="checkbox" data-ck="${g.id}|${i}" ${a.done?"checked":""} aria-label="ทำแล้ว"><span>${esc(a.t)}</span><button class="x" data-rm="${g.id}|${i}" type="button" title="ลบ">✕</button></li>`).join("")}</ul>
+  <div class="add"><input data-ad="${g.id}" placeholder="เพิ่มสิ่งที่ต้องทำ แล้วกด Enter" maxlength="120"><button data-adb="${g.id}" type="button">＋</button></div></div></div>`}
+const byId=id=>G.find(g=>g.id===id);
+function bindCards(){
+  $$("[data-ed]").forEach(b=>b.onclick=()=>goalDlg(b.dataset.ed));
+  $$("[data-ck]").forEach(c=>c.onchange=()=>{const[id,i]=c.dataset.ck.split("|"),g=byId(id);const was=st(g).p;g.acts[+i].done=c.checked;g.acts[+i].at=c.checked?today():"";save();if(was<100&&st(g).p>=100)toast("🎉 สำเร็จ! ถึงเวลารับรางวัล"+(g.reward?": "+g.reward:""));render()});
+  $$("[data-rm]").forEach(b=>b.onclick=()=>{const[id,i]=b.dataset.rm.split("|"),g=byId(id);if(!confirm('ลบ "'+g.acts[+i].t+'"?'))return;g.acts.splice(+i,1);save();render()});
+  const add=id=>{const inp=$(`[data-ad="${id}"]`),t=inp.value.trim();if(!t)return inp.focus();byId(id).acts.push({t,done:false});save();render();setTimeout(()=>{const n=$(`[data-ad="${id}"]`);n&&n.focus()},20)};
+  $$("[data-ad]").forEach(i=>i.onkeydown=e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();add(i.dataset.ad)}});$$("[data-adb]").forEach(b=>b.onclick=()=>add(b.dataset.adb))}
+function openDlg(t,h){$("#dlgT").textContent=t;$("#dlgB").innerHTML=h;const d=$("#dlg");if(!d.open)d.showModal()}
+$("#dlgX").onclick=()=>$("#dlg").close();
+function goalDlg(id){const o=id?byId(id):null,g=o?JSON.parse(JSON.stringify(o)):{title:"",cat:cfg.cats[0]||"",start:today(),end:addD(today(),90),c:G.length%6,acts:[],reward:"",note:""};
+  openDlg(o?"แก้ไขเป้าหมาย":"ตั้งเป้าหมายใหม่",`<div class="f"><label>เป้าหมาย (เขียนให้ชัด วัดผลได้)</label><input class="in-" id="gT" value="${esc(g.title)}" placeholder="เช่น ออมเงินให้ได้ 50,000 บาท" maxlength="100"></div>
+  <div class="f"><label>หมวด</label><select class="in-" id="gC">${cfg.cats.map(c=>`<option ${c===g.cat?"selected":""}>${esc(c)}</option>`).join("")}${g.cat&&!cfg.cats.includes(g.cat)?`<option selected>${esc(g.cat)}</option>`:""}</select></div>
+  <div class="row"><div class="f"><label>วันที่เริ่ม</label><input class="in-" type="date" id="gS" value="${g.start||""}"></div><div class="f"><label>วันเป้าหมาย</label><input class="in-" type="date" id="gE" value="${g.end||""}"></div></div>
+  <div class="f"><label>สีการ์ด</label><div class="sw">${COL.map((c,i)=>`<label><input type="radio" name="gc" value="${i}" ${(+g.c||0)===i?"checked":""}><i style="background:${c}"></i></label>`).join("")}</div></div>
+  ${o?"":`<div class="f"><label>สิ่งที่ต้องทำ (บรรทัดละ 1 ข้อ · เพิ่มทีหลังได้)</label><textarea class="in-" id="gA" placeholder="ฝากเงินทุกวันที่ 1&#10;งดซื้อของไม่จำเป็น"></textarea></div>`}
+  <div class="f"><label>🎁 รางวัลเมื่อทำสำเร็จ</label><input class="in-" id="gR" value="${esc(g.reward)}" placeholder="เช่น ซื้อรองเท้าวิ่งคู่ใหม่" maxlength="100"></div>
+  <div class="f"><label>📝 บันทึก / แรงบันดาลใจ</label><textarea class="in-" id="gN" placeholder="ทำไมเป้าหมายนี้สำคัญกับเรา">${esc(g.note)}</textarea></div>
+  <div style="display:flex;gap:8px;justify-content:space-between">${o?`<button class="btn ghost danger" id="gD" type="button">ลบเป้าหมาย</button>`:"<span></span>"}<button class="btn main" id="gOk" type="button">บันทึก</button></div>`);
+  $("#gOk").onclick=()=>{g.title=$("#gT").value.trim();if(!g.title){toast("ใส่ชื่อเป้าหมาย");return $("#gT").focus()}g.cat=$("#gC").value;g.start=$("#gS").value;g.end=$("#gE").value;if(g.start&&g.end&&g.end<g.start)return toast("วันเป้าหมายต้องหลังวันที่เริ่ม");
+    g.c=+(($$('[name="gc"]').find(r=>r.checked)||{}).value||0);g.reward=$("#gR").value.trim();g.note=$("#gN").value;
+    if(o){Object.assign(o,g)}else{g.id=uid("g");g.acts=$("#gA").value.split("\n").map(t=>t.trim()).filter(Boolean).map(t=>({t,done:false}));G.push(g)}
+    if(cfg.demo&&!o){cfg.demo=false;saveC()}save();$("#dlg").close();toast("บันทึกแล้ว ✓");render()};
+  if(o)$("#gD").onclick=()=>{if(!confirm('ลบเป้าหมาย "'+o.title+'"?'))return;G=G.filter(x=>x!==o);save();$("#dlg").close();render()};
+  setTimeout(()=>$("#gT").focus(),40)}
+function vRw(){const M=$("#main");if(!G.length)return emptyHello(M);
+  M.innerHTML=`<div class="hello"><div><h1>🎁 รางวัล & บันทึก</h1><p>ให้รางวัลตัวเองเมื่อทำสำเร็จ และจดสิ่งที่ได้เรียนรู้ระหว่างทาง</p></div></div><div class="gg">${G.map(g=>{const s=st(g),ok=s.p>=100;return`<div class="g" data-c="${g.c||0}"><div class="gh"><b>${esc(g.title)}</b><button data-ed="${g.id}" type="button" title="แก้ไข">✏️</button></div><div class="gb">
+  <div class="gt">รางวัล</div><div class="rw ${g.got?"got":""}"><div class="big">${g.got?"🏆":ok?"🎁":"🔒"}</div><p>${esc(g.reward||"ยังไม่ได้ตั้งรางวัล")}</p><small style="color:var(--muted)">${g.got?"รับรางวัลแล้ว "+thD(g.got):ok?"สำเร็จแล้ว รับรางวัลได้เลย!":"ปลดล็อกเมื่อทำครบ 100% (ตอนนี้ "+s.p+"%)"}</small>${ok&&!g.got&&g.reward?`<div><button class="btn sm main" data-got="${g.id}" type="button" style="margin-top:6px;background:var(--c)">รับรางวัลแล้ว ✓</button></div>`:""}</div>
+  <div class="gt">บันทึก</div><div class="nt">${esc(g.note||"—")}</div></div></div>`}).join("")}</div>`;
+  $$("[data-ed]").forEach(b=>b.onclick=()=>goalDlg(b.dataset.ed));$$("[data-got]").forEach(b=>b.onclick=()=>{byId(b.dataset.got).got=today();save();toast("🏆 ยินดีด้วย!");vRw()})}
+function vSet(){const M=$("#main");
+  M.innerHTML=`<div class="hello"><div><h1>⚙️ ตั้งค่า</h1><p>ชื่อที่แสดง และหมวดเป้าหมายที่ใช้เลือก</p></div></div>
+  <div class="card"><h2>ชื่อของฉัน</h2><div class="f"><label>ชื่อที่แสดงบนหัวหน้า</label><input class="in-" id="nm" value="${esc(cfg.name)}" placeholder="เช่น มิว" maxlength="40"></div></div>
+  <div class="card"><h2>หมวดเป้าหมาย <small>แก้ชื่อได้ · ลบหมวดไม่กระทบเป้าหมายเดิม</small></h2><div class="cl" id="cl">${cfg.cats.map((c,i)=>`<div><input class="in-" data-cn="${i}" value="${esc(c)}" maxlength="40"><button class="btn sm ghost danger" data-cx="${i}" type="button">ลบ</button></div>`).join("")}</div><div><button class="btn sm" id="ca" type="button">＋ เพิ่มหมวด</button></div></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="sv" type="button">บันทึกการตั้งค่า</button><button class="btn ghost" id="dm" type="button">✨ ใส่ตัวอย่าง 5 เป้าหมาย</button><button class="btn ghost" id="ex" type="button">⬇️ ส่งออก CSV</button><button class="btn ghost danger" id="clr" type="button">ล้างข้อมูลทั้งหมด</button></div>`;
+  const read=()=>{cfg.name=$("#nm").value.trim();cfg.cats=$$("[data-cn]").map(i=>i.value.trim()).filter(Boolean)};
+  $("#ca").onclick=()=>{read();cfg.cats.push("หมวดใหม่");vSet();const l=$$("[data-cn]").pop();l.focus();l.select()};
+  $$("[data-cx]").forEach(b=>b.onclick=()=>{read();cfg.cats.splice(+b.dataset.cx,1);vSet()});
+  $("#sv").onclick=()=>{read();if(!cfg.cats.length)cfg.cats=DCATS.slice();saveC();toast("บันทึกแล้ว ✓")};$("#dm").onclick=demo;
+  $("#ex").onclick=()=>{const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"',rows=[["เป้าหมาย","หมวด","วันที่เริ่ม","วันเป้าหมาย","ความคืบหน้า %","สิ่งที่ต้องทำ","สถานะ","รางวัล","บันทึก"]];G.forEach(g=>{const p=st(g).p;(g.acts.length?g.acts:[{t:"",done:""}]).forEach((a,i)=>rows.push([i?"":g.title,i?"":g.cat,i?"":g.start,i?"":g.end,i?"":p,a.t,a.t?(a.done?"ทำแล้ว":"ยังไม่ทำ"):"",i?"":g.reward,i?"":g.note]))});
+    const b=new Blob(["﻿"+rows.map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="เป้าหมาย-"+today()+".csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2e3)};
+  $("#clr").onclick=()=>{if(!confirm("ล้างเป้าหมายทั้งหมด? (ย้อนกลับไม่ได้)"))return;G=[];save();ui.v="dash";saveUi();render()}}
+function demo(){if(G.length&&!confirm("เพิ่มเป้าหมายตัวอย่าง 5 ข้อ?"))return;const t=today(),A=(L,n)=>L.map((x,i)=>({t:x,done:i<n}));
+  const D=[["วิ่งมาราธอนให้ได้ 21 กม.",DCATS[0],-30,200,0,A(["วิ่งเบา ๆ สัปดาห์ละ 3 วัน","ยืดเหยียดก่อน-หลังวิ่งทุกครั้ง","ลงวิ่ง 10 กม. ให้ได้ 1 รายการ","นอนก่อน 4 ทุ่ม"],2),"รองเท้าวิ่งคู่ใหม่","อยากมีแรงเล่นกับลูกได้นาน ๆ"],
+   ["สอบ TOEIC ให้ได้ 750 คะแนน",DCATS[1],-20,150,1,A(["ฝึก Listening วันละ 30 นาที","ท่องศัพท์วันละ 20 คำ","ทำข้อสอบเก่าสัปดาห์ละ 1 ชุด","สมัครสอบ"],3),"หูฟังตัวใหม่","ใช้ยื่นสมัครงานบริษัทต่างชาติ"],
+   ["ออมเงินฉุกเฉิน 50,000 บาท",DCATS[2],-40,120,2,A(["เปิดบัญชีออมแยก","ตั้งโอนอัตโนมัติวันเงินเดือนออก","จดรายจ่ายทุกวัน","ขายของที่ไม่ใช้แล้ว"],2),"ทริปทะเล 2 วัน 1 คืน","ไม่ต้องกังวลเวลามีเรื่องฉุกเฉิน"],
+   ["อ่านหนังสือให้ได้ 12 เล่มต่อปี",DCATS[6],-60,300,3,A(["อ่านก่อนนอนวันละ 20 นาที","จดสรุปเล่มละ 1 หน้า","เข้าร่วมกลุ่มนักอ่าน"],1),"ชั้นหนังสือใหม่","ได้ไอเดียใหม่ ๆ มาใช้กับงาน"],
+   ["เที่ยวญี่ปุ่นกับครอบครัว",DCATS[5],-10,240,4,A(["ทำพาสปอร์ตให้ครบทุกคน","จองตั๋วช่วงโปร","วางแผนเที่ยว 7 วัน","แลกเงินเยน"],3),"ร้านซูชิดี ๆ 1 มื้อ","ทริปแรกของทั้งบ้าน"]];
+  D.forEach(d=>G.push({id:uid("g"),title:d[0],cat:d[1],start:addD(t,d[2]),end:addD(t,d[3]),c:d[4],acts:d[5],reward:d[6],note:d[7]}));if(!cfg.name)cfg.name="มิว (ตัวอย่าง)";cfg.demo=true;saveC();save();ui.v="dash";ui.f="";saveUi();render();toast("ใส่ตัวอย่างแล้ว ✓")}
+window.addEventListener("storage",e=>{if(e.key===K.items||e.key===K.cfg){G=LS.get(K.items,[])||[];cfg=Object.assign(cfg,LS.get(K.cfg,{})||{});if(!$("#dlg").open)render()}});
+render();
+})();
+</script>
+<script src="../assets/member.js?v=79" defer></script>
+</body>
+</html>

@@ -5,6 +5,7 @@
   "use strict";
   var F = 'fill="#fff" fill-opacity=".34" stroke="none"';
   var G = {
+    target: '<circle ' + F + ' cx="11" cy="13" r="8.5"/><circle cx="11" cy="13" r="8.5"/><circle cx="11" cy="13" r="4.6"/><circle cx="11" cy="13" r="1.2" fill="#fff"/><path d="M11 13 19.5 4.5M16.4 4.6l3.1-.1-.1 3.1"/>',
     check: '<rect ' + F + ' x="3.5" y="3.5" width="17" height="17" rx="4"/><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M7.5 12.3l3 3 6-6.3"/>',
     clock: '<circle ' + F + ' cx="12" cy="12.5" r="8.5"/><circle cx="12" cy="12.5" r="8.5"/><path d="M12 8v4.8l3.2 2M9.5 2.8h5"/>',
     home: '<path ' + F + ' d="M4.5 11 12 4.6l7.5 6.4V20h-15z"/><path d="M3 11.6 12 4l9 7.6M5.5 10v10h13V10M10 20v-5.5h4V20"/>',
@@ -37,7 +38,7 @@
     home: "#0E6B43", bill: "#149060", cart: "#D4485C", box: "#D98A0B", boxin: "#D98A0B", coins: "#0E8C94", chart: "#2F6FD6",
     sliders: "#5B6B7F", cup: "#8B5A3C", calendar: "#7A4FC2", list: "#2F6FD6", bed: "#7A4FC2", glass: "#C26A2E", menu: "#B7791F",
     jar: "#D4485C", drawer: "#0E8C94", register: "#149060", wallet: "#C2410C", store: "#0E6B43", sheet: "#1F7A45", doc: "#0E8A5F",
-    more: "#5B6B7F", data: "#5B6B7F", users: "#0E8C94", clock: "#0E7490", check: "#15803D"
+    more: "#5B6B7F", data: "#5B6B7F", users: "#0E8C94", clock: "#0E7490", check: "#15803D", target: "#6E55C0"
   };
   function icon(k, opt) {
     var g = G[k]; if (!g) return "";

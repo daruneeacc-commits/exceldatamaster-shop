@@ -18,6 +18,7 @@
 - `cafe/` POS คาเฟ่ (ข้อมูลแยก edm_cafe_*) · `booking/` จองห้องพัก + แท็บ "เช่ารายเดือน" (vLease, edm_book_lease {L:ผู้เช่า, B:{"<id>|YYYY-MM":บิล}}) จดมิเตอร์ meterDlg · lzIssue · ย้ายออก moveOutDlg หักค่าค้างจากประกัน · ห้องที่มีผู้เช่า = ไม่ว่างในปฏิทิน/usage/จองออนไลน์ · app route bklease
 - `payroll/` ดึงชั่วโมงจากระบบลงเวลา (assets/timecalc.js, #timeBar) · จ่ายกลางเดือน r.mid (openMid) หักใน calcMonth
 - `orders/` ออเดอร์ร้านออนไลน์ (edm_ord_items/cfg, tone coral) วางแชต parseChat · แพ็กแล้วตัดสต๊อก edm_stock_tx · ใบปะหน้า COD · `pos/` POS มินิมาร์ท (tone sky, edm_pos_sales/cfg, ใช้สินค้า edm_stock_items code=บาร์โค้ด, กล้อง BarcodeDetector, ใบเสร็จ 80mm) · รุ่น /app/?ed=salon นัดหมายร้านเสริมสวย (booking cfg.biz=salon เปลี่ยนคำ KIND.hour, sys book)
+- `goals/` ตั้งเป้าหมาย Smart Goal 49/490 (tone lav, edm_goal_items/cfg) การ์ดสีต่อเป้าหมาย g.c · โดนัท % = acts ที่ติ๊ก · รางวัล g.reward/g.got · หมวด cfg.cats · ไอคอน target ใน icons.js
 - ชุดธุรกิจ 349: kitonline = orders+stock+finance · kitsalon = book(salon)+payroll+time (member.js GROUP + Apps Script MEMBER_KIT)
 - `todo/` To-Do แบบตาราง (edm_tdsheet_*) · `finance/` การเงิน SME & ฟรีแลนซ์ (edm_fin_items/cfg) 199/1,990 · ยืดหยุ่นทุกธุรกิจ: กระเป๋าเงิน cfg.chans+cfg.open (โอน = item t:"tr" ch→ch2 ไม่นับรายได้/จ่าย) · แยกกำไร cfg.tagName/cfg.tags (item.tag) · ประเภทธุรกิจ BT (bizDlg) · รายการประจำ cfg.rec (runRecur ตอนเปิดหน้า, item.rid) · ปุ่ม + ลอย = formDlg
 - **ขายแยกทุกระบบ** (12 ต.ค. 2569): หน้าราคาเป็นรายการสินค้า (`PLANS` ใน index.html) ระบบละ 149 · ร้านค้า 249 · To-Do 49 · การเงิน 199 · ยกเลิกขายแพ็ก all (ครบทุกระบบ 349) สมาชิกเดิมใช้/ต่ออายุได้ · all ไม่รวม time/finance
@@ -32,7 +33,7 @@
 - ทดสอบ: `python3 -m http.server 8772` + Playwright
 
 ## Apps Script (หลังบ้าน: ออเดอร์ · สมาชิก · ซื้อเลย · สำรองข้อมูล)
-- โค้ดอยู่นอก repo (มีเลขบัญชี ห้าม commit) · ล่าสุด **v29** (v29: สินค้า orders, pos, ชุด kitonline/kitsalon 349 · MEMBER_KIT/mSysNorm_/mCovered_ · สำรอง Drive 08 ออเดอร์ 09 POS · v28.1: MEMBER_AUTO_TRIAL=false ร้านอนุมัติทดลองใช้เอง + อีเมลแจ้ง · ลิงก์ใช้ WEB_EXEC เสมอ · ลิงก์หลังร้านส่งเข้าอีเมล · todo/finance ไม่มีลองแบบไม่สมัครแล้ว · v28: เพิ่มสินค้า dorm ระบบหอพัก 149 ขายแยก, book ครอบ dorm · v27 13 ต.ค. 2569: ทดลองใช้ยืนยันอีเมลใช้ได้ทันที MEMBER_AUTO_TRIAL · ซื้อ+สลิป ใช้ชั่วคราว 24 ชม. BUY_PROV_HOURS (คอลัมน์ L ต่ออายุ = JSON ชั่วคราว; ไม่อนุมัติ/ครบเวลา = mProvRevert_ คืนสิทธิ์เดิม; สลิปเคยถูกปฏิเสธ = ไม่ได้ชั่วคราวอีก) · จำนวนเครื่องรายคน MC.dev คอลัมน์ P ปุ่ม 📱) เจ้าของเก็บไฟล์ `Code-v29.txt` · ไฟล์ทดสอบจำลองอยู่นอก repo · จะแก้ต้องขอให้เจ้าของแนบโค้ดปัจจุบันมาก่อน อย่าเขียนใหม่จากความจำ
+- โค้ดอยู่นอก repo (มีเลขบัญชี ห้าม commit) · ล่าสุด **v30** (v30: สินค้า goals 49 · สำรอง Drive 10 · v29: สินค้า orders, pos, ชุด kitonline/kitsalon 349 · MEMBER_KIT/mSysNorm_/mCovered_ · สำรอง Drive 08 ออเดอร์ 09 POS · v28.1: MEMBER_AUTO_TRIAL=false ร้านอนุมัติทดลองใช้เอง + อีเมลแจ้ง · ลิงก์ใช้ WEB_EXEC เสมอ · ลิงก์หลังร้านส่งเข้าอีเมล · todo/finance ไม่มีลองแบบไม่สมัครแล้ว · v28: เพิ่มสินค้า dorm ระบบหอพัก 149 ขายแยก, book ครอบ dorm · v27 13 ต.ค. 2569: ทดลองใช้ยืนยันอีเมลใช้ได้ทันที MEMBER_AUTO_TRIAL · ซื้อ+สลิป ใช้ชั่วคราว 24 ชม. BUY_PROV_HOURS (คอลัมน์ L ต่ออายุ = JSON ชั่วคราว; ไม่อนุมัติ/ครบเวลา = mProvRevert_ คืนสิทธิ์เดิม; สลิปเคยถูกปฏิเสธ = ไม่ได้ชั่วคราวอีก) · จำนวนเครื่องรายคน MC.dev คอลัมน์ P ปุ่ม 📱) เจ้าของเก็บไฟล์ `Code-v30.txt` · ไฟล์ทดสอบจำลองอยู่นอก repo · จะแก้ต้องขอให้เจ้าของแนบโค้ดปัจจุบันมาก่อน อย่าเขียนใหม่จากความจำ
 - โปรเจกต์จริงชื่อ "โครงการไม่มีชื่อ" ไฟล์ `รหัส.gs` (ผูกชีต "ออเดอร์ Excel Data Master")
 - เว็บเรียก deployment **`AKfycbwNEx…`** (ใน `assets/member.js`, `index.html` ปุ่มราคา, `book/index.html`) · ลิงก์เก่า `AKfycbzAZLzT7BKY…` (v18) และ `AKfycbzDNIwx…` ไม่ใช้แล้ว
 - Deploy ทุกครั้ง: จัดการการทำให้ใช้งานได้ → รายการ `AKfycbwNEx` → ✏️ → **เวอร์ชันใหม่** · ห้าม "การทำให้ใช้งานได้รายการใหม่" (ได้ลิงก์ใหม่ เว็บไม่รู้จัก)
@@ -41,7 +42,7 @@
 - สำรองลูกค้า Drive: `EDM ข้อมูลลูกค้า (ห้ามแชร์)/00 ไฟล์หลักสำหรับกู้คืน (ห้ามลบ)` + `01 ร้านค้า … 06 To-Do · 07 การเงิน SME` (สำเนาแยกตามระบบ) + `เก็บถาวร` · เมนูชีต "จัดไฟล์สำรองลูกค้าเป็นโฟลเดอร์ตามระบบ"
 
 ## งานค้าง
-- เจ้าของต้อง Deploy Apps Script **v29** (ถ้ายังไม่ Deploy ซื้อ/สมัคร ออเดอร์ · POS · ชุดธุรกิจ จะไม่ทำงาน)
+- เจ้าของต้อง Deploy Apps Script **v30** (รวม v29) (ถ้ายังไม่ Deploy ซื้อ/สมัคร ออเดอร์ · POS · ชุดธุรกิจ จะไม่ทำงาน)
 - เดิม: Deploy Apps Script **v28** (รวม v27/v26; ถ้ายังไม่ Deploy สมัคร/ซื้อระบบหอพักจะไม่ทำงาน) · ถ้ายังไม่ Deploy: สมัครทดลองยังต้องรออนุมัติ และไม่มีใช้ชั่วคราวหลังแนบสลิป
 - เจ้าของกดเมนู "จัดไฟล์สำรองลูกค้าเป็นโฟลเดอร์ตามระบบ" 1 ครั้ง (ถ้ายังไม่ได้กด)
 - เช็กชีตสมาชิก คอลัมน์ "ระบบ" ที่ว่าง ควรเหลือเฉพาะสมาชิกเดิม 199
