@@ -1,5 +1,5 @@
 {
- "name": "บันทึกรายจ่าย · Excel Data Master",
+ "name": "บันทึกรายรับ-รายจ่าย · Excel Data Master",
  "short_name": "รายจ่าย",
  "start_url": "/spend/",
  "scope": "/spend/",

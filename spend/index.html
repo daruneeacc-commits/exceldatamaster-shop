@@ -6,7 +6,7 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>บันทึกรายจ่าย ใช้ง่าย สรุปรายจ่ายรายเดือน แดชบอร์ด ภาษาไทย ออนไลน์ | Excel Data Master</title>
+<title>บันทึกรายรับ-รายจ่าย ใช้ง่าย สรุปรายเดือน แดชบอร์ด ภาษาไทย ออนไลน์ | Excel Data Master</title>
 <meta name="description" content="จดรายจ่ายง่าย ๆ แตะหมวด ใส่จำนวนเงิน จบ · แดชบอร์ดสรุปรายจ่ายเดือนนี้ เทียบเดือนก่อน แยกตามหมวด งบประมาณรายเดือน ใช้ได้ทั้งมือถือและคอม">
 <link rel="canonical" href="https://exceldatamaster.com/spend/">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,6 +40,8 @@ dialog{border:0;border-radius:18px;padding:0;width:min(480px,96vw)}dialog::backd
 .donut{width:170px;height:170px;border-radius:50%;flex:none;display:grid;place-items:center}.donut i{width:104px;height:104px;border-radius:50%;background:#fff;display:grid;place-items:center;font-style:normal;text-align:center;font-weight:700;line-height:1.2}.donut i small{display:block;font-weight:400;color:var(--muted);font-size:.72rem}
 .dw{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center}.lg{flex:1;min-width:180px;display:flex;flex-direction:column;gap:6px}.lg div{display:grid;grid-template-columns:14px minmax(0,1fr) auto auto;gap:8px;align-items:center;font-size:.88rem}.lg s{width:12px;height:12px;border-radius:4px;text-decoration:none}.lg em{font-style:normal;color:var(--muted);font-size:.78rem;width:38px;text-align:right}
 .bars{display:flex;align-items:flex-end;gap:6px;height:150px;padding-top:16px}.bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;min-width:0}.bars b{width:100%;max-width:42px;background:#F3B6A7;border-radius:6px 6px 2px 2px;min-height:2px}.bars div.cur b{background:var(--accent)}.bars span{font-size:.7rem;color:var(--muted);white-space:nowrap}.bars small{font-size:.66rem;color:var(--muted)}
+.bars div.pair{flex-direction:row;gap:3px;align-items:flex-end;justify-content:center;width:100%;flex:1;min-height:0}.bars .pair b{flex:1;max-width:22px}.bars .pair b.bi{background:#7FC8A1}.bars div.cur .pair b.bi{background:var(--ok)}
+.seg.tp button{font-size:1rem;padding:9px}.seg.tp button.on{color:#fff!important;background:var(--accent)}
 .days{display:flex;align-items:flex-end;gap:2px;height:90px}.days b{flex:1;background:#F3B6A7;border-radius:3px 3px 0 0;min-height:1px}.days b.t{background:var(--accent)}
 .bud{height:14px;border-radius:99px;background:var(--soft);overflow:hidden}.bud i{display:block;height:100%;border-radius:99px;background:var(--ok)}.bud.warn i{background:#E3A008}.bud.over i{background:var(--danger)}
 .li{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}.li .e{width:40px;height:40px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:1.3rem}.li small{display:block;color:var(--muted);font-size:.78rem;overflow-wrap:anywhere}.li b.m{color:var(--danger);white-space:nowrap}
@@ -54,16 +56,16 @@ dialog{border:0;border-radius:18px;padding:0;width:min(480px,96vw)}dialog::backd
 <link rel="stylesheet" href="../assets/skin.css?v=1">
 <script src="../assets/skin.js?v=1"></script>
 <script src="../assets/lock.js?v=3"></script>
-<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="บันทึกรายจ่าย ใช้ง่าย | Excel Data Master"><meta property="og:description" content="แตะหมวด ใส่จำนวนเงิน จบ · แดชบอร์ดสรุปรายจ่ายรายเดือน แยกหมวด เทียบเดือนก่อน งบประมาณ"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-spend.jpg?v=1"><meta property="og:url" content="https://exceldatamaster.com/spend/">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-spend.jpg?v=1">
+<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="บันทึกรายรับ-รายจ่าย ใช้ง่าย | Excel Data Master"><meta property="og:description" content="แตะหมวด ใส่จำนวนเงิน จบ · แดชบอร์ดสรุปรายจ่ายรายเดือน แยกหมวด เทียบเดือนก่อน งบประมาณ"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-spend.jpg?v=2"><meta property="og:url" content="https://exceldatamaster.com/spend/">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-spend.jpg?v=2">
 <meta name="theme-color" content="#D45D45">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="รายจ่าย">
 </head>
 <body>
-<header class="top"><div class="in"><a class="brand" href="/">💸 Excel Data Master <small>· บันทึกรายจ่าย</small></a><nav class="nav"></nav></div></header>
+<header class="top"><div class="in"><a class="brand" href="/">💸 Excel Data Master <small>· บันทึกรายรับ-รายจ่าย</small></a><nav class="nav"></nav></div></header>
 <div class="tabs" id="tabs"><button data-v="dash">📊 ภาพรวม</button><button data-v="list">📋 รายการ</button><button data-v="set">⚙️ ตั้งค่า</button></div>
 <main id="main"></main>
-<button class="fab" id="fab" type="button" aria-label="จดรายจ่าย">＋</button>
+<button class="fab" id="fab" type="button" aria-label="จดรายรับ-รายจ่าย">＋</button>
 <dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button">✕</button></div><div class="db" id="dlgB"></div></dialog>
 <div class="toast" id="toast" hidden></div>
 <script>
@@ -84,82 +86,92 @@ const WD=["อาทิตย์","จันทร์","อังคาร","พ
 function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2200)}
 const PAL=["#D45D45","#E0A21C","#3FA98A","#5B86D6","#9A6FD6","#D6578A","#E8896A","#4FAF83","#7A8CA3","#B7791F","#0E8C94","#A0A0A0"];
 const DC=[["🍜","อาหาร/เครื่องดื่ม"],["🛒","ของใช้/ซูเปอร์"],["🚗","เดินทาง/น้ำมัน"],["🏠","ค่าบ้าน/ค่าเช่า"],["💡","น้ำ ไฟ เน็ต โทรศัพท์"],["🛍","ช้อปปิ้ง"],["💊","สุขภาพ"],["🎓","การศึกษา"],["🎉","บันเทิง/ท่องเที่ยว"],["👨‍👩‍👧","ครอบครัว"],["💳","หนี้/ผ่อน"],["📦","อื่น ๆ"]];
+const DI=[["💼","เงินเดือน"],["🛍","ขายของ"],["💻","รายได้เสริม/ฟรีแลนซ์"],["🎁","โบนัส/ของขวัญ"],["📈","ดอกเบี้ย/ปันผล"],["💰","อื่น ๆ"]];
 const PAY={cash:"เงินสด",transfer:"โอน",card:"บัตร"};
-let X=LS.get(K.items,[])||[],cfg=Object.assign({name:"",budget:0,cats:DC.map(c=>({e:c[0],n:c[1]})),demo:false},LS.get(K.cfg,{})||{}),ui=Object.assign({v:"dash",m:today().slice(0,7),q:""},LS.get(K.ui,{})||{});
+let X=LS.get(K.items,[])||[],cfg=Object.assign({name:"",budget:0,cats:DC.map(c=>({e:c[0],n:c[1]})),demo:false},LS.get(K.cfg,{})||{}),ui=Object.assign({v:"dash",m:today().slice(0,7),q:"",f:""},LS.get(K.ui,{})||{});
+if(!Array.isArray(cfg.icats)||!cfg.icats.length)cfg.icats=DI.map(c=>({e:c[0],n:c[1]}));
 const save=()=>LS.set(K.items,X),saveC=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,ui);
-const catE=n=>{const c=cfg.cats.find(c=>c.n===n);return c?c.e:"📦"};
-const inM=ym=>X.filter(x=>x.d.slice(0,7)===ym),sum=a=>r2(a.reduce((s,x)=>s+num(x.a),0));
+const isIn=x=>x.t==="in",catsOf=t=>t==="in"?cfg.icats:cfg.cats;
+const catE=(n,t)=>{const c=catsOf(t).find(c=>c.n===n)||cfg.cats.concat(cfg.icats).find(c=>c.n===n);return c?c.e:(t==="in"?"💰":"📦")};
+const inM=ym=>X.filter(x=>x.d.slice(0,7)===ym),sum=a=>r2(a.reduce((s,x)=>s+num(x.a),0)),outs=a=>a.filter(x=>!isIn(x)),ins=a=>a.filter(isIn);
 function render(){$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));({dash:vDash,list:vList,set:vSet}[ui.v]||vDash)()}
 $("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b){ui.v=b.dataset.v;saveUi();render()}};
 $("#fab").onclick=()=>addDlg();
 function mbar(){return`<div class="mbar"><button class="btn ghost sm" data-mm="-1" type="button">‹</button><b>${thM(ui.m)}</b><button class="btn ghost sm" data-mm="1" type="button" ${ui.m>=today().slice(0,7)?"disabled":""}>›</button></div>`}
 function bindM(fn){$$("[data-mm]").forEach(b=>b.onclick=()=>{ui.m=addM(ui.m,+b.dataset.mm);saveUi();fn()})}
 function vDash(){const M=$("#main");
-  if(!X.length){M.innerHTML=`<div class="card" style="text-align:center;align-items:center;padding:30px 16px"><div style="font-size:3rem">💸</div><h2 style="justify-content:center">เริ่มจดรายจ่ายรายการแรก</h2><p style="color:var(--muted);margin:0;max-width:480px">กดปุ่ม ＋ แตะหมวด ใส่จำนวนเงิน เสร็จใน 3 วินาที ระบบสรุปให้ว่าเดือนนี้ใช้ไปเท่าไหร่ หมดไปกับอะไร</p><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="btn main" id="nw" type="button">＋ จดรายจ่าย</button><button class="btn ghost" id="dm" type="button">✨ ดูตัวอย่าง</button></div></div>`;$("#nw").onclick=()=>addDlg();$("#dm").onclick=demo;return}
-  const m=ui.m,L=inM(m),tot=sum(L),isCur=m===today().slice(0,7),pmL=inM(addM(m,-1)),pm=sum(isCur?pmL.filter(x=>+x.d.slice(8)<=new Date().getDate()):pmL);
-  const dim=new Date(+m.slice(0,4),+m.slice(5,7),0).getDate(),dn=isCur?new Date().getDate():dim,avg=dn?tot/dn:0,td=sum(X.filter(x=>x.d===today()));
-  const ch=pm?Math.round((tot-pm)/pm*100):null,bud=num(cfg.budget),bp=bud?Math.round(tot/bud*100):0,left=bud-tot;
-  const byC={};L.forEach(x=>byC[x.c]=(byC[x.c]||0)+num(x.a));const cs=Object.entries(byC).sort((a,b)=>b[1]-a[1]);
+  if(!X.length){M.innerHTML=`<div class="card" style="text-align:center;align-items:center;padding:30px 16px"><div style="font-size:3rem">💸</div><h2 style="justify-content:center">เริ่มจดรายรับ-รายจ่ายรายการแรก</h2><p style="color:var(--muted);margin:0;max-width:480px">กดปุ่ม ＋ เลือกรายจ่ายหรือรายรับ แตะหมวด ใส่จำนวนเงิน เสร็จใน 3 วินาที ระบบสรุปให้ว่าเดือนนี้ได้เท่าไหร่ ใช้ไปเท่าไหร่ เหลือเท่าไหร่</p><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="btn main" id="nw" type="button">＋ จดรายการ</button><button class="btn ghost" id="dm" type="button">✨ ดูตัวอย่าง</button></div></div>`;$("#nw").onclick=()=>addDlg();$("#dm").onclick=demo;return}
+  const m=ui.m,L=inM(m),O=outs(L),I=ins(L),tot=sum(O),inc=sum(I),bal=r2(inc-tot),isCur=m===today().slice(0,7),pmL=outs(inM(addM(m,-1))),pm=sum(isCur?pmL.filter(x=>+x.d.slice(8)<=new Date().getDate()):pmL);
+  const dim=new Date(+m.slice(0,4),+m.slice(5,7),0).getDate(),dn=isCur?new Date().getDate():dim,avg=dn?tot/dn:0;
+  const ch=pm?Math.round((tot-pm)/pm*100):null,bud=num(cfg.budget),bp=bud?Math.round(tot/bud*100):0,left=bud-tot,sr=inc?Math.round(bal/inc*100):null;
+  const byC={};O.forEach(x=>byC[x.c]=(byC[x.c]||0)+num(x.a));const cs=Object.entries(byC).sort((a,b)=>b[1]-a[1]);
   let acc=0;const grad=cs.length?cs.map(([c,v],i)=>{const a=acc/tot*100;acc+=v;return`${PAL[i%PAL.length]} ${a}% ${acc/tot*100}%`}).join(","):"var(--soft) 0 100%";
-  const six=[...Array(6)].map((_,i)=>addM(m,i-5)),sv=six.map(k=>sum(inM(k))),smax=Math.max(1,...sv);
-  const dd=[...Array(dim)].map((_,i)=>sum(L.filter(x=>+x.d.slice(8)===i+1))),dmax=Math.max(1,...dd);
-  const top=L.slice().sort((a,b)=>num(b.a)-num(a.a)).slice(0,5);
-  M.innerHTML=`<div class="hello"><div><h1>💸 ${esc(cfg.name?"รายจ่ายของ "+cfg.name:"รายจ่ายของฉัน")}</h1><p>สรุปให้เองทุกครั้งที่จด</p></div>${mbar()}</div>
-  <div class="kpis"><div class="kpi"><span>รายจ่าย${isCur?"เดือนนี้":" "+thMs(m)}</span><b>${fm(tot)}</b><small>${L.length} รายการ</small></div>
-  <div class="kpi"><span>เทียบเดือนก่อน</span><b class="${ch==null?"":ch>0?"up":"down"}">${ch==null?"-":(ch>0?"▲ ":"▼ ")+Math.abs(ch)+"%"}</b><small>${isCur?"ช่วงเดียวกันเดือนก่อน":"เดือนก่อน"} ${fm(pm)}</small></div>
-  <div class="kpi"><span>เฉลี่ยต่อวัน</span><b>${fm(r2(avg))}</b><small>${isCur?"วันนี้ "+fm(td):dim+" วัน"}</small></div>
-  <div class="kpi"><span>${bud?"งบเหลือ":"งบประมาณ"}</span><b class="${bud&&left<0?"up":""}">${bud?fm(left):"-"}</b><small>${bud?"งบ "+fm(bud)+" · ใช้ "+bp+"%":'<a href="#" id="setB">ตั้งงบรายเดือน</a>'}</small></div></div>
-  ${bud?`<div class="card" style="gap:6px"><h2>งบประมาณเดือนนี้ <small>${bp}% ${bp>=100?"· เกินงบแล้ว!":bp>=80?"· ใกล้เต็มงบ":""}</small></h2><div class="bud ${bp>=100?"over":bp>=80?"warn":""}"><i style="width:${Math.min(100,bp)}%"></i></div></div>`:""}
-  <div class="g2"><div class="card"><h2>หมดไปกับอะไร <small>${thMs(m)}</small></h2>${cs.length?`<div class="dw"><div class="donut" style="background:conic-gradient(${grad})"><i>${fm(tot)}<small>ทั้งเดือน</small></i></div><div class="lg">${cs.slice(0,8).map(([c,v],i)=>`<div><s style="background:${PAL[i%PAL.length]}"></s><span>${catE(c)} ${esc(c)}</span><b>${fm(v)}</b><em>${Math.round(v/tot*100)}%</em></div>`).join("")}</div></div>`:`<div class="empty">ยังไม่มีรายจ่ายเดือนนี้</div>`}</div>
-  <div class="card"><h2>6 เดือนล่าสุด</h2><div class="bars">${six.map((k,i)=>`<div class="${k===m?"cur":""}"><small>${sv[i]?fmt(Math.round(sv[i])):""}</small><b style="height:${sv[i]/smax*100}%"></b><span>${thMs(k)}</span></div>`).join("")}</div>
-  <h2 style="margin-top:6px">รายวัน <small>${thMs(m)}</small></h2><div class="days">${dd.map((v,i)=>`<b class="${isCur&&i+1===new Date().getDate()?"t":""}" style="height:${v/dmax*100}%" title="${i+1}: ${fm(v)}"></b>`).join("")}</div></div></div>
+  const six=[...Array(6)].map((_,i)=>addM(m,i-5)),so=six.map(k=>sum(outs(inM(k)))),si=six.map(k=>sum(ins(inM(k)))),smax=Math.max(1,...so,...si);
+  const dd=[...Array(dim)].map((_,i)=>sum(O.filter(x=>+x.d.slice(8)===i+1))),dmax=Math.max(1,...dd);
+  const top=O.slice().sort((a,b)=>num(b.a)-num(a.a)).slice(0,5);
+  M.innerHTML=`<div class="hello"><div><h1>💸 ${esc(cfg.name?"รายรับ-รายจ่ายของ "+cfg.name:"รายรับ-รายจ่ายของฉัน")}</h1><p>สรุปให้เองทุกครั้งที่จด</p></div>${mbar()}</div>
+  <div class="kpis"><div class="kpi"><span>รายรับ${isCur?"เดือนนี้":" "+thMs(m)}</span><b class="down">${fm(inc)}</b><small>${I.length} รายการ</small></div>
+  <div class="kpi"><span>รายจ่าย${isCur?"เดือนนี้":" "+thMs(m)}</span><b class="up">${fm(tot)}</b><small>${ch==null?O.length+" รายการ":(ch>0?"▲ ":"▼ ")+Math.abs(ch)+"% จาก"+(isCur?"ช่วงเดียวกัน":"")+"เดือนก่อน"}</small></div>
+  <div class="kpi"><span>คงเหลือ (รับ − จ่าย)</span><b class="${bal<0?"up":"down"}">${bal<0?"-":""}${fm(Math.abs(bal))}</b><small>${sr==null?"ยังไม่มีรายรับ":bal<0?"ใช้เกินรายรับ":"เก็บได้ "+sr+"% ของรายรับ"}</small></div>
+  <div class="kpi"><span>${bud?"งบรายจ่ายเหลือ":"เฉลี่ยจ่ายต่อวัน"}</span><b class="${bud&&left<0?"up":""}">${bud?fm(left):fm(r2(avg))}</b><small>${bud?"งบ "+fm(bud)+" · ใช้ "+bp+"%":'<a href="#" id="setB">ตั้งงบรายเดือน</a>'}</small></div></div>
+  ${bud?`<div class="card" style="gap:6px"><h2>งบรายจ่ายเดือนนี้ <small>${bp}% ${bp>=100?"· เกินงบแล้ว!":bp>=80?"· ใกล้เต็มงบ":""}</small></h2><div class="bud ${bp>=100?"over":bp>=80?"warn":""}"><i style="width:${Math.min(100,bp)}%"></i></div></div>`:""}
+  <div class="g2"><div class="card"><h2>รายจ่ายหมดไปกับอะไร <small>${thMs(m)}</small></h2>${cs.length?`<div class="dw"><div class="donut" style="background:conic-gradient(${grad})"><i>${fm(tot)}<small>รายจ่าย</small></i></div><div class="lg">${cs.slice(0,8).map(([c,v],i)=>`<div><s style="background:${PAL[i%PAL.length]}"></s><span>${catE(c)} ${esc(c)}</span><b>${fm(v)}</b><em>${Math.round(v/tot*100)}%</em></div>`).join("")}</div></div>`:`<div class="empty">ยังไม่มีรายจ่ายเดือนนี้</div>`}</div>
+  <div class="card"><h2>รายรับ vs รายจ่าย 6 เดือน <small><span style="color:var(--ok)">■</span> รับ <span style="color:var(--accent)">■</span> จ่าย</small></h2><div class="bars">${six.map((k,i)=>`<div class="${k===m?"cur":""}"><small>${fmt(Math.round(si[i]-so[i]))}</small><div class="pair"><b class="bi" style="height:${si[i]/smax*100}%"></b><b style="height:${so[i]/smax*100}%"></b></div><span>${thMs(k)}</span></div>`).join("")}</div>
+  <h2 style="margin-top:6px">รายจ่ายรายวัน <small>${thMs(m)}</small></h2><div class="days">${dd.map((v,i)=>`<b class="${isCur&&i+1===new Date().getDate()?"t":""}" style="height:${v/dmax*100}%" title="${i+1}: ${fm(v)}"></b>`).join("")}</div></div></div>
   <div class="card"><h2>จ่ายเยอะที่สุด <small>${thMs(m)}</small></h2>${top.length?top.map(row).join(""):`<div class="empty">-</div>`}</div>`;
   bindM(vDash);bindRows();const sb=$("#setB");if(sb)sb.onclick=e=>{e.preventDefault();ui.v="set";saveUi();render()}}
-function row(x){return`<div class="li" data-ed="${x.id}"><div class="e">${catE(x.c)}</div><div><b>${esc(x.n||x.c)}</b><small>${esc(x.c)} · ${thD(x.d)}${x.p&&PAY[x.p]?" · "+PAY[x.p]:""}</small></div><b class="m">-${fm(x.a)}</b></div>`}
+function row(x){const i=isIn(x);return`<div class="li" data-ed="${x.id}"><div class="e" style="${i?"background:#E3F4EA":""}">${catE(x.c,x.t)}</div><div><b>${esc(x.n||x.c)}</b><small>${i?"รายรับ · ":""}${esc(x.c)} · ${thD(x.d)}${x.p&&PAY[x.p]?" · "+PAY[x.p]:""}</small></div><b class="m" style="${i?"color:var(--ok)":""}">${i?"+":"-"}${fm(x.a)}</b></div>`}
 function bindRows(){$$("[data-ed]").forEach(r=>r.onclick=()=>addDlg(r.dataset.ed))}
-function vList(){const M=$("#main"),q=(ui.q||"").trim().toLowerCase();let L=inM(ui.m);if(q)L=L.filter(x=>(x.n+" "+x.c).toLowerCase().includes(q));
-  L.sort((a,b)=>a.d<b.d?1:a.d>b.d?-1:(b.ts||0)-(a.ts||0));const G={};L.forEach(x=>(G[x.d]=G[x.d]||[]).push(x));
-  M.innerHTML=`<div class="hello"><div><h1>📋 รายการรายจ่าย</h1><p>แตะรายการเพื่อแก้ไข/ลบ</p></div>${mbar()}</div>
-  <div class="card"><div class="row"><input class="in-" id="q" placeholder="🔎 ค้นหา" value="${esc(ui.q||"")}"><button class="btn ghost" id="ex" type="button">⬇️ ส่งออก Excel (CSV)</button></div>
-  <div style="display:flex;justify-content:space-between;font-weight:700"><span>รวม ${L.length} รายการ</span><span style="color:var(--danger)">${fm(sum(L))}</span></div>
-  ${Object.keys(G).length?Object.keys(G).map(d=>{const dt=new Date(d+"T00:00");return`<div class="dayh"><span>${WD[dt.getDay()]} ${thD(d)}</span><span>${fm(sum(G[d]))}</span></div>`+G[d].map(row).join("")}).join(""):`<div class="empty">ไม่มีรายการ</div>`}</div>`;
-  bindM(vList);bindRows();const qi=$("#q");qi.oninput=()=>{ui.q=qi.value;saveUi();clearTimeout(vList.t);vList.t=setTimeout(()=>{vList();const n=$("#q");n.focus();n.setSelectionRange(n.value.length,n.value.length)},250)};$("#ex").onclick=()=>csv(L)}
-function csv(L){const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"',rows=[["วันที่","หมวด","รายการ","จำนวนเงิน","จ่ายด้วย"]].concat(L.map(x=>[x.d,x.c,x.n,num(x.a),PAY[x.p]||""]));
-  const b=new Blob(["﻿"+rows.map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="รายจ่าย-"+ui.m+".csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2e3)}
+function vList(){const M=$("#main"),q=(ui.q||"").trim().toLowerCase();let L=inM(ui.m);if(ui.f==="in")L=ins(L);else if(ui.f==="out")L=outs(L);if(q)L=L.filter(x=>(x.n+" "+x.c).toLowerCase().includes(q));
+  L.sort((a,b)=>a.d<b.d?1:a.d>b.d?-1:(b.ts||0)-(a.ts||0));const G={};L.forEach(x=>(G[x.d]=G[x.d]||[]).push(x));const net=a=>r2(sum(ins(a))-sum(outs(a)));
+  M.innerHTML=`<div class="hello"><div><h1>📋 รายการรายรับ-รายจ่าย</h1><p>แตะรายการเพื่อแก้ไข/ลบ</p></div>${mbar()}</div>
+  <div class="card"><div class="seg" id="lf">${[["","ทั้งหมด"],["out","รายจ่าย"],["in","รายรับ"]].map(([k,t])=>`<button type="button" data-f="${k}" class="${(ui.f||"")===k?"on":""}">${t}</button>`).join("")}</div>
+  <div class="row"><input class="in-" id="q" placeholder="🔎 ค้นหา" value="${esc(ui.q||"")}"><button class="btn ghost" id="ex" type="button">⬇️ ส่งออก Excel (CSV)</button></div>
+  <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-weight:700"><span>${L.length} รายการ</span><span><span style="color:var(--ok)">รับ ${fm(sum(ins(L)))}</span> · <span style="color:var(--danger)">จ่าย ${fm(sum(outs(L)))}</span></span></div>
+  ${Object.keys(G).length?Object.keys(G).map(d=>{const dt=new Date(d+"T00:00"),n=net(G[d]);return`<div class="dayh"><span>${WD[dt.getDay()]} ${thD(d)}</span><span style="color:${n<0?"var(--danger)":"var(--ok)"}">${n<0?"-":"+"}${fm(Math.abs(n))}</span></div>`+G[d].map(row).join("")}).join(""):`<div class="empty">ไม่มีรายการ</div>`}</div>`;
+  bindM(vList);bindRows();$$("#lf [data-f]").forEach(b=>b.onclick=()=>{ui.f=b.dataset.f;saveUi();vList()});const qi=$("#q");qi.oninput=()=>{ui.q=qi.value;saveUi();clearTimeout(vList.t);vList.t=setTimeout(()=>{vList();const n=$("#q");n.focus();n.setSelectionRange(n.value.length,n.value.length)},250)};$("#ex").onclick=()=>csv(L)}
+function csv(L){const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"',rows=[["วันที่","ประเภท","หมวด","รายการ","จำนวนเงิน","จ่าย/รับด้วย"]].concat(L.map(x=>[x.d,isIn(x)?"รายรับ":"รายจ่าย",x.c,x.n,isIn(x)?num(x.a):-num(x.a),PAY[x.p]||""]));
+  const b=new Blob(["﻿"+rows.map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="รายรับรายจ่าย-"+ui.m+".csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2e3)}
 function openDlg(t,h){$("#dlgT").textContent=t;$("#dlgB").innerHTML=h;const d=$("#dlg");if(!d.open)d.showModal()}
 $("#dlgX").onclick=()=>$("#dlg").close();
-function addDlg(id){const o=id?X.find(x=>x.id===id):null,x=o?Object.assign({},o):{a:"",c:(LS.get(K.ui,{})||{}).lc||cfg.cats[0].n,n:"",d:today(),p:"cash"};
-  openDlg(o?"แก้ไขรายจ่าย":"จดรายจ่าย",`<input class="in- amt" id="xA" inputmode="decimal" placeholder="0" value="${o?num(x.a):""}" aria-label="จำนวนเงิน">
-  <div class="cats" id="xC">${cfg.cats.map(c=>`<button type="button" data-c="${esc(c.n)}" class="${c.n===x.c?"on":""}"><i>${esc(c.e)}</i>${esc(c.n)}</button>`).join("")}</div>
-  <div class="f"><label>รายละเอียด (ไม่ใส่ก็ได้)</label><input class="in-" id="xN" value="${esc(x.n)}" placeholder="เช่น ข้าวมันไก่ ค่าน้ำมัน" maxlength="80"></div>
-  <div class="row"><div class="f"><label>วันที่</label><input class="in-" type="date" id="xD" value="${x.d}"></div><div class="f"><label>จ่ายด้วย</label><div class="seg" id="xP">${Object.keys(PAY).map(k=>`<button type="button" data-p="${k}" class="${x.p===k?"on":""}">${PAY[k]}</button>`).join("")}</div></div></div>
+function addDlg(id,tp){const o=id?X.find(x=>x.id===id):null,U=LS.get(K.ui,{})||{},t0=o?(o.t||"out"):(tp||"out"),x=o?Object.assign({},o):{t:t0,a:"",c:(t0==="in"?U.li:U.lc)||catsOf(t0)[0].n,n:"",d:today(),p:t0==="in"?"transfer":"cash"};if(!x.t)x.t="out";
+  const inc=x.t==="in";
+  openDlg(o?"แก้ไขรายการ":(inc?"จดรายรับ":"จดรายจ่าย"),`<div class="seg tp" id="xT"><button type="button" data-t="out" class="${!inc?"on":""}">💸 รายจ่าย</button><button type="button" data-t="in" class="${inc?"on":""}">💰 รายรับ</button></div>
+  <input class="in- amt" id="xA" inputmode="decimal" placeholder="0" value="${o?num(x.a):""}" aria-label="จำนวนเงิน" style="color:${inc?"var(--ok)":"var(--danger)"}">
+  <div class="cats" id="xC">${catsOf(x.t).map(c=>`<button type="button" data-c="${esc(c.n)}" class="${c.n===x.c?"on":""}"><i>${esc(c.e)}</i>${esc(c.n)}</button>`).join("")}</div>
+  <div class="f"><label>รายละเอียด (ไม่ใส่ก็ได้)</label><input class="in-" id="xN" value="${esc(x.n)}" placeholder="${inc?"เช่น เงินเดือน ต.ค. ขายเสื้อ 3 ตัว":"เช่น ข้าวมันไก่ ค่าน้ำมัน"}" maxlength="80"></div>
+  <div class="row"><div class="f"><label>วันที่</label><input class="in-" type="date" id="xD" value="${x.d}"></div><div class="f"><label>${inc?"รับเป็น":"จ่ายด้วย"}</label><div class="seg" id="xP">${Object.keys(PAY).map(k=>`<button type="button" data-p="${k}" class="${x.p===k?"on":""}">${PAY[k]}</button>`).join("")}</div></div></div>
   <div style="display:flex;gap:8px;justify-content:space-between">${o?`<button class="btn ghost danger" id="xDel" type="button">ลบ</button>`:`<button class="btn ghost" id="xMore" type="button">บันทึก + จดต่อ</button>`}<button class="btn main" id="xOk" type="button" style="flex:1">บันทึก</button></div>`);
+  $$("#xT [data-t]").forEach(b=>b.onclick=()=>{if(b.dataset.t===x.t)return;const a=$("#xA").value,n=$("#xN").value;if(o){o.t=b.dataset.t;x.t=b.dataset.t;if(!catsOf(x.t).some(c=>c.n===x.c))x.c=catsOf(x.t)[0].n;Object.assign(o,{c:x.c});addDlg(id);}else addDlg(null,b.dataset.t);$("#xA").value=a;$("#xN").value=n});
   $$("#xC [data-c]").forEach(b=>b.onclick=()=>{x.c=b.dataset.c;$$("#xC [data-c]").forEach(z=>z.classList.toggle("on",z===b))});
   $$("#xP [data-p]").forEach(b=>b.onclick=()=>{x.p=b.dataset.p;$$("#xP [data-p]").forEach(z=>z.classList.toggle("on",z===b))});
   const ok=more=>{const a=r2(num($("#xA").value));if(!(a>0)){toast("ใส่จำนวนเงิน");return $("#xA").focus()}x.a=a;x.n=$("#xN").value.trim();x.d=$("#xD").value||today();
-    if(o)Object.assign(o,x);else{x.id=uid();x.ts=Date.now();X.push(x);if(cfg.demo){cfg.demo=false;saveC()}}save();const u=LS.get(K.ui,{})||{};ui.lc=x.c;saveUi();
-    toast("บันทึกแล้ว ✓ "+fm(a));if(more){addDlg();}else{$("#dlg").close()}render()};
+    if(o)Object.assign(o,x);else{x.id=uid();x.ts=Date.now();X.push(x);if(cfg.demo){cfg.demo=false;saveC()}}save();if(x.t==="in")ui.li=x.c;else ui.lc=x.c;saveUi();
+    toast("บันทึกแล้ว ✓ "+(x.t==="in"?"+":"-")+fm(a));if(more){addDlg(null,x.t);}else{$("#dlg").close()}render()};
   $("#xOk").onclick=()=>ok(false);if(!o)$("#xMore").onclick=()=>ok(true);else $("#xDel").onclick=()=>{if(!confirm("ลบรายการนี้?"))return;X=X.filter(z=>z!==o);save();$("#dlg").close();render()};
   $("#xA").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();ok(false)}};setTimeout(()=>$("#xA").focus(),40)}
+function catEditor(key,title){const L=cfg[key];return`<div class="card"><h2>${title} <small>แก้ไอคอน/ชื่อได้ · ลบหมวดไม่กระทบรายการเดิม</small></h2><div class="cl">${L.map((c,i)=>`<div><input class="in-" data-ce="${key}|${i}" value="${esc(c.e)}" maxlength="4" style="text-align:center"><input class="in-" data-cn="${key}|${i}" value="${esc(c.n)}" maxlength="30"><button class="btn sm ghost danger" data-cx="${key}|${i}" type="button">ลบ</button></div>`).join("")}</div><div><button class="btn sm" data-ca="${key}" type="button">＋ เพิ่มหมวด</button></div></div>`}
 function vSet(){const M=$("#main");
-  M.innerHTML=`<div class="hello"><div><h1>⚙️ ตั้งค่า</h1><p>งบรายเดือน และหมวดรายจ่าย</p></div></div>
+  M.innerHTML=`<div class="hello"><div><h1>⚙️ ตั้งค่า</h1><p>งบรายจ่ายต่อเดือน และหมวดรายรับ/รายจ่าย</p></div></div>
   <div class="card"><h2>ทั่วไป</h2><div class="row"><div class="f"><label>ชื่อที่แสดง</label><input class="in-" id="nm" value="${esc(cfg.name)}" maxlength="40" placeholder="เช่น บ้านเรา"></div><div class="f"><label>งบรายจ่ายต่อเดือน (บาท · 0 = ไม่ตั้ง)</label><input class="in-" id="bd" inputmode="decimal" value="${num(cfg.budget)||""}" placeholder="เช่น 15000"></div></div></div>
-  <div class="card"><h2>หมวดรายจ่าย <small>แก้ไอคอน/ชื่อได้ · ลบหมวดไม่กระทบรายการเดิม</small></h2><div class="cl">${cfg.cats.map((c,i)=>`<div><input class="in-" data-ce="${i}" value="${esc(c.e)}" maxlength="4" style="text-align:center"><input class="in-" data-cn="${i}" value="${esc(c.n)}" maxlength="30"><button class="btn sm ghost danger" data-cx="${i}" type="button">ลบ</button></div>`).join("")}</div><div><button class="btn sm" id="ca" type="button">＋ เพิ่มหมวด</button></div></div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="sv" type="button">บันทึกการตั้งค่า</button><button class="btn ghost" id="dm" type="button">✨ ใส่ข้อมูลตัวอย่าง</button><button class="btn ghost danger" id="clr" type="button">ล้างรายจ่ายทั้งหมด</button></div>`;
-  const read=()=>{cfg.name=$("#nm").value.trim();cfg.budget=num($("#bd").value);cfg.cats=$$("[data-cn]").map(i=>({e:($(`[data-ce="${i.dataset.cn}"]`).value||"📦").trim(),n:i.value.trim()})).filter(c=>c.n)};
-  $("#ca").onclick=()=>{read();cfg.cats.push({e:"📦",n:"หมวดใหม่"});vSet();const l=$$("[data-cn]").pop();l.focus();l.select()};
-  $$("[data-cx]").forEach(b=>b.onclick=()=>{read();cfg.cats.splice(+b.dataset.cx,1);vSet()});
-  $("#sv").onclick=()=>{read();if(!cfg.cats.length)cfg.cats=DC.map(c=>({e:c[0],n:c[1]}));saveC();toast("บันทึกแล้ว ✓")};$("#dm").onclick=demo;
-  $("#clr").onclick=()=>{if(!confirm("ล้างรายจ่ายทั้งหมด? (ย้อนกลับไม่ได้)"))return;X=[];save();ui.v="dash";saveUi();render()}}
-function demo(){if(X.length&&!confirm("เพิ่มข้อมูลตัวอย่าง 6 เดือน?"))return;const t=new Date(),C=cfg.cats.map(c=>c.n);let s=7;const rnd=()=>{s=(s*9301+49297)%233280;return s/233280};
+  ${catEditor("cats","หมวดรายจ่าย")}${catEditor("icats","หมวดรายรับ")}
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="sv" type="button">บันทึกการตั้งค่า</button><button class="btn ghost" id="dm" type="button">✨ ใส่ข้อมูลตัวอย่าง</button><button class="btn ghost danger" id="clr" type="button">ล้างรายการทั้งหมด</button></div>`;
+  const read=()=>{cfg.name=$("#nm").value.trim();cfg.budget=num($("#bd").value);["cats","icats"].forEach(k=>{cfg[k]=$$(`[data-cn^="${k}|"]`).map(i=>({e:($(`[data-ce="${i.dataset.cn}"]`).value||"📦").trim(),n:i.value.trim()})).filter(c=>c.n)})};
+  $$("[data-ca]").forEach(b=>b.onclick=()=>{read();cfg[b.dataset.ca].push({e:b.dataset.ca==="icats"?"💰":"📦",n:"หมวดใหม่"});vSet();const l=$$(`[data-cn^="${b.dataset.ca}|"]`).pop();l.focus();l.select()});
+  $$("[data-cx]").forEach(b=>b.onclick=()=>{read();const[k,i]=b.dataset.cx.split("|");cfg[k].splice(+i,1);vSet()});
+  $("#sv").onclick=()=>{read();if(!cfg.cats.length)cfg.cats=DC.map(c=>({e:c[0],n:c[1]}));if(!cfg.icats.length)cfg.icats=DI.map(c=>({e:c[0],n:c[1]}));saveC();toast("บันทึกแล้ว ✓")};$("#dm").onclick=demo;
+  $("#clr").onclick=()=>{if(!confirm("ล้างรายการทั้งหมด? (ย้อนกลับไม่ได้)"))return;X=[];save();ui.v="dash";saveUi();render()}}
+function demo(){if(X.length&&!confirm("เพิ่มข้อมูลตัวอย่าง 6 เดือน?"))return;const t=new Date(),C=cfg.cats.map(c=>c.n),CI=cfg.icats.map(c=>c.n);let s=7;const rnd=()=>{s=(s*9301+49297)%233280;return s/233280};
   const P=[[0,["ข้าวกลางวัน","กาแฟ","ข้าวเย็น","ขนม"],40,180,2.2],[1,["ซูเปอร์มาร์เก็ต","ของใช้ในบ้าน"],150,900,.35],[2,["เติมน้ำมัน","ค่าทางด่วน","แท็กซี่"],60,900,.4],[5,["เสื้อผ้า","ของออนไลน์"],199,1500,.12],[6,["ร้านยา"],80,600,.06],[8,["ดูหนัง","เที่ยวต่างจังหวัด"],220,2500,.07]];
-  for(let k=0;k<180;k++){const d=new Date(t);d.setDate(t.getDate()-k);const ds=ymd(d);P.forEach(([ci,ns,lo,hi,pr])=>{let n=Math.floor(pr)+(rnd()<pr%1?1:0);while(n--)X.push({id:uid(),a:Math.round(lo+rnd()*(hi-lo)),c:C[ci]||C[0],n:ns[Math.floor(rnd()*ns.length)],d:ds,p:rnd()<.6?"cash":"transfer",ts:d.getTime()})});
-    if(d.getDate()===1){X.push({id:uid(),a:6500,c:C[3],n:"ค่าเช่าห้อง",d:ds,p:"transfer",ts:d.getTime()});X.push({id:uid(),a:1290,c:C[4],n:"ค่าไฟ + เน็ต",d:ds,p:"transfer",ts:d.getTime()})}}
+  for(let k=0;k<180;k++){const d=new Date(t);d.setDate(t.getDate()-k);const ds=ymd(d);P.forEach(([ci,ns,lo,hi,pr])=>{let n=Math.floor(pr)+(rnd()<pr%1?1:0);while(n--)X.push({id:uid(),t:"out",a:Math.round(lo+rnd()*(hi-lo)),c:C[ci]||C[0],n:ns[Math.floor(rnd()*ns.length)],d:ds,p:rnd()<.6?"cash":"transfer",ts:d.getTime()})});
+    if(d.getDate()===1){X.push({id:uid(),t:"out",a:6500,c:C[3],n:"ค่าเช่าห้อง",d:ds,p:"transfer",ts:d.getTime()});X.push({id:uid(),t:"out",a:1290,c:C[4],n:"ค่าไฟ + เน็ต",d:ds,p:"transfer",ts:d.getTime()})}
+    if(d.getDate()===1)X.push({id:uid(),t:"in",a:32000,c:CI[0],n:"เงินเดือน",d:ds,p:"transfer",ts:d.getTime()});
+    if(rnd()<.08)X.push({id:uid(),t:"in",a:Math.round(300+rnd()*2700),c:CI[2]||CI[0],n:"งานเสริม",d:ds,p:"transfer",ts:d.getTime()})}
   if(!cfg.budget)cfg.budget=25000;if(!cfg.name)cfg.name="บ้านเรา (ตัวอย่าง)";cfg.demo=true;saveC();save();ui.v="dash";ui.m=today().slice(0,7);saveUi();render();toast("ใส่ข้อมูลตัวอย่างแล้ว ✓")}
 window.addEventListener("storage",e=>{if(e.key===K.items||e.key===K.cfg){X=LS.get(K.items,[])||[];cfg=Object.assign(cfg,LS.get(K.cfg,{})||{});if(!$("#dlg").open)render()}});
 render();
 })();
 </script>
-<script src="../assets/member.js?v=88" defer></script>
+<script src="../assets/member.js?v=89" defer></script>
 </body>
 </html>
