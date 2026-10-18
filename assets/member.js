@@ -57,7 +57,7 @@
 
   /* ---------- styles ---------- */
   var css = ".edm-paid .edm-brand{display:none!important}" +
-    ".edm-gate{position:fixed;inset:0;z-index:100;background:rgba(244,246,245,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px;overflow:auto}" +
+    ".edm-gate{position:fixed;inset:0;z-index:2147480000;background:rgba(244,246,245,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px;overflow:auto}" +
     "@media (prefers-color-scheme:dark){.edm-gate{background:rgba(13,17,16,.75)}}" +
     ".edm-card{background:var(--card,#fff);color:var(--ink,#0F1513);border-radius:22px;box-shadow:0 0 0 1px var(--line,#E2E6E4),0 30px 60px -30px rgba(0,0,0,.35);width:100%;max-width:420px;padding:26px 22px;display:flex;flex-direction:column;gap:12px;font:15px/1.6 'IBM Plex Sans Thai','Noto Sans Thai',system-ui,sans-serif}" +
     ".edm-card h2{margin:0;font-size:1.35rem;line-height:1.3}.edm-card p{margin:0}.edm-muted{color:var(--muted,#66706B);font-size:.86rem}" +
@@ -213,9 +213,23 @@
     deny.innerHTML = '<div class="edm-card"><span class="edm-badge">' + esc(me.email) + '</span><h2>บัญชีนี้ยังไม่ได้เปิดใช้ ' + esc(SYS[k].n) + '</h2>' +
       '<p class="edm-muted">บัญชีของคุณใช้ได้กับระบบต่อไปนี้</p>' +
       mine.map(function (x) { return '<a class="edm-btn ghost" href="' + BASE + SYS[x].u + '">' + esc(SYS[x].n) + '</a>'; }).join("") +
-      '<a class="edm-btn" href="' + line + '" target="_blank" rel="noopener" style="background:#06C755;color:#fff">💬 ขอเพิ่มระบบนี้ทาง LINE</a>' +
+      '<a class="edm-btn" href="' + esc(buyUrl(k)) + '" target="_blank" rel="noopener">🛒 ซื้อ ' + esc(SYS[k].n) + ' เพิ่มในบัญชีนี้</a>' +
+      '<a class="edm-btn ghost" href="' + line + '" target="_blank" rel="noopener">💬 ขอทดลองระบบนี้ทาง LINE</a>' +
       '<button class="edm-link" id="edmDenyOut" type="button" style="align-self:center">ใช้อีเมลอื่น · ออกจากระบบ</button></div>';
     deny.querySelector("#edmDenyOut").onclick = function () { call({ a: "logout", email: me.email, token: me.token }).catch(function () {}); cloudStop(); me = null; LS.set(null); hideDeny(); apply(); openGate("signup"); };
+  }
+  /* หมดอายุ = ปิดการใช้งานทั้งหน้า จนกว่าจะต่ออายุ/ซื้อ (ทุกระบบ รวมหน้าในระบบร้านค้า) */
+  function showExp() {
+    document.body.classList.add("edm-locked");
+    if (!deny) { deny = document.createElement("div"); deny.className = "edm-gate"; deny.setAttribute("role", "dialog"); deny.setAttribute("aria-modal", "true"); document.body.appendChild(deny); }
+    var tr = me.status === "ทดลองใช้" || !me.paid;
+    deny.innerHTML = '<div class="edm-card"><span class="edm-badge">' + esc(me.email) + '</span><h2>' + (tr ? "หมดช่วงทดลองใช้แล้ว" : "บัญชีหมดอายุแล้ว") + '</h2>' +
+      '<p class="edm-muted">หมดอายุเมื่อ ' + thDate(me.exp) + ' · ' + (tr ? "สั่งซื้อเพื่อใช้งานต่อ" : "ต่ออายุเพื่อใช้งานต่อ") + ' ข้อมูลเดิมยังอยู่ครบ ใช้ต่อได้ทันทีเมื่อร้านตรวจสลิปแล้ว</p>' +
+      '<a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">' + (tr ? "🛒 สั่งซื้อ / ใช้งานต่อ" : "🔄 ต่ออายุสมาชิก") + '</a>' +
+      '<button class="edm-btn ghost" id="edmExpChk" type="button">โอนแล้ว · ตรวจสอบอีกครั้ง</button>' +
+      '<button class="edm-link" id="edmDenyOut" type="button" style="align-self:center">ใช้อีเมลอื่น · ออกจากระบบ</button></div>';
+    deny.querySelector("#edmExpChk").onclick = function () { check(true); };
+    deny.querySelector("#edmDenyOut").onclick = function () { call({ a: "logout", email: me.email, token: me.token }).catch(function () {}); cloudStop(); me = null; LS.set(null); hideDeny(); apply(); openGate("login"); };
   }
   function hideDeny() { if (deny) { deny.remove(); deny = null; document.body.classList.remove("edm-locked"); } }
 
@@ -227,8 +241,8 @@
   function apply() {
     paidFlag();
     if (!me) { hideDeny(); document.body.classList.remove("edm-ro"); if (chip) chip.remove(), chip = null; if (bar) bar.remove(), bar = null; return; }
-    if (!allowed(me, curSys())) showDeny(); else hideDeny();
     var left = daysLeft(), ex = expired();
+    if (!allowed(me, curSys())) showDeny(); else if (ex) showExp(); else hideDeny();
     document.body.classList.toggle("edm-ro", ex);
     var nav = document.querySelector("header .nav") || document.querySelector("header");
     if (!chip) { chip = document.createElement("div"); chip.className = "edm-chip"; nav.insertBefore(chip, nav.firstChild); }
@@ -240,7 +254,7 @@
     if (need) {
       if (!bar) { bar = document.createElement("div"); var hd = document.querySelector("header.top"); hd.parentNode.insertBefore(bar, hd.nextSibling); }
       bar.className = "edm-bar" + (ex ? "" : " warn");
-      bar.innerHTML = (ex ? "บัญชีหมดอายุแล้ว · ยังเปิดดูและพิมพ์เอกสารเดิมได้ แต่สร้างหรือแก้ไขไม่ได้จนกว่าจะต่ออายุ"
+      bar.innerHTML = (ex ? "บัญชีหมดอายุแล้ว · ต่ออายุหรือสั่งซื้อเพื่อใช้งานต่อ"
         : (me.status === "ทดลองใช้" ? "ช่วงทดลองใช้" : "บัญชีของคุณ") + "จะหมดอายุใน " + left + " วัน (" + thDate(me.exp) + ")") +
         ' <a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">ต่ออายุสมาชิก</a>';
     } else if (bar) { bar.remove(); bar = null; }
@@ -410,7 +424,7 @@
       // (ถ้ายังไม่ได้ติดตั้งโค้ดสมาชิก จะไม่ขึ้นหน้าต่างเลย และใช้งานได้ตามปกติ — ไม่มีหน้าต่างขึ้นแล้วเด้งหาย)
       var want = (/[?&]start=(signup|login)/.exec(location.search) || [])[1]; // ลิงก์จากหน้าร้าน: ?start=signup (ทดลองใช้) / ?start=login
       if (!want && tryOk() && tryUsed()) { tryBar(); return; }   // กำลังลองใช้แบบไม่สมัคร
-      call({ a: "ping" }).then(function (r) { if (r && r.ok && !me) openGate(want); }).catch(function () {});
+      openGate(want);   // ต้องสมัคร/เข้าสู่ระบบทุกครั้ง (แม้ติดต่อหลังบ้านไม่ได้ ก็ไม่เปิดให้ใช้ฟรี)
       return;
     }
     apply(); check(false); cloudInit();
