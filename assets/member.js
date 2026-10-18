@@ -219,7 +219,9 @@
     deny.querySelector("#edmDenyOut").onclick = function () { call({ a: "logout", email: me.email, token: me.token }).catch(function () {}); cloudStop(); me = null; LS.set(null); hideDeny(); apply(); openGate("signup"); };
     deny.querySelector("#edmTry").onclick = function () {
       var bt = this, M = deny.querySelector("#edmTryM"); bt.disabled = true; bt.textContent = "กำลังส่งคำขอ…";
-      call({ a: "trialreq", email: me.email, token: me.token, sys: k }).then(function (r) {
+      // ใช้ช่องทางสมัครเดิม (หลังบ้าน v31 ขึ้นไป): บัญชีที่ยืนยันแล้ว = แจ้งร้านทางอีเมล ไม่เปลี่ยนรหัสผ่าน
+      call({ a: "signup", email: me.email, pass: "rq-" + Math.random().toString(36).slice(2) + Date.now().toString(36), sys: k }).then(function (r) {
+        if (r && !r.ok && r.code === "exists") r = { ok: true, msg: /คำขอ/.test(r.msg || "") ? "ส่งคำขอทดลองใช้ " + SYS[k].n + " ให้ร้านแล้ว ร้านจะเปิดให้และแจ้งทางอีเมล" : r.msg };
         M.hidden = false; M.className = "edm-msg" + (r && r.ok ? " ok" : " err"); M.textContent = (r && r.msg) || "ส่งไม่สำเร็จ ลองใหม่ หรือทัก LINE ร้าน";
         bt.textContent = r && r.ok ? "✓ ส่งคำขอแล้ว" : "🎁 ขอทดลองใช้ระบบนี้ฟรี 7 วัน"; bt.disabled = !!(r && r.ok);
       }).catch(function () { M.hidden = false; M.className = "edm-msg err"; M.textContent = "เชื่อมต่อไม่ได้ ลองใหม่ หรือทัก LINE ร้าน"; bt.disabled = false; bt.textContent = "🎁 ขอทดลองใช้ระบบนี้ฟรี 7 วัน"; });
