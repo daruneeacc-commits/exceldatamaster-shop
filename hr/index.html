@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="th" data-theme="light" data-tone="sky">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>แดชบอร์ดวิเคราะห์เงินเดือน HR KPI ภาษาไทย ใช้ออนไลน์ | Excel Data Master</title>
+<meta name="description" content="แดชบอร์ดวิเคราะห์เงินเดือนและพนักงาน ภาษาไทย ค่าจ้างรวม เงินเดือนเฉลี่ย อัตราลาออก พนักงานใหม่ จ่ายตรงเวลา เงินเดือนตามแผนก กราฟแนวโน้ม 6 เดือน การกระจายเงินเดือน ผลประเมินเทียบเงินเดือน กรองตามแผนก สถานะ ระดับ ปีที่เข้างาน">
+<link rel="canonical" href="https://exceldatamaster.com/hr/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{--bg:#F3F6FB;--card:#fff;--ink:#1D2939;--muted:#667085;--line:#E3E8F0;--soft:#EEF3FB;--accent:#1E5BB8;--danger:#D14343;--ok:#16A34A;--c1:#2F6FDE;--c2:#22A06B;--c3:#F08C2E;--c4:#7C5CD6;--c5:#14A3B8;--c6:#E0527A}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.5 "IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}a{color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1400px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px}.brand{font-weight:700;text-decoration:none;color:var(--accent);display:flex;align-items:center;gap:8px}.brand .edm-ic{width:26px;height:26px}.brand small{color:var(--muted);font-weight:500}.nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.tabs{max-width:1400px;margin:10px auto 0;padding:0 16px;display:flex;gap:6px;overflow-x:auto}.tabs button{flex:none;border:0;border-radius:999px;padding:7px 15px;background:var(--card);box-shadow:0 0 0 1px var(--line);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px}.tabs button .edm-ic{width:22px;height:22px}.tabs button.on{background:var(--accent);color:#fff;box-shadow:none}
+main{max-width:1400px;margin:0 auto;padding:12px 16px 40px;display:flex;flex-direction:column;gap:14px}
+.hero{background:linear-gradient(120deg,#0F2B5B,#1E5BB8);color:#fff;border-radius:18px;padding:18px 22px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}.hero h1{margin:0;font-size:1.5rem;line-height:1.2}.hero h1 span{color:#FFD54A}.hero p{margin:4px 0 0;opacity:.85;font-size:.9rem}.hero .sp{flex:1}.hero select,.hero .btn{background:rgba(255,255,255,.14);color:#fff;border:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}.hero select option{color:#111}
+.card{background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:10px;min-width:0}.card h2{font-size:1rem;margin:0;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.card h2 small{font-weight:400;color:var(--muted);font-size:.78rem}
+.btn{border:0;border-radius:10px;padding:8px 14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;background:var(--soft);justify-content:center;text-decoration:none;white-space:nowrap}.btn.main{background:var(--accent);color:#fff}.btn.ghost{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:5px 11px;font-size:.84rem}.btn.danger{color:var(--danger)}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 11px;outline:none}.in-:focus{border-color:var(--accent)}textarea.in-{min-height:140px;font-family:ui-monospace,monospace;font-size:.82rem}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}.f label{font-size:.8rem;font-weight:600;color:var(--muted)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}@media(max-width:520px){.row3{grid-template-columns:1fr 1fr}}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}@media(max-width:1100px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:600px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{--k:var(--c1);background:#fff;border-radius:16px;padding:12px 10px;box-shadow:0 0 0 2px color-mix(in srgb,var(--k) 35%,transparent);text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;background:linear-gradient(#fff,color-mix(in srgb,var(--k) 6%,#fff))}
+.kpi .ic{width:38px;height:38px;border-radius:12px;background:color-mix(in srgb,var(--k) 14%,#fff);display:grid;place-items:center;color:var(--k)}.kpi .ic svg{width:24px;height:24px}
+.kpi span{font-size:.84rem;font-weight:600;color:var(--ink)}.kpi b{font-size:1.55rem;line-height:1.2;color:var(--k);font-variant-numeric:tabular-nums}.kpi small{font-size:.74rem;color:var(--muted)}.kpi small em{font-style:normal;font-weight:700}.up{color:var(--ok)}.dn{color:var(--danger)}
+.g3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,.9fr);gap:14px}.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}.gT{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:14px;align-items:start}
+@media(max-width:1000px){.g3,.gT{grid-template-columns:1fr}}@media(max-width:760px){.g2{grid-template-columns:1fr}}
+
+svg.cv{width:100%;height:auto;display:block}svg.cv text{font-family:inherit;font-size:11px;fill:#5B6474}svg.cv .v{font-weight:700;fill:#1D2939}
+.leg{display:flex;flex-wrap:wrap;gap:10px;font-size:.78rem;color:var(--muted);justify-content:center}.leg i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.dn2{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}.dn2 ul{list-style:none;margin:0;padding:0;font-size:.82rem;display:flex;flex-direction:column;gap:5px;min-width:120px}.dn2 li{display:flex;gap:6px;align-items:center}.dn2 li i{width:11px;height:11px;border-radius:3px;flex:none}.dn2 li b{margin-left:auto;padding-left:10px}
+.tw{overflow:auto;max-height:430px;border-radius:10px;box-shadow:0 0 0 1px var(--line)}
+table.et{width:100%;border-collapse:collapse;font-size:.86rem;font-variant-numeric:tabular-nums}.et th{position:sticky;top:0;background:var(--soft);font-weight:600;text-align:left;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:1}.et td{padding:7px 8px;border-bottom:1px solid #EEF1F5;white-space:nowrap}.et tr:hover td{background:#F7FAFF;cursor:pointer}.et .r{text-align:right}
+.st{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.76rem;font-weight:600}.st.a{background:#DCF5E6;color:#15803D}.st.l{background:#FFF1D6;color:#9A6200}.st.t{background:#FCE2E2;color:#B42318}
+.slc{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sl{border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:8px;display:flex;flex-direction:column;gap:4px;background:#FAFCFF}.sl b{font-size:.84rem;display:flex;justify-content:space-between;align-items:center}.sl b button{border:0;background:none;color:var(--muted);cursor:pointer;font-size:.75rem}
+.sl label{display:block;cursor:pointer}.sl input{display:none}.sl span{display:block;border-radius:8px;padding:5px 9px;font-size:.84rem;background:#fff;box-shadow:inset 0 0 0 1px #E5EBF5}.sl input:checked+span{background:#DCE8FB;box-shadow:inset 0 0 0 1px #9DBCEB;font-weight:600;color:#123E86}
+.fx{width:100%;border-collapse:collapse;font-size:.84rem}.fx th,.fx td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}.fx th{background:#E9F7EF;color:#14532D}.fx code{font-size:.78rem;color:#334155}
+.note{font-size:.78rem;color:var(--muted)}.empty{text-align:center;padding:24px;color:var(--muted)}
+.fbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.fbar .chip{border-radius:999px;background:#DCE8FB;color:#123E86;padding:3px 10px;font-size:.78rem;font-weight:600}
+dialog{border:0;border-radius:18px;padding:0;width:min(580px,96vw);max-height:92vh}dialog::backdrop{background:rgba(15,30,60,.45)}.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}.db{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100}
+.plog{width:100%;border-collapse:collapse;font-size:.86rem}.plog td,.plog th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}.plog input{border:1px solid var(--line);border-radius:8px;padding:4px 6px;width:100%}
+@media print{header.top,.tabs,.toast,dialog,.edm-bar,.noprint{display:none!important}body{background:#fff}main{padding:0}.card{break-inside:avoid}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.tw{max-height:none}}
+</style>
+<link rel="stylesheet" href="../assets/pastel.css?v=8">
+<script src="../assets/pastel.js?v=2" defer></script>
+<link rel="stylesheet" href="../assets/skin.css?v=1">
+<script src="../assets/skin.js?v=1"></script>
+<script src="../assets/lock.js?v=3"></script>
+<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="แดชบอร์ดวิเคราะห์เงินเดือน HR KPI | Excel Data Master"><meta property="og:description" content="ค่าจ้างรวม เงินเดือนเฉลี่ย อัตราลาออก พนักงานใหม่ แนวโน้ม 6 เดือน เงินเดือนตามแผนก กรองได้ทุกมุม"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-hr.jpg?v=1"><meta property="og:url" content="https://exceldatamaster.com/hr/">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-hr.jpg?v=1">
+<meta name="theme-color" content="#1E5BB8">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="HR KPI">
+</head>
+<body>
+<header class="top"><div class="in"><a class="brand" href="/">📊 Excel Data Master <small>· วิเคราะห์เงินเดือน HR</small></a><nav class="nav"></nav></div></header>
+<div class="tabs" id="tabs"><button data-v="dash">📊 แดชบอร์ด</button><button data-v="emp">👥 พนักงาน</button><button data-v="pay">💰 การจ่ายเงินเดือน</button><button data-v="set">⚙️ ตั้งค่า</button></div>
+<main id="main"></main>
+<dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button">✕</button></div><div class="db" id="dlgB"></div></dialog>
+<div class="toast" id="toast" hidden></div>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่เต็ม)");return false}}};
+const K={emp:"edm_hr_emps",pay:"edm_hr_pay",cfg:"edm_hr_cfg",ui:"edm_hr_ui"};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),today=()=>ymd(new Date());
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const thD=s=>{if(!s)return"-";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/[,฿\s]/g,""));return isFinite(n)?n:0};
+const f0=n=>(+n||0).toLocaleString("th-TH",{maximumFractionDigits:0}),fk=n=>{n=+n||0;return n>=1e6?(n/1e6).toFixed(n>=1e7?1:2)+"M":n>=1e3?(n/1e3).toFixed(n>=1e5?0:1)+"K":f0(n)},pc=n=>(isFinite(n)?(Math.round(n*10)/10).toFixed(1):"0.0")+"%";
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
+const ymAdd=(ym,k)=>{const[y,m]=ym.split("-").map(Number),d=new Date(y,m-1+k,1);return d.getFullYear()+"-"+pad(d.getMonth()+1)},ymEnd=ym=>{const[y,m]=ym.split("-").map(Number);return ym+"-"+pad(new Date(y,m,0).getDate())},ymS=ym=>MS[+ym.slice(5)-1]+" "+String(+ym.slice(0,4)+543).slice(2);
+const STS={a:"ทำงานอยู่",l:"ลาพัก",t:"ลาออก"},LV=["พนักงาน","หัวหน้างาน","ผู้จัดการ","ผู้บริหาร"],COL=["#2F6FDE","#22A06B","#F08C2E","#7C5CD6","#14A3B8","#E0527A","#8A9A5B","#C2410C","#0F766E","#9333EA"];
+let E=LS.get(K.emp,[])||[],PY=LS.get(K.pay,{})||{},cfg=Object.assign({name:"",depts:["ไอที","บุคคล","บัญชี/การเงิน","ฝ่ายขาย","ปฏิบัติการ"],payDay:25,demo:false},LS.get(K.cfg,{})||{}),ui=Object.assign({v:"dash",ym:today().slice(0,7),f:{d:[],s:[],lv:[],y:[]},q:""},LS.get(K.ui,{})||{});
+ui.f=Object.assign({d:[],s:[],lv:[],y:[]},ui.f||{});
+const save=()=>LS.set(K.emp,E),saveP=()=>LS.set(K.pay,PY),saveC=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,ui);
+const dcol=d=>COL[Math.max(0,cfg.depts.indexOf(d))%COL.length];
+/* อยู่ในบริษัท ณ วันสิ้นเดือน (นับคนลาพักด้วย) */
+const activeAt=(e,date)=>e.start&&e.start<=date&&!(e.end&&e.end<=date)&&!(e.st==="t"&&!e.end);
+function filtered(){const f=ui.f;return E.filter(e=>(!f.d.length||f.d.includes(e.dept))&&(!f.s.length||f.s.includes(e.st))&&(!f.lv.length||f.lv.includes(e.lv))&&(!f.y.length||f.y.includes((e.start||"").slice(0,4))))}
+function stats(L,ym){const end=ymEnd(ym),pend=ymEnd(ymAdd(ym,-1)),act=L.filter(e=>activeAt(e,end)),pact=L.filter(e=>activeAt(e,pend));
+  const cost=act.reduce((a,e)=>a+num(e.sal),0),hires=L.filter(e=>(e.start||"").slice(0,7)===ym).length,leav=L.filter(e=>(e.end||"").slice(0,7)===ym).length;
+  const p=PY[ym],ot=p&&num(p.n)>0?Math.max(0,(num(p.n)-num(p.late))/num(p.n)*100):null;
+  return{hc:act.length,cost,avg:act.length?cost/act.length:0,hires,leav,attr:pact.length?leav/pact.length*100:0,ot,act}}
+const delta=(a,b,inv)=>{if(!b)return`<small>&nbsp;</small>`;const d=(a-b)/Math.abs(b)*100,up=d>=0,good=inv?!up:up;return`<small><em class="${Math.abs(d)<.05?"":good?"up":"dn"}">${up?"▲":"▼"} ${pc(Math.abs(d))}</em> เทียบเดือนก่อน</small>`};
+const IC={users:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="8" r="3.4"/><circle cx="17" cy="9" r="2.6" opacity=".7"/><path d="M2.5 19c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6v1h-13zM15.5 20v-1c0-1.6-.5-3-1.4-4.1.9-.5 1.9-.8 2.9-.8 2.9 0 5 2 5 4.9v1z" opacity=".85"/></svg>',
+ cash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="3"/><path d="M6 9.5v5M18 9.5v5"/></svg>',
+ avg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2c-.4-1-1.5-1.6-2.8-1.6-1.6 0-2.8.8-2.8 2.1 0 2.9 5.8 1.5 5.8 4.4 0 1.3-1.2 2.2-3 2.2-1.4 0-2.6-.7-3-1.8M12 6v1.6M12 16.3V18"/></svg>',
+ clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
+ add:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="10" cy="8" r="3.6"/><path d="M3 20c0-3.8 3.1-6.3 7-6.3s7 2.5 7 6.3z"/><path d="M19 6v6M16 9h6" stroke="currentColor" stroke-width="2"/></svg>',
+ out:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M9.5 20V6M15 20v-6M20.5 20V3"/><path d="M14 5l6.5-2"/></svg>'};
+function render(){$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));({dash:vDash,emp:vEmp,pay:vPay,set:vSet}[ui.v]||vDash)()}
+$("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b){ui.v=b.dataset.v;saveUi();render();scrollTo(0,0)}};
+
+/* ---------- กราฟ SVG ---------- */
+function niceMax(v){if(v<=0)return 1;const p=Math.pow(10,Math.floor(Math.log10(v))),n=v/p;return(n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p}
+function barLine(labels,bars,line,opt){const W=520,H=250,l=48,r=line?40:10,t=26,b=28,iw=W-l-r,ih=H-t-b,mx=niceMax(Math.max(...bars,1)),lm=line?niceMax(Math.max(...line,1)):1,n=labels.length,bw=iw/n*.58;
+  let g="";for(let i=0;i<=5;i++){const y=t+ih-ih*i/5;g+=`<line x1="${l}" x2="${W-r}" y1="${y}" y2="${y}" stroke="#EEF1F5"/><text x="${l-6}" y="${y+4}" text-anchor="end">${opt.fy(mx*i/5)}</text>${line?`<text x="${W-r+6}" y="${y+4}">${f0(lm*i/5)}</text>`:""}`}
+  const cx=i=>l+iw/n*(i+.5);
+  bars.forEach((v,i)=>{const h=ih*v/mx;g+=`<rect x="${cx(i)-bw/2}" y="${t+ih-h}" width="${bw}" height="${h}" rx="4" fill="${opt.col?opt.col[i]:"#2F6FDE"}"/><text class="v" x="${cx(i)}" y="${t+ih-h-6}" text-anchor="middle">${opt.fv(v)}</text><text x="${cx(i)}" y="${H-8}" text-anchor="middle">${esc(labels[i])}</text>`});
+  if(line){const pts=line.map((v,i)=>[cx(i),t+ih-ih*v/lm]);g+=`<polyline points="${pts.map(p=>p.join(",")).join(" ")}" fill="none" stroke="#F08C2E" stroke-width="3"/>`+pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="#F08C2E" stroke="#fff" stroke-width="2"/>`).join("")}
+  return`<svg class="cv" viewBox="0 0 ${W} ${H}">${g}</svg>`}
+function donut(items,center){const tot=items.reduce((a,x)=>a+x.v,0)||1,R=70,r=44,c=90;let a=-Math.PI/2,g="";
+  items.forEach(x=>{const s=x.v/tot*Math.PI*2;if(x.v<=0)return;if(s>=Math.PI*2-1e-6){g+=`<circle cx="${c}" cy="${c}" r="${(R+r)/2}" fill="none" stroke="${x.c}" stroke-width="${R-r}"/>`;a+=s;return}
+   const p=(ang,rad)=>[c+rad*Math.cos(ang),c+rad*Math.sin(ang)],[x1,y1]=p(a,R),[x2,y2]=p(a+s,R),[x3,y3]=p(a+s,r),[x4,y4]=p(a,r),lg=s>Math.PI?1:0;
+   g+=`<path d="M${x1} ${y1}A${R} ${R} 0 ${lg} 1 ${x2} ${y2}L${x3} ${y3}A${r} ${r} 0 ${lg} 0 ${x4} ${y4}Z" fill="${x.c}" stroke="#fff" stroke-width="2"/>`;
+   const[mx,my]=p(a+s/2,(R+r)/2);if(x.v/tot>.06)g+=`<text x="${mx}" y="${my+4}" text-anchor="middle" style="fill:#fff;font-weight:700;font-size:11px">${Math.round(x.v/tot*100)}%</text>`;a+=s});
+  return`<svg class="cv" viewBox="0 0 180 180" style="max-width:190px">${g}<text x="90" y="84" text-anchor="middle" style="font-size:12px">${center[0]}</text><text class="v" x="90" y="106" text-anchor="middle" style="font-size:22px">${center[1]}</text></svg>`}
+function scatter(pts){const W=520,H=250,l=52,r=14,t=16,b=36,iw=W-l-r,ih=H-t-b;if(!pts.length)return`<div class="empty">ยังไม่มีคะแนนประเมิน</div>`;
+  const ys=pts.map(p=>p[1]),my=niceMax(Math.max(...ys)),x0=1,x1=5,X=x=>l+iw*(x-x0)/(x1-x0),Y=y=>t+ih-ih*y/my;let g="";
+  for(let i=0;i<=5;i++){const y=t+ih-ih*i/5;g+=`<line x1="${l}" x2="${W-r}" y1="${y}" y2="${y}" stroke="#EEF1F5"/><text x="${l-6}" y="${y+4}" text-anchor="end">${fk(my*i/5)}</text>`}
+  for(let x=1;x<=5;x++)g+=`<text x="${X(x)}" y="${H-18}" text-anchor="middle">${x}</text>`;g+=`<text x="${l+iw/2}" y="${H-3}" text-anchor="middle" style="font-weight:600">คะแนนประเมิน (1–5)</text>`;
+  pts.forEach(p=>g+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4.5" fill="#2F6FDE" fill-opacity=".75"/>`);
+  const n=pts.length,mx_=pts.reduce((a,p)=>a+p[0],0)/n,my_=ys.reduce((a,v)=>a+v,0)/n,sxx=pts.reduce((a,p)=>a+(p[0]-mx_)**2,0),sxy=pts.reduce((a,p)=>a+(p[0]-mx_)*(p[1]-my_),0),syy=ys.reduce((a,v)=>a+(v-my_)**2,0);
+  if(sxx>0&&syy>0){const k=sxy/sxx,c=my_-k*mx_,r2=sxy*sxy/(sxx*syy);g+=`<line x1="${X(1)}" y1="${Y(Math.max(0,c+k))}" x2="${X(5)}" y2="${Y(Math.max(0,c+5*k))}" stroke="#1D2939" stroke-dasharray="5 4" stroke-width="1.5"/><text class="v" x="${W-r-4}" y="${t+14}" text-anchor="end">R² = ${r2.toFixed(2)}</text>`}
+  return`<svg class="cv" viewBox="0 0 ${W} ${H}">${g}</svg>`}
+
+/* ---------- แดชบอร์ด ---------- */
+function vDash(){const M=$("#main");if(!E.length)return emptyHello(M);const ym=ui.ym||today().slice(0,7),L=filtered(),S=stats(L,ym),P=stats(L,ymAdd(ym,-1));
+  const ms=[];for(let i=5;i>=0;i--)ms.push(ymAdd(ym,-i));const tr=ms.map(x=>stats(L,x));
+  const act=S.act,dep=cfg.depts.filter(d=>act.some(e=>e.dept===d)).concat([...new Set(act.map(e=>e.dept).filter(d=>!cfg.depts.includes(d)))]);
+  const avgD=dep.map(d=>{const a=act.filter(e=>e.dept===d);return a.reduce((s,e)=>s+num(e.sal),0)/a.length});
+  const R=[[0,15000,"<15K"],[15000,20000,"15–20K"],[20000,25000,"20–25K"],[25000,30000,"25–30K"],[30000,40000,"30–40K"],[40000,1e12,">40K"]],hist=R.map(x=>act.filter(e=>num(e.sal)>=x[0]&&num(e.sal)<x[1]).length);
+  const sc=act.filter(e=>num(e.rate)>0).map(e=>[num(e.rate),num(e.sal)]);
+  const yrs=[...new Set(E.map(e=>(e.start||"").slice(0,4)).filter(Boolean))].sort();
+  const sl=(k,label,opts)=>`<div class="sl"><b>${label}${ui.f[k].length?`<button type="button" data-clr="${k}">ล้าง ✕</button>`:""}</b>${opts.map(([v,t])=>`<label><input type="checkbox" data-f="${k}" value="${esc(v)}"${ui.f[k].includes(v)?" checked":""}><span>${esc(t)}</span></label>`).join("")}</div>`;
+  const anyF=Object.values(ui.f).some(a=>a.length),rows=L.slice().sort((a,b)=>(a.code||"").localeCompare(b.code||""));
+  M.innerHTML=`<div class="hero"><div><h1>วิเคราะห์เงินเดือน <span>HR KPI Dashboard</span></h1><p>${esc(cfg.name||"บริษัทของคุณ")} · ข้อมูล ณ สิ้นเดือน ${ymS(ym)}${anyF?" · กำลังกรองข้อมูล":""}</p></div><div class="sp"></div><div class="noprint" style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm" id="mP" type="button">‹</button><select id="ymS" class="btn sm">${Array.from({length:24},(_,i)=>ymAdd(today().slice(0,7),-i)).map(x=>`<option value="${x}"${x===ym?" selected":""}>${ymS(x)}</option>`).join("")}</select><button class="btn sm" id="mN" type="button">›</button><button class="btn sm" onclick="print()" type="button">🖨️ พิมพ์</button></div></div>
+  <div class="kpis">
+   <div class="kpi" style="--k:#2F6FDE"><div class="ic">${IC.users}</div><span>พนักงานทั้งหมด</span><b>${f0(S.hc)}</b>${delta(S.hc,P.hc)}</div>
+   <div class="kpi" style="--k:#22A06B"><div class="ic">${IC.cash}</div><span>ค่าจ้างรวม / เดือน</span><b>฿${fk(S.cost)}</b>${delta(S.cost,P.cost)}</div>
+   <div class="kpi" style="--k:#7C5CD6"><div class="ic">${IC.avg}</div><span>เงินเดือนเฉลี่ย</span><b>฿${f0(S.avg)}</b>${delta(S.avg,P.avg)}</div>
+   <div class="kpi" style="--k:#F08C2E"><div class="ic">${IC.clock}</div><span>จ่ายตรงเวลา</span><b>${S.ot==null?"-":pc(S.ot)}</b>${S.ot!=null&&P.ot!=null?delta(S.ot,P.ot):`<small>${S.ot==null?"บันทึกที่แท็บ การจ่ายเงินเดือน":"&nbsp;"}</small>`}</div>
+   <div class="kpi" style="--k:#14A3B8"><div class="ic">${IC.add}</div><span>พนักงานใหม่</span><b>${S.hires}</b>${delta(S.hires,P.hires)}</div>
+   <div class="kpi" style="--k:#E0527A"><div class="ic">${IC.out}</div><span>อัตราลาออก</span><b>${pc(S.attr)}</b>${P.attr?delta(S.attr,P.attr,1):`<small>ลาออก ${S.leav} คน</small>`}</div></div>
+  <div class="g3"><div class="card ch"><h2>แนวโน้มค่าจ้าง 6 เดือน</h2><div class="leg"><span><i style="background:#2F6FDE"></i>ค่าจ้างรวม (บาท)</span><span><i style="background:#F08C2E"></i>จำนวนพนักงาน</span></div>${barLine(ms.map(ymS),tr.map(x=>x.cost),tr.map(x=>x.hc),{fy:fk,fv:v=>v?fk(v):""})}</div>
+   <div class="card ch"><h2>เงินเดือนเฉลี่ยตามแผนก</h2>${dep.length?barLine(dep,avgD,null,{fy:fk,fv:v=>fk(v),col:dep.map(dcol)}):`<div class="empty">-</div>`}</div>
+   <div class="card ch"><h2>จำนวนพนักงานตามแผนก</h2><div class="dn2">${donut(dep.map(d=>({v:act.filter(e=>e.dept===d).length,c:dcol(d)})),["ทั้งหมด",f0(S.hc)])}<ul>${dep.map(d=>{const n=act.filter(e=>e.dept===d).length;return`<li><i style="background:${dcol(d)}"></i>${esc(d)}<b>${S.hc?Math.round(n/S.hc*100):0}%</b></li>`}).join("")}</ul></div></div></div>
+  <div class="gT"><div class="card ch"><h2>ข้อมูลพนักงาน <small>${rows.length} คน · แตะเพื่อแก้ไข</small></h2><div class="tw"><table class="et"><thead><tr><th>รหัส</th><th>ชื่อ</th><th>แผนก</th><th>ตำแหน่ง</th><th class="r">เงินเดือน</th><th>เริ่มงาน</th><th>สถานะ</th></tr></thead><tbody>${rows.map(e=>`<tr data-e="${e.id}"><td>${esc(e.code||"")}</td><td>${esc(e.name)}</td><td>${esc(e.dept||"")}</td><td>${esc(e.pos||"")}</td><td class="r">${f0(e.sal)}</td><td>${thD(e.start)}</td><td><span class="st ${e.st}">${STS[e.st]||""}</span></td></tr>`).join("")}</tbody></table></div></div>
+   <div class="card ch noprint"><h2>ตัวกรอง (Slicer)${anyF?`<button class="btn sm" id="clrAll" type="button" style="background:#fff;color:var(--accent)">ล้างทั้งหมด</button>`:""}</h2><div class="slc">${sl("d","แผนก",(cfg.depts.concat([...new Set(E.map(e=>e.dept).filter(d=>d&&!cfg.depts.includes(d)))])).map(d=>[d,d]))}${sl("s","สถานะ",Object.entries(STS))}${sl("lv","ระดับ",LV.map(x=>[x,x]))}${sl("y","ปีที่เข้างาน",yrs.map(y=>[y,String(+y+543)]))}</div><p class="note" style="margin:0">เลือกได้หลายอย่าง ทุกกราฟและตัวเลขเปลี่ยนตาม</p></div></div>
+  <div class="g2"><div class="card ch"><h2>การกระจายเงินเดือน <small>จำนวนคนในแต่ละช่วง</small></h2>${barLine(R.map(x=>x[2]),hist,null,{fy:v=>f0(v),fv:v=>v||""})}</div>
+   <div class="card ch"><h2>ผลประเมิน vs เงินเดือน</h2>${scatter(sc)}</div></div>
+  <div class="card"><h2 style="color:#14532D">วิธีคำนวณ KPI</h2><div style="overflow-x:auto"><table class="fx"><tr><th>KPI</th><th>วิธีคิด</th><th>ผล (${ymS(ym)})</th></tr>
+   <tr><td>พนักงานทั้งหมด</td><td><code>นับคนที่ยังอยู่ ณ สิ้นเดือน (รวมลาพัก)</code></td><td>${f0(S.hc)} คน</td></tr><tr><td>ค่าจ้างรวม</td><td><code>รวมเงินเดือนของพนักงานที่ยังอยู่</code></td><td>${f0(S.cost)} บาท</td></tr>
+   <tr><td>เงินเดือนเฉลี่ย</td><td><code>ค่าจ้างรวม ÷ จำนวนพนักงาน</code></td><td>${f0(S.avg)} บาท</td></tr><tr><td>จ่ายตรงเวลา</td><td><code>(จำนวนคนที่จ่าย − คนที่จ่ายช้า) ÷ จำนวนคนที่จ่าย</code></td><td>${S.ot==null?"-":pc(S.ot)}</td></tr>
+   <tr><td>พนักงานใหม่</td><td><code>นับคนที่วันเริ่มงานอยู่ในเดือนนี้</code></td><td>${S.hires} คน</td></tr><tr><td>อัตราลาออก</td><td><code>คนที่ลาออกเดือนนี้ ÷ พนักงาน ณ สิ้นเดือนก่อน</code></td><td>${pc(S.attr)}</td></tr>
+   <tr><td>เทียบเดือนก่อน</td><td><code>(เดือนนี้ − เดือนก่อน) ÷ เดือนก่อน</code></td><td>ค่าจ้าง ${P.cost?pc((S.cost-P.cost)/P.cost*100):"-"}</td></tr></table></div></div>`;
+  $("#ymS").onchange=e=>{ui.ym=e.target.value;saveUi();vDash()};$("#mP").onclick=()=>{ui.ym=ymAdd(ym,-1);saveUi();vDash()};$("#mN").onclick=()=>{ui.ym=ymAdd(ym,1);saveUi();vDash()};
+  M.querySelectorAll("[data-f]").forEach(x=>x.onchange=()=>{const k=x.dataset.f,a=ui.f[k];if(x.checked)a.push(x.value);else ui.f[k]=a.filter(v=>v!==x.value);saveUi();const y=scrollY;vDash();scrollTo(0,y)});
+  M.querySelectorAll("[data-clr]").forEach(b=>b.onclick=()=>{ui.f[b.dataset.clr]=[];saveUi();const y=scrollY;vDash();scrollTo(0,y)});
+  const ca=$("#clrAll");if(ca)ca.onclick=()=>{ui.f={d:[],s:[],lv:[],y:[]};saveUi();const y=scrollY;vDash();scrollTo(0,y)};
+  M.querySelectorAll("[data-e]").forEach(r=>r.onclick=()=>eDlg(r.dataset.e))}
+function emptyHello(M){M.innerHTML=`<div class="card empty" style="align-items:center"><div style="font-size:3rem">📊</div><h2 style="justify-content:center">เริ่มใส่ข้อมูลพนักงาน</h2><p class="note" style="max-width:520px;margin:0 auto">ใส่ทีละคน หรือวางรายชื่อจาก Excel ทีเดียวหลายคน ระบบสร้างแดชบอร์ด KPI ให้ทันที</p><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn main" id="eNew" type="button">＋ เพิ่มพนักงาน</button><button class="btn ghost" id="ePaste" type="button">📋 วางจาก Excel</button><button class="btn ghost" id="eDemo" type="button">✨ ลองดูตัวอย่าง</button></div></div>`;
+  $("#eNew").onclick=()=>eDlg();$("#ePaste").onclick=pasteDlg;$("#eDemo").onclick=demo}
+
+/* ---------- พนักงาน ---------- */
+function vEmp(){const M=$("#main"),q=(ui.q||"").trim().toLowerCase(),L=E.filter(e=>!q||(e.code+" "+e.name+" "+e.dept+" "+e.pos).toLowerCase().includes(q)).sort((a,b)=>(a.code||"").localeCompare(b.code||""));
+  M.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><input class="in-" id="eq" placeholder="🔎 ค้นหา รหัส ชื่อ แผนก ตำแหน่ง" value="${esc(ui.q||"")}" style="flex:1;min-width:200px"><button class="btn main" id="eNew" type="button">＋ เพิ่มพนักงาน</button><button class="btn ghost" id="ePaste" type="button">📋 วางจาก Excel</button></div>
+  <div class="card"><h2>พนักงาน ${L.length} คน <small>ทำงานอยู่ ${E.filter(e=>e.st==="a").length} · ลาพัก ${E.filter(e=>e.st==="l").length} · ลาออก ${E.filter(e=>e.st==="t").length}</small></h2>${L.length?`<div class="tw" style="max-height:none"><table class="et"><thead><tr><th>รหัส</th><th>ชื่อ</th><th>แผนก</th><th>ตำแหน่ง</th><th>ระดับ</th><th class="r">เงินเดือน</th><th>เริ่มงาน</th><th>อายุงาน</th><th>ประเมิน</th><th>สถานะ</th></tr></thead><tbody>${L.map(e=>`<tr data-e="${e.id}"><td>${esc(e.code||"")}</td><td>${esc(e.name)}</td><td>${esc(e.dept||"")}</td><td>${esc(e.pos||"")}</td><td>${esc(e.lv||"")}</td><td class="r">${f0(e.sal)}</td><td>${thD(e.start)}</td><td>${tenure(e)}</td><td>${e.rate?"★".repeat(Math.round(num(e.rate))):"-"}</td><td><span class="st ${e.st}">${STS[e.st]||""}</span>${e.end?` <small class="note">${thD(e.end)}</small>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">ไม่พบ</div>`}</div>`;
+  const eq=$("#eq");eq.oninput=()=>{ui.q=eq.value;saveUi();const s=eq.selectionStart;vEmp();const n=$("#eq");n.focus();n.setSelectionRange(s,s)};
+  $("#eNew").onclick=()=>eDlg();$("#ePaste").onclick=pasteDlg;M.querySelectorAll("[data-e]").forEach(r=>r.onclick=()=>eDlg(r.dataset.e))}
+function tenure(e){if(!e.start)return"-";const to=e.end||today(),a=new Date(e.start+"T00:00"),b=new Date(to+"T00:00");let m=(b.getFullYear()-a.getFullYear())*12+b.getMonth()-a.getMonth();if(b.getDate()<a.getDate())m--;m=Math.max(0,m);return(Math.floor(m/12)?Math.floor(m/12)+" ปี ":"")+(m%12)+" ด."}
+function openDlg(t,h){$("#dlgT").textContent=t;$("#dlgB").innerHTML=h;if(!$("#dlg").open)$("#dlg").showModal()}
+$("#dlgX").onclick=()=>$("#dlg").close();
+function nextCode(){const n=E.reduce((a,e)=>Math.max(a,parseInt(String(e.code||"").replace(/\D/g,""))||0),0)+1;return"E"+String(n).padStart(3,"0")}
+function eDlg(id){const e=id?E.find(x=>x.id===id):null;
+  openDlg(e?"แก้ไข "+e.name:"เพิ่มพนักงาน",`<div class="row3"><div class="f"><label>รหัส</label><input class="in-" id="xC" value="${esc(e?e.code:nextCode())}"></div><div class="f" style="grid-column:span 2"><label>ชื่อ-สกุล *</label><input class="in-" id="xN" value="${esc(e?e.name:"")}"></div></div>
+  <div class="row"><div class="f"><label>แผนก</label><input class="in-" id="xD" list="dl" value="${esc(e?e.dept:(cfg.depts[0]||""))}"><datalist id="dl">${cfg.depts.map(d=>`<option value="${esc(d)}">`).join("")}</datalist></div><div class="f"><label>ตำแหน่ง</label><input class="in-" id="xP" value="${esc(e?e.pos:"")}"></div></div>
+  <div class="row3"><div class="f"><label>ระดับ</label><select class="in-" id="xL">${LV.map(x=>`<option${(e?e.lv:LV[0])===x?" selected":""}>${x}</option>`).join("")}</select></div><div class="f"><label>เงินเดือน (บาท) *</label><input class="in-" id="xS" inputmode="decimal" value="${e?e.sal:""}"></div><div class="f"><label>คะแนนประเมิน (1–5)</label><input class="in-" id="xR" inputmode="decimal" value="${e?e.rate||"":""}" placeholder="ไม่ใส่ก็ได้"></div></div>
+  <div class="row3"><div class="f"><label>วันเริ่มงาน *</label><input class="in-" type="date" id="xB" value="${e?e.start:today()}"></div><div class="f"><label>สถานะ</label><select class="in-" id="xT">${Object.entries(STS).map(([k,v])=>`<option value="${k}"${(e?e.st:"a")===k?" selected":""}>${v}</option>`).join("")}</select></div><div class="f"><label>วันที่ลาออก</label><input class="in-" type="date" id="xE" value="${e?e.end||"":""}"></div></div>
+  <div style="display:flex;justify-content:space-between;gap:8px">${e?`<button class="btn ghost danger" id="xDel" type="button">ลบ</button>`:"<span></span>"}<button class="btn main" id="xOk" type="button">บันทึก</button></div>`);
+  $("#xT").onchange=()=>{if($("#xT").value==="t"&&!$("#xE").value)$("#xE").value=today();if($("#xT").value!=="t")$("#xE").value=""};
+  $("#xOk").onclick=()=>{const n=$("#xN").value.trim(),s=num($("#xS").value),b=$("#xB").value;if(!n)return toast("ใส่ชื่อก่อน");if(!b)return toast("ใส่วันเริ่มงาน");
+    const v={code:$("#xC").value.trim(),name:n,dept:$("#xD").value.trim(),pos:$("#xP").value.trim(),lv:$("#xL").value,sal:s,rate:Math.min(5,num($("#xR").value))||"",start:b,st:$("#xT").value,end:$("#xT").value==="t"?($("#xE").value||today()):""};
+    if(v.dept&&!cfg.depts.includes(v.dept)){cfg.depts.push(v.dept);saveC()}
+    if(e)Object.assign(e,v);else E.push(Object.assign({id:uid("e")},v));save();$("#dlg").close();render();toast("บันทึกแล้ว ✓")};
+  const d=$("#xDel");if(d)d.onclick=()=>{if(!confirm("ลบ "+e.name+" ?"))return;E=E.filter(x=>x!==e);save();$("#dlg").close();render()};
+  setTimeout(()=>$("#xN").focus(),60)}
+function pasteDlg(){openDlg("วางรายชื่อจาก Excel",`<p class="note" style="margin:0">คัดลอกจาก Excel แล้ววางได้เลย เรียงคอลัมน์: <b>รหัส · ชื่อ · แผนก · ตำแหน่ง · เงินเดือน · วันเริ่มงาน · สถานะ</b> (ระดับ · คะแนนประเมิน ถ้ามี) · วันที่ใช้ 15/02/2023 หรือ 2023-02-15 · สถานะ: ทำงานอยู่ / ลาพัก / ลาออก</p>
+  <textarea class="in-" id="pT" placeholder="E001	สมชาย ใจดี	ไอที	โปรแกรมเมอร์	35000	01/01/2023	ทำงานอยู่"></textarea><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="pR"> แทนข้อมูลเดิมทั้งหมด</label><div class="note" id="pH"></div><button class="btn main" id="pOk" type="button">นำเข้า</button>`);
+  const parse=()=>$("#pT").value.split(/\r?\n/).map(l=>l.split(/\t|,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(x=>x.trim().replace(/^"|"$/g,""))).filter(r=>r.length>=2&&r[1]&&!/^ชื่อ|name/i.test(r[1]));
+  const dt=s=>{s=String(s||"").trim();let m=/^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s);if(m)return m[1]+"-"+pad(m[2])+"-"+pad(m[3]);m=/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})$/.exec(s);if(m){let y=+m[3];if(y<100)y+=2000;if(y>2400)y-=543;return y+"-"+pad(m[2])+"-"+pad(m[1])}return""};
+  const st=s=>/ออก|term/i.test(s)?"t":/พัก|leave/i.test(s)?"l":"a";
+  $("#pT").oninput=()=>{$("#pH").textContent="พบ "+parse().length+" แถว"};
+  $("#pOk").onclick=()=>{const rs=parse();if(!rs.length)return toast("ยังไม่มีข้อมูล");if($("#pR").checked){if(!confirm("แทนข้อมูลเดิมทั้งหมด?"))return;E=[];cfg.demo=false}
+    rs.forEach(r=>{const v={id:uid("e"),code:r[0]||nextCode(),name:r[1],dept:r[2]||"",pos:r[3]||"",sal:num(r[4]),start:dt(r[5])||today(),st:st(r[6]||""),lv:LV.includes(r[7])?r[7]:LV[0],rate:Math.min(5,num(r[8]))||"",end:""};if(v.st==="t")v.end=today();E.push(v);if(v.dept&&!cfg.depts.includes(v.dept))cfg.depts.push(v.dept)});
+    save();saveC();$("#dlg").close();ui.v="dash";saveUi();render();toast("นำเข้า "+rs.length+" คนแล้ว ✓")}}
+
+/* ---------- การจ่ายเงินเดือน ---------- */
+function vPay(){const M=$("#main"),cur=today().slice(0,7),ms=Array.from({length:12},(_,i)=>ymAdd(cur,-i));
+  M.innerHTML=`<div class="card"><h2>บันทึกการจ่ายเงินเดือน <small>ใช้คำนวณ KPI "จ่ายตรงเวลา"</small></h2><p class="note" style="margin:0">กำหนดจ่ายทุกวันที่ <input id="pd" value="${cfg.payDay}" inputmode="numeric" style="width:50px;border:1px solid var(--line);border-radius:8px;padding:3px 6px"> ของเดือน · ใส่วันที่จ่ายจริง จำนวนคนที่จ่าย และจำนวนคนที่จ่ายช้า (ถ้ามี)</p>
+  <div style="overflow-x:auto"><table class="plog"><tr><th>เดือน</th><th>ค่าจ้างรวม (ระบบคิด)</th><th>วันที่จ่ายจริง</th><th>จ่ายกี่คน</th><th>จ่ายช้ากี่คน</th><th>จ่ายตรงเวลา</th></tr>${ms.map(ym=>{const p=PY[ym]||{},S=stats(E,ym),ot=num(p.n)>0?(num(p.n)-num(p.late))/num(p.n)*100:null;return`<tr><td><b>${ymS(ym)}</b></td><td>${f0(S.cost)}</td><td><input type="date" data-pp="${ym}|d" value="${p.d||""}"></td><td><input data-pp="${ym}|n" inputmode="numeric" value="${p.n||""}" placeholder="${S.hc}"></td><td><input data-pp="${ym}|late" inputmode="numeric" value="${p.late||""}" placeholder="0"></td><td>${ot==null?"-":pc(ot)}</td></tr>`}).join("")}</table></div>
+  <button class="btn ghost sm" id="fillN" type="button" style="align-self:flex-start">เติมจำนวนคนอัตโนมัติ (ตามจำนวนพนักงาน)</button></div>`;
+  $("#pd").oninput=e=>{cfg.payDay=Math.max(1,Math.min(31,num(e.target.value)||25));saveC()};
+  M.querySelectorAll("[data-pp]").forEach(i=>i.onchange=()=>{const[ym,k]=i.dataset.pp.split("|");PY[ym]=PY[ym]||{};PY[ym][k]=i.value;if(k==="d"&&!PY[ym].n)PY[ym].n=stats(E,ym).hc;saveP();vPay()});
+  $("#fillN").onclick=()=>{ms.forEach(ym=>{PY[ym]=PY[ym]||{};if(!PY[ym].n){const h=stats(E,ym).hc;if(h)PY[ym].n=h}});saveP();vPay()}}
+
+/* ---------- ตั้งค่า ---------- */
+function vSet(){const M=$("#main");
+  M.innerHTML=`<div class="card"><h2>ชื่อบริษัท</h2><input class="in-" id="sN" value="${esc(cfg.name)}"></div>
+  <div class="card"><h2>แผนก <small>ลำดับนี้ใช้กับสีในกราฟ</small></h2><textarea class="in-" id="sD" style="font-family:inherit;min-height:110px">${esc(cfg.depts.join("\n"))}</textarea></div>
+  <div class="card"><h2>ข้อมูล</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="xCsv" type="button">⬇️ ส่งออก Excel (CSV)</button><button class="btn ghost" id="xP" type="button">📋 วางจาก Excel</button><button class="btn ghost" id="xD" type="button">✨ ใส่ข้อมูลตัวอย่าง</button><button class="btn ghost danger" id="xC" type="button">ล้างข้อมูลทั้งหมด</button></div><p class="note" style="margin:0">ข้อมูลเก็บในเครื่องนี้ และสำรองขึ้นระบบอัตโนมัติเมื่อเข้าสู่ระบบสมาชิก · เงินเดือนเป็นข้อมูลลับ ควรตั้งรหัสผ่านเครื่อง</p></div>`;
+  $("#sN").oninput=e=>{cfg.name=e.target.value;saveC()};$("#sD").onchange=e=>{cfg.depts=e.target.value.split("\n").map(x=>x.trim()).filter(Boolean);saveC();toast("บันทึกแล้ว ✓")};
+  $("#xCsv").onclick=()=>{const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"',rows=[["รหัส","ชื่อ","แผนก","ตำแหน่ง","เงินเดือน","วันเริ่มงาน","สถานะ","ระดับ","คะแนนประเมิน","วันที่ลาออก"]].concat(E.map(e=>[e.code,e.name,e.dept,e.pos,e.sal,e.start,STS[e.st],e.lv,e.rate,e.end]));const b=new Blob(["﻿"+rows.map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="employees-"+today()+".csv";a.click()};
+  $("#xP").onclick=pasteDlg;$("#xD").onclick=()=>{if(E.length&&!confirm("ข้อมูลตัวอย่างจะแทนข้อมูลที่มีอยู่ ต้องการต่อ?"))return;demo()};
+  $("#xC").onclick=()=>{if(!confirm("ล้างพนักงานและบันทึกการจ่ายทั้งหมด?"))return;E=[];PY={};cfg.demo=false;save();saveP();saveC();render();toast("ล้างแล้ว")}}
+
+/* ---------- ตัวอย่าง (ข้อมูลสมมติ) ---------- */
+function demo(){const FN=["สมชาย","สุภาพร","วิทยา","กมลชนก","ณัฐพล","ปิยะนุช","ธนากร","อรอุมา","ศุภชัย","จิราพร","อนุชา","พิมพ์ชนก","ชยพล","วรรณา","ภาณุ","นภัสสร","กิตติ","ศิริพร","ธีรวัฒน์","รัชนี","เอกชัย","ปวีณา","สุรเชษฐ์","มณีรัตน์","ณัฐวุฒิ","ชุติมา","พงศกร","อัญชลี","ทวีศักดิ์","ดวงใจ"],LN=["ใจดี","สุขสันต์","รุ่งเรือง","มีสุข","ทองดี","ศรีสวัสดิ์","บุญมา","แสงทอง","พรหมมา","วงศ์ใหญ่","เจริญผล","สายบุญ"];
+  const DP={"ไอที":[["โปรแกรมเมอร์",32000],["ผู้ดูแลระบบ",28000],["หัวหน้าทีมไอที",48000]],"บุคคล":[["เจ้าหน้าที่บุคคล",22000],["หัวหน้าฝ่ายบุคคล",38000]],"บัญชี/การเงิน":[["นักบัญชี",25000],["เจ้าหน้าที่การเงิน",21000],["ผู้จัดการบัญชี",45000]],"ฝ่ายขาย":[["พนักงานขาย",18000],["หัวหน้าฝ่ายขาย",35000],["ผู้จัดการฝ่ายขาย",52000]],"ปฏิบัติการ":[["พนักงานปฏิบัติการ",15000],["หัวหน้างาน",24000],["ผู้จัดการโรงงาน",55000]]};
+  const W={"ไอที":.2,"บุคคล":.12,"บัญชี/การเงิน":.15,"ฝ่ายขาย":.25,"ปฏิบัติการ":.28};cfg.depts=Object.keys(DP);
+  let seed=7;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280};const t=today(),cur=t.slice(0,7);E=[];let k=0;
+  const pickD=()=>{let r=rnd(),a=0;for(const d in W){a+=W[d];if(r<=a)return d}return"ปฏิบัติการ"};
+  for(let i=0;i<72;i++){const d=pickD(),ps=DP[d],j=rnd()<.7?0:rnd()<.75?1:Math.min(2,ps.length-1),p=ps[Math.min(j,ps.length-1)],rate=Math.round((1.5+rnd()*3.5)*10)/10,base=p[1]*(.9+rnd()*.2)*(.62+rate*.13);
+    const mAgo=i<58?Math.floor(8+rnd()*40):Math.floor(rnd()*8),st=ymAdd(cur,-mAgo)+"-"+pad(1+Math.floor(rnd()*27));
+    const lv=/ผู้จัดการ/.test(p[0])?"ผู้จัดการ":/หัวหน้า/.test(p[0])?"หัวหน้างาน":"พนักงาน";
+    E.push({id:uid("e"),code:"E"+String(++k).padStart(3,"0"),name:FN[i%FN.length]+" "+LN[(i*7)%LN.length],dept:d,pos:p[0],lv,sal:Math.round(base/100)*100,rate:Math.min(5,rate),start:st>t?t:st,st:"a",end:""})}
+  [3,17,29,44,51].forEach((i,n)=>{const e=E[i];e.st="t";e.end=ymAdd(cur,-n)+"-"+pad(10+n*3)});E[22].st="l";E[38].st="l";
+  E.push({id:uid("e"),code:"E"+String(++k).padStart(3,"0"),name:"ประเสริฐ มั่นคง",dept:"บัญชี/การเงิน",pos:"ผู้อำนวยการ",lv:"ผู้บริหาร",sal:85000,rate:4.6,start:ymAdd(cur,-60)+"-01",st:"a",end:""});
+  PY={};for(let i=1;i<=8;i++){const ym=ymAdd(cur,-i),h=stats(E,ym).hc;if(h)PY[ym]={d:ym+"-"+pad(cfg.payDay),n:h,late:i%3===0?2:i%4===0?1:0}}
+  if(!cfg.name)cfg.name="บริษัทตัวอย่าง";cfg.demo=true;ui.ym=ymAdd(cur,-1);ui.v="dash";ui.f={d:[],s:[],lv:[],y:[]};save();saveP();saveC();saveUi();render();toast("ใส่ตัวอย่างแล้ว ✓")}
+window.addEventListener("storage",e=>{if([K.emp,K.pay,K.cfg].includes(e.key)){E=LS.get(K.emp,[])||[];PY=LS.get(K.pay,{})||{};cfg=Object.assign(cfg,LS.get(K.cfg,{})||{});if(!$("#dlg").open)render()}});
+if(/[?&]demo=1/.test(location.search)&&!E.length)demo();else render();
+})();
+</script>
+<script src="../assets/icons.js?v=9"></script>
+<script>/* ไอคอนวาดเองบนแท็บ/โลโก้ */(function(){if(!window.EDM_ICON)return;var I={dash:["chart","#1E5BB8"],emp:["users","#0E8C94"],pay:["wallet","#C2410C"],set:["sliders","#5B6B7F"]};document.querySelectorAll("#tabs [data-v]").forEach(function(b){var k=I[b.dataset.v];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.trim().replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON("chart",{color:"#1E5BB8"}))}})()</script>
+<script src="../assets/member.js?v=95" defer></script>
+</body>
+</html>
