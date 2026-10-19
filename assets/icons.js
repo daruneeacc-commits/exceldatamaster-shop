@@ -5,6 +5,7 @@
   "use strict";
   var F = 'fill="#fff" fill-opacity=".34" stroke="none"';
   var G = {
+    paw: '<circle cx="5.5" cy="9" r="2" fill="#fff"/><circle cx="9.5" cy="5" r="2" fill="#fff"/><circle cx="14.5" cy="5" r="2" fill="#fff"/><circle cx="18.5" cy="9" r="2" fill="#fff"/><path d="M12 10.5c-3.2 0-6 3.6-6 6.3 0 2 1.6 2.9 3.2 2.6 1.2-.2 1.9-.8 2.8-.8s1.6.6 2.8.8c1.6.3 3.2-.6 3.2-2.6 0-2.7-2.8-6.3-6-6.3z" fill="#fff"/>',
     gantt: '<path d="M3 3.5v16"/><path d="M6.5 6h8M9.5 11h8.5M7.5 16h7"/>',
     target: '<circle ' + F + ' cx="11" cy="13" r="8.5"/><circle cx="11" cy="13" r="8.5"/><circle cx="11" cy="13" r="4.6"/><circle cx="11" cy="13" r="1.2" fill="#fff"/><path d="M11 13 19.5 4.5M16.4 4.6l3.1-.1-.1 3.1"/>',
     check: '<rect ' + F + ' x="3.5" y="3.5" width="17" height="17" rx="4"/><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M7.5 12.3l3 3 6-6.3"/>',
@@ -39,7 +40,7 @@
     home: "#0E6B43", bill: "#149060", cart: "#D4485C", box: "#D98A0B", boxin: "#D98A0B", coins: "#0E8C94", chart: "#2F6FD6",
     sliders: "#5B6B7F", cup: "#8B5A3C", calendar: "#7A4FC2", list: "#2F6FD6", bed: "#7A4FC2", glass: "#C26A2E", menu: "#B7791F",
     jar: "#D4485C", drawer: "#0E8C94", register: "#149060", wallet: "#C2410C", store: "#0E6B43", sheet: "#1F7A45", doc: "#0E8A5F",
-    more: "#5B6B7F", data: "#5B6B7F", users: "#0E8C94", clock: "#0E7490", check: "#15803D", target: "#6E55C0", gantt: "#5A43B5"
+    more: "#5B6B7F", data: "#5B6B7F", users: "#0E8C94", clock: "#0E7490", check: "#15803D", target: "#6E55C0", gantt: "#5A43B5", paw: "#E0703F"
   };
   function icon(k, opt) {
     var g = G[k]; if (!g) return "";

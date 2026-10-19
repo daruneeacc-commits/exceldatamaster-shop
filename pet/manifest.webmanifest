@@ -1,0 +1,14 @@
+{
+ "name": "ระบบร้านสัตว์เลี้ยง / คลินิกสัตว์ · Excel Data Master",
+ "short_name": "สัตว์เลี้ยง",
+ "start_url": "/pet/",
+ "scope": "/pet/",
+ "display": "standalone",
+ "background_color": "#FFF8F4",
+ "theme_color": "#E0703F",
+ "lang": "th",
+ "icons": [
+  {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+  {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+ ]
+}
