@@ -331,11 +331,11 @@ body>header.top,body>.edm-bar{flex:none}
 body>.shell{flex:1 1 auto;min-height:0;height:auto!important;order:1}
 body>.tabbar{order:2}
 @media(max-width:760px){body>.tabbar{position:relative!important;bottom:auto;flex:none}.stage iframe{overscroll-behavior:contain}}
-</style>
+#rbTitle,#mdTitle{display:inline-flex;align-items:center;gap:10px}#rbTitle .ti-ic,#mdTitle .ti-ic{width:30px;height:30px;flex:none}</style>
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261019-0915";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261019-0925";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -473,7 +473,7 @@ body>.tabbar{order:2}
       <div class="card" style="padding:0"><div class="rb-wrap"><table class="rb" id="mdTbl"></table></div></div>
     </div></section>
     <section id="bills" class="pane"><div class="wrap">
-      <div class="hello rb-head"><div><h1 id="rbTitle">📋 รายงานบิลทั้งหมด</h1><p id="rbSub">บิลทั้งหมดที่บันทึกไว้ ดู แก้ไข หรือลบได้จากที่นี่</p></div><div class="acts" style="margin:0"><button class="btn main" id="rbNew">＋ เปิดบิลใหม่</button><button class="btn ghost" id="rbNew2" hidden></button><button class="btn ghost" id="rbXls">📊 Excel</button></div></div>
+      <div class="hello rb-head"><div><h1 id="rbTitle">รายงานบิลทั้งหมด</h1><p id="rbSub">บิลทั้งหมดที่บันทึกไว้ ดู แก้ไข หรือลบได้จากที่นี่</p></div><div class="acts" style="margin:0"><button class="btn main" id="rbNew">＋ เปิดบิลใหม่</button><button class="btn ghost" id="rbNew2" hidden></button><button class="btn ghost" id="rbXls">📊 Excel</button></div></div>
       <div class="card rb-f">
         <input class="in" id="rbQ" type="search" placeholder="🔍 เลขที่ ลูกค้า หรือสินค้า">
         <select class="in" id="rbT"><option value="">ทุกประเภท</option><option value="IT">ใบแจ้งหนี้ / ใบกำกับ (ขายสินค้า)</option><option value="IV">ใบแจ้งหนี้ (บริการ)</option><option value="TX">ใบกำกับภาษี / ใบเสร็จ</option><option value="CN">ใบลดหนี้</option><option value="DN">ใบเพิ่มหนี้</option><option value="RC">ใบเสร็จรับเงิน</option><option value="QT">ใบเสนอราคา</option></select>
@@ -824,7 +824,7 @@ function purTotal(p){let t=0;(p.lines||[]).forEach(l=>t+=n2(l.q)*n2(l.p));if(p.v
 function supRows(){const L=(LS.get("edm_suppliers",[])||[]).map(x=>Object.assign({},x)),A=LS.get("edm_acc",{})||{},seen=new Set(L.map(x=>x.name));
   (A.pur||[]).slice().reverse().forEach(p=>{const n=p.sup&&p.sup.name;if(n&&!seen.has(n)){seen.add(n);L.push({name:n,tax:p.sup.tax||"",branch:p.sup.branch||"",_auto:1})}});return L}
 function mdRows(){if(md==="sup")return supRows();return LS.get(mdDef().k,[])||[]}
-function renderMaster(){const D=MD[md],def=mdDef();$("#mdTitle").textContent=D.t;$("#mdSub").textContent=D.s;$("#mdSeg").hidden=md!=="prod";
+function renderMaster(){const D=MD[md],def=mdDef();$("#mdTitle").innerHTML=TI(md,D.t);$("#mdSub").textContent=D.s;$("#mdSeg").hidden=md!=="prod";
   $$("#mdSeg button").forEach(b=>b.classList.toggle("on",b.dataset.s===mdSeg));
   $("#mdNew").textContent="＋ เพิ่ม"+(md==="cust"?"ลูกค้า":md==="sup"?"เจ้าหนี้":mdSeg==="goods"?"สินค้า":"บริการ");
   const q=$("#mdQ").value,all=mdRows(),docs=LS.get("edm_bill_docs",[]),A=LS.get("edm_acc",{})||{},pays=A.pay||[];
@@ -907,7 +907,8 @@ function docStatus(d,docs,pays){const c=calcDoc(d);
   if(got>=c.total-.01)return{k:"paid",t:"รับครบ",cls:"paid",c};
   const late=(d.due||d.date)<today();
   return{k:got>0?"part":"open",late,t:(got>0?"รับบางส่วน":"ค้างชำระ")+(late?" · เกินกำหนด":""),cls:late?"late":"cr",c,left:r2(c.total-got)}}
-function setView(){const V=VIEWS[view];$("#rbTitle").textContent=V.t;$("#rbSub").textContent=V.s;$("#rbNew").textContent=V.nw[0];
+const TI=(k,t)=>{const m={bills:"list",quotes:"doc",invoices:"bill",billing:"doc",receipts:"coins",cust:"users",sup:"users",prod:"box"}[k];const x=String(t).replace(/^[^ ]+ /,"");return (window.EDM_ICON&&m?EDM_ICON(m,{cls:"ti-ic"}):"")+"<span>"+x+"</span>"};
+function setView(){const V=VIEWS[view];$("#rbTitle").innerHTML=TI(view,V.t);$("#rbSub").textContent=V.s;$("#rbNew").textContent=V.nw[0];
   $("#rbNew2").hidden=!V.nw2;if(V.nw2)$("#rbNew2").textContent=V.nw2[0];$("#rbT").hidden=!!V.f;if(V.f)$("#rbT").value=""}
 function renderBills(){const docs=LS.get("edm_bill_docs",[]),A=LS.get("edm_acc",{})||{},pays=(A.pay||[]).filter(p=>p.dir==="in");const VF=VIEWS[view]&&VIEWS[view].f;
   const ms=[...new Set(docs.map(d=>String(d.date).slice(0,7)))].sort().reverse(),sel=$("#rbM").value;
