@@ -4,7 +4,7 @@
  */
 (function () {
   "use strict";
-  var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbx34OG-A37eJ3tigNpZL9E_dQG60ERGZljLgfw64raq6q-8iXfklJmisrr0YVcFhKX6/exec";
+  var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbxik6syeiTNqaCr21R7lGY-yhl2AUVqPR90D01MVjLR2kzv7h2ijSZMf3FiI1CRqXyc/exec";
   /* ---------- สิทธิ์รายระบบ ----------
    * ระบบหลังร้านส่ง sys มากับ login/check เช่น "bill" · "payroll,time" · "shop" · "all"
    * ไม่มี sys (บัญชีเดิม/ระบบหลังร้านรุ่นเก่า) = ใช้ได้ทุกระบบเหมือนเดิม
