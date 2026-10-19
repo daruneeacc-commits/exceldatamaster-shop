@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="th" data-theme="light" data-tone="sky">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ระบบดูแลทีมขาย ติดตามยอดขาย เป้าหมาย และพัฒนาเซลล์ ใช้ออนไลน์ | Excel Data Master</title>
+<meta name="description" content="หัวหน้าทีมขายเห็นยอดขายทีมเทียบเป้า อันดับเซลล์ ท่อการขาย ทักษะ และแผนพัฒนารายคน เซลล์บันทึกการโทร นัดคุย เสนอราคา ปิดการขายจากมือถือของตัวเอง">
+<link rel="canonical" href="https://exceldatamaster.com/sales/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{--bg:#F5F8FD;--card:#fff;--ink:#22303F;--muted:#5F6E87;--line:#DCE5F2;--soft:#EBF1FA;--accent:#3D6FB2;--accent-ink:#fff;--danger:#B3261E;--ok:#2E7D4F;--warn:#B8510D;--okbg:#E2F2E8;--warnbg:#FCE9DC;--nearbg:#E0EBF8}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1300px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px}.brand{font-weight:700;text-decoration:none;color:var(--accent)}.brand small{color:var(--muted);font-weight:500}.nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.tabs{max-width:1300px;margin:10px auto 0;padding:0 16px;display:flex;gap:6px;overflow-x:auto}.tabs button{flex:none;border:0;border-radius:999px;padding:8px 16px;background:var(--card);box-shadow:0 0 0 1px var(--line);font-weight:600;cursor:pointer;min-height:40px}.tabs button.on{background:var(--accent);color:#fff;box-shadow:none}
+main{max-width:1300px;margin:0 auto;padding:12px 16px 48px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}.card h2{font-size:1.05rem;margin:0;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.card h2 small{font-weight:400;color:var(--muted);font-size:.8rem}
+.hello{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}.hello h1{margin:0;font-size:1.3rem}.hello p{margin:4px 0 0;color:var(--muted)}
+.btn{border:0;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;background:var(--soft);justify-content:center;text-decoration:none;min-height:40px;color:var(--ink)}.btn.main{background:var(--accent);color:#fff}.btn.ghost{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:6px 12px;font-size:.85rem;min-height:34px}.btn.danger{color:var(--danger)}.btn:disabled{opacity:.5;cursor:default}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;outline:none;min-height:40px}.in-:focus{border-color:var(--accent)}textarea.in-{min-height:70px;resize:vertical}
+.f{display:flex;flex-direction:column;gap:4px}.f label{font-size:.8rem;font-weight:600;color:var(--muted)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px var(--line);min-width:0}.kpi span{display:block;font-size:.8rem;color:var(--muted)}.kpi b{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.kpi small{color:var(--muted);font-size:.76rem}.kpi b.warn{color:var(--warn)}
+.grid2{display:flex;flex-wrap:wrap;gap:14px}.grid2>.card{flex:1 1 360px}.grid2>.card.wide{flex:999 1 600px}
+.empty{text-align:center;padding:24px;color:var(--muted)}
+.bar{height:8px;border-radius:99px;background:var(--soft);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}.bar.lg{height:10px}
+.c-over,.c-ok{background:var(--ok)!important}.c-wait{background:#AEB9C9!important}.c-near{background:var(--accent)!important}.c-coach{background:var(--warn)!important}.c-none{background:#AEB9C9!important}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.76rem;font-weight:600;white-space:nowrap}.b-over,.b-ok{background:var(--okbg);color:#1F5E3A}.b-wait{background:var(--soft);color:var(--muted)}.b-near{background:var(--nearbg);color:#244E86}.b-coach{background:var(--warnbg);color:#8A3A08}.b-none{background:var(--soft);color:var(--muted)}
+.tw{overflow-x:auto}table.t{width:100%;border-collapse:collapse;font-size:.9rem;min-width:620px}table.t th{text-align:left;font-weight:600;color:var(--muted);font-size:.8rem;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap}table.t td{padding:10px 8px;border-bottom:1px solid var(--soft);vertical-align:middle}table.t .r{text-align:right;font-variant-numeric:tabular-nums}
+.who{display:flex;align-items:center;gap:10px;border:0;background:none;padding:0;cursor:pointer;text-align:left;min-height:40px}.av{width:34px;height:34px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:700;flex:none;color:var(--accent)}.who b{display:block}.who small{display:block;color:var(--muted);font-size:.76rem}
+.wk{display:flex;align-items:flex-end;gap:12px;height:200px;position:relative;border-bottom:1px solid var(--line);padding-top:18px}.wk .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;min-width:0}.wk .col i{display:block;width:100%;max-width:54px;border-radius:6px 6px 0 0;background:var(--accent)}.wk .stk{position:relative;flex:1;width:100%;max-width:54px}.wk .stk i{position:absolute;left:0;right:0;bottom:0;max-width:none}.wk .stk i.g{background:var(--accent);opacity:.18}.wk .col small{font-size:.74rem;font-variant-numeric:tabular-nums}
+.wkl{display:flex;gap:12px}.wkl div{flex:1;text-align:center;font-size:.78rem;color:var(--muted)}.tline{position:absolute;left:0;right:0;border-top:2px dashed var(--ink);pointer-events:none}.tline span{position:absolute;right:0;top:-20px;font-size:.72rem;background:#fff;padding:0 4px}
+.fn{display:grid;grid-template-columns:96px minmax(0,1fr) 56px;gap:10px;align-items:center}.fn .fb{height:28px;border-radius:6px;background:var(--soft);overflow:hidden}.fn .fb i{display:block;height:100%;background:var(--accent);border-radius:6px}.fn .n{text-align:right;font-variant-numeric:tabular-nums}
+.sk{display:flex;flex-direction:column;gap:4px}.sk .h{display:flex;justify-content:space-between;font-size:.88rem}.sk .h span:last-child{font-variant-numeric:tabular-nums}
+.sk .tr{position:relative;height:10px;border-radius:99px;background:var(--soft)}.sk .tr i{display:block;height:100%;border-radius:99px;background:var(--accent)}.sk .tr em{position:absolute;top:-4px;bottom:-4px;width:3px;border-radius:2px;background:var(--ink)}
+.chk{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}.chk li{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:10px;box-shadow:0 0 0 1px var(--line);background:#fff}.chk input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);flex:none;margin-top:1px;cursor:pointer}.chk span{flex:1;min-width:0;overflow-wrap:anywhere}.chk span small{display:block;color:var(--muted);font-size:.78rem}.chk li.done span b{text-decoration:line-through;color:var(--muted)}.chk .x{border:0;background:none;color:var(--muted);cursor:pointer;min-width:32px;min-height:32px}
+.add{display:flex;gap:6px}.add input{flex:1;min-width:0}
+.reps{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}.rc{background:#fff;border-radius:16px;box-shadow:0 0 0 1px var(--line);padding:14px;display:flex;flex-direction:column;gap:10px;cursor:pointer;text-align:left;border:0;width:100%}.rc:hover{box-shadow:0 0 0 2px var(--accent)}.rc .top2{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.rc .amt{font-size:1.2rem;font-weight:700;font-variant-numeric:tabular-nums}.rc .meta{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);gap:6px;flex-wrap:wrap}
+.mx td,.mx th{text-align:center!important}.mx td:first-child,.mx th:first-child{text-align:left!important}.sc{display:inline-block;min-width:40px;padding:3px 6px;border-radius:6px;font-weight:600;font-variant-numeric:tabular-nums}.sc.lo{background:var(--warnbg);color:#8A3A08}.sc.hi{background:var(--okbg);color:#1F5E3A}.sc.mid{background:var(--soft)}
+.note{border-left:0;padding:10px 12px;border-radius:10px;background:var(--soft);font-size:.9rem;white-space:pre-wrap;overflow-wrap:anywhere}.note small{display:block;color:var(--muted);font-size:.76rem;margin-bottom:2px}
+.mbar{display:flex;align-items:center;gap:4px;background:#fff;border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:3px}.mbar b{padding:0 8px;min-width:96px;text-align:center}.mbar button{border:0;background:none;width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:1.1rem}.mbar button:hover{background:var(--soft)}
+.mode{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;padding:3px 10px;border-radius:999px;background:var(--soft);color:var(--muted);font-weight:600}.mode i{width:8px;height:8px;border-radius:50%;background:#AEB9C9}.mode.on i{background:var(--ok)}.mode.demo{background:#FFF3D6;color:#7A5A00}
+.tip{background:var(--soft);border-radius:12px;padding:12px 14px;font-size:.9rem}.tip.warn{background:var(--warnbg)}
+.lnk{display:flex;gap:6px;flex-wrap:wrap}.lnk input{flex:1 1 240px}
+dialog{border:0;border-radius:18px;padding:0;width:min(520px,96vw);max-height:92vh}dialog::backdrop{background:rgba(20,30,50,.45)}.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:1}.db{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}.seg label{cursor:pointer}.seg input{position:absolute;opacity:0;pointer-events:none}.seg span{display:inline-block;padding:8px 14px;border-radius:10px;box-shadow:inset 0 0 0 1px var(--line);background:#fff;font-weight:600;min-height:40px}.seg input:checked+span{background:var(--accent);color:#fff;box-shadow:none}.seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100;max-width:92vw;text-align:center}
+.loading{opacity:.55;pointer-events:none}
+@media print{header.top,.tabs,.toast,dialog,.edm-bar,.add,.chk .x,.hello .btn,.mbar button,.noprint{display:none!important}body{background:#fff}.card{break-inside:avoid;box-shadow:0 0 0 1px #ccc}}
+</style>
+<link rel="stylesheet" href="../assets/pastel.css?v=8">
+<script src="../assets/pastel.js?v=2" defer></script>
+<link rel="stylesheet" href="../assets/skin.css?v=1">
+<script src="../assets/skin.js?v=1"></script>
+<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="ระบบดูแลทีมขาย | Excel Data Master"><meta property="og:description" content="ยอดขายทีมเทียบเป้า อันดับเซลล์ ท่อการขาย ทักษะ แผนพัฒนารายคน เซลล์บันทึกจากมือถือ"><meta property="og:url" content="https://exceldatamaster.com/sales/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-sales.jpg?v=1">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-sales.jpg?v=1">
+<meta name="theme-color" content="#3D6FB2">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ทีมขาย">
+</head>
+<body>
+<header class="top"><div class="in"><a class="brand" href="/">📈 Excel Data Master <small>· ระบบดูแลทีมขาย</small></a><nav class="nav"></nav></div></header>
+<div class="tabs" id="tabs"><button data-v="dash" type="button">📈 ภาพรวม</button><button data-v="team" type="button">👥 ทีมขาย</button><button data-v="log" type="button">📝 กิจกรรม</button><button data-v="dev" type="button">🎯 พัฒนาทีม</button><button data-v="set" type="button">⚙️ ตั้งค่า</button></div>
+<main id="main"></main>
+<dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button" aria-label="ปิด">✕</button></div><div class="db" id="dlgB"></div></dialog>
+<div class="toast" id="toast" role="status" hidden></div>
+<script src="../assets/vendor/qrcode.js"></script>
+<script src="../assets/salesapi.js?v=1"></script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่เต็ม)");return false}}};
+const K={cfg:"edm_sales_cfg",data:"edm_sales_data",ui:"edm_sales_ui"};
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),today=()=>ymd(new Date());
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],MF=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+const thD=s=>{if(!s)return"-";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
+const thM=m=>{const[y,mm]=m.split("-");return MF[+mm-1]+" "+(+y+543)};
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const money=n=>Math.round(n||0).toLocaleString("en-US");
+const addM=(m,n)=>{const[y,mm]=m.split("-").map(Number),d=new Date(y,mm-1+n,1);return d.getFullYear()+"-"+pad(d.getMonth()+1)};
+const dim=m=>{const[y,mm]=m.split("-").map(Number);return new Date(y,mm,0).getDate()};
+const addD=(s,n)=>{const d=new Date(s+"T00:00");d.setDate(d.getDate()+n);return ymd(d)};
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2800)}
+const S=window.EDM_SALES;
+function qrSvg(t){try{const q=qrcode(0,"M");q.addData(t);q.make();return q.createSvgTag({cellSize:4,margin:0,scalable:true})}catch(e){return""}}
+const KIND={call:["โทร","📞"],meet:["นัดคุย / เข้าพบ","🤝"],quote:["เสนอราคา","📄"],follow:["ติดตาม","🔁"],sale:["ปิดการขาย","💰"]};
+const DSKILLS=["หาลูกค้าใหม่","นัดคุย / เปิดบทสนทนา","นำเสนอสินค้า","ต่อรองและปิดการขาย","ติดตามลูกค้าเก่า"];
+const DSTD={call:100,meet:10,quote:12,follow:15};
+let cfg=Object.assign({team:"",key:"",demo:false},LS.get(K.cfg,{})||{});
+let D=LS.get(K.data,null)||{team:{name:"",cfg:{std:Object.assign({},DSTD),skills:DSKILLS.slice(),plan:[]}},reps:[],logs:[]};
+D.team=D.team||{name:"",cfg:{}};D.team.cfg=Object.assign({std:Object.assign({},DSTD),skills:DSKILLS.slice(),plan:[]},D.team.cfg||{});D.reps=D.reps||[];D.logs=D.logs||[];
+let ui=Object.assign({v:"dash",m:today().slice(0,7),rep:"",fr:"",fk:""},LS.get(K.ui,{})||{});
+const saveC=()=>LS.set(K.cfg,cfg),persist=()=>LS.set(K.data,D),saveUi=()=>LS.set(K.ui,ui);
+const online=()=>!!(cfg.team&&cfg.key&&S&&S.api);
+function paidMs(){const m=window.EDM_MEMBER&&EDM_MEMBER.me;if(!m)return 0;const X=m.sx||{};return Object.keys(X).length?(Number(X.sales)||0):(Number(m.exp)||0)}
+const mreq=o=>S.call(Object.assign({team:cfg.team,key:cfg.key,paid:paidMs()},o));
+
+/* ---------- ข้อมูล: ออนไลน์ (หลังบ้าน) หรือเครื่องเดียว ---------- */
+let busy=false;
+async function refresh(quiet){if(!online()){render();return}
+  busy=true;if(!quiet)$("#main").classList.add("loading");
+  try{const r=await mreq({a:"m_get",from:addD(ui.m+"-01",-7),to:ui.m+"-31"});D.team=r.team;D.team.cfg=Object.assign({std:Object.assign({},DSTD),skills:DSKILLS.slice(),plan:[]},r.team.cfg||{});if(!D.team.cfg.skills.length)D.team.cfg.skills=DSKILLS.slice();D.reps=r.reps;D.logs=r.logs;D.at=Date.now();persist()}
+  catch(e){toast(S.msg(e));if(e.message==="no_access"){/* กุญแจผิด: เก็บไว้ให้เจ้าของตัดสินใจในหน้าตั้งค่า */}}
+  busy=false;$("#main").classList.remove("loading");render()}
+async function saveTeam(p){// p: {name?, cfg?, reps?:[{id,...}]}
+  if(online()){const r=await mreq(Object.assign({a:"m_save"},p));D.team=r.team;D.team.cfg=Object.assign({std:Object.assign({},DSTD),skills:DSKILLS.slice(),plan:[]},r.team.cfg||{});D.reps=r.reps;persist();return}
+  if(p.name!=null)D.team.name=p.name;if(p.cfg)D.team.cfg=p.cfg;
+  (p.reps||[]).forEach(x=>{const i=D.reps.findIndex(r=>r.id===x.id);if(x.del){if(i>=0)D.reps.splice(i,1);return}
+    const o=i>=0?D.reps[i]:{id:x.id||uid("r"),name:"",zone:"",target:0,active:true,skills:{},idp:[],notes:[]};const c=Object.assign({},x);delete c.pin;Object.assign(o,c);if(x.pin)o.hasPin=true;if(i<0)D.reps.push(o)});
+  if(D.reps.filter(r=>r.active!==false).length>10)throw new Error("max_reps");persist()}
+async function addLog(l){if(online()){const r=await mreq({a:"m_log",log:l});const i=D.logs.findIndex(x=>x.id===r.log.id);i>=0?D.logs[i]=r.log:D.logs.push(r.log);persist();return}
+  l.id=l.id||uid("l");l.ts=Date.now();l.by="mgr";const i=D.logs.findIndex(x=>x.id===l.id);i>=0?D.logs[i]=l:D.logs.push(l);persist()}
+async function delLog(id){if(online())await mreq({a:"m_del",id});D.logs=D.logs.filter(l=>l.id!==id);persist()}
+const guard=fn=>async(...a)=>{try{await fn(...a)}catch(e){toast(S.msg(e))}};
+
+/* ---------- คำนวณ ---------- */
+const actReps=()=>D.reps.filter(r=>r.active!==false);
+const repById=id=>D.reps.find(r=>r.id===id);
+const mLogs=()=>D.logs.filter(l=>l.date&&l.date.slice(0,7)===ui.m);
+function stat(rep,L){L=(L||mLogs()).filter(l=>l.rep===rep.id);const c={call:0,meet:0,quote:0,follow:0,sale:0},amt=L.reduce((a,l)=>{c[l.kind]=(c[l.kind]||0)+1;return a+(l.kind==="sale"?+l.amount||0:0)},0);
+  const pct=rep.target?Math.round(amt/rep.target*100):0,fr=paceFrac(),exp=rep.target*fr,pace=exp?Math.round(amt/exp*100):0;
+  const st=!rep.target?"none":pct>=100?"over":!fr?"wait":pace>=100?"ok":pace>=85?"near":"coach";
+  return{amt,c,deals:c.sale,pct,pace,exp,st,conv:c.quote?Math.round(c.sale/c.quote*100):null,avg:c.sale?amt/c.sale:0}}
+const STL={over:"ถึงเป้าแล้ว",ok:"ตามแผน",near:"ใกล้แผน",coach:"ต้องโค้ช",none:"ยังไม่ตั้งเป้า",wait:"ยังไม่ถึงเดือน"};
+const isWork=s=>new Date(s+"T00:00").getDay()!==0;
+function paceFrac(){const t=today(),m=ui.m,cur=t.slice(0,7);if(m<cur)return 1;if(m>cur)return 0;let a=0,b=0;for(let d=1;d<=dim(m);d++){const ds=m+"-"+pad(d);if(!isWork(ds))continue;b++;if(ds<=t)a++}return b?a/b:1}
+function daysLeft(){const t=today(),m=ui.m,cur=t.slice(0,7);if(m<cur)return 0;let n=0;const s=m===cur?+t.slice(8):1;for(let d=s;d<=dim(m);d++){if(new Date(m+"-"+pad(d)+"T00:00").getDay()!==0)n++}return n}
+function weekOf(s){const d=new Date(s+"T00:00"),k=(d.getDay()+6)%7;d.setDate(d.getDate()-k);return ymd(d)}
+const skillAvg=(name)=>{const v=actReps().map(r=>(r.skills||{})[name]).filter(x=>x>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0};
+
+/* ---------- แสดงผล ---------- */
+function render(){$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===(ui.v==="rep"?"team":ui.v)));
+  ({dash:vDash,team:vTeam,rep:vRep,log:vLog,dev:vDev,set:vSet}[ui.v]||vDash)()}
+$("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b){ui.v=b.dataset.v;saveUi();render();scrollTo(0,0)}};
+function modeTag(){return online()?`<span class="mode on"><i></i>ทีมออนไลน์</span>`:cfg.demo?`<span class="mode demo"><i></i>ข้อมูลตัวอย่าง</span>`:`<span class="mode"><i></i>ใช้เครื่องเดียว</span>`}
+function mbar(){return`<div class="mbar"><button type="button" data-act="mprev" aria-label="เดือนก่อน">‹</button><b>${thM(ui.m)}</b><button type="button" data-act="mnext" aria-label="เดือนถัดไป">›</button></div>`}
+function stBadge(st){return`<span class="badge b-${st}">${STL[st]}</span>`}
+function who(r,sub){return`<button class="who" type="button" data-act="open" data-id="${esc(r.id)}"><span class="av">${esc((r.name||"?").charAt(0))}</span><span><b>${esc(r.name)}</b><small>${esc(sub!=null?sub:r.zone||"")}</small></span></button>`}
+
+function emptyHello(M){M.innerHTML=`<div class="card" style="text-align:center;align-items:center;padding:30px 16px"><div style="font-size:3rem">📈</div><h2 style="justify-content:center">เริ่มดูแลทีมขายของคุณ</h2>
+  <p style="color:var(--muted);margin:0;max-width:560px">เพิ่มรายชื่อเซลล์ ตั้งเป้ายอดขายรายเดือน แล้วให้เซลล์บันทึกการโทร นัดคุย เสนอราคา และปิดการขายจากมือถือของตัวเอง ระบบสรุปอันดับ ท่อการขาย และจุดที่ต้องโค้ชให้</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="btn main" type="button" data-act="addrep">＋ เพิ่มเซลล์คนแรก</button>${online()?"":`<button class="btn ghost" type="button" data-act="demo">ดูข้อมูลตัวอย่าง</button>`}</div></div>`}
+
+function vDash(){const M=$("#main");if(!actReps().length)return emptyHello(M);
+  const reps=actReps().map(r=>Object.assign({r},stat(r))).sort((a,b)=>b.pct-a.pct||b.amt-a.amt);
+  const tgt=reps.reduce((a,x)=>a+(+x.r.target||0),0),act=reps.reduce((a,x)=>a+x.amt,0),pct=tgt?Math.round(act/tgt*100):0,gap=Math.max(tgt-act,0),dl=daysLeft();
+  const L=mLogs(),cnt=k=>L.filter(l=>l.kind===k).length,deals=cnt("sale"),quotes=cnt("quote");
+  // รายสัปดาห์ (1-7, 8-14, 15-21, 22-สิ้นเดือน)
+  const n=dim(ui.m),B=[[1,7],[8,14],[15,21],[22,n]].map(([a,b],i)=>{const v=L.filter(l=>l.kind==="sale"&&+l.date.slice(8)>=a&&+l.date.slice(8)<=b).reduce((s,l)=>s+(+l.amount||0),0);return{i,a,b,v,t:tgt*(b-a+1)/n}});
+  const mx=Math.max(1,...B.map(x=>Math.max(x.v,x.t)))*1.1;
+  const F=[["call","โทร"],["meet","นัดคุย"],["quote","เสนอราคา"],["sale","ปิดได้"]].map(([k,t])=>[t,cnt(k)]),fmx=Math.max(1,...F.map(f=>f[1]));
+  const rate=(a,b)=>b?Math.round(a/b*100)+"%":"-";
+  const sks=D.team.cfg.skills||[],plan=D.team.cfg.plan||[];
+  const coach=reps.filter(x=>x.st==="coach");
+  M.innerHTML=`<div class="hello"><div>${modeTag()}<h1>${esc(D.team.name||"ยอดขายทีม")}</h1><p>${thM(ui.m)} · ${dl?`เหลือ ${dl} วันทำการ`:"สรุปทั้งเดือน"}${online()&&D.at?" · อัปเดต "+new Date(D.at).toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit"})+" น.":""}</p></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${mbar()}${online()?`<button class="btn ghost sm" type="button" data-act="reload">⟳ อัปเดต</button>`:""}<button class="btn ghost sm" type="button" data-act="print">🖨 พิมพ์</button></div></div>
+  <div class="kpis"><div class="kpi"><span>ยอดขายทีม</span><b>฿${money(act)}</b><div class="bar"><i style="width:${Math.min(pct,100)}%"></i></div><small>${pct}% ของเป้า ฿${money(tgt)}${paceFrac()>0&&paceFrac()<1?` · ควรได้ถึงวันนี้ ฿${money(tgt*paceFrac())}`:""}</small></div>
+  <div class="kpi"><span>ต้องทำเพิ่มเพื่อถึงเป้า</span><b class="${gap?"warn":""}">฿${money(gap)}</b><small>${gap&&dl?"เฉลี่ยวันละ ฿"+money(gap/dl):gap?"เดือนนี้จบแล้ว":"ถึงเป้าแล้ว 🎉"}</small></div>
+  <div class="kpi"><span>ดีลที่ปิดได้</span><b>${deals}</b><small>ยอดเฉลี่ยต่อดีล ฿${money(deals?act/deals:0)}</small></div>
+  <div class="kpi"><span>อัตราปิดการขาย</span><b>${rate(deals,quotes)}</b><small>เสนอราคา ${quotes} → ปิดได้ ${deals}</small></div></div>
+  <div class="grid2"><section class="card wide"><h2>อันดับเซลล์ <small>กดชื่อเพื่อดูรายคน</small></h2><div class="tw"><table class="t"><thead><tr><th>#</th><th>เซลล์</th><th style="width:34%">ยอด / เป้า</th><th class="r">ดีล</th><th class="r">ปิดได้</th><th>สถานะ</th></tr></thead><tbody>
+  ${reps.map((x,i)=>`<tr><td>${i+1}</td><td>${who(x.r)}</td><td><div style="display:flex;justify-content:space-between;font-size:.84rem"><span>฿${money(x.amt)}</span><span style="color:var(--muted)">${x.r.target?x.pct+"%":"-"}</span></div><div class="bar"><i class="c-${x.st}" style="width:${Math.min(x.pct,100)}%"></i></div></td><td class="r">${x.deals}</td><td class="r">${x.conv==null?"-":x.conv+"%"}</td><td>${stBadge(x.st)}</td></tr>`).join("")}
+  </tbody></table></div></section>
+  <section class="card"><h2>ยอดรายสัปดาห์เทียบเป้า</h2><div class="wk" role="img" aria-label="ยอดขายแต่ละช่วงวันที่เทียบเป้า">${B.map(x=>`<div class="col"><small>${money(x.v/1000)}k <span style="color:var(--muted)">/ ${money(x.t/1000)}k</span></small><div class="stk"><i class="g" style="height:${(x.t/mx*100).toFixed(1)}%"></i><i class="${x.v>=x.t?"c-ok":""}" style="height:${(x.v/mx*100).toFixed(1)}%"></i></div></div>`).join("")}</div>
+  <div class="wkl">${B.map(x=>`<div>วันที่ ${x.a}–${x.b}</div>`).join("")}</div><div style="display:flex;gap:14px;font-size:.78rem;color:var(--muted);flex-wrap:wrap"><span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--accent);vertical-align:middle"></i> ยอดขายจริง</span><span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--accent);opacity:.18;vertical-align:middle"></i> เป้าของช่วงนั้น</span></div></section></div>
+  <div class="grid2"><section class="card"><h2>ท่อการขาย <small>ขั้นที่หลุดมากคือจุดที่ต้องโค้ช</small></h2>${F.map(f=>`<div class="fn"><span>${f[0]}</span><div class="fb"><i style="width:${(f[1]/fmx*100).toFixed(1)}%"></i></div><span class="n">${f[1]}</span></div>`).join("")}
+  <div style="font-size:.86rem;color:var(--muted)">อัตราผ่าน: โทร→นัด ${rate(cnt("meet"),cnt("call"))} · นัด→เสนอราคา ${rate(quotes,cnt("meet"))} · เสนอราคา→ปิด ${rate(deals,quotes)}</div></section>
+  <section class="card"><h2>ทักษะทีม <small>คะแนนเฉลี่ยจาก 5</small></h2>${sks.map(s=>{const v=skillAvg(s);return`<div class="sk"><div class="h"><span>${esc(s)}</span><span>${v?v.toFixed(1):"-"}</span></div><div class="tr"><i class="${v&&v<3?"c-coach":""}" style="width:${v/5*100}%"></i></div></div>`}).join("")||`<p class="empty">ยังไม่มีหัวข้อทักษะ</p>`}
+  ${sks.some(s=>skillAvg(s))?"":`<div class="tip">ให้คะแนนทักษะแต่ละคนได้ในหน้า <b>ทีมขาย</b> → กดชื่อเซลล์</div>`}</section>
+  <section class="card"><h2>แผนพัฒนาทีม <small>${plan.filter(p=>p.done).length}/${plan.length}</small></h2>${planList(plan)}</section></div>
+  ${coach.length?`<section class="card"><h2>ต้องโค้ช ${coach.length} คน <small>ข้อแนะนำจากตัวเลขเดือนนี้</small></h2><div class="reps">${coach.map(x=>`<div class="rc" style="cursor:default">${who(x.r,x.pct+"% ของเป้า")}<div class="tip warn">${esc(advice(x))}</div></div>`).join("")}</div></section>`:""}`;
+  bindPlan()}
+function advice(x){const c=x.c,s=D.team.cfg.std||DSTD,wk=Math.max(1,Math.ceil((ui.m===today().slice(0,7)?+today().slice(8):dim(ui.m))/7));
+  if(c.call<(s.call||0)*wk*.7)return"กิจกรรมน้อย: โทรได้ "+c.call+" ครั้ง (มาตรฐาน ~"+Math.round((s.call||0)*wk)+") เพิ่มเวลาโทรช่วงเช้าทุกวัน";
+  if(c.call&&c.meet/c.call<.08)return"โทรแล้วนัดไม่ได้: ฝึกบทเปิดบทสนทนา และคัดรายชื่อลูกค้าให้ตรงกลุ่มขึ้น";
+  if(c.meet&&c.quote/c.meet<.4)return"นัดคุยแล้วไม่ถึงขั้นเสนอราคา: ฝึกถามความต้องการลูกค้าก่อนนำเสนอ";
+  if(c.quote&&c.sale/c.quote<.2)return"เสนอราคาแล้วปิดไม่ได้ ("+(x.conv||0)+"%): ฝึกต่อรองและติดตามภายใน 48 ชม.";
+  return"ยอดต่อดีลต่ำหรือดีลน้อย: ทบทวนกลุ่มลูกค้าและสินค้าที่เสนอ";}
+function planList(plan,repId){return`<ul class="chk">${plan.map(p=>`<li class="${p.done?"done":""}"><input type="checkbox" ${p.done?"checked":""} data-pk="${esc(p.id)}" ${repId?`data-rp="${esc(repId)}"`:""} aria-label="ทำแล้ว"><span><b>${esc(p.t)}</b>${p.m||p.due?`<small>${esc([p.m,p.due].filter(Boolean).join(" · "))}</small>`:""}</span><button class="x" type="button" data-px="${esc(p.id)}" ${repId?`data-rp="${esc(repId)}"`:""} aria-label="ลบ">✕</button></li>`).join("")}</ul>
+  <div class="add"><input class="in-" data-pa="${esc(repId||"")}" placeholder="${repId?"เพิ่มสิ่งที่จะพัฒนา เช่น ฝึกต่อรองราคา":"เพิ่มงานพัฒนาทีม เช่น ประชุมเช้า 15 นาที"}" maxlength="120"><button class="btn main" type="button" data-pab="${esc(repId||"")}">＋</button></div>`}
+function bindPlan(){
+  const list=rid=>rid?(repById(rid).idp=repById(rid).idp||[]):(D.team.cfg.plan=D.team.cfg.plan||[]);
+  const push=guard(async rid=>{if(rid)await saveTeam({reps:[{id:rid,idp:repById(rid).idp}]});else await saveTeam({cfg:D.team.cfg});render()});
+  $$("[data-pk]").forEach(c=>c.onchange=()=>{const L=list(c.dataset.rp||""),it=L.find(p=>p.id===c.dataset.pk);if(it){it.done=c.checked;push(c.dataset.rp||"")}});
+  $$("[data-px]").forEach(b=>b.onclick=()=>{const rid=b.dataset.rp||"",L=list(rid),i=L.findIndex(p=>p.id===b.dataset.px);if(i>=0&&confirm('ลบ "'+L[i].t+'"?')){L.splice(i,1);push(rid)}});
+  const add=rid=>{const inp=$(`[data-pa="${rid}"]`),t=inp.value.trim();if(!t)return inp.focus();list(rid).push({id:uid("p"),t,m:"",done:false});push(rid)};
+  $$("[data-pa]").forEach(i=>i.onkeydown=e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();add(i.dataset.pa)}});$$("[data-pab]").forEach(b=>b.onclick=()=>add(b.dataset.pab))}
+
+function vTeam(){const M=$("#main");const all=D.reps;
+  M.innerHTML=`<div class="hello"><div>${modeTag()}<h1>ทีมขาย</h1><p>เซลล์ที่ใช้งาน ${actReps().length} / 10 คน · กดการ์ดเพื่อดูรายละเอียดและแผนพัฒนา</p></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${mbar()}<button class="btn main" type="button" data-act="addrep">＋ เพิ่มเซลล์</button></div></div>
+  ${online()&&all.some(r=>r.active!==false&&!r.hasPin)?`<div class="tip warn">มีเซลล์ที่ยังไม่ได้ตั้ง PIN จะเข้าแอปจากมือถือไม่ได้ กดที่การ์ดแล้วเลือก "แก้ไข" เพื่อตั้ง PIN</div>`:""}
+  ${all.length?`<div class="reps">${all.map(r=>{const x=stat(r);return`<button class="rc" type="button" data-act="open" data-id="${esc(r.id)}"><div class="top2"><span class="who" style="pointer-events:none"><span class="av">${esc((r.name||"?").charAt(0))}</span><span><b>${esc(r.name)}</b><small>${esc(r.zone||"")}</small></span></span>${r.active===false?`<span class="badge b-none">ปิดใช้งาน</span>`:stBadge(x.st)}</div>
+  <div class="amt">฿${money(x.amt)} <small style="font-size:.8rem;font-weight:500;color:var(--muted)">/ ฿${money(r.target)}</small></div><div class="bar lg"><i class="c-${x.st}" style="width:${Math.min(x.pct,100)}%"></i></div>
+  <div class="meta"><span>ดีล ${x.deals}</span><span>ปิดได้ ${x.conv==null?"-":x.conv+"%"}</span><span>${online()?(r.hasPin?"มี PIN ✓":"ยังไม่ตั้ง PIN"):"โทร "+x.c.call}</span></div></button>`}).join("")}</div>`:`<div class="card empty">ยังไม่มีเซลล์ <div style="margin-top:10px"><button class="btn main" type="button" data-act="addrep">＋ เพิ่มเซลล์คนแรก</button></div></div>`}`}
+
+function vRep(){const r=repById(ui.rep);if(!r){ui.v="team";return render()}const M=$("#main"),x=stat(r),s=D.team.cfg.std||DSTD;
+  const team=actReps().map(o=>stat(o)),tc=team.length,avgDeals=tc?team.reduce((a,o)=>a+o.deals,0)/tc:0,tq=team.reduce((a,o)=>a+o.c.quote,0),td=team.reduce((a,o)=>a+o.deals,0);
+  const wk=weekOf(today()),wl=D.logs.filter(l=>l.rep===r.id&&l.date>=wk&&l.date<=addD(wk,6)),wc=k=>wl.filter(l=>l.kind===k).length;
+  const sks=D.team.cfg.skills||[],my=r.skills||{};
+  const recent=D.logs.filter(l=>l.rep===r.id).sort((a,b)=>(b.date+b.ts)>(a.date+a.ts)?1:-1).slice(0,8);
+  M.innerHTML=`<div class="hello"><div><button class="btn ghost sm" type="button" data-act="back">‹ กลับทีมขาย</button><h1 style="margin-top:8px">${esc(r.name)} ${r.active===false?`<span class="badge b-none">ปิดใช้งาน</span>`:stBadge(x.st)}</h1><p>${esc([r.zone,"เป้า ฿"+money(r.target)+"/เดือน"].filter(Boolean).join(" · "))}</p></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${mbar()}<button class="btn ghost sm" type="button" data-act="editrep" data-id="${esc(r.id)}">✏️ แก้ไข</button><button class="btn main sm" type="button" data-act="addlog" data-id="${esc(r.id)}">＋ บันทึกกิจกรรม</button></div></div>
+  <div class="kpis"><div class="kpi"><span>ยอดขาย ${MS[+ui.m.slice(5)-1]}</span><b>฿${money(x.amt)}</b><div class="bar"><i class="c-${x.st}" style="width:${Math.min(x.pct,100)}%"></i></div><small>${r.target?x.pct+"% · ขาด ฿"+money(Math.max(r.target-x.amt,0)):"ยังไม่ตั้งเป้า"}</small></div>
+  <div class="kpi"><span>ดีลที่ปิดได้</span><b>${x.deals}</b><small>ค่าเฉลี่ยทีม ${avgDeals.toFixed(1)}</small></div>
+  <div class="kpi"><span>อัตราปิดการขาย</span><b class="${x.conv!=null&&tq&&x.conv<td/tq*100?"warn":""}">${x.conv==null?"-":x.conv+"%"}</b><small>ค่าเฉลี่ยทีม ${tq?Math.round(td/tq*100)+"%":"-"}</small></div>
+  <div class="kpi"><span>ยอดเฉลี่ยต่อดีล</span><b>฿${money(x.avg)}</b><small>เสนอราคา ${x.c.quote} ครั้ง</small></div></div>
+  <div class="grid2"><section class="card"><h2>กิจกรรมสัปดาห์นี้ <small>เทียบมาตรฐานทีม (ตั้งได้ในหน้าตั้งค่า)</small></h2>
+  ${(()=>{const wd=Math.max(1,Math.min(6,(new Date().getDay()+6)%7+1));return["call","meet","quote","follow"].map(k=>{const v=wc(k),g=s[k]||0,p=g?v/g:0,e=g*wd/6;return`<div class="sk"><div class="h"><span>${KIND[k][1]} ${KIND[k][0]}</span><span>${v} / ${g||"-"}</span></div><div class="bar lg"><i class="${g&&v<e*.7?"c-coach":v>=e?"c-ok":""}" style="width:${Math.min(p*100,100)}%"></i></div></div>`}).join("")+`<small style="color:var(--muted)">วันที่ ${wd} ของสัปดาห์ (จ.–ส.) · ควรได้ประมาณ ${wd}/6 ของมาตรฐาน · เขียว = ตามแผน · ส้ม = ต่ำกว่า 70%</small>`})()}</section>
+  <section class="card"><h2>ทักษะ <small>เส้นดำ = ค่าเฉลี่ยทีม · เลือกคะแนน 1–5</small></h2>
+  ${sks.map((k,i)=>{const v=+my[k]||0,a=skillAvg(k);return`<div class="sk"><div class="h"><label for="sk${i}">${esc(k)}</label><select class="in-" id="sk${i}" data-sk="${esc(k)}" style="width:auto;min-height:34px;padding:4px 8px">${(v&&!["1","1.5","2","2.5","3","3.5","4","4.5","5"].includes(String(v))?["",String(v),"1","1.5","2","2.5","3","3.5","4","4.5","5"]:["","1","1.5","2","2.5","3","3.5","4","4.5","5"]).map(o=>`<option value="${o}" ${String(v||"")===o?"selected":""}>${o||"-"}</option>`).join("")}</select></div><div class="tr"><i class="${a&&v&&a-v>=.5?"c-coach":""}" style="width:${v/5*100}%"></i>${a?`<em style="left:calc(${a/5*100}% - 1px)"></em>`:""}</div></div>`}).join("")||`<p class="empty">เพิ่มหัวข้อทักษะในหน้าตั้งค่า</p>`}</section></div>
+  <div class="grid2"><section class="card wide"><h2>แผนพัฒนารายบุคคล <small>${(r.idp||[]).filter(t=>t.done).length}/${(r.idp||[]).length} · เซลล์ติ๊กเองจากมือถือได้</small></h2>${planList(r.idp||[],r.id)}</section>
+  <section class="card"><h2>บันทึกโค้ช 1:1</h2><div class="f"><label for="nt">บันทึกครั้งใหม่</label><textarea class="in-" id="nt" placeholder="สิ่งที่คุย · สิ่งที่ตกลงจะทำ · นัดครั้งหน้า" maxlength="600"></textarea></div><button class="btn main" type="button" data-act="note" data-id="${esc(r.id)}" style="align-self:flex-start">บันทึก</button>
+  ${(r.notes||[]).slice().reverse().map((n,i)=>`<div class="note"><small>${thD(n.d)}</small>${esc(n.t)}</div>`).join("")}</section></div>
+  <section class="card"><h2>กิจกรรมล่าสุด</h2>${recent.length?logTable(recent,false):`<p class="empty">ยังไม่มีกิจกรรม</p>`}</section>`;
+  bindPlan();
+  $$("[data-sk]").forEach(sel=>sel.onchange=guard(async()=>{const o=Object.assign({},r.skills||{});if(sel.value)o[sel.dataset.sk]=+sel.value;else delete o[sel.dataset.sk];r.skills=o;await saveTeam({reps:[{id:r.id,skills:o}]});render()}))}
+
+function logTable(L,showRep){return`<div class="tw"><table class="t"><thead><tr><th>วันที่</th>${showRep?"<th>เซลล์</th>":""}<th>กิจกรรม</th><th>ลูกค้า / หมายเหตุ</th><th class="r">ยอด (บาท)</th><th></th></tr></thead><tbody>
+  ${L.map(l=>{const r=repById(l.rep);return`<tr><td style="white-space:nowrap">${thD(l.date)}</td>${showRep?`<td>${esc(r?r.name:"(ลบแล้ว)")}</td>`:""}<td style="white-space:nowrap">${(KIND[l.kind]||["?",""])[1]} ${esc((KIND[l.kind]||[l.kind])[0])}</td><td>${esc([l.customer,l.note].filter(Boolean).join(" · "))||"-"}</td><td class="r">${l.kind==="sale"?money(l.amount):""}</td><td style="text-align:right"><button class="btn sm ghost danger" type="button" data-act="dellog" data-id="${esc(l.id)}" aria-label="ลบ">ลบ</button></td></tr>`}).join("")}</tbody></table></div>`}
+
+function vLog(){const M=$("#main");const L=mLogs().filter(l=>(!ui.fr||l.rep===ui.fr)&&(!ui.fk||l.kind===ui.fk)).sort((a,b)=>(b.date+String(b.ts).padStart(14,"0"))>(a.date+String(a.ts).padStart(14,"0"))?1:-1);
+  const sum=L.filter(l=>l.kind==="sale").reduce((a,l)=>a+(+l.amount||0),0);
+  M.innerHTML=`<div class="hello"><div>${modeTag()}<h1>กิจกรรมการขาย</h1><p>${L.length} รายการ${sum?" · ยอดขาย ฿"+money(sum):""}</p></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${mbar()}<button class="btn main" type="button" data-act="addlog">＋ บันทึกกิจกรรม</button></div></div>
+  <div class="card" style="flex-direction:row;flex-wrap:wrap;gap:10px"><div class="f" style="flex:1 1 200px"><label for="fr">เซลล์</label><select class="in-" id="fr"><option value="">ทุกคน</option>${D.reps.map(r=>`<option value="${esc(r.id)}" ${ui.fr===r.id?"selected":""}>${esc(r.name)}</option>`).join("")}</select></div>
+  <div class="f" style="flex:1 1 200px"><label for="fk">กิจกรรม</label><select class="in-" id="fk"><option value="">ทั้งหมด</option>${Object.keys(KIND).map(k=>`<option value="${k}" ${ui.fk===k?"selected":""}>${KIND[k][0]}</option>`).join("")}</select></div></div>
+  <section class="card">${L.length?logTable(L,true):`<p class="empty">ยังไม่มีกิจกรรมในเดือนนี้${online()?" · เซลล์บันทึกจากมือถือได้ที่ลิงก์ในหน้าตั้งค่า":""}</p>`}</section>`;
+  $("#fr").onchange=e=>{ui.fr=e.target.value;saveUi();vLog()};$("#fk").onchange=e=>{ui.fk=e.target.value;saveUi();vLog()}}
+
+function vDev(){const M=$("#main"),sks=D.team.cfg.skills||[],R=actReps();
+  const notes=[];R.forEach(r=>(r.notes||[]).forEach(n=>notes.push({r,n})));notes.sort((a,b)=>a.n.d<b.n.d?1:-1);
+  const sc=v=>v?`<span class="sc ${v<3?"lo":v>=4?"hi":"mid"}">${(+v).toFixed(1)}</span>`:`<span class="sc mid">-</span>`;
+  M.innerHTML=`<div class="hello"><div>${modeTag()}<h1>พัฒนาทีม</h1><p>ดูว่าใครเก่งเรื่องไหน ใครควรเป็นพี่เลี้ยง และทีมต้องฝึกเรื่องอะไรก่อน</p></div><button class="btn ghost sm" type="button" data-act="print">🖨 พิมพ์</button></div>
+  <section class="card"><h2>ตารางทักษะ <small>ส้ม = ต่ำกว่า 3 · เขียว = 4 ขึ้นไป · กดชื่อเพื่อให้คะแนน</small></h2>${R.length&&sks.length?`<div class="tw"><table class="t mx"><thead><tr><th>เซลล์</th>${sks.map(s=>`<th>${esc(s)}</th>`).join("")}</tr></thead><tbody>
+  ${R.map(r=>`<tr><td>${who(r)}</td>${sks.map(s=>`<td>${sc((r.skills||{})[s])}</td>`).join("")}</tr>`).join("")}<tr><td><b>ค่าเฉลี่ยทีม</b></td>${sks.map(s=>`<td>${sc(skillAvg(s))}</td>`).join("")}</tr></tbody></table></div>`:`<p class="empty">เพิ่มเซลล์และหัวข้อทักษะก่อน</p>`}
+  ${(()=>{if(!R.length||!sks.length)return"";const w=sks.map(s=>[s,skillAvg(s)]).filter(x=>x[1]).sort((a,b)=>a[1]-b[1])[0];if(!w)return"";const best=R.slice().sort((a,b)=>((b.skills||{})[w[0]]||0)-((a.skills||{})[w[0]]||0))[0];return`<div class="tip">ทีมควรฝึกเรื่อง <b>${esc(w[0])}</b> ก่อน (เฉลี่ย ${w[1].toFixed(1)})${best&&(best.skills||{})[w[0]]>=4?` · ให้ <b>${esc(best.name)}</b> เป็นพี่เลี้ยงเรื่องนี้`:""}</div>`})()}</section>
+  <div class="grid2"><section class="card"><h2>แผนพัฒนาทีม <small>${(D.team.cfg.plan||[]).filter(p=>p.done).length}/${(D.team.cfg.plan||[]).length}</small></h2>${planList(D.team.cfg.plan||[])}</section>
+  <section class="card"><h2>บันทึกโค้ชล่าสุด</h2>${notes.slice(0,10).map(o=>`<div class="note"><small>${thD(o.n.d)} · ${esc(o.r.name)}</small>${esc(o.n.t)}</div>`).join("")||`<p class="empty">ยังไม่มีบันทึก · เพิ่มได้ในหน้าของเซลล์แต่ละคน</p>`}</section></div>`;
+  bindPlan()}
+
+function vSet(){const M=$("#main"),c=D.team.cfg,s=c.std||DSTD,me=window.EDM_MEMBER&&EDM_MEMBER.me;
+  const link=cfg.team?S.repUrl(cfg.team):"";
+  M.innerHTML=`<div class="hello"><div>${modeTag()}<h1>ตั้งค่า</h1><p>ชื่อทีม มาตรฐานกิจกรรม หัวข้อทักษะ และการเชื่อมมือถือเซลล์</p></div></div>
+  <section class="card"><h2>เซลล์บันทึกจากมือถือ</h2>
+  ${online()?`<p style="margin:0">ส่งลิงก์นี้ให้เซลล์ เปิดแล้วเลือกชื่อ ใส่ PIN ที่หัวหน้าตั้งให้ (ตั้ง PIN ได้ในหน้าทีมขาย → แก้ไข)</p><div class="lnk"><input class="in-" id="lk" value="${esc(link)}" readonly aria-label="ลิงก์สำหรับเซลล์"><button class="btn main" type="button" data-act="copy">คัดลอกลิงก์</button><a class="btn ghost" href="https://line.me/R/share?text=${encodeURIComponent("ลิงก์บันทึกยอดขายทีม "+(D.team.name||"")+"\n"+link)}" target="_blank" rel="noopener">ส่งทาง LINE</a></div>
+  <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div style="width:150px;height:150px;padding:8px;background:#fff;border-radius:12px;box-shadow:0 0 0 1px var(--line)" role="img" aria-label="QR โค้ดลิงก์สำหรับเซลล์">${qrSvg(link)}</div><small style="color:var(--muted);max-width:280px">ให้เซลล์สแกน QR ด้วยกล้องมือถือ แล้วกด "เพิ่มไปยังหน้าจอโฮม" เพื่อเปิดเหมือนแอป</small></div>
+  <small style="color:var(--muted)">รหัสทีม ${esc(cfg.team)} · ข้อมูลทีมเก็บในระบบออนไลน์ เปิดจากเครื่องอื่นได้เมื่อเข้าสู่ระบบอีเมลเดียวกัน</small>`
+  :!S.api?`<div class="tip">ระบบทีมออนไลน์กำลังติดตั้ง ระหว่างนี้ใช้แบบเครื่องเดียวได้ (หัวหน้าบันทึกแทน) ข้อมูลจะย้ายขึ้นทีมออนไลน์ได้ภายหลัง</div>`
+  :`<p style="margin:0">เปิดทีมออนไลน์ให้เซลล์แต่ละคนบันทึกจากมือถือของตัวเอง ข้อมูลรวมมาที่หน้านี้ทันที</p>${cfg.demo?`<div class="tip warn">ตอนนี้เป็นข้อมูลตัวอย่าง ข้อมูลตัวอย่างจะไม่ถูกย้ายขึ้นทีมออนไลน์</div>`:""}<button class="btn main" type="button" data-act="goonline" style="align-self:flex-start" ${me?"":"disabled"}>เปิดทีมออนไลน์</button>${me?"":`<small style="color:var(--muted)">เข้าสู่ระบบสมาชิกก่อน</small>`}`}
+  </section>
+  <section class="card"><h2>ชื่อทีม</h2><div class="f"><label for="tn">ชื่อที่แสดงบนหน้าภาพรวมและมือถือเซลล์</label><input class="in-" id="tn" value="${esc(D.team.name)}" placeholder="เช่น ทีมขายเขตเหนือ" maxlength="60"></div></section>
+  <section class="card"><h2>มาตรฐานกิจกรรมต่อสัปดาห์ <small>ต่อเซลล์ 1 คน ใช้เทียบในหน้ารายคนและมือถือ</small></h2><div class="row" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">${["call","meet","quote","follow"].map(k=>`<div class="f"><label for="sd_${k}">${KIND[k][1]} ${KIND[k][0]}</label><input class="in-" type="number" min="0" max="999" inputmode="numeric" id="sd_${k}" value="${+s[k]||0}"></div>`).join("")}</div></section>
+  <section class="card"><h2>หัวข้อทักษะ <small>สูงสุด 8 หัวข้อ</small></h2><div style="display:flex;flex-direction:column;gap:6px" id="skl">${(c.skills||[]).map((k,i)=>`<div style="display:flex;gap:6px"><input class="in-" data-skn="${i}" value="${esc(k)}" maxlength="40" aria-label="ทักษะ ${i+1}"><button class="btn sm ghost danger" type="button" data-skx="${i}">ลบ</button></div>`).join("")}</div>
+  <button class="btn ghost sm" type="button" data-act="skadd" style="align-self:flex-start" ${(c.skills||[]).length>=8?"disabled":""}>＋ เพิ่มหัวข้อ</button></section>
+  <div><button class="btn main" type="button" data-act="saveset">บันทึกการตั้งค่า</button></div>
+  ${online()?"":`<section class="card"><h2>ข้อมูลตัวอย่าง</h2><p style="margin:0;color:var(--muted)">ลองดูหน้าตาระบบด้วยทีมสมมติ 5 คน</p><div style="display:flex;gap:6px;flex-wrap:wrap">${cfg.demo?`<button class="btn ghost danger" type="button" data-act="cleardemo">ลบข้อมูลตัวอย่าง</button>`:`<button class="btn ghost" type="button" data-act="demo">ใส่ข้อมูลตัวอย่าง</button>`}</div></section>`}`;
+  $$("[data-skx]").forEach(b=>b.onclick=()=>{c.skills.splice(+b.dataset.skx,1);vSet()})}
+
+/* ---------- หน้าต่าง ---------- */
+function openDlg(t,h){$("#dlgT").textContent=t;$("#dlgB").innerHTML=h;const d=$("#dlg");if(!d.open)d.showModal()}
+$("#dlgX").onclick=()=>$("#dlg").close();
+function repDlg(id){const o=id?repById(id):null,r=o||{name:"",zone:"",target:0,active:true};
+  openDlg(o?"แก้ไขเซลล์":"เพิ่มเซลล์",`<div class="f"><label for="rN">ชื่อเซลล์</label><input class="in-" id="rN" value="${esc(r.name)}" maxlength="40" placeholder="เช่น อรุณี ก."></div>
+  <div class="row"><div class="f"><label for="rZ">เขต / สาขา (ถ้ามี)</label><input class="in-" id="rZ" value="${esc(r.zone||"")}" maxlength="40"></div><div class="f"><label for="rT">เป้ายอดขายต่อเดือน (บาท)</label><input class="in-" id="rT" type="number" min="0" inputmode="numeric" value="${+r.target||""}" placeholder="เช่น 300000"></div></div>
+  ${online()||S.api?`<div class="f"><label for="rP">PIN สำหรับเข้าแอปมือถือ (ตัวเลข 4–6 หลัก)${o&&o.hasPin?" · เว้นว่าง = ใช้ PIN เดิม":""}</label><input class="in-" id="rP" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="${o&&o.hasPin?"••••":"เช่น 4821"}"><small style="color:var(--muted)">เปลี่ยน PIN แล้ว เครื่องที่เคยเข้าไว้จะต้องเข้าใหม่</small></div>`:""}
+  ${o?`<label style="display:flex;gap:8px;align-items:center;min-height:40px"><input type="checkbox" id="rA" ${r.active!==false?"checked":""} style="width:20px;height:20px">ใช้งานอยู่ (ปิด = เก็บประวัติไว้ แต่ไม่นับในทีม)</label>`:""}
+  <div style="display:flex;gap:8px;justify-content:space-between">${o?`<button class="btn ghost danger" id="rD" type="button">ลบเซลล์</button>`:"<span></span>"}<button class="btn main" id="rOk" type="button">บันทึก</button></div>`);
+  $("#rOk").onclick=guard(async()=>{const name=$("#rN").value.trim();if(!name){toast("ใส่ชื่อเซลล์");return $("#rN").focus()}const pin=$("#rP")?$("#rP").value.trim():"";if(pin&&!/^\d{4,6}$/.test(pin))return toast("PIN ต้องเป็นตัวเลข 4–6 หลัก");
+    const x={id:o?o.id:uid("r"),name,zone:$("#rZ").value.trim(),target:+$("#rT").value||0};if(o)x.active=$("#rA").checked;else x.active=true;if(pin)x.pin=pin;
+    if(!o&&actReps().length>=10)return toast(S.msg(new Error("max_reps")));
+    $("#rOk").disabled=true;try{await saveTeam({reps:[x]});if(cfg.demo&&!o){cfg.demo=false;saveC()}$("#dlg").close();toast("บันทึกแล้ว ✓");render()}finally{const b=$("#rOk");if(b)b.disabled=false}});
+  if(o)$("#rD").onclick=guard(async()=>{if(!confirm('ลบ "'+o.name+'"? (กิจกรรมเดิมยังอยู่ในรายงาน)'))return;await saveTeam({reps:[{id:o.id,del:true}]});$("#dlg").close();ui.v="team";saveUi();render()});
+  setTimeout(()=>$("#rN").focus(),40)}
+function logDlg(rid){const R=actReps();if(!R.length)return toast("เพิ่มเซลล์ก่อน");
+  openDlg("บันทึกกิจกรรม",`<div class="f"><label for="lR">เซลล์</label><select class="in-" id="lR">${R.map(r=>`<option value="${esc(r.id)}" ${r.id===rid?"selected":""}>${esc(r.name)}</option>`).join("")}</select></div>
+  <div class="f"><span style="font-size:.8rem;font-weight:600;color:var(--muted)">กิจกรรม</span><div class="seg" role="radiogroup">${Object.keys(KIND).map((k,i)=>`<label><input type="radio" name="lk" value="${k}" ${k==="sale"?"checked":""}><span>${KIND[k][1]} ${KIND[k][0]}</span></label>`).join("")}</div></div>
+  <div class="row"><div class="f"><label for="lD">วันที่</label><input class="in-" type="date" id="lD" value="${today()}"></div><div class="f" id="lAw"><label for="lA">ยอดขาย (บาท)</label><input class="in-" type="number" min="0" inputmode="decimal" id="lA" placeholder="0"></div></div>
+  <div class="f"><label for="lC">ลูกค้า</label><input class="in-" id="lC" maxlength="80" placeholder="ชื่อร้าน / บริษัท"></div><div class="f"><label for="lN">หมายเหตุ</label><input class="in-" id="lN" maxlength="200"></div>
+  <button class="btn main" id="lOk" type="button">บันทึก</button>`);
+  const sync=()=>{const k=($$('[name="lk"]').find(x=>x.checked)||{}).value;$("#lAw").style.visibility=k==="sale"?"visible":"hidden"};$$('[name="lk"]').forEach(x=>x.onchange=sync);sync();
+  $("#lOk").onclick=guard(async()=>{const k=($$('[name="lk"]').find(x=>x.checked)||{}).value,a=+$("#lA").value||0;if(k==="sale"&&!a){toast("ใส่ยอดขาย");return $("#lA").focus()}
+    $("#lOk").disabled=true;try{await addLog({rep:$("#lR").value,kind:k,date:$("#lD").value||today(),amount:k==="sale"?a:0,customer:$("#lC").value.trim(),note:$("#lN").value.trim()});if(cfg.demo){cfg.demo=false;saveC()}$("#dlg").close();toast("บันทึกแล้ว ✓");render()}finally{const b=$("#lOk");if(b)b.disabled=false}})}
+
+/* ---------- ปุ่มทั้งหมด ---------- */
+$("#main").addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(!b||busy)return;const id=b.dataset.id;
+  ({mprev(){ui.m=addM(ui.m,-1);saveUi();online()?refresh():render()},mnext(){ui.m=addM(ui.m,1);saveUi();online()?refresh():render()},reload(){refresh()},print(){print()},
+   addrep(){repDlg()},editrep(){repDlg(id)},open(){ui.rep=id;ui.v="rep";saveUi();render();scrollTo(0,0)},back(){ui.v="team";saveUi();render()},
+   addlog(){logDlg(id)},dellog:guard(async()=>{const l=D.logs.find(x=>x.id===id);if(!l||!confirm("ลบรายการนี้?"))return;await delLog(id);render()}),
+   note:guard(async()=>{const t=$("#nt").value.trim();if(!t)return $("#nt").focus();const r=repById(id);const n=(r.notes||[]).concat([{d:today(),t}]).slice(-40);await saveTeam({reps:[{id,notes:n}]});toast("บันทึกแล้ว ✓");render()}),
+   copy(){const i=$("#lk");i.select();(navigator.clipboard?navigator.clipboard.writeText(i.value):Promise.reject()).then(()=>toast("คัดลอกแล้ว ✓"),()=>{document.execCommand("copy");toast("คัดลอกแล้ว ✓")})},
+   skadd(){const c=D.team.cfg;readSkills();if((c.skills||[]).length<8){c.skills.push("");vSet();const L=$$("[data-skn]");L[L.length-1].focus()}},
+   saveset:guard(async()=>{readSkills();const c=Object.assign({},D.team.cfg,{std:{}});["call","meet","quote","follow"].forEach(k=>c.std[k]=Math.max(0,Math.min(999,Math.round(+$("#sd_"+k).value||0))));c.skills=(c.skills||[]).map(s=>s.trim()).filter(Boolean).slice(0,8);
+     await saveTeam({name:$("#tn").value.trim(),cfg:c});toast("บันทึกแล้ว ✓");vSet()}),
+   demo(){if(D.reps.length&&!cfg.demo&&!confirm("ใส่ข้อมูลตัวอย่างแทนข้อมูลเดิม?"))return;makeDemo()},
+   cleardemo(){if(!confirm("ลบข้อมูลตัวอย่างทั้งหมด?"))return;D={team:{name:"",cfg:{std:Object.assign({},DSTD),skills:DSKILLS.slice(),plan:[]}},reps:[],logs:[]};cfg.demo=false;saveC();persist();ui.v="dash";saveUi();render()},
+   goonline:guard(goOnline)}[b.dataset.act]||(()=>{}))()});
+function readSkills(){const L=$$("[data-skn]");if(L.length)D.team.cfg.skills=L.map(i=>i.value)}
+
+async function goOnline(){const me=window.EDM_MEMBER&&EDM_MEMBER.me;if(!me||!me.email)return toast("เข้าสู่ระบบสมาชิกก่อน");
+  if(cfg.demo&&!confirm("ข้อมูลตัวอย่างจะถูกลบ แล้วเริ่มทีมออนไลน์ใหม่ ตกลง?"))return;
+  const btn=$('[data-act="goonline"]');if(btn)btn.disabled=true;toast("กำลังเปิดทีมออนไลน์…");
+  try{const keepReps=cfg.demo?[]:D.reps.slice(),keepLogs=cfg.demo?[]:D.logs.slice();
+    const r=await S.call({a:"create",email:me.email,name:D.team.name||"ทีมขาย",paid:paidMs(),cfg:cfg.demo?{std:DSTD,skills:DSKILLS,plan:[]}:D.team.cfg});
+    cfg.team=r.team;cfg.key=r.key;cfg.demo=false;saveC();
+    if(keepReps.length)await mreq({a:"m_save",reps:keepReps.map(x=>({id:x.id,name:x.name,zone:x.zone,target:x.target,active:x.active!==false,skills:x.skills||{},idp:x.idp||[],notes:x.notes||[]}))});
+    for(let i=0;i<keepLogs.length;i++){const l=keepLogs[i];if(i%20===0)toast("ย้ายกิจกรรม "+(i+1)+"/"+keepLogs.length);await mreq({a:"m_log",log:{id:l.id,rep:l.rep,kind:l.kind,date:l.date,amount:l.amount,customer:l.customer,note:l.note}})}
+    toast("เปิดทีมออนไลน์แล้ว ✓ ตั้ง PIN ให้เซลล์แต่ละคนต่อได้เลย");await refresh();ui.v="set";saveUi();render()}
+  catch(e){toast(S.msg(e));if(btn)btn.disabled=false}}
+
+function makeDemo(){const t=today(),m=t.slice(0,7),last=+t.slice(8);let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  const P=[["อรุณี ก.","กรุงเทพฯ เหนือ",500000,1.12,{},[4,4,4.5,4.5,4]],["ธนพล ส.","นนทบุรี",500000,.97,{},[4,3.5,4,3,3.5]],["กมลชนก ว.","ปทุมธานี",400000,.9,{},[3.5,3.5,4,3,3]],["วีรยุทธ พ.","กรุงเทพฯ ใต้",400000,.72,{},[3.5,3,4,2,2.5]],["ปวีณา ร.","สมุทรปราการ",350000,.6,{},[3,2.5,3.5,2.5,3]]];
+  D={team:{name:"ทีมขาย (ตัวอย่าง)",cfg:{std:Object.assign({},DSTD),skills:DSKILLS.slice(),plan:[{id:"p1",t:"ประชุมเช้า 15 นาที ทุกวัน",m:"ทั้งทีม · 08:30 น.",done:true},{id:"p2",t:"โค้ช 1:1 วีรยุทธ เรื่องปิดการขาย",m:"สัปดาห์นี้ · 30 นาที",done:false},{id:"p3",t:"ซ้อมบทต่อรองราคา (role-play)",m:"ศุกร์ · อรุณีเป็นพี่เลี้ยง",done:false}]}},reps:[],logs:[]};
+  P.forEach((p,i)=>{const id="r"+(i+1),sk={};DSKILLS.forEach((s,j)=>sk[s]=p[5][j]);
+    D.reps.push({id,name:p[0],zone:p[1],target:p[2],active:true,skills:sk,idp:i===3?[{id:"i1",t:"ตามอรุณีไปพบลูกค้า 2 ครั้ง",m:"ดูวิธีปิดการขาย",due:"สัปดาห์ 1",done:true},{id:"i2",t:"ฝึกบทต่อรองราคากับหัวหน้า",m:"3 สถานการณ์: แพงไป / ขอคิดก่อน / เจ้าอื่นถูกกว่า",due:"สัปดาห์ 1",done:false},{id:"i3",t:"ติดตามดีลค้างภายใน 48 ชม.",m:"",due:"สัปดาห์ 2",done:false}]:[],notes:i===3?[{d:addD(t,-4),t:"ลูกค้าหลุดตอนต่อรองราคา 4 ราย ลดราคาเร็วเกินไป ตกลงฝึกถามความต้องการก่อนลดราคา"}]:[]});
+    let wdAll=0;for(let d=1;d<=dim(m);d++)if(isWork(m+"-"+pad(d)))wdAll++;let sold=0,wd=0;
+    for(let d=1;d<=last;d++){const ds=m+"-"+pad(d);if(new Date(ds+"T00:00").getDay()===0)continue;const sc=.6+p[3]*.5;
+      const add=(k,n,amt)=>{for(let z=0;z<n;z++)D.logs.push({id:uid("l"),rep:id,date:ds,kind:k,amount:amt||0,customer:k==="sale"||k==="quote"?["ร้านสมใจ","บจก. ไทยเจริญ","ร้านเจ๊หมวย","หจก. รุ่งเรือง","ร้านบ้านสวน"][Math.floor(rnd()*5)]:"",note:"",ts:Date.now()-z,by:"rep"})};
+      wd++;const due=p[2]*p[3]*wd/wdAll;add("call",Math.round((12+rnd()*8)*sc));add("meet",3+(rnd()<.5?1:0)+(rnd()<.3*sc?1:0));add("follow",Math.round(rnd()*3*sc));let q=2+(rnd()<.6?1:0)+(rnd()<.3?1:0);
+      while(sold<due-6000){const a=Math.round((12000+rnd()*16000)/100)*100;add("sale",1,a);sold+=a;}add("quote",q)}});
+  cfg.demo=true;saveC();persist();ui.v="dash";ui.m=m;saveUi();render();toast("ใส่ตัวอย่างแล้ว ✓")}
+
+window.addEventListener("storage",e=>{if(e.key===K.data||e.key===K.cfg){cfg=Object.assign(cfg,LS.get(K.cfg,{})||{});D=LS.get(K.data,D)||D;if(!$("#dlg").open)render()}});
+render();if(online())refresh(true);
+window.addEventListener("edm-member",()=>{if(ui.v==="set")vSet()});
+})();
+</script>
+<script src="../assets/icons.js?v=7"></script>
+<script>/* ไอคอนวาดเองบนแท็บ/โลโก้ */(function(){if(!window.EDM_ICON)return;var I={dash:["chart","#3D6FB2"],team:["users","#0E8C94"],log:["check","#15803D"],dev:["target","#6E55C0"],set:["sliders","#5B6B7F"]},B=["chart","#3D6FB2"];document.querySelectorAll("#tabs [data-v]").forEach(function(b){var k=I[b.dataset.v];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.trim().replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON(B[0],{color:B[1]}))}})()</script>
+<script src="../assets/member.js?v=91" defer></script>
+</body>
+</html>

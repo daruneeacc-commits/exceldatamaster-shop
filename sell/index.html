@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>บันทึกยอดขาย · ทีมขาย | Excel Data Master</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<meta name="theme-color" content="#1F2A37">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="../sales/icon-192.png"><link rel="apple-touch-icon" href="../sales/icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="บันทึกยอดขาย">
+<style>
+:root{--bg:#F2F5FA;--card:#fff;--ink:#1F2A37;--muted:#5B6879;--line:#DCE3EE;--soft:#EAF0F8;--accent:#2F5FA8;--ok:#2E7D4F;--warn:#B8510D;--dark:#1F2A37}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif;-webkit-text-size-adjust:100%}
+button,input{font:inherit;color:inherit}
+.wrap{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.hero{background:var(--dark);color:#EEF2F7;padding:calc(18px + env(safe-area-inset-top)) 18px 22px;display:flex;flex-direction:column;gap:14px}
+.hrow{display:flex;justify-content:space-between;align-items:center;gap:10px}.hrow small{color:#B8C3D1;display:block;font-size:.8rem}.hrow b{font-size:1.25rem}
+.out{border:0;background:#2E3B4C;color:#EEF2F7;border-radius:10px;padding:0 12px;min-height:40px;cursor:pointer;font-size:.85rem}
+.mcard{background:#2A3646;border-radius:16px;padding:14px 16px}.mcard .t{display:flex;justify-content:space-between;font-size:.82rem;color:#B8C3D1}.mcard .amt{font-size:1.8rem;font-weight:700;font-variant-numeric:tabular-nums;margin:2px 0 8px}
+.bar{height:9px;border-radius:99px;background:#3A4759;overflow:hidden}.bar i{display:block;height:100%;border-radius:99px;background:#8DB4F0}.bar.l{background:var(--soft)}.bar.l i{background:var(--accent)}.bar i.w{background:var(--warn)}
+.mcard small{display:block;color:#B8C3D1;font-size:.82rem;margin-top:8px}
+main{padding:16px;display:flex;flex-direction:column;gap:14px;flex:1}
+h2{font-size:1.05rem;margin:0}
+.card{background:var(--card);border-radius:16px;box-shadow:0 0 0 1px var(--line);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.act{background:#fff;border-radius:16px;box-shadow:0 0 0 1px var(--line);padding:12px;display:flex;flex-direction:column;gap:6px}.act span{font-size:.85rem;color:var(--muted)}.act b{font-size:1.5rem;font-variant-numeric:tabular-nums}.act b small{font-size:.85rem;color:var(--muted);font-weight:500}
+.plus{border:0;border-radius:12px;background:var(--accent);color:#fff;min-height:48px;font-weight:700;font-size:1.05rem;cursor:pointer}.plus:active{transform:scale(.97)}
+.f{display:flex;flex-direction:column;gap:4px}.f label{font-size:.82rem;color:var(--muted);font-weight:600}
+.in{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;min-height:50px;background:#fff;outline:none;font-size:1.05rem}.in:focus{border-color:var(--accent)}
+.btn{border:0;border-radius:12px;min-height:50px;padding:0 16px;font-weight:700;cursor:pointer;background:var(--dark);color:#fff;font-size:1rem}.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}.btn:disabled{opacity:.5}
+.list{display:flex;flex-direction:column}.list div{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--soft);font-size:.92rem}.list div:last-child{border-bottom:0}.list .del{border:0;background:none;color:var(--muted);min-width:44px;min-height:40px;cursor:pointer}
+.rk{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--soft)}.rk:last-child{border-bottom:0}.rk .n{width:26px;text-align:center;font-weight:700;color:var(--muted)}.rk .nm{flex:1;min-width:0}.rk .nm small{display:block;color:var(--muted);font-size:.78rem}.rk.me{background:var(--soft);border-radius:10px;padding:8px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:12px;box-shadow:0 0 0 1px var(--line);cursor:pointer;min-height:48px}.chk input{width:22px;height:22px;accent-color:var(--accent);flex:none;margin:1px 0 0}.chk small{display:block;color:var(--muted);font-size:.8rem}.chk.done b{text-decoration:line-through;color:var(--muted)}
+.names{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.names button{border:0;border-radius:14px;background:#fff;box-shadow:0 0 0 1px var(--line);min-height:64px;font-weight:600;cursor:pointer;padding:8px}.names button.on{box-shadow:0 0 0 2px var(--accent);background:var(--soft)}
+.center{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:24px 18px}.center h1{margin:0;font-size:1.4rem}.center p{margin:0;color:var(--muted)}
+.pend{background:#FFF3D6;color:#6B4E00;border-radius:12px;padding:10px 12px;font-size:.88rem;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:10;max-width:92vw;text-align:center}
+.foot{text-align:center;font-size:.75rem;color:var(--muted);padding:10px 0 calc(16px + env(safe-area-inset-bottom))}.foot a{color:inherit}
+.loading{opacity:.55;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script src="../assets/salesapi.js?v=1"></script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],S=window.EDM_SALES;
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),today=()=>ymd(new Date());
+const addD=(s,n)=>{const d=new Date(s+"T00:00");d.setDate(d.getDate()+n);return ymd(d)},weekOf=s=>{const d=new Date(s+"T00:00");d.setDate(d.getDate()-((d.getDay()+6)%7));return ymd(d)};
+const money=n=>Math.round(n||0).toLocaleString("en-US");
+const DAYS=["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"],MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const KIND={call:["โทร","📞"],meet:["นัดคุย","🤝"],quote:["เสนอราคา","📄"],follow:["ติดตาม","🔁"],sale:["ปิดการขาย","💰"]};
+const SK="edm_sell",QK="edm_sell_q";
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
+let ses=LS.get(SK,{})||{},Q=LS.get(QK,[])||[],V=null,pick="";
+const urlT=(new URLSearchParams(location.search).get("t")||"").trim().toLowerCase();
+if(urlT&&urlT!==ses.t){ses={t:urlT};LS.set(SK,ses);Q=[];LS.set(QK,Q)}
+if(urlT)history.replaceState(null,"",location.pathname);
+const save=()=>LS.set(SK,ses),saveQ=()=>LS.set(QK,Q);
+const A=$("#app");
+
+function fail(e){const k=e&&e.message;if(k==="no_access"){ses={t:ses.t};save();toast("กรุณาเข้าสู่ระบบอีกครั้ง");return start()}if(k==="team_expired"||k==="no_team")return stop(S.msg(e));toast(S.msg(e))}
+function stop(m){A.innerHTML=`<div class="center"><div style="font-size:3rem">⛔</div><h1>ใช้งานไม่ได้ตอนนี้</h1><p>${esc(m)}</p><button class="btn ghost" type="button" id="rt">ลองใหม่</button></div>`;$("#rt").onclick=start}
+
+function start(){if(!S||!S.api)return stop("ระบบทีมออนไลน์ยังไม่เปิดใช้งาน");
+  if(!ses.t)return askTeam();if(!ses.tok)return login();home()}
+function askTeam(){A.innerHTML=`<div class="center"><div style="font-size:3rem">📈</div><h1>บันทึกยอดขายทีม</h1><p>เปิดลิงก์ที่หัวหน้าทีมส่งให้ หรือใส่รหัสทีม</p>
+  <div class="f"><label for="tc">รหัสทีม</label><input class="in" id="tc" autocomplete="off" autocapitalize="none" maxlength="12" placeholder="เช่น ab12cd34"></div><button class="btn" type="button" id="go">ต่อไป</button></div>`;
+  $("#go").onclick=()=>{const v=$("#tc").value.trim().toLowerCase();if(!/^[a-z0-9]{6,12}$/.test(v))return toast("รหัสทีมไม่ถูกต้อง");ses={t:v};save();login()}}
+async function login(){A.innerHTML=`<div class="center"><p>กำลังโหลดรายชื่อทีม…</p></div>`;
+  let L;try{L=await S.call({a:"r_list",team:ses.t})}catch(e){return fail(e)}
+  A.innerHTML=`<div class="center"><div><small style="color:var(--muted)">ทีม</small><h1>${esc(L.name)}</h1></div><p>เลือกชื่อของคุณ แล้วใส่ PIN ที่หัวหน้าทีมให้</p>
+  ${L.reps.length?`<div class="names" role="group" aria-label="ชื่อเซลล์">${L.reps.map(r=>`<button type="button" data-r="${esc(r.id)}" aria-pressed="false">${esc(r.name)}</button>`).join("")}</div>`:`<p class="pend">ยังไม่มีชื่อเซลล์ที่ตั้ง PIN แล้ว ให้หัวหน้าทีมตั้ง PIN ก่อน</p>`}
+  <div class="f"><label for="pin">PIN</label><input class="in" id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="••••"></div>
+  <button class="btn" type="button" id="ok" disabled>เข้าใช้งาน</button><button class="btn ghost" type="button" id="chg">เปลี่ยนทีม</button></div>`;
+  const upd=()=>{$("#ok").disabled=!(pick&&/^\d{4,6}$/.test($("#pin").value))};
+  $$("[data-r]").forEach(b=>b.onclick=()=>{pick=b.dataset.r;$$("[data-r]").forEach(x=>{x.classList.toggle("on",x===b);x.setAttribute("aria-pressed",x===b)});$("#pin").focus();upd()});
+  $("#pin").oninput=upd;$("#pin").onkeydown=e=>{if(e.key==="Enter"&&!$("#ok").disabled)$("#ok").click()};
+  $("#chg").onclick=()=>{ses={};save();askTeam()};
+  $("#ok").onclick=async()=>{$("#ok").disabled=true;try{const r=await S.call({a:"r_login",team:ses.t,rep:pick,pin:$("#pin").value});ses={t:ses.t,tok:r.tok,rep:r.rep,name:r.name};save();home()}
+    catch(e){const k=e.message;if(k==="pin"){toast("PIN ไม่ถูกต้อง"+(e.res&&e.res.left>=0?" (เหลือ "+e.res.left+" ครั้ง)":""));$("#pin").value="";$("#pin").focus()}else fail(e);upd()}}}
+
+/* ---------- หน้าหลักเซลล์ ---------- */
+async function load(){const t=today(),ms=t.slice(0,8)+"01",wk=weekOf(t);V=await S.call({a:"r_get",team:ses.t,tok:ses.tok,from:wk<ms?wk:ms,to:t.slice(0,8)+"31"});return V}
+async function home(){if(!V)A.innerHTML=`<div class="center"><p>กำลังโหลด…</p></div>`;try{await load()}catch(e){if(!V)return fail(e);toast(S.msg(e))}flush();draw()}
+function mine(){const L=(V.logs||[]).slice();Q.forEach(q=>{if(q.a==="r_log"&&!L.some(l=>l.id===q.log.id))L.push(Object.assign({ts:Date.now(),by:"rep",pending:true},q.log))});return L}
+function draw(){const t=today(),m=t.slice(0,7),L=mine(),ML=L.filter(l=>l.date.slice(0,7)===m),me=V.me,std=(V.team&&V.team.std)||{};
+  const amt=ML.filter(l=>l.kind==="sale").reduce((a,l)=>a+(+l.amount||0),0),tg=+me.target||0,pct=tg?Math.round(amt/tg*100):0;
+  const wk=weekOf(t),WL=L.filter(l=>l.date>=wk&&l.date<=addD(wk,6)),TL=L.filter(l=>l.date===t);
+  const rank=(V.rank||[]).map(r=>r.id===me.id?Object.assign({},r,{amount:amt,pct}):r).sort((a,b)=>b.pct-a.pct||b.amount-a.amount),pos=rank.findIndex(r=>r.id===me.id)+1;
+  const d=new Date();
+  A.innerHTML=`<div class="hero"><div class="hrow"><div><small>${DAYS[d.getDay()]} ${d.getDate()} ${MS[d.getMonth()]} · ${esc(V.team.name)}</small><b>สวัสดี ${esc(me.name)}</b></div><button class="out" type="button" id="lo">ออกจากระบบ</button></div>
+  <div class="mcard"><div class="t"><span>ยอดขายเดือนนี้</span><span>${pos?"อันดับ "+pos+" จาก "+rank.length:""}</span></div><div class="amt">฿${money(amt)}</div><div class="bar"><i style="width:${Math.min(pct,100)}%"></i></div>
+  <small>${tg?pct+"% ของเป้า ฿"+money(tg)+(amt<tg?" · ขาดอีก ฿"+money(tg-amt):" · ถึงเป้าแล้ว 🎉"):"หัวหน้ายังไม่ได้ตั้งเป้า"}</small></div></div>
+  <main id="mn">${Q.length?`<div class="pend"><span>รอส่ง ${Q.length} รายการ (ไม่มีอินเทอร์เน็ต)</span><button class="btn ghost" style="min-height:40px" type="button" id="rs">ส่งอีกครั้ง</button></div>`:""}
+  <h2>กิจกรรมวันนี้</h2><div class="acts">${["call","meet","quote","follow"].map(k=>{const n=TL.filter(l=>l.kind===k).length,w=WL.filter(l=>l.kind===k).length,g=+std[k]||0;return`<div class="act"><span>${KIND[k][1]} ${KIND[k][0]}</span><b>${n} <small>วันนี้</small></b>
+  ${g?`<div class="bar l"><i class="${w/g<.7?"w":""}" style="width:${Math.min(w/g*100,100)}%"></i></div><span style="font-size:.76rem">สัปดาห์นี้ ${w}/${g}</span>`:`<span style="font-size:.76rem">สัปดาห์นี้ ${w}</span>`}
+  <button class="plus" type="button" data-k="${k}" aria-label="เพิ่ม${KIND[k][0]} 1 ครั้ง">＋ 1</button></div>`}).join("")}</div>
+  <section class="card"><h2>💰 บันทึกการปิดการขาย</h2><div class="f"><label for="sa">ยอดขาย (บาท)</label><input class="in" id="sa" type="number" inputmode="decimal" min="0" placeholder="เช่น 25000"></div>
+  <div class="f"><label for="sc">ลูกค้า</label><input class="in" id="sc" maxlength="80" placeholder="ชื่อร้าน / บริษัท"></div><button class="btn" type="button" id="sv">บันทึกยอดขาย</button></section>
+  <section class="card"><h2>วันนี้บันทึกแล้ว ${TL.length} รายการ</h2>${TL.length?`<div class="list">${TL.slice().sort((a,b)=>b.ts-a.ts).slice(0,30).map(l=>`<div><span>${KIND[l.kind][1]} ${KIND[l.kind][0]}${l.kind==="sale"?" · ฿"+money(l.amount):""}${l.customer?" · "+esc(l.customer):""}${l.pending?" · <small>รอส่ง</small>":""}</span>${l.by==="rep"&&!l.pending?`<button class="del" type="button" data-del="${esc(l.id)}" aria-label="ลบรายการ">ลบ</button>`:""}</div>`).join("")}</div>`:`<p style="margin:0;color:var(--muted)">กด ＋1 ทุกครั้งที่โทร นัด เสนอราคา หรือติดตามลูกค้า</p>`}</section>
+  ${(me.idp||[]).length?`<section class="card"><h2>🎯 สิ่งที่ฉันกำลังพัฒนา</h2>${me.idp.map(t=>`<label class="chk ${t.done?"done":""}"><input type="checkbox" data-idp="${esc(t.id)}" ${t.done?"checked":""}><span><b>${esc(t.t)}</b>${t.m||t.due?`<small>${esc([t.m,t.due].filter(Boolean).join(" · "))}</small>`:""}</span></label>`).join("")}</section>`:""}
+  <section class="card"><h2>🏆 อันดับทีมเดือนนี้</h2>${rank.map((r,i)=>`<div class="rk ${r.id===me.id?"me":""}"><span class="n">${i+1}</span><span class="nm"><b>${esc(r.name)}</b><small>${r.pct}% ของเป้า</small></span></div>`).join("")}</section>
+  <button class="btn ghost" type="button" id="rf">⟳ อัปเดตข้อมูล</button></main><div class="foot">ระบบดูแลทีมขาย · <a href="https://exceldatamaster.com/">exceldatamaster.com</a></div>`;
+  $("#lo").onclick=()=>{if(!confirm("ออกจากระบบ?"))return;ses={t:ses.t};save();V=null;login()};
+  $("#rf").onclick=()=>{$("#mn").classList.add("loading");home()};if($("#rs"))$("#rs").onclick=()=>flush(true);
+  $$("[data-k]").forEach(b=>b.onclick=()=>{send({kind:b.dataset.k});if(navigator.vibrate)navigator.vibrate(15)});
+  $("#sv").onclick=()=>{const a=+$("#sa").value||0;if(a<=0){toast("ใส่ยอดขาย");return $("#sa").focus()}send({kind:"sale",amount:a,customer:$("#sc").value.trim()},"บันทึกยอดขายแล้ว ✓")};
+  $$("[data-del]").forEach(b=>b.onclick=async()=>{if(!confirm("ลบรายการนี้?"))return;b.disabled=true;try{await S.call({a:"r_del",team:ses.t,tok:ses.tok,id:b.dataset.del});V.logs=V.logs.filter(l=>l.id!==b.dataset.del);draw()}catch(e){fail(e);b.disabled=false}});
+  $$("[data-idp]").forEach(c=>c.onchange=async()=>{const it=V.me.idp.find(t=>t.id===c.dataset.idp);try{await S.call({a:"r_idp",team:ses.t,tok:ses.tok,id:it.id,done:c.checked});it.done=c.checked;draw()}catch(e){c.checked=!c.checked;fail(e)}})}
+function send(x,msg){const log=Object.assign({id:"m"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:today()},x);
+  Q.push({a:"r_log",log});saveQ();draw();toast(msg||"＋1 "+KIND[x.kind][0]);flush()}
+let flushing=false;
+async function flush(loud){if(flushing||!Q.length||!ses.tok)return;flushing=true;let sent=0;
+  while(Q.length){const q=Q[0];try{const r=await S.call({a:"r_log",team:ses.t,tok:ses.tok,log:q.log});Q.shift();saveQ();if(V){V.logs=V.logs.filter(l=>l.id!==r.log.id);V.logs.push(r.log)}sent++}
+    catch(e){const k=e.message;if(k==="kind"||k==="date"){Q.shift();saveQ();continue}if(k==="no_access"||k==="team_expired"){flushing=false;return fail(e)}if(loud)toast(S.msg(e));break}}
+  flushing=false;const ae=document.activeElement;if(V&&$("#mn")&&!(ae&&ae.tagName==="INPUT"&&$("#mn").contains(ae)))draw()}
+window.addEventListener("online",()=>flush());
+start();
+})();
+</script>
+</body>
+</html>
