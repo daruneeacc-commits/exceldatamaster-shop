@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="th" data-theme="light" data-tone="lav">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Project Planner วางแผนโปรเจกต์ Gantt Chart ภาษาไทย ใช้ออนไลน์ | Excel Data Master</title>
+<meta name="description" content="วางแผนโปรเจกต์ด้วย Gantt Chart ภาษาไทย กำหนดวันเริ่ม-วันจบ ผู้รับผิดชอบ ติดตามสถานะ รอเริ่ม / กำลังทำ / เสร็จแล้ว เห็น Timeline ทุกงานในหน้าเดียว แดชบอร์ดความคืบหน้า ใช้ได้ทั้งมือถือและคอม">
+<link rel="canonical" href="https://exceldatamaster.com/plan/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{--bg:#F6F4FC;--card:#fff;--ink:#27213D;--muted:#6C6585;--line:#E3DDF2;--soft:#EFEBFA;--accent:#5A43B5;--accent2:#7B66D1;--danger:#C0392B;--ok:#2E7D32;
+  --pB:#FBD5D5;--pT:#B3404A;--pS:#F2A7A7;--wB:#FFF0C7;--wT:#946200;--wS:#F2CB6B;--dB:#DDF2D8;--dT:#2E7D32;--dS:#9ED493;--dw:26px}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}a{color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1400px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px}.brand{font-weight:700;text-decoration:none;color:var(--accent);display:flex;align-items:center;gap:8px}.brand .edm-ic{width:26px;height:26px}.brand small{color:var(--muted);font-weight:500}.nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.tabs{max-width:1400px;margin:10px auto 0;padding:0 16px;display:flex;gap:6px;overflow-x:auto}.tabs button{flex:none;border:0;border-radius:999px;padding:7px 16px;background:var(--card);box-shadow:0 0 0 1px var(--line);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px}.tabs button .edm-ic{width:22px;height:22px}.tabs button.on{background:var(--accent);color:#fff;box-shadow:none}
+main{max-width:1400px;margin:0 auto;padding:12px 16px 40px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}.card h2{font-size:1.05rem;margin:0;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.card h2 small{font-weight:400;color:var(--muted);font-size:.8rem}
+.btn{border:0;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;background:var(--soft);justify-content:center;text-decoration:none;white-space:nowrap}.btn.main{background:var(--accent);color:#fff}.btn.ghost{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:6px 12px;font-size:.85rem}.btn.danger{color:var(--danger)}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;outline:none}.in-:focus{border-color:var(--accent)}textarea.in-{min-height:64px;resize:vertical}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}.f label{font-size:.8rem;font-weight:600;color:var(--muted)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 90px;gap:10px}
+.seg{display:flex;background:var(--soft);border-radius:999px;padding:3px;gap:3px}.seg button{flex:1;border:0;background:none;border-radius:999px;padding:7px 12px;cursor:pointer;font-weight:600;font-size:.86rem;color:var(--muted);white-space:nowrap}.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px var(--line);border-left:5px solid var(--k,var(--accent))}.kpi span{display:block;font-size:.8rem;color:var(--muted)}.kpi b{display:block;font-size:1.4rem}.kpi small{color:var(--muted);font-size:.76rem}
+dialog{border:0;border-radius:18px;padding:0;width:min(520px,96vw)}dialog::backdrop{background:rgba(30,20,60,.45)}.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}.db{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100}
+.note{font-size:.8rem;color:var(--muted)}
+/* หัวโปรเจกต์ */
+.ph{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.ph h1{margin:0;font-size:1.3rem;flex:1;min-width:200px;display:flex;align-items:center;gap:8px}.ph h1 i{width:14px;height:14px;border-radius:4px;background:var(--pc,var(--accent));flex:none}
+.pjs{display:flex;gap:6px;overflow-x:auto;padding:2px}.pjs button{flex:none;border:0;border-radius:999px;padding:6px 14px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);cursor:pointer;font-weight:600;font-size:.86rem;display:flex;gap:6px;align-items:center}.pjs button i{width:10px;height:10px;border-radius:3px;background:var(--pc)}.pjs button.on{background:var(--ink);color:#fff;box-shadow:none}
+.pinfo{display:grid;grid-template-columns:auto auto 1fr;gap:6px 18px;align-items:center;font-size:.9rem}.pinfo .lb{background:var(--soft);border-radius:8px;padding:5px 10px;font-weight:600;color:var(--accent)}
+.pbar{height:10px;border-radius:99px;background:var(--soft);overflow:hidden}.pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:99px}
+/* Gantt */
+.gtitle{background:var(--accent);color:#fff;text-align:center;font-weight:700;font-size:1.15rem;padding:8px;border-radius:12px 12px 0 0;margin:-16px -16px 0}
+.gw{overflow:auto;border:1px solid var(--line);border-radius:10px;max-height:72vh;background:#fff}
+table.gt{border-collapse:separate;border-spacing:0;font-size:.84rem;table-layout:fixed}
+.gt th,.gt td{border-bottom:1px solid #EEEAF6;border-right:1px solid #EEEAF6;padding:0;height:34px;white-space:nowrap}
+.gt thead th{position:sticky;top:0;z-index:3;background:#6C55C6;color:#fff;font-weight:600;font-size:.8rem}
+.gt thead tr.mo th{height:24px;background:#5A43B5}.gt thead tr.dy th{top:24px;height:46px}
+.gt th.c-n,.gt td.c-n{position:sticky;left:0;z-index:2;background:#fff;text-align:left;padding:0 8px;width:220px;max-width:220px;overflow:hidden;text-overflow:ellipsis;border-right:2px solid #DDD5F2}
+.gt thead th.c-n{z-index:5;background:#5A43B5}
+.gt td.c-n{cursor:pointer;font-weight:500}.gt td.c-n:hover{color:var(--accent)}.gt td.c-n small{color:var(--muted);font-weight:400;margin-right:6px}
+.gt .c-w{width:110px;padding:0 6px;overflow:hidden;text-overflow:ellipsis;text-align:left}.gt .c-s,.gt .c-e{width:92px;text-align:center}.gt .c-d{width:52px;text-align:center}.gt .c-st{width:118px;text-align:center;padding:0 6px}
+.gt td.c-w{color:var(--muted)}
+@media(min-width:701px){.gt .c-w,.gt .c-s,.gt .c-e,.gt .c-d,.gt .c-st{position:sticky;z-index:2;background:#fff}.gt .c-w{left:220px}.gt .c-s{left:330px}.gt .c-e{left:422px}.gt .c-d{left:514px}.gt .c-st{left:566px;box-shadow:2px 0 0 #DDD5F2}
+  .gt thead th.c-w,.gt thead th.c-s,.gt thead th.c-e,.gt thead th.c-d,.gt thead th.c-st{z-index:5;background:#5A43B5}.gt tr.grp td.c-w,.gt tr.grp td.c-s,.gt tr.grp td.c-e,.gt tr.grp td.c-d,.gt tr.grp td.c-st{background:var(--soft)}.gt tr.qa td{background:#FCFBFF}}
+.gt th.day{width:var(--dw);min-width:var(--dw);max-width:var(--dw);font-size:.68rem;font-weight:500;line-height:1.1;text-align:center;writing-mode:vertical-rl;transform:rotate(180deg);padding:4px 0}
+.gt th.day.we{background:#8A77D6}.gt th.day.td{background:#E05D5D}
+.gt.wk th.day{writing-mode:horizontal-tb;transform:none;font-size:.62rem}
+.gt td.tl{position:relative;background-image:repeating-linear-gradient(90deg,transparent 0 calc(var(--dw) - 1px),#F1EEF8 calc(var(--dw) - 1px) var(--dw));padding:0}
+.bar{position:absolute;top:7px;height:20px;border-radius:6px;background:var(--pS);cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05);overflow:hidden;font-size:.7rem;line-height:20px;padding:0 6px;color:#5a2a2a}
+.bar.w{background:var(--wS);color:#5a4200}.bar.d{background:var(--dS);color:#1e4d1e}.bar.late{box-shadow:inset 0 0 0 2px var(--danger)}
+.tdl{position:absolute;top:0;bottom:0;width:2px;background:rgba(224,93,93,.55);pointer-events:none}
+.gt tr.grp td{background:var(--soft);font-weight:700;height:30px}.gt tr.grp td.c-n{background:var(--soft);color:var(--accent)}
+.gt tr.grp td.c-n i{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--pc);margin-right:6px}
+.st{appearance:none;-webkit-appearance:none;border:0;border-radius:999px;padding:3px 22px 3px 10px;font-size:.78rem;font-weight:600;cursor:pointer;width:100%;background:var(--pB) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 8px center;color:var(--pT)}
+.st.w{background-color:var(--wB);color:var(--wT)}.st.d{background-color:var(--dB);color:var(--dT)}
+.late-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--danger);margin-left:6px;vertical-align:middle}
+.qa td{background:#FCFBFF}.qa input{border:1px dashed #CFC6EC;border-radius:8px;padding:4px 8px;width:100%;outline:none;background:#fff}.qa input:focus{border-color:var(--accent)}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);align-items:center}.leg i{display:inline-block;width:18px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+/* ภาพรวม */
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:14px}@media(max-width:900px){.g2{grid-template-columns:1fr}}
+.donut{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;flex:none}.donut i{width:98px;height:98px;border-radius:50%;background:#fff;display:grid;place-items:center;font-style:normal;text-align:center;line-height:1.2}.donut i b{font-size:1.5rem;display:block}
+.dl{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.dl ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;font-size:.9rem}.dl li i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.pl{display:flex;flex-direction:column;gap:12px}.pl .it{display:flex;flex-direction:column;gap:4px;cursor:pointer}.pl .it div{display:flex;justify-content:space-between;gap:8px;font-size:.9rem}.pl .it small{color:var(--muted)}
+.ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}.ul li{display:flex;gap:10px;align-items:center;padding:8px 2px;border-bottom:1px dashed var(--line);font-size:.9rem;cursor:pointer}.ul li span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ul li em{font-style:normal;font-size:.78rem;font-weight:600;border-radius:999px;padding:2px 9px;background:var(--soft);color:var(--accent);flex:none}.ul li em.late{background:#FBE1DE;color:var(--danger)}
+.ppl{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}.ppl div{background:var(--soft);border-radius:12px;padding:8px 12px;font-size:.88rem}.ppl b{display:block}
+.empty{text-align:center;padding:30px 16px;align-items:center}
+.sw{display:flex;gap:8px;flex-wrap:wrap}.sw label{cursor:pointer}.sw input{display:none}.sw i{display:block;width:28px;height:28px;border-radius:50%;box-shadow:0 0 0 2px #fff,0 0 0 3px transparent}.sw input:checked+i{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
+.plist{display:flex;flex-direction:column;gap:8px}.plist div{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;box-shadow:0 0 0 1px var(--line)}.plist i{width:14px;height:14px;border-radius:4px;flex:none}.plist span{flex:1;min-width:0}.plist small{color:var(--muted)}
+@media(max-width:700px){.gt .c-w,.gt .c-s,.gt .c-e,.gt .c-d{display:none}.gt th.c-n,.gt td.c-n{width:150px;max-width:150px}.gt .c-st{width:96px}.pinfo{grid-template-columns:auto 1fr}.row3{grid-template-columns:1fr 1fr}.row3 .f:last-child{grid-column:1/-1}:root{--dw:22px}}
+@media print{@page{size:A4 landscape;margin:8mm}header.top,.tabs,.toast,dialog,.edm-bar,.noprint,.qa{display:none!important}body{background:#fff}main{padding:0;max-width:none}.card{box-shadow:none;padding:0}.gw{max-height:none;overflow:visible;border:0}.gt thead th{position:static}.gt th.c-n,.gt td.c-n{position:static}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+<link rel="stylesheet" href="../assets/pastel.css?v=8">
+<script src="../assets/pastel.js?v=2" defer></script>
+<link rel="stylesheet" href="../assets/skin.css?v=1">
+<script src="../assets/skin.js?v=1"></script>
+<script src="../assets/lock.js?v=3"></script>
+<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="Project Planner วางแผนโปรเจกต์ Gantt Chart | Excel Data Master"><meta property="og:description" content="วางแผนงาน กำหนดวันเริ่ม-วันจบ ติดตามสถานะ รอเริ่ม / กำลังทำ / เสร็จแล้ว เห็น Timeline ทุกงานในหน้าเดียว"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-plan.jpg?v=1"><meta property="og:url" content="https://exceldatamaster.com/plan/">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-plan.jpg?v=1">
+<meta name="theme-color" content="#5A43B5">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="แผนงาน">
+</head>
+<body>
+<header class="top"><div class="in"><a class="brand" href="/">📊 Excel Data Master <small>· Project Planner</small></a><nav class="nav"></nav></div></header>
+<div class="tabs" id="tabs"><button data-v="gantt">📊 แผนงาน (Gantt)</button><button data-v="dash">📈 ภาพรวม</button><button data-v="set">⚙️ ตั้งค่า</button></div>
+<main id="main"></main>
+<dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button">✕</button></div><div class="db" id="dlgB"></div></dialog>
+<div class="toast" id="toast" hidden></div>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่เต็ม)");return false}}};
+const K={items:"edm_plan_tasks",cfg:"edm_plan_cfg",ui:"edm_plan_ui"};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),today=()=>ymd(new Date());
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],MF=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+const thD=s=>{if(!s)return"-";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const addD=(s,n)=>{const d=new Date(s+"T00:00");d.setDate(d.getDate()+n);return ymd(d)},dDiff=(a,b)=>Math.round((new Date(b+"T00:00")-new Date(a+"T00:00"))/864e5);
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
+const PC=["#5A43B5","#2F80C9","#2E9E7B","#D9822B","#D0457A","#7A8B99"];
+const ST={p:["รอเริ่ม","Pending"],w:["กำลังทำ","WIP"],d:["เสร็จแล้ว","Completed"]};
+let T=LS.get(K.items,[])||[],cfg=Object.assign({name:"",projects:[],people:[],demo:false},LS.get(K.cfg,{})||{}),ui=Object.assign({v:"gantt",pid:"",zoom:"d"},LS.get(K.ui,{})||{});
+const save=()=>LS.set(K.items,T),saveC=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,ui);
+const P=id=>cfg.projects.find(p=>p.id===id);
+const dur=t=>Math.max(1,dDiff(t.start,t.end)+1);
+const isLate=t=>t.st!=="d"&&t.end&&t.end<today();
+const tasksOf=pid=>T.filter(t=>!pid||t.pid===pid).sort((a,b)=>a.start<b.start?-1:a.start>b.start?1:(a.end<b.end?-1:1));
+function span(L,p){let s=p&&p.start||"",e=p&&p.end||"";L.forEach(t=>{if(!s||t.start<s)s=t.start;if(!e||t.end>e)e=t.end});if(!s)s=today();if(!e||e<s)e=addD(s,13);return[s,e]}
+function prog(L){const n=L.length,d=L.filter(t=>t.st==="d").length;return{n,d,w:L.filter(t=>t.st==="w").length,p:n?Math.round(d/n*100):0,late:L.filter(isLate).length}}
+function render(){$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));({gantt:vGantt,dash:vDash,set:vSet}[ui.v]||vGantt)()}
+$("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b){ui.v=b.dataset.v;saveUi();render()}};
+
+function emptyHello(M){M.innerHTML=`<div class="card empty"><div style="font-size:3rem">📊</div><h2 style="justify-content:center">วางแผนโปรเจกต์แรกของคุณ</h2><p class="note" style="max-width:520px;margin:0 auto">ใส่งานที่ต้องทำ วันเริ่ม วันจบ และผู้รับผิดชอบ ระบบวาด Gantt Chart ให้เอง เปลี่ยนสถานะ รอเริ่ม → กำลังทำ → เสร็จแล้ว ได้ในคลิกเดียว</p>
+  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn main" id="eNew" type="button">＋ สร้างโปรเจกต์</button><button class="btn ghost" id="eDemo" type="button">✨ ลองดูตัวอย่าง</button></div></div>`;
+  $("#eNew").onclick=()=>projDlg();$("#eDemo").onclick=demo}
+
+/* ---------- แผนงาน (Gantt) ---------- */
+function vGantt(){const M=$("#main");if(!cfg.projects.length)return emptyHello(M);
+  if(ui.pid&&!P(ui.pid))ui.pid="";
+  const p=P(ui.pid),L=tasksOf(ui.pid),[s,e]=span(L,p),pr=prog(L),days=dDiff(s,e)+1,wk=ui.zoom==="w";
+  const dwN=wk?10:(innerWidth<700?22:26),mob=innerWidth<=700;document.documentElement.style.setProperty("--dw",dwN+"px");
+  const pj=`<div class="pjs noprint"><button type="button" data-pj="" class="${!ui.pid?"on":""}">ทุกโปรเจกต์</button>${cfg.projects.map(x=>`<button type="button" data-pj="${x.id}" class="${ui.pid===x.id?"on":""}" style="--pc:${x.c}"><i></i>${esc(x.name)}</button>`).join("")}<button type="button" data-pj="+">＋ โปรเจกต์</button></div>`;
+  const dl=[];for(let i=0;i<days;i++)dl.push(addD(s,i));
+  const td=today(),ti=dDiff(s,td);
+  // แถวเดือน
+  let mo="",cur="",cnt=0;dl.forEach((d,i)=>{const k=d.slice(0,7);if(k!==cur){if(cur)mo+=`<th colspan="${cnt}">${MS[+cur.slice(5)-1]} ${+cur.slice(0,4)+543}</th>`;cur=k;cnt=0}cnt++});mo+=`<th colspan="${cnt}">${MS[+cur.slice(5)-1]} ${+cur.slice(0,4)+543}</th>`;
+  const dy=dl.map(d=>{const dt=new Date(d+"T00:00"),w=dt.getDay(),lb=wk?(w===1?+d.slice(8):""):(+d.slice(8)+" "+MS[+d.slice(5,7)-1]);return`<th class="day${w===0||w===6?" we":""}${d===td?" td":""}" title="${thD(d)}">${lb}</th>`}).join("");
+  const bar=t=>{const a=dDiff(s,t.start),n=dur(t);return`<div class="bar ${t.st==="p"?"":t.st}${isLate(t)?" late":""}" data-id="${t.id}" style="left:calc(var(--dw)*${a});width:calc(var(--dw)*${n} - 2px)" title="${esc(t.name)} · ${thD(t.start)} – ${thD(t.end)} (${n} วัน) · ${ST[t.st][0]}">${wk||n<4?"":esc(t.name)}</div>`};
+  const tl=t=>`<td class="tl" colspan="${days}">${ti>=0&&ti<days?`<span class="tdl" style="left:calc(var(--dw)*${ti} + var(--dw)/2)"></span>`:""}${t?bar(t):""}</td>`;
+  const row=(t,i)=>`<tr><td class="c-n" data-ed="${t.id}" title="${esc(t.name)}"><small>${i+1}</small>${esc(t.name)}${isLate(t)?'<span class="late-dot" title="เลยกำหนด"></span>':""}</td><td class="c-w">${esc(t.who||"-")}</td><td class="c-s">${thD(t.start)}</td><td class="c-e">${thD(t.end)}</td><td class="c-d">${dur(t)}</td><td class="c-st"><select class="st ${t.st==="p"?"":t.st}" data-st="${t.id}">${Object.keys(ST).map(k=>`<option value="${k}"${t.st===k?" selected":""}>${ST[k][0]}</option>`).join("")}</select></td>${tl(t)}</tr>`;
+  let body="";
+  if(p){body=L.map(row).join("")}
+  else cfg.projects.forEach(x=>{const Lx=L.filter(t=>t.pid===x.id);if(!Lx.length&&L.length)return;const q=prog(Lx);body+=`<tr class="grp"><td class="c-n" style="--pc:${x.c}" data-pj2="${x.id}"><i></i>${esc(x.name)}</td><td class="c-w"></td><td class="c-s"></td><td class="c-e"></td><td class="c-d"></td><td class="c-st" style="font-weight:500;color:var(--muted);font-size:.78rem">${q.d}/${q.n} · ${q.p}%</td><td class="tl" colspan="${days}"></td></tr>`+Lx.map(row).join("")});
+  const qa=`<tr class="qa"><td class="c-n"><input id="qaN" placeholder="＋ พิมพ์ชื่องานแล้วกด Enter"></td><td class="c-w"><input id="qaW" placeholder="ผู้รับผิดชอบ" list="ppl"></td><td class="c-s"><input id="qaS" type="date" value="${L.length?addD(L[L.length-1].end,1):(p&&p.start||td)}"></td><td class="c-e"><input id="qaD" type="number" min="1" value="3" title="จำนวนวัน" style="text-align:center"></td><td class="c-d" style="font-size:.75rem;color:var(--muted)">วัน</td><td class="c-st"><button class="btn sm main" id="qaB" type="button" style="width:100%">เพิ่ม</button></td><td class="tl" colspan="${days}"></td></tr>`;
+  const pc=p?p.c:"var(--accent)";
+  M.innerHTML=`${pj}
+  <div class="card"><div class="gtitle">${esc(p?p.name:(cfg.name?cfg.name+" · ":"")+"แผนงานทุกโปรเจกต์")}</div>
+    <div class="ph"><div class="pinfo"><span class="lb">วันที่เริ่ม${p?"โปรเจกต์":""}</span><b>${thD(s)}</b><span class="lb">วันที่สิ้นสุด${p?"โปรเจกต์":""}</span><b>${thD(e)}</b><span class="note">${days} วัน${e>=td&&s<=td?" · เหลืออีก "+dDiff(td,e)+" วัน":e<td?" · ครบกำหนดแล้ว":""}</span></div>
+      <div style="flex:1;min-width:220px"><div style="display:flex;justify-content:space-between;font-size:.85rem"><span>ความคืบหน้า <b>${pr.p}%</b></span><span class="note">เสร็จ ${pr.d} / ${pr.n} งาน${pr.late?` · <b style="color:var(--danger)">เลยกำหนด ${pr.late}</b>`:""}</span></div><div class="pbar"><i style="width:${pr.p}%"></i></div></div>
+      <div class="noprint" style="display:flex;gap:6px;flex-wrap:wrap"><div class="seg"><button type="button" data-z="d" class="${wk?"":"on"}">รายวัน</button><button type="button" data-z="w" class="${wk?"on":""}">รายสัปดาห์</button></div>${p?`<button class="btn sm ghost" type="button" id="pEdit">✏️ โปรเจกต์</button>`:""}<button class="btn sm ghost" type="button" onclick="print()">🖨️ พิมพ์</button><button class="btn sm main" type="button" id="tAdd">＋ เพิ่มงาน</button></div></div>
+    <div class="gw" id="gw"><table class="gt${wk?" wk":""}" style="width:${(mob?246:684)+days*dwN}px"><thead><tr class="mo"><th class="c-n" rowspan="2">งานที่ต้องทำ</th><th class="c-w" rowspan="2">ผู้รับผิดชอบ</th><th class="c-s" rowspan="2">วันที่เริ่ม</th><th class="c-e" rowspan="2">วันที่สิ้นสุด</th><th class="c-d" rowspan="2">ระยะเวลา<br>(วัน)</th><th class="c-st" rowspan="2">สถานะ</th>${mo}</tr><tr class="dy">${dy}</tr></thead><tbody>${body||`<tr><td class="c-n" style="color:var(--muted)">ยังไม่มีงาน</td><td class="c-w"></td><td class="c-s"></td><td class="c-e"></td><td class="c-d"></td><td class="c-st"></td>${tl(null)}</tr>`}${p?qa:""}</tbody></table></div>
+    <div class="leg"><span><i style="background:var(--pS)"></i>Pending · รอเริ่ม</span><span><i style="background:var(--wS)"></i>WIP · กำลังทำ</span><span><i style="background:var(--dS)"></i>Completed · เสร็จแล้ว</span><span><i style="background:#fff;box-shadow:inset 0 0 0 2px var(--danger)"></i>เลยกำหนด</span><span><i style="background:rgba(224,93,93,.55);width:3px"></i>วันนี้</span>${p?"":`<span class="noprint">· เลือกโปรเจกต์ด้านบนเพื่อเพิ่มงานเร็ว ๆ ในตาราง</span>`}</div>
+  </div><datalist id="ppl">${people().map(n=>`<option value="${esc(n)}">`).join("")}</datalist>`;
+  M.querySelectorAll("[data-pj]").forEach(b=>b.onclick=()=>{if(b.dataset.pj==="+")return projDlg();ui.pid=b.dataset.pj;saveUi();render()});
+  M.querySelectorAll("[data-pj2]").forEach(b=>b.onclick=()=>{ui.pid=b.dataset.pj2;saveUi();render()});
+  M.querySelectorAll("[data-z]").forEach(b=>b.onclick=()=>{ui.zoom=b.dataset.z;saveUi();render()});
+  M.querySelectorAll("[data-ed],.bar").forEach(b=>b.onclick=()=>taskDlg(b.dataset.ed||b.dataset.id));
+  M.querySelectorAll("[data-st]").forEach(sel=>sel.onchange=()=>{const t=T.find(x=>x.id===sel.dataset.st);if(!t)return;t.st=sel.value;save();render();if(t.st==="d")toast("🎉 เสร็จแล้ว: "+t.name)});
+  const pe=$("#pEdit");if(pe)pe.onclick=()=>projDlg(p.id);
+  $("#tAdd").onclick=()=>taskDlg(null);
+  const qb=$("#qaB");if(qb){const go=()=>{const n=$("#qaN").value.trim();if(!n){$("#qaN").focus();return}const st=$("#qaS").value||td,d=Math.max(1,+$("#qaD").value||1);T.push({id:uid("t"),pid:p.id,name:n,who:$("#qaW").value.trim(),start:st,end:addD(st,d-1),st:"p",note:""});addPerson($("#qaW").value);save();render();const q=$("#qaN");q&&q.focus()};qb.onclick=go;$("#qaN").onkeydown=e=>{if(e.key==="Enter")go()}}
+  // เลื่อนให้เห็นวันนี้
+  const gw=$("#gw");if(gw&&ti>3&&!vGantt.done){vGantt.done=1;const dw=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--dw"))||26;gw.scrollLeft=Math.max(0,(ti-3)*dw)}
+}
+function people(){const s=new Set(cfg.people||[]);T.forEach(t=>t.who&&s.add(t.who));return[...s].filter(Boolean)}
+function addPerson(n){n=String(n||"").trim();if(n&&!(cfg.people||[]).includes(n)){cfg.people=(cfg.people||[]).concat(n);saveC()}}
+
+/* ---------- หน้าต่างงาน ---------- */
+function openDlg(t,h){$("#dlgT").textContent=t;$("#dlgB").innerHTML=h;$("#dlg").showModal()}
+$("#dlgX").onclick=()=>$("#dlg").close();
+function taskDlg(id){const t=id?T.find(x=>x.id===id):null,pid=t?t.pid:(ui.pid||cfg.projects[0].id),L=tasksOf(pid),st0=t?t.start:(L.length?addD(L[L.length-1].end,1):((P(pid)||{}).start||today()));
+  openDlg(t?"แก้ไขงาน":"เพิ่มงาน",`<div class="f"><label>งานที่ต้องทำ</label><input class="in-" id="tN" value="${esc(t?t.name:"")}" placeholder="เช่น ออกแบบโลโก้"></div>
+  <div class="row"><div class="f"><label>โปรเจกต์</label><select class="in-" id="tP">${cfg.projects.map(p=>`<option value="${p.id}"${p.id===pid?" selected":""}>${esc(p.name)}</option>`).join("")}</select></div><div class="f"><label>ผู้รับผิดชอบ</label><input class="in-" id="tW" list="ppl2" value="${esc(t?t.who:"")}" placeholder="ชื่อ (ถ้ามี)"><datalist id="ppl2">${people().map(n=>`<option value="${esc(n)}">`).join("")}</datalist></div></div>
+  <div class="row3"><div class="f"><label>วันที่เริ่ม</label><input class="in-" type="date" id="tS" value="${st0}"></div><div class="f"><label>วันที่สิ้นสุด</label><input class="in-" type="date" id="tE" value="${t?t.end:addD(st0,2)}"></div><div class="f"><label>จำนวนวัน</label><input class="in-" type="number" min="1" id="tD" value="${t?dur(t):3}"></div></div>
+  <div class="f"><label>สถานะ</label><div class="seg" id="tSt">${Object.keys(ST).map(k=>`<button type="button" data-k="${k}" class="${(t?t.st:"p")===k?"on":""}">${ST[k][0]}</button>`).join("")}</div></div>
+  <div class="f"><label>หมายเหตุ</label><textarea class="in-" id="tNo" placeholder="รายละเอียด ลิงก์ไฟล์ ฯลฯ">${esc(t?t.note:"")}</textarea></div>
+  <div style="display:flex;gap:8px;justify-content:space-between">${t?`<button class="btn ghost danger" id="tDel" type="button">ลบงาน</button>`:"<span></span>"}<button class="btn main" id="tOk" type="button">บันทึก</button></div>`);
+  let st=t?t.st:"p";$$("#tSt button").forEach(b=>b.onclick=()=>{st=b.dataset.k;$$("#tSt button").forEach(x=>x.classList.toggle("on",x===b))});
+  const sync=from=>{const s=$("#tS").value;if(!s)return;if(from==="d"){$("#tE").value=addD(s,Math.max(1,+$("#tD").value||1)-1)}else{let e=$("#tE").value;if(!e||e<s){e=s;$("#tE").value=s}$("#tD").value=dDiff(s,e)+1}};
+  $("#tS").oninput=()=>sync("d");$("#tE").oninput=()=>sync("e");$("#tD").oninput=()=>sync("d");
+  $("#tOk").onclick=()=>{const n=$("#tN").value.trim();if(!n){$("#tN").focus();return toast("ใส่ชื่องานก่อน")}const s=$("#tS").value||today();let e=$("#tE").value||s;if(e<s)e=s;
+    const o={name:n,pid:$("#tP").value,who:$("#tW").value.trim(),start:s,end:e,st,note:$("#tNo").value};addPerson(o.who);
+    if(t)Object.assign(t,o);else T.push(Object.assign({id:uid("t")},o));save();$("#dlg").close();render();toast("บันทึกแล้ว ✓")};
+  const d=$("#tDel");if(d)d.onclick=()=>{if(!confirm("ลบงาน \""+t.name+"\" ?"))return;T=T.filter(x=>x!==t);save();$("#dlg").close();render()};
+  setTimeout(()=>$("#tN").focus(),50)}
+function projDlg(id){const p=id?P(id):null,c=p?p.c:PC[cfg.projects.length%PC.length];
+  openDlg(p?"แก้ไขโปรเจกต์":"สร้างโปรเจกต์",`<div class="f"><label>ชื่อโปรเจกต์</label><input class="in-" id="pN" value="${esc(p?p.name:"")}" placeholder="เช่น เปิดร้านสาขาใหม่"></div>
+  <div class="row"><div class="f"><label>วันที่เริ่มโปรเจกต์</label><input class="in-" type="date" id="pS" value="${p?p.start||"":today()}"></div><div class="f"><label>วันที่สิ้นสุดโปรเจกต์</label><input class="in-" type="date" id="pE" value="${p?p.end||"":addD(today(),37)}"></div></div>
+  <div class="f"><label>สี</label><div class="sw">${PC.map(x=>`<label><input type="radio" name="pc" value="${x}"${x===c?" checked":""}><i style="background:${x}"></i></label>`).join("")}</div></div>
+  <p class="note" style="margin:0">ไม่ใส่วันก็ได้ ระบบใช้วันของงานแรก-งานสุดท้ายให้เอง</p>
+  <div style="display:flex;gap:8px;justify-content:space-between">${p?`<button class="btn ghost danger" id="pDel" type="button">ลบโปรเจกต์</button>`:"<span></span>"}<button class="btn main" id="pOk" type="button">บันทึก</button></div>`);
+  $("#pOk").onclick=()=>{const n=$("#pN").value.trim();if(!n){$("#pN").focus();return toast("ใส่ชื่อโปรเจกต์ก่อน")}const o={name:n,start:$("#pS").value,end:$("#pE").value,c:($("input[name=pc]:checked")||{}).value||c};
+    if(p)Object.assign(p,o);else{const np=Object.assign({id:uid("p")},o);cfg.projects.push(np);ui.pid=np.id;saveUi()}if(cfg.demo&&!p)cfg.demo=false;saveC();$("#dlg").close();ui.v="gantt";saveUi();render();toast(p?"บันทึกแล้ว ✓":"สร้างโปรเจกต์แล้ว · เพิ่มงานในตารางได้เลย")};
+  const d=$("#pDel");if(d)d.onclick=()=>{const n=T.filter(t=>t.pid===p.id).length;if(!confirm("ลบโปรเจกต์ \""+p.name+"\""+(n?" และงาน "+n+" รายการ":"")+" ?"))return;cfg.projects=cfg.projects.filter(x=>x!==p);T=T.filter(t=>t.pid!==p.id);if(ui.pid===p.id)ui.pid="";save();saveC();saveUi();$("#dlg").close();render()};
+  setTimeout(()=>$("#pN").focus(),50)}
+
+/* ---------- ภาพรวม ---------- */
+function vDash(){const M=$("#main");if(!cfg.projects.length)return emptyHello(M);
+  const pr=prog(T),td=today(),wk=addD(td,7);
+  const a=pr.n?pr.d/pr.n*100:0,b=pr.n?pr.w/pr.n*100:0;
+  const up=T.filter(t=>t.st!=="d"&&t.end<=wk).sort((x,y)=>x.end<y.end?-1:1).slice(0,10);
+  const pp={};T.filter(t=>t.st!=="d").forEach(t=>{const k=t.who||"(ยังไม่ระบุ)";pp[k]=pp[k]||{n:0,w:0,late:0};pp[k].n++;if(t.st==="w")pp[k].w++;if(isLate(t))pp[k].late++});
+  M.innerHTML=`<div class="kpis"><div class="kpi" style="--k:var(--accent)"><span>งานทั้งหมด</span><b>${pr.n}</b><small>${cfg.projects.length} โปรเจกต์</small></div><div class="kpi" style="--k:var(--dS)"><span>เสร็จแล้ว</span><b>${pr.d}</b><small>${pr.p}% ของงานทั้งหมด</small></div><div class="kpi" style="--k:var(--wS)"><span>กำลังทำ</span><b>${pr.w}</b><small>รอเริ่ม ${pr.n-pr.d-pr.w} งาน</small></div><div class="kpi" style="--k:var(--danger)"><span>เลยกำหนด</span><b style="color:${pr.late?"var(--danger)":"inherit"}">${pr.late}</b><small>${pr.late?"ควรรีบตามงาน":"ไม่มีงานค้าง 👍"}</small></div></div>
+  <div class="g2"><div class="card"><h2>สถานะงานทั้งหมด</h2><div class="dl"><div class="donut" style="background:conic-gradient(var(--dS) 0 ${a}%,var(--wS) ${a}% ${a+b}%,var(--pS) ${a+b}% 100%)"><i><span><b>${pr.p}%</b><small class="note">เสร็จแล้ว</small></span></i></div><ul><li><i style="background:var(--dS)"></i>เสร็จแล้ว ${pr.d}</li><li><i style="background:var(--wS)"></i>กำลังทำ ${pr.w}</li><li><i style="background:var(--pS)"></i>รอเริ่ม ${pr.n-pr.d-pr.w}</li></ul></div></div>
+    <div class="card"><h2>ความคืบหน้าแต่ละโปรเจกต์</h2><div class="pl">${cfg.projects.map(p=>{const L=tasksOf(p.id),q=prog(L),[s,e]=span(L,p),lf=dDiff(td,e);return`<div class="it" data-go="${p.id}"><div><b style="color:${p.c}">● ${esc(p.name)}</b><span>${q.p}%</span></div><div class="pbar"><i style="width:${q.p}%;background:${p.c}"></i></div><div><small>${thD(s)} – ${thD(e)} · ${q.d}/${q.n} งาน${q.late?` · <b style="color:var(--danger)">เลยกำหนด ${q.late}</b>`:""}</small><small>${q.p>=100&&q.n?"🎉 เสร็จทั้งโปรเจกต์":lf<0?"ครบกำหนดแล้ว":"เหลือ "+lf+" วัน"}</small></div></div>`}).join("")}</div></div></div>
+  <div class="g2"><div class="card"><h2>ต้องเสร็จภายใน 7 วัน <small>รวมงานที่เลยกำหนด</small></h2>${up.length?`<ul class="ul">${up.map(t=>{const n=dDiff(td,t.end);return`<li data-ed="${t.id}"><span>${esc(t.name)} <small class="note">· ${esc((P(t.pid)||{}).name||"")}${t.who?" · "+esc(t.who):""}</small></span><em class="${n<0?"late":""}">${n<0?"เลย "+(-n)+" วัน":n===0?"วันนี้":"อีก "+n+" วัน"}</em></li>`}).join("")}</ul>`:`<p class="note">ไม่มีงานที่ใกล้ครบกำหนด 👍</p>`}</div>
+    <div class="card"><h2>งานที่ค้างของแต่ละคน</h2>${Object.keys(pp).length?`<div class="ppl">${Object.entries(pp).sort((x,y)=>y[1].n-x[1].n).map(([k,v])=>`<div><b>${esc(k)}</b>ค้าง ${v.n} งาน · กำลังทำ ${v.w}${v.late?` · <span style="color:var(--danger)">เลยกำหนด ${v.late}</span>`:""}</div>`).join("")}</div>`:`<p class="note">ทุกงานเสร็จแล้ว 🎉</p>`}</div></div>`;
+  M.querySelectorAll("[data-go]").forEach(x=>x.onclick=()=>{ui.pid=x.dataset.go;ui.v="gantt";saveUi();render()});
+  M.querySelectorAll("[data-ed]").forEach(x=>x.onclick=()=>taskDlg(x.dataset.ed))}
+
+/* ---------- ตั้งค่า ---------- */
+function vSet(){const M=$("#main");
+  M.innerHTML=`<div class="card"><h2>ชื่อทีม / บริษัท</h2><input class="in-" id="sName" value="${esc(cfg.name)}" placeholder="เช่น ทีมการตลาด"></div>
+  <div class="card"><h2>โปรเจกต์ <button class="btn sm main" id="sNewP" type="button">＋ สร้างโปรเจกต์</button></h2>${cfg.projects.length?`<div class="plist">${cfg.projects.map(p=>{const q=prog(tasksOf(p.id));return`<div><i style="background:${p.c}"></i><span><b>${esc(p.name)}</b><br><small>${p.start?thD(p.start):"-"} – ${p.end?thD(p.end):"-"} · ${q.n} งาน · ${q.p}%</small></span><button class="btn sm ghost" data-pe="${p.id}" type="button">แก้ไข</button></div>`}).join("")}</div>`:`<p class="note">ยังไม่มีโปรเจกต์</p>`}</div>
+  <div class="card"><h2>รายชื่อผู้รับผิดชอบ</h2><textarea class="in-" id="sPpl" placeholder="ใส่ทีละบรรทัด">${esc((cfg.people||[]).join("\n"))}</textarea><p class="note" style="margin:0">ใช้เลือกตอนเพิ่มงาน (พิมพ์ชื่อใหม่ในงานได้เลย ระบบจำให้เอง)</p></div>
+  <div class="card"><h2>ข้อมูล</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="sCsv" type="button">⬇️ ส่งออก Excel (CSV)</button><button class="btn ghost" id="sDemo" type="button">✨ ใส่ข้อมูลตัวอย่าง</button><button class="btn ghost danger" id="sClr" type="button">ล้างข้อมูลทั้งหมด</button></div><p class="note" style="margin:0">ข้อมูลเก็บในเครื่องนี้ และสำรองขึ้นระบบอัตโนมัติเมื่อเข้าสู่ระบบสมาชิก</p></div>`;
+  $("#sName").oninput=e=>{cfg.name=e.target.value;saveC()};
+  $("#sPpl").onchange=e=>{cfg.people=e.target.value.split("\n").map(x=>x.trim()).filter(Boolean);saveC();toast("บันทึกแล้ว ✓")};
+  $("#sNewP").onclick=()=>projDlg();M.querySelectorAll("[data-pe]").forEach(b=>b.onclick=()=>projDlg(b.dataset.pe));
+  $("#sCsv").onclick=csv;$("#sDemo").onclick=()=>{if(T.length&&!confirm("ข้อมูลตัวอย่างจะแทนข้อมูลที่มีอยู่ ต้องการต่อ?"))return;demo()};
+  $("#sClr").onclick=()=>{if(!confirm("ล้างโปรเจกต์และงานทั้งหมด? ย้อนกลับไม่ได้"))return;T=[];cfg.projects=[];cfg.demo=false;ui.pid="";save();saveC();saveUi();render();toast("ล้างแล้ว")}}
+function csv(){const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';const rows=[["โปรเจกต์","งานที่ต้องทำ","ผู้รับผิดชอบ","วันที่เริ่ม","วันที่สิ้นสุด","ระยะเวลา (วัน)","สถานะ","หมายเหตุ"]];
+  cfg.projects.forEach(p=>tasksOf(p.id).forEach(t=>rows.push([p.name,t.name,t.who,t.start,t.end,dur(t),ST[t.st][1],t.note])));
+  const b=new Blob(["﻿"+rows.map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="project-planner-"+today()+".csv";a.click()}
+
+/* ---------- ตัวอย่าง ---------- */
+function demo(){const t=today(),s=addD(t,-12),p1={id:uid("p"),name:"เปิดร้านกาแฟสาขาใหม่",start:s,end:addD(s,37),c:PC[0]},p2={id:uid("p"),name:"ทำเว็บไซต์ร้าน",start:addD(t,-5),end:addD(t,20),c:PC[1]};
+  const D=[["สำรวจทำเลและคู่แข่ง","มิว",0,5],["ทำแผนธุรกิจ + งบประมาณ","มิว",1,5],["เซ็นสัญญาเช่าพื้นที่","ต้น",7,3],["ออกแบบร้าน","ฝน",9,4],["ขออนุญาตร้านอาหาร","ต้น",11,5],["ตกแต่งร้าน / งานระบบ","ช่างเอก",14,8],["สั่งเครื่องชงกาแฟ","ต้น",15,2],["ออกแบบเมนูและราคา","ฝน",16,3],["รับสมัครพนักงาน","มิว",19,6],["อบรมพนักงาน","ฝน",24,4],["ทำป้ายและสื่อโปรโมต","ฝน",26,5],["เปิดเพจ + ยิงโฆษณา","มิว",27,7],["ทดลองเปิด (Soft opening)","ทุกคน",33,3],["งานเปิดร้านจริง","ทุกคน",36,1],["สรุปผล 1 สัปดาห์แรก","มิว",37,1]];
+  const W=[["รวบรวมรูปร้าน + เมนู","ฝน",0,3],["ออกแบบหน้าเว็บ","บีม",3,5],["เขียนเนื้อหา","มิว",5,4],["ทำระบบสั่งออนไลน์","บีม",9,7],["ทดสอบบนมือถือ","บีม",16,3],["เปิดใช้งานเว็บ","บีม",20,1]];
+  const st=(a,e)=>e<t?(Math.random()<.85?"d":"w"):a<=t?"w":"p";
+  T=D.map(d=>{const a=addD(s,d[2]),e=addD(a,d[3]-1);return{id:uid("t"),pid:p1.id,name:d[0],who:d[1],start:a,end:e,st:st(a,e),note:""}}).concat(W.map(d=>{const a=addD(p2.start,d[2]),e=addD(a,d[3]-1);return{id:uid("t"),pid:p2.id,name:d[0],who:d[1],start:a,end:e,st:st(a,e),note:""}}));
+  const lt=T.find(x=>x.end<t&&x.pid===p1.id&&x.name.includes("ขออนุญาต"));if(lt)lt.st="w";
+  cfg.projects=[p1,p2];cfg.people=["มิว","ต้น","ฝน","บีม","ช่างเอก"];if(!cfg.name)cfg.name="ร้านกาแฟตัวอย่าง";cfg.demo=true;ui.pid=p1.id;ui.v="gantt";vGantt.done=0;save();saveC();saveUi();render();toast("ใส่ตัวอย่างแล้ว ✓")}
+window.addEventListener("storage",e=>{if(e.key===K.items||e.key===K.cfg){T=LS.get(K.items,[])||[];cfg=Object.assign(cfg,LS.get(K.cfg,{})||{});if(!$("#dlg").open)render()}});
+let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>{if(ui.v==="gantt"&&!$("#dlg").open)render()},200)});
+if(/[?&]demo=1/.test(location.search)&&!T.length)demo();else render();
+})();
+</script>
+<script src="../assets/icons.js?v=8"></script>
+<script>/* ไอคอนวาดเองบนแท็บ/โลโก้ */(function(){if(!window.EDM_ICON)return;var I={gantt:["gantt","#5A43B5"],dash:["chart","#2F80C9"],set:["sliders","#5B6B7F"]};document.querySelectorAll("#tabs [data-v]").forEach(function(b){var k=I[b.dataset.v];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.trim().replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON("gantt",{color:"#5A43B5"}))}})()</script>
+<script src="../assets/member.js?v=92" defer></script>
+</body>
+</html>
