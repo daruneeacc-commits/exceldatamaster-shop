@@ -662,6 +662,21 @@ header.top .hd .logo{flex:0 1 auto;min-width:0}
 .ico2{display:inline-block;flex:none;width:42px;height:42px}.ico2 svg{display:block;width:100%;height:100%}.ico2.sm{width:34px;height:34px}.ico2.lg{width:50px;height:50px}
 @media (max-width:620px){.sys-txt h3 .ico2{width:32px;height:32px}}
 .rc{color:var(--muted);font-size:.9rem;white-space:nowrap}
+/* 19 ต.ค.: จัดหน้าแรกให้กระชับ */
+.door{grid-template-columns:1fr!important}.door-ics{grid-column:1/-1!important;grid-row:auto!important;margin-top:12px;flex-wrap:wrap;gap:6px}
+.door{align-content:start;position:relative;padding:24px 26px!important;border-radius:20px;background:linear-gradient(160deg,var(--bg) 60%,rgba(20,144,96,.06));transition:transform .15s,box-shadow .15s,border-color .15s}
+.door:hover{transform:translateY(-3px);border-color:var(--brand);box-shadow:0 16px 32px -20px rgba(0,0,0,.35)}
+.door::after{content:"›";position:absolute;right:22px;top:18px;font-size:1.6rem;color:var(--brand);line-height:1}
+.door b{font-size:1.3rem;line-height:1.35;margin-top:2px}
+.door-ics .ico2{width:30px;height:30px}
+.sys-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.sys-img{aspect-ratio:16/9}.sys-txt{padding:12px 14px 14px;gap:4px}.sys-txt h3{font-size:1rem;gap:10px}
+.sys-txt p{font-size:.86rem;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sys-go{font-size:.86rem}
+.sys{transition:transform .15s,box-shadow .15s,border-color .15s}.sys:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(0,0,0,.35)}
+@media (max-width:1100px){.sys-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:800px){.sys-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.sys-grid{grid-template-columns:1fr;gap:10px}}
 </style><div id="app"><!--pre--><header class="top"><div class="wrap hd">
     <a class="logo" href="#top"><img class="logo-img" src="/assets/shop/avatar.webp" alt=""><span>Excel Data Master</span></a>
     <nav class="links" aria-label="เมนูหลัก"><a href="#tools">ระบบออนไลน์</a><a href="#shop">เทมเพลต Excel</a><a href="#pricing">ราคา</a><a href="#how">วิธีสั่งซื้อ</a><a href="#faq">คำถาม</a></nav>
