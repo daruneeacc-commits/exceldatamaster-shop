@@ -136,6 +136,57 @@ table.p-items .c{text-align:center}
   .paper-scroll{background:none;padding:0;max-height:none;overflow:visible;border-radius:0}
   .paper{box-shadow:none;margin:0;transform:none!important;zoom:1!important;width:210mm;min-height:297mm}
 }
+/* แบบเรียบ (tpl-clean) + กรอกบนหน้าบิล */
+#peBar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}#peBar .seg{flex:none}#peBar .seg button{white-space:nowrap;padding:8px 14px}
+.pe-tg{display:flex;gap:6px;align-items:center;font-weight:600;font-size:.86rem;background:var(--card);padding:7px 12px;border-radius:999px;box-shadow:0 0 0 1px var(--line);cursor:pointer}.pe-tg.dis{opacity:.5}.pe-note{font-size:.8rem;color:var(--muted)}
+.paper.tpl-clean{padding:13mm 13mm 9mm;font-size:9.5pt;line-height:1.55;overflow:hidden}
+.tpl-clean .c-corner{position:absolute;top:0;right:0;width:19mm;height:19mm;background:var(--paper-accent);clip-path:polygon(0 0,100% 0,100% 100%)}
+.tpl-clean .c-corner span{position:absolute;top:2.2mm;right:3.6mm;color:#fff;font-size:13pt;font-weight:600}
+.c-top{display:grid;grid-template-columns:minmax(0,1fr) 80mm;gap:10mm;align-items:start}
+.c-seller{min-width:0;overflow-wrap:anywhere}.c-logo{max-height:14mm;max-width:40mm;object-fit:contain;display:block;margin-bottom:2mm}
+.c-sn{font-weight:600}
+.c-cust{margin-top:5mm}.c-lb{color:var(--paper-accent);margin-bottom:.5mm}
+.c-right{min-width:0}.c-title{text-align:center;margin:3mm 0 3mm}.c-title h1{margin:0;font-size:17pt;line-height:1.25;font-weight:600;color:var(--paper-accent)}.c-sub{font-size:8.5pt;color:var(--paper-accent)}
+.c-kv{border-top:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf;padding:2.5mm 1.5mm;display:grid;grid-template-columns:24mm minmax(0,1fr);gap:.8mm 3mm;overflow-wrap:anywhere}
+.c-kv>span:nth-child(odd){color:var(--paper-accent)}
+.c-adj{margin-top:4mm;font-size:9pt}
+table.c-items{width:100%;border-collapse:collapse;margin-top:7mm;font-variant-numeric:tabular-nums}
+.c-items th{font-weight:500;padding:1.8mm 2mm;border-top:1px solid #bdbdbd;border-bottom:1px solid #bdbdbd;text-align:left;font-size:9pt}
+.c-items td{padding:2mm;border-bottom:1px solid #e2e2e2;vertical-align:top}.c-items .r{text-align:right;white-space:nowrap}.c-items .c{text-align:center}.c-items th.r{text-align:right}
+.c-d{white-space:pre-wrap}.c-sm{font-size:8pt;color:#666}.c-none{color:#999;text-align:center;padding:5mm}
+.c-sum{display:grid;grid-template-columns:minmax(0,1fr) 92mm;gap:6mm;margin-top:4mm;align-items:end}
+.c-tot{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2mm 5mm;text-align:right;font-variant-numeric:tabular-nums}
+.c-tot .l{color:var(--paper-accent)}.c-tot .v{min-width:30mm;white-space:nowrap}
+.c-tot .gr{padding-bottom:2.5mm;border-bottom:1px solid #bdbdbd}.c-tot .b{font-weight:700}
+.c-notes{margin-top:6mm;white-space:pre-wrap;font-size:9pt}.c-pay{margin-top:2mm}
+.c-sign{margin-top:auto;padding-top:12mm;display:grid;grid-template-columns:1fr 1fr;gap:14mm;font-size:9pt;break-inside:avoid}
+.c-sign .who{min-height:12mm}.c-sign .ln2{display:grid;grid-template-columns:1fr 1fr;gap:4mm;text-align:center;margin-top:12mm}.c-sign .ln2 div{border-top:1px solid #bdbdbd;padding-top:1.5mm}
+.tpl-clean .p-foot{text-align:right}
+/* ช่องกรอกบนหน้าบิล */
+.paper.pe-on{width:auto;max-width:210mm;min-height:0}
+.pe{font:inherit;color:inherit;width:100%;min-width:0;border:0;border-bottom:1px dashed #b7c3be;background:#FFFBE8;border-radius:3px;padding:1px 5px;outline:none;margin:1px 0}
+.pe:focus{background:#FFF1BF;border-bottom:1px solid var(--paper-accent)}
+textarea.pe{resize:none;overflow:hidden;display:block;line-height:1.45}.pe.r{text-align:right}select.pe{padding:1px 2px;cursor:pointer}
+.pe::placeholder{color:#a9b0ad}
+.c-2{display:grid;grid-template-columns:1fr 1fr;gap:2mm}
+.c-items .q .pe{width:15mm;display:inline-block}.c-items .q .pe.u{width:16mm;margin-left:1mm;text-align:left}
+.c-items .p .pe,.c-items .ds .pe{width:24mm}
+.c-tot .c-in{width:auto;max-width:44mm;display:inline-block}.c-tot input.c-in{width:22mm}
+.pe-del{border:0;background:none;color:#c0392b;cursor:pointer;font-size:13pt;line-height:1;margin-left:2mm;padding:0 2px}
+.pe-add td{border:0!important}.pe-add button,.c-pc{border:1px dashed var(--paper-accent);background:#fff;color:var(--paper-accent);border-radius:999px;padding:1.5mm 4mm;cursor:pointer;font:inherit;font-size:9pt;margin:2mm 2mm 0 0}
+.c-pc{padding:0 3mm;font-size:8pt;margin:0 0 0 2mm}
+body.onpaper main{grid-template-columns:minmax(0,330px) minmax(0,1fr)}
+body.onpaper #editor>.card:not(#typeCard):not(#actBar),body.onpaper #editor>details.card,body.onpaper #editor>.cta{display:none!important}
+@media(max-width:980px){body.onpaper main{grid-template-columns:minmax(0,1fr);padding-bottom:96px}body.onpaper .mtabs{display:none!important}body.onpaper #editor.hide{display:flex}body.onpaper .preview-wrap{display:block}
+  body.onpaper #actBar{position:fixed!important;left:8px;right:8px;bottom:6px}body.onpaper .paper-scroll{padding:8px;max-height:none}}
+@media(max-width:640px){.paper.pe-on{padding:16px 12px 12px;font-size:11pt}.pe-on .c-top,.pe-on .c-sum{grid-template-columns:minmax(0,1fr);gap:4mm}.pe-on .c-corner{display:none}.pe-on .c-title{text-align:left;margin-top:0}
+  .pe-on .c-right{order:-1}.pe-on .c-items thead{display:none}.pe-on .c-items,.pe-on .c-items tbody{display:block}
+  .pe-on .c-items tr[data-li]{display:grid;grid-template-columns:22px repeat(3,minmax(0,1fr));gap:4px 6px;padding:8px 0;border-bottom:1px solid #e2e2e2}
+  .pe-on .c-items tr[data-li] td{border:0;padding:0;text-align:left}.pe-on .c-items td.d{grid-column:2/-1}.pe-on .c-items td.no{grid-row:1}
+  .pe-on .c-items td[data-lb]::before{content:attr(data-lb);display:block;font-size:8.5pt;color:#888}
+  .pe-on .c-items td[data-lb] .pe{width:100%}.pe-on .c-items td.q{display:flex;flex-wrap:wrap;gap:3px}.pe-on .c-items td.q::before{width:100%}.pe-on .c-items td.q .pe{flex:1 1 0;width:auto;margin:0}.pe-on .c-items td[data-lb]::before{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pe-on .c-items td.a{align-self:end;font-weight:600}
+  .pe-on .pe-add{display:block}.pe-on .pe-add td{display:block;padding:0}.pe-on .c-tot .v{min-width:0}.pe-on .c-sign{display:none}}
+@media print{main:has(.tpl-clean){padding:0!important}.paper.tpl-clean{min-height:296mm!important}#paper.tpl-clean{break-after:page}#paperCopy{break-after:auto}.pe-add,.pe-del,.c-pc{display:none!important}}
 .editor{counter-reset:stp}.editor>.card>h2:first-child{counter-increment:stp;position:relative;padding-left:34px;min-height:26px}.editor>.card>h2:first-child::before{content:counter(stp);position:absolute;left:0;top:50%;transform:translateY(-50%);width:25px;height:25px;border-radius:8px;background:color-mix(in srgb,var(--accent,#127A4B) 14%,transparent);color:var(--accent,#127A4B);font-size:.8rem;font-weight:800;display:grid;place-items:center}
 
 /* ---------- โหมดกะทัดรัด: ช่องกรอกเล็กลง อ่านง่าย ไม่ล้นสายตา ---------- */
@@ -213,7 +264,7 @@ details.opt{border:1px dashed var(--line);border-radius:12px;padding:8px 12px}de
 <main>
   <section class="editor" id="editor">
     <div id="docBanner" class="keep" hidden></div>
-    <div class="card">
+    <div class="card" id="typeCard">
       <h2>ประเภทธุรกิจ <button class="btn sm ghost keep" id="demoBtn" type="button">✨ ลองใส่ข้อมูลตัวอย่าง</button></h2>
       <div class="seg" id="modeSeg"><button data-mode="goods">🛍️ ซื้อมาขายไป</button><button data-mode="service">🧰 บริการ</button></div>
       <h2 style="margin-top:4px">เอกสาร</h2>
@@ -313,7 +364,7 @@ details.opt{border:1px dashed var(--line);border-radius:12px;padding:8px 12px}de
   </section>
 
   <section class="preview-wrap" id="previewWrap">
-    <div id="nxView" class="no-print"></div>
+    <div id="peBar" class="no-print"></div><div id="nxView" class="no-print"></div>
     <div class="paper-scroll"><div class="paper" id="paper"></div></div>
   </section>
 </main>
@@ -403,7 +454,7 @@ function syncPay(d,remove){const t=termOf(d);let A=LS.get("edm_acc",null);
   LS.set("edm_acc",A)}
 
 /* ---------- state ---------- */
-let seller=Object.assign({name:"",addr:"",tax:"",branch:"สำนักงานใหญ่",phone:"",contact:"",vat:false,pay:"",color:"#127A4B",logo:""},LS.get(K.seller,{}));
+let seller=Object.assign({name:"",addr:"",tax:"",branch:"สำนักงานใหญ่",phone:"",contact:"",vat:false,pay:"",color:"#127A4B",logo:""},LS.get(K.seller,{}));if(!seller.tpl&&!seller.name&&!LS.get(K.docs,[]).length)seller.tpl="clean";
 /* เข้าหน้านี้ = เริ่มเอกสารใหม่เสมอ · กู้คืนเฉพาะฉบับร่างที่ยังไม่เคยบันทึก (เปิดเอกสารเดิมต้องผ่าน #open=<id>) */
 const baseType=d=>d&&MODE_TYPES[d.mode]&&MODE_TYPES[d.mode].includes(d.type)&&!(d.type==="TX"&&!seller.vat)?d.type:d&&d.mode==="service"?"IV":"IT";
 let doc=(()=>{const dr=LS.get(K.draft,null);if(dr&&!dr.saved&&dr.items&&!ADJ(dr.type))return dr;return blank(dr&&dr.mode==="service"?"service":"goods",baseType(dr))})();
@@ -594,7 +645,7 @@ async function shareDoc(){if(!locked()&&!isStored(doc)&&!save(true))return;const
   audit("ส่งให้ลูกค้า",doc);
   if(navigator.share){try{await navigator.share({title:doc.no,text:t});return}catch(e){if(e&&e.name==="AbortError")return}}
   try{await navigator.clipboard.writeText(t)}catch(e){}window.open("https://line.me/R/share?text="+encodeURIComponent(t),"_blank","noopener");toast("คัดลอกข้อความแล้ว · เปิด LINE ให้เลือกผู้รับ")}
-function renderPaper(c){
+function renderPaper(c){peBar();if(tplOf()==="clean"){renderClean(c);return}$("#paper").classList.remove("tpl-clean","pe-on");document.body.classList.remove("onpaper");
   const S=sOf(doc),tm=termOf(doc),T=Object.assign({},TYPES[doc.type],doc.type==="IT"&&tm==="cash"?{due:"",sign:["ผู้รับเงิน","ผู้รับสินค้า"]}:{}),g=doc.mode==="goods",col=seller.color||"#127A4B",adj=ADJ(doc.type);
   const EN=enOf(doc),tt=(th,en)=>EN?en:th,dt=EN?enDate:thDate,cur=curOf(doc),fc=cur!=="THB",cu=EN?cur:fc?cur:"บาท",amtH=tt("จำนวนเงิน","Amount")+(fc?" ("+cur+")":"");
   const cdays=tm==="credit"&&doc.due?Math.round((new Date(doc.due+"T00:00:00")-new Date(doc.date+"T00:00:00"))/864e5):0;
@@ -627,6 +678,88 @@ function renderPaper(c){
   <div class="p-foot edm-brand">${tt("สร้างด้วย","Made with")} exceldatamaster.com</div>${doc.void?`<div class="p-void">${tt("ยกเลิก","VOID")}<small>${esc(doc.void.reason||"")}</small></div>`:""}`;
   fitPaper();
 }
+/* ---------- แบบเรียบ + กรอกบนหน้าบิล (19 ต.ค. 2569) · แบบมาตรฐาน (renderPaper เดิม) ไม่เปลี่ยน ---------- */
+const PEK="edm_bill_pe";let peForceView=0;
+const tplOf=()=>seller.tpl==="clean"?"clean":"std";
+const peWant=()=>{try{return localStorage.getItem(PEK)!=="0"}catch(e){return true}};
+const peOk=()=>tplOf()==="clean"&&!locked()&&doc.type!=="BN"&&!ADJ(doc.type);
+const peOn=()=>!peForceView&&peWant()&&peOk();
+function peBar(){const b=$("#peBar");if(!b)return;const cl=tplOf()==="clean";
+  b.innerHTML=`<div class="seg"><button type="button" data-tpl="clean" class="${cl?"on":""}">แบบเรียบ</button><button type="button" data-tpl="std" class="${cl?"":"on"}">แบบมาตรฐาน</button></div>${cl?`<label class="pe-tg${peOk()?"":" dis"}"><input type="checkbox" id="peTg"${peOn()?" checked":""}${peOk()?"":" disabled"}> ✍️ กรอกบนหน้าบิล</label><label class="pe-tg"><input type="checkbox" id="cpTg"${seller.copy!==false?" checked":""}> พิมพ์ต้นฉบับ + สำเนา</label>`:""}${cl&&!peOk()?`<span class="pe-note">${locked()?"เอกสารนี้แก้ไขไม่ได้แล้ว":"เอกสารประเภทนี้กรอกที่ฟอร์ม"}</span>`:""}`;
+  b.querySelectorAll("[data-tpl]").forEach(x=>x.onclick=()=>{seller.tpl=x.dataset.tpl;sv();renderAll()});
+  const t=$("#peTg");if(t)t.onchange=()=>{try{localStorage.setItem(PEK,t.checked?"1":"0")}catch(e){}renderAll()};
+  const cp=$("#cpTg");if(cp)cp.onchange=()=>{seller.copy=cp.checked;sv();update()};
+}
+const peWords=c=>{const EN=enOf(doc),cur=curOf(doc);return EN?enAmount(c.total,cur):cur!=="THB"?curText(c.total,cur):bahtText(c.total)};
+function renderClean(c){
+  const ed=peOn(),S=sOf(doc),tm=termOf(doc),T=Object.assign({},TYPES[doc.type],doc.type==="IT"&&tm==="cash"?{due:"",sign:["ผู้รับเงิน","ผู้รับสินค้า"]}:{}),g=doc.mode==="goods",col=seller.color||"#127A4B",adj=ADJ(doc.type),bn=doc.type==="BN";
+  const EN=enOf(doc),tt=(th,en)=>EN?en:th,dt=EN?enDate:thDate,cur=curOf(doc),fc=cur!=="THB",cu=EN?cur:fc?cur:"บาท",cp=seller.copy!==false;
+  const cdays=tm==="credit"&&doc.due?Math.round((new Date(doc.due+"T00:00:00")-new Date(doc.date+"T00:00:00"))/864e5):0;
+  const p=$("#paper");p.style.setProperty("--paper-accent",col);p.classList.add("tpl-clean");p.classList.toggle("pe-on",ed);p.style.zoom="";document.body.classList.toggle("onpaper",ed);
+  const o=adj?(doc.orig||(()=>{const x=LS.get(K.docs,[]).find(y=>y.id===doc.refId);return x?{no:x.no,date:x.date,val:adjOrigVal(x,doc.id)}:{no:doc.ref,date:"",val:0}})()):null;
+  const I=(f,v,ph,x)=>`<input class="pe" data-f="${f}" value="${esc(v||"")}" placeholder="${ph||""}"${x||""}>`;
+  const A=(f,v,ph)=>`<textarea class="pe" data-f="${f}" rows="1" placeholder="${ph||""}">${esc(v||"")}</textarea>`;
+  const taxLb=tt("เลขประจำตัวผู้เสียภาษี","Tax ID"),meth=doc.payMeth||"เงินสด",none=tt("ยังไม่มีรายการ","No items"),amtH=tt("มูลค่า","Amount")+(fc?" ("+cur+")":"");
+  const kv=[[tt("เลขที่","No."),ed?I("no",doc.no):esc(doc.no)],[tt("วันที่","Date"),ed?I("date",doc.date,"",' type="date"'):dt(doc.date)]];
+  if(tm==="cash")kv.push([tt("การชำระ","Payment"),EN?"Cash sale · "+esc(METH_EN[meth]||meth):"ขายเงินสด · "+esc(meth)]);else if(cdays>0)kv.push([tt("เงื่อนไข","Terms"),EN?"Net "+cdays+" days":"เครดิต "+cdays+" วัน"]);
+  if(T.due&&(doc.due||ed))kv.push([EN?DUE_EN[T.due]||T.due:T.due,ed?I("due",doc.due,"",' type="date"'):dt(doc.due)]);
+  if(!adj&&(doc.ref||ed))kv.push([tt("อ้างอิง","Reference"),ed?I("ref",doc.ref,"ถ้ามี"):esc(doc.ref)]);
+  if(S.contact)kv.push([tt("ผู้ติดต่อ","Contact"),esc(S.contact)]);
+  if(fc)kv.push([tt("สกุลเงิน","Currency"),EN?cur:cur+" · "+CUR[cur][0]]);
+  const cu0=doc.cust;
+  const cust=ed?`<div class="c-lb">${doc.type==="QT"?"เสนอราคาให้":"ลูกค้า"} <button type="button" class="c-pc no-print" id="pePc">เลือกลูกค้าเดิม</button></div>${I("cust.name",cu0.name,"ชื่อลูกค้า / บริษัท")}${A("cust.addr",cu0.addr,"ที่อยู่")}<div class="c-2">${I("cust.tax",cu0.tax,"เลขผู้เสียภาษี 13 หลัก",' inputmode="numeric"')}${I("cust.branch",cu0.branch,"สาขา เช่น สำนักงานใหญ่")}</div>${I("cust.contact",cu0.contact,"ผู้ติดต่อ / เบอร์โทร")}`
+    :`<div class="c-lb">${doc.type==="QT"?tt("เสนอราคาให้","Quotation to"):tt("ลูกค้า","Bill to")}</div><div>${esc(cu0.name||"-")}${cu0.branch?" ("+esc(cu0.branch)+")":""}</div>${cu0.addr?`<div>${esc(oneLine(cu0.addr))}</div>`:""}${cu0.tax?`<div>${taxLb} ${esc(cu0.tax)}</div>`:""}${cu0.contact?`<div>${esc(cu0.contact)}</div>`:""}`;
+  let head,rows;
+  if(bn){head=`<th class="c" style="width:8mm">#</th><th>${tt("เลขที่ใบแจ้งหนี้ / รายการ","Invoice no. / Description")}</th><th class="c">${tt("ลงวันที่","Date")}</th><th class="c">${tt("ครบกำหนด","Due")}</th><th class="r">${amtH}</th>`;
+    rows=c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td>${esc(l.d)}</td><td class="c">${l.idate?dt(l.idate):"-"}</td><td class="c">${l.idue?dt(l.idue):"-"}</td><td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="5" class="c-none">${none}</td></tr>`}
+  else{head=`<th class="c" style="width:8mm">#</th><th>${tt("รายละเอียด","Description")}</th><th class="r">${tt("จำนวน","Qty")}</th><th class="r">${tt("ราคาต่อหน่วย","Unit price")}</th>${g?`<th class="r">${tt("ส่วนลด","Discount")}</th>`:""}<th class="r">${amtH}</th>`;
+    rows=ed?doc.items.map((it,i)=>`<tr data-li="${i}"><td class="c no">${i+1}</td><td class="d"><textarea class="pe" data-k="d" rows="1" placeholder="${g?"ชื่อสินค้า":"รายละเอียดงานบริการ"}">${esc(it.d)}</textarea></td><td class="r q" data-lb="จำนวน"><input class="pe r" data-k="q" type="number" step="any" inputmode="decimal" value="${esc(it.q)}">${g?`<input class="pe u" data-k="u" value="${esc(it.u||"")}" placeholder="หน่วย">`:""}</td><td class="r p" data-lb="ราคา/หน่วย"><input class="pe r" data-k="p" type="number" step="any" inputmode="decimal" value="${esc(it.p||"")}" placeholder="0.00"></td>${g?`<td class="r ds" data-lb="ส่วนลด"><input class="pe r" data-k="disc" type="number" step="any" inputmode="decimal" value="${esc(it.disc||"")}" placeholder="-"></td>`:""}<td class="r a" data-lb="มูลค่า"><span data-amt="${i}">${fmt(c.lines[i].amt)}</span><button type="button" class="pe-del no-print" data-pdel="${i}" title="ลบรายการ">×</button></td></tr>`).join("")+`<tr class="pe-add no-print"><td></td><td colspan="${g?5:4}"><button type="button" id="peAdd">＋ เพิ่มรายการ</button>${g&&SI.length?` <button type="button" id="pePick">📦 เลือกจากสต๊อก</button>`:""}</td></tr>`
+      :c.lines.filter(l=>l.d||l.amt).map((l,i)=>`<tr><td class="c">${i+1}</td><td class="c-d">${esc(l.d)}${l.brand?`<div class="c-sm">${tt("แบรนด์","Brand")} ${esc(l.brand)}</div>`:""}</td><td class="r">${(+num(l.q)).toLocaleString("th-TH")}${g&&l.u?" "+esc(l.u):""}</td><td class="r">${fmt(num(l.p))}</td>${g?`<td class="r">${num(l.disc)?fmt(num(l.disc)):"-"}</td>`:""}<td class="r">${fmt(l.amt)}</td></tr>`).join("")||`<tr><td colspan="${g?6:5}" class="c-none">${none}</td></tr>`}
+  const R=(l,v,k,cls)=>`<span class="l${cls?" "+cls:""}">${l}</span><span class="v${cls?" "+cls:""}"><span${k?` data-v="${k}"`:""}>${v}</span> ${cu}</span>`;
+  let tot;
+  if(adj)tot=R("มูลค่าตามใบกำกับภาษีเดิม",fmt(o.val))+R("มูลค่าที่ถูกต้อง",fmt(o.val+(doc.type==="CN"?-c.base:c.base)))+R("ผลต่าง",fmt(c.base))+R("ภาษีมูลค่าเพิ่ม 7%",fmt(c.vat))+R("รวม",fmt(c.total),"","gr");
+  else if(ed)tot=R(tt("รวมเป็นเงิน","Subtotal"),fmt(c.sub),"sub")+R(`ส่วนลดท้ายบิล <input class="pe r c-in" data-f="billDisc" type="number" step="any" inputmode="decimal" value="${esc(doc.billDisc||"")}" placeholder="0">`,c.disc?"-"+fmt(c.disc):"-","disc")
+      +R(`<select class="pe c-in" data-f="vat"><option value="none"${doc.vat==="none"?" selected":""}>ไม่มี VAT</option><option value="ex"${doc.vat==="ex"?" selected":""}>VAT 7% (บวกเพิ่ม)</option><option value="in"${doc.vat==="in"?" selected":""}>VAT 7% (รวมในราคาแล้ว)</option></select>`,fmt(c.vat),"vat")
+      +R(tt("จำนวนเงินรวมทั้งสิ้น","Grand total"),fmt(c.total),"total","gr")
+      +R(`หัก ณ ที่จ่าย <select class="pe c-in" data-f="wht">${[[0,"ไม่หัก"],[1,"1%"],[2,"2%"],[3,"3%"],[5,"5%"]].map(([v,n])=>`<option value="${v}"${num(doc.wht)===v?" selected":""}>${n}</option>`).join("")}</select>`,c.wht?"-"+fmt(c.wht):"-","wht")+R(tt("ยอดชำระ","Amount due"),fmt(c.net),"net","b");
+  else tot=R(tt("รวมเป็นเงิน","Subtotal"),fmt(c.sub))+(c.disc?R(tt("ส่วนลด","Discount"),"-"+fmt(c.disc))+R(tt("หลังหักส่วนลด","After discount"),fmt(c.after)):"")
+      +(doc.vat!=="none"?(doc.vat==="in"?R(tt("มูลค่าก่อนภาษี","Value before VAT"),fmt(c.base)):"")+R(tt("ภาษีมูลค่าเพิ่ม 7%","VAT 7%"),fmt(c.vat)):"")
+      +R(tt("จำนวนเงินรวมทั้งสิ้น","Grand total"),fmt(c.total),"","gr")+(c.wht?R(tt("หัก ณ ที่จ่าย","Withholding tax")+" "+doc.wht+"%",fmt(c.wht))+R(tt("ยอดชำระ","Amount due"),fmt(c.net),"","b"):"");
+  const fxLine=fc&&num(doc.fx)>0?`<div class="c-sm">${tt("อัตราแลกเปลี่ยน","Exchange rate")} 1 ${cur} = ${(+num(doc.fx)).toLocaleString("en-US",{maximumFractionDigits:4})} ${tt("บาท","THB")} · ${tt("เทียบเท่า","approx.")} ${fmt(calcTHB(doc).total)} ${tt("บาท","THB")}</div>`:"";
+  const payInfo=seller.pay&&tm!=="cash"&&doc.type!=="RC"&&doc.type!=="TX"&&!adj;
+  const notes=ed?`<div class="c-notes"><div class="c-lb">หมายเหตุ</div>${A("notes",doc.notes,"เช่น เงื่อนไขการชำระเงิน (ถ้ามี)")}${payInfo?`<div class="c-pay"><b>${tt("ช่องทางชำระเงิน","Payment details")}</b>\n${esc(seller.pay)}</div>`:""}</div>`
+    :doc.notes||payInfo?`<div class="c-notes">${doc.notes?`<div class="c-lb">${tt("หมายเหตุ","Remarks")}</div>${esc(doc.notes)}\n`:""}${payInfo?`<div class="c-pay"><b>${tt("ช่องทางชำระเงิน","Payment details")}</b>\n${esc(seller.pay)}</div>`:""}</div>`:"";
+  const due=dueAmt(c),pp=!ed&&seller.pp&&due>0&&ppPayload(seller.pp,due)?`<div class="p-pp"><div class="p-qr">${qrSvg(ppPayload(seller.pp,due))}</div><div><b>${tt("สแกนจ่ายด้วยพร้อมเพย์","Scan to pay (PromptPay)")}</b><br>${tt("ยอดชำระ","Amount")} ${fmt(due)} ${tt("บาท","THB")}<br>${tt("พร้อมเพย์","PromptPay")} ${esc(seller.pp)}</div></div>`:"";
+  const sg=k=>EN?SIGN_EN[T.sign[k]]||T.sign[k]:T.sign[k],onb=n=>`${tt("ในนาม","On behalf of")} ${esc(n||"")}`;
+  p.innerHTML=`<div class="c-corner">${cp?"<span>1</span>":""}</div>
+  <div class="c-top"><div class="c-seller">${seller.logo?`<img class="c-logo" src="${seller.logo}" alt="">`:""}<div class="c-sn">${esc(S.name||tt("ชื่อกิจการของคุณ","Your business name"))}${S.branch&&S.tax?" ("+esc(EN&&S.branch==="สำนักงานใหญ่"?"Head office":S.branch)+")":""}</div>${S.addr?`<div>${esc(oneLine(S.addr))}</div>`:""}${S.tax?`<div>${taxLb} ${esc(S.tax)}</div>`:""}${S.phone?`<div>${tt("โทร","Tel.")} ${esc(S.phone)}</div>`:""}
+      <div class="c-cust">${cust}</div></div>
+    <div class="c-right"><div class="c-title"><h1>${adj?(doc.type==="CN"?"ใบลดหนี้":"ใบเพิ่มหนี้"):EN?tEn(doc.type,doc):tName(doc.type,doc)}</h1><div class="c-sub">${cp||T.tax&&S.vat?tt("ต้นฉบับ","Original"):EN?"":tEn(doc.type,doc)}</div></div><div class="c-kv">${kv.map(([a,b])=>`<span>${a}</span><span>${b}</span>`).join("")}</div></div></div>
+  ${adj?`<div class="c-adj">อ้างถึงใบกำกับภาษีเลขที่ <b>${esc(doc.ref||"-")}</b> ลงวันที่ ${o.date?thDate(o.date):"-"} · เหตุผล: ${esc(doc.reason||"-")}</div>`:""}
+  <table class="c-items"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>
+  <div class="c-sum"><div class="c-words"><span data-v="words">(${peWords(c)})</span>${fxLine}${tm==="cash"&&doc.type==="IT"?`<div class="p-paid">${tt("✓ ได้รับเงินถูกต้องแล้ว","✓ Paid in full")}</div>`:""}</div><div class="c-tot">${tot}</div></div>
+  ${notes}${pp}
+  <div class="c-sign"><div><div class="who">${onb(cu0.name)}</div><div class="ln2"><div>${sg(1)}</div><div>${tt("วันที่","Date")}</div></div></div><div><div class="who">${onb(S.name)}</div><div class="ln2"><div>${sg(0)}</div><div>${tt("วันที่","Date")}</div></div></div></div>
+  <div class="p-foot edm-brand">${tt("สร้างด้วย","Made with")} exceldatamaster.com</div>${doc.void?`<div class="p-void">${tt("ยกเลิก","VOID")}<small>${esc(doc.void.reason||"")}</small></div>`:""}`;
+  if(ed)peBind();else fitPaper();
+}
+function peGrow(t){t.style.height="auto";t.style.height=t.scrollHeight+"px"}
+function peRefresh(){const c=calc(doc),P=$("#paper");renderTotals(c);LS.set(K.draft,doc);
+  P.querySelectorAll("[data-amt]").forEach(s=>{const l=c.lines[+s.dataset.amt];if(l)s.textContent=fmt(l.amt)});
+  const m={sub:fmt(c.sub),disc:c.disc?"-"+fmt(c.disc):"-",vat:fmt(c.vat),total:fmt(c.total),wht:c.wht?"-"+fmt(c.wht):"-",net:fmt(c.net),words:"("+peWords(c)+")"};
+  P.querySelectorAll("[data-v]").forEach(s=>{if(m[s.dataset.v]!=null)s.textContent=m[s.dataset.v]})}
+function peBind(){const P=$("#paper");
+  P.querySelectorAll("textarea.pe").forEach(peGrow);
+  P.querySelectorAll("[data-f]").forEach(el=>{const f=el.dataset.f,h=()=>{let v=el.value;if(f==="wht")v=+v;const[a,b]=f.split(".");if(b)doc[a][b]=v;else doc[a]=v;if(el.tagName==="TEXTAREA")peGrow(el);if(f==="vat")update();else peRefresh()};if(el.tagName==="SELECT")el.onchange=h;else el.oninput=h});
+  P.querySelectorAll("tr[data-li]").forEach(tr=>{const i=+tr.dataset.li;tr.querySelectorAll("[data-k]").forEach(el=>el.oninput=()=>{const it=doc.items[i];it[el.dataset.k]=el.value;if(el.dataset.k==="d"&&it.pid&&stockItem(it.pid)&&el.value!==stockItem(it.pid).name)delete it.pid;if(el.tagName==="TEXTAREA")peGrow(el);peRefresh()})});
+  P.querySelectorAll("[data-pdel]").forEach(b=>b.onclick=()=>{doc.items.splice(+b.dataset.pdel,1);if(!doc.items.length)doc.items.push({d:"",q:1,u:"",p:0,disc:0});renderItems();update()});
+  const ad=$("#peAdd");if(ad)ad.onclick=()=>{$("#addItem").click();const t=[...$$("#paper tr[data-li] textarea")].pop();t&&t.focus()};
+  const pk=$("#pePick");if(pk)pk.onclick=()=>{$("#addItem").click();pickStock(doc.items.length-1)};
+  const pc=$("#pePc");if(pc)pc.onclick=()=>$("#pickCust").click();
+}
+window.addEventListener("beforeprint",()=>{if(tplOf()!=="clean")return;if(document.body.classList.contains("onpaper")){peForceView=1;renderClean(calc(doc))}
+  if(seller.copy!==false&&!$("#paperCopy")){const P=$("#paper"),x=P.cloneNode(true);x.id="paperCopy";const s=x.querySelector(".c-sub");if(s)s.textContent=enOf(doc)?"Copy":"สำเนา";const k=x.querySelector(".c-corner span");if(k)k.textContent="2";P.after(x)}});
+window.addEventListener("afterprint",()=>{const x=$("#paperCopy");if(x)x.remove();if(peForceView){peForceView=0;update()}});
 // ย่อตัวอักษรที่ยาวเกินจำนวนบรรทัดที่กำหนด (data-fit="ขนาดปกติ,ขนาดเล็กสุด,จำนวนบรรทัด" หน่วย pt)
 // โลโก้แนวนอน (กว้างกว่าสูงมาก) วางไว้บนชื่อร้าน ไม่เบียดข้อความ
 function logoShape(img){const w=img.naturalWidth,h=img.naturalHeight;img.parentNode.classList.toggle("wide",h>0&&w/h>1.8);fitTexts()}window.logoShape=logoShape;
