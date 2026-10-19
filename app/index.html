@@ -335,7 +335,7 @@ body>.tabbar{order:2}
 <script src="../assets/suggest.js?v=50"></script>
 <script>
 /* ตรวจเวอร์ชันใหม่: ถ้าเว็บอัปเดตแล้วแต่เบราว์เซอร์ยังจำหน้าเก่า ให้โหลดหน้าใหม่ให้เอง */
-(function(){var APP_V="20261019-0950";window.EDM_APP_V=APP_V;
+(function(){var APP_V="20261019-1000";window.EDM_APP_V=APP_V;
   function check(auto){fetch("/app/version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.v||j.v===APP_V)return;
     var k="edm_upd_"+j.v;var done=false;try{done=sessionStorage.getItem(k)}catch(e){}
     if(auto&&!done){try{sessionStorage.setItem(k,"1")}catch(e){}var sp=new URLSearchParams(location.search);sp.set("u",j.v);location.replace("/app/?"+sp+location.hash);return}
@@ -591,7 +591,7 @@ const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.�
 const thD=s=>{if(!s)return"";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
 
 /* ---------- เส้นทาง: หน้าไหนเปิดระบบไหน ---------- */
-const ROUTES={bill:{src:"/bill/?v=66"},stock:{src:"/stock/?v=61",sv:"home"},stockrep:{src:"/stock/?v=61",sv:"report"},stkdash:{src:"/stock/?v=61",sv:"dash"},stkitems:{src:"/stock/?v=61",sv:"items"},stkin:{src:"/stock/?v=61",sv:"in"},stkout:{src:"/stock/?v=61",sv:"out"},stkadj:{src:"/stock/?v=61",sv:"adj"},stkhist:{src:"/stock/?v=61",sv:"hist"},stkre:{src:"/stock/?v=61",sv:"reorder"},
+const ROUTES={bill:{src:"/bill/?v=67"},stock:{src:"/stock/?v=61",sv:"home"},stockrep:{src:"/stock/?v=61",sv:"report"},stkdash:{src:"/stock/?v=61",sv:"dash"},stkitems:{src:"/stock/?v=61",sv:"items"},stkin:{src:"/stock/?v=61",sv:"in"},stkout:{src:"/stock/?v=61",sv:"out"},stkadj:{src:"/stock/?v=61",sv:"adj"},stkhist:{src:"/stock/?v=61",sv:"hist"},stkre:{src:"/stock/?v=61",sv:"reorder"},
   ar:{src:"/account/?v=62",v:"ar"},tax:{src:"/account/?v=62",v:"tax"},buy:{src:"/account/?v=62",v:"buy"},cash:{src:"/account/?v=62",v:"cash"},pnl:{src:"/account/?v=62",v:"home"},
   cf:{src:"/cafe/?v=13",cv:"home"},cfpos:{src:"/cafe/?v=13",cv:"pos"},cfbar:{src:"/cafe/?v=13",cv:"bar"},cford:{src:"/cafe/?v=13",cv:"orders"},cfmenu:{src:"/cafe/?v=13",cv:"menu"},cfinv:{src:"/cafe/?v=13",cv:"inv"},cfshift:{src:"/cafe/?v=13",cv:"shift"},cfrpt:{src:"/cafe/?v=13",cv:"rpt"},cfset:{src:"/cafe/?v=13",cv:"set"},
   bk:{src:"/booking/?v=18",bv:"home"},bkcal:{src:"/booking/?v=18",bv:"cal"},bklist:{src:"/booking/?v=18",bv:"list"},bkres:{src:"/booking/?v=18",bv:"res"},bkrpt:{src:"/booking/?v=18",bv:"rpt"},bklease:{src:"/booking/?v=18",bv:"lease"},bkset:{src:"/booking/?v=18",bv:"set"},
