@@ -1749,7 +1749,7 @@ function renderClip(){
 function storeMB(st){return new Blob([JSON.stringify(st)]).size/1048576;}
 
 /* ---------- admin (shop owner only) ---------- */
-function openAdmin(){draft=JSON.parse(JSON.stringify(S));dirty=false;editing=null;adminTab="orders";showDrawer("admin",true);renderAdmin();}
+function openAdmin(){draft=JSON.parse(JSON.stringify(S));dirty=false;editing=null;adminTab=artifactNS?"orders":"products";showDrawer("admin",true);renderAdmin();}
 function markDirty(){dirty=true;const p=$("#dirtyPill");if(p){p.className="pill warn";p.textContent="มีการแก้ไขที่ยังไม่บันทึก";}const b=$("#saveBtn");if(b)b.disabled=false;}
 function renderAdmin(){
   const d=$("#drawer");
@@ -1853,7 +1853,7 @@ function renderAdmin(){
       <p class="hint err" id="sErr"></p>
     </form>`;
   }
-  d.innerHTML=`<div class="drawer-head"><div style="display:flex;flex-direction:column;gap:8px;min-width:0"><h2>หลังร้าน</h2><div class="admin-tabs" style="flex-wrap:wrap"><button data-at="orders" aria-pressed="${adminTab==="orders"}">ออเดอร์${orders.filter(o=>o.status!=="sent").length?` (${orders.filter(o=>o.status!=="sent").length})`:""}</button><button data-at="products" aria-pressed="${adminTab==="products"}">สินค้า (${draft.products.length})</button><button data-at="shop" aria-pressed="${adminTab==="shop"}">ตั้งค่าร้าน</button></div></div><button class="x" id="dClose" aria-label="ปิด">×</button></div>
+  d.innerHTML=`<div class="drawer-head"><div style="display:flex;flex-direction:column;gap:8px;min-width:0"><h2>หลังร้าน</h2><div class="admin-tabs" style="flex-wrap:wrap">${artifactNS?`<button data-at="orders" aria-pressed="${adminTab==="orders"}">ออเดอร์${orders.filter(o=>o.status!=="sent").length?` (${orders.filter(o=>o.status!=="sent").length})`:""}</button>`:""}<button data-at="products" aria-pressed="${adminTab==="products"}">สินค้า (${draft.products.length})</button><button data-at="shop" aria-pressed="${adminTab==="shop"}">ตั้งค่าร้าน</button></div></div><button class="x" id="dClose" aria-label="ปิด">×</button></div>
     <div class="drawer-body">${body}</div>
     <div class="drawer-foot" ${adminTab==="orders"||adminTab==="quick"?"hidden":""}><div class="unsaved"><span class="pill ${dirty?"warn":""}" id="dirtyPill">${dirty?"มีการแก้ไขที่ยังไม่บันทึก":"ข้อมูลตรงกับหน้าร้าน"}</span><button class="btn btn-main" id="saveBtn" ${dirty?"":"disabled"}>บันทึกขึ้นหน้าร้าน</button></div><p class="hint" id="saveHint">กดบันทึกแล้วลูกค้าจะเห็นทันที</p></div>`;
   $("#dClose").onclick=()=>{if(dirty&&!confirmClose()){return;}closeAll();};
@@ -1952,14 +1952,15 @@ async function save(){
   if(storeMB(draft)>12.5){h.className="hint err";h.textContent="รูปภาพรวมกันใหญ่เกินไป ลบรูปบางส่วนออกก่อน (ไม่เกิน 12 MB) เพื่อให้หน้าเว็บโหลดเร็ว";return;}
   btn.disabled=true;btn.textContent="กำลังบันทึก…";h.className="hint";h.textContent="";
   try{
-    await artifactNS.publish(buildDoc(draft));
-    h.className="hint ok";h.textContent="บันทึกแล้ว หน้าร้านกำลังโหลดเวอร์ชันใหม่";
+    if(artifactNS){await artifactNS.publish(buildDoc(draft));h.className="hint ok";h.textContent="บันทึกแล้ว หน้าร้านกำลังโหลดเวอร์ชันใหม่";}
+    else{await saveRemote(JSON.parse(JSON.stringify(draft)));dirty=false;closeAll();toast("บันทึกขึ้นหน้าร้านแล้ว ✓ ลูกค้าเห็นทันที");}
   }catch(e){
     const c=e&&e.code;
     btn.disabled=false;btn.textContent="บันทึกขึ้นหน้าร้าน";h.className="hint err";
     h.textContent=c==="conflict"?"มีการแก้ไขจากที่อื่นก่อนหน้านี้ หน้านี้จะโหลดใหม่ ให้แก้ไขอีกครั้ง"
       :(c==="not_writer"||c==="not_granted")?"บัญชีนี้ไม่มีสิทธิ์แก้ไขร้าน"
       :c==="too_large"?"ข้อมูลใหญ่เกินไป ลองลดจำนวนตัวอักษรในรายละเอียดสินค้า"
+      :(e&&e.msg)?"บันทึกไม่สำเร็จ: "+e.msg
       :"บันทึกไม่สำเร็จ ลองกดบันทึกอีกครั้ง";
   }
 }
@@ -1967,6 +1968,37 @@ async function save(){
 let tt;function toast(m){const t=$("#toast");if(!t)return;t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,2400);}
 
 render();
+
+/* ===== v42: เจ้าของร้านเพิ่ม/แก้สินค้าเองได้ (เก็บที่หลังบ้าน Google Drive) · ปุ่ม "หลังร้าน (เจ้าของร้าน)" ท้ายหน้า → ใส่รหัสหลังร้านครั้งเดียว ===== */
+const SHOP_API=window.EDM_API||"https://script.google.com/macros/s/AKfycbzPQJkUwRiyY8lKdDC1UJkKiaXF0Ju7K0DH9iQOxcTgP2btBFhzgwzpTSJbGqrZqoFG/exec";
+let shopKey="";try{shopKey=localStorage.getItem("edm_shop_key")||""}catch(e){}
+function applyCat(c){if(!c||!Array.isArray(c.products))return false;S.products=c.products;if(c.shop&&typeof c.shop==="object"){const keep=S.shop.orderUrl;Object.assign(S.shop,c.shop);S.shop.orderUrl=keep;}return true;}
+function shopPost(o){return fetch(SHOP_API,{method:"POST",body:JSON.stringify(o)}).then(r=>r.json());}
+(function(){let c=null;try{c=JSON.parse(localStorage.getItem("edm_shop_cat")||"null")}catch(e){}
+  if(c&&applyCat(c))render();
+  shopPost({a:"shop"}).then(r=>{if(!r||!r.ok||!r.cat)return;if(c&&c.v===r.cat.v)return;if(applyCat(r.cat)){try{localStorage.setItem("edm_shop_cat",JSON.stringify(r.cat))}catch(e){}if($("#drawer").hidden&&$("#modal").hidden)render();}}).catch(()=>{});
+})();
+function keyOwner(){
+  let k=shopKey;
+  if(!k){k=(prompt("ใส่รหัสหลังร้าน\n(วางลิงก์หลังร้านจากอีเมลทั้งลิงก์ก็ได้ ระบบจะดึงรหัสให้เอง)")||"").trim();const m=/admin=([^&\s]+)/.exec(k);if(m)k=decodeURIComponent(m[1]);}
+  if(!k)return;
+  toast("กำลังตรวจรหัส…");
+  shopPost({a:"shopauth",key:k}).then(r=>{
+    if(!r||!r.ok){shopKey="";try{localStorage.removeItem("edm_shop_key")}catch(e){}alert(r&&r.code==="key"?"รหัสหลังร้านไม่ถูกต้อง":"ตรวจรหัสไม่ได้ ลองใหม่อีกครั้ง");return;}
+    shopKey=k;try{localStorage.setItem("edm_shop_key",k)}catch(e){}
+    canAdmin=true;const b=$("#adminBtn");if(b)b.hidden=false;openAdmin();
+  }).catch(()=>alert("เชื่อมต่อหลังบ้านไม่ได้ ลองใหม่อีกครั้ง"));
+}
+async function saveRemote(d){
+  const up=async v=>{if(typeof v!=="string"||!v.startsWith("data:"))return v;const r=await shopPost({a:"shopimg",key:shopKey,data:v});if(!r||!r.ok)throw {code:r&&r.code,msg:(r&&r.msg)||"อัปโหลดรูปไม่สำเร็จ"};return r.url;};
+  for(const p of d.products){if(Array.isArray(p.images))for(let i=0;i<p.images.length;i++)p.images[i]=await up(p.images[i]);if(p.clip)p.clip=await up(p.clip);}
+  for(const k of ["avatar","mascot","banner"])if(d.shop&&d.shop[k])d.shop[k]=await up(d.shop[k]);
+  const shop=Object.assign({},d.shop);delete shop.orderUrl;
+  const r=await shopPost({a:"shopsave",key:shopKey,cat:{products:d.products,shop}});
+  if(!r||!r.ok){if(r&&r.code==="key"){shopKey="";try{localStorage.removeItem("edm_shop_key")}catch(e){}}throw {code:r&&r.code,msg:(r&&r.msg)||"บันทึกไม่สำเร็จ"};}
+  applyCat(r.cat);try{localStorage.setItem("edm_shop_cat",JSON.stringify(r.cat))}catch(e){}render();
+}
+if(/[?&]shopadmin\b/.test(location.search))setTimeout(keyOwner,400);
 
 // light up the owner's back office when this viewer can edit the page
 async function initOwner(){
@@ -1985,6 +2017,7 @@ initOwner();
 document.addEventListener("click",async e=>{
   if(!e.target.closest||!e.target.closest("#ownerLink"))return;
   if(canAdmin){openAdmin();return;}
+  if(!window.claude||!window.claude.use){keyOwner();return;}
   toast("กำลังตรวจสอบสิทธิ์เจ้าของร้าน...");
   try{const pm=window.claude&&window.claude.use?await window.claude.use("permissions"):null;if(pm)await pm.request(["artifact","user","db"]);}catch{}
   await initOwner();
