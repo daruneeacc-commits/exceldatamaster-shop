@@ -6,6 +6,7 @@
 - ประหยัดโควตา: อ่านเฉพาะส่วนไฟล์ที่ต้องแก้ (ใช้ Grep หาก่อน) ไม่ทดสอบทั้งระบบถ้าไม่ได้ขอ ไม่ใช้ subagent ถ้าไม่ได้ขอ
 
 ## แผนที่โปรเจกต์ (GitHub Pages: exceldatamaster.com)
+- หน้าแรกเน้นสินค้าเด่น (20 ต.ค.): `TOPK` ใน index.html (bill, payroll, spend, orders, store) · ระบบอื่นใน #sysGrid มี class `more` ซ่อนจนกด #sysMore "ดูระบบทั้งหมด" · ราคา #pcat ชิปแรก "⭐ ขายดี / แนะนำ" (data-pc=top, .pli[data-top]) · เปลี่ยนสินค้าเด่น = แก้ TOPK แล้ว prerender
 - `index.html` หน้าร้าน/หน้าหลัก (มี SEO + prerender: `tools/seo-home.py`, `tools/prerender.js`) · ปุ่มทดลองใช้ `a[data-pick]` เปิดหน้าต่าง "อยากใช้ทำอะไร" (ท้ายไฟล์, รายการ O) พาไป <ระบบ>?start=signup
 - `app/` เชลล์ระบบออนไลน์ (เมนู, iframe ระบบย่อย) · `app/edition.js` รุ่นแยก (bill, stock, cafe, book)
 - `bill/` เปิดบิล/ใบกำกับภาษี/CN/DN · `account/` VAT, ลูกหนี้, 50 ทวิ · `payroll/` เงินเดือน/ประกันสังคม
