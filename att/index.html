@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="th" data-theme="light" data-tone="sky">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>เช็กชื่อพนักงาน มา ขาด ลา สาย สรุปรายเดือนอัตโนมัติ ใช้ออนไลน์ | Excel Data Master</title>
+<meta name="description" content="บันทึกการมาทำงานพนักงาน มา (P) ขาด (A) ลา (L) สาย (S) แบบตารางรายเดือนเหมือน Excel แตะช่องเดียวเปลี่ยนสถานะ เช็กชื่อวันนี้บนมือถือ สรุปรายคน รายแผนก อัตรามาทำงาน % กราฟ ส่งออก CSV พิมพ์ A4">
+<link rel="canonical" href="https://exceldatamaster.com/att/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{--bg:#F3F7FC;--card:#fff;--ink:#1D2A36;--muted:#5F7182;--line:#DCE6F1;--soft:#E9F1FA;--accent:#2F72C4;--accent2:#7FAEE3;--danger:#C0392B;--hd:#D6E6F7;
+--P:#1E9E5A;--Pb:#E2F5EA;--A:#D64545;--Ab:#FCE5E3;--L:#2F72C4;--Lb:#E1ECFA;--S:#C98A12;--Sb:#FFF2D6;--off:#F1F3F6}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}a{color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1400px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px}.brand{font-weight:700;text-decoration:none;color:var(--accent);display:flex;align-items:center;gap:8px}.brand .edm-ic{width:26px;height:26px}.brand small{color:var(--muted);font-weight:500}.nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.tabs{max-width:1400px;margin:10px auto 0;padding:0 16px;display:flex;gap:6px;overflow-x:auto}.tabs button{flex:none;border:0;border-radius:999px;padding:7px 15px;background:var(--card);box-shadow:0 0 0 1px var(--line);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px}.tabs button .edm-ic{width:22px;height:22px}.tabs button.on{background:var(--accent);color:#fff;box-shadow:none}
+main{max-width:1400px;margin:0 auto;padding:12px 16px 40px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}.card h2{font-size:1.05rem;margin:0;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.card h2 small{font-weight:400;color:var(--muted);font-size:.8rem}
+.hello{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}.hello h1{margin:0;font-size:1.3rem}.hello p{margin:2px 0 0;color:var(--muted)}
+.btn{border:0;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;background:var(--soft);justify-content:center;text-decoration:none;white-space:nowrap}.btn.main{background:var(--accent);color:#fff}.btn.ghost{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:5px 11px;font-size:.84rem}.btn.danger{color:var(--danger)}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;outline:none}.in-:focus{border-color:var(--accent)}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}.f label{font-size:.8rem;font-weight:600;color:var(--muted)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}@media(max-width:1000px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:560px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px var(--line);border-left:5px solid var(--k,var(--accent))}.kpi span{display:block;font-size:.8rem;color:var(--muted)}.kpi b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums;line-height:1.3}.kpi small{color:var(--muted);font-size:.76rem}
+dialog{border:0;border-radius:18px;padding:0;width:min(560px,96vw);max-height:92vh}dialog::backdrop{background:rgba(20,30,50,.45)}.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}.db{padding:16px;display:flex;flex-direction:column;gap:12px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100}
+.note{font-size:.8rem;color:var(--muted)}.empty{text-align:center;padding:24px;color:var(--muted)}
+.mnav{display:flex;align-items:center;gap:6px}.mnav b{min-width:120px;text-align:center;font-size:1.05rem}
+/* ป้ายสถานะ */
+.cd{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:6px;font-weight:700;font-size:.8rem}
+.cd.P{background:var(--Pb);color:var(--P)}.cd.A{background:var(--Ab);color:var(--A)}.cd.L{background:var(--Lb);color:var(--L)}.cd.S{background:var(--Sb);color:var(--S)}
+.leg{display:flex;gap:12px;flex-wrap:wrap;font-size:.84rem;color:var(--muted);align-items:center}.leg span{display:flex;gap:6px;align-items:center}
+/* ตารางรายเดือน */
+.tw{overflow:auto;border-radius:10px;box-shadow:0 0 0 2px var(--accent2);max-height:72vh}
+table.gr{border-collapse:separate;border-spacing:0;font-size:.84rem;font-variant-numeric:tabular-nums;background:#fff;min-width:100%}
+.gr th,.gr td{border-right:1px solid #E1E9F2;border-bottom:1px solid #E1E9F2;text-align:center;padding:0;height:32px}
+.gr thead th{position:sticky;top:0;z-index:3;background:var(--hd);font-weight:700;line-height:1.1;padding:4px 2px}
+.gr thead tr+tr th{top:30px}
+.gr th.wd{font-weight:500;font-size:.7rem;color:var(--muted)}
+.gr .st{position:sticky;left:0;z-index:2;background:#fff;text-align:left;padding:0 8px;white-space:nowrap}
+.gr .st2{position:sticky;left:64px;z-index:2;background:#fff;text-align:left;padding:0 8px;white-space:nowrap;min-width:150px;max-width:190px;overflow:hidden;text-overflow:ellipsis;box-shadow:2px 0 0 #C9DAEC}
+.gr .st{width:64px;min-width:64px;color:var(--muted)}
+.gr thead .st,.gr thead .st2{z-index:4;background:var(--hd)}
+.gr td.c{width:30px;min-width:30px;cursor:pointer;font-weight:700;user-select:none}
+.gr td.c:hover{outline:2px solid var(--accent);outline-offset:-2px}
+.gr td.P{background:var(--Pb);color:var(--P)}.gr td.A{background:var(--Ab);color:var(--A)}.gr td.L{background:var(--Lb);color:var(--L)}.gr td.S{background:var(--Sb);color:var(--S)}
+.gr .off{background:var(--off)}.gr td.off:not(.P):not(.A):not(.L):not(.S){color:#B5BFCA}.gr th.off{background:#E6EAF0;color:#8B97A5}
+.gr .td{box-shadow:inset 0 0 0 2px var(--accent)}
+.gr .sm{min-width:38px;font-weight:700;background:#FAFCFE}.gr th.sm.P,.gr td.sm.P{color:var(--P)}.gr .sm.A{color:var(--A)}.gr .sm.L{color:var(--L)}.gr .sm.S{color:var(--S)}
+.gr .pc{min-width:52px;font-weight:700}
+.gr tfoot td{background:var(--soft);font-weight:700;font-size:.76rem;position:sticky;bottom:0;z-index:1}.gr tfoot .st,.gr tfoot .st2{background:var(--soft);z-index:3}
+.gr tr.dp td.st2{background:var(--soft);font-weight:700;color:var(--accent)}
+.brush{display:flex;gap:4px;background:var(--soft);padding:4px;border-radius:12px;flex-wrap:wrap}.brush button{border:0;border-radius:9px;padding:6px 11px;background:transparent;font-weight:700;cursor:pointer;display:flex;gap:5px;align-items:center}.brush button.on{background:#fff;box-shadow:0 1px 4px rgba(20,40,80,.15)}
+/* เช็กชื่อวันนี้ */
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px}
+.de{display:flex;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:10px 12px;box-shadow:0 0 0 1px var(--line)}
+.de .av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;flex:none;background:var(--soft);color:var(--accent)}
+.de .t{flex:1;min-width:0}.de .t b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.de .t small{color:var(--muted);font-size:.78rem}
+.seg{display:flex;gap:4px;flex:none}.seg button{width:44px;height:40px;border-radius:10px;border:0;background:var(--off);font-weight:700;cursor:pointer;color:#8B97A5;line-height:1}.seg button small{display:block;font-size:.62rem;font-weight:500}
+.seg button.P.on{background:var(--P)!important;color:#fff!important}.seg button.A.on{background:var(--A)!important;color:#fff!important}.seg button.L.on{background:var(--L)!important;color:#fff!important}.seg button.S.on{background:var(--S)!important;color:#fff!important}.seg button:not(.on){background:var(--off)!important;color:#8B97A5!important;box-shadow:none!important}
+.de.P{box-shadow:0 0 0 1px #BDE5CC}.de.A{box-shadow:0 0 0 1px #F3C2BD;background:#FFFAFA}.de.L{box-shadow:0 0 0 1px #C3D8F3}.de.S{box-shadow:0 0 0 1px #F0D9A6}
+.cnt{display:flex;gap:8px;flex-wrap:wrap}.cnt span{border-radius:999px;padding:5px 12px;font-weight:700;font-size:.86rem;background:var(--soft)}
+/* กราฟ */
+.g2{display:grid;grid-template-columns:1.6fr 1fr;gap:14px}@media(max-width:900px){.g2{grid-template-columns:1fr}}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}@media(max-width:900px){.g3{grid-template-columns:1fr}}
+.dn{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center}.dn ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:.88rem}.dn li{display:flex;gap:8px;align-items:center}.dn li i{width:12px;height:12px;border-radius:3px;display:inline-block}.dn li b{margin-left:auto;padding-left:14px;font-variant-numeric:tabular-nums}
+svg text{font-family:inherit}
+.rk{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}.rk li{display:flex;gap:8px;align-items:center;font-size:.9rem}.rk li .n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rk li .b{flex:1.2;height:8px;background:var(--off);border-radius:99px;overflow:hidden}.rk li .b i{display:block;height:100%;border-radius:99px}.rk li em{font-style:normal;font-weight:700;min-width:26px;text-align:right}
+.yr{width:100%;border-collapse:collapse;font-size:.88rem;font-variant-numeric:tabular-nums}.yr th,.yr td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}.yr th:first-child,.yr td:first-child{text-align:left}.yr th{background:var(--soft);font-weight:600}
+.el{display:flex;flex-direction:column;gap:6px}.ei{display:flex;gap:10px;align-items:center;padding:9px 10px;border-radius:12px;box-shadow:0 0 0 1px var(--line);background:#fff}.ei .t{flex:1;min-width:0}.ei .t b{display:block}.ei .t small{color:var(--muted)}.ei.x{opacity:.55}
+.chk{display:flex;gap:6px;flex-wrap:wrap}.chk label{display:flex;gap:6px;align-items:center;background:var(--soft);border-radius:999px;padding:5px 12px;cursor:pointer;font-weight:600;font-size:.88rem}
+@media(max-width:700px){.gr .st{display:none}.gr .st2{left:0;min-width:104px;max-width:112px;font-size:.78rem;padding:0 6px}.hide-m{display:none!important}.de{padding:9px 10px;gap:8px}.de .av{display:none}.de .t small{font-size:.72rem}.seg button{width:40px}}
+@media print{@page{size:A4 landscape;margin:8mm}header.top,.tabs,.toast,dialog,.edm-bar,.noprint{display:none!important}body{background:#fff}main{padding:0;max-width:none}.card{box-shadow:none;padding:4px 0}.tw{max-height:none;overflow:visible;box-shadow:none}.gr{font-size:9px}.gr th,.gr td{height:18px}.gr .st2{min-width:0}.gr td.c{width:auto;min-width:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.gr thead th,.gr .st,.gr .st2,.gr tfoot td{position:static}}
+</style>
+<link rel="stylesheet" href="../assets/pastel.css?v=8">
+<script src="../assets/pastel.js?v=2" defer></script>
+<link rel="stylesheet" href="../assets/skin.css?v=1">
+<script src="../assets/skin.js?v=1"></script>
+<script src="../assets/lock.js?v=3"></script>
+<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="เช็กชื่อพนักงาน มา ขาด ลา สาย | Excel Data Master"><meta property="og:description" content="ตารางรายเดือนแบบ Excel แตะช่องเดียว เช็กชื่อวันนี้บนมือถือ สรุปรายคน รายแผนก อัตรามาทำงานอัตโนมัติ"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-att.jpg?v=1"><meta property="og:url" content="https://exceldatamaster.com/att/">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-att.jpg?v=1">
+<meta name="theme-color" content="#2F72C4">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="เช็กชื่อ">
+</head>
+<body>
+<header class="top"><div class="in"><a class="brand" href="/">✅ Excel Data Master <small>· เช็กชื่อ มา ขาด ลา</small></a><nav class="nav"></nav></div></header>
+<div class="tabs" id="tabs"><button data-v="today">✅ เช็กชื่อวันนี้</button><button data-v="month">📅 ตารางรายเดือน</button><button data-v="dash">📊 สรุป</button><button data-v="emps">👥 พนักงาน</button><button data-v="set">⚙️ ตั้งค่า</button></div>
+<main id="main"></main>
+<dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button">✕</button></div><div class="db" id="dlgB"></div></dialog>
+<div class="toast" id="toast" hidden></div>
+<input type="file" id="impF" accept=".json,application/json" hidden>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่เต็ม?)");return false}}};
+const K={emps:"edm_att_emps",rec:"edm_att_rec",cfg:"edm_att_cfg",ui:"edm_att_ui"};
+const CODES=["P","S","A","L"],CN={P:"มา",S:"สาย",A:"ขาด",L:"ลา"},CC={P:"#1E9E5A",S:"#C98A12",A:"#D64545",L:"#2F72C4"};
+const WD=["อา","จ","อ","พ","พฤ","ศ","ส"],MN=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],MF=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+let E=LS.get(K.emps,[])||[],R=LS.get(K.rec,{})||{},C=Object.assign({name:"",off:[0],hol:{},demo:false},LS.get(K.cfg,{})||{});
+const pad=n=>String(n).padStart(2,"0"),todayS=()=>{const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
+let ui=Object.assign({v:innerWidth<700?"today":"month",m:todayS().slice(0,7),day:todayS(),br:"cy",dep:""},LS.get(K.ui,{})||{});
+if(!ui.m)ui.m=todayS().slice(0,7);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const save=()=>{LS.set(K.emps,E);LS.set(K.rec,R)},saveC=()=>LS.set(K.cfg,C),saveUi=()=>LS.set(K.ui,ui);
+function toast(t){const e=$("#toast");e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2200)}
+function dim(ym){const[y,m]=ym.split("-").map(Number);return new Date(y,m,0).getDate()}
+function wdOf(ym,d){const[y,m]=ym.split("-").map(Number);return new Date(y,m-1,d).getDay()}
+function isOff(ym,d){return C.off.includes(wdOf(ym,d))||!!C.hol[ym+"-"+pad(d)]}
+function mAdd(ym,n){let[y,m]=ym.split("-").map(Number);m+=n;while(m<1){m+=12;y--}while(m>12){m-=12;y++}return y+"-"+pad(m)}
+function mLabel(ym){const[y,m]=ym.split("-").map(Number);return MF[m-1]+" "+(y+543)}
+function get(ym,id,d){const s=(R[ym]||{})[id];return s?(s[d-1]||".").replace(".",""):""}
+function put(ym,id,d,v){R[ym]=R[ym]||{};let s=(R[ym][id]||"").padEnd(dim(ym),".").split("");s[d-1]=v||".";R[ym][id]=s.join("");if(!/[PSAL]/.test(R[ym][id]))delete R[ym][id];if(C.demo){C.demo=false;saveC()}}
+const act=()=>E.filter(e=>!e.x),depts=()=>[...new Set(E.map(e=>e.dept).filter(Boolean))];
+const fil=()=>act().filter(e=>!ui.dep||e.dept===ui.dep);
+function lastDay(ym){const t=todayS();if(ym<t.slice(0,7))return dim(ym);if(ym>t.slice(0,7))return 0;return +t.slice(8)}
+function cnt(ym,id){const o={P:0,S:0,A:0,L:0};const s=(R[ym]||{})[id]||"";for(const ch of s)if(o[ch]!=null)o[ch]++;return o}
+function sum(ym,list){const o={P:0,S:0,A:0,L:0};list.forEach(e=>{const c=cnt(ym,e.id);CODES.forEach(k=>o[k]+=c[k])});o.come=o.P+o.S;o.all=o.P+o.S+o.A+o.L;o.rate=o.all?o.come/o.all*100:0;return o}
+const pct=v=>(Math.round(v*10)/10).toFixed(1)+"%";
+function workDays(ym,upto){let n=0;for(let d=1;d<=upto;d++)if(!isOff(ym,d))n++;return n}
+
+/* ---------- หน้า ---------- */
+function render(){$$("#tabs [data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));const M=$("#main");
+  if(!E.length&&ui.v!=="set"&&ui.v!=="emps"){M.innerHTML=`<div class="card" style="text-align:center;align-items:center;padding:34px 16px"><div style="font-size:3rem">✅</div><h2 style="justify-content:center">เริ่มเช็กชื่อพนักงานกันเลย</h2><p class="note" style="max-width:460px;margin:0">เพิ่มรายชื่อพนักงาน (วางจาก Excel ได้ทีเดียวทั้งหมด) แล้วแตะช่องในตารางเพื่อใส่ มา · ขาด · ลา · สาย ระบบสรุปรายเดือนให้อัตโนมัติ</p><div class="bar" style="justify-content:center"><button class="btn main" id="e0">＋ เพิ่มพนักงาน</button><button class="btn ghost" id="p0">📋 วางรายชื่อจาก Excel</button><button class="btn ghost" id="d0">✨ ดูข้อมูลตัวอย่าง</button></div></div>`;$("#e0").onclick=()=>empDlg();$("#p0").onclick=pasteDlg;$("#d0").onclick=demo;return}
+  ({today:vToday,month:vMonth,dash:vDash,emps:vEmps,set:vSet}[ui.v]||vMonth)(M)}
+function depSel(){const D=depts();if(!D.length)return"";return`<select class="in-" id="dep" style="width:auto"><option value="">ทุกแผนก</option>${D.map(d=>`<option${d===ui.dep?" selected":""}>${esc(d)}</option>`).join("")}</select>`}
+function bindDep(){const s=$("#dep");if(s)s.onchange=()=>{ui.dep=s.value;saveUi();render()}}
+function hello(t,sub){return`<div class="hello"><div><h1>${esc(t)}</h1><p>${sub}</p></div></div>`}
+
+function vToday(M){const ds=ui.day||todayS(),ym=ds.slice(0,7),d=+ds.slice(8),L=fil(),o={P:0,S:0,A:0,L:0,"":0};L.forEach(e=>o[get(ym,e.id,d)]++);
+  const dt=new Date(ds+"T00:00"),off=isOff(ym,d),hn=C.hol[ds];
+  M.innerHTML=`${hello((C.name?C.name+" · ":"")+"เช็กชื่อวันนี้",`วัน${["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"][dt.getDay()]}ที่ ${d} ${MF[dt.getMonth()]} ${dt.getFullYear()+543}${off?` · <b style="color:var(--S)">${hn?esc(hn):"วันหยุด"}</b>`:""}`)}
+  <div class="card"><div class="bar"><button class="btn ghost sm" id="dp">‹</button><input type="date" class="in-" id="dd" value="${ds}" style="width:auto"><button class="btn ghost sm" id="dn">›</button><button class="btn ghost sm" id="dt">วันนี้</button>${depSel()}<span style="flex:1"></span><button class="btn main" id="all">✓ ที่เหลือ = มาทั้งหมด</button></div>
+  <div class="cnt"><span style="color:var(--P)">มา ${o.P}</span><span style="color:var(--S)">สาย ${o.S}</span><span style="color:var(--A)">ขาด ${o.A}</span><span style="color:var(--L)">ลา ${o.L}</span><span style="color:var(--muted)">ยังไม่เช็ก ${o[""]}</span></div>
+  <div class="dl">${L.map(e=>{const v=get(ym,e.id,d);return`<div class="de ${v}" data-id="${e.id}"><span class="av">${esc((e.name||"?").replace(/^(นาย|นางสาว|นาง|น\.ส\.)\s*/,"").slice(0,1))}</span><div class="t"><b>${esc(e.name)}</b><small>${esc([e.code,e.dept].filter(Boolean).join(" · "))}</small></div><div class="seg">${CODES.map(k=>`<button type="button" class="${k}${v===k?" on":""}" data-k="${k}">${k}<small>${CN[k]}</small></button>`).join("")}</div></div>`}).join("")}</div>
+  <p class="note">แตะปุ่มอีกครั้งเพื่อลบ · P มา · S สาย (นับเป็นมา) · A ขาด · L ลา</p></div>`;
+  const go=s=>{ui.day=s;saveUi();render()};const sh=n=>{const x=new Date(ds+"T00:00");x.setDate(x.getDate()+n);go(x.getFullYear()+"-"+pad(x.getMonth()+1)+"-"+pad(x.getDate()))};
+  $("#dp").onclick=()=>sh(-1);$("#dn").onclick=()=>sh(1);$("#dt").onclick=()=>go(todayS());$("#dd").onchange=e=>e.target.value&&go(e.target.value);bindDep();
+  $("#all").onclick=()=>{let n=0;L.forEach(e=>{if(!get(ym,e.id,d)){put(ym,e.id,d,"P");n++}});save();render();toast(n?`ใส่ "มา" ให้ ${n} คน`:"ทุกคนเช็กแล้ว")};
+  $$(".de .seg button").forEach(b=>b.onclick=()=>{const id=b.closest(".de").dataset.id,k=b.dataset.k;put(ym,id,d,get(ym,id,d)===k?"":k);save();render()});
+}
+
+function vMonth(M){const ym=ui.m,n=dim(ym),L=fil(),t=todayS(),td=t.slice(0,7)===ym?+t.slice(8):0,S=sum(ym,L);
+  const hd=[...Array(n)].map((_,i)=>i+1);
+  M.innerHTML=`${hello("ตารางเช็กชื่อรายเดือน",`${mLabel(ym)} · ${L.length} คน · วันทำงาน ${workDays(ym,n)} วัน · อัตรามาทำงาน <b>${pct(S.rate)}</b>`)}
+  <div class="card"><div class="bar"><div class="mnav"><button class="btn ghost sm" id="mp">‹</button><b>${mLabel(ym)}</b><button class="btn ghost sm" id="mn">›</button></div>${depSel()}
+  <div class="brush noprint" id="brush" title="เลือกแล้วแตะช่อง">${[["cy","🔁 วน"],["P","P มา"],["S","S สาย"],["A","A ขาด"],["L","L ลา"],["","⌫ ลบ"]].map(([k,l])=>`<button type="button" data-b="${k}" class="${ui.br===k?"on":""}">${l}</button>`).join("")}</div>
+  <span style="flex:1"></span><button class="btn sm main noprint" id="fill">✓ เติม "มา" ช่องว่างถึงวันนี้</button><button class="btn sm ghost noprint" id="csv">⬇ CSV</button><button class="btn sm ghost noprint" id="prt">🖨 พิมพ์</button></div>
+  <div class="tw"><table class="gr" id="gr"><thead><tr><th class="st" rowspan="2">รหัส</th><th class="st2" rowspan="2">ชื่อพนักงาน</th>${hd.map(d=>`<th class="${isOff(ym,d)?"off":""}${d===td?" td":""}">${d}</th>`).join("")}${CODES.map(k=>`<th class="sm ${k}" rowspan="2">${k}</th>`).join("")}<th class="pc" rowspan="2">%มา</th></tr>
+  <tr>${hd.map(d=>`<th class="wd ${isOff(ym,d)?"off":""}" title="${esc(C.hol[ym+"-"+pad(d)]||"")}">${WD[wdOf(ym,d)]}</th>`).join("")}</tr></thead>
+  <tbody>${L.map(e=>{const c=cnt(ym,e.id),all=c.P+c.S+c.A+c.L;return`<tr data-id="${e.id}"><td class="st">${esc(e.code||"")}</td><td class="st2" title="${esc(e.name)}">${esc(e.name)}</td>${hd.map(d=>{const v=get(ym,e.id,d);return`<td class="c ${v}${isOff(ym,d)?" off":""}" data-d="${d}">${v||(isOff(ym,d)?"·":"")}</td>`}).join("")}${CODES.map(k=>`<td class="sm ${k}">${c[k]||""}</td>`).join("")}<td class="pc">${all?pct((c.P+c.S)/all*100):"–"}</td></tr>`}).join("")}</tbody>
+  <tfoot><tr><td class="st"></td><td class="st2">มา / ทั้งหมด</td>${hd.map(d=>{let a=0,b=0;L.forEach(e=>{const v=get(ym,e.id,d);if(v){b++;if(v==="P"||v==="S")a++}});return`<td${isOff(ym,d)?' class="off"':""}>${b?a:""}</td>`}).join("")}${CODES.map(k=>`<td class="sm ${k}">${S[k]}</td>`).join("")}<td class="pc">${pct(S.rate)}</td></tr></tfoot></table></div>
+  <div class="leg"><span><i class="cd P">P</i>มา</span><span><i class="cd S">S</i>สาย</span><span><i class="cd A">A</i>ขาด</span><span><i class="cd L">L</i>ลา</span><span><i class="cd" style="background:var(--off);color:#9AA6B2">·</i>วันหยุด (ตั้งได้ที่ ⚙️)</span><span class="hide-m">แตะช่องเพื่อเปลี่ยน · ลากผ่านหลายช่องได้เมื่อเลือก P/S/A/L</span></div></div>`;
+  $("#mp").onclick=()=>{ui.m=mAdd(ym,-1);saveUi();render()};$("#mn").onclick=()=>{ui.m=mAdd(ym,1);saveUi();render()};bindDep();
+  $$("#brush [data-b]").forEach(b=>b.onclick=()=>{ui.br=b.dataset.b;saveUi();$$("#brush [data-b]").forEach(x=>x.classList.toggle("on",x===b))});
+  const gr=$("#gr");let drag=false;
+  const paint=(td,first)=>{const id=td.parentNode.dataset.id,d=+td.dataset.d,cur=get(ym,id,d);let v=ui.br;if(v==="cy"){if(!first)return;v=CODES[(CODES.indexOf(cur)+1)]||"";if(!cur)v="P"}put(ym,id,d,v);td.className="c "+v+(isOff(ym,d)?" off":"");td.textContent=v||(isOff(ym,d)?"·":"")};
+  gr.addEventListener("pointerdown",e=>{const td=e.target.closest("td.c");if(!td)return;drag=ui.br!=="cy";paint(td,true);if(drag)e.preventDefault()});
+  gr.addEventListener("pointerover",e=>{if(!drag)return;const td=e.target.closest("td.c");if(td)paint(td,false)});
+  const end=()=>{drag=false;save();clearTimeout(vMonth.t);vMonth.t=setTimeout(()=>{if(ui.v==="month"){const sx=$(".tw")?$(".tw").scrollLeft:0,sy=$(".tw")?$(".tw").scrollTop:0;render();const w=$(".tw");if(w){w.scrollLeft=sx;w.scrollTop=sy}}},700)};
+  gr.addEventListener("pointerup",end);gr.addEventListener("pointerleave",()=>{if(drag)end()});
+  $("#fill").onclick=()=>{const up=lastDay(ym);if(!up)return toast("เดือนนี้ยังไม่ถึง");let k=0;L.forEach(e=>{for(let d=1;d<=up;d++)if(!isOff(ym,d)&&!get(ym,e.id,d)){put(ym,e.id,d,"P");k++}});save();render();toast(k?`เติม "มา" ${k} ช่อง`:"ไม่มีช่องว่าง")};
+  $("#csv").onclick=()=>{const rows=[["รหัส","ชื่อ","แผนก",...hd.map(String),"มา","สาย","ขาด","ลา","%มา"]];L.forEach(e=>{const c=cnt(ym,e.id),all=c.P+c.S+c.A+c.L;rows.push([e.code||"",e.name,e.dept||"",...hd.map(d=>get(ym,e.id,d)),c.P,c.S,c.A,c.L,all?((c.P+c.S)/all*100).toFixed(1):""])});dl("เช็กชื่อ-"+ym+".csv","﻿"+rows.map(r=>r.map(x=>/[",\n]/.test(String(x))?'"'+String(x).replace(/"/g,'""')+'"':x).join(",")).join("\n"),"text/csv")};
+  $("#prt").onclick=()=>print();
+  if(td){const w=$(".tw"),c=w.querySelector("thead th.td"),st=w.querySelector("thead .st2");if(c&&st){const vis=w.clientWidth-(st.offsetLeft+st.offsetWidth);w.scrollLeft=Math.max(0,c.offsetLeft-(st.offsetLeft+st.offsetWidth)-Math.max(0,vis-c.offsetWidth*3))}}
+}
+function dl(n,t,ty){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:ty}));a.download=n;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+
+function donut(o){const T=CODES.reduce((s,k)=>s+o[k],0);let a=-Math.PI/2,p="";const R1=70,R2=46,cx=80,cy=80;
+  if(!T)return`<svg viewBox="0 0 160 160" width="170"><circle cx="80" cy="80" r="58" fill="none" stroke="#E6ECF3" stroke-width="24"/><text x="80" y="86" text-anchor="middle" font-size="15" fill="#8B97A5">ยังไม่มีข้อมูล</text></svg>`;
+  CODES.forEach(k=>{const v=o[k];if(!v)return;const b=a+v/T*Math.PI*2-(v===T?1e-4:0),la=b-a>Math.PI?1:0,P=(r,t)=>`${(cx+r*Math.cos(t)).toFixed(2)} ${(cy+r*Math.sin(t)).toFixed(2)}`;p+=`<path d="M${P(R1,a)} A${R1} ${R1} 0 ${la} 1 ${P(R1,b)} L${P(R2,b)} A${R2} ${R2} 0 ${la} 0 ${P(R2,a)}Z" fill="${CC[k]}"/>`;a=b});
+  return`<svg viewBox="0 0 160 160" width="170">${p}<text x="80" y="82" text-anchor="middle" font-size="26" font-weight="700" fill="#1D2A36">${Math.round(o.rate)}%</text><text x="80" y="102" text-anchor="middle" font-size="11" fill="#5F7182">มาทำงาน</text></svg>`}
+function dayBars(ym,L){const n=dim(ym),W=720,H=200,pl=28,pb=24,bw=(W-pl)/n,mx=Math.max(1,L.length);let s="";
+  for(let g=0;g<=4;g++){const y=H-pb-(H-pb-8)*g/4;s+=`<line x1="${pl}" x2="${W}" y1="${y}" y2="${y}" stroke="#E6ECF3"/><text x="${pl-5}" y="${y+4}" text-anchor="end" font-size="10" fill="#8B97A5">${Math.round(mx*g/4)}</text>`}
+  for(let d=1;d<=n;d++){const x=pl+(d-1)*bw;let yb=H-pb;if(isOff(ym,d))s+=`<rect x="${x}" y="8" width="${bw}" height="${H-pb-8}" fill="#F3F5F8"/>`;
+    ["P","S","L","A"].forEach(k=>{let c=0;L.forEach(e=>{if(get(ym,e.id,d)===k)c++});if(!c)return;const h=(H-pb-8)*c/mx;yb-=h;s+=`<rect x="${(x+bw*.15).toFixed(1)}" y="${yb.toFixed(1)}" width="${(bw*.7).toFixed(1)}" height="${h.toFixed(1)}" fill="${CC[k]}" rx="1.5"><title>${d} ${MN[+ym.slice(5)-1]} · ${CN[k]} ${c} คน</title></rect>`});
+    if(n<=31&&(d%2===1||bw>22))s+=`<text x="${x+bw/2}" y="${H-8}" text-anchor="middle" font-size="10" fill="#5F7182">${d}</text>`}
+  return`<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="none" style="height:210px">${s}</svg>`}
+function trend(L){const ms=[...Array(6)].map((_,i)=>mAdd(ui.m,i-5)),W=520,H=190,pl=34,pb=26,bw=(W-pl)/6;let s="";
+  for(let g=0;g<=4;g++){const y=H-pb-(H-pb-14)*g/4;s+=`<line x1="${pl}" x2="${W}" y1="${y}" y2="${y}" stroke="#E6ECF3"/><text x="${pl-5}" y="${y+4}" text-anchor="end" font-size="10" fill="#8B97A5">${g*25}%</text>`}
+  ms.forEach((m,i)=>{const o=sum(m,L),x=pl+i*bw,h=(H-pb-14)*o.rate/100;s+=`<rect x="${x+bw*.22}" y="${H-pb-h}" width="${bw*.56}" height="${h}" rx="5" fill="${m===ui.m?"#2F72C4":"#A9C7EC"}"/>`+(o.all?`<text x="${x+bw/2}" y="${H-pb-h-5}" text-anchor="middle" font-size="11" font-weight="700" fill="#1D2A36">${Math.round(o.rate)}%</text>`:"")+`<text x="${x+bw/2}" y="${H-8}" text-anchor="middle" font-size="11" fill="#5F7182">${MN[+m.slice(5)-1]}</text>`});
+  return`<svg viewBox="0 0 ${W} ${H}" width="100%" style="height:200px">${s}</svg>`}
+function rank(ym,L,k){const a=L.map(e=>({e,v:cnt(ym,e.id)[k]})).filter(x=>x.v).sort((x,y)=>y.v-x.v).slice(0,5),mx=a.length?a[0].v:1;
+  return a.length?`<ul class="rk">${a.map(x=>`<li><span class="n">${esc(x.e.name)}</span><span class="b"><i style="width:${x.v/mx*100}%;background:${CC[k]}"></i></span><em style="color:${CC[k]}">${x.v}</em></li>`).join("")}</ul>`:`<p class="note" style="margin:0">ไม่มีใคร${CN[k]}เดือนนี้ 🎉</p>`}
+
+function vDash(M){const ym=ui.m,L=fil(),o=sum(ym,L),pm=sum(mAdd(ym,-1),L),up=lastDay(ym);
+  const dif=(a,b,good,isP)=>{if(!pm.all)return"";const d=Math.round((a-b)*10)/10;if(!d)return"เท่าเดือนก่อน";return`<span style="color:${(d>0)===good?"var(--P)":"var(--A)"}">${d>0?"▲":"▼"} ${Math.abs(d)}${isP?"%":""}</span> จากเดือนก่อน`};
+  const D=depts(),dRows=D.map(d=>{const x=sum(ym,act().filter(e=>e.dept===d));return{d,x,n:act().filter(e=>e.dept===d).length}});
+  M.innerHTML=`${hello("สรุปการมาทำงาน",`${mLabel(ym)}${ui.dep?" · "+esc(ui.dep):""} · บันทึกถึงวันที่ ${up||"–"}`)}
+  <div class="card"><div class="bar"><div class="mnav"><button class="btn ghost sm" id="mp">‹</button><b>${mLabel(ym)}</b><button class="btn ghost sm" id="mn">›</button></div>${depSel()}</div>
+  <div class="kpis"><div class="kpi" style="--k:#5F7182"><span>พนักงาน</span><b>${L.length}</b><small>วันทำงาน ${workDays(ym,dim(ym))} วัน</small></div>
+  <div class="kpi" style="--k:var(--P)"><span>มา (P)</span><b style="color:var(--P)">${o.P}</b><small>คน-วัน</small></div>
+  <div class="kpi" style="--k:var(--S)"><span>สาย (S)</span><b style="color:var(--S)">${o.S}</b><small>${dif(o.S,pm.S,false)}</small></div>
+  <div class="kpi" style="--k:var(--A)"><span>ขาด (A)</span><b style="color:var(--A)">${o.A}</b><small>${dif(o.A,pm.A,false)}</small></div>
+  <div class="kpi" style="--k:var(--L)"><span>ลา (L)</span><b style="color:var(--L)">${o.L}</b><small>${dif(o.L,pm.L,false)}</small></div>
+  <div class="kpi" style="--k:var(--accent)"><span>อัตรามาทำงาน</span><b>${pct(o.rate)}</b><small>${pm.all?dif(o.rate,pm.rate,true,1):"(มา+สาย) ÷ ที่บันทึก"}</small></div></div></div>
+  <div class="g2"><div class="card"><h2>มาทำงานรายวัน <small>จำนวนคน · แถบเทา = วันหยุด</small></h2>${dayBars(ym,L)}<div class="leg">${CODES.map(k=>`<span><i class="cd ${k}">${k}</i>${CN[k]}</span>`).join("")}</div></div>
+  <div class="card"><h2>สัดส่วนทั้งเดือน</h2><div class="dn">${donut(o)}<ul>${CODES.map(k=>`<li><i style="background:${CC[k]}"></i>${CN[k]} (${k})<b>${o[k]}</b></li>`).join("")}</ul></div></div></div>
+  <div class="g3"><div class="card"><h2>ขาดมากที่สุด</h2>${rank(ym,L,"A")}</div><div class="card"><h2>ลามากที่สุด</h2>${rank(ym,L,"L")}</div><div class="card"><h2>สายมากที่สุด</h2>${rank(ym,L,"S")}</div></div>
+  <div class="g2"><div class="card"><h2>อัตรามาทำงาน 6 เดือน</h2>${trend(L)}</div>
+  <div class="card"><h2>แยกตามแผนก</h2>${D.length?`<table class="yr"><tr><th>แผนก</th><th>คน</th><th>ขาด</th><th>ลา</th><th>สาย</th><th>%มา</th></tr>${dRows.map(r=>`<tr><td>${esc(r.d)}</td><td>${r.n}</td><td style="color:var(--A)">${r.x.A}</td><td style="color:var(--L)">${r.x.L}</td><td style="color:var(--S)">${r.x.S}</td><td><b>${r.x.all?pct(r.x.rate):"–"}</b></td></tr>`).join("")}</table>`:`<p class="note" style="margin:0">ใส่แผนกให้พนักงาน (แท็บ 👥) เพื่อดูสรุปแยกแผนก</p>`}</div></div>`;
+  $("#mp").onclick=()=>{ui.m=mAdd(ym,-1);saveUi();render()};$("#mn").onclick=()=>{ui.m=mAdd(ym,1);saveUi();render()};bindDep()}
+
+function vEmps(M){const A=act().length;
+  M.innerHTML=`${hello("รายชื่อพนักงาน",`ใช้งาน ${A} คน${E.length>A?` · พักไว้ ${E.length-A} คน`:""}`)}
+  <div class="card"><div class="bar"><button class="btn main" id="add">＋ เพิ่มพนักงาน</button><button class="btn ghost" id="pst">📋 วางรายชื่อจาก Excel</button></div>
+  ${E.length?`<div class="el">${E.map(e=>`<div class="ei${e.x?" x":""}"><div class="t"><b>${esc(e.name)}</b><small>${esc([e.code,e.dept,e.pos].filter(Boolean).join(" · "))}${e.x?" · พักไว้ (ไม่แสดงในตาราง)":""}</small></div><button class="btn sm ghost" data-ed="${e.id}">แก้ไข</button></div>`).join("")}</div>`:`<p class="empty">ยังไม่มีพนักงาน</p>`}</div>`;
+  $("#add").onclick=()=>empDlg();$("#pst").onclick=pasteDlg;$$("[data-ed]").forEach(b=>b.onclick=()=>empDlg(E.find(e=>e.id===b.dataset.ed)))}
+function dlg(t,h){$("#dlgT").textContent=t;$("#dlgB").innerHTML=h;const d=$("#dlg");if(!d.open)d.showModal();return d}
+$("#dlgX").onclick=()=>$("#dlg").close();
+function empDlg(e){const n=!e;e=e||{};dlg(n?"เพิ่มพนักงาน":"แก้ไขพนักงาน",`<div class="row"><div class="f"><label>รหัส</label><input class="in-" id="ec" value="${esc(e.code||"")}" placeholder="เช่น 5431"></div><div class="f"><label>ชื่อ-นามสกุล *</label><input class="in-" id="en" value="${esc(e.name||"")}"></div></div>
+  <div class="row"><div class="f"><label>แผนก</label><input class="in-" id="ed" list="dlD" value="${esc(e.dept||"")}"><datalist id="dlD">${depts().map(d=>`<option>${esc(d)}</option>`).join("")}</datalist></div><div class="f"><label>ตำแหน่ง</label><input class="in-" id="ep" value="${esc(e.pos||"")}"></div></div>
+  ${n?"":`<label class="note" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="ex"${e.x?" checked":""}> พักไว้ / ลาออกแล้ว (เก็บประวัติไว้ ไม่แสดงในตาราง)</label>`}
+  <div class="bar"><button class="btn main" id="es">บันทึก</button>${n?"":`<button class="btn ghost danger" id="edel">ลบ</button>`}</div>`);
+  setTimeout(()=>$("#en").focus(),50);
+  $("#es").onclick=()=>{const nm=$("#en").value.trim();if(!nm)return toast("ใส่ชื่อก่อน");const o={code:$("#ec").value.trim(),name:nm,dept:$("#ed").value.trim(),pos:$("#ep").value.trim()};if(n){E.push(Object.assign({id:uid()},o))}else{Object.assign(e,o);e.x=$("#ex").checked}if(C.demo){C.demo=false;saveC()}save();$("#dlg").close();render();toast("บันทึกแล้ว")};
+  if(!n)$("#edel").onclick=()=>{if(!confirm("ลบ "+e.name+" และประวัติเช็กชื่อทั้งหมดของคนนี้?"))return;E=E.filter(x=>x!==e);Object.values(R).forEach(m=>delete m[e.id]);save();$("#dlg").close();render()}}
+function pasteDlg(){dlg("วางรายชื่อจาก Excel",`<p class="note" style="margin:0">คัดลอกจาก Excel / Google Sheets มาวางได้เลย หนึ่งบรรทัดต่อหนึ่งคน · ลำดับคอลัมน์ <b>รหัส · ชื่อ · แผนก · ตำแหน่ง</b> (มีแค่ชื่อก็ได้)</p><textarea class="in-" id="pt" rows="9" placeholder="5431&#9;สมชาย ใจดี&#9;ขาย&#10;6446&#9;อรวรรณ ศรีสุข&#9;บัญชี"></textarea><button class="btn main" id="pg">เพิ่มรายชื่อ</button>`);
+  $("#pg").onclick=()=>{let k=0;$("#pt").value.split(/\r?\n/).forEach(l=>{const c=l.split(/\t|,(?=\S)/).map(s=>s.trim());if(!c.join(""))return;let code="",name,dept="",pos="";if(c.length===1)name=c[0];else if(/^[A-Za-z0-9\-_.\/]+$/.test(c[0])){[code,name,dept="",pos=""]=c}else{[name,dept="",pos=""]=c}if(!name||/^(ชื่อ|name)/i.test(name))return;E.push({id:uid(),code,name,dept,pos});k++});if(C.demo){E=E.filter(e=>!e.demo);R={};C.demo=false;saveC()}save();$("#dlg").close();render();toast(`เพิ่ม ${k} คน`)}}
+
+function vSet(M){const hl=Object.keys(C.hol).sort();
+  M.innerHTML=`${hello("ตั้งค่า","วันหยุด ชื่อกิจการ และสำรองข้อมูล")}
+  <div class="card"><h2>ชื่อกิจการ</h2><input class="in-" id="cn" value="${esc(C.name)}" placeholder="เช่น บริษัท ใจดี จำกัด"></div>
+  <div class="card"><h2>วันหยุดประจำสัปดาห์ <small>แสดงเป็นช่องสีเทา ไม่นับเป็นวันทำงาน</small></h2><div class="chk">${WD.map((w,i)=>`<label><input type="checkbox" data-w="${i}"${C.off.includes(i)?" checked":""}> ${["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"][i]}</label>`).join("")}</div></div>
+  <div class="card"><h2>วันหยุดพิเศษ / นักขัตฤกษ์</h2><div class="bar"><input type="date" class="in-" id="hd" style="width:auto"><input class="in-" id="hn" placeholder="ชื่อวันหยุด" style="flex:1;min-width:160px"><button class="btn main" id="ha">＋ เพิ่ม</button></div>
+  ${hl.length?`<div class="el">${hl.map(d=>`<div class="ei"><div class="t"><b>${esc(C.hol[d]||"วันหยุด")}</b><small>${+d.slice(8)} ${MN[+d.slice(5,7)-1]} ${+d.slice(0,4)+543}</small></div><button class="btn sm ghost danger" data-hx="${d}">ลบ</button></div>`).join("")}</div>`:`<p class="note" style="margin:0">ยังไม่มีวันหยุดพิเศษ</p>`}</div>
+  <div class="card"><h2>สำรอง / ย้ายข้อมูล</h2><p class="note" style="margin:0">ข้อมูลเก็บในเครื่องนี้และซิงก์กับบัญชีสมาชิก · ดาวน์โหลดไฟล์สำรองเก็บไว้เป็นระยะ</p><div class="bar"><button class="btn ghost" id="bk">⬇ ดาวน์โหลดไฟล์สำรอง</button><button class="btn ghost" id="im">⬆ นำเข้าไฟล์สำรอง</button><button class="btn ghost" id="dm">✨ ข้อมูลตัวอย่าง</button><button class="btn ghost danger" id="clr">ล้างข้อมูลทั้งหมด</button></div></div>`;
+  $("#cn").onchange=e=>{C.name=e.target.value.trim();saveC();toast("บันทึกแล้ว")};
+  $$("[data-w]").forEach(c=>c.onchange=()=>{C.off=$$("[data-w]").filter(x=>x.checked).map(x=>+x.dataset.w);saveC()});
+  $("#ha").onclick=()=>{const d=$("#hd").value;if(!d)return toast("เลือกวันที่");C.hol[d]=$("#hn").value.trim()||"วันหยุด";saveC();render()};
+  $$("[data-hx]").forEach(b=>b.onclick=()=>{delete C.hol[b.dataset.hx];saveC();render()});
+  $("#bk").onclick=()=>dl("สำรอง-เช็กชื่อ-"+todayS()+".json",JSON.stringify({app:"edm-att",v:1,at:new Date().toISOString(),emps:E,rec:R,cfg:C}),"application/json");
+  $("#im").onclick=()=>$("#impF").click();
+  $("#dm").onclick=demo;
+  $("#clr").onclick=()=>{if(!confirm("ล้างรายชื่อและการเช็กชื่อทั้งหมด? (ควรดาวน์โหลดไฟล์สำรองก่อน)"))return;E=[];R={};C.demo=false;save();saveC();render()}}
+$("#impF").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(j.app!=="edm-att"||!Array.isArray(j.emps))throw 0;if(!confirm(`นำเข้า ${j.emps.length} คน แทนข้อมูลปัจจุบัน?`))return;E=j.emps;R=j.rec||{};C=Object.assign(C,j.cfg||{});save();saveC();render();toast("นำเข้าแล้ว")}catch(x){alert("ไฟล์ไม่ถูกต้อง")}};r.readAsText(f);e.target.value=""};
+
+/* ---------- ข้อมูลตัวอย่าง (สมมติ) ---------- */
+function demo(){if(E.length&&!C.demo&&!confirm("แทนที่ด้วยข้อมูลตัวอย่าง? (ข้อมูลเดิมจะหาย)"))return;
+  const N=[["5431","สมชาย ใจดี","ขาย"],["6446","อรวรรณ ศรีสุข","บัญชี"],["9597","ธนพล วัฒนะ","คลังสินค้า"],["7870","รัชฎา พิมพ์ทอง","ขาย"],["1977","กฤษฎา สุขสันต์","คลังสินค้า"],["6319","มาลิสา อารี","บัญชี"],["3199","ณัฐ ยอดเยี่ยม","ขาย"],["6548","เอมอร ชัยวัฒน์","ธุรการ"]];
+  E=N.map(([code,name,dept],i)=>({id:"d"+i,code,name,dept,pos:"",demo:1}));R={};let s=7;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
+  const t=todayS();for(let k=5;k>=0;k--){const ym=mAdd(t.slice(0,7),-k),up=lastDay(ym);E.forEach((e,i)=>{for(let d=1;d<=up;d++){if(isOff(ym,d))continue;const r=rnd(),bad=i===1||i===6?2:1;put(ym,e.id,d,r<.035*bad?"A":r<.035*bad+.05?"L":r<.035*bad+.05+.05*bad?"S":"P")}})}
+  C.demo=true;C.name=C.name||"บริษัท ตัวอย่าง จำกัด";save();saveC();render();toast("ใส่ข้อมูลตัวอย่างแล้ว (ชื่อสมมติ)")}
+
+$$("#tabs [data-v]").forEach(b=>b.onclick=()=>{ui.v=b.dataset.v;saveUi();render()});
+if(/[?&]demo=1/.test(location.search)&&(!E.length||C.demo))demo();else render();
+window.addEventListener("storage",e=>{if(e.key&&e.key.startsWith("edm_att_")){E=LS.get(K.emps,[])||[];R=LS.get(K.rec,{})||{};C=Object.assign(C,LS.get(K.cfg,{})||{});render()}});
+})();
+</script>
+<script src="../assets/icons.js?v=9"></script>
+<script>/* ไอคอนวาดเองบนแท็บ/โลโก้ */(function(){if(!window.EDM_ICON)return;var I={today:["check","#1E9E5A"],month:["calendar","#2F72C4"],dash:["chart","#9B7BD4"],emps:["users","#0E8C94"],set:["sliders","#5B6B7F"]};document.querySelectorAll("#tabs [data-v]").forEach(function(b){var k=I[b.dataset.v];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.trim().replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON("check",{color:"#2F72C4"}))}})()</script>
+<script src="../assets/track.js?v=3" defer></script><script src="../assets/member.js?v=98" defer></script>
+</body>
+</html>
