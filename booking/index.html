@@ -284,7 +284,11 @@ load();
 /* ระบบแยกตามประเภทธุรกิจ (/app/?ed=hotel|resort|dorm|meet): ตั้งแบบการเช่าให้ตรงธุรกิจครั้งแรก */
 (function(){let ed="";try{ed=(new URLSearchParams(window.top.location.search).get("ed")||"").toLowerCase()}catch(e){}
   const KD={hotel:{night:true,hour:false,item:false},resort:{night:true,hour:false,item:true},dorm:{night:true,hour:false,item:false},meet:{night:false,hour:true,item:true},salon:{night:false,hour:true,item:false},tech:{night:false,hour:true,item:false}}[ed];
-  if(KD&&cfg.biz!==ed){cfg.biz=ed;cfg.kinds=Object.assign({},cfg.kinds,KD);LS.set(K.cfg,cfg)}})();
+  if(KD&&cfg.biz!==ed){cfg.biz=ed;cfg.kinds=Object.assign({},cfg.kinds,KD);LS.set(K.cfg,cfg);
+    /* เปลี่ยนประเภทธุรกิจ + ข้อมูลเดิมเป็นข้อมูลตัวอย่างล้วน → เปลี่ยนเป็นตัวอย่างของธุรกิจใหม่ (ข้อมูลจริงไม่แตะ) */
+    const DID=/^(r101|r102|r201|r301|r302|rCAM|rMA|rTNT|t[1-4]|s[1-4])$/,z=LS.get("edm_book_lease",null);
+    if(res.length&&res.every(r=>DID.test(r.id))&&list.every(b=>/^bd\d/.test(b.id))&&(!z||(z.L||[]).every(L=>/^lsD/.test(L.id)))){
+      res=[];list=[];LS.set(K.res,res);LS.set(K.list,list);if(z)LS.set("edm_book_lease",{L:[],B:{}});window.__reDemo=1}}})();
 /* ข้อความในใบยืนยันตามธุรกิจ: ใช้เมื่อยังเป็นข้อความตั้งต้นของโรงแรม (ร้านยังไม่ได้แก้เอง) */
 (function(){const T={salon:["เลื่อนหรือยกเลิกนัดก่อนเวลานัดอย่างน้อย 3 ชั่วโมง · ไม่มาตามนัดโดยไม่แจ้ง ขอสงวนสิทธิ์ไม่คืนเงินมัดจำ","กรุณามาก่อนเวลานัด 10 นาที"],tech:["เลื่อนหรือยกเลิกงานก่อนเวลานัดอย่างน้อย 24 ชั่วโมง · ยกเลิกหลังช่างออกเดินทางแล้ว อาจมีค่าเดินทาง","ช่างจะโทรแจ้งก่อนเข้าหน้างาน"],meet:["ยกเลิกก่อนวันใช้งาน 3 วัน คืนเงินมัดจำเต็มจำนวน · ยกเลิกน้อยกว่า 3 วัน ขอสงวนสิทธิ์ไม่คืนเงินมัดจำ","กรุณาแสดงใบยืนยันนี้ในวันใช้งาน"]}[cfg.biz];
   if(!T)return;let ch=0;if(cfg.cancel===CFG0.cancel){cfg.cancel=T[0];ch=1}if(cfg.foot===CFG0.foot){cfg.foot=T[1];ch=1}if(ch)LS.set(K.cfg,cfg)})();
@@ -357,12 +361,12 @@ function custDL(){const seen=new Set(),cs=[];list.forEach(b=>{const c=b.cust||{}
 
 /* ---------- หน้าภาพรวม ---------- */
 function vHome(){const V=$("#view"),t=today(),nw=nowT();
-  if(!res.length){V.innerHTML=`<div class="hello"><h1>${cfg.biz==="salon"?"💇 ระบบนัดหมาย / คิวบริการ":cfg.biz==="tech"?"🔧 ระบบจองช่าง / บริการถึงบ้าน":"📅 ระบบจองและให้เช่า"}</h1><p>${cfg.biz==="salon"?"ร้านเสริมสวย สปา คลินิก ร้านทำเล็บ แยกคิวตามช่าง/เตียง":cfg.biz==="tech"?"รับงานติดตั้งกล้องวงจรปิด ช่างแอร์ ช่างไฟ งานซ่อมบ้าน แยกคิวตามช่าง/ทีม เก็บที่อยู่หน้างาน":"จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า"} ระบบเช็กว่างให้ ไม่จองซ้อน และพิมพ์ใบเสร็จได้ทันที</p></div>
-    <div class="card"><h2>เริ่มต้นใน 3 ขั้นตอน</h2><div class="hint">1) เพิ่มห้องหรืออุปกรณ์ที่ให้เช่า พร้อมราคา &nbsp;·&nbsp; 2) กด "＋ จองใหม่" ระบบแสดงเฉพาะที่ว่างและคิดราคาให้ &nbsp;·&nbsp; 3) เช็คอิน/รับคืน รับเงิน แล้วพิมพ์ใบเสร็จ ยอดเข้ารายงานการจองอัตโนมัติ</div>
-    <b>ธุรกิจของคุณให้เช่าแบบไหน? (เลือกเพื่อเพิ่มรายการแรก)</b>
-    <div class="kinds">${KO.filter(kOn).map(k=>`<button type="button" data-addres="${k}" class="edm-lock"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}<button type="button" id="goLease" class="edm-lock"><i>🏢</i><b>หอพัก / อพาร์ตเมนต์ (รายเดือน)</b><span>สัญญาเช่า เงินประกัน จดมิเตอร์น้ำไฟ ออกบิลทุกเดือน</span></button></div>
-    <div class="acts"><button class="btn ghost" id="demoB" type="button">✨ ลองใส่ข้อมูลตัวอย่าง</button><span class="note">ข้อมูลตัวอย่างใส่เฉพาะระบบจอง ลบทิ้งได้ที่หน้าตั้งค่า</span></div></div>`;
-    $$("[data-addres]").forEach(b=>b.onclick=()=>resDlg(null,b.dataset.addres));$("#goLease").onclick=()=>{show("lease");setTimeout(()=>leaseDlg(null),60)};$("#demoB").onclick=demo;return}
+  if(!res.length){if(window.__reDemo){window.__reDemo=0;return demo()}const SVC=cfg.biz==="salon"||cfg.biz==="tech"||cfg.biz==="meet";V.innerHTML=`<div class="hello"><h1>${cfg.biz==="salon"?"💇 ระบบนัดหมาย / คิวบริการ":cfg.biz==="tech"?"🔧 ระบบจองช่าง / บริการถึงบ้าน":"📅 ระบบจองและให้เช่า"}</h1><p>${cfg.biz==="salon"?"ร้านเสริมสวย สปา คลินิก ร้านทำเล็บ แยกคิวตามช่าง/เตียง":cfg.biz==="tech"?"รับงานติดตั้งกล้องวงจรปิด ช่างแอร์ ช่างไฟ งานซ่อมบ้าน แยกคิวตามช่าง/ทีม เก็บที่อยู่หน้างาน":"จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า"} ระบบเช็กว่างให้ ไม่จองซ้อน และพิมพ์ใบเสร็จได้ทันที</p></div>
+    <div class="card"><h2>เริ่มต้นใน 3 ขั้นตอน</h2><div class="hint">${cfg.biz==="tech"?"1) เพิ่มช่าง / ทีม และค่าบริการ &nbsp;·&nbsp; 2) กด \"＋ รับงานใหม่\" ใส่ชื่อลูกค้า ที่อยู่หน้างาน อาการเสีย ระบบแสดงเฉพาะช่างที่ว่าง &nbsp;·&nbsp; 3) ช่างออกหน้างาน → งานเสร็จ รับเงิน แล้วพิมพ์ใบเสร็จ":cfg.biz==="salon"?"1) เพิ่มช่าง / เตียง และราคาบริการ &nbsp;·&nbsp; 2) กด \"＋ นัดใหม่\" ระบบแสดงเฉพาะคิวที่ว่าง &nbsp;·&nbsp; 3) ลูกค้ามาถึง → เสร็จ รับเงิน แล้วพิมพ์ใบเสร็จ":cfg.biz==="meet"?"1) เพิ่มห้องประชุม / อุปกรณ์ พร้อมราคาต่อชั่วโมง &nbsp;·&nbsp; 2) กด \"＋ จองใหม่\" ระบบแสดงเฉพาะห้องที่ว่าง &nbsp;·&nbsp; 3) เริ่มใช้ → ใช้เสร็จ รับเงิน แล้วพิมพ์ใบเสร็จ":`1) เพิ่มห้องหรืออุปกรณ์ที่ให้เช่า พร้อมราคา &nbsp;·&nbsp; 2) กด "＋ จองใหม่" ระบบแสดงเฉพาะที่ว่างและคิดราคาให้ &nbsp;·&nbsp; 3) เช็คอิน/รับคืน รับเงิน แล้วพิมพ์ใบเสร็จ ยอดเข้ารายงานการจองอัตโนมัติ`}</div>
+    <b>${cfg.biz==="tech"?"เพิ่มช่าง / ทีมคนแรก":cfg.biz==="salon"?"เพิ่มช่าง / เตียงแรก":"ธุรกิจของคุณให้เช่าแบบไหน? (เลือกเพื่อเพิ่มรายการแรก)"}</b>
+    <div class="kinds">${KO.filter(kOn).map(k=>`<button type="button" data-addres="${k}" class="edm-lock"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}${SVC?"":`<button type="button" id="goLease" class="edm-lock"><i>🏢</i><b>หอพัก / อพาร์ตเมนต์ (รายเดือน)</b><span>สัญญาเช่า เงินประกัน จดมิเตอร์น้ำไฟ ออกบิลทุกเดือน</span></button>`}</div>
+    <div class="acts"><button class="btn ghost" id="demoB" type="button">✨ ลองใส่ข้อมูลตัวอย่าง</button><span class="note">${cfg.biz==="tech"?"เช่น งานติดกล้องวงจรปิด ซ่อมแอร์ ไฟช็อต ท่อรั่ว · ":""}ลบทิ้งได้ที่หน้าตั้งค่า</span></div></div>`;
+    $$("[data-addres]").forEach(b=>b.onclick=()=>resDlg(null,b.dataset.addres));if($("#goLease"))$("#goLease").onclick=()=>{show("lease");setTimeout(()=>leaseDlg(null),60)};$("#demoB").onclick=demo;return}
   const A=list.filter(ACT);
   const arr=A.filter(b=>(b.st==="hold"||b.st==="conf")&&bStart(b).slice(0,10)<=t).sort((a,b)=>bStart(a).localeCompare(bStart(b)));
   const dep=A.filter(b=>b.st==="in"&&(bEnd(b).length>10?bEnd(b)<=nw.slice(0,10)+"T23:59":bEnd(b)<=t)).sort((a,b)=>bEnd(a).localeCompare(bEnd(b)));
@@ -944,7 +948,7 @@ function demo(){if((res.length||list.length)&&!confirm("ใส่ข้อมู
   const SV={tech:{res:[["t1","ทีมติดตั้งกล้อง A","กล้องวงจรปิด",500,"ติดตั้งกล้อง IP/Analog เดินสาย ตั้งค่าดูผ่านมือถือ"],["t2","ช่างเอก · แอร์","ล้าง/ซ่อมแอร์",600,"ล้างแอร์ เติมน้ำยา ย้ายจุดติดตั้ง"],["t3","ช่างบอย · ไฟฟ้า","ไฟฟ้า",500,"เดินสายไฟ เปลี่ยนเบรกเกอร์ ติดตั้งโคม"],["t4","ช่างต้น · ซ่อมทั่วไป","ซ่อมบ้าน / ประปา",450,"ท่อรั่ว ก๊อกน้ำ ประตูรั้ว งานซ่อมเล็ก"]],
     bk:[["คุณสมศรี (ติดกล้อง 4 ตัว)","081-222-3333","line","conf",[["t1",h(0,"09:00"),h(0,"13:00")]],[["pay",1000,"โอนเงิน",-1]],"ติดกล้องวงจรปิด 4 ตัว หน้าบ้าน โรงรถ หลังบ้าน ทางเดินข้างบ้าน · พร้อมเครื่องบันทึก 4 ช่อง ดูผ่านมือถือ","99/12 หมู่บ้านสุขใจ ถ.บางนา-ตราด"],
       ["ร้านกาแฟ บ้านสวน (แอร์ไม่เย็น)","089-444-5555","phone","in",[["t2",h(0,"10:00"),h(0,"12:00")]],[["pay",600,"เงินสด",0]],"แอร์ไม่เย็น 2 เครื่อง ล้าง + เติมน้ำยา","12 ซ.สุขุมวิท 101"],
-      ["คอนโด ดีดี ห้อง 1203 (ไฟช็อต)","086-666-7777","fb","conf",[["t3",h(0,"14:00"),h(0,"16:00")]],[],"ปลั๊กไฟในครัวช็อต เบรกเกอร์ตัดบ่อย","คอนโด ดีดี ชั้น 12"],
+      ["คุณต้น คอนโด ดีดี (ไฟช็อต)","086-666-7777","fb","conf",[["t3",h(0,"14:00"),h(0,"16:00")]],[],"ปลั๊กไฟในครัวช็อต เบรกเกอร์ตัดบ่อย","คอนโด ดีดี ชั้น 12"],
       ["คุณวีระ (ท่อน้ำรั่ว)","082-888-9999","line","out",[["t4",h(0,"08:00"),h(0,"09:30")]],[["pay",675,"QR พร้อมเพย์",0]],"ท่อใต้ซิงก์ล้างจานรั่ว เปลี่ยนท่อ + ซีลใหม่",""],
       ["โรงงาน เอบีซี (สำรวจหน้างาน)","02-111-2222","phone","hold",[["t1",h(1,"09:00"),h(1,"12:00")]],[],"สำรวจหน้างานติดกล้อง 16 จุด รอบโรงงาน เพื่อทำใบเสนอราคา","นิคมอุตสาหกรรมบางพลี"],
       ["คุณนิด (ซ่อมประตูรั้ว)","090-333-4444","walkin","conf",[["t4",h(2,"10:00"),h(2,"12:00")]],[["pay",300,"เงินสด",-1]],"ประตูรั้วเลื่อนฝืด ล้อหลุด",""]]},
