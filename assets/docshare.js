@@ -164,7 +164,8 @@
   }
 
   /* ---------- เมนู ---------- */
-  var CSS = ".edm-ds{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:flex-end;justify-content:center;background:rgba(15,23,42,.45);font-family:inherit}" +
+  var CSS = "dialog.edm-ds{width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;overflow:auto}dialog.edm-ds::backdrop{background:transparent}" +
+    ".edm-ds{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:flex-end;justify-content:center;background:rgba(15,23,42,.45);font-family:inherit}" +
     ".edm-ds-b{background:#fff;color:#111;width:100%;max-width:420px;border-radius:18px 18px 0 0;padding:18px 16px calc(16px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.2)}" +
     "@media(min-width:700px){.edm-ds{align-items:center}.edm-ds-b{border-radius:18px}}" +
     ".edm-ds-t{font-weight:700;font-size:1.05rem;margin:0 0 2px}.edm-ds-s{color:#64748b;font-size:.85rem;margin:0 0 14px;min-height:1.2em;word-break:break-all}" +
@@ -178,7 +179,7 @@
     catch (e) { return false; }
   }
 
-  function close() { if (sheet) { sheet.remove(); sheet = null; } job++; pdf = null; }
+  function close() { if (sheet) { try { if (sheet.open && sheet.close) sheet.close(); } catch (e) {} sheet.remove(); sheet = null; } job++; pdf = null; }
 
   function open(o) {
     var d = findDoc(o);
@@ -187,12 +188,15 @@
     close();
     var my = ++job, name = fileName(d), share = canShareFiles();
     if (!document.getElementById("edmDsCss")) { var s = document.createElement("style"); s.id = "edmDsCss"; s.textContent = CSS; document.head.appendChild(s); }
-    sheet = document.createElement("div"); sheet.className = "edm-ds no-print"; sheet.setAttribute("role", "dialog"); sheet.setAttribute("aria-label", "ส่งหรือพิมพ์เอกสาร");
+    // ใช้ <dialog> + showModal ให้เด้งขึ้นชั้นบนสุดเสมอ (ไม่หลบอยู่หลังหน้าต่างอื่นที่เปิดค้าง เช่น ใบจอง/ฟอร์มบิล)
+    var dlgOk = typeof HTMLDialogElement === "function";
+    sheet = document.createElement(dlgOk ? "dialog" : "div"); sheet.className = "edm-ds no-print"; sheet.setAttribute("role", "dialog"); sheet.setAttribute("aria-label", "ส่งหรือพิมพ์เอกสาร");
     sheet.innerHTML = '<div class="edm-ds-b"><p class="edm-ds-t">ส่ง / พิมพ์เอกสาร</p><p class="edm-ds-s" id="edmDsS">กำลังเตรียม PDF…</p>' +
       (share ? '<button class="pri" id="edmDsShare" disabled><i>📤</i>ส่ง PDF (LINE · อีเมล · แชร์)</button>' : "") +
       '<button id="edmDsSave" class="' + (share ? "" : "pri") + '" disabled><i>⬇️</i>บันทึกเป็น PDF</button>' +
       '<button id="edmDsPrint"><i>🖨️</i>พิมพ์</button><button class="x" id="edmDsX">ปิด</button></div>';
     document.body.appendChild(sheet);
+    if (dlgOk) { try { sheet.showModal(); } catch (e) { sheet.setAttribute("open", ""); } sheet.addEventListener("cancel", function (e) { e.preventDefault(); close(); }); }
     var $ = function (id) { return document.getElementById(id); }, msg = $("edmDsS");
     sheet.addEventListener("click", function (e) { if (e.target === sheet) close(); });
     $("edmDsX").onclick = close;
