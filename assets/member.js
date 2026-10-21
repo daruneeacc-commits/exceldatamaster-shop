@@ -148,7 +148,7 @@
       var su = mode === "signup";
       h += '<span class="edm-badge">ทดลองใช้ฟรี ' + TRIAL + ' วัน</span><h2>' + esc(tool) + '</h2>' +
         (note ? '<div class="edm-msg err">' + esc(note) + '</div>' : '') +
-        (su ? '<ul class="edm-perks"><li>' + esc(perk()) + '</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดสิทธิ์ให้แล้วแจ้งทางอีเมล</li><li>ไม่ผูกสัญญา ไม่ตัดบัตรอัตโนมัติ ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
+        (su ? '<ul class="edm-perks"><li>' + esc(perk()) + '</li><li>ไม่ต้องใส่บัตรเครดิต · ร้านเปิดสิทธิ์ให้ภายใน 2 ชม. (8:00–22:00) แจ้งทางอีเมล</li><li>ไม่ผูกสัญญา ไม่ตัดบัตรอัตโนมัติ ยกเลิกเมื่อไหร่ก็ได้</li></ul>' : '') +
         '<div class="edm-tabs"><button data-go="signup" class="' + (su ? "on" : "") + '">สมัครใหม่</button><button data-go="login" class="' + (su ? "" : "on") + '">เข้าสู่ระบบ</button></div>' +
         (su ? '<input class="edm-in" id="edmN" autocomplete="off" placeholder="ชื่อร้าน / ชื่อของคุณ (ไม่บังคับ)">' : '') +
         '<input class="edm-in" id="edmE" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="email" placeholder="อีเมล">' +
@@ -219,7 +219,7 @@
     var line = "https://line.me/R/oaMessage/%40856tvnxs/?" + encodeURIComponent("ขอเพิ่มระบบ " + SYS[k].n + " ให้บัญชี " + me.email);
     deny.innerHTML = '<div class="edm-card"><span class="edm-badge">' + esc(me.email) + '</span><h2>' + esc(SYS[k].n) + '</h2>' +
       '<p class="edm-muted">บัญชีนี้ยังไม่ได้เปิดใช้ระบบนี้ · เลือก 1 อย่าง</p>' +
-      '<button class="edm-btn" id="edmTry" type="button">🎁 ขอทดลองฟรี 7 วัน (ร้านอนุมัติ แล้วแจ้งทางอีเมล)</button><div class="edm-msg" id="edmTryM" hidden></div>' +
+      '<button class="edm-btn" id="edmTry" type="button">🎁 ขอทดลองฟรี 7 วัน (เปิดสิทธิ์ภายใน 2 ชม.)</button><div class="edm-msg" id="edmTryM" hidden></div>' +
       '<a class="edm-btn ghost" href="' + esc(buyUrl(k)) + '" target="_blank" rel="noopener">🛒 ซื้อเลย</a>' +
       (mine.length ? '<p class="edm-muted" style="font-size:.8rem;margin:6px 0 0">ระบบที่บัญชีนี้ใช้อยู่: ' + mine.map(function (x) { return '<a href="' + BASE + SYS[x].u + '">' + esc(SYS[x].n) + '</a>'; }).join(" · ") + '</p>' : '') +
       '<button class="edm-link" id="edmDenyOut" type="button" style="align-self:center">ใช้อีเมลอื่น · ออกจากระบบ</button></div>';
@@ -228,7 +228,7 @@
       var bt = this, M = deny.querySelector("#edmTryM"); bt.disabled = true; bt.textContent = "กำลังส่งคำขอ…";
       // ใช้ช่องทางสมัครเดิม (หลังบ้าน v31 ขึ้นไป): บัญชีที่ยืนยันแล้ว = แจ้งร้านทางอีเมล ไม่เปลี่ยนรหัสผ่าน
       call({ a: "signup", email: me.email, pass: "rq-" + Math.random().toString(36).slice(2) + Date.now().toString(36), sys: k }).then(function (r) {
-        if (r && !r.ok && r.code === "exists") r = { ok: true, msg: /คำขอ/.test(r.msg || "") ? "✓ ส่งคำขอแล้ว รอร้านอนุมัติ ระบบจะแจ้งทางอีเมล" : r.msg };
+        if (r && !r.ok && r.code === "exists") r = { ok: true, msg: /คำขอ/.test(r.msg || "") ? "✓ ส่งคำขอแล้ว ร้านเปิดสิทธิ์ให้ภายใน 2 ชม. (8:00–22:00) แจ้งทางอีเมล" : r.msg };
         M.hidden = false; M.className = "edm-msg" + (r && r.ok ? " ok" : " err"); M.textContent = (r && r.msg) || "ส่งไม่สำเร็จ ลองใหม่ หรือทัก LINE ร้าน";
         bt.textContent = r && r.ok ? "✓ ส่งคำขอแล้ว" : "🎁 ขอทดลองใช้ระบบนี้ฟรี 7 วัน"; bt.disabled = !!(r && r.ok);
       }).catch(function () { M.hidden = false; M.className = "edm-msg err"; M.textContent = "เชื่อมต่อไม่ได้ ลองใหม่ หรือทัก LINE ร้าน"; bt.disabled = false; bt.textContent = "🎁 ขอทดลองใช้ระบบนี้ฟรี 7 วัน"; });
