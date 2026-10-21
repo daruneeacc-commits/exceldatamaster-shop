@@ -7,7 +7,7 @@
     if (q.get("notrack") === "1") { ls.setItem("edm_notrack", "1"); return; }
     if (q.get("notrack") === "0") ls.removeItem("edm_notrack");
     if (ls.getItem("edm_notrack") === "1") return;
-    var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbwx6RqiPnBEgGjRbnSzLGztkowkfVI84rQ_r59fWe4tVR5zPVmFW2xhfw9FvlWUuSo3/exec";
+    var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbylmvweKvqw7t8snmpWOFm3Gr6TlN4eKZYX5_CCM_MUvwcgROoNkzwBdVb0DPb2Sqi4/exec";
     var v = ls.getItem("edm_vid"), n = 0;
     if (!v) { v = Math.random().toString(36).slice(2, 12) + Date.now().toString(36).slice(-4); ls.setItem("edm_vid", v); n = 1; }
     var src = ss.getItem("edm_src");
