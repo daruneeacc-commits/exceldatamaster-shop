@@ -285,6 +285,9 @@ load();
 (function(){let ed="";try{ed=(new URLSearchParams(window.top.location.search).get("ed")||"").toLowerCase()}catch(e){}
   const KD={hotel:{night:true,hour:false,item:false},resort:{night:true,hour:false,item:true},dorm:{night:true,hour:false,item:false},meet:{night:false,hour:true,item:true},salon:{night:false,hour:true,item:false},tech:{night:false,hour:true,item:false}}[ed];
   if(KD&&cfg.biz!==ed){cfg.biz=ed;cfg.kinds=Object.assign({},cfg.kinds,KD);LS.set(K.cfg,cfg)}})();
+/* ข้อความในใบยืนยันตามธุรกิจ: ใช้เมื่อยังเป็นข้อความตั้งต้นของโรงแรม (ร้านยังไม่ได้แก้เอง) */
+(function(){const T={salon:["เลื่อนหรือยกเลิกนัดก่อนเวลานัดอย่างน้อย 3 ชั่วโมง · ไม่มาตามนัดโดยไม่แจ้ง ขอสงวนสิทธิ์ไม่คืนเงินมัดจำ","กรุณามาก่อนเวลานัด 10 นาที"],tech:["เลื่อนหรือยกเลิกงานก่อนเวลานัดอย่างน้อย 24 ชั่วโมง · ยกเลิกหลังช่างออกเดินทางแล้ว อาจมีค่าเดินทาง","ช่างจะโทรแจ้งก่อนเข้าหน้างาน"],meet:["ยกเลิกก่อนวันใช้งาน 3 วัน คืนเงินมัดจำเต็มจำนวน · ยกเลิกน้อยกว่า 3 วัน ขอสงวนสิทธิ์ไม่คืนเงินมัดจำ","กรุณาแสดงใบยืนยันนี้ในวันใช้งาน"]}[cfg.biz];
+  if(!T)return;let ch=0;if(cfg.cancel===CFG0.cancel){cfg.cancel=T[0];ch=1}if(cfg.foot===CFG0.foot){cfg.foot=T[1];ch=1}if(ch)LS.set(K.cfg,cfg)})();
 /* ร้านเสริมสวย/สปา/คลินิก: เรียก "นัดหมาย" · หน่วย = ช่าง/เตียง */
 if(cfg.biz==="tech")Object.assign(KIND.hour,{n:"งานช่าง / นัดหน้างาน",ic:"🔧",s:"นัดเวลา",e:"ถึง",in:"🚐 ออกหน้างาน",out:"✅ งานเสร็จ",inS:"กำลังทำงาน",outS:"งานเสร็จ",ex:"ช่างแอร์ ช่างไฟ ช่างประปา ทีมทำความสะอาด",unit:"ช่าง/ทีม"});
 if(cfg.biz==="salon")Object.assign(KIND.hour,{n:"นัดหมาย / คิวบริการ",ic:"💇",s:"นัดเวลา",e:"ถึง",in:"▶️ เริ่มบริการ",out:"🏁 บริการเสร็จ",inS:"กำลังให้บริการ",outS:"บริการเสร็จ",ex:"ช่างตัดผม เตียงนวด/สปา ห้องตรวจ ช่างทำเล็บ",unit:"ช่าง/เตียง"});
@@ -636,7 +639,7 @@ function vRes(){const V=$("#view");const ks=KO.filter(kOn);
 function resDlg(id,kind){const old=id?rOf(id):null;const r=old?Object.assign({},old):{id:uid("r"),kind:kind||"night",name:"",cat:"",qty:1,rate:"",rateWe:"",rate7:"",dep:"",unit:"",note:"",active:true};
   const draw=()=>{const Kd=KIND[r.kind];
   openDlg(old?"แก้ไข "+old.name:"เพิ่ม"+Kd.n,`<div class="db">
-    ${old?"":`<div class="kinds">${KO.map(k=>`<button type="button" data-k="${k}" class="${r.kind===k?"on":""}"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}</div>`}
+    ${old||KO.filter(kOn).length<2?"":`<div class="kinds">${KO.filter(k=>kOn(k)||r.kind===k).map(k=>`<button type="button" data-k="${k}" class="${r.kind===k?"on":""}"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}</div>`}
     <div class="row"><div class="f"><label>ชื่อ${r.kind==="item"?"อุปกรณ์":"ห้อง / สถานที่"} *</label><input class="in-" id="rN" value="${esc(r.name)}" placeholder="${r.kind==="night"?"เช่น ห้อง 101 Deluxe":r.kind==="hour"?"เช่น ห้องประชุม A":"เช่น กล้อง Canon EOS R6"}"></div>
       <div class="f"><label>หมวด / ประเภท</label><input class="in-" id="rC" value="${esc(r.cat||"")}" placeholder="${r.kind==="night"?"เช่น Deluxe, Family":r.kind==="hour"?"เช่น ห้องประชุม, สนาม":"เช่น กล้อง, แคมป์ปิ้ง"}"></div></div>
     <div class="row3"><div class="f"><label>${r.kind==="item"?"จำนวนที่มี":"จำนวน (ห้องเหมือนกัน)"}</label><input class="in- r" id="rQ" inputmode="numeric" value="${esc(r.qty||1)}"></div>
@@ -1040,12 +1043,6 @@ window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.d
 </script>
 <script src="../assets/track.js?v=5" defer></script><script src="../assets/member.js?v=101" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
-<script>/* รุ่นงานนัดหมาย (salon/tech): เปลี่ยนคำเรียกแบบโรงแรมในหน้าจอให้เป็นคำของงานบริการ */
-(function(){var b="";try{b=(JSON.parse(localStorage.getItem("edm_book_cfg")||"{}").biz)||""}catch(e){}if(b!=="salon"&&b!=="tech")return;
-var U=b==="tech"?"ช่าง / ทีม":"ช่าง / เตียง",N=b==="tech"?"ระบบจองช่าง":"ระบบนัดหมาย";
-var M=[["ค่าเช่าแบ่งตามจำนวนคืน/วันที่อยู่ในเดือน (รวมเฉพาะที่ยืนยันแล้ว เข้าพัก และออกแล้ว)","ยอดค่าบริการของงานในเดือน (รวมเฉพาะที่ยืนยันแล้ว กำลังทำ และเสร็จแล้ว)"],["รายงานการจอง","รายงานงานบริการ"],["ใบจองใหม่ (เริ่มในเดือน)","งานใหม่ (เริ่มในเดือน)"],["ค่าประกันถืออยู่","มัดจำที่ถืออยู่"],["ค่าเช่า","ค่าบริการ"],["ต้องเช็คอิน / ส่งมอบวันนี้","คิวที่ยังไม่เริ่มวันนี้"],["ต้องเช็คเอาท์ / รับคืนวันนี้","กำลังทำ / รอปิดงาน"],["เข้า / ส่งมอบวันนี้","คิววันนี้"],["ออก / รับคืนวันนี้","กำลังทำ / รอปิดงาน"],["ภาพรวมการจอง","ภาพรวมงาน"],["ปฏิทินห้อง / อุปกรณ์","ตารางคิว"],["แยกตามห้อง / อุปกรณ์","แยกตาม"+U],["ห้อง / อุปกรณ์ให้เช่า",U],["ห้อง / อุปกรณ์",U],["ระบบจองและให้เช่า",N],["จองใหม่","นัดใหม่"],["รายการจอง","รายการนัด"],["ค่าประกันที่ถืออยู่","มัดจำที่ถืออยู่"],["ใบจอง","ใบนัด"]];
-var R=/\s*·\s*เวลาเช็คอิน.*?เช็คเอาท์\s*[\d:]+\s*น\./;
-function fix(root){var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),n,t,o;while(n=w.nextNode()){t=o=n.nodeValue;if(!t||!/[ก-๙]/.test(t))continue;for(var i=0;i<M.length;i++)if(t.indexOf(M[i][0])>=0)t=t.split(M[i][0]).join(M[i][1]);t=t.replace(R,"");if(t!==o)n.nodeValue=t}}
-var q=0,run=function(){q=0;try{fix(document.body)}catch(e){}};new MutationObserver(function(){if(q)return;q=1;setTimeout(run,30)}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});run();document.addEventListener("DOMContentLoaded",run);window.addEventListener("load",run)})()</script>
+<script src="../assets/bookwords.js?v=1"></script>
 </body>
 </html>

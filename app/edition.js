@@ -66,7 +66,8 @@
   if (E.solo) {
     var IC = { cf: "☕", cfpos: "🧾", cfbar: "🍹", cford: "📋", cfmenu: "📖", cfinv: "🧂", cfshift: "💰", cfrpt: "📊", cfset: "⚙️", bk: "🏠", bkcal: "📅", bklist: "📋", bkres: "🛏️", bklease: "🏢", bkrpt: "📊", bkset: "⚙️" };
     var NM = { cf: "ภาพรวม", cfpos: "ขาย", cfbar: "จอบาร์", cford: "ออเดอร์", cfmenu: "เมนู", cfinv: "วัตถุดิบ", cfshift: "กะ", cfrpt: "รายงาน", cfset: "ตั้งค่า", bk: "ภาพรวม", bkcal: "ปฏิทิน", bklist: "การจอง", bkres: "ห้อง / อุปกรณ์", bklease: "เช่ารายเดือน", bkrpt: "รายงาน", bkset: "ตั้งค่า" };
-    if (ed === "salon" || ed === "tech") { NM.bkres = ed === "tech" ? "ช่าง / ทีม" : "ช่าง / เตียง"; NM.bklist = "นัดหมาย"; NM.bkcal = "ตารางคิว"; IC.bkres = ed === "tech" ? "🔧" : "💇"; }
+    var NB = { hotel: ["ห้องพัก"], resort: ["บ้านพัก"], dorm: ["ห้องเช่า"], salon: ["ช่าง / เตียง", "นัดหมาย", "ตารางคิว", "💇"], tech: ["ช่าง / ทีม", "งานทั้งหมด", "ตารางงาน", "🔧"] }[ed];
+    if (NB) { NM.bkres = NB[0]; if (NB[1]) { NM.bklist = NB[1]; NM.bkcal = NB[2]; IC.bkres = NB[3]; } }
     var sg = $('aside .mg[data-g="' + E.solo + '"]'), foot = $("aside .foot");
     if (sg && foot) $$(".mg-b a", sg).forEach(function (a) { setText(a, NM[a.dataset.r] || ""); var i = document.createElement("span"); i.className = "step"; i.textContent = IC[a.dataset.r] || "•"; a.insertBefore(i, a.firstChild); foot.parentNode.insertBefore(a, foot); });
     $$("aside > a[data-r], aside .mg").forEach(function (x) { if (x.tagName === "A" ? E.allow.indexOf(x.dataset.r) < 0 : true) x.remove(); });
