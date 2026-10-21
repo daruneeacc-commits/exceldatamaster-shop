@@ -11,14 +11,15 @@
    * shop = ระบบร้านค้า (เปิดบิล + สต๊อก + บัญชี) · all = ครบทุกระบบ (ไม่รวมลงเวลา ซึ่งขายแยก) */
   var SYS = {
     bill: { n: "เปิดบิลออนไลน์", u: "bill/" }, stock: { n: "สต๊อกสินค้า", u: "stock/" }, account: { n: "บัญชีร้านค้า", u: "account/" },
-    shop: { n: "ระบบร้านค้า (บิล · สต๊อก · บัญชี)", u: "app/" }, cafe: { n: "ร้านคาเฟ่ (POS)", u: "cafe/" }, book: { n: "จองห้อง / ให้เช่า", u: "booking/" }, dorm: { n: "ระบบหอพัก / อพาร์ตเมนต์", u: "app/?ed=dorm" },
+    shop: { n: "ระบบร้านค้า (บิล · สต๊อก · บัญชี)", u: "app/" }, cafe: { n: "ร้านคาเฟ่ (POS)", u: "cafe/" }, book: { n: "จองห้อง / ให้เช่า", u: "booking/" }, dorm: { n: "ระบบหอพัก / อพาร์ตเมนต์", u: "app/?ed=dorm" }, hotel: { n: "ระบบโรงแรม / โฮมสเตย์", u: "app/?ed=hotel" }, resort: { n: "ระบบรีสอร์ท / บ้านพัก", u: "app/?ed=resort" }, meet: { n: "ระบบห้องประชุม / ให้เช่าอุปกรณ์", u: "app/?ed=meet" }, salon: { n: "ระบบนัดหมาย ร้านเสริมสวย / สปา", u: "app/?ed=salon" }, tech: { n: "ระบบจองช่าง / บริการถึงบ้าน", u: "app/?ed=tech" },
     payroll: { n: "คำนวณเงินเดือน", u: "payroll/" }, time: { n: "ลงเวลา / ตอกบัตร", u: "time/" }, todo: { n: "To-Do งานที่ต้องทำ", u: "todo/" },
     finance: { n: "การเงิน SME & ฟรีแลนซ์", u: "finance/" }, orders: { n: "จัดการออเดอร์ร้านออนไลน์", u: "orders/" }, pos: { n: "POS ร้านค้าปลีก / มินิมาร์ท", u: "pos/" }, goals: { n: "ตั้งเป้าหมาย Smart Goal", u: "goals/" }, plan: { n: "Project Planner วางแผนโปรเจกต์", u: "plan/" }, pet: { n: "ระบบร้านสัตว์เลี้ยง / คลินิกสัตว์", u: "pet/" }, loan: { n: "ติดตามค่างวด / สัญญาเช่าซื้อ", u: "loan/" }, hr: { n: "แดชบอร์ดวิเคราะห์เงินเดือน HR", u: "hr/" }, att: { n: "เช็กชื่อพนักงาน มา ขาด ลา", u: "att/" }, spend: { n: "บันทึกรายรับ-รายจ่าย", u: "spend/" }, sales: { n: "ระบบดูแลทีมขาย", u: "sales/" }
   };
-  var GROUP = { shop: ["shop", "bill", "stock", "account"], book: ["book", "dorm"], kitonline: ["orders", "stock", "finance"], kitsalon: ["book", "dorm", "payroll", "time"], all: ["shop", "bill", "stock", "account", "cafe", "book", "dorm", "payroll", "todo"] }   // all = แพ็กเดิม (ยกเลิกขายแล้ว ใช้ต่อได้) ไม่รวม time / finance;
+  // v44: ระบบจองขายแยกทีละแบบ (hotel/resort/meet/salon/tech/dorm ไม่ใช้ข้ามกัน) · book = แบบเดิมก่อนแยกขาย ครอบทุกแบบให้ลูกค้าเก่า
+  var GROUP = { shop: ["shop", "bill", "stock", "account"], book: ["book", "dorm", "hotel", "resort", "meet", "salon", "tech"], kitonline: ["orders", "stock", "finance"], kitsalon: ["salon", "payroll", "time"], all: ["shop", "bill", "stock", "account", "cafe", "book", "dorm", "hotel", "resort", "meet", "salon", "tech", "payroll", "todo"] }   // all = แพ็กเดิม (ยกเลิกขายแล้ว ใช้ต่อได้) ไม่รวม time / finance;
   function curSys() {
     var p = location.pathname, ed = (/[?&]ed=([a-z]+)/.exec(location.search) || [])[1];
-    if (/\/app\//.test(p)) return { bill: "bill", stock: "stock", book: "book", cafe: "cafe", hotel: "book", resort: "book", dorm: "dorm", meet: "book", salon: "book", tech: "book" }[ed] || "shop"; // รุ่นที่ edition.js รู้จักเท่านั้น อื่น ๆ = ตัวเต็ม (ระบบร้านค้า)
+    if (/\/app\//.test(p)) return { bill: "bill", stock: "stock", book: "book", cafe: "cafe", hotel: "hotel", resort: "resort", dorm: "dorm", meet: "meet", salon: "salon", tech: "tech" }[ed] || "shop"; // รุ่นที่ edition.js รู้จักเท่านั้น อื่น ๆ = ตัวเต็ม (ระบบร้านค้า)
     var m = /\/(bill|stock|account|payroll|time|todo|finance|cafe|booking|orders|pos|goals|spend|sales|plan|pet|loan|hr|att)\//.exec(p);
     return m ? (m[1] === "booking" ? "book" : m[1]) : "";
   }

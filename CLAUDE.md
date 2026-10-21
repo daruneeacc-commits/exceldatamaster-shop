@@ -55,6 +55,7 @@
 - สำรองลูกค้า Drive: `EDM ข้อมูลลูกค้า (ห้ามแชร์)/00 ไฟล์หลักสำหรับกู้คืน (ห้ามลบ)` + `01 ร้านค้า … 06 To-Do · 07 การเงิน SME` (สำเนาแยกตามระบบ) + `เก็บถาวร` · เมนูชีต "จัดไฟล์สำรองลูกค้าเป็นโฟลเดอร์ตามระบบ"
 
 ## งานค้าง
+- **v44 (21 ต.ค.) รอเจ้าของ Deploy** · หน้าเว็บที่คู่กันอยู่ branch `v44-booking-split` (member.js SYS/GROUP/curSys แยก hotel/resort/meet/salon/tech, PLANS sys = รหัสรุ่น) → พอได้ URL: merge เข้า main + แทน ID + prerender + bump member.js v=101 แล้ว push · ห้ามขึ้นก่อนหลังบ้าน v44 (สมัคร/ซื้อระบบจองจะพัง)
 - ✓ v43 Deploy แล้ว 21 ต.ค. 10:21 (AKfycbyYZaTe…) แทน ID ทั้ง repo แล้ว (สินค้า att)
 - ✓ v42 Deploy แล้ว 20 ต.ค. 12:12 (AKfycbwJkmZl…) แทน ID ทั้ง repo แล้ว
 - ✓ 20 ต.ค. เจ้าของ Deploy แล้ว ส่ง URL AKfycbzPQJkU… (ตั้งใจเป็น v41) แทน ID ทั้ง repo แล้ว · ยังไม่ได้ยืนยันเลขเวอร์ชันจากหน้าลิงก์ (sandbox เรียก script.google ไม่ได้) ให้เจ้าของเปิดลิงก์ดูว่าขึ้น v41
