@@ -2,7 +2,7 @@
    รีวิวใหม่ไปที่หลังบ้าน a=rv (รออนุมัติจากร้าน) · แสดงเฉพาะที่ร้านกด "แสดง" (a=rvs) */
 (function () {
   if (window.EDM_RV) return;
-  var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbwJkmZljZol1M-e46U_gGNHUu_FRgbjcqlXCCXLwz1GMjlhhRddkCkugtob2vrn9YCc/exec";
+  var API = window.EDM_API || "https://script.google.com/macros/s/AKfycbyYZaTeX0nyRv3wW4nXQvnR4w8HydFgiKQgbpjKe9GJnmPV_F6l4r8A9BKaAs1hGhqS/exec";
   var css = document.createElement("style");
   css.textContent = ".rvw{margin-top:14px;border-top:1px solid #E6E8EB;padding-top:12px;display:flex;flex-direction:column;gap:10px;text-align:left;font-size:.92rem}" +
     ".rvw h4{margin:0;font-size:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.rvw .stx{color:#E3A008;letter-spacing:1px}.rvw .stx i{color:#D5D9DE;font-style:normal}.rvw .mut{color:#7A838C;font-size:.82rem;font-weight:400}" +
