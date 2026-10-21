@@ -23,7 +23,7 @@
       name: "ระบบจองและให้เช่า", ic: "📅",
       sub: "จองห้องพัก ห้องประชุม สนาม อุปกรณ์ให้เช่า และห้องเช่ารายเดือน (สัญญา จดมิเตอร์ บิลน้ำไฟ) เช็กว่างอัตโนมัติ",
       allow: ["bk", "bkcal", "bklist", "bkres", "bklease", "bkrpt", "bkset"], solo: "bk", start: "bk",
-      shopName: function () { try { return ((JSON.parse(localStorage.getItem("edm_book_cfg") || "{}") || {}).shop || {}).name || ""; } catch (e) { return ""; } },
+      shopName: function () { try { return ((JSON.parse(localStorage.getItem(/^(hotel|resort|dorm|meet|salon|tech)$/.test(ed) ? "edm_book_" + ed + "_cfg" : "edm_book_cfg") || "{}") || {}).shop || {}).name || ""; } catch (e) { return ""; } },
       rpt: {},
       tab: [["bk", "🏠", "หน้าหลัก"], ["bkcal", "📅", "ปฏิทิน"], ["bklist", "📋", "การจอง"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]
     }

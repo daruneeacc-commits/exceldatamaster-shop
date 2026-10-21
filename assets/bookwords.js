@@ -4,7 +4,7 @@
 (function () {
   "use strict";
   var biz = "";
-  try { biz = (JSON.parse(localStorage.getItem("edm_book_cfg") || "{}").biz) || ""; } catch (e) {}
+  try { biz = (JSON.parse(localStorage.getItem((window.EDM_BKP || "edm_book_") + "cfg") || "{}").biz) || ""; } catch (e) {}
   if (!biz) return;
 
   // ---------- คำร่วมแยกตามกลุ่ม ----------

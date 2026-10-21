@@ -237,7 +237,14 @@ html{overscroll-behavior-y:contain}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2800)}
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast("บันทึกไม่ได้: พื้นที่ในเครื่องเต็มหรือเบราว์เซอร์ไม่อนุญาต");return false}}};
-const K={res:"edm_book_res",list:"edm_book_list",cfg:"edm_book_cfg",ui:"edm_book_ui",pub:"edm_book_pub",inbox:"edm_book_inbox",acks:"edm_book_acks"};
+/* ข้อมูลแยกตามรุ่น (/app/?ed=hotel|resort|dorm|meet|salon|tech): แต่ละสินค้าเก็บคนละชุด edm_book_<รุ่น>_* ไม่ปนกัน
+   ระบบจองแบบรวมเดิม (ไม่มี ed) ใช้ edm_book_* เดิม · เปิดรุ่นครั้งแรก: ถ้าข้อมูลเดิมเป็นของรุ่นนี้ (cfg.biz ตรง) คัดลอกมาให้ */
+const BK_ED=(()=>{let e="";try{e=(new URLSearchParams(window.top.location.search).get("ed")||"").toLowerCase()}catch(x){}if(!e)e=(new URLSearchParams(location.search).get("ed")||"").toLowerCase();return ["hotel","resort","dorm","meet","salon","tech"].includes(e)?e:""})();
+const BKP=BK_ED?"edm_book_"+BK_ED+"_":"edm_book_";window.EDM_BKP=BKP;
+const K={res:BKP+"res",list:BKP+"list",cfg:BKP+"cfg",ui:BKP+"ui",pub:BKP+"pub",inbox:BKP+"inbox",acks:BKP+"acks"};
+(function(){if(!BK_ED)return;try{if(localStorage.getItem(K.cfg)!=null)return;const o=JSON.parse(localStorage.getItem("edm_book_cfg")||"null");if(!o)return;
+  const has=(JSON.parse(localStorage.getItem("edm_book_res")||"[]")||[]).length;if(!(o.biz===BK_ED||(!o.biz&&has&&(BK_ED==="hotel"||BK_ED==="dorm"))))return;
+  ["res","list","cfg","ui","pub","inbox","acks","lease"].forEach(k=>{const v=localStorage.getItem("edm_book_"+k);if(v!=null)localStorage.setItem(BKP+k,v)})}catch(e){}})();
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0};
 const r2=n=>Math.round((n+Number.EPSILON)*100)/100;
@@ -286,9 +293,9 @@ load();
   const KD={hotel:{night:true,hour:false,item:false},resort:{night:true,hour:false,item:true},dorm:{night:true,hour:false,item:false},meet:{night:false,hour:true,item:true},salon:{night:false,hour:true,item:false},tech:{night:false,hour:true,item:false}}[ed];
   if(KD&&cfg.biz!==ed){cfg.biz=ed;cfg.kinds=Object.assign({},cfg.kinds,KD);LS.set(K.cfg,cfg);
     /* เปลี่ยนประเภทธุรกิจ + ข้อมูลเดิมเป็นข้อมูลตัวอย่างล้วน → เปลี่ยนเป็นตัวอย่างของธุรกิจใหม่ (ข้อมูลจริงไม่แตะ) */
-    const DID=/^(r101|r102|r201|r301|r302|rCAM|rMA|rTNT|t[1-4]|s[1-4])$/,z=LS.get("edm_book_lease",null);
+    const DID=/^(r101|r102|r201|r301|r302|rCAM|rMA|rTNT|t[1-4]|s[1-4])$/,z=LS.get(BKP+"lease",null);
     if(res.length&&res.every(r=>DID.test(r.id))&&list.every(b=>/^bd\d/.test(b.id))&&(!z||(z.L||[]).every(L=>/^lsD/.test(L.id)))){
-      res=[];list=[];LS.set(K.res,res);LS.set(K.list,list);if(z)LS.set("edm_book_lease",{L:[],B:{}});window.__reDemo=1}}})();
+      res=[];list=[];LS.set(K.res,res);LS.set(K.list,list);if(z)LS.set(BKP+"lease",{L:[],B:{}});window.__reDemo=1}}})();
 /* ข้อความในใบยืนยันตามธุรกิจ: ใช้เมื่อยังเป็นข้อความตั้งต้นของโรงแรม (ร้านยังไม่ได้แก้เอง) */
 (function(){const T={salon:["เลื่อนหรือยกเลิกนัดก่อนเวลานัดอย่างน้อย 3 ชั่วโมง · ไม่มาตามนัดโดยไม่แจ้ง ขอสงวนสิทธิ์ไม่คืนเงินมัดจำ","กรุณามาก่อนเวลานัด 10 นาที"],tech:["เลื่อนหรือยกเลิกงานก่อนเวลานัดอย่างน้อย 24 ชั่วโมง · ยกเลิกหลังช่างออกเดินทางแล้ว อาจมีค่าเดินทาง","ช่างจะโทรแจ้งก่อนเข้าหน้างาน"],meet:["ยกเลิกก่อนวันใช้งาน 3 วัน คืนเงินมัดจำเต็มจำนวน · ยกเลิกน้อยกว่า 3 วัน ขอสงวนสิทธิ์ไม่คืนเงินมัดจำ","กรุณาแสดงใบยืนยันนี้ในวันใช้งาน"]}[cfg.biz];
   if(!T)return;let ch=0;if(cfg.cancel===CFG0.cancel){cfg.cancel=T[0];ch=1}if(cfg.foot===CFG0.foot){cfg.foot=T[1];ch=1}if(ch)LS.set(K.cfg,cfg)})();
@@ -453,7 +460,7 @@ function vList(){const V=$("#view"),t=today(),q=(ui.q||"").trim().toLowerCase();
   const lq=$("#lq");lq.oninput=()=>{ui.q=lq.value;clearTimeout(vList.t);vList.t=setTimeout(()=>{vList();const x=$("#lq");x.focus();x.setSelectionRange(x.value.length,x.value.length)},250)}}
 
 /* ---------- เช่ารายเดือน: สัญญา · จดมิเตอร์ · บิลค่าเช่า+น้ำไฟทุกเดือน (ข้อมูล edm_book_lease แยกจากใบจองรายคืน) ---------- */
-const LK="edm_book_lease";
+const LK=BKP+"lease";
 let LZ={L:[],B:{}};
 function loadLZ(){const o=LS.get(LK,null)||{};LZ={L:Array.isArray(o.L)?o.L:[],B:o.B&&typeof o.B==="object"?o.B:{}};return LZ}
 const saveLZ=()=>pubAfter(LS.set(LK,LZ));
@@ -1058,8 +1065,8 @@ setInterval(()=>{if(document.visibilityState==="visible"&&cfg.online.on){publish
 window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.edm==="member"&&cfg.online.on)setTimeout(()=>publish(false).then(()=>pull()),300)});
 })();
 </script>
-<script src="../assets/track.js?v=5" defer></script><script src="../assets/member.js?v=101" defer></script>
+<script src="../assets/track.js?v=5" defer></script><script src="../assets/member.js?v=102" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
-<script src="../assets/bookwords.js?v=2"></script>
+<script src="../assets/bookwords.js?v=3"></script>
 </body>
 </html>
