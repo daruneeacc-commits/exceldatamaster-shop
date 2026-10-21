@@ -18,7 +18,7 @@
   var GROUP = { shop: ["shop", "bill", "stock", "account"], book: ["book", "dorm"], kitonline: ["orders", "stock", "finance"], kitsalon: ["book", "dorm", "payroll", "time"], all: ["shop", "bill", "stock", "account", "cafe", "book", "dorm", "payroll", "todo"] }   // all = แพ็กเดิม (ยกเลิกขายแล้ว ใช้ต่อได้) ไม่รวม time / finance;
   function curSys() {
     var p = location.pathname, ed = (/[?&]ed=([a-z]+)/.exec(location.search) || [])[1];
-    if (/\/app\//.test(p)) return { bill: "bill", stock: "stock", book: "book", cafe: "cafe", hotel: "book", resort: "book", dorm: "dorm", meet: "book", salon: "book" }[ed] || "shop"; // รุ่นที่ edition.js รู้จักเท่านั้น อื่น ๆ = ตัวเต็ม (ระบบร้านค้า)
+    if (/\/app\//.test(p)) return { bill: "bill", stock: "stock", book: "book", cafe: "cafe", hotel: "book", resort: "book", dorm: "dorm", meet: "book", salon: "book", tech: "book" }[ed] || "shop"; // รุ่นที่ edition.js รู้จักเท่านั้น อื่น ๆ = ตัวเต็ม (ระบบร้านค้า)
     var m = /\/(bill|stock|account|payroll|time|todo|finance|cafe|booking|orders|pos|goals|spend|sales|plan|pet|loan|hr|att)\//.exec(p);
     return m ? (m[1] === "booking" ? "book" : m[1]) : "";
   }

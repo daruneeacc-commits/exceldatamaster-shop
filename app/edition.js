@@ -41,6 +41,7 @@
     hotel: ["ระบบโรงแรม / โฮมสเตย์", "🏨", "จองห้องรายคืน ปฏิทินห้องว่าง เช็คอิน-เอาต์ มัดจำ ราคาวันหยุด ลูกค้าจองเองได้", ["bk", "bkcal", "bklist", "bkres", "bkrpt", "bkset"], "bk", [["bk", "🏠", "หน้าหลัก"], ["bkcal", "📅", "ปฏิทิน"], ["bklist", "📋", "การจอง"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]],
     resort: ["ระบบรีสอร์ท / บ้านพัก", "🌴", "บ้านพักทั้งหลัง ห้องพัก ค่าอาหาร/กิจกรรมในใบจอง มัดจำ ลูกค้าจองเองได้", ["bk", "bkcal", "bklist", "bkres", "bkrpt", "bkset"], "bk", [["bk", "🏠", "หน้าหลัก"], ["bkcal", "📅", "ปฏิทิน"], ["bklist", "📋", "การจอง"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]],
     dorm: ["ระบบหอพัก / อพาร์ตเมนต์", "🏢", "สัญญาเช่า เงินประกัน จดมิเตอร์น้ำไฟ ออกบิลทุกห้องรายเดือน รับเงิน คืนประกัน", ["bklease", "bkres", "bkrpt", "bkset"], "bklease", [["bklease", "🏢", "ผู้เช่า"], ["bkres", "🛏️", "ห้อง"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]],
+    tech: ["ระบบจองช่าง / บริการถึงบ้าน", "🔧", "นัดช่างแอร์ ไฟ ประปา ทำความสะอาด กันคิวชน แยกตามช่าง/ทีม มัดจำ ออกใบเสร็จหน้างาน", ["bk", "bkcal", "bklist", "bkres", "bkrpt", "bkset"], "bk", [["bk", "🏠", "หน้าหลัก"], ["bkcal", "📅", "ตารางงาน"], ["bklist", "📋", "งานทั้งหมด"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]],
     salon: ["ระบบนัดหมาย ร้านเสริมสวย / สปา / คลินิก", "💇", "ลูกค้าจองคิวเอง กันคิวชน แยกตามช่าง/เตียง มัดจำ เตือนนัด", ["bk", "bkcal", "bklist", "bkres", "bkrpt", "bkset"], "bk", [["bk", "🏠", "หน้าหลัก"], ["bkcal", "📅", "ตารางคิว"], ["bklist", "📋", "นัดหมาย"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]],
     meet: ["ระบบจองห้องประชุม / ให้เช่าอุปกรณ์", "🎤", "จองรายชั่วโมง กันจองชน อุปกรณ์เสริม (โปรเจกเตอร์ ไมค์) นับจำนวนคงเหลือ", ["bk", "bkcal", "bklist", "bkres", "bkrpt", "bkset"], "bk", [["bk", "🏠", "หน้าหลัก"], ["bkcal", "📅", "ตาราง"], ["bklist", "📋", "การจอง"], ["bkrpt", "📊", "รายงาน"], ["more", "☰", "เมนู"]]]
   };
@@ -65,6 +66,7 @@
   if (E.solo) {
     var IC = { cf: "☕", cfpos: "🧾", cfbar: "🍹", cford: "📋", cfmenu: "📖", cfinv: "🧂", cfshift: "💰", cfrpt: "📊", cfset: "⚙️", bk: "🏠", bkcal: "📅", bklist: "📋", bkres: "🛏️", bklease: "🏢", bkrpt: "📊", bkset: "⚙️" };
     var NM = { cf: "ภาพรวม", cfpos: "ขาย", cfbar: "จอบาร์", cford: "ออเดอร์", cfmenu: "เมนู", cfinv: "วัตถุดิบ", cfshift: "กะ", cfrpt: "รายงาน", cfset: "ตั้งค่า", bk: "ภาพรวม", bkcal: "ปฏิทิน", bklist: "การจอง", bkres: "ห้อง / อุปกรณ์", bklease: "เช่ารายเดือน", bkrpt: "รายงาน", bkset: "ตั้งค่า" };
+    if (ed === "salon" || ed === "tech") { NM.bkres = ed === "tech" ? "ช่าง / ทีม" : "ช่าง / เตียง"; NM.bklist = "นัดหมาย"; NM.bkcal = "ตารางคิว"; IC.bkres = ed === "tech" ? "🔧" : "💇"; }
     var sg = $('aside .mg[data-g="' + E.solo + '"]'), foot = $("aside .foot");
     if (sg && foot) $$(".mg-b a", sg).forEach(function (a) { setText(a, NM[a.dataset.r] || ""); var i = document.createElement("span"); i.className = "step"; i.textContent = IC[a.dataset.r] || "•"; a.insertBefore(i, a.firstChild); foot.parentNode.insertBefore(a, foot); });
     $$("aside > a[data-r], aside .mg").forEach(function (x) { if (x.tagName === "A" ? E.allow.indexOf(x.dataset.r) < 0 : true) x.remove(); });

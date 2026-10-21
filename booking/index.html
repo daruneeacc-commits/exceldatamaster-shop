@@ -283,9 +283,10 @@ function load(){res=LS.get(K.res,[])||[];list=LS.get(K.list,[])||[];cfg=Object.a
 load();
 /* ระบบแยกตามประเภทธุรกิจ (/app/?ed=hotel|resort|dorm|meet): ตั้งแบบการเช่าให้ตรงธุรกิจครั้งแรก */
 (function(){let ed="";try{ed=(new URLSearchParams(window.top.location.search).get("ed")||"").toLowerCase()}catch(e){}
-  const KD={hotel:{night:true,hour:false,item:false},resort:{night:true,hour:false,item:true},dorm:{night:true,hour:false,item:false},meet:{night:false,hour:true,item:true},salon:{night:false,hour:true,item:false}}[ed];
+  const KD={hotel:{night:true,hour:false,item:false},resort:{night:true,hour:false,item:true},dorm:{night:true,hour:false,item:false},meet:{night:false,hour:true,item:true},salon:{night:false,hour:true,item:false},tech:{night:false,hour:true,item:false}}[ed];
   if(KD&&cfg.biz!==ed){cfg.biz=ed;cfg.kinds=Object.assign({},cfg.kinds,KD);LS.set(K.cfg,cfg)}})();
 /* ร้านเสริมสวย/สปา/คลินิก: เรียก "นัดหมาย" · หน่วย = ช่าง/เตียง */
+if(cfg.biz==="tech")Object.assign(KIND.hour,{n:"งานช่าง / นัดหน้างาน",ic:"🔧",s:"นัดเวลา",e:"ถึง",in:"🚐 ออกหน้างาน",out:"✅ งานเสร็จ",inS:"กำลังทำงาน",outS:"งานเสร็จ",ex:"ช่างแอร์ ช่างไฟ ช่างประปา ทีมทำความสะอาด",unit:"ช่าง/ทีม"});
 if(cfg.biz==="salon")Object.assign(KIND.hour,{n:"นัดหมาย / คิวบริการ",ic:"💇",s:"นัดเวลา",e:"ถึง",in:"▶️ เริ่มบริการ",out:"🏁 บริการเสร็จ",inS:"กำลังให้บริการ",outS:"บริการเสร็จ",ex:"ช่างตัดผม เตียงนวด/สปา ห้องตรวจ ช่างทำเล็บ",unit:"ช่าง/เตียง"});
 const saveRes=()=>pubAfter(LS.set(K.res,res)),saveList=()=>pubAfter(LS.set(K.list,list)),saveCfg=()=>pubAfter(LS.set(K.cfg,cfg)),saveUi=()=>LS.set(K.ui,{v:ui.v,span:ui.span,kf:ui.kf,lf:ui.lf});
 const rOf=id=>res.find(r=>r.id===id);
@@ -353,7 +354,7 @@ function custDL(){const seen=new Set(),cs=[];list.forEach(b=>{const c=b.cust||{}
 
 /* ---------- หน้าภาพรวม ---------- */
 function vHome(){const V=$("#view"),t=today(),nw=nowT();
-  if(!res.length){V.innerHTML=`<div class="hello"><h1>${cfg.biz==="salon"?"💇 ระบบนัดหมาย / คิวบริการ":"📅 ระบบจองและให้เช่า"}</h1><p>${cfg.biz==="salon"?"ร้านเสริมสวย สปา คลินิก ร้านทำเล็บ แยกคิวตามช่าง/เตียง":"จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า"} ระบบเช็กว่างให้ ไม่จองซ้อน และพิมพ์ใบเสร็จได้ทันที</p></div>
+  if(!res.length){V.innerHTML=`<div class="hello"><h1>${cfg.biz==="salon"?"💇 ระบบนัดหมาย / คิวบริการ":cfg.biz==="tech"?"🔧 ระบบจองช่าง / บริการถึงบ้าน":"📅 ระบบจองและให้เช่า"}</h1><p>${cfg.biz==="salon"?"ร้านเสริมสวย สปา คลินิก ร้านทำเล็บ แยกคิวตามช่าง/เตียง":cfg.biz==="tech"?"ช่างแอร์ ช่างไฟ ช่างประปา ทีมทำความสะอาด แยกคิวตามช่าง/ทีม เก็บที่อยู่หน้างาน":"จองห้องพัก ห้องประชุม สนาม และอุปกรณ์ให้เช่า"} ระบบเช็กว่างให้ ไม่จองซ้อน และพิมพ์ใบเสร็จได้ทันที</p></div>
     <div class="card"><h2>เริ่มต้นใน 3 ขั้นตอน</h2><div class="hint">1) เพิ่มห้องหรืออุปกรณ์ที่ให้เช่า พร้อมราคา &nbsp;·&nbsp; 2) กด "＋ จองใหม่" ระบบแสดงเฉพาะที่ว่างและคิดราคาให้ &nbsp;·&nbsp; 3) เช็คอิน/รับคืน รับเงิน แล้วพิมพ์ใบเสร็จ ยอดเข้ารายงานการจองอัตโนมัติ</div>
     <b>ธุรกิจของคุณให้เช่าแบบไหน? (เลือกเพื่อเพิ่มรายการแรก)</b>
     <div class="kinds">${KO.filter(kOn).map(k=>`<button type="button" data-addres="${k}" class="edm-lock"><i>${KIND[k].ic}</i><b>${KIND[k].n}</b><span>${KIND[k].ex}</span></button>`).join("")}<button type="button" id="goLease" class="edm-lock"><i>🏢</i><b>หอพัก / อพาร์ตเมนต์ (รายเดือน)</b><span>สัญญาเช่า เงินประกัน จดมิเตอร์น้ำไฟ ออกบิลทุกเดือน</span></button></div>
@@ -1039,5 +1040,12 @@ window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.d
 </script>
 <script src="../assets/track.js?v=4" defer></script><script src="../assets/member.js?v=100" defer></script>
 <script src="../assets/docshare.js?v=1" defer></script>
+<script>/* รุ่นงานนัดหมาย (salon/tech): เปลี่ยนคำเรียกแบบโรงแรมในหน้าจอให้เป็นคำของงานบริการ */
+(function(){var b="";try{b=(JSON.parse(localStorage.getItem("edm_book_cfg")||"{}").biz)||""}catch(e){}if(b!=="salon"&&b!=="tech")return;
+var U=b==="tech"?"ช่าง / ทีม":"ช่าง / เตียง",N=b==="tech"?"ระบบจองช่าง":"ระบบนัดหมาย";
+var M=[["ต้องเช็คอิน / ส่งมอบวันนี้","คิวที่ยังไม่เริ่มวันนี้"],["ต้องเช็คเอาท์ / รับคืนวันนี้","กำลังทำ / รอปิดงาน"],["ห้องว่างคืนนี้","ช่องว่างวันนี้"],["ยังไม่มีห้องพัก","ดูที่ตารางคิว"],["เข้า / ส่งมอบวันนี้","คิววันนี้"],["ออก / รับคืนวันนี้","กำลังทำ / รอปิดงาน"],["ภาพรวมการจอง","ภาพรวมงาน"],["ปฏิทินห้อง / อุปกรณ์","ตารางคิว"],["แยกตามห้อง / อุปกรณ์","แยกตาม"+U],["ห้อง / อุปกรณ์ให้เช่า",U],["ห้อง / อุปกรณ์",U],["ระบบจองและให้เช่า",N],["จองใหม่","นัดใหม่"],["รายการจอง","รายการนัด"],["ค่าประกันที่ถืออยู่","มัดจำที่ถืออยู่"],["ใบจอง","ใบนัด"]];
+var R=/\s*·\s*เวลาเช็คอิน.*?เช็คเอาท์\s*[\d:]+\s*น\./;
+function fix(root){var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),n,t,o;while(n=w.nextNode()){t=o=n.nodeValue;if(!t||!/[ก-๙]/.test(t))continue;for(var i=0;i<M.length;i++)if(t.indexOf(M[i][0])>=0)t=t.split(M[i][0]).join(M[i][1]);t=t.replace(R,"");if(t!==o)n.nodeValue=t}}
+var q=0,run=function(){q=0;try{fix(document.body)}catch(e){}};new MutationObserver(function(){if(q)return;q=1;setTimeout(run,30)}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});run();document.addEventListener("DOMContentLoaded",run);window.addEventListener("load",run)})()</script>
 </body>
 </html>
