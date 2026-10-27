@@ -477,3 +477,27 @@
   function go() { label(); new MutationObserver(sched).observe(document.body, { childList: true, subtree: true }); }
   if (document.body) go(); else document.addEventListener("DOMContentLoaded", go);
 })();
+
+/* ข้อความแจ้งเตือน (.toast) ต้องเห็นได้แม้มีหน้าต่าง (dialog แบบ modal) เปิดอยู่
+ * เดิม toast อยู่ใต้หน้าต่าง → กดบันทึกแล้วข้อความเตือน เช่น "ใส่ชื่อสินค้า" ไม่ขึ้น ดูเหมือนกดไม่ได้
+ * แก้: ขณะมีหน้าต่างเปิด ย้าย .toast เข้าไปในหน้าต่างบนสุด · ปิดหน้าต่างแล้วย้ายกลับ body */
+(function () {
+  "use strict";
+  if (!window.MutationObserver) return;
+  function topModal() {
+    var a = document.querySelectorAll("dialog[open]"), m = null;
+    for (var i = 0; i < a.length; i++) { try { if (a[i].matches(":modal")) m = a[i]; } catch (e) { m = a[i]; } }
+    return m;
+  }
+  function fix() {
+    var ts = document.querySelectorAll(".toast"); if (!ts.length) return;
+    var d = topModal(), home = d || document.body;
+    for (var i = 0; i < ts.length; i++) if (ts[i].parentNode !== home) home.appendChild(ts[i]);
+  }
+  var q = 0; function sched() { if (q) return; q = requestAnimationFrame(function () { q = 0; fix(); }); }
+  function go() {
+    new MutationObserver(sched).observe(document.body, { attributes: true, attributeFilter: ["open"], subtree: true });
+    document.addEventListener("close", function () { setTimeout(fix, 0); }, true);
+  }
+  if (document.body) go(); else document.addEventListener("DOMContentLoaded", go);
+})();
