@@ -364,6 +364,7 @@ function vSet(){const E=T.emps(),y=+ui.ym.slice(0,4);
    ${c.hol.length?`<div class="tw"><table class="t"><tbody>${c.hol.slice().sort((a,b)=>a.d.localeCompare(b.d)).map(h=>`<tr><td>${esc(thD(h.d))}</td><td>${esc(h.n)}</td><td class="r"><button class="btn sm ghost danger" data-hdel="${esc(h.d)}" type="button">ลบ</button></td></tr>`).join("")}</tbody></table></div>`:""}</section>
   <section class="card"><h2>💾 ข้อมูลลงเวลา</h2><p class="muted small" style="margin:0">ข้อมูลเก็บในเครื่องนี้ และสำรองขึ้นระบบอัตโนมัติเมื่อเข้าสู่ระบบสมาชิก · ใช้เครื่องเดียวเป็นจุดตอกบัตรประจำร้าน (แท็บเล็ตหรือมือถือที่ตั้งไว้หน้าร้าน)</p>
    <div class="row"><button class="btn ghost" id="dExp" type="button">⬇️ สำรองข้อมูลลงเวลา</button><label class="btn ghost" for="dImp">⬆️ นำเข้า</label><input type="file" id="dImp" accept="application/json" hidden></div>
+   <div class="row" style="margin-top:10px"><button class="btn ghost" id="dWipe" type="button" style="color:#B3261E">🧹 ล้างข้อมูลลงเวลาทั้งหมด (เริ่มใหม่)</button></div>
    ${T.emps().length&&!Object.keys(getLog()).length?`<button class="btn ghost" id="dDemo" type="button">✨ สร้างข้อมูลตัวอย่างเดือนนี้ (ดูรายงานก่อนใช้จริง)</button>`:""}</section></div>`}
 function bindSet(){const save=()=>{svCfg();toast("บันทึกแล้ว")};
   $$("[data-sh]").forEach(card=>{const s=c.shifts[+card.dataset.sh];card.querySelectorAll("[data-s]").forEach(i=>i.onchange=()=>{s[i.dataset.s]=i.dataset.s==="brk"?num(i.value):i.value;save();render()});
@@ -382,6 +383,9 @@ function bindSet(){const save=()=>{svCfg();toast("บันทึกแล้ว
   $("#hAdd").onclick=()=>{const d=$("#hD").value,n=$("#hN").value.trim()||"วันหยุด";if(!d)return toast("เลือกวันที่");c.hol=c.hol.filter(h=>h.d!==d);c.hol.push({d,n});save();render()};
   $("#hFix").onclick=()=>{const y=ui.ym.slice(0,4);let n=0;FIXED_HOL.forEach(([md,nm])=>{const d=y+"-"+md;if(!c.hol.some(h=>h.d===d)){c.hol.push({d,n:nm});n++}});save();render();toast("เพิ่ม "+n+" วัน")};
   $$("[data-hdel]").forEach(b=>b.onclick=()=>{c.hol=c.hol.filter(h=>h.d!==b.dataset.hdel);save();render()});
+  $("#dWipe").onclick=()=>{const c=String(Math.floor(1000+Math.random()*9000));const v=prompt("⚠️ ลบข้อมูลลงเวลาทั้งหมด (พนักงาน เวลาเข้า-ออก ตั้งค่า) กู้คืนไม่ได้ถ้าไม่มีไฟล์สำรอง\nแนะนำกด \"สำรองข้อมูลลงเวลา\" ก่อน\n\nพิมพ์รหัส "+c+" เพื่อยืนยัน");if(v==null)return;if(v.trim()!==c)return toast("รหัสไม่ตรง ยังไม่ได้ลบ");
+    Object.keys(localStorage).filter(k=>k.startsWith("edm_time")).forEach(k=>localStorage.removeItem(k));try{localStorage.setItem("edm_sync_wipe","1")}catch(e){}
+    toast("ล้างข้อมูลลงเวลาแล้ว · กำลังอัปเดตข้อมูลสำรอง…");let pr=null;try{if(window.EDM_MEMBER&&EDM_MEMBER.push)pr=EDM_MEMBER.push(true)}catch(e){}Promise.race([Promise.resolve(pr),new Promise(r=>setTimeout(r,8000))]).catch(()=>{}).then(()=>location.reload())};
   $("#dExp").onclick=()=>{const o={app:"edm-time",v:1};Object.values(T.K).filter(k=>k.startsWith("edm_time")).forEach(k=>o[k]=T.get(k,null));const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="time-backup-"+T.today()+".json";a.click()};
   $("#dImp").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const o=JSON.parse(t);if(o.app!=="edm-time")throw 0;if(!confirm("นำเข้าจะแทนที่ข้อมูลลงเวลาในเครื่องนี้ ยืนยัน?"))return;Object.keys(o).filter(k=>k.startsWith("edm_time")).forEach(k=>T.set(k,o[k]));c=T.cfg();toast("นำเข้าแล้ว");render()}).catch(()=>toast("ไฟล์ไม่ถูกต้อง"))};
   if($("#dDemo"))$("#dDemo").onclick=demo}
