@@ -370,6 +370,7 @@ details.adv{border:1px solid var(--line);border-radius:10px;padding:8px 12px}det
             <div class="f"><label>ฐานสูงสุด (กำหนดเอง)</label><input class="in-" data-c="ssoMax" type="number" min="0" step="1" placeholder="อัตโนมัติ"></div>
             <div class="f"><label>ฐานต่ำสุด</label><input class="in-" data-c="ssoMin" type="number" min="0" step="1"></div>
           </div>
+          <div class="row"><div class="f"><label>ค่าล่วงเวลา (OT) คิดประกันสังคมไหม</label><select class="in-" data-c="ssoOT"><option value="">รวม OT ด้วย (ตามหลัก สปส. ค่าเริ่มต้น)</option><option value="no">ไม่รวม OT (คิดจากเงินเดือน/ค่าแรงปกติ)</option></select></div></div>
           <div class="note" style="margin-top:-6px">ฐานสูงสุด: เว้นว่าง = ตามกฎหมายแต่ละปี: 2569–2571 17,500 บาท · 2572–2574 20,000 บาท · 2575 ขึ้นไป 23,000 บาท (ก่อนปี 2569 = 15,000 บาท) · ฐานไม่รวมโบนัส</div>
           <div class="row">
             <div class="f"><label>ค่าแรงขั้นต่ำต่อวัน (จังหวัดของคุณ)</label><input class="in-" data-c="minWage" type="number" min="0" step="1" placeholder="ใส่เพื่อให้ระบบเตือน"></div>
@@ -480,7 +481,7 @@ function calcMonth(e,r,prev,monthIdx,ctx){
   const earn=r2(base+posA+fixA+ot15+ot2+ot3+dil+com+bonus+oth);
   const income=r2(Math.max(0,earn-absD-leaveD-lateD));        // เงินได้ที่ใช้คิดภาษีและประกันสังคม
   // ประกันสังคม: ฐานค่าจ้าง = เงินได้ไม่รวมโบนัส (โบนัสไม่ใช่ "ค่าจ้าง") · เพดานตามปีของงวด
-  const ssoWage=fr?0:r2(Math.max(0,income-bonus));let sso=0,ssoBase=0;
+  const ssoWage=fr?0:r2(Math.max(0,income-bonus-(co.ssoOT==="no"?ot15+ot2+ot3:0)));let sso=0,ssoBase=0;   // co.ssoOT="no" = ไม่นับ OT เป็นฐานประกันสังคม (ร้านเลือกเอง)
   if(!fr&&e.sso&&ssoWage>0){ssoBase=Math.min(Math.max(ssoWage,num(co.ssoMin)),ssoMaxFor(yr));sso=Math.round(ssoBase*num(co.ssoRate)/100)}
   const wage=Math.max(0,base-absD-leaveD),pvd=fr?0:r2(wage*num(e.pvd)/100),erPvd=fr?0:r2(wage*num(e.pvdEr)/100);
   let tax=0,wht=0,yearTax=0,netInc=0;
