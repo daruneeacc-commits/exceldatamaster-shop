@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>คอร์ส Excel · ตารางลงเวลา ติ๊กแล้วบันทึกเวลาอัตโนมัติ | Excel Data Master</title>
+<meta name="description" content="สอนทำตารางลงเวลาเข้างานใน Excel ติ๊กปุ๊บเวลาขึ้นปั๊บ มาสายขึ้นแดงเอง ไม่ต้องซื้อเครื่องตอกบัตร · มีไฟล์พร้อมใช้ · Excel Data Master">
+<meta property="og:title" content="ตารางลงเวลา Excel · ติ๊กแล้วบันทึกเวลาอัตโนมัติ">
+<meta property="og:description" content="ติ๊กปุ๊บ เวลาขึ้นปั๊บ มาสายขึ้นแดงเอง · ไฟล์พร้อมใช้ + คอร์สสอนทำ">
+<meta property="og:image" content="https://exceldatamaster.com/og.jpg?v=2">
+<link rel="icon" href="/assets/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#0f2a3a;--sub:#4a6272;--line:#d6ebf4;--bg:#f4fbfe;--blue:#0f8acb;--green:#2fb37a;--peach:#fde8e1;--card:#fff;--f:"IBM Plex Sans Thai",sans-serif;--h:"Anuphan","IBM Plex Sans Thai",sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f);color:var(--ink);background:var(--bg);line-height:1.6}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--h);font-weight:700}
+.brand img{width:36px;height:36px;border-radius:50%}
+.nav a{text-decoration:none;color:var(--sub);font-weight:600;font-size:15px}
+.hero{padding:36px 0 18px}
+.tag{display:inline-block;background:var(--ink);color:#fff;font-weight:700;font-size:14px;padding:5px 14px;border-radius:999px}
+h1{font-family:var(--h);font-size:clamp(30px,6vw,48px);line-height:1.2;margin:14px 0 10px}
+h1 em{font-style:normal;color:var(--blue)}
+.lead{font-size:clamp(16px,2.6vw,19px);color:var(--sub);max-width:640px}
+.grid{display:grid;grid-template-columns:1.25fr 1fr;gap:24px;margin-top:26px;align-items:start}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.vid{position:relative;width:100%;aspect-ratio:16/9;border-radius:20px;overflow:hidden;background:#0f2a3a;box-shadow:0 18px 50px rgba(15,80,120,.18)}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#0f2a3a}
+.vid.vert{aspect-ratio:9/16;max-width:380px;margin:0 auto}
+.vplay{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-decoration:none;color:#fff;background:radial-gradient(circle at 30% 20%,#1f6f9e 0,#0f2a3a 70%)}
+.vplay .pbtn{width:84px;height:84px;border-radius:50%;background:#fff;color:#0f8acb;display:grid;place-items:center;font-size:34px;padding-left:6px;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:transform .15s}
+.vplay:hover .pbtn{transform:scale(1.07)}
+.vplay .ptxt{font-family:var(--h);font-weight:700;font-size:22px}
+.vplay .psub{font-size:14px;opacity:.75}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 8px 30px rgba(15,80,120,.08)}
+.card h2{font-family:var(--h);font-size:22px;margin-bottom:10px}
+.price{font-family:var(--h);font-size:20px;font-weight:700;color:var(--green);margin:6px 0 14px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 16px;border-radius:14px;font-weight:700;font-size:17px;text-decoration:none;margin-top:10px}
+.btn.line{background:#06c755;color:#fff}
+.btn.fb{background:#fff;border:2px solid var(--line);color:var(--ink)}
+.small{font-size:13.5px;color:var(--sub);margin-top:10px}
+section{padding:30px 0}
+section h2{font-family:var(--h);font-size:26px;margin-bottom:14px}
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.feat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;font-weight:600}
+.feat b{display:block;font-family:var(--h);font-size:17px;margin-bottom:4px}
+.feat span{font-weight:400;color:var(--sub);font-size:15px}
+ol.lessons{list-style:none;counter-reset:l;display:grid;gap:10px}
+ol.lessons li{counter-increment:l;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px 14px 60px;position:relative}
+ol.lessons li::before{content:counter(l,decimal-leading-zero);position:absolute;left:16px;top:13px;width:32px;height:32px;border-radius:10px;background:var(--peach);font-family:var(--h);font-weight:700;display:grid;place-items:center;font-size:15px}
+ol.lessons small{display:block;color:var(--sub)}
+.who{display:flex;flex-wrap:wrap;gap:10px}
+.who span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-weight:600}
+.faq details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.faq summary{font-weight:700;cursor:pointer}
+.faq p{color:var(--sub);margin-top:8px}
+footer{padding:30px 0 50px;text-align:center;color:var(--sub);font-size:14px}
+.mascot{display:flex;gap:14px;align-items:center;background:var(--peach);border-radius:18px;padding:14px 16px;margin-top:14px}
+.mascot img{width:52px;height:52px;border-radius:50%}
+.demo{background:#fff;border:2px solid #1f8fd6;border-radius:14px;padding:10px;overflow-x:auto}
+.demo .dh{font-family:var(--h);font-weight:700;text-align:center;background:#d6ecfa;border-radius:8px;padding:6px;margin-bottom:8px}
+.demo table{border-collapse:collapse;width:100%;font-size:14px}.demo th{background:#d6ecfa;padding:6px 4px;border:1px solid #9cc7e6}
+.demo td{border:1px solid #9cc7e6;padding:5px 6px;text-align:center}.demo td:first-child{text-align:left}
+.demo td:nth-child(2),.demo td:nth-child(3){background:#eaf5fd}.demo td:nth-child(4){color:#1a1aa6}
+.demo .late{background:#ffd6dc;color:#c62828;font-weight:700}.demo .ok{background:#ddf3e4;color:#1b7f3b;font-weight:600}
+.opt{display:grid;grid-template-columns:1fr auto;gap:2px 10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.opt.hot{border:2px solid var(--green);background:#f0fbf5}.opt .pr{font-family:var(--h);font-weight:700;font-size:20px;color:var(--blue)}
+.opt small{grid-column:1/-1;color:var(--sub)}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.jpg" alt="">Excel Data Master</a><nav class="nav"><a href="/course/">← คอร์สทั้งหมด</a></nav></div></header>
+
+<main class="wrap">
+  <div class="hero">
+    <span class="tag">🎬 คอร์สออนไลน์ C02 · ใหม่</span>
+    <h1>ติ๊กปุ๊บ เวลาขึ้นปั๊บ<br><em>ตารางลงเวลาใน Excel</em></h1>
+    <p class="lead">พนักงานมาถึงแค่ติ๊ก เวลาขึ้นเองและค้างไว้ไม่เปลี่ยน มาสายขึ้น "สาย" สีแดงให้ทันที ไม่ต้องซื้อเครื่องตอกบัตร ใช้ Excel ไฟล์เดียวจบ</p>
+
+    <div class="grid">
+      <div>
+        <div class="demo"><div class="dh">ตารางลงเวลาเข้างาน (ติ๊กแล้วบันทึกเวลาอัตโนมัติ)</div><table><tr><th>ชื่อพนักงาน</th><th>ติ๊ก</th><th>เวลา</th><th>เริ่มงาน</th><th>ผลลัพธ์</th></tr>
+<tr><td>สมชาย</td><td>☑</td><td>08:21:05</td><td>08:30:00</td><td class="ok">ตรงเวลา</td></tr>
+<tr><td>สมหญิง</td><td>☑</td><td>08:42:17</td><td>08:30:00</td><td class="late">สาย</td></tr>
+<tr><td>มานะ</td><td>☑</td><td>08:29:40</td><td>08:30:00</td><td class="ok">ตรงเวลา</td></tr>
+<tr><td>น้องฝน</td><td>☐</td><td></td><td>08:30:00</td><td></td></tr></table><p class="small" style="margin-top:6px">ตัวอย่างหน้าตา (ข้อมูลสมมติ) · คลิปตัวอย่างเร็ว ๆ นี้</p></div>
+        <div class="mascot"><img src="/assets/logo.jpg" alt=""><div><b>สอนโดย Excel Data Master</b><br><span style="color:var(--sub)">ผู้ทำไฟล์และระบบเงินเดือน · OT · บิล ให้ร้านค้าและ SME</span></div></div>
+      </div>
+      <div class="card">
+        <h2>C02 · ตารางลงเวลา ติ๊กแล้วบันทึกเวลา</h2>
+        <div class="opt"><b>📄 ไฟล์พร้อมใช้</b><span class="pr">249.-</span><small>ตารางทั้งเดือน 30 คน · หน้าวันนี้ · สรุปสายรายคน · ล็อกกันแก้เวลา</small></div>
+        <div class="opt hot"><b>🎬 คอร์สสอนทำ + ไฟล์</b><span class="pr">590.-</span><small>คลิปสอนทีละขั้น ~12 นาที ย้อนดูได้ + ไฟล์ที่ใช้สอน + ไฟล์พร้อมใช้</small></div>
+        <a class="btn line" href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 สั่งซื้อผ่าน LINE</a>
+        <a class="btn fb" href="https://m.me/Exceldatamaster" target="_blank" rel="noopener">ทักแชตเพจ Facebook</a>
+        <p class="small">พิมพ์ว่า <b>"ลงเวลา C02"</b> แล้วบอกว่าเอาไฟล์หรือคอร์ส ร้านส่งช่องทางชำระเงินให้ค่ะ</p>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h2>เรียนจบแล้วทำอะไรได้</h2>
+    <div class="feats">
+      <div class="feat"><b>☑ ติ๊กแล้วเวลาขึ้นเอง</b><span>เวลาค้างไว้ ไม่เดินตามนาฬิกา กด F9 กี่ครั้งก็ไม่เปลี่ยน</span></div>
+      <div class="feat"><b>🔴 มาสายขึ้นแดง</b><span>เทียบเวลาเริ่มงานรายคน ตั้งผ่อนผันกี่นาทีก็ได้</span></div>
+      <div class="feat"><b>🔒 กันพนักงานแก้เวลา</b><span>ล็อกชีต ติ๊กได้อย่างเดียว</span></div>
+      <div class="feat"><b>📊 สรุปทั้งเดือน (ในไฟล์พร้อมใช้)</b><span>วันมา · วันสาย · นาทีสายรวม รายคน</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>เนื้อหาในคอร์ส</h2>
+    <ol class="lessons">
+      <li><b>ทำหน้าตาตารางลงเวลา 22 คน</b><small>หัวตาราง · ผสานเซลล์ · รูปแบบเวลา hh:mm:ss</small></li>
+      <li><b>ใส่ช่องติ๊ก (Checkbox)</b><small>Excel 365 แทรกได้เลย · รุ่นเก่าใช้ Developer + Cell link</small></li>
+      <li><b>ติ๊กแล้วเวลาขึ้นเองและค้างไว้</b><small>NOW · IF · N · เปิดคำนวณซ้ำ (หัวใจของคอร์ส)</small></li>
+      <li><b>ผลลัพธ์ สาย / ตรงเวลา + ระบายสีแดง</b><small>MOD · Conditional Formatting · ผ่อนผันเป็นนาที</small></li>
+      <li><b>ล็อกชีต และใช้งานทุกวัน</b><small>ป้องกันแผ่นงาน · คัดลอกแท็บวันใหม่</small></li>
+    </ol>
+    <p class="small">* เนื้อหาอาจปรับเล็กน้อยตอนเปิดคอร์สจริง</p>
+  </section>
+
+  <section>
+    <h2>เหมาะกับใคร</h2>
+    <div class="who"><span>👩‍💼 HR / ธุรการ</span><span>🏪 เจ้าของร้าน · SME</span><span>📒 ผู้ทำบัญชี</span><span>🙋 คนอยากเก่ง Excel ใช้ในงานจริง</span></div>
+  </section>
+
+  <section class="faq">
+    <h2>คำถามที่พบบ่อย</h2>
+    <details><summary>ดูคลิปได้ทางไหน</summary><p>ดูผ่านมือถือหรือคอมได้ ใช้บัญชี Google ของอีเมลที่แจ้งตอนซื้อ (ไม่มี Gmail ก็สมัครบัญชี Google ฟรีด้วยอีเมลเดิมได้) ร้านจะเปิดสิทธิ์ให้อีเมลนั้น</p></details>
+    <details><summary>ไม่เก่ง Excel เรียนได้ไหม</summary><p>ได้ค่ะ คลิปสอนแบบช้า ทีละคลิก และมีไฟล์ที่ใช้สอนให้เปิดทำตามไปพร้อมกัน</p></details>
+    <details><summary>ใช้ Excel เวอร์ชันไหน</summary><p>Excel 2010 ขึ้นไป หรือ Microsoft 365 (Checkbox แบบแทรกได้เลยมีใน 365) · Google Sheets ใช้ได้ (เปิด "การคำนวณซ้ำ" ในการตั้งค่า)</p></details>
+    <details><summary>อยากได้ไฟล์ไปใช้เลย ไม่อยากเรียน</summary><p>เลือก "ไฟล์พร้อมใช้ 249.-" ได้เลยค่ะ ถ้าอยากให้ตอกบัตรด้วย PIN แล้วต่อเข้าเงินเดือนอัตโนมัติ ลองระบบลงเวลาออนไลน์ฟรี 7 วันที่ <a href="/time/">ระบบลงเวลา</a></p></details>
+    <details><summary>เวลาไม่ขึ้น / มีเตือนการอ้างอิงแบบวงกลม</summary><p>เปิด File › Options › Formulas › Enable iterative calculation (Maximum Iterations = 1) ในคอร์สสอนไว้แล้วค่ะ</p></details>
+  </section>
+</main>
+
+<footer>© Excel Data Master · <a href="/">exceldatamaster.com</a></footer>
+<script src="../../assets/track.js?v=6" defer></script>
+</body>
+</html>
