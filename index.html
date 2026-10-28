@@ -2013,6 +2013,9 @@ async function saveRemote(d){
   applyCat(r.cat);try{localStorage.setItem("edm_shop_cat",JSON.stringify(r.cat))}catch(e){}render();
 }
 if(/[?&]shopadmin\b/.test(location.search))setTimeout(keyOwner,400);
+// ?buy=<รหัสสินค้า> จากหน้าคอร์ส/โพส → ใส่ตะกร้าแล้วเปิดหน้าชำระเงินเลย
+function tryBuy(){const m=/[?&]buy=([^&#]+)/.exec(location.search);if(!m||window.__buyDone)return;const id=decodeURIComponent(m[1]);if(!byId(id))return;window.__buyDone=1;if(!cart.includes(id))toggleCart(id);openCart();}
+setTimeout(tryBuy,300);setTimeout(tryBuy,2500);setTimeout(tryBuy,6000);
 
 // light up the owner's back office when this viewer can edit the page
 async function initOwner(){
