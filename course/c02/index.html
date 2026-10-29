@@ -93,10 +93,10 @@ footer{padding:30px 0 50px;text-align:center;color:var(--sub);font-size:14px}
       <div class="card">
         <h2>C02 · ตารางลงเวลา ติ๊กแล้วบันทึกเวลา</h2>
         <div class="price">🎉 ราคาเปิดตัว 20 คนแรก</div>
-        <div class="opt"><b>📄 ไฟล์พร้อมใช้</b><span class="pr"><s>249</s> 199.-</span><small>ตารางทั้งเดือน 30 คน · หน้าวันนี้ · สรุปสายรายคน · ล็อกกันแก้เวลา</small></div>
-        <div class="opt hot"><b>🎬 คอร์สสอนทำ + ไฟล์</b><span class="pr"><s>390</s> 290.-</span><small>คลิปสอนทีละขั้น 10–15 นาที ย้อนดูได้ + ไฟล์ที่ใช้สอน + ไฟล์พร้อมใช้</small></div>
-        <a class="btn line" href="/?buy=pmvs6yqyv">🎬 ซื้อคอร์ส + ไฟล์ 290.-</a>
-        <a class="btn fb" href="/?buy=pmvs6kcrv">📄 ซื้อไฟล์พร้อมใช้ 199.-</a>
+        <div class="opt"><b>📄 ไฟล์พร้อมใช้</b><span class="pr" data-pp="pmvs6kcrv"><s>249</s> 199.-</span><small>ตารางทั้งเดือน 30 คน · หน้าวันนี้ · สรุปสายรายคน · ล็อกกันแก้เวลา</small></div>
+        <div class="opt hot"><b>🎬 คอร์สสอนทำ + ไฟล์</b><span class="pr" data-pp="pmvs6yqyv"><s>599</s> 329.-</span><small>คลิปสอนทีละขั้น 10–15 นาที ย้อนดูได้ + ไฟล์ที่ใช้สอน + ไฟล์พร้อมใช้</small></div>
+        <a class="btn line" href="/?buy=pmvs6yqyv">🎬 ซื้อคอร์ส + ไฟล์ <span data-p="pmvs6yqyv">329</span>.-</a>
+        <a class="btn fb" href="/?buy=pmvs6kcrv">📄 ซื้อไฟล์พร้อมใช้ <span data-p="pmvs6kcrv">199</span>.-</a>
         <p class="small">สแกน QR พร้อมเพย์ แนบสลิป → ร้านตรวจแล้วส่งลิงก์คอร์ส/ไฟล์เข้าอีเมลให้ภายใน 2 ชม. (8:00–22:00) · สงสัยทัก <a href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">LINE</a></p>
       </div>
     </div>
@@ -134,12 +134,23 @@ footer{padding:30px 0 50px;text-align:center;color:var(--sub);font-size:14px}
     <details><summary>ดูคลิปได้ทางไหน</summary><p>ดูผ่านมือถือหรือคอมได้ ใช้บัญชี Google ของอีเมลที่แจ้งตอนซื้อ (ไม่มี Gmail ก็สมัครบัญชี Google ฟรีด้วยอีเมลเดิมได้) ร้านจะเปิดสิทธิ์ให้อีเมลนั้น</p></details>
     <details><summary>ไม่เก่ง Excel เรียนได้ไหม</summary><p>ได้ค่ะ คลิปสอนแบบช้า ทีละคลิก และมีไฟล์ที่ใช้สอนให้เปิดทำตามไปพร้อมกัน</p></details>
     <details><summary>ใช้ Excel เวอร์ชันไหน</summary><p>Excel 2010 ขึ้นไป หรือ Microsoft 365 (Checkbox แบบแทรกได้เลยมีใน 365) · Google Sheets ใช้ได้ (เปิด "การคำนวณซ้ำ" ในการตั้งค่า)</p></details>
-    <details><summary>อยากได้ไฟล์ไปใช้เลย ไม่อยากเรียน</summary><p>เลือก "ไฟล์พร้อมใช้ 199.-" ได้เลยค่ะ ถ้าอยากให้ตอกบัตรด้วย PIN แล้วต่อเข้าเงินเดือนอัตโนมัติ ลองระบบลงเวลาออนไลน์ฟรี 7 วันที่ <a href="/time/">ระบบลงเวลา</a></p></details>
+    <details><summary>อยากได้ไฟล์ไปใช้เลย ไม่อยากเรียน</summary><p>เลือก "ไฟล์พร้อมใช้ <span data-p="pmvs6kcrv">199</span>.-" ได้เลยค่ะ ถ้าอยากให้ตอกบัตรด้วย PIN แล้วต่อเข้าเงินเดือนอัตโนมัติ ลองระบบลงเวลาออนไลน์ฟรี 7 วันที่ <a href="/time/">ระบบลงเวลา</a></p></details>
     <details><summary>เวลาไม่ขึ้น / มีเตือนการอ้างอิงแบบวงกลม</summary><p>เปิด File › Options › Formulas › Enable iterative calculation (Maximum Iterations = 1) ในคอร์สสอนไว้แล้วค่ะ</p></details>
   </section>
 </main>
 
 <footer>© Excel Data Master · <a href="/">exceldatamaster.com</a></footer>
+<script>
+/* ราคาตามหลังร้าน (หน้าร้าน › หลังร้าน) อัตโนมัติ */
+(function(){var API="https://script.google.com/macros/s/AKfycbylmvweKvqw7t8snmpWOFm3Gr6TlN4eKZYX5_CCM_MUvwcgROoNkzwBdVb0DPb2Sqi4/exec";
+function f(n){return Number(n).toLocaleString("en-US")}
+function put(c){if(!c||!c.products)return;var M={};c.products.forEach(function(p){M[p.id]=p});
+document.querySelectorAll("[data-p]").forEach(function(e){var p=M[e.dataset.p];if(p&&p.price)e.textContent=f(p.price)});
+document.querySelectorAll("[data-pp]").forEach(function(e){var p=M[e.dataset.pp];if(p&&p.price)e.innerHTML=(p.was&&+p.was>+p.price?"<s>"+f(p.was)+"</s> ":"")+f(p.price)+".-"})}
+try{put(JSON.parse(localStorage.getItem("edm_shop_cat")||"null"))}catch(e){}
+fetch(API,{method:"POST",body:JSON.stringify({a:"shop"})}).then(function(r){return r.json()}).then(function(r){if(r&&r.ok&&r.cat){put(r.cat);try{localStorage.setItem("edm_shop_cat",JSON.stringify(r.cat))}catch(e){}}}).catch(function(){});
+})();
+</script>
 <script src="../../assets/track.js?v=6" defer></script>
 </body>
 </html>

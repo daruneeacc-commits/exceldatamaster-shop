@@ -120,7 +120,7 @@ footer{padding:30px 0 50px;text-align:center;color:var(--sub);font-size:14px}
 
   <section>
     <h2>คอร์สอื่น</h2>
-    <a class="feat" href="/course/c02/" style="display:block;text-decoration:none"><b>☑ C02 · ตารางลงเวลา ติ๊กแล้วบันทึกเวลาอัตโนมัติ</b><span>ติ๊กปุ๊บ เวลาขึ้นปั๊บ มาสายขึ้นแดงเอง · ราคาเปิดตัว ไฟล์ 199.- / คอร์ส+ไฟล์ 290.- →</span></a>
+    <a class="feat" href="/course/c02/" style="display:block;text-decoration:none"><b>☑ C02 · ตารางลงเวลา ติ๊กแล้วบันทึกเวลาอัตโนมัติ</b><span>ติ๊กปุ๊บ เวลาขึ้นปั๊บ มาสายขึ้นแดงเอง · ไฟล์ <span data-p="pmvs6kcrv">199</span>.- / คอร์ส+ไฟล์ <span data-p="pmvs6yqyv">329</span>.- →</span></a>
   </section>
 
   <section class="faq">
@@ -133,6 +133,17 @@ footer{padding:30px 0 50px;text-align:center;color:var(--sub);font-size:14px}
 </main>
 
 <footer>© Excel Data Master · <a href="/">exceldatamaster.com</a></footer>
+<script>
+/* ราคาตามหลังร้าน (หน้าร้าน › หลังร้าน) อัตโนมัติ */
+(function(){var API="https://script.google.com/macros/s/AKfycbylmvweKvqw7t8snmpWOFm3Gr6TlN4eKZYX5_CCM_MUvwcgROoNkzwBdVb0DPb2Sqi4/exec";
+function f(n){return Number(n).toLocaleString("en-US")}
+function put(c){if(!c||!c.products)return;var M={};c.products.forEach(function(p){M[p.id]=p});
+document.querySelectorAll("[data-p]").forEach(function(e){var p=M[e.dataset.p];if(p&&p.price)e.textContent=f(p.price)});
+document.querySelectorAll("[data-pp]").forEach(function(e){var p=M[e.dataset.pp];if(p&&p.price)e.innerHTML=(p.was&&+p.was>+p.price?"<s>"+f(p.was)+"</s> ":"")+f(p.price)+".-"})}
+try{put(JSON.parse(localStorage.getItem("edm_shop_cat")||"null"))}catch(e){}
+fetch(API,{method:"POST",body:JSON.stringify({a:"shop"})}).then(function(r){return r.json()}).then(function(r){if(r&&r.ok&&r.cat){put(r.cat);try{localStorage.setItem("edm_shop_cat",JSON.stringify(r.cat))}catch(e){}}}).catch(function(){});
+})();
+</script>
 <script src="../assets/track.js?v=6" defer></script>
 </body>
 </html>
