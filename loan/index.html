@@ -91,9 +91,9 @@ let C=LS.get(K.items,[])||[],cfg=Object.assign({name:"",warn:3,demo:false},LS.ge
 const save=()=>LS.set(K.items,C),saveC=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,ui);
 /* วันครบกำหนดของงวดที่ i (1..n): เดือนเริ่ม = c.fm (YYYY-MM) + (i-1) · วันที่ = c.day (ถ้าเดือนนั้นไม่มีวันนี้ใช้วันสุดท้าย) */
 function ymAdd(ym,k){const[y,m]=ym.split("-").map(Number),d=new Date(y,m-1+k,1);return d.getFullYear()+"-"+pad(d.getMonth()+1)}
-function dueOf(c,i){const ym=ymAdd(c.fm,i-1),[y,m]=ym.split("-").map(Number),last=new Date(y,m,0).getDate();return ym+"-"+pad(Math.min(c.day,last))}
+function dueOf(c,i){const ym=ymAdd(c.fm,(i-1)*(c.ev||1)),[y,m]=ym.split("-").map(Number),last=new Date(y,m,0).getDate();return ym+"-"+pad(Math.min(c.day,last))}
 const amtOf=(c,i)=>i===1?num(c.a1):num(c.a),total=c=>num(c.a1)+num(c.a)*(c.n-1);
-const idxIn=(c,ym)=>{const[y1,m1]=c.fm.split("-").map(Number),[y,m]=ym.split("-").map(Number),i=(y-y1)*12+(m-m1)+1;return i>=1&&i<=c.n?i:0};
+const idxIn=(c,ym)=>{const[y1,m1]=c.fm.split("-").map(Number),[y,m]=ym.split("-").map(Number),ev=c.ev||1,dm=(y-y1)*12+(m-m1);if(dm<0||dm%ev)return 0;const i=dm/ev+1;return i<=c.n?i:0};   // c.ev = ชำระทุกกี่เดือน (1 = ทุกเดือน · 12 = ทุกปี เช่น ประกันรถ ภาษีรถ)
 const isPaid=(c,i)=>!!(c.paid&&c.paid[i]);
 function stat(c,i){if(isPaid(c,i))return["ชำระแล้ว","ok"];const n=dDiff(today(),dueOf(c,i));if(n<0)return["เลยกำหนด "+(-n)+" วัน","late"];if(n===0)return["ครบกำหนดวันนี้","wait"];if(n<=num(cfg.warn||3))return["อีก "+n+" วัน","wait"];return["ค้างชำระ",""]}
 const paidCnt=c=>Object.keys(c.paid||{}).filter(i=>+i>=1&&+i<=c.n).length,paidAmt=c=>Object.keys(c.paid||{}).filter(i=>+i>=1&&+i<=c.n).reduce((a,i)=>a+amtOf(c,+i),0);
@@ -164,16 +164,17 @@ function cDlg(id){const c=id?C.find(x=>x.id===id):null,nx=C.reduce((a,x)=>Math.m
   <div class="row"><div class="f"><label>เลขที่สัญญา</label><input class="in-" id="cC" value="${esc(c?c.cno:"")}"></div><div class="f"><label>บริษัทลิสซิ่ง / ไฟแนนซ์</label><input class="in-" id="cF" list="finL" value="${esc(c?c.fin:"")}"><datalist id="finL">${[...new Set(C.map(x=>x.fin).filter(Boolean))].map(x=>`<option value="${esc(x)}">`).join("")}</datalist></div></div>
   <div class="f"><label>รายการ (รุ่น / เลขเครื่อง / ทะเบียน)</label><input class="in-" id="cA" value="${esc(c?c.asset:"")}" placeholder="เช่น SK200-10 · YN15435707"></div>
   <div class="row3"><div class="f"><label>วันที่ส่งรถ / เริ่มสัญญา</label><input class="in-" type="date" id="cS" value="${c?c.start||"":today()}"></div><div class="f"><label>ชำระทุกวันที่</label><input class="in-" id="cD" inputmode="numeric" value="${c?c.day:""}" placeholder="1–31"></div><div class="f"><label>งวดแรกเดือน</label><input class="in-" type="month" id="cM" value="${c?c.fm:""}"></div></div>
+  <div class="row3"><div class="f"><label>ชำระทุก</label><select class="in-" id="cEv"><option value="1">ทุกเดือน</option><option value="12"${c&&c.ev==12?" selected":""}>ทุกปี (เช่น ประกันรถ ภาษีรถ)</option></select></div></div>
   <div class="row3"><div class="f"><label>จำนวนงวด</label><input class="in-" id="cNn" inputmode="numeric" value="${c?c.n:60}"></div><div class="f"><label>ยอดงวดที่ 1</label><input class="in-" id="cA1" inputmode="decimal" value="${c?c.a1:""}"></div><div class="f"><label>ยอดงวดที่ 2 เป็นต้นไป</label><input class="in-" id="cAa" inputmode="decimal" value="${c?c.a:""}"></div></div>
   <div class="note" id="cHint"></div>
   <div class="f"><label>หมายเหตุ</label><input class="in-" id="cNt" value="${esc(c?c.note:"")}"></div>
   <div style="display:flex;justify-content:space-between;gap:8px">${c?`<button class="btn ghost danger" id="cDel" type="button">ลบสัญญา</button>`:"<span></span>"}<button class="btn main" id="cOk" type="button">บันทึก</button></div>`);
   const autoM=()=>{if($("#cM").value||!$("#cS").value)return;const s=$("#cS").value,d=num($("#cD").value);if(!d)return;$("#cM").value=ymAdd(s.slice(0,7),1)};
-  const hint=()=>{const n=Math.max(1,num($("#cNn").value)),a1=num($("#cA1").value),a=num($("#cAa").value),fmv=$("#cM").value,d=num($("#cD").value);$("#cHint").innerHTML=fmv&&d?`งวดแรก ${thD(dueOf({fm:fmv,day:d},1))} · งวดสุดท้าย ${thD(dueOf({fm:fmv,day:d},n))} · รวมทั้งสัญญา <b>${fm(a1+a*(n-1))}</b> บาท`:"ใส่วันที่ชำระ แล้วระบบเติมเดือนของงวดแรกให้ (เดือนถัดจากวันส่งรถ) แก้ได้"};
-  ["#cS","#cD"].forEach(s=>$(s).addEventListener("change",()=>{autoM();hint()}));["#cNn","#cA1","#cAa","#cM","#cD"].forEach(s=>$(s).addEventListener("input",hint));hint();
+  const hint=()=>{const n=Math.max(1,num($("#cNn").value)),a1=num($("#cA1").value),a=num($("#cAa").value),fmv=$("#cM").value,d=num($("#cD").value),ev=num($("#cEv").value)||1;$("#cHint").innerHTML=fmv&&d?`งวดแรก ${thD(dueOf({fm:fmv,day:d,ev},1))} · งวดสุดท้าย ${thD(dueOf({fm:fmv,day:d,ev},n))} · รวมทั้งสัญญา <b>${fm(a1+a*(n-1))}</b> บาท`:"ใส่วันที่ชำระ แล้วระบบเติมเดือนของงวดแรกให้ (เดือนถัดจากวันส่งรถ) แก้ได้"};
+  ["#cS","#cD"].forEach(s=>$(s).addEventListener("change",()=>{autoM();hint()}));["#cNn","#cA1","#cAa","#cM","#cD","#cEv"].forEach(s=>$(s).addEventListener("input",hint));$("#cEv").addEventListener("change",hint);hint();
   $("#cOk").onclick=()=>{const n=$("#cN").value.trim(),d=Math.round(num($("#cD").value)),nn=Math.round(num($("#cNn").value));autoM();const fmv=$("#cM").value;
     if(!n)return toast("ใส่ชื่อผู้เช่าซื้อก่อน");if(d<1||d>31)return toast("วันที่ชำระต้องเป็น 1–31");if(!fmv)return toast("ใส่เดือนของงวดแรก");if(nn<1||nn>480)return toast("จำนวนงวดไม่ถูกต้อง");
-    const v={no:$("#cNo").value.trim(),name:n,cno:$("#cC").value.trim(),fin:$("#cF").value.trim(),asset:$("#cA").value.trim(),start:$("#cS").value,day:d,fm:fmv,n:nn,a1:num($("#cA1").value),a:num($("#cAa").value),note:$("#cNt").value.trim()};
+    const v={no:$("#cNo").value.trim(),name:n,cno:$("#cC").value.trim(),fin:$("#cF").value.trim(),asset:$("#cA").value.trim(),start:$("#cS").value,day:d,fm:fmv,ev:num($("#cEv").value)||1,n:nn,a1:num($("#cA1").value),a:num($("#cAa").value),note:$("#cNt").value.trim()};
     if(!v.a1)v.a1=v.a;if(c)Object.assign(c,v);else C.push(Object.assign({id:uid("c"),paid:{}},v));if(cfg.demo&&!c){}save();$("#dlg").close();render();toast("บันทึกแล้ว ✓")};
   const dl=$("#cDel");if(dl)dl.onclick=()=>{if(!confirm("ลบสัญญา "+c.name+" ?"))return;C=C.filter(x=>x!==c);save();$("#dlg").close();ui.v="list";saveUi();render()};
   setTimeout(()=>$("#cN").focus(),60)}
