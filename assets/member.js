@@ -55,7 +55,7 @@
     if (!me) return 0; var X = me.sx, k = curSys(), mx = 0;
     if (!X || !Object.keys(X).length || !k) return me.exp || 0;
     Object.keys(X).forEach(function (c) { if ((GROUP[c] || [c]).indexOf(k) >= 0) mx = Math.max(mx, Number(X[c]) || 0); });
-    return mx;
+    return mx || me.exp || 0;   // ไม่มีวันแยกของระบบนี้ = ใช้วันหมดอายุของบัญชี (เดิมได้ 0 → ขึ้นหมดอายุ 1 ม.ค. 2513)
   }
   function daysLeft() { var e = expAt(); return e ? Math.ceil((e - Date.now()) / 864e5) : 0; }
   function expired() { var e = expAt(); return !me || !e || e < Date.now(); }
