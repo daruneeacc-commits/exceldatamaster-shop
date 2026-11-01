@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="th" data-theme="light" data-tone="mustard">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ระบบติดตามวันครบกำหนด สัญญา ค้ำประกันผลงาน ประกันภัย ใบอนุญาต แจ้งเตือนก่อนหมดอายุ | Excel Data Master</title>
+<meta name="description" content="ติดตามวันหมดอายุ สัญญา หนังสือค้ำประกันผลงาน ค้ำประกันซอง ประกันภัย พ.ร.บ. ใบอนุญาต ภาษี ในที่เดียว เตือนล่วงหน้า 30 / 60 / 90 วัน ปฏิทินทั้งปี คัดลอกข้อความแจ้งเตือนส่ง LINE ได้ ใช้ได้ทั้งมือถือและคอม">
+<link rel="canonical" href="https://exceldatamaster.com/due/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{--bg:#FBF8F1;--card:#fff;--ink:#2B2416;--muted:#74684F;--line:#EDE3CC;--soft:#F7F0DE;--accent:#B7791F;--accent2:#E0A93B;--danger:#C0392B;--ok:#1F8A5B;--warn:#B7791F;--hd:#F5E6BF}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}a{color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1300px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px}.brand{font-weight:700;text-decoration:none;color:var(--accent);display:flex;align-items:center;gap:8px}.brand .edm-ic{width:26px;height:26px}.brand small{color:var(--muted);font-weight:500}.nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.tabs{max-width:1300px;margin:10px auto 0;padding:0 16px;display:flex;gap:6px;overflow-x:auto}.tabs button{flex:none;border:0;border-radius:999px;padding:7px 15px;background:var(--card);box-shadow:0 0 0 1px var(--line);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px}.tabs button .edm-ic{width:22px;height:22px}.tabs button.on{background:var(--accent);color:#fff;box-shadow:none}
+main{max-width:1300px;margin:0 auto;padding:12px 16px 90px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}.card h2{font-size:1.05rem;margin:0;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.card h2 small{font-weight:400;color:var(--muted);font-size:.8rem}
+.hello{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}.hello h1{margin:0;font-size:1.3rem}.hello p{margin:2px 0 0;color:var(--muted)}
+.btn{border:0;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;background:var(--soft);justify-content:center;text-decoration:none;white-space:nowrap}.btn.main{background:var(--accent);color:#fff}.btn.ghost{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:5px 11px;font-size:.84rem}.btn.danger{color:var(--danger)}
+@media(max-width:760px){.fab{bottom:86px!important}}
+.fab{position:fixed;right:18px;bottom:22px;z-index:30;border-radius:999px;padding:13px 20px;box-shadow:0 6px 18px rgba(120,80,0,.28)}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;outline:none}.in-:focus{border-color:var(--accent)}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}.f label{font-size:.8rem;font-weight:600;color:var(--muted)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}@media(max-width:520px){.row3{grid-template-columns:1fr 1fr}}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px var(--line);border-left:5px solid var(--k,var(--accent));cursor:pointer;text-align:left;border-top:0;border-right:0;border-bottom:0}.kpi span{display:block;font-size:.8rem;color:var(--muted)}.kpi b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}.kpi small{color:var(--muted);font-size:.76rem}
+dialog{border:0;border-radius:18px;padding:0;width:min(600px,96vw);max-height:92vh}dialog::backdrop{background:rgba(40,30,10,.45)}.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}.db{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100}
+.note{font-size:.8rem;color:var(--muted)}.empty{text-align:center;padding:24px;color:var(--muted)}
+.tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:.76rem;font-weight:600;white-space:nowrap;background:#EEE;color:#666}.tag.ok{background:#DFF2E6;color:var(--ok)}.tag.late{background:#FBE1DE;color:var(--danger)}.tag.w1{background:#FDE7D3;color:#C2410C}.tag.w2{background:#FFF1CC;color:var(--warn)}.tag.w3{background:#E3EEFB;color:#2F6DB5}.tag.done{background:#EEE;color:#777}
+.ty{display:inline-flex;align-items:center;gap:5px;border-radius:8px;padding:2px 8px;font-size:.76rem;font-weight:600;background:var(--tb,#EEE);color:var(--tc,#555);white-space:nowrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:0;border-radius:999px;padding:5px 12px;background:#fff;box-shadow:0 0 0 1px var(--line);cursor:pointer;font-size:.86rem;font-weight:600}.chip.on{background:var(--ink);color:#fff;box-shadow:none}
+/* รายการต้องจัดการ */
+.al{display:flex;flex-direction:column;gap:8px}
+.ai{display:flex;gap:12px;align-items:center;background:#fff;border-radius:12px;padding:11px 12px;box-shadow:0 0 0 1px var(--line);border-left:5px solid var(--bc,var(--line))}
+.ai .d{min-width:62px;text-align:center;font-weight:700;line-height:1.1}.ai .d b{display:block;font-size:1.35rem}.ai .d small{font-size:.7rem;color:var(--muted);font-weight:600}
+.ai .t{flex:1;min-width:0;cursor:pointer}.ai .t b{display:block;overflow:hidden;text-overflow:ellipsis}.ai .t small{display:block;color:var(--muted);font-size:.8rem}
+.ai .x{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:600px){.ai{flex-wrap:wrap}.ai .x{width:100%;justify-content:flex-start;padding-left:74px}}
+/* ตาราง Excel */
+.tw{overflow-x:auto;border-radius:10px;box-shadow:0 0 0 2px var(--accent2)}
+table.xl{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums;background:#fff}
+.xl th{background:var(--hd);font-weight:700;padding:8px;border:1px solid #E6D3A3;text-align:center;line-height:1.25;white-space:nowrap}
+.xl td{padding:7px 8px;border:1px solid var(--line);vertical-align:middle}
+.xl td.r{text-align:right;white-space:nowrap}.xl td.c{text-align:center;white-space:nowrap}
+.xl tr{cursor:pointer}.xl tr:hover td{background:#FFFBEF}.xl tr.late td{background:#FFF5F3}.xl tr.done td{color:#999}
+.xl td.nm b{display:block}.xl td.nm small{color:var(--muted);display:block}
+.ml{display:none;flex-direction:column;gap:8px}
+@media(max-width:760px){.tw.big{display:none}.ml{display:flex}}
+/* ปฏิทิน */
+.cal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media(max-width:900px){.cal{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.cal{grid-template-columns:1fr}}
+.mo{background:#fff;border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:10px;display:flex;flex-direction:column;gap:6px;min-height:110px}.mo.now{box-shadow:0 0 0 2px var(--accent)}
+.mo h3{margin:0;font-size:.95rem;display:flex;justify-content:space-between}.mo h3 small{color:var(--muted);font-weight:500}
+.ev{font-size:.8rem;border-radius:8px;padding:4px 7px;background:var(--tb,#F4F4F4);cursor:pointer;display:flex;gap:6px}.ev b{font-variant-numeric:tabular-nums;flex:none}.ev span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bars{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;align-items:end;height:90px}.bars div{display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end;cursor:pointer}.bars i{display:block;width:100%;max-width:34px;background:var(--accent2);border-radius:6px 6px 2px 2px;min-height:3px}.bars em{font-style:normal;font-size:.7rem;color:var(--muted)}.bars b{font-size:.75rem}
+@media print{header.top,.tabs,.toast,dialog,.edm-bar,.noprint,.fab{display:none!important}body{background:#fff}main{padding:0}.card{box-shadow:none;padding:6px 0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+<link rel="stylesheet" href="../assets/pastel.css?v=8">
+<script src="../assets/pastel.js?v=2" defer></script>
+<link rel="stylesheet" href="../assets/skin.css?v=1">
+<script src="../assets/skin.js?v=1"></script>
+<script src="../assets/lock.js?v=3"></script>
+<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="ระบบติดตามวันครบกำหนด สัญญา · ค้ำประกัน · ประกันภัย | Excel Data Master"><meta property="og:description" content="เตือนล่วงหน้า 30/60/90 วัน ไม่พลาดวันหมดอายุ สัญญา ค้ำประกันผลงาน ประกันภัย ใบอนุญาต"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-due.jpg?v=1"><meta property="og:url" content="https://exceldatamaster.com/due/">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-due.jpg?v=1">
+<meta name="theme-color" content="#B7791F">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ครบกำหนด">
+</head>
+<body>
+<header class="top"><div class="in"><a class="brand" href="/">⏰ Excel Data Master <small>· ติดตามวันครบกำหนด</small></a><nav class="nav"></nav></div></header>
+<div class="tabs" id="tabs"><button data-v="home">⏰ ต้องจัดการ</button><button data-v="list">📋 รายการทั้งหมด</button><button data-v="cal">📅 ปฏิทินทั้งปี</button><button data-v="set">⚙️ ตั้งค่า</button></div>
+<main id="main"></main>
+<button class="btn main fab noprint" id="fab" type="button">＋ เพิ่มรายการ</button>
+<dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button">✕</button></div><div class="db" id="dlgB"></div></dialog>
+<div class="toast" id="toast" hidden></div>
+<input type="file" id="impF" accept=".json,application/json" hidden>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่เต็ม)");return false}}};
+const K={items:"edm_due_items",cfg:"edm_due_cfg",ui:"edm_due_ui"};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),today=()=>ymd(new Date());
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],MF=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+const thD=s=>{if(!s)return"-";const[y,m,d]=s.split("-");return +d+" "+MS[+m-1]+" "+String(+y+543).slice(2)};
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const dDiff=(a,b)=>Math.round((new Date(b+"T00:00")-new Date(a+"T00:00"))/864e5);
+const addM=(s,k)=>{const[y,m,d]=s.split("-").map(Number),t=new Date(y,m-1+k,1),last=new Date(t.getFullYear(),t.getMonth()+1,0).getDate();return t.getFullYear()+"-"+pad(t.getMonth()+1)+"-"+pad(Math.min(d,last))};
+const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0},f0=n=>(+n||0).toLocaleString("th-TH",{maximumFractionDigits:2});
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
+/* ประเภท: k, ชื่อ, ไอคอน, สีพื้น, สีตัวอักษร, ป้ายช่อง party/bank */
+const TDEF=[["con","สัญญา","📄","#E8EEF9","#2F5DA8"],["perf","ค้ำประกันผลงาน","🛡️","#E6F4EA","#1F7A47"],["bid","ค้ำประกันซอง","✉️","#F1EAFB","#6D3FB0"],["gua","ค้ำประกันสัญญา","🏦","#E3F2F6","#1D6E85"],["ins","ประกันภัย / พ.ร.บ.","🚗","#FDECEF","#B23A57"],["lic","ใบอนุญาต / ภาษี / ทะเบียน","🪪","#FFF3DA","#946200"],["oth","อื่น ๆ","📌","#F1F1F1","#555"]];
+let C=LS.get(K.items,[])||[],cfg=Object.assign({name:"",w1:30,w2:60,w3:90,demo:false},LS.get(K.cfg,{})||{}),ui=Object.assign({v:"home",ft:"",fs:"",q:"",y:+today().slice(0,4)},LS.get(K.ui,{})||{});
+const save=()=>LS.set(K.items,C),saveC=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,ui);
+const TY=k=>TDEF.find(t=>t[0]===k)||TDEF[TDEF.length-1];
+const tyHtml=k=>{const t=TY(k);return`<span class="ty" style="--tb:${t[3]};--tc:${t[4]}">${t[2]} ${esc(t[1])}</span>`};
+const left=c=>dDiff(today(),c.end);
+/* สถานะ: late / w1 / w2 / w3 / ok / done */
+function st(c){if(c.done)return["done",c.rep?"ต่ออายุแล้ว":"ปิดแล้ว"];if(!c.end)return["ok","ไม่มีวันสิ้นสุด"];const n=left(c);if(n<0)return["late","หมดอายุแล้ว "+(-n)+" วัน"];if(n===0)return["late","หมดอายุวันนี้"];if(n<=cfg.w1)return["w1","อีก "+n+" วัน"];if(n<=cfg.w2)return["w2","อีก "+n+" วัน"];if(n<=cfg.w3)return["w3","อีก "+n+" วัน"];return["ok","อีก "+n+" วัน"]}
+const BC={late:"#C0392B",w1:"#EA580C",w2:"#E0A93B",w3:"#4A86C8",ok:"#9CC9A8",done:"#CCC"};
+const active=()=>C.filter(c=>!c.done);
+const sorted=L=>L.slice().sort((a,b)=>(a.end||"9999").localeCompare(b.end||"9999"));
+function lineMsg(L){const h=(cfg.name?"["+cfg.name+"] ":"")+"แจ้งเตือนวันครบกำหนด ณ "+thD(today());return h+"\n"+L.map((c,i)=>{const s=st(c);return(i+1)+") "+TY(c.t)[1]+" · "+c.name+(c.ref?" ("+c.ref+")":"")+"\n   หมดอายุ "+thD(c.end)+" · "+s[1]+(c.amt?" · "+f0(c.amt)+" บาท":"")+(c.who?" · ผู้รับผิดชอบ "+c.who:"")}).join("\n")}
+function copy(t){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast("คัดลอกแล้ว วางในแชตได้เลย ✓")).catch(()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");toast("คัดลอกแล้ว ✓")}catch(e){prompt("คัดลอกข้อความนี้",t)}a.remove()})}
+function emptyHello(M){M.innerHTML=`<div class="card" style="align-items:center;text-align:center;padding:34px 18px"><div style="font-size:2.6rem">⏰</div><h2 style="justify-content:center">ยังไม่มีรายการ</h2><p class="note" style="max-width:460px;margin:0">เพิ่มสัญญา หนังสือค้ำประกันผลงาน ประกันภัย ใบอนุญาต หรืออะไรก็ได้ที่มีวันหมดอายุ ระบบจะเตือนล่วงหน้า ${cfg.w1} / ${cfg.w2} / ${cfg.w3} วัน</p><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="btn main" id="eNew" type="button">＋ เพิ่มรายการแรก</button><button class="btn ghost" id="eDemo" type="button">✨ ดูตัวอย่าง</button></div></div>`;$("#eNew").onclick=()=>iDlg();$("#eDemo").onclick=demo}
+function render(){$$("#tabs [data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));({home:vHome,list:vList,cal:vCal,set:vSet}[ui.v]||vHome)()}
+$("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(!b)return;ui.v=b.dataset.v;saveUi();render();scrollTo(0,0)};
+$("#fab").onclick=()=>iDlg();
+$("#dlgX").onclick=()=>$("#dlg").close();
+function openDlg(t,h){$("#dlgT").textContent=t;$("#dlgB").innerHTML=h;if(!$("#dlg").open)$("#dlg").showModal()}
+
+/* ---------- หน้า ต้องจัดการ ---------- */
+function aiHtml(c){const s=st(c),n=c.end?left(c):null;return`<div class="ai" style="--bc:${BC[s[0]]}"><div class="d" style="color:${BC[s[0]]}">${n==null?"-":n<0?`<b>${-n}</b><small>วันที่เลย</small>`:`<b>${n}</b><small>วัน</small>`}</div><div class="t" data-e="${c.id}"><b>${esc(c.name)}</b><small>${tyHtml(c.t)} ${c.ref?esc(c.ref)+" · ":""}หมดอายุ ${thD(c.end)}${c.party?" · "+esc(c.party):""}${c.amt?" · "+f0(c.amt)+" บาท":""}</small></div><div class="x"><span class="tag ${s[0]}">${s[1]}</span><button class="btn sm ghost" data-r="${c.id}" type="button">${c.rep?"🔄 ต่ออายุแล้ว":"✅ ปิดรายการ"}</button></div></div>`}
+function bindAi(M){M.querySelectorAll("[data-e]").forEach(x=>x.onclick=()=>iDlg(C.find(c=>c.id===x.dataset.e)));M.querySelectorAll("[data-r]").forEach(x=>x.onclick=()=>doneDlg(C.find(c=>c.id===x.dataset.r)))}
+function vHome(){const M=$("#main");if(!C.length)return emptyHello(M);const A=sorted(active()).filter(c=>c.end);
+  const late=A.filter(c=>left(c)<=0),w1=A.filter(c=>left(c)>0&&left(c)<=cfg.w1),w23=A.filter(c=>left(c)>cfg.w1&&left(c)<=cfg.w3);
+  const bondT=["perf","bid","gua"],bond=active().filter(c=>bondT.includes(c.t)).reduce((a,c)=>a+num(c.amt),0);
+  const todo=A.filter(c=>left(c)<=cfg.w3);const y=+today().slice(0,4),ym0=today().slice(0,7);
+  const cnt=Array.from({length:12},(_,i)=>{const ym=addM(ym0+"-01",i).slice(0,7);return[ym,A.filter(c=>c.end.slice(0,7)===ym).length]}),mx=Math.max(1,...cnt.map(x=>x[1]));
+  M.innerHTML=`<div class="hello"><div><h1>${esc(cfg.name||"ติดตามวันครบกำหนด")}</h1><p>วันนี้ ${thD(today())} · ทั้งหมด ${active().length} รายการที่ยังไม่ปิด</p></div>${todo.length?`<button class="btn ghost" id="cpAll" type="button">💬 คัดลอกข้อความแจ้งเตือน (${todo.length})</button>`:""}</div>
+  <div class="kpis"><button class="kpi" style="--k:#C0392B" data-go="late" type="button"><span>หมดอายุ / ถึงกำหนดแล้ว</span><b style="color:#C0392B">${late.length}</b><small>ต้องจัดการด่วน</small></button><button class="kpi" style="--k:#EA580C" data-go="w1" type="button"><span>ภายใน ${cfg.w1} วัน</span><b style="color:#C2410C">${w1.length}</b><small>เตรียมต่ออายุ / ทวงคืน</small></button><button class="kpi" style="--k:#E0A93B" data-go="w3" type="button"><span>${cfg.w1+1}–${cfg.w3} วัน</span><b>${w23.length}</b><small>วางแผนล่วงหน้า</small></button><button class="kpi" style="--k:#1F7A47" data-go="bond" type="button"><span>หลักประกัน / ค้ำประกันคงค้าง</span><b>${f0(bond)}</b><small>บาท · ค้ำผลงาน ซอง สัญญา</small></button></div>
+  <div class="card"><h2>⚠️ ต้องจัดการภายใน ${cfg.w3} วัน <small>เรียงจากใกล้ที่สุด · แตะรายการเพื่อแก้ไข</small></h2>${todo.length?`<div class="al">${todo.map(aiHtml).join("")}</div>`:`<div class="empty">🎉 ไม่มีรายการใกล้ครบกำหนดใน ${cfg.w3} วัน</div>`}</div>
+  <div class="card"><h2>📈 ครบกำหนด 12 เดือนข้างหน้า <small>แตะแท่งเพื่อดูปฏิทิน</small></h2><div class="bars">${cnt.map(([ym,n])=>`<div data-ym="${ym}"><b>${n||""}</b><i style="height:${n/mx*70}%"></i><em>${MS[+ym.slice(5)-1]}</em></div>`).join("")}</div></div>`;
+  bindAi(M);const cp=$("#cpAll");if(cp)cp.onclick=()=>copy(lineMsg(todo));
+  M.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{ui.v="list";ui.fs=b.dataset.go;saveUi();render()});
+  M.querySelectorAll("[data-ym]").forEach(b=>b.onclick=()=>{ui.v="cal";ui.y=+b.dataset.ym.slice(0,4);saveUi();render()})}
+
+/* ---------- รายการทั้งหมด ---------- */
+function vList(){const M=$("#main");if(!C.length)return emptyHello(M);
+  const FS=[["","ทั้งหมด"],["late","หมดอายุแล้ว"],["w1","≤ "+cfg.w1+" วัน"],["w3","≤ "+cfg.w3+" วัน"],["bond","หลักประกันคงค้าง"],["open","ยังไม่ปิด"],["done","ปิดแล้ว"]];
+  M.innerHTML=`<div class="card"><div class="chips" id="fT"><button class="chip${ui.ft?"":" on"}" data-t="" type="button">ทุกประเภท</button>${TDEF.filter(t=>C.some(c=>c.t===t[0])).map(t=>`<button class="chip${ui.ft===t[0]?" on":""}" data-t="${t[0]}" type="button">${t[2]} ${t[1]}</button>`).join("")}</div><div class="chips" id="fS">${FS.map(f=>`<button class="chip${ui.fs===f[0]?" on":""}" data-s="${f[0]}" type="button">${f[1]}</button>`).join("")}</div><input class="in-" id="fQ" placeholder="🔍 ค้นหา ชื่อ / คู่สัญญา / เลขที่ / ธนาคาร / ผู้รับผิดชอบ" value="${esc(ui.q)}"></div><div id="lst"></div>`;
+  const draw=()=>{const q=ui.q.trim().toLowerCase();let L=C.filter(c=>(!ui.ft||c.t===ui.ft)&&(!q||[c.name,c.party,c.ref,c.bank,c.who,c.note].join(" ").toLowerCase().includes(q)));
+    const s=ui.fs;if(s==="late")L=L.filter(c=>!c.done&&c.end&&left(c)<=0);else if(s==="w1")L=L.filter(c=>!c.done&&c.end&&left(c)<=cfg.w1);else if(s==="w3")L=L.filter(c=>!c.done&&c.end&&left(c)<=cfg.w3);else if(s==="bond")L=L.filter(c=>!c.done&&["perf","bid","gua"].includes(c.t));else if(s==="open")L=L.filter(c=>!c.done);else if(s==="done")L=L.filter(c=>c.done);
+    L=sorted(L);const tot=L.reduce((a,c)=>a+num(c.amt),0);
+    $("#lst").innerHTML=L.length?`<div class="card"><h2>${L.length} รายการ <small>มูลค่ารวม ${f0(tot)} บาท</small></h2><div class="tw big"><table class="xl"><thead><tr><th>#</th><th>ประเภท</th><th>รายการ / โครงการ</th><th>เลขที่</th><th>คู่สัญญา / หน่วยงาน</th><th>ธนาคาร / บริษัท</th><th>มูลค่า (บาท)</th><th>เริ่ม</th><th>หมดอายุ</th><th>สถานะ</th><th>ผู้รับผิดชอบ</th></tr></thead><tbody>${L.map((c,i)=>{const z=st(c);return`<tr data-e="${c.id}" class="${z[0]==="late"?"late":z[0]==="done"?"done":""}"><td class="c">${i+1}</td><td>${tyHtml(c.t)}</td><td class="nm"><b>${esc(c.name)}</b>${c.note?`<small>${esc(c.note)}</small>`:""}</td><td class="c">${esc(c.ref)}</td><td>${esc(c.party)}</td><td>${esc(c.bank)}</td><td class="r">${c.amt?f0(c.amt):""}</td><td class="c">${thD(c.start)}</td><td class="c"><b>${thD(c.end)}</b>${c.rep?`<br><small class="note">🔄 ทุก ${c.rep/12>=1&&c.rep%12===0?c.rep/12+" ปี":c.rep+" เดือน"}</small>`:""}</td><td class="c"><span class="tag ${z[0]}">${z[1]}</span></td><td>${esc(c.who)}</td></tr>`}).join("")}</tbody></table></div><div class="ml al">${L.map(aiHtml).join("")}</div></div>`:`<div class="card"><div class="empty">ไม่พบรายการ</div></div>`;
+    $("#lst").querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>iDlg(C.find(c=>c.id===r.dataset.e)));bindAi($("#lst"))};
+  $("#fT").onclick=e=>{const b=e.target.closest("[data-t]");if(!b)return;ui.ft=b.dataset.t;saveUi();vList()};
+  $("#fS").onclick=e=>{const b=e.target.closest("[data-s]");if(!b)return;ui.fs=b.dataset.s;saveUi();vList()};
+  $("#fQ").oninput=e=>{ui.q=e.target.value;saveUi();draw()};draw()}
+
+/* ---------- ปฏิทินทั้งปี ---------- */
+function vCal(){const M=$("#main");if(!C.length)return emptyHello(M);const y=ui.y,ym0=today().slice(0,7);
+  M.innerHTML=`<div class="card"><h2><span>📅 ปฏิทินวันครบกำหนด ปี ${y+543}</span><span style="display:flex;gap:6px"><button class="btn sm ghost" id="yP" type="button">‹ ${y+542}</button><button class="btn sm ghost" id="yT" type="button">ปีนี้</button><button class="btn sm ghost" id="yN" type="button">${y+544} ›</button><button class="btn sm ghost noprint" id="yPr" type="button">🖨️ พิมพ์</button></span></h2><div class="cal">${MF.map((mn,i)=>{const ym=y+"-"+pad(i+1),L=sorted(C.filter(c=>c.end&&c.end.slice(0,7)===ym));return`<div class="mo${ym===ym0?" now":""}"><h3>${mn}<small>${L.length?L.length+" รายการ":""}</small></h3>${L.map(c=>{const t=TY(c.t),z=st(c);return`<div class="ev" data-e="${c.id}" style="--tb:${t[3]};${z[0]==="done"?"opacity:.5;text-decoration:line-through":""}"><b>${+c.end.slice(8)}</b><span>${t[2]} ${esc(c.name)}</span></div>`}).join("")||`<span class="note">—</span>`}</div>`}).join("")}</div><p class="note" style="margin:0">ขีดฆ่า = ปิดแล้ว / ต่ออายุแล้ว · กรอบสีส้ม = เดือนนี้</p></div>`;
+  $("#yP").onclick=()=>{ui.y--;saveUi();vCal()};$("#yN").onclick=()=>{ui.y++;saveUi();vCal()};$("#yT").onclick=()=>{ui.y=+today().slice(0,4);saveUi();vCal()};$("#yPr").onclick=()=>print();
+  M.querySelectorAll("[data-e]").forEach(x=>x.onclick=()=>iDlg(C.find(c=>c.id===x.dataset.e)))}
+
+/* ---------- เพิ่ม / แก้ไข ---------- */
+function iDlg(c){const o=c||{t:"perf",start:today(),rep:0};
+  openDlg(c?"แก้ไขรายการ":"เพิ่มรายการ",`<div class="f"><label>ประเภท</label><select class="in-" id="iT">${TDEF.map(t=>`<option value="${t[0]}"${o.t===t[0]?" selected":""}>${t[2]} ${t[1]}</option>`).join("")}</select></div>
+  <div class="f"><label>ชื่อรายการ / โครงการ *</label><input class="in-" id="iN" value="${esc(o.name)}" placeholder="เช่น ค้ำประกันผลงาน งานก่อสร้างอาคาร A / ประกันรถ กข 1234"></div>
+  <div class="row"><div class="f"><label id="lP">คู่สัญญา / หน่วยงาน</label><input class="in-" id="iP" value="${esc(o.party)}"></div><div class="f"><label>เลขที่สัญญา / เลขที่หนังสือ / กรมธรรม์</label><input class="in-" id="iR" value="${esc(o.ref)}"></div></div>
+  <div class="row"><div class="f"><label>ธนาคาร / บริษัทประกัน / ผู้ออก</label><input class="in-" id="iB" value="${esc(o.bank)}"></div><div class="f"><label>มูลค่า / วงเงิน (บาท)</label><input class="in-" id="iA" inputmode="decimal" value="${o.amt||""}"></div></div>
+  <div class="row3"><div class="f"><label>วันเริ่ม</label><input class="in-" type="date" id="iS" value="${o.start||""}"></div><div class="f"><label>วันหมดอายุ / ครบกำหนด *</label><input class="in-" type="date" id="iE" value="${o.end||""}"></div><div class="f"><label>ต่ออายุซ้ำ</label><select class="in-" id="iRp">${[[0,"ครั้งเดียว (ไม่ต่ออายุ)"],[12,"ทุกปี"],[24,"ทุก 2 ปี"],[36,"ทุก 3 ปี"],[60,"ทุก 5 ปี"],[6,"ทุก 6 เดือน"],[1,"ทุกเดือน"]].map(r=>`<option value="${r[0]}"${(o.rep||0)==r[0]?" selected":""}>${r[1]}</option>`).join("")}</select></div></div>
+  <div class="row"><div class="f"><label>ช่วงอายุ (กดเพื่อเติมวันหมดอายุ)</label><div class="chips" id="qk">${[["+1 ปี",12],["+2 ปี",24],["+3 ปี",36],["+6 เดือน",6]].map(q=>`<button class="chip" type="button" data-m="${q[1]}">${q[0]}</button>`).join("")}</div></div><div class="f"><label>ผู้รับผิดชอบ</label><input class="in-" id="iW" value="${esc(o.who)}"></div></div>
+  <div class="f"><label>หมายเหตุ</label><textarea class="in-" id="iNt" rows="2">${esc(o.note)}</textarea></div>
+  ${c&&c.log&&c.log.length?`<div class="note">ประวัติ: ${c.log.map(l=>esc(l)).join(" · ")}</div>`:""}
+  <div id="iHint" class="note"></div>
+  <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap">${c?`<span style="display:flex;gap:6px"><button class="btn ghost danger" id="iDel" type="button">ลบ</button>${c.done?`<button class="btn ghost" id="iOpen" type="button">↩️ เปิดรายการอีกครั้ง</button>`:""}</span>`:"<span></span>"}<button class="btn main" id="iOk" type="button">บันทึก</button></div>`);
+  const hint=()=>{const e=$("#iE").value;$("#iHint").innerHTML=e?(()=>{const n=dDiff(today(),e);return n<0?`⚠️ หมดอายุไปแล้ว ${-n} วัน`:`เหลืออีก <b>${n}</b> วัน · ระบบเตือนเมื่อเหลือ ${cfg.w3} / ${cfg.w2} / ${cfg.w1} วัน`})():""};
+  $("#iE").addEventListener("input",hint);hint();
+  $("#qk").onclick=e=>{const b=e.target.closest("[data-m]");if(!b)return;const s=$("#iS").value||today();$("#iE").value=addM(s,+b.dataset.m);hint()};
+  $("#iOk").onclick=()=>{const v={t:$("#iT").value,name:$("#iN").value.trim(),party:$("#iP").value.trim(),ref:$("#iR").value.trim(),bank:$("#iB").value.trim(),amt:num($("#iA").value),start:$("#iS").value,end:$("#iE").value,rep:+$("#iRp").value,who:$("#iW").value.trim(),note:$("#iNt").value.trim()};
+    if(!v.name)return toast("ใส่ชื่อรายการก่อน");if(!v.end)return toast("ใส่วันหมดอายุ / ครบกำหนด");if(v.start&&v.start>v.end)return toast("วันเริ่มต้องไม่เกินวันหมดอายุ");
+    if(c)Object.assign(c,v);else C.push(Object.assign({id:uid("d"),log:[]},v));save();$("#dlg").close();render();toast("บันทึกแล้ว ✓")};
+  const dl=$("#iDel");if(dl)dl.onclick=()=>{if(!confirm("ลบ "+c.name+" ?"))return;C=C.filter(x=>x!==c);save();$("#dlg").close();render()};
+  const op=$("#iOpen");if(op)op.onclick=()=>{delete c.done;save();$("#dlg").close();render();toast("เปิดรายการแล้ว")};
+  setTimeout(()=>$("#iN").focus(),60)}
+/* ต่ออายุ / ปิดรายการ */
+function doneDlg(c){if(c.rep){const ne=addM(c.end,c.rep),ns=c.end;
+    openDlg("ต่ออายุแล้ว · "+c.name,`<p style="margin:0">ระบบจะเลื่อนรอบถัดไปให้ · เดิมหมดอายุ <b>${thD(c.end)}</b></p><div class="row"><div class="f"><label>วันเริ่มรอบใหม่</label><input class="in-" type="date" id="rS" value="${ns}"></div><div class="f"><label>หมดอายุรอบใหม่</label><input class="in-" type="date" id="rE" value="${ne}"></div></div><div class="row"><div class="f"><label>มูลค่า / เบี้ย (บาท)</label><input class="in-" id="rA" inputmode="decimal" value="${c.amt||""}"></div><div class="f"><label>เลขที่ใหม่ (ถ้าเปลี่ยน)</label><input class="in-" id="rR" value="${esc(c.ref)}"></div></div><button class="btn main" id="rOk" type="button">🔄 บันทึกการต่ออายุ</button>`);
+    $("#rOk").onclick=()=>{const e=$("#rE").value;if(!e)return toast("ใส่วันหมดอายุรอบใหม่");(c.log=c.log||[]).push("ต่ออายุ "+thD(today())+" (เดิม "+thD(c.end)+")");c.start=$("#rS").value;c.end=e;c.amt=num($("#rA").value);c.ref=$("#rR").value.trim();delete c.done;save();$("#dlg").close();render();toast("ต่ออายุแล้ว ✓ รอบถัดไป "+thD(e))}}
+  else{openDlg("ปิดรายการ · "+c.name,`<p style="margin:0">ใช้เมื่อสัญญาจบ / ได้หลักประกันคืนแล้ว / ไม่ต้องติดตามต่อ</p><div class="f"><label>วันที่ปิด</label><input class="in-" type="date" id="xD" value="${today()}"></div><div class="f"><label>หมายเหตุการปิด</label><input class="in-" id="xN" placeholder="เช่น ได้รับหนังสือค้ำคืนแล้ว"></div><button class="btn main" id="xOk" type="button">✅ ปิดรายการ</button>`);
+    $("#xOk").onclick=()=>{c.done=$("#xD").value||today();(c.log=c.log||[]).push("ปิด "+thD(c.done)+($("#xN").value.trim()?" · "+$("#xN").value.trim():""));save();$("#dlg").close();render();toast("ปิดรายการแล้ว ✓")}}}
+
+/* ---------- ตั้งค่า ---------- */
+function vSet(){const M=$("#main");
+  M.innerHTML=`<div class="card"><h2>ชื่อบริษัท / ชื่อตาราง</h2><input class="in-" id="sN" value="${esc(cfg.name)}" placeholder="แสดงบนหัวหน้าแรกและข้อความแจ้งเตือน"></div>
+  <div class="card"><h2>เตือนล่วงหน้า (วัน)</h2><div class="row3"><div class="f"><label>ด่วน (สีส้ม)</label><input class="in-" id="s1" inputmode="numeric" value="${cfg.w1}"></div><div class="f"><label>เตรียมตัว (สีเหลือง)</label><input class="in-" id="s2" inputmode="numeric" value="${cfg.w2}"></div><div class="f"><label>วางแผน (สีฟ้า)</label><input class="in-" id="s3" inputmode="numeric" value="${cfg.w3}"></div></div><p class="note" style="margin:0">หน้า "ต้องจัดการ" แสดงรายการที่เหลือไม่เกิน ${cfg.w3} วัน</p></div>
+  <div class="card"><h2>ข้อมูล</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="xCsv" type="button">⬇️ ส่งออก Excel (CSV)</button><button class="btn ghost" id="xJ" type="button">⬇️ สำรองข้อมูล (ไฟล์)</button><button class="btn ghost" id="xI" type="button">⬆️ นำเข้าจากไฟล์</button><button class="btn ghost" id="xDm" type="button">✨ ใส่ข้อมูลตัวอย่าง</button><button class="btn ghost danger" id="xC" type="button">ล้างข้อมูลทั้งหมด</button></div><p class="note" style="margin:0">ข้อมูลเก็บในเครื่องนี้ และสำรองขึ้นระบบอัตโนมัติเมื่อเข้าสู่ระบบสมาชิก</p></div>`;
+  $("#sN").oninput=e=>{cfg.name=e.target.value;saveC()};
+  [["#s1","w1"],["#s2","w2"],["#s3","w3"]].forEach(([s,k])=>$(s).onchange=e=>{cfg[k]=Math.max(1,Math.round(num(e.target.value)))||cfg[k];if(cfg.w2<cfg.w1)cfg.w2=cfg.w1;if(cfg.w3<cfg.w2)cfg.w3=cfg.w2;saveC();vSet()});
+  $("#xCsv").onclick=()=>{const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"',rows=[["ประเภท","รายการ / โครงการ","เลขที่","คู่สัญญา / หน่วยงาน","ธนาคาร / บริษัท","มูลค่า","วันเริ่ม","วันหมดอายุ","เหลือ (วัน)","สถานะ","ต่ออายุทุก (เดือน)","ผู้รับผิดชอบ","หมายเหตุ"]];sorted(C).forEach(c=>rows.push([TY(c.t)[1],c.name,c.ref,c.party,c.bank,c.amt||"",c.start,c.end,c.done?"":left(c),st(c)[1],c.rep||"",c.who,c.note]));const b=new Blob(["﻿"+rows.map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="due-"+today()+".csv";a.click()};
+  $("#xJ").onclick=()=>{const b=new Blob([JSON.stringify({app:"edm-due",v:1,items:C,cfg},null,1)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="due-backup-"+today()+".json";a.click()};
+  $("#xI").onclick=()=>$("#impF").click();
+  $("#xDm").onclick=()=>{if(C.length&&!confirm("ข้อมูลตัวอย่างจะแทนข้อมูลที่มีอยู่ ต้องการต่อ?"))return;demo()};
+  $("#xC").onclick=()=>{if(!confirm("ล้างรายการทั้งหมด? ย้อนกลับไม่ได้"))return;C=[];cfg.demo=false;save();saveC();render();toast("ล้างแล้ว")}}
+$("#impF").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const d=JSON.parse(t);if(d.app!=="edm-due"||!Array.isArray(d.items))throw 0;if(C.length&&!confirm("นำเข้า "+d.items.length+" รายการ แทนข้อมูลเดิม?"))return;C=d.items;cfg=Object.assign(cfg,d.cfg||{},{demo:false});save();saveC();ui.v="home";saveUi();render();toast("นำเข้า "+C.length+" รายการแล้ว ✓")}).catch(()=>alert("ไฟล์ไม่ถูกต้อง"));e.target.value=""};
+
+/* ---------- ตัวอย่าง (ข้อมูลสมมติ) ---------- */
+function demo(){const t=today(),d=k=>{const x=new Date();x.setDate(x.getDate()+k);return ymd(x)};
+  const D=[["perf","ค้ำประกันผลงาน งานปรับปรุงถนน ซอย 5","อบต.ตัวอย่าง","LG-2567-0012","ธนาคารสมมติ สาขาเมือง",125000,-12],["perf","ค้ำประกันผลงาน อาคารเรียน 2 ชั้น","สพท.ตัวอย่าง","LG-2566-0088","ธนาคารสมมติ",85000,25],["con","สัญญาจ้างเหมา ระบบประปาหมู่บ้าน","เทศบาลตัวอย่าง","สจ.45/2568","",1250000,48],["bid","ค้ำประกันซอง งานรางระบายน้ำ","อบจ.ตัวอย่าง","BG-0156","ธนาคารสมมติ",35000,9],["gua","ค้ำประกันสัญญา งานถนนลาดยาง","กรมตัวอย่าง","CG-0043","ธนาคารสมมติ",210000,160],["ins","ประกันรถ ชั้น 1 · รถกระบะ กข 1234","บริษัทประกันสมมติ","POL-889120","บริษัทประกันสมมติ",18500,32,12],["ins","พ.ร.บ. รถบรรทุก 6 ล้อ 70-1234","","CMI-55120","บริษัทประกันสมมติ",1300,75,12],["lic","ต่อภาษีรถ รถขุด SK200","ขนส่งจังหวัด","","",3200,3,12],["lic","ใบอนุญาตประกอบกิจการ","เทศบาลตัวอย่าง","อน.12/2568","",2000,210,12]];
+  C=D.map(x=>{const end=d(x[6]),rep=x[7]||0;return{id:uid("d"),t:x[0],name:x[1],party:x[2],ref:x[3],bank:x[4],amt:x[5],start:rep?addM(end,-rep):addM(end,-12),end,rep,who:["คุณเอ","คุณบี",""][x[6]%3<0?0:x[6]%3],note:"",log:[]}});
+  C.push({id:uid("d"),t:"perf",name:"ค้ำประกันผลงาน งานรั้วโรงเรียน (คืนแล้ว)",party:"โรงเรียนตัวอย่าง",ref:"LG-2565-0031",bank:"ธนาคารสมมติ",amt:42000,start:addM(t,-26),end:d(-40),rep:0,who:"",note:"",done:d(-35),log:["ปิด "+thD(d(-35))+" · ได้รับหนังสือค้ำคืนแล้ว"]});
+  if(!cfg.name)cfg.name="บริษัทตัวอย่าง";cfg.demo=true;save();saveC();ui.v="home";saveUi();render();toast("ใส่ตัวอย่างแล้ว ✓")}
+window.addEventListener("storage",e=>{if(e.key===K.items||e.key===K.cfg){C=LS.get(K.items,[])||[];cfg=Object.assign(cfg,LS.get(K.cfg,{})||{});if(!$("#dlg").open)render()}});
+if(/[?&]demo=1/.test(location.search)&&!C.length)demo();else render();
+})();
+</script>
+<script src="../assets/icons.js?v=10"></script>
+<script>/* ไอคอนวาดเองบนแท็บ/โลโก้ */(function(){if(!window.EDM_ICON)return;var I={home:["clock","#B7791F"],list:["list","#2F80C9"],cal:["calendar","#1F8A5B"],set:["sliders","#5B6B7F"]};document.querySelectorAll("#tabs [data-v]").forEach(function(b){var k=I[b.dataset.v];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.trim().replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON("clock",{color:"#B7791F"}))}})()</script>
+<script src="../assets/track.js?v=6" defer></script><script src="../assets/member.js?v=105" defer></script>
+</body>
+</html>
