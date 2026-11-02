@@ -526,6 +526,7 @@ header.top .head-actions{margin-left:auto;display:flex;align-items:center;gap:10
 .fx-b{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--bg);border:1.5px solid var(--line);border-radius:16px;padding:14px 8px;font:inherit;font-size:.98rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:center;line-height:1.3;text-decoration:none;transition:border-color .15s}
 .fx-b:hover{border-color:var(--brand)}.fx-b[aria-pressed=true]{border-color:var(--brand);background:var(--mist);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 18%,transparent)}
 .fx-e{font-size:1.9rem;line-height:1}
+.fx-k{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px;font-weight:600}.fx-k button{border:1.5px solid var(--line);background:var(--bg);border-radius:999px;padding:8px 16px;font:inherit;font-size:.95rem;font-weight:600;color:var(--ink);cursor:pointer}.fx-k button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff}
 .fx-r{margin-top:14px;border:1.5px solid var(--brand);border-radius:18px;padding:16px;background:var(--bg)}
 .fx-rh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.fx-rh h3{margin:0;font-family:var(--f-head);font-size:1.2rem}
 .fx-col h4{margin:14px 0 8px;font-size:1rem}.fx-col h4 small{font-weight:400;color:var(--muted)}
@@ -737,7 +738,8 @@ header.top .hd .logo{flex:0 1 auto;min-width:0}
     </div></section>
 
     <section class="fxs" id="find"><div class="wrap">
-      <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">แตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้ ทั้งไฟล์ Excel และแบบใช้ผ่านเว็บ</p>
+      <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">เลือกแบบที่ชอบ แล้วแตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้</p>
+      <div class="fx-k" role="group" aria-label="เลือกแบบ"><span>อยากได้แบบไหน:</span><button type="button" data-fk="all" aria-pressed="true">ทั้ง 2 แบบ</button><button type="button" data-fk="file" aria-pressed="false">📊 ไฟล์ Excel (ซื้อครั้งเดียว)</button><button type="button" data-fk="web" aria-pressed="false">🌐 ใช้ออนไลน์ผ่านเว็บ</button></div>
       <div class="fx-g" role="group" aria-label="เลือกงานที่ต้องการ"><button type="button" class="fx-b" data-need="money" aria-pressed="false"><span class="fx-e">💰</span>จดรายรับ-รายจ่าย</button><button type="button" class="fx-b" data-need="bill" aria-pressed="false"><span class="fx-e">🧾</span>เปิดบิล ใบเสร็จ ใบกำกับภาษี</button><button type="button" class="fx-b" data-need="debt" aria-pressed="false"><span class="fx-e">📒</span>ติดตามลูกหนี้ เก็บเงิน</button><button type="button" class="fx-b" data-need="pay" aria-pressed="false"><span class="fx-e">👥</span>คิดเงินเดือน</button><button type="button" class="fx-b" data-need="time" aria-pressed="false"><span class="fx-e">⏰</span>ลงเวลา เช็กชื่อ</button><button type="button" class="fx-b" data-need="stock" aria-pressed="false"><span class="fx-e">📦</span>สต๊อก ขายหน้าร้าน</button><button type="button" class="fx-b" data-need="online" aria-pressed="false"><span class="fx-e">🛍️</span>ขายของออนไลน์</button><button type="button" class="fx-b" data-need="book" aria-pressed="false"><span class="fx-e">🏨</span>รับจอง ห้องพัก คิว</button><button type="button" class="fx-b" data-need="cafe" aria-pressed="false"><span class="fx-e">☕</span>ร้านกาแฟ ร้านอาหาร</button><button type="button" class="fx-b" data-need="work" aria-pressed="false"><span class="fx-e">✅</span>จดงาน วางแผน</button><button type="button" class="fx-b" data-need="contract" aria-pressed="false"><span class="fx-e">📅</span>ค่างวด สัญญา ครบกำหนด</button><a class="fx-b" href="/course/"><span class="fx-e">🎓</span>เรียน Excel</a></div>
       <div class="fx-r" id="fxR" hidden=""></div>
       <div class="fx-all">หรือดูทั้งหมด: <a href="#shop">📊 ไฟล์ Excel (11)</a><a href="#tools">🌐 ใช้ผ่านเว็บ (20)</a><a href="/course/">🎓 คอร์สเรียน</a></div>
@@ -1180,7 +1182,8 @@ function render(){
     </div></section>
 
     <section class="fxs" id="find"><div class="wrap">
-      <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">แตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้ ทั้งไฟล์ Excel และแบบใช้ผ่านเว็บ</p>
+      <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">เลือกแบบที่ชอบ แล้วแตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้</p>
+      <div class="fx-k" role="group" aria-label="เลือกแบบ"><span>อยากได้แบบไหน:</span><button type="button" data-fk="all" aria-pressed="true">ทั้ง 2 แบบ</button><button type="button" data-fk="file" aria-pressed="false">📊 ไฟล์ Excel (ซื้อครั้งเดียว)</button><button type="button" data-fk="web" aria-pressed="false">🌐 ใช้ออนไลน์ผ่านเว็บ</button></div>
       <div class="fx-g" role="group" aria-label="เลือกงานที่ต้องการ">${NEEDS.map(n=>n[0]==="learn"?`<a class="fx-b" href="${base}course/"${tg}><span class="fx-e">${n[1]}</span>${n[2]}</a>`:`<button type="button" class="fx-b" data-need="${n[0]}" aria-pressed="false"><span class="fx-e">${n[1]}</span>${n[2]}</button>`).join("")}</div>
       <div class="fx-r" id="fxR" hidden></div>
       <div class="fx-all">หรือดูทั้งหมด: <a href="#shop">📊 ไฟล์ Excel (${tpl.length})</a><a href="#tools">🌐 ใช้ผ่านเว็บ (${SYS.length})</a><a href="${base}course/"${tg}>🎓 คอร์สเรียน</a></div>
@@ -1308,16 +1311,18 @@ function renderFind(id){
   const R=$("#fxR");if(!R)return;const n=(window.NEEDS_||[]).find(x=>x[0]===id);
   document.querySelectorAll("[data-need]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.need===id));
   if(!n){R.hidden=true;R.innerHTML="";return;}
-  const F=live().products.filter(p=>p.type!=="course"&&n[4]&&n[4].test(p.name)).slice(0,6),inC=x=>cart.includes(x);
+  const K=window.FXK_||"all",F=K==="web"?[]:live().products.filter(p=>p.type!=="course"&&n[4]&&n[4].test(p.name)).slice(0,6),inC=x=>cart.includes(x);
   const fh=F.map(p=>`<div class="fx-it" data-fid="${esc(p.id)}" tabindex="0">${thumb(p)}<div><div class="fx-n">${esc(p.name)}</div><div class="fx-p"><span>${p.was>p.price?`<s style="color:var(--muted);font-weight:400">${baht(p.was)}</s> `:""}<b>${baht(p.price)}</b></span><button type="button" class="fx-go ${inC(p.id)?"in":""}" data-fadd="${esc(p.id)}">${inC(p.id)?"✓ ในตะกร้า":"ใส่ตะกร้า"}</button></div></div></div>`).join("");
-  const sh=n[3].map(window.FXSYS_).join("");
+  const sh=K==="file"?"":n[3].map(window.FXSYS_).join("");
   R.innerHTML=`<div class="fx-rh"><h3>${n[1]} ${n[2]}</h3><button type="button" class="btn btn-line btn-sm" data-need-x>✕ ปิด</button></div>`+
     (fh?`<div class="fx-col"><h4>📊 ไฟล์ Excel / Google Sheets <small>· ซื้อครั้งเดียว ได้ไฟล์ทางอีเมล</small></h4><div class="fx-list">${fh}</div></div>`:"")+
     (sh?`<div class="fx-col"><h4>🌐 ใช้ผ่านเว็บ มือถือ/คอม <small>· ทดลองฟรี 7 วัน ไม่ต้องลงโปรแกรม</small></h4><div class="fx-list">${sh}</div></div>`:"")+
+    (!fh&&!sh?`<p class="fx-help">ตอนนี้ยังไม่มี${K==="file"?"ไฟล์ Excel":"แบบออนไลน์"}สำหรับเรื่องนี้ ลองเลือก "ทั้ง 2 แบบ" ดูนะคะ</p>`:"")+
     `<p class="fx-help">ไม่แน่ใจว่าตัวไหนเหมาะ? <button type="button" data-fask>ทักถามร้าน ช่วยเลือกให้ฟรี</button></p>`;
   R.hidden=false;R.dataset.need=id;try{hydrateClips(R)}catch(e){}
 }
 function bind(){
+  const fxk=document.querySelector(".fx-k");if(fxk)fxk.onclick=e=>{const b=e.target.closest("[data-fk]");if(!b)return;window.FXK_=b.dataset.fk;fxk.querySelectorAll("[data-fk]").forEach(x=>x.setAttribute("aria-pressed",x===b));const R=$("#fxR");if(R&&!R.hidden&&R.dataset.need)renderFind(R.dataset.need);};
   const fxg=document.querySelector(".fx-g");if(fxg)fxg.onclick=e=>{const b=e.target.closest("[data-need]");if(!b)return;const on=b.getAttribute("aria-pressed")==="true";renderFind(on?null:b.dataset.need);if(!on)setTimeout(()=>$("#fxR").scrollIntoView({behavior:"smooth",block:"nearest"}),60);};
   const fxr=$("#fxR");if(fxr){fxr.onclick=e=>{if(e.target.closest("[data-need-x]"))return renderFind(null);if(e.target.closest("[data-fask]"))return openAsk(null);const a=e.target.closest("[data-fadd]");if(a){e.stopPropagation();toggleCart(a.dataset.fadd);return;}const c=e.target.closest("[data-fid]");if(c)openProduct(c.dataset.fid);};
     fxr.onkeydown=e=>{if(e.key==="Enter"&&!e.target.closest("button")){const c=e.target.closest("[data-fid]");if(c)openProduct(c.dataset.fid);}};}
