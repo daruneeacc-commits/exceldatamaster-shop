@@ -520,6 +520,27 @@ header.top .head-actions{margin-left:auto;display:flex;align-items:center;gap:10
 .door-ics{grid-column:2;grid-row:2/4;align-self:center;display:flex;gap:2px;font-size:1.15rem}
 .door-ics i{font-style:normal;width:32px;height:32px;display:grid;place-items:center;background:var(--mist);border-radius:9px}
 @media (max-width:760px){.doors-in{grid-template-columns:1fr;gap:10px}.door{padding:16px}.door-ics{grid-column:1/-1;grid-row:auto;margin-top:8px;flex-wrap:wrap}}
+/* 2 พ.ย.: ตัวช่วยหาสินค้า "อยากทำอะไรคะ?" */
+.fxs{padding-block:6px 10px}.fx-h{font-family:var(--f-head);font-size:1.5rem;margin:0 0 4px}.fx-s{color:var(--muted);margin:0 0 14px}
+.fx-g{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.fx-b{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--bg);border:1.5px solid var(--line);border-radius:16px;padding:14px 8px;font:inherit;font-size:.98rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:center;line-height:1.3;text-decoration:none;transition:border-color .15s}
+.fx-b:hover{border-color:var(--brand)}.fx-b[aria-pressed=true]{border-color:var(--brand);background:var(--mist);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 18%,transparent)}
+.fx-e{font-size:1.9rem;line-height:1}
+.fx-r{margin-top:14px;border:1.5px solid var(--brand);border-radius:18px;padding:16px;background:var(--bg)}
+.fx-rh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.fx-rh h3{margin:0;font-family:var(--f-head);font-size:1.2rem}
+.fx-col h4{margin:14px 0 8px;font-size:1rem}.fx-col h4 small{font-weight:400;color:var(--muted)}
+.fx-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.fx-it{display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px;background:#fff;text-decoration:none;color:var(--ink);cursor:pointer}
+.fx-it .thumb{width:76px;height:58px!important;min-height:0!important;aspect-ratio:auto!important;border-radius:9px;overflow:hidden;padding:0!important}.fx-it .thumb img,.fx-it .thumb video{width:100%;height:100%;object-fit:cover}.fx-it .vid-badge{display:none}.fx-it .thumb>*:not(img):not(video){transform:scale(.45);transform-origin:top left}
+.fx-im{width:76px;height:58px;border-radius:9px;object-fit:cover;object-position:top left;border:1px solid var(--line)}
+.fx-n{font-weight:600;font-size:.95rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fx-p{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;font-size:.92rem}.fx-p b{color:var(--brand)}
+.fx-go{background:var(--brand);color:#fff;border:0;border-radius:999px;padding:5px 12px;font:inherit;font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none}.fx-go.in{background:var(--mist);color:var(--brand)}
+.fx-help{margin:12px 0 0;font-size:.95rem;color:var(--muted)}.fx-help button{background:none;border:0;color:var(--brand);font:inherit;font-weight:700;text-decoration:underline;cursor:pointer;padding:0}
+.fx-all{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px;font-size:.95rem;color:var(--muted)}.fx-all a{border:1px solid var(--line);border-radius:999px;padding:6px 14px;text-decoration:none;color:var(--ink);font-weight:600;background:var(--bg)}.fx-all a:hover{border-color:var(--brand)}
+@media (max-width:900px){.fx-g{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.fx-b,.fx-it,.fx-it>div,.fx-r,.fx-col{min-width:0}.fx-n{overflow-wrap:anywhere}
+@media (max-width:560px){.fx-g{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.fx-b{padding:12px 4px;font-size:.86rem;border-radius:14px}.fx-e{font-size:1.6rem}.fx-h{font-size:1.3rem}.fx-r{padding:12px}.fx-list{grid-template-columns:1fr}}
 
 /* หัวข้อแต่ละส่วน */
 .sx{padding-block:72px}
@@ -691,7 +712,7 @@ header.top .hd .logo{flex:0 1 auto;min-width:0}
 @media (max-width:620px){.sys-grid{grid-template-columns:1fr;gap:10px}}
 </style><div id="app"><!--pre--><header class="top"><div class="wrap hd">
     <a class="logo" href="#top"><img class="logo-img" src="/assets/shop/avatar.webp" alt=""><span>Excel Data Master</span></a>
-    <nav class="links" aria-label="เมนูหลัก"><a href="#tools">ระบบออนไลน์</a><a href="#shop">เทมเพลต Excel</a><a href="/course/">คอร์สออนไลน์</a><a href="#pricing">ราคา</a><a href="#how">วิธีสั่งซื้อ</a><a href="#faq">คำถาม</a></nav>
+    <nav class="links" aria-label="เมนูหลัก"><a href="#find">หาสินค้า</a><a href="#shop">เทมเพลต Excel</a><a href="#tools">ระบบออนไลน์</a><a href="/course/">คอร์สออนไลน์</a><a href="#pricing">ราคา</a><a href="#how">วิธีสั่งซื้อ</a><a href="#faq">คำถาม</a></nav>
     <div class="head-actions">
       <button class="btn btn-line btn-sm" id="adminBtn" hidden="">หลังร้าน</button>
       <a class="hd-line" href="https://line.me/R/ti/p/%40856tvnxs" target="_blank" rel="noopener"><svg class="ln-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C6.5 3 2 6.6 2 11c0 3.9 3.5 7.2 8.3 7.9.3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.6 1.1-.5 6-3.5 8.2-6.1 1.5-1.6 2.2-3.3 2.2-5C22.4 6.6 17.5 3 12 3Zm-5.3 10.6H4.8c-.3 0-.5-.2-.5-.5V9.4c0-.3.2-.5.5-.5s.5.2.5.5v3.2h1.4c.3 0 .5.2.5.5s-.2.5-.5.5Zm2-.5c0 .3-.2.5-.5.5s-.5-.2-.5-.5V9.4c0-.3.2-.5.5-.5s.5.2.5.5v3.7Zm4.5 0c0 .2-.1.4-.3.5h-.2c-.2 0-.3-.1-.4-.2l-1.9-2.6v2.3c0 .3-.2.5-.5.5s-.5-.2-.5-.5V9.4c0-.2.1-.4.3-.5h.2c.2 0 .3.1.4.2l1.9 2.6V9.4c0-.3.2-.5.5-.5s.5.2.5.5v3.7Zm3.1-2.3c.3 0 .5.2.5.5s-.2.5-.5.5h-1.4v.9h1.4c.3 0 .5.2.5.5s-.2.5-.5.5h-1.9c-.3 0-.5-.2-.5-.5V9.4c0-.3.2-.5.5-.5h1.9c.3 0 .5.2.5.5s-.2.5-.5.5h-1.4v.9h1.4Z"></path></svg><span>ทักแชท</span></a>
@@ -715,10 +736,86 @@ header.top .hd .logo{flex:0 1 auto;min-width:0}
       </div>
     </div></section>
 
-    <section class="doors"><div class="wrap doors-in">
-      <a class="door" href="#tools"><span class="door-k">ระบบออนไลน์</span><b>ใช้ผ่านเว็บ จ่ายเป็นรายเดือน</b><span class="door-p">เริ่ม 49 บาท / 30 วัน · ทดลองฟรี 7 วัน</span><span class="door-ics"><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#149060"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" fill-opacity=".34" stroke="none" d="M3.8 2.5h11.5v14.5"></path><path d="M3.8 2.5h11.5v8.3M3.8 2.5v18.2l2-1.4 2 1.4 2-1.4 1.6 1.1M7 7h5.2M7 10.4h4"></path><circle cx="16.4" cy="16.6" r="5.4" fill="#fff" stroke="none"></circle><path d="M16.6 12.9v7.4M15 14.1h2.3a1.25 1.25 0 0 1 0 2.5H15zm0 2.5h2.6a1.25 1.25 0 0 1 0 2.5H15z" stroke="#149060" stroke-width="1.5"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#D98A0B"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" fill-opacity=".34" stroke="none" d="M12 3 20.5 7.5 12 12 3.5 7.5z"></path><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5zM3.5 7.5 12 12l8.5-4.5M12 12v9"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#8B5A3C"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" fill-opacity=".34" stroke="none" d="M4 9h12v4.5A5.5 5.5 0 0 1 10.5 19h-1A5.5 5.5 0 0 1 4 13.5z"></path><path d="M4 9h12v4.5A5.5 5.5 0 0 1 10.5 19h-1A5.5 5.5 0 0 1 4 13.5zM16 10.5h1.3a2.6 2.6 0 0 1 0 5.2H16M7.5 3.3c-.7 1 .7 1.7 0 2.7M11.5 3.3c-.7 1 .7 1.7 0 2.7"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#7A4FC2"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect fill="#fff" fill-opacity=".34" stroke="none" x="3.5" y="5" width="17" height="5" rx="1"></rect><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4M8.5 15l2.4 2.4 4.6-4.6"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#2F6FD6"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="12" width="3.6" height="7.5" rx="1" fill="#fff" stroke="none"></rect><rect x="10.2" y="7.5" width="3.6" height="12" rx="1" fill="#fff" fill-opacity=".34" stroke="none"></rect><rect x="15.9" y="4" width="3.6" height="15.5" rx="1" fill="#fff" stroke="none"></rect><path d="M3 21h18"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#C2410C"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" fill-opacity=".34" stroke="none" d="M3 10.5h18v9H3z"></path><rect x="3" y="6.5" width="18" height="13" rx="2.5"></rect><path d="M3 10.5h18M7 6.5 9 3.6l7 2.9"></path><circle cx="16.5" cy="15" r="1.4" fill="#fff"></circle></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#15803D"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect fill="#fff" fill-opacity=".34" stroke="none" x="3.5" y="3.5" width="17" height="17" rx="4"></rect><rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect><path d="M7.5 12.3l3 3 6-6.3"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#0E8C94"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><ellipse fill="#fff" fill-opacity=".34" stroke="none" cx="9" cy="7" rx="5.5" ry="2.6"></ellipse><path d="M3.5 7c0-1.4 2.5-2.6 5.5-2.6s5.5 1.2 5.5 2.6-2.5 2.6-5.5 2.6S3.5 8.4 3.5 7zM3.5 7v4c0 1.4 2.5 2.6 5.5 2.6M3.5 11v4c0 1.4 2.5 2.6 5.5 2.6"></path><circle fill="#fff" fill-opacity=".34" stroke="none" cx="16" cy="15.5" r="5"></circle><circle cx="16" cy="15.5" r="5"></circle><path d="M16 13v5"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#0E7490"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle fill="#fff" fill-opacity=".34" stroke="none" cx="12" cy="12.5" r="8.5"></circle><circle cx="12" cy="12.5" r="8.5"></circle><path d="M12 8v4.8l3.2 2M9.5 2.8h5"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#D4485C"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" fill-opacity=".34" stroke="none" d="M6.6 7h13.6l-2.1 8.2H8.3z"></path><path d="M2.8 4h2.6l2.4 11.2h10.4l2.2-8.4H6.4"></path><circle cx="9" cy="19.6" r="1.4" fill="#fff"></circle><circle cx="17" cy="19.6" r="1.4" fill="#fff"></circle></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#C2410C"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" fill-opacity=".34" stroke="none" d="M3 10.5h18v9H3z"></path><rect x="3" y="6.5" width="18" height="13" rx="2.5"></rect><path d="M3 10.5h18M7 6.5 9 3.6l7 2.9"></path><circle cx="16.5" cy="15" r="1.4" fill="#fff"></circle></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#6E55C0"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle fill="#fff" fill-opacity=".34" stroke="none" cx="11" cy="13" r="8.5"></circle><circle cx="11" cy="13" r="8.5"></circle><circle cx="11" cy="13" r="4.6"></circle><circle cx="11" cy="13" r="1.2" fill="#fff"></circle><path d="M11 13 19.5 4.5M16.4 4.6l3.1-.1-.1 3.1"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#5A43B5"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3.5v16"></path><path d="M6.5 6h8M9.5 11h8.5M7.5 16h7"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#E0703F"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="9" r="2" fill="#fff"></circle><circle cx="9.5" cy="5" r="2" fill="#fff"></circle><circle cx="14.5" cy="5" r="2" fill="#fff"></circle><circle cx="18.5" cy="9" r="2" fill="#fff"></circle><path d="M12 10.5c-3.2 0-6 3.6-6 6.3 0 2 1.6 2.9 3.2 2.6 1.2-.2 1.9-.8 2.8-.8s1.6.6 2.8.8c1.6.3 3.2-.6 3.2-2.6 0-2.7-2.8-6.3-6-6.3z" fill="#fff"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#7A4FC2"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect fill="#fff" fill-opacity=".34" stroke="none" x="3.5" y="5" width="17" height="5" rx="1"></rect><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4M8.5 15l2.4 2.4 4.6-4.6"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#0E7490"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle fill="#fff" fill-opacity=".34" stroke="none" cx="12" cy="12.5" r="8.5"></circle><circle cx="12" cy="12.5" r="8.5"></circle><path d="M12 8v4.8l3.2 2M9.5 2.8h5"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#15803D"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect fill="#fff" fill-opacity=".34" stroke="none" x="3.5" y="3.5" width="17" height="17" rx="4"></rect><rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect><path d="M7.5 12.3l3 3 6-6.3"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#2F6FD6"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="12" width="3.6" height="7.5" rx="1" fill="#fff" stroke="none"></rect><rect x="10.2" y="7.5" width="3.6" height="12" rx="1" fill="#fff" fill-opacity=".34" stroke="none"></rect><rect x="15.9" y="4" width="3.6" height="15.5" rx="1" fill="#fff" stroke="none"></rect><path d="M3 21h18"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#2F6FD6"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="12" width="3.6" height="7.5" rx="1" fill="#fff" stroke="none"></rect><rect x="10.2" y="7.5" width="3.6" height="12" rx="1" fill="#fff" fill-opacity=".34" stroke="none"></rect><rect x="15.9" y="4" width="3.6" height="15.5" rx="1" fill="#fff" stroke="none"></rect><path d="M3 21h18"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#149060"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" fill-opacity=".34" stroke="none" d="M4 13h16v7H4z"></path><path d="M4 13h16v7H4zM6 13V9h12v4M8 9V4h8v5M10 6.5h4M8.5 16.5h2M13.5 16.5h2"></path></g></svg></span></span></a>
-      <a class="door" href="#shop"><span class="door-k">เทมเพลต Excel / Google Sheets</span><b>ซื้อครั้งเดียว ได้ไฟล์ไปใช้เลย</b><span class="door-p">11 ไฟล์ · เริ่มต้น ฿459</span><span class="door-ics"><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#1F7A45"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect fill="#fff" fill-opacity=".34" stroke="none" x="3.5" y="4" width="6" height="16"></rect><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M3.5 9h17M3.5 14.5h17M9.5 4v16"></path></g></svg></span><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#0E8A5F"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" fill-opacity=".34" stroke="none" d="M8.5 11h7v6.5h-7z"></path><path d="M7 3h7.5L19 7.5V21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM14.5 3v4.5H19M8.5 11h7v6.5h-7zM8.5 14.2h7M12 11v6.5"></path></g></svg></span></span></a>
-      <a class="door door-new" href="/course/"><span class="door-k">คอร์สออนไลน์ <i class="door-badge">ใหม่</i></span><b>คลิปสอนทีละขั้น ทำเองเป็น</b><span class="door-p">เปิดขายแล้ว · คลิป + ไฟล์ที่ใช้สอน</span><span class="door-ics" style="font-size:26px">🎬</span></a>
+    <section class="fxs" id="find"><div class="wrap">
+      <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">แตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้ ทั้งไฟล์ Excel และแบบใช้ผ่านเว็บ</p>
+      <div class="fx-g" role="group" aria-label="เลือกงานที่ต้องการ"><button type="button" class="fx-b" data-need="money" aria-pressed="false"><span class="fx-e">💰</span>จดรายรับ-รายจ่าย</button><button type="button" class="fx-b" data-need="bill" aria-pressed="false"><span class="fx-e">🧾</span>เปิดบิล ใบเสร็จ ใบกำกับภาษี</button><button type="button" class="fx-b" data-need="debt" aria-pressed="false"><span class="fx-e">📒</span>ติดตามลูกหนี้ เก็บเงิน</button><button type="button" class="fx-b" data-need="pay" aria-pressed="false"><span class="fx-e">👥</span>คิดเงินเดือน</button><button type="button" class="fx-b" data-need="time" aria-pressed="false"><span class="fx-e">⏰</span>ลงเวลา เช็กชื่อ</button><button type="button" class="fx-b" data-need="stock" aria-pressed="false"><span class="fx-e">📦</span>สต๊อก ขายหน้าร้าน</button><button type="button" class="fx-b" data-need="online" aria-pressed="false"><span class="fx-e">🛍️</span>ขายของออนไลน์</button><button type="button" class="fx-b" data-need="book" aria-pressed="false"><span class="fx-e">🏨</span>รับจอง ห้องพัก คิว</button><button type="button" class="fx-b" data-need="cafe" aria-pressed="false"><span class="fx-e">☕</span>ร้านกาแฟ ร้านอาหาร</button><button type="button" class="fx-b" data-need="work" aria-pressed="false"><span class="fx-e">✅</span>จดงาน วางแผน</button><button type="button" class="fx-b" data-need="contract" aria-pressed="false"><span class="fx-e">📅</span>ค่างวด สัญญา ครบกำหนด</button><a class="fx-b" href="/course/"><span class="fx-e">🎓</span>เรียน Excel</a></div>
+      <div class="fx-r" id="fxR" hidden=""></div>
+      <div class="fx-all">หรือดูทั้งหมด: <a href="#shop">📊 ไฟล์ Excel (11)</a><a href="#tools">🌐 ใช้ผ่านเว็บ (20)</a><a href="/course/">🎓 คอร์สเรียน</a></div>
+    </div></section>
+
+    <section id="shop" class="sx"><div class="wrap">
+      <div class="sx-head"><h2>เทมเพลต Excel และ Google Sheets</h2><p>ซื้อครั้งเดียว ได้ไฟล์ทางอีเมล ใช้ได้ตลอด สูตรทำไว้ให้แล้ว กรอกแค่ข้อมูลของร้าน</p><p class="xl-up">💡 อยากใช้บนมือถือ หลายคนช่วยกันกรอก? เทมเพลตยอดนิยมมีเวอร์ชันเว็บ <a href="#tools">ทดลองใช้ฟรี 7 วัน</a></p></div>
+      <div class="toolbar">
+        <div class="tabs" id="tabs" role="group" aria-label="ประเภทไฟล์"><button class="tab" data-f="all" aria-pressed="true">ทั้งหมด <span style="color:var(--muted);font-weight:400">11</span></button><button class="tab" data-f="excel" aria-pressed="false"><i class="dot" style="background:var(--t-excel)"></i>Excel <span style="color:var(--muted);font-weight:400">7</span></button><button class="tab" data-f="sheets" aria-pressed="false"><i class="dot" style="background:var(--t-sheets)"></i>Google Sheets <span style="color:var(--muted);font-weight:400">4</span></button></div><span class="rc" id="resultCount">11 รายการ</span>
+        <label class="search" for="q"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><input id="q" type="search" placeholder="ค้นหา เช่น สต๊อก ใบเสร็จ" value=""></label>
+      </div>
+      <div class="grid" id="grid">
+    <article class="card" data-id="pmuwvjfjc" tabindex="0" aria-label="📋 Excel To-Do List + ปฏิทินงาน">
+      <div class="plinth"><span class="badge">มาใหม่</span><div class="thumb photo"><img src="/assets/shop/pmuwvjfjc-1.webp" alt="📋 Excel To-Do List + ปฏิทินงาน" loading="lazy"></div>
+        <button class="quick " data-add="pmuwvjfjc" aria-label="เพิ่มลงตะกร้า">+</button></div>
+      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-sheets)"></i>Google Sheets</span><h3>📋 Excel To-Do List + ปฏิทินงาน</h3><span data-rvs="x-pmuwvjfjc"></span></div>
+        <span class="price">฿749</span></div>
+    </article>
+    <article class="card" data-id="pmuwu9l4i" tabindex="0" aria-label="📋 Excel To-Do List + ปฏิทินงาน">
+      <div class="plinth"><span class="badge">มาใหม่</span><div class="thumb photo"><img src="/assets/shop/pmuwu9l4i-1.webp" alt="📋 Excel To-Do List + ปฏิทินงาน" loading="lazy"></div>
+        <button class="quick " data-add="pmuwu9l4i" aria-label="เพิ่มลงตะกร้า">+</button></div>
+      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>📋 Excel To-Do List + ปฏิทินงาน</h3><span data-rvs="x-pmuwu9l4i"></span></div>
+        <span class="price">฿749</span></div>
+    </article>
+    <article class="card" data-id="pmuwsveys" tabindex="0" aria-label="บันทึกค่าใช้จ่าย Macro + Dashboard">
+      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwsveys-1.webp" alt="บันทึกค่าใช้จ่าย Macro + Dashboard" loading="lazy"></div>
+        <button class="quick " data-add="pmuwsveys" aria-label="เพิ่มลงตะกร้า">+</button></div>
+      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>บันทึกค่าใช้จ่าย Macro + Dashboard</h3><span data-rvs="x-pmuwsveys"></span></div>
+        <span class="price"><s>฿1,299</s>฿749</span></div>
+    </article>
+    <article class="card" data-id="pmuwsawfx" tabindex="0" aria-label="เทมเพลตใบเสร็จรับเงิน ใบแจ้งหนี้ ใบกำกับภาษี ใบเสนอราคา">
+      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwsawfx-1.webp" alt="เทมเพลตใบเสร็จรับเงิน ใบแจ้งหนี้ ใบกำกับภาษี ใบเสนอราคา" loading="lazy"></div>
+        <button class="quick " data-add="pmuwsawfx" aria-label="เพิ่มลงตะกร้า">+</button></div>
+      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>เทมเพลตใบเสร็จรับเงิน ใบแจ้งหนี้ ใบกำกับภาษี ใบเสนอราคา</h3><span data-rvs="x-pmuwsawfx"></span></div>
+        <span class="price"><s>฿1,499</s>฿999</span></div>
+    </article>
+    <article class="card" data-id="pmuwqtcmg" tabindex="0" aria-label="SME Billing &amp; Dashboard – ออกบิล ติดตามรับเงิน ดูลูกหนี้ค้าง ในไฟล์เดียว">
+      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwqtcmg-1.webp" alt="SME Billing &amp; Dashboard – ออกบิล ติดตามรับเงิน ดูลูกหนี้ค้าง ในไฟล์เดียว" loading="lazy"></div>
+        <button class="quick " data-add="pmuwqtcmg" aria-label="เพิ่มลงตะกร้า">+</button></div>
+      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>SME Billing &amp; Dashboard – ออกบิล ติดตามรับเงิน ดูลูกหนี้ค้าง ในไฟล์เดียว</h3><span data-rvs="x-pmuwqtcmg"></span></div>
+        <span class="price"><s>฿2,499</s>฿1,999</span></div>
+    </article>
+    <article class="card" data-id="pmuwndtjn" tabindex="0" aria-label="แพลนเนอร์รายปี ไฮไลต์วันสำคัญอัตโนมัติ ใช้ได้ทุกปี">
+      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwndtjn-1.webp" alt="แพลนเนอร์รายปี ไฮไลต์วันสำคัญอัตโนมัติ ใช้ได้ทุกปี" loading="lazy"></div>
+        <button class="quick " data-add="pmuwndtjn" aria-label="เพิ่มลงตะกร้า">+</button></div>
+      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>แพลนเนอร์รายปี ไฮไลต์วันสำคัญอัตโนมัติ ใช้ได้ทุกปี</h3><span data-rvs="x-pmuwndtjn"></span></div>
+        <span class="price"><s>฿899</s>฿459</span></div>
+    </article>
+    <article class="card" data-id="pmuwlypnd" tabindex="0" aria-label="เทมเพลต Excel ระบบสต๊อกสินค้า รับเข้า-เบิกออก เจ้าหนี้ พร้อม Dashboard อัตโนมัติ">
+      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwlypnd-1.webp" alt="เทมเพลต Excel ระบบสต๊อกสินค้า รับเข้า-เบิกออก เจ้าหนี้ พร้อม Dashboard อัตโนมัติ" loading="lazy"></div>
+        <button class="quick " data-add="pmuwlypnd" aria-label="เพิ่มลงตะกร้า">+</button></div>
+      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>เทมเพลต Excel ระบบสต๊อกสินค้า รับเข้า-เบิกออก เจ้าหนี้ พร้อม Dashboard อัตโนมัติ</h3><span data-rvs="x-pmuwlypnd"></span></div>
+        <span class="price"><s>฿1,499</s>฿999</span></div>
+    </article>
+    <article class="card" data-id="pmuwjsnes" tabindex="0" aria-label="บัญชีรายรับ-รายจ่าย อัจฉริยะ | ซื้อครั้งเดียว ใช้ได้ทุกปี">
+      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwjsnes-1.webp" alt="บัญชีรายรับ-รายจ่าย อัจฉริยะ | ซื้อครั้งเดียว ใช้ได้ทุกปี" loading="lazy"></div>
+        <button class="quick " data-add="pmuwjsnes" aria-label="เพิ่มลงตะกร้า">+</button></div>
+      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>บัญชีรายรับ-รายจ่าย อัจฉริยะ | ซื้อครั้งเดียว ใช้ได้ทุกปี</h3><span data-rvs="x-pmuwjsnes"></span></div>
+        <span class="price"><s>฿999</s>฿799</span></div>
+    </article>
+    <article class="card" data-id="pmus63jiz" tabindex="0" aria-label="เทมเพลตปฏิทินแจ้งเตือน">
+      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmus63jiz-1.webp" alt="เทมเพลตปฏิทินแจ้งเตือน" loading="lazy"><span class="vid-badge">▶ วิดีโอ</span></div>
+        <button class="quick " data-add="pmus63jiz" aria-label="เพิ่มลงตะกร้า">+</button></div>
+      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-sheets)"></i>Google Sheets</span><h3>เทมเพลตปฏิทินแจ้งเตือน</h3><span data-rvs="x-pmus63jiz"></span></div>
+        <span class="price"><s>฿999</s>฿599</span></div>
+    </article>
+    <article class="card" data-id="p4" tabindex="0" aria-label="SME &amp; Freelance Financial  | เทมเพลตบริหารการเงินและธุรกิจครบวงจร">
+      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/p4-1.webp" alt="SME &amp; Freelance Financial  | เทมเพลตบริหารการเงินและธุรกิจครบวงจร" loading="lazy"><span class="vid-badge">▶ วิดีโอ</span></div>
+        <button class="quick " data-add="p4" aria-label="เพิ่มลงตะกร้า">+</button></div>
+      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-sheets)"></i>Google Sheets</span><h3>SME &amp; Freelance Financial  | เทมเพลตบริหารการเงินและธุรกิจครบวงจร</h3><span data-rvs="x-p4"></span></div>
+        <span class="price"><s>฿1,999</s>฿1,499</span></div>
+    </article>
+    <article class="card" data-id="pmuqtwpiz" tabindex="0" aria-label="เทมเพลตระบบติดตามหนี้ &amp; รับชำระเงิน พร้อมแดชบอร์ดอัตโนมัติ">
+      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuqtwpiz-1.webp" alt="เทมเพลตระบบติดตามหนี้ &amp; รับชำระเงิน พร้อมแดชบอร์ดอัตโนมัติ" loading="lazy"><span class="vid-badge">▶ วิดีโอ</span></div>
+        <button class="quick " data-add="pmuqtwpiz" aria-label="เพิ่มลงตะกร้า">+</button></div>
+      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-sheets)"></i>Google Sheets</span><h3>เทมเพลตระบบติดตามหนี้ &amp; รับชำระเงิน พร้อมแดชบอร์ดอัตโนมัติ</h3><span data-rvs="x-pmuqtwpiz"></span></div>
+        <span class="price"><s>฿999</s>฿749</span></div>
+    </article></div>
     </div></section>
 
     <section id="tools" class="sx"><div class="wrap">
@@ -810,80 +907,6 @@ header.top .hd .logo{flex:0 1 auto;min-width:0}
       </div>
     </div></section>
 
-    <section id="shop" class="sx"><div class="wrap">
-      <div class="sx-head"><h2>เทมเพลต Excel และ Google Sheets</h2><p>ซื้อครั้งเดียว ได้ไฟล์ทางอีเมล ใช้ได้ตลอด สูตรทำไว้ให้แล้ว กรอกแค่ข้อมูลของร้าน</p><p class="xl-up">💡 อยากใช้บนมือถือ หลายคนช่วยกันกรอก? เทมเพลตยอดนิยมมีเวอร์ชันเว็บ <a href="#tools">ทดลองใช้ฟรี 7 วัน</a></p></div>
-      <div class="toolbar">
-        <div class="tabs" id="tabs" role="group" aria-label="ประเภทไฟล์"><button class="tab" data-f="all" aria-pressed="true">ทั้งหมด <span style="color:var(--muted);font-weight:400">11</span></button><button class="tab" data-f="excel" aria-pressed="false"><i class="dot" style="background:var(--t-excel)"></i>Excel <span style="color:var(--muted);font-weight:400">7</span></button><button class="tab" data-f="sheets" aria-pressed="false"><i class="dot" style="background:var(--t-sheets)"></i>Google Sheets <span style="color:var(--muted);font-weight:400">4</span></button></div><span class="rc" id="resultCount">11 รายการ</span>
-        <label class="search" for="q"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><input id="q" type="search" placeholder="ค้นหา เช่น สต๊อก ใบเสร็จ" value=""></label>
-      </div>
-      <div class="grid" id="grid">
-    <article class="card" data-id="pmuwvjfjc" tabindex="0" aria-label="📋 Excel To-Do List + ปฏิทินงาน">
-      <div class="plinth"><span class="badge">มาใหม่</span><div class="thumb photo"><img src="/assets/shop/pmuwvjfjc-1.webp" alt="📋 Excel To-Do List + ปฏิทินงาน" loading="lazy"></div>
-        <button class="quick " data-add="pmuwvjfjc" aria-label="เพิ่มลงตะกร้า">+</button></div>
-      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-sheets)"></i>Google Sheets</span><h3>📋 Excel To-Do List + ปฏิทินงาน</h3><span data-rvs="x-pmuwvjfjc"></span></div>
-        <span class="price">฿749</span></div>
-    </article>
-    <article class="card" data-id="pmuwu9l4i" tabindex="0" aria-label="📋 Excel To-Do List + ปฏิทินงาน">
-      <div class="plinth"><span class="badge">มาใหม่</span><div class="thumb photo"><img src="/assets/shop/pmuwu9l4i-1.webp" alt="📋 Excel To-Do List + ปฏิทินงาน" loading="lazy"></div>
-        <button class="quick " data-add="pmuwu9l4i" aria-label="เพิ่มลงตะกร้า">+</button></div>
-      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>📋 Excel To-Do List + ปฏิทินงาน</h3><span data-rvs="x-pmuwu9l4i"></span></div>
-        <span class="price">฿749</span></div>
-    </article>
-    <article class="card" data-id="pmuwsveys" tabindex="0" aria-label="บันทึกค่าใช้จ่าย Macro + Dashboard">
-      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwsveys-1.webp" alt="บันทึกค่าใช้จ่าย Macro + Dashboard" loading="lazy"></div>
-        <button class="quick " data-add="pmuwsveys" aria-label="เพิ่มลงตะกร้า">+</button></div>
-      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>บันทึกค่าใช้จ่าย Macro + Dashboard</h3><span data-rvs="x-pmuwsveys"></span></div>
-        <span class="price"><s>฿1,299</s>฿749</span></div>
-    </article>
-    <article class="card" data-id="pmuwsawfx" tabindex="0" aria-label="เทมเพลตใบเสร็จรับเงิน ใบแจ้งหนี้ ใบกำกับภาษี ใบเสนอราคา">
-      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwsawfx-1.webp" alt="เทมเพลตใบเสร็จรับเงิน ใบแจ้งหนี้ ใบกำกับภาษี ใบเสนอราคา" loading="lazy"></div>
-        <button class="quick " data-add="pmuwsawfx" aria-label="เพิ่มลงตะกร้า">+</button></div>
-      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>เทมเพลตใบเสร็จรับเงิน ใบแจ้งหนี้ ใบกำกับภาษี ใบเสนอราคา</h3><span data-rvs="x-pmuwsawfx"></span></div>
-        <span class="price"><s>฿1,499</s>฿999</span></div>
-    </article>
-    <article class="card" data-id="pmuwqtcmg" tabindex="0" aria-label="SME Billing &amp; Dashboard – ออกบิล ติดตามรับเงิน ดูลูกหนี้ค้าง ในไฟล์เดียว">
-      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwqtcmg-1.webp" alt="SME Billing &amp; Dashboard – ออกบิล ติดตามรับเงิน ดูลูกหนี้ค้าง ในไฟล์เดียว" loading="lazy"></div>
-        <button class="quick " data-add="pmuwqtcmg" aria-label="เพิ่มลงตะกร้า">+</button></div>
-      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>SME Billing &amp; Dashboard – ออกบิล ติดตามรับเงิน ดูลูกหนี้ค้าง ในไฟล์เดียว</h3><span data-rvs="x-pmuwqtcmg"></span></div>
-        <span class="price"><s>฿2,499</s>฿1,999</span></div>
-    </article>
-    <article class="card" data-id="pmuwndtjn" tabindex="0" aria-label="แพลนเนอร์รายปี ไฮไลต์วันสำคัญอัตโนมัติ ใช้ได้ทุกปี">
-      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwndtjn-1.webp" alt="แพลนเนอร์รายปี ไฮไลต์วันสำคัญอัตโนมัติ ใช้ได้ทุกปี" loading="lazy"></div>
-        <button class="quick " data-add="pmuwndtjn" aria-label="เพิ่มลงตะกร้า">+</button></div>
-      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>แพลนเนอร์รายปี ไฮไลต์วันสำคัญอัตโนมัติ ใช้ได้ทุกปี</h3><span data-rvs="x-pmuwndtjn"></span></div>
-        <span class="price"><s>฿899</s>฿459</span></div>
-    </article>
-    <article class="card" data-id="pmuwlypnd" tabindex="0" aria-label="เทมเพลต Excel ระบบสต๊อกสินค้า รับเข้า-เบิกออก เจ้าหนี้ พร้อม Dashboard อัตโนมัติ">
-      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwlypnd-1.webp" alt="เทมเพลต Excel ระบบสต๊อกสินค้า รับเข้า-เบิกออก เจ้าหนี้ พร้อม Dashboard อัตโนมัติ" loading="lazy"></div>
-        <button class="quick " data-add="pmuwlypnd" aria-label="เพิ่มลงตะกร้า">+</button></div>
-      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>เทมเพลต Excel ระบบสต๊อกสินค้า รับเข้า-เบิกออก เจ้าหนี้ พร้อม Dashboard อัตโนมัติ</h3><span data-rvs="x-pmuwlypnd"></span></div>
-        <span class="price"><s>฿1,499</s>฿999</span></div>
-    </article>
-    <article class="card" data-id="pmuwjsnes" tabindex="0" aria-label="บัญชีรายรับ-รายจ่าย อัจฉริยะ | ซื้อครั้งเดียว ใช้ได้ทุกปี">
-      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuwjsnes-1.webp" alt="บัญชีรายรับ-รายจ่าย อัจฉริยะ | ซื้อครั้งเดียว ใช้ได้ทุกปี" loading="lazy"></div>
-        <button class="quick " data-add="pmuwjsnes" aria-label="เพิ่มลงตะกร้า">+</button></div>
-      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-excel)"></i>Excel</span><h3>บัญชีรายรับ-รายจ่าย อัจฉริยะ | ซื้อครั้งเดียว ใช้ได้ทุกปี</h3><span data-rvs="x-pmuwjsnes"></span></div>
-        <span class="price"><s>฿999</s>฿799</span></div>
-    </article>
-    <article class="card" data-id="pmus63jiz" tabindex="0" aria-label="เทมเพลตปฏิทินแจ้งเตือน">
-      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmus63jiz-1.webp" alt="เทมเพลตปฏิทินแจ้งเตือน" loading="lazy"><span class="vid-badge">▶ วิดีโอ</span></div>
-        <button class="quick " data-add="pmus63jiz" aria-label="เพิ่มลงตะกร้า">+</button></div>
-      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-sheets)"></i>Google Sheets</span><h3>เทมเพลตปฏิทินแจ้งเตือน</h3><span data-rvs="x-pmus63jiz"></span></div>
-        <span class="price"><s>฿999</s>฿599</span></div>
-    </article>
-    <article class="card" data-id="p4" tabindex="0" aria-label="SME &amp; Freelance Financial  | เทมเพลตบริหารการเงินและธุรกิจครบวงจร">
-      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/p4-1.webp" alt="SME &amp; Freelance Financial  | เทมเพลตบริหารการเงินและธุรกิจครบวงจร" loading="lazy"><span class="vid-badge">▶ วิดีโอ</span></div>
-        <button class="quick " data-add="p4" aria-label="เพิ่มลงตะกร้า">+</button></div>
-      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-sheets)"></i>Google Sheets</span><h3>SME &amp; Freelance Financial  | เทมเพลตบริหารการเงินและธุรกิจครบวงจร</h3><span data-rvs="x-p4"></span></div>
-        <span class="price"><s>฿1,999</s>฿1,499</span></div>
-    </article>
-    <article class="card" data-id="pmuqtwpiz" tabindex="0" aria-label="เทมเพลตระบบติดตามหนี้ &amp; รับชำระเงิน พร้อมแดชบอร์ดอัตโนมัติ">
-      <div class="plinth"><span class="badge sale">ลดราคา</span><div class="thumb photo"><img src="/assets/shop/pmuqtwpiz-1.webp" alt="เทมเพลตระบบติดตามหนี้ &amp; รับชำระเงิน พร้อมแดชบอร์ดอัตโนมัติ" loading="lazy"><span class="vid-badge">▶ วิดีโอ</span></div>
-        <button class="quick " data-add="pmuqtwpiz" aria-label="เพิ่มลงตะกร้า">+</button></div>
-      <div class="card-info"><div style="min-width:0"><span class="type-tag"><i class="dot" style="background:var(--t-sheets)"></i>Google Sheets</span><h3>เทมเพลตระบบติดตามหนี้ &amp; รับชำระเงิน พร้อมแดชบอร์ดอัตโนมัติ</h3><span data-rvs="x-pmuqtwpiz"></span></div>
-        <span class="price"><s>฿999</s>฿749</span></div>
-    </article></div>
-    </div></section>
 
     
 
@@ -1113,10 +1136,26 @@ function render(){
   const CIMG={hotel:"bk-hotel",resort:"bk-resort",dorm:"bk-dorm",meet:"bk-meet",salon:"bk-salon",store:"app",kitonline:"orders",kitsalon:"bk-salon",tech:"bk-tech"};
   const card=k=>{const P=PLANS.find(x=>x[0]===k);if(!P)return"";const S0=SYS.find(x=>x[0]===k),img=S0?S0[4]:(CIMG[k]||"app"),d=S0?S0[3]:P[4],ik=S0?k:(HK[k]?k:P[1]);
     return`<a class="sys" href="${base}${P[7]}"${tg}><div class="sys-img"><img src="/assets/shop/ui-${img}.webp?v=3" alt="ตัวอย่างหน้าจอ${P[2]}" loading="lazy" width="1280" height="800"></div><div class="sys-txt"><h3>${ico(ik)}${P[2]}</h3><p>${d}</p><div class="sys-ft"><span class="sys-pr">${P[3]} บาท/เดือน</span><span class="sys-go">ทดลองใช้ฟรี</span></div></div></a>`};
+  // 2 พ.ย.: ตัวช่วยหาสินค้า [id, อีโมจิ, ปุ่ม, ระบบออนไลน์ที่ตรงงาน, คำในชื่อไฟล์]
+  const NEEDS=[["money","💰","จดรายรับ-รายจ่าย",["spend","finance"],/รายรับ|รายจ่าย|ค่าใช้จ่าย|การเงิน|Financ/i],
+    ["bill","🧾","เปิดบิล ใบเสร็จ ใบกำกับภาษี",["bill","store"],/บิล|ใบเสร็จ|ใบกำกับ|ใบแจ้งหนี้|ใบเสนอราคา|Billing/i],
+    ["debt","📒","ติดตามลูกหนี้ เก็บเงิน",["bill","account"],/หนี้|รับชำระ|Billing/i],
+    ["pay","👥","คิดเงินเดือน",["payroll"],/เงินเดือน|Payroll|ค่าแรง/i],
+    ["time","⏰","ลงเวลา เช็กชื่อ",["time","att"],/ลงเวลา|เช็กชื่อ|เข้างาน|ตอกบัตร/i],
+    ["stock","📦","สต๊อก ขายหน้าร้าน",["stock","pos","store"],/สต๊อก|สต็อก|Stock|คลังสินค้า/i],
+    ["online","🛍️","ขายของออนไลน์",["orders","kitonline"],/ออเดอร์|Order|พัสดุ|ขนส่ง/i],
+    ["book","🏨","รับจอง ห้องพัก คิว",["hotel","resort","dorm","salon","tech","meet"],/จอง|ห้องพัก|หอพัก/i],
+    ["cafe","☕","ร้านกาแฟ ร้านอาหาร",["cafe"],/คาเฟ่|กาแฟ|ร้านอาหาร/i],
+    ["work","✅","จดงาน วางแผน",["todo","plan","goals"],/To-?Do|แพลนเนอร์|Planner|โปรเจกต์|เป้าหมาย|ปฏิทิน/i],
+    ["contract","📅","ค่างวด สัญญา ครบกำหนด",["loan","due"],/ค่างวด|สัญญา|ผ่อน|แจ้งเตือน|ครบกำหนด/i],
+    ["learn","🎓","เรียน Excel",[],null]];
+  const fxSys=k=>{const P=PLANS.find(x=>x[0]===k);if(!P)return"";const S0=SYS.find(x=>x[0]===k),img=S0?S0[4]:(CIMG[k]||"app");
+    return`<a class="fx-it" href="${base}${P[7]}"${tg}><img class="fx-im" src="/assets/shop/ui-${img}.webp?v=3" alt="" loading="lazy"><div><div class="fx-n">${P[2]}</div><div class="fx-p"><span><b>${P[3]}</b> บาท/เดือน</span><span class="fx-go">ทดลองฟรี</span></div></div></a>`};
+  window.NEEDS_=NEEDS;window.FXSYS_=fxSys;
   $("#app").innerHTML=`
   <header class="top"><div class="wrap hd">
     <a class="logo" href="#top">${s.avatar?`<img class="logo-img" src="${esc(s.avatar)}" alt="">`:`<span class="logo-cell">A1</span>`}<span>${esc(s.name)}</span></a>
-    <nav class="links" aria-label="เมนูหลัก"><a href="#tools">ระบบออนไลน์</a><a href="#shop">เทมเพลต Excel</a><a href="/course/">คอร์สออนไลน์</a><a href="#pricing">ราคา</a><a href="#how">วิธีสั่งซื้อ</a><a href="#faq">คำถาม</a></nav>
+    <nav class="links" aria-label="เมนูหลัก"><a href="#find">หาสินค้า</a><a href="#shop">เทมเพลต Excel</a><a href="#tools">ระบบออนไลน์</a><a href="/course/">คอร์สออนไลน์</a><a href="#pricing">ราคา</a><a href="#how">วิธีสั่งซื้อ</a><a href="#faq">คำถาม</a></nav>
     <div class="head-actions">
       <button class="btn btn-line btn-sm" id="adminBtn" hidden>หลังร้าน</button>
       <a class="hd-line" href="${lineUrl}" target="_blank" rel="noopener">${LINEIC}<span>ทักแชท</span></a>
@@ -1140,10 +1179,20 @@ function render(){
       </div>
     </div></section>
 
-    <section class="doors"><div class="wrap doors-in">
-      <a class="door" href="#tools"><span class="door-k">ระบบออนไลน์</span><b>ใช้ผ่านเว็บ จ่ายเป็นรายเดือน</b><span class="door-p">เริ่ม ${MINP} บาท / 30 วัน · ทดลองฟรี 7 วัน</span><span class="door-ics">${SYS.map(x=>ico(x[0],"sm")).join("")}</span></a>
-      <a class="door" href="#shop"><span class="door-k">เทมเพลต Excel / Google Sheets</span><b>ซื้อครั้งเดียว ได้ไฟล์ไปใช้เลย</b><span class="door-p">${tpl.length} ไฟล์${minPrice?` · เริ่มต้น ${baht(minPrice)}`:""}</span><span class="door-ics">${ico("xlsx","sm")}${ico("sheets","sm")}</span></a>
-      <a class="door door-new" href="${base}course/"${tg}><span class="door-k">คอร์สออนไลน์ <i class="door-badge">ใหม่</i></span><b>คลิปสอนทีละขั้น ทำเองเป็น</b><span class="door-p">เปิดขายแล้ว · คลิป + ไฟล์ที่ใช้สอน</span><span class="door-ics" style="font-size:26px">🎬</span></a>
+    <section class="fxs" id="find"><div class="wrap">
+      <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">แตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้ ทั้งไฟล์ Excel และแบบใช้ผ่านเว็บ</p>
+      <div class="fx-g" role="group" aria-label="เลือกงานที่ต้องการ">${NEEDS.map(n=>n[0]==="learn"?`<a class="fx-b" href="${base}course/"${tg}><span class="fx-e">${n[1]}</span>${n[2]}</a>`:`<button type="button" class="fx-b" data-need="${n[0]}" aria-pressed="false"><span class="fx-e">${n[1]}</span>${n[2]}</button>`).join("")}</div>
+      <div class="fx-r" id="fxR" hidden></div>
+      <div class="fx-all">หรือดูทั้งหมด: <a href="#shop">📊 ไฟล์ Excel (${tpl.length})</a><a href="#tools">🌐 ใช้ผ่านเว็บ (${SYS.length})</a><a href="${base}course/"${tg}>🎓 คอร์สเรียน</a></div>
+    </div></section>
+
+    <section id="shop" class="sx"><div class="wrap">
+      <div class="sx-head"><h2>เทมเพลต Excel และ Google Sheets</h2><p>ซื้อครั้งเดียว ได้ไฟล์ทางอีเมล ใช้ได้ตลอด สูตรทำไว้ให้แล้ว กรอกแค่ข้อมูลของร้าน</p><p class="xl-up">💡 อยากใช้บนมือถือ หลายคนช่วยกันกรอก? เทมเพลตยอดนิยมมีเวอร์ชันเว็บ <a href="#tools">ทดลองใช้ฟรี 7 วัน</a></p></div>
+      <div class="toolbar">
+        <div class="tabs" id="tabs" role="group" aria-label="ประเภทไฟล์"></div><span class="rc" id="resultCount"></span>
+        <label class="search" for="q"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="ค้นหา เช่น สต๊อก ใบเสร็จ" value="${esc(q)}"></label>
+      </div>
+      <div class="grid" id="grid"></div>
     </div></section>
 
     <section id="tools" class="sx"><div class="wrap">
@@ -1181,14 +1230,6 @@ function render(){
       </div>
     </div></section>
 
-    <section id="shop" class="sx"><div class="wrap">
-      <div class="sx-head"><h2>เทมเพลต Excel และ Google Sheets</h2><p>ซื้อครั้งเดียว ได้ไฟล์ทางอีเมล ใช้ได้ตลอด สูตรทำไว้ให้แล้ว กรอกแค่ข้อมูลของร้าน</p><p class="xl-up">💡 อยากใช้บนมือถือ หลายคนช่วยกันกรอก? เทมเพลตยอดนิยมมีเวอร์ชันเว็บ <a href="#tools">ทดลองใช้ฟรี 7 วัน</a></p></div>
-      <div class="toolbar">
-        <div class="tabs" id="tabs" role="group" aria-label="ประเภทไฟล์"></div><span class="rc" id="resultCount"></span>
-        <label class="search" for="q"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="ค้นหา เช่น สต๊อก ใบเสร็จ" value="${esc(q)}"></label>
-      </div>
-      <div class="grid" id="grid"></div>
-    </div></section>
 
     ${P.some(p=>p.type==="course")?courseSection(P):""}
 
@@ -1263,7 +1304,23 @@ function renderGrid(){
   hydrateClips(g);
 }
 
+function renderFind(id){
+  const R=$("#fxR");if(!R)return;const n=(window.NEEDS_||[]).find(x=>x[0]===id);
+  document.querySelectorAll("[data-need]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.need===id));
+  if(!n){R.hidden=true;R.innerHTML="";return;}
+  const F=live().products.filter(p=>p.type!=="course"&&n[4]&&n[4].test(p.name)).slice(0,6),inC=x=>cart.includes(x);
+  const fh=F.map(p=>`<div class="fx-it" data-fid="${esc(p.id)}" tabindex="0">${thumb(p)}<div><div class="fx-n">${esc(p.name)}</div><div class="fx-p"><span>${p.was>p.price?`<s style="color:var(--muted);font-weight:400">${baht(p.was)}</s> `:""}<b>${baht(p.price)}</b></span><button type="button" class="fx-go ${inC(p.id)?"in":""}" data-fadd="${esc(p.id)}">${inC(p.id)?"✓ ในตะกร้า":"ใส่ตะกร้า"}</button></div></div></div>`).join("");
+  const sh=n[3].map(window.FXSYS_).join("");
+  R.innerHTML=`<div class="fx-rh"><h3>${n[1]} ${n[2]}</h3><button type="button" class="btn btn-line btn-sm" data-need-x>✕ ปิด</button></div>`+
+    (fh?`<div class="fx-col"><h4>📊 ไฟล์ Excel / Google Sheets <small>· ซื้อครั้งเดียว ได้ไฟล์ทางอีเมล</small></h4><div class="fx-list">${fh}</div></div>`:"")+
+    (sh?`<div class="fx-col"><h4>🌐 ใช้ผ่านเว็บ มือถือ/คอม <small>· ทดลองฟรี 7 วัน ไม่ต้องลงโปรแกรม</small></h4><div class="fx-list">${sh}</div></div>`:"")+
+    `<p class="fx-help">ไม่แน่ใจว่าตัวไหนเหมาะ? <button type="button" data-fask>ทักถามร้าน ช่วยเลือกให้ฟรี</button></p>`;
+  R.hidden=false;R.dataset.need=id;try{hydrateClips(R)}catch(e){}
+}
 function bind(){
+  const fxg=document.querySelector(".fx-g");if(fxg)fxg.onclick=e=>{const b=e.target.closest("[data-need]");if(!b)return;const on=b.getAttribute("aria-pressed")==="true";renderFind(on?null:b.dataset.need);if(!on)setTimeout(()=>$("#fxR").scrollIntoView({behavior:"smooth",block:"nearest"}),60);};
+  const fxr=$("#fxR");if(fxr){fxr.onclick=e=>{if(e.target.closest("[data-need-x]"))return renderFind(null);if(e.target.closest("[data-fask]"))return openAsk(null);const a=e.target.closest("[data-fadd]");if(a){e.stopPropagation();toggleCart(a.dataset.fadd);return;}const c=e.target.closest("[data-fid]");if(c)openProduct(c.dataset.fid);};
+    fxr.onkeydown=e=>{if(e.key==="Enter"&&!e.target.closest("button")){const c=e.target.closest("[data-fid]");if(c)openProduct(c.dataset.fid);}};}
   $("#tabs").onclick=e=>{const b=e.target.closest("[data-f]");if(!b)return;filter=b.dataset.f;renderTabs();renderGrid();};
   $("#q").oninput=e=>{q=e.target.value.trim().toLowerCase();renderGrid();};
   document.querySelectorAll("[data-type]").forEach(b=>b.onclick=()=>{filter=b.dataset.type;renderTabs();renderGrid();$("#shop").scrollIntoView({behavior:"smooth"});});
@@ -1285,7 +1342,7 @@ function toggleCart(id){
   const p=byId(id);if(!p)return;
   if(cart.includes(id)){cart=cart.filter(x=>x!==id);toast("นำออกจากตะกร้าแล้ว");}
   else{cart.push(id);toast("เพิ่ม "+p.name+" แล้ว");}
-  $("#cartCount").textContent=cart.length;renderGrid();
+  $("#cartCount").textContent=cart.length;renderGrid();{const R=$("#fxR");if(R&&!R.hidden&&R.dataset.need)renderFind(R.dataset.need);}
   if(!$("#drawer").hidden&&$("#drawer").dataset.kind==="cart")renderCart();
 }
 function closeAll(){["#drawer","#modal","#scrim"].forEach(s=>{const el=$(s);if(el)el.hidden=true;});}
