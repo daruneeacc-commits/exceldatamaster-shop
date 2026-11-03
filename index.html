@@ -2080,6 +2080,8 @@ async function saveRemote(d){
 }
 if(/[?&]shopadmin\b/.test(location.search))setTimeout(keyOwner,400);
 // ?buy=<รหัสสินค้า> จากหน้าคอร์ส/โพส → ใส่ตะกร้าแล้วเปิดหน้าชำระเงินเลย
+function tryView(){const m=/[?&]view=([^&#]+)/.exec(location.search);if(!m||window.__viewDone)return;const id=decodeURIComponent(m[1]);if(!byId(id))return;window.__viewDone=1;openProduct(id);}
+setTimeout(tryView,300);setTimeout(tryView,2500);setTimeout(tryView,6000);
 function tryBuy(){const m=/[?&]buy=([^&#]+)/.exec(location.search);if(!m||window.__buyDone)return;const id=decodeURIComponent(m[1]);if(!byId(id))return;window.__buyDone=1;if(!cart.includes(id))toggleCart(id);openCart();}
 setTimeout(tryBuy,300);setTimeout(tryBuy,2500);setTimeout(tryBuy,6000);
 
