@@ -83,7 +83,7 @@ table.xl{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 "use strict";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่เต็ม)");return false}}};
-const K={items:"edm_due_items",cfg:"edm_due_cfg",ui:"edm_due_ui"};
+const K={items:"edm_due_items",cfg:"edm_due_cfg",ui:"edm_due_ui",del:"edm_due_del"};
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),today=()=>ymd(new Date());
 const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],MF=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
@@ -96,7 +96,12 @@ function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeou
 /* ประเภท: k, ชื่อ, ไอคอน, สีพื้น, สีตัวอักษร, ป้ายช่อง party/bank */
 const TDEF=[["con","สัญญา","📄","#E8EEF9","#2F5DA8"],["perf","ค้ำประกันผลงาน","🛡️","#E6F4EA","#1F7A47"],["bid","ค้ำประกันซอง","✉️","#F1EAFB","#6D3FB0"],["gua","ค้ำประกันสัญญา","🏦","#E3F2F6","#1D6E85"],["ins","ประกันภัย / พ.ร.บ.","🚗","#FDECEF","#B23A57"],["lic","ใบอนุญาต / ภาษี / ทะเบียน","🪪","#FFF3DA","#946200"],["oth","อื่น ๆ","📌","#F1F1F1","#555"]];
 let C=LS.get(K.items,[])||[],cfg=Object.assign({name:"",w1:30,w2:60,w3:90,demo:false},LS.get(K.cfg,{})||{}),ui=Object.assign({v:"home",ft:"",fs:"",q:"",y:+today().slice(0,4)},LS.get(K.ui,{})||{});
-const save=()=>LS.set(K.items,C),saveC=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,ui);
+/* กรอกพร้อมกันหลายเครื่อง: ประทับเวลาแก้ล่าสุด (u) ทุกรายการที่เปลี่ยน + จดรายการที่ลบไว้ (edm_due_del) ให้เครื่องอื่นลบตาม */
+let SEEN=new Map((LS.get(K.items,[])||[]).map(x=>[x.id,JSON.stringify(Object.assign({},x,{u:0}))]));
+const save=()=>{const now=Date.now(),ids=new Set(),D=LS.get(K.del,{})||{};let dd=false;
+  C.forEach(x=>{if(!x.id)x.id=uid("d");ids.add(x.id);const j=JSON.stringify(Object.assign({},x,{u:0}));if(SEEN.get(x.id)!==j||!x.u){x.u=now;SEEN.set(x.id,j)}if(D[x.id]){delete D[x.id];dd=true}});
+  [...SEEN.keys()].forEach(id=>{if(!ids.has(id)){D[id]=now;SEEN.delete(id);dd=true}});
+  if(dd)LS.set(K.del,D);return LS.set(K.items,C)},saveC=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,ui);
 const TY=k=>TDEF.find(t=>t[0]===k)||TDEF[TDEF.length-1];
 const tyHtml=k=>{const t=TY(k);return`<span class="ty" style="--tb:${t[3]};--tc:${t[4]}">${t[2]} ${esc(t[1])}</span>`};
 const left=c=>dDiff(today(),c.end);
@@ -197,12 +202,14 @@ function demo(){const t=today(),d=k=>{const x=new Date();x.setDate(x.getDate()+k
   C=D.map(x=>{const end=d(x[6]),rep=x[7]||0;return{id:uid("d"),t:x[0],name:x[1],party:x[2],ref:x[3],bank:x[4],amt:x[5],start:rep?addM(end,-rep):addM(end,-12),end,rep,who:["คุณเอ","คุณบี",""][x[6]%3<0?0:x[6]%3],note:"",log:[]}});
   C.push({id:uid("d"),t:"perf",name:"ค้ำประกันผลงาน งานรั้วโรงเรียน (คืนแล้ว)",party:"โรงเรียนตัวอย่าง",ref:"LG-2565-0031",bank:"ธนาคารสมมติ",amt:42000,start:addM(t,-26),end:d(-40),rep:0,who:"",note:"",done:d(-35),log:["ปิด "+thD(d(-35))+" · ได้รับหนังสือค้ำคืนแล้ว"]});
   if(!cfg.name)cfg.name="บริษัทตัวอย่าง";cfg.demo=true;save();saveC();ui.v="home";saveUi();render();toast("ใส่ตัวอย่างแล้ว ✓")}
+let mergeWait=false;const onMerged=()=>{if($("#dlg").open){mergeWait=true;return}C=LS.get(K.items,[])||[];SEEN=new Map(C.map(x=>[x.id,JSON.stringify(Object.assign({},x,{u:0}))]));render();toast("อัปเดตรายการจากเครื่องอื่นแล้ว")};
+window.addEventListener("edm:cloud-merged",onMerged);$("#dlg").addEventListener("close",()=>{if(mergeWait){mergeWait=false;setTimeout(onMerged,50)}});
 window.addEventListener("storage",e=>{if(e.key===K.items||e.key===K.cfg){C=LS.get(K.items,[])||[];cfg=Object.assign(cfg,LS.get(K.cfg,{})||{});if(!$("#dlg").open)render()}});
 if(/[?&]demo=1/.test(location.search)&&!C.length)demo();else render();
 })();
 </script>
 <script src="../assets/icons.js?v=10"></script>
 <script>/* ไอคอนวาดเองบนแท็บ/โลโก้ */(function(){if(!window.EDM_ICON)return;var I={home:["clock","#B7791F"],list:["list","#2F80C9"],cal:["calendar","#1F8A5B"],set:["sliders","#5B6B7F"]};document.querySelectorAll("#tabs [data-v]").forEach(function(b){var k=I[b.dataset.v];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.trim().replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON("clock",{color:"#B7791F"}))}})()</script>
-<script src="../assets/track.js?v=6" defer></script><script src="../assets/member.js?v=106" defer></script>
+<script src="../assets/track.js?v=6" defer></script><script src="../assets/member.js?v=107" defer></script>
 </body>
 </html>
