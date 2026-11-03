@@ -1350,7 +1350,7 @@ function toggleCart(id){
   $("#cartCount").textContent=cart.length;renderGrid();{const R=$("#fxR");if(R&&!R.hidden&&R.dataset.need)renderFind(R.dataset.need);}
   if(!$("#drawer").hidden&&$("#drawer").dataset.kind==="cart")renderCart();
 }
-function closeAll(){["#drawer","#modal","#scrim"].forEach(s=>{const el=$(s);if(el)el.hidden=true;});}
+function closeAll(){["#drawer","#modal","#scrim"].forEach(s=>{const el=$(s);if(el)el.hidden=true;});try{if(/[?&]view=/.test(location.search))history.replaceState(null,"",location.pathname+location.hash)}catch(e){}}
 function showDrawer(kind,wide){const d=$("#drawer");d.dataset.kind=kind;d.className="drawer"+(wide?" wide":"");$("#modal").hidden=true;d.hidden=false;$("#scrim").hidden=false;return d;}
 
 /* ---------- product gallery ---------- */
@@ -1439,7 +1439,7 @@ function openProduct(id){
   m.innerHTML=`<div class="modal-card" role="dialog" aria-modal="true" aria-label="${esc(p.name)}">
     ${galleryHTML(p)}
     <div class="modal-info">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span class="type-tag"><i class="dot" style="background:${t.color}"></i>${t.label}</span><button class="x" id="mClose" aria-label="ปิด">×</button></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span class="type-tag"><i class="dot" style="background:${t.color}"></i>${t.label}</span><span style="display:flex;gap:8px;align-items:center"><button class="btn btn-line btn-sm" id="mShare" type="button">🔗 แชร์สินค้านี้</button><button class="x" id="mClose" aria-label="ปิด">×</button></span></div>
       <h2>${esc(p.name)}</h2><p>${esc(p.desc)}</p>
       ${p.features&&p.features.length?`<ul class="feat">${p.features.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>`:""}
       <dl class="spec">${p.type==="course"?`${p.lessons?`<dt>บทเรียน</dt><dd>${esc(p.lessons)} บท</dd>`:""}${p.hours?`<dt>ความยาว</dt><dd>${esc(p.hours)}</dd>`:""}${p.level?`<dt>ระดับ</dt><dd>${esc(p.level)}</dd>`:""}<dt>รูปแบบ</dt><dd>${esc(t.desc)}</dd>`:`<dt>ใช้กับ</dt><dd>${esc(t.desc)}</dd>`}${p.includes?`<dt>ได้รับ</dt><dd>${esc(p.includes)}</dd>`:""}</dl>
@@ -1453,6 +1453,11 @@ function openProduct(id){
   bindGallery(p);hydrateClips(m);
   $("#mClose").onclick=closeAll;$("#mClose").focus();
   $("#mAsk").onclick=()=>openAsk(p.id);
+  const plink=location.origin+"/?view="+encodeURIComponent(p.id);
+  try{history.replaceState(null,"",plink.replace(location.origin,""))}catch(e){}
+  $("#mShare").onclick=async()=>{const d={title:p.name,text:p.name+" · Excel Data Master",url:plink};
+    if(navigator.share){try{await navigator.share(d);return}catch(e){if(e&&e.name==="AbortError")return}}
+    try{await navigator.clipboard.writeText(plink);toast("คัดลอกลิงก์สินค้าแล้ว วางส่งลูกค้าได้เลย")}catch(e){prompt("คัดลอกลิงก์นี้",plink)}};
   const ma=$("#mAdd");if(ma)ma.onclick=()=>{toggleCart(p.id);closeAll();};
   $("#mBuy").onclick=()=>{if(!cart.includes(p.id)){cart.push(p.id);$("#cartCount").textContent=cart.length;renderGrid();}openCart();setTimeout(()=>{const n=$("#oName");if(n&&!n.value)n.focus();},60);};
   m.onclick=e=>{if(e.target===m)closeAll();};
