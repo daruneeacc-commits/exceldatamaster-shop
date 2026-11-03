@@ -70,7 +70,7 @@ table.xl{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 .doc .sg{display:grid;gap:18px;text-align:center;font-size:9.5pt;margin-top:auto;padding-top:24px}.doc .sg .ln{height:34px}.doc .sg b{display:block}.doc .sg .nm{min-height:1.4em}
 .doc .ft{margin-top:10px;font-size:7.5pt;color:#9aa6a1;text-align:right}
 #printArea{display:none}
-@media print{header.top,.tabs,.toast,dialog,.edm-bar,.noprint,main{display:none!important}body{background:#fff}#printArea{display:block}#printArea .doc{box-shadow:none;width:auto;min-height:auto;padding:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media print{header.top,.tabs,.toast,dialog,.edm-bar,.noprint,main{display:none!important}body{background:#fff}#printArea{display:block}#printArea .cpimg{width:100%;display:block}#printArea .doc{box-shadow:none;width:auto;min-height:auto;padding:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
 <style id="pageSize">@page{size:A4;margin:12mm}</style>
 <link rel="stylesheet" href="../assets/pastel.css?v=8">
@@ -85,7 +85,7 @@ table.xl{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 </head>
 <body>
 <header class="top"><div class="in"><a class="brand" href="/">📝 Excel Data Master <small>· แบบฟอร์มเอกสาร</small></a><nav class="nav"></nav></div></header>
-<div class="tabs" id="tabs"><button data-v="new">📝 สร้างเอกสาร</button><button data-v="docs">📂 เอกสารของฉัน</button><button data-v="set">⚙️ ตั้งค่าบริษัท</button></div>
+<div class="tabs" id="tabs"><button data-v="new">📝 สร้างเอกสาร</button><button data-v="docs">📂 เอกสารของฉัน</button><button data-v="cp">🖊️ ขีดคร่อมสำเนา</button><button data-v="set">⚙️ ตั้งค่าบริษัท</button></div>
 <main id="main"></main>
 <div id="printArea"></div>
 <dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button">✕</button></div><div class="db" id="dlgB"></div></dialog>
@@ -520,8 +520,63 @@ function demo(){const d=k=>{const x=new Date();x.setDate(x.getDate()+k);return y
   mk("pr",{date:d(0),lang:"en",cur:"USD",f:{requester:"Somchai M.",dept:"IT",need:d(10),supplier:"Sample Tech Co.",reason:"Replace old laptops for new staff",sup:"Suda H.",appr:"Managing Director"},items:[{desc:"Laptop 14\" i5 / 16GB",qty:"2",unit:"pcs",price:"720"},{desc:"Wireless mouse",qty:"2",unit:"pcs",price:"15"}]});
   save();saveC();ui.v="docs";saveUi();render();toast("ใส่ตัวอย่างแล้ว ✓ (ข้อมูลสมมติ)")}
 
+/* ขีดคร่อมสำเนาเอกสาร (บัตรประชาชน ทะเบียนบ้าน ฯลฯ) — รูปอยู่ในเครื่องนี้เท่านั้น ไม่บันทึก ไม่ส่งขึ้นระบบ */
+let CPI=[];
+const CP_TY=["บัตรประชาชน","ทะเบียนบ้าน","หน้าสมุดบัญชี","ใบขับขี่","หนังสือเดินทาง","อื่นๆ"];
+const CP_P=["สมัครงาน","เปิดบัญชีธนาคาร","ยื่นกู้สินเชื่อ","ทำสัญญาเช่า","ติดต่อราชการ","รับเงิน/เบิกค่าใช้จ่าย"];
+const CP_C={blue:"#1F4FD8",black:"#111",red:"#C62828"};
+function cpCfg(){const d={ty:"บัตรประชาชน",x:"",two:true,name:"",col:"blue",dt:true};ui.cp=ui.cp||{};for(const k in d)if(!(k in ui.cp))ui.cp[k]=d[k];return ui.cp}
+function vCp(){const M=$("#main"),c=cpCfg();
+  M.innerHTML=`<div class="ed"><div class="card side">
+  <h3 style="margin:0">🖊️ ขีดคร่อมสำเนาเอกสาร</h3>
+  <p class="note" style="margin:0">ถ่ายรูปหรือเลือกรูปบัตร/เอกสาร ระบบจะขีดคร่อม เขียน "ใช้สำหรับ…เท่านั้น" และ "สำเนาถูกต้อง" ให้ · <b>รูปอยู่ในเครื่องนี้เท่านั้น ไม่บันทึก ไม่ส่งขึ้นระบบ</b></p>
+  <div class="f"><label>เอกสาร</label><div class="chips" id="cpTy">${CP_TY.map(t=>`<button class="chip${c.ty===t?" on":""}" data-ty="${esc(t)}">${esc(t)}</button>`).join("")}</div></div>
+  <div class="f"><label>รูปเอกสาร (ได้หลายรูป เช่น หน้า-หลังบัตร)</label><label class="btn main" style="cursor:pointer">📷 ถ่าย / เลือกรูป<input type="file" id="cpF" accept="image/*" multiple hidden></label><div id="cpL" class="chips"></div></div>
+  <div class="f"><label>ใช้สำหรับ … เท่านั้น</label><input class="in-" id="cpX" value="${esc(c.x)}" placeholder="เช่น สมัครงานกับ บริษัท ตัวอย่าง จำกัด"><div class="chips" id="cpP">${CP_P.map(t=>`<button class="chip" data-p="${esc(t)}">${esc(t)}</button>`).join("")}</div></div>
+  <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cpTwo"${c.two?" checked":""}> เพิ่มบรรทัด "ห้ามนำไปใช้เพื่อการอื่น"</label>
+  <div class="f"><label>ชื่อผู้รับรองสำเนา (ใต้ลายเซ็น)</label><input class="in-" id="cpN" value="${esc(c.name)}" placeholder="เช่น นายสมชาย ใจดี"></div>
+  <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cpDt"${c.dt?" checked":""}> ใส่วันที่วันนี้</label>
+  <div class="f"><label>สีปากกา</label><div class="chips" id="cpC">${Object.keys(CP_C).map(k=>`<button class="chip${c.col===k?" on":""}" data-c="${k}"><span style="color:${CP_C[k]}">●</span> ${{blue:"น้ำเงิน",black:"ดำ",red:"แดง"}[k]}</button>`).join("")}</div></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="cpPdf">📄 PDF / ส่ง / พิมพ์</button><button class="btn ghost" id="cpPng">🖼️ บันทึกเป็นรูป</button></div>
+  <p class="note" style="margin:0">พิมพ์แล้วเซ็นชื่อจริงบนเส้น "ลงชื่อ" ก่อนส่งทุกครั้ง</p>
+  </div><div class="pvw"><canvas id="cpCv" width="1240" height="1754" style="width:100%;max-width:794px;display:block;margin:auto;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.12)"></canvas></div></div>`;
+  const up=()=>{c.x=$("#cpX").value.trim();c.two=$("#cpTwo").checked;c.name=$("#cpN").value.trim();c.dt=$("#cpDt").checked;saveUi();cpDraw()};
+  ["#cpX","#cpN"].forEach(s=>$(s).oninput=up);["#cpTwo","#cpDt"].forEach(s=>$(s).onchange=up);
+  $("#cpTy").onclick=e=>{const b=e.target.closest("[data-ty]");if(!b)return;c.ty=b.dataset.ty;$$("#cpTy .chip").forEach(x=>x.classList.toggle("on",x===b));saveUi()};
+  $("#cpP").onclick=e=>{const b=e.target.closest("[data-p]");if(!b)return;$("#cpX").value=b.dataset.p;up()};
+  $("#cpC").onclick=e=>{const b=e.target.closest("[data-c]");if(!b)return;c.col=b.dataset.c;$$("#cpC .chip").forEach(x=>x.classList.toggle("on",x===b));up()};
+  $("#cpF").onchange=e=>{const fs=[...e.target.files];e.target.value="";fs.forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1800/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);if(CPI.length<4)CPI.push({cv,rot:0});else toast("ใส่ได้สูงสุด 4 รูป");cpList();cpDraw()};im.src=r.result};r.readAsDataURL(f)})};
+  $("#cpL").onclick=e=>{const b=e.target.closest("[data-r],[data-x]");if(!b)return;if(b.dataset.r!=null)CPI[+b.dataset.r].rot=(CPI[+b.dataset.r].rot+90)%360;else CPI.splice(+b.dataset.x,1);cpList();cpDraw()};
+  const name=()=>"สำเนา"+c.ty+"-"+new Date().toISOString().slice(0,10);
+  $("#cpPng").onclick=()=>{if(!CPI.length)return toast("เลือกรูปเอกสารก่อน");$("#cpCv").toBlob(b=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name()+".png";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)},"image/png")};
+  $("#cpPdf").onclick=()=>{if(!CPI.length)return toast("เลือกรูปเอกสารก่อน");$("#printArea").innerHTML=`<img class="cpimg" src="${$("#cpCv").toDataURL("image/jpeg",.92)}" alt="">`;window.EDM_DOCNAME=name();window.print()};
+  cpList();cpDraw();
+}
+function cpList(){const L=$("#cpL");if(L)L.innerHTML=CPI.map((x,i)=>`<span class="chip" style="display:inline-flex;gap:6px;align-items:center">รูป ${i+1}<button class="btn sm ghost" data-r="${i}" title="หมุน">⟳</button><button class="btn sm ghost danger" data-x="${i}" title="เอาออก">✕</button></span>`).join("")}
+async function cpDraw(){const cv=$("#cpCv");if(!cv)return;const c=cpCfg(),g=cv.getContext("2d"),W=1240,H=1754,col=CP_C[c.col]||CP_C.blue,F='"IBM Plex Sans Thai","Noto Sans Thai",Tahoma,sans-serif';
+  try{await document.fonts.load('700 40px "IBM Plex Sans Thai"')}catch(e){}
+  g.setTransform(1,0,0,1,0,0);g.fillStyle="#fff";g.fillRect(0,0,W,H);
+  if(!CPI.length){g.fillStyle="#9aa6a1";g.font=`600 34px ${F}`;g.textAlign="center";g.fillText("เลือกรูปเอกสารทางซ้าย 📷",W/2,H/2-60);g.font=`28px ${F}`;g.fillText("รูปอยู่ในเครื่องนี้เท่านั้น ไม่ส่งขึ้นระบบ",W/2,H/2);}
+  const top=90,bot=1330,slot=(bot-top)/Math.max(1,CPI.length),line1="ใช้สำหรับ"+(c.x||"……………………………")+" เท่านั้น",line2=c.two?"ห้ามนำไปใช้เพื่อการอื่น":"";
+  CPI.forEach((p,i)=>{const r=p.rot%180!==0,iw=r?p.cv.height:p.cv.width,ih=r?p.cv.width:p.cv.height,k=Math.min(1000/iw,(slot-40)/ih),w=iw*k,h=ih*k,x=(W-w)/2,y=top+i*slot+(slot-h)/2;
+    g.save();g.translate(x+w/2,y+h/2);g.rotate(p.rot*Math.PI/180);const dw=r?h:w,dh=r?w:h;g.drawImage(p.cv,-dw/2,-dh/2,dw,dh);g.restore();
+    g.strokeStyle="rgba(0,0,0,.15)";g.lineWidth=1;g.strokeRect(x,y,w,h);
+    // ขีดคร่อม 2 เส้นขนานตามแนวทแยง พร้อมข้อความระหว่างเส้น
+    const ang=-Math.atan2(h,w),len=Math.hypot(w,h),gap=Math.max(70,Math.min(130,Math.min(w,h)*.22))*(line2?1.25:1);
+    g.save();g.beginPath();g.rect(x,y,w,h);g.clip();g.translate(x+w/2,y+h/2);g.rotate(ang);g.strokeStyle=col;g.lineWidth=5;g.lineCap="round";
+    [-gap/2,gap/2].forEach(o=>{g.beginPath();g.moveTo(-len*.6,o);g.lineTo(len*.6,o);g.stroke()});
+    g.fillStyle=col;g.textAlign="center";g.textBaseline="middle";const lines=line2?[line1,line2]:[line1];let fs=Math.min(gap*(line2?.3:.5),46);
+    g.font=`700 ${fs}px ${F}`;const mw=Math.max(...lines.map(t=>g.measureText(t).width));if(mw>len*.85){fs*=len*.85/mw;g.font=`700 ${fs}px ${F}`}
+    lines.forEach((t,j)=>g.fillText(t,0,(j-(lines.length-1)/2)*fs*1.35+fs*.08));g.restore()});
+  if(CPI.length){g.fillStyle=col;g.textAlign="center";g.textBaseline="alphabetic";const cx=W-360;
+    g.font=`700 46px ${F}`;g.fillText("สำเนาถูกต้อง",cx,1420);
+    g.font=`32px ${F}`;g.fillText("ลงชื่อ ......................................................",cx,1510);
+    g.fillText("( "+(c.name||"......................................................")+" )",cx,1565);
+    if(c.dt){const d=new Date();g.fillText("วันที่ "+d.getDate()+" "+["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."][d.getMonth()]+" "+(d.getFullYear()+543),cx,1620)}
+    if(!document.documentElement.classList.contains("edm-paid")){g.fillStyle="#b4bdb9";g.font=`20px ${F}`;g.textAlign="right";g.fillText("สร้างด้วย exceldatamaster.com",W-60,H-40)}}
+}
 function render(){$("#main").onclick=null;$$("#tabs [data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v||(ui.v==="ed"&&b.dataset.v==="new"&&cur&&!cur.id)||(ui.v==="ed"&&b.dataset.v==="docs"&&cur&&cur.id)));
-  if(ui.v==="ed"&&!cur)ui.v="new";({new:vNew,docs:vDocs,set:vSet,ed:vEd}[ui.v]||vNew)()}
+  if(ui.v==="ed"&&!cur)ui.v="new";({new:vNew,docs:vDocs,set:vSet,ed:vEd,cp:vCp}[ui.v]||vNew)()}
 $("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(!b)return;if(ui.v==="ed"&&cur&&!confirm("ออกจากหน้านี้? (ถ้ายังไม่กดบันทึก ข้อมูลที่กรอกจะหาย)"))return;cur=null;ui.v=b.dataset.v;saveUi();render();scrollTo(0,0)};
 $("#dlgX").onclick=()=>$("#dlg").close();
 window.addEventListener("storage",e=>{if(e.key===K.docs||e.key===K.cfg){D=LS.get(K.docs,[])||[];cfg=Object.assign(cfg,LS.get(K.cfg,{})||{});if(ui.v!=="ed")render()}});
