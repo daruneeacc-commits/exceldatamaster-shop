@@ -30,21 +30,35 @@ main{max-width:1400px;margin:0 auto;padding:12px 16px 90px;display:flex;flex-dir
 .chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:0;border-radius:999px;padding:5px 12px;background:#fff;box-shadow:0 0 0 1px var(--line);cursor:pointer;font-size:.86rem;font-weight:600}.chip.on{background:var(--ink);color:#fff;box-shadow:none}
 dialog{border:0;border-radius:18px;padding:0;width:min(560px,96vw);max-height:92vh}dialog::backdrop{background:rgba(20,30,45,.45)}.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}.db{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
 /* คลังแบบฟอร์ม */
+.hero{position:relative;border-radius:22px;padding:22px 24px;background:linear-gradient(120deg,#2E6F9E 0%,#3F8CC4 55%,#7DB8E3 100%);color:#fff;display:grid;grid-template-columns:1fr auto;gap:14px 18px;align-items:center;overflow:hidden;box-shadow:0 14px 30px -18px rgba(46,111,158,.8)}
+.hero:after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.12);pointer-events:none}
+.hero h1{margin:0;font-size:1.55rem;line-height:1.25}.hero p{margin:4px 0 0;opacity:.92}
+.hero-k{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.hero-k span{background:rgba(255,255,255,.18);border-radius:999px;padding:3px 11px;font-size:.8rem;font-weight:600}
+.hero-b{background:#fff;color:#2E6F9E;position:relative;z-index:1}
+.hero-s{grid-column:1/-1;position:relative;z-index:1}.hero-s .in-{border:0;padding:12px 16px;font-size:1rem;border-radius:14px;box-shadow:0 6px 16px -8px rgba(0,0,0,.35)}
+.gchips{flex-wrap:nowrap;overflow-x:auto;padding:2px 2px 4px;scrollbar-width:none}.gchips::-webkit-scrollbar{display:none}.gchips .chip{flex:none;padding:7px 14px}
+.cg{display:flex;align-items:center;gap:8px;font-weight:700;margin:10px 0 2px;color:var(--ink);font-size:1rem}.cg:before{content:"";width:6px;height:20px;border-radius:3px;background:var(--gc,#2E6F9E)}.cg small{background:var(--soft);color:var(--muted);border-radius:999px;padding:0 8px;font-size:.75rem}
+
 .hello{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}.hello h1{margin:0;font-size:1.3rem}.hello p{margin:2px 0 0;color:var(--muted)}
 .gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
-.tp{display:flex;gap:12px;align-items:center;text-align:left;background:#fff;border:0;border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px var(--line);cursor:pointer;transition:box-shadow .15s}.tp:hover{box-shadow:0 0 0 2px var(--accent)}
-.tp .e{font-size:1.7rem;width:46px;height:46px;border-radius:12px;background:var(--soft);display:grid;place-items:center;flex:none}.tp b{display:block;line-height:1.3}.tp small{display:block;color:var(--muted);font-size:.78rem;line-height:1.35}
-.cg{font-weight:700;margin:4px 0 -2px;color:var(--muted);font-size:.9rem}
+.tp{display:flex;gap:12px;align-items:center;text-align:left;background:#fff;border:0;border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px var(--line);cursor:pointer;transition:box-shadow .15s}.tp:hover{box-shadow:0 0 0 2px var(--gc,var(--accent));transform:translateY(-1px)}.tp{transition:box-shadow .15s,transform .15s}
+.tp .e{font-size:1.6rem;width:46px;height:46px;border-radius:12px;background:color-mix(in srgb,var(--gc,#2E6F9E) 13%,#fff);display:grid;place-items:center;flex:none}.tp b{display:block;line-height:1.3}.tp small{display:block;color:var(--muted);font-size:.78rem;line-height:1.35}
+.gal.pop .tp{background:linear-gradient(180deg,#FFFBEA,#fff)}.gal.pop{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+@media(max-width:600px){.hero{padding:18px 16px;border-radius:18px;grid-template-columns:1fr}.hero h1{font-size:1.25rem}.hero-k span:nth-child(3){display:none}
+ .gal{grid-template-columns:1fr 1fr;gap:8px}.tp{flex-direction:column;align-items:flex-start;gap:8px;padding:12px}.tp small{display:none}.tp b{font-size:.92rem}.tp .e{width:40px;height:40px;font-size:1.35rem}}
 /* ตัวแก้เอกสาร */
 .ed{display:grid;grid-template-columns:minmax(330px,440px) 1fr;gap:14px;align-items:start}
 .ed .side{position:sticky;top:64px;max-height:calc(100vh - 80px);overflow:auto}
-.edbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}.edbar .g{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.edbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;background:var(--card);border-radius:14px;padding:8px 10px;box-shadow:0 0 0 1px var(--line)}.edbar .g{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .sel{border:1px solid var(--line);border-radius:9px;padding:6px 8px;background:#fff}
 .pvw{background:#E4EAF0;border-radius:16px;padding:16px;overflow:auto}.pvs{transform-origin:top left}
 .it-ed{display:flex;flex-direction:column;gap:8px}.it-row{display:grid;gap:6px;align-items:center;background:var(--soft);border-radius:10px;padding:8px}.it-row .x{border:0;background:none;color:var(--danger);cursor:pointer;font-size:1.1rem}
 .it-row .in-{padding:6px 8px;font-size:.9rem}
 .radio{display:flex;gap:6px;flex-wrap:wrap}.radio label{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 11px;cursor:pointer;font-size:.88rem;font-weight:600;color:var(--ink)}.radio input{accent-color:var(--accent)}
 .mob{display:none}@media(max-width:980px){.mob{display:inline-flex}}
+@media(max-width:760px){.edbar{position:sticky;top:50px;z-index:15;box-shadow:0 6px 14px -10px rgba(0,0,0,.35),0 0 0 1px var(--line)}.edbar>.g:first-child b{flex:1 1 100%;order:-1}
+ .edbar .g:last-child .note,.edbar .g:last-child select{display:none}.edbar.show .g:last-child .note,.edbar.show .g:last-child select{display:block}.edbar.show .g:last-child select{flex:1 1 40%}
+ .edbar .g:last-child{width:100%}.edbar .g:last-child .btn{flex:1}.toast{bottom:84px}}
 .sum{display:flex;justify-content:space-between;font-weight:700;background:var(--hd);border-radius:10px;padding:8px 12px}
 @media(max-width:980px){.ed{grid-template-columns:1fr}.ed .side{position:static;max-height:none}.pvw{padding:8px}}
 /* รายการเอกสาร */
@@ -85,7 +99,7 @@ table.xl{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 </head>
 <body>
 <header class="top"><div class="in"><a class="brand" href="/">📝 Excel Data Master <small>· แบบฟอร์มเอกสาร</small></a><nav class="nav"></nav></div></header>
-<div class="tabs" id="tabs"><button data-v="new">📝 สร้างเอกสาร</button><button data-v="docs">📂 เอกสารของฉัน</button><button data-v="cp">🖊️ ขีดคร่อมสำเนา</button><button data-v="set">⚙️ ตั้งค่าบริษัท</button></div>
+<div class="tabs" id="tabs"><button data-v="new">📝 สร้างเอกสาร</button><button data-v="docs">📂 เอกสารของฉัน</button><button data-v="cp">🖊️ ขีดคร่อม</button><button data-v="set">⚙️ ตั้งค่าบริษัท</button></div>
 <main id="main"></main>
 <div id="printArea"></div>
 <dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button">✕</button></div><div class="db" id="dlgB"></div></dialog>
@@ -412,10 +426,13 @@ function needFont(l){if(!FONT[l]||document.getElementById("fnt-"+l))return;const
 
 /* ---------- หน้า สร้างเอกสาร ---------- */
 function vNew(){const M=$("#main"),G=["การเงิน & บัญชี","จัดซื้อ & คลังสินค้า","บุคคล (HR)","ขาย & ลูกค้า","ธุรการ · อาคาร · IT"].filter(g=>T.some(t=>t.g===g));
-  M.innerHTML=`<div class="hello"><div><h1>เลือกแบบฟอร์ม</h1><p>${T.length} แบบฟอร์ม ครบทุกแผนก · แค่กรอกข้อมูล ระบบจัดหน้า รันเลขที่ และแปลงจำนวนเงินเป็นตัวหนังสือให้ · เลือกภาษาได้ ไทย · English · 한국어 · 日本語</p></div>${!cfg.co.name?`<button class="btn main" id="goSet" type="button">🏢 ใส่ชื่อบริษัทก่อน</button>`:""}</div>
-  <div class="card" style="padding:12px;gap:10px"><input class="in-" id="gq" placeholder="🔍 ค้นหาแบบฟอร์ม เช่น ใบลา เบิก ซ่อม สั่งซื้อ…" value="${esc(ui.gq||"")}"><div class="chips"><button class="chip${!ui.gd?" on":""}" data-gd="" type="button">ทุกแผนก (${T.length})</button>${G.map(g=>`<button class="chip${ui.gd===g?" on":""}" data-gd="${esc(g)}" type="button">${esc(g)} (${T.filter(t=>t.g===g).length})</button>`).join("")}</div></div><div id="galW"></div>`;
+  M.innerHTML=`<section class="hero"><div class="hero-t"><h1>วันนี้จะทำเอกสารอะไรดี?</h1><p>เลือกแบบฟอร์ม กรอกข้อมูล ได้ PDF พร้อมส่ง</p><div class="hero-k"><span>📄 ${T.length} แบบฟอร์ม</span><span>🌏 ไทย · EN · 한국어 · 日本語</span><span>🔢 รันเลขที่ + ตัวหนังสือให้อัตโนมัติ</span></div></div>${!cfg.co.name?`<button class="btn hero-b" id="goSet" type="button">🏢 ใส่ชื่อบริษัทก่อน</button>`:""}
+  <div class="hero-s"><input class="in-" id="gq" placeholder="🔍 ค้นหา เช่น ใบลา เบิก ซ่อม สั่งซื้อ…" value="${esc(ui.gq||"")}"></div></section>
+  <div class="chips gchips"><button class="chip${!ui.gd?" on":""}" data-gd="" type="button">ทุกแผนก (${T.length})</button>${G.map(g=>`<button class="chip${ui.gd===g?" on":""}" data-gd="${esc(g)}" type="button">${esc(g)} (${T.filter(t=>t.g===g).length})</button>`).join("")}</div><div id="galW"></div>`;
   const draw=()=>{const q=(ui.gq||"").trim().toLowerCase(),L=T.filter(t=>(!ui.gd||t.g===ui.gd)&&(!q||(t.t.join(" ")+" "+t.d).toLowerCase().includes(q)));
-    $("#galW").innerHTML=L.length?G.filter(g=>L.some(t=>t.g===g)).map(g=>`<div class="cg">${esc(g)}</div><div class="gal">${L.filter(t=>t.g===g).map(t=>`<button class="tp" data-t="${t.id}" type="button"><span class="e">${t.e}</span><span><b>${esc(t.t[0])}</b><small>${esc(t.d)}</small></span></button>`).join("")}</div>`).join(""):`<div class="empty">ไม่พบแบบฟอร์ม “${esc(q)}” · อยากได้แบบไหนเพิ่ม ทัก LINE ร้านได้เลย</div>`;
+    const GC={"การเงิน & บัญชี":"#2E6F9E","จัดซื้อ & คลังสินค้า":"#C77D1A","บุคคล (HR)":"#8E5BB5","ขาย & ลูกค้า":"#2E9E6B","ธุรการ · อาคาร · IT":"#5B6B7F"},card=t=>`<button class="tp" data-t="${t.id}" type="button" style="--gc:${GC[t.g]||"#2E6F9E"}"><span class="e">${t.e}</span><span><b>${esc(t.t[0])}</b><small>${esc(t.d)}</small></span></button>`;
+    const pop=!q&&!ui.gd?`<div class="cg" style="--gc:#E0A100">⭐ ใช้บ่อย</div><div class="gal pop">${["pv","pc","ad","lv","po","rc"].map(TP).filter(Boolean).map(card).join("")}</div>`:"";
+    $("#galW").innerHTML=L.length?pop+G.filter(g=>L.some(t=>t.g===g)).map(g=>`<div class="cg" style="--gc:${GC[g]}">${esc(g)} <small>${L.filter(t=>t.g===g).length}</small></div><div class="gal">${L.filter(t=>t.g===g).map(card).join("")}</div>`).join(""):`<div class="empty">ไม่พบแบบฟอร์ม “${esc(q)}” · อยากได้แบบไหนเพิ่ม ทัก LINE ร้านได้เลย</div>`;
     $$("#galW [data-t]").forEach(b=>b.onclick=()=>openEd(blank(TP(b.dataset.t))))};draw();
   $("#gq").oninput=e=>{ui.gq=e.target.value;saveUi();draw()};M.querySelectorAll("[data-gd]").forEach(b=>b.onclick=()=>{ui.gd=b.dataset.gd;saveUi();M.querySelectorAll("[data-gd]").forEach(x=>x.classList.toggle("on",x===b));draw()});
   const gs=$("#goSet");if(gs)gs.onclick=()=>{ui.v="set";saveUi();render()}}
@@ -431,7 +448,7 @@ function vEd(){const d=cur,t=TP(d.tpl),M=$("#main");needFont(d.lang);
     return`<div class="f${w2?" w2":""}"><label>${esc(lab)}</label><input class="in-" type="${typ}" data-k="${k}" value="${v}"${im} list="dl-${k}"><datalist id="dl-${k}">${ty==="t"?hist(k).map(s=>`<option value="${esc(s)}">`).join(""):""}</datalist></div>`};
   const sgK=(t.sg||[]).map(s=>s[1]).filter(k=>!t.f.some(x=>x[0]===k));
   const itEd=t.it?`<div class="card"><h2>${esc(t.sum==="hours"?"รายการ OT":"รายการในตาราง")} <button class="btn sm" id="addR" type="button">＋ เพิ่มแถว</button></h2><div class="it-ed" id="itEd"></div><div class="sum" id="sumBox"></div></div>`:"";
-  M.innerHTML=`<div class="edbar"><div class="g"><button class="btn ghost sm" id="back" type="button">← กลับ</button><b>${t.e} ${esc(t.t[0])}</b><button class="btn ghost sm mob" id="goPv" type="button">👁️ ดูเอกสาร</button></div>
+  M.innerHTML=`<div class="edbar"><div class="g"><button class="btn ghost sm" id="back" type="button">← กลับ</button><b>${t.e} ${esc(t.t[0])}</b><button class="btn ghost sm mob" id="goPv" type="button">👁️ ดูเอกสาร</button><button class="btn ghost sm mob" id="goOpt" type="button">⚙️ ภาษา/ฟอนต์</button></div>
    <div class="g"><label class="note">ภาษา</label><select class="sel" id="eL">${LANGS.map(([k,n])=>`<option value="${k}"${d.lang===k?" selected":""}>${n}</option>`).join("")}</select>
    <label class="note">ฟอนต์</label>${ffSel("eF",d.font)}
    ${t.nomoney?"":`<label class="note">สกุลเงิน</label><select class="sel" id="eC">${CUR.map(c=>`<option value="${c[0]}"${d.cur===c[0]?" selected":""}>${c[0]} ${c[8]}</option>`).join("")}</select>`}
@@ -460,7 +477,7 @@ function vEd(){const d=cur,t=TP(d.tpl),M=$("#main");needFont(d.lang);
   loadFF(cur.font);$("#eF").onchange=e=>{cur.font=e.target.value;loadFF(cur.font,()=>cur&&pv());pv()};$("#eL").onchange=e=>{cur.lang=e.target.value;needFont(cur.lang);pv();setTimeout(pv,900)};const ec=$("#eC");if(ec)ec.onchange=e=>{cur.cur=e.target.value;drawIt();pv()};
   const ar=$("#addR");if(ar)ar.onclick=()=>{cur.items.push({});drawIt();pv();const L=$$("#itEd .it-row");L[L.length-1].querySelector("input:not([disabled])").focus()};
   const ie=$("#itEd");if(ie)ie.onclick=e=>{const b=e.target.closest("[data-del]");if(!b)return;cur.items.splice(+b.dataset.del,1);if(!cur.items.length)cur.items.push({});drawIt();pv()};
-  $("#goPv").onclick=()=>$("#pvw").scrollIntoView({behavior:"smooth"});
+  $("#goOpt").onclick=()=>$(".edbar").classList.toggle("show");$("#goPv").onclick=()=>$("#pvw").scrollIntoView({behavior:"smooth"});
   $("#back").onclick=()=>{ui.v=cur.id?"docs":"new";cur=null;saveUi();render()};
   $("#eSave").onclick=()=>{if(doSave()){pv();toast("บันทึกแล้ว ✓ "+(cur.no||""))}};
   $("#ePdf").onclick=()=>{if(!doSave())return;pv();printDoc(cur)};
@@ -593,7 +610,7 @@ window.EDM_FORM={words,T,docHtml};
 })();
 </script>
 <script src="../assets/icons.js?v=10"></script>
-<script>/* ไอคอนวาดเองบนแท็บ/โลโก้ */(function(){if(!window.EDM_ICON)return;var I={new:["doc","#2E6F9E"],docs:["list","#2F80C9"],set:["sliders","#5B6B7F"]};document.querySelectorAll("#tabs [data-v]").forEach(function(b){var k=I[b.dataset.v];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.trim().replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON("doc",{color:"#2E6F9E"}))}})()</script>
+<script>/* ไอคอนวาดเองบนแท็บ/โลโก้ */(function(){if(!window.EDM_ICON)return;var I={new:["doc","#2E6F9E"],docs:["list","#2F80C9"],cp:["check","#1F4FD8"],set:["sliders","#5B6B7F"]};document.querySelectorAll("#tabs [data-v]").forEach(function(b){var k=I[b.dataset.v];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.trim().replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON("doc",{color:"#2E6F9E"}))}})()</script>
 <script src="../assets/docshare.js?v=2" defer></script>
 <script src="../assets/track.js?v=6" defer></script><script src="../assets/member.js?v=109" defer></script>
 </body>
