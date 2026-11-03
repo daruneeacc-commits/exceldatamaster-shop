@@ -339,7 +339,7 @@ function calc(d){const t=TP(d.tpl),I=d.items||[];I.forEach(r=>{if(t.it&&t.it.som
   const vt=t.vat?Math.round(sub*num(d.f.vatPct==null||d.f.vatPct===""?7:d.f.vatPct)/100*100)/100:0;const o={sub,wht:wh,vat:vt,net:sub-wh+vt};if(t.clear){o.adv=num(d.f.advRecv);o.diff=o.adv-sub}return o}
 function blank(t){const last=D.filter(x=>x.tpl===t.id).sort((a,b)=>(b.ts||0)-(a.ts||0))[0],f={};
   (t.keep||[]).forEach(k=>{if(last&&last.f[k])f[k]=last.f[k]});if(t.id==="ce"||t.id==="mm"){}
-  return{id:"",tpl:t.id,no:"",date:today(),lang:cfg.lang||"th",cur:cfg.cur||"THB",f,items:t.it?[{},{}]:[],pm:t.pay?"transfer":"",ts:0}}
+  return{id:"",tpl:t.id,no:"",date:today(),lang:cfg.lang||"th",cur:cfg.cur||"THB",font:cfg.font||"",f,items:t.it?[{},{}]:[],pm:t.pay?"transfer":"",ts:0}}
 
 /* ---------- วาดเอกสาร ---------- */
 const coName=l=>(l!=="th"&&l!=="bi"&&cfg.co.nameEn)?cfg.co.nameEn:(cfg.co.name||"ชื่อบริษัทของคุณ (ตั้งค่าในแท็บ ตั้งค่าบริษัท)");
@@ -375,7 +375,7 @@ function docHtml(d){const t=TP(d.tpl),l=d.lang||"th",c=calc(d),C=CU(d.cur),cc=d.
   const lg=cfg.co.logo?`<img class="lg" src="${esc(cfg.co.logo)}" alt="">`:`<div class="lgt">${esc((coName("en")||"A").replace(/^(บริษัท|ห้างหุ้นส่วน(จำกัด)?|หจก\.?|บจก\.?)\s*/,"").trim().slice(0,1)||"A")}</div>`;
   const ttl=l==="bi"?`${esc(t.t[0])}`:esc(t.t[LI[l]]),sub=l==="th"||l==="en"?"":t.t[1];
   const meta=`<table class="mt">${t.noNo?"":`<tr><td>${w("no",l)}</td><td><b>${esc(d.no||"—")}</b></td></tr>`}<tr><td>${w("date",l)}</td><td>${esc(dt(d.date,l))}</td></tr></table>`;
-  let h=t.noHead?`<div class="doc ${l}" style="--dc:${esc(cfg.color||"#2E6F9E")}"><div class="hd nh"><div><h1>${ttl}</h1>${l==="bi"||sub?`<div class="sub">${esc(t.t[1])}</div>`:""}${meta}</div></div>`:`<div class="doc ${l}" style="--dc:${esc(cfg.color||"#2E6F9E")}"><div class="hd"><div class="co">${lg}<div><b>${esc(coName(l))}</b><small>${esc(coAddr(l)||"")}</small><small>${cfg.co.tax?esc(wt("taxid",l==="bi"?"th":l))+" "+esc(cfg.co.tax):""}${cfg.co.phone?" · "+esc(wt("phone",l==="bi"?"th":l))+" "+esc(cfg.co.phone):""}</small></div></div><div><h1>${ttl}</h1>${l==="bi"||sub?`<div class="sub">${esc(t.t[1])}</div>`:""}${meta}</div></div>`;
+  let h=t.noHead?`<div class="doc ${l}" style="--dc:${esc(cfg.color||"#2E6F9E")};${ffCss(d.font)}"><div class="hd nh"><div><h1>${ttl}</h1>${l==="bi"||sub?`<div class="sub">${esc(t.t[1])}</div>`:""}${meta}</div></div>`:`<div class="doc ${l}" style="--dc:${esc(cfg.color||"#2E6F9E")};${ffCss(d.font)}"><div class="hd"><div class="co">${lg}<div><b>${esc(coName(l))}</b><small>${esc(coAddr(l)||"")}</small><small>${cfg.co.tax?esc(wt("taxid",l==="bi"?"th":l))+" "+esc(cfg.co.tax):""}${cfg.co.phone?" · "+esc(wt("phone",l==="bi"?"th":l))+" "+esc(cfg.co.phone):""}</small></div></div><div><h1>${ttl}</h1>${l==="bi"||sub?`<div class="sub">${esc(t.t[1])}</div>`:""}${meta}</div></div>`;
   // ช่องข้อมูล
   const hideKV=new Set(["note","body","matters","whtPct","vatPct","signer","sPos"].concat(t.hide||[]).concat(t.memo?["pos"]:[]).concat(t.body==="pa"?["grantor","gAddr","grantee","gid","geAddr","valid"]:[]).concat(t.body==="ce"?["empName","idcard","pos","dept","start","salary","purpose"]:[]));
   const kv=t.f.filter(x=>!hideKV.has(x[0])&&!(t.memo&&x[0]==="body")).map(x=>{let v=fv(d,x[0]);if(!v)return null;if(x[1]==="d")v=dt(v,l);else if(x[1]==="m")v=money(num(v),cc)+" "+cc;else if(x[1]==="sel")v=x[4].map(o=>(o===v?"☑ ":"☐ ")+wt(o,l==="bi"?"th":l)).join("   ");return`<div class="${x[2]||x[1]==="sel"?"w2":""}"><span class="k">${w(x[0],l)}</span><span class="v">${esc(v)}</span></div>`}).filter(Boolean);
@@ -402,6 +402,12 @@ function docHtml(d){const t=TP(d.tpl),l=d.lang||"th",c=calc(d),C=CU(d.cur),cc=d.
 
 /* ---------- ฟอนต์เกาหลี/ญี่ปุ่น (โหลดเมื่อเลือกภาษา) ---------- */
 const FONT={ko:"Noto+Sans+KR",ja:"Noto+Sans+JP"};
+/* ฟอนต์ให้เลือก (Google Fonts โหลดเมื่อใช้) */
+const FF=[["","ค่าเริ่มต้น (IBM Plex)","",""],["sarabun","สารบรรณ · ทางการ","Sarabun","400;700"],["pridi","ปรีดี · มีหัว","Pridi","400;600;700"],["taviraj","ทวิราช · มีหัว คลาสสิก","Taviraj","400;600;700"],["prompt","พรอมต์ · ทันสมัย","Prompt","400;600;700"],["kanit","คณิต · ตัวหนาชัด","Kanit","400;600;700"],["niramit","นิรมิต · อ่านง่าย","Niramit","400;600;700"],["krub","ครับ · โปร่ง","Krub","400;600;700"],["chakra","จักรเพชร · เหลี่ยม","Chakra Petch","400;600;700"],["mali","มะลิ · กลมน่ารัก","Mali","400;600;700"],["itim","อิทิม · ลายมือ","Itim","400"],["sriracha","ศรีราชา · ลายมือ","Sriracha","400"],["charm","ชาม · ลายมือหวัด","Charm","400;700"]];
+const ffOf=k=>FF.find(x=>x[0]===k&&k);
+function loadFF(k,cb){const f=ffOf(k);if(!f||document.getElementById("ff-"+k))return;const e=document.createElement("link");e.id="ff-"+k;e.rel="stylesheet";if(cb)e.onload=()=>Promise.all(["400","700"].map(w=>document.fonts.load(w+' 20px "'+f[2]+'"',"กขa1"))).then(cb,cb);e.href="https://fonts.googleapis.com/css2?family="+f[2].replace(/ /g,"+")+":wght@"+f[3]+"&display=swap";document.head.appendChild(e)}
+const ffCss=k=>{const f=ffOf(k);return f?`font-family:'${f[2]}','IBM Plex Sans Thai','Noto Sans KR','Noto Sans JP',sans-serif;`:""};
+const ffSel=(id,v)=>`<select class="sel" id="${id}">${FF.map(f=>`<option value="${f[0]}"${(v||"")===f[0]?" selected":""}>${esc(f[1])}</option>`).join("")}</select>`;
 function needFont(l){if(!FONT[l]||document.getElementById("fnt-"+l))return;const k=document.createElement("link");k.id="fnt-"+l;k.rel="stylesheet";k.href="https://fonts.googleapis.com/css2?family="+FONT[l]+":wght@400;600;700&display=swap";document.head.appendChild(k)}
 
 /* ---------- หน้า สร้างเอกสาร ---------- */
@@ -427,6 +433,7 @@ function vEd(){const d=cur,t=TP(d.tpl),M=$("#main");needFont(d.lang);
   const itEd=t.it?`<div class="card"><h2>${esc(t.sum==="hours"?"รายการ OT":"รายการในตาราง")} <button class="btn sm" id="addR" type="button">＋ เพิ่มแถว</button></h2><div class="it-ed" id="itEd"></div><div class="sum" id="sumBox"></div></div>`:"";
   M.innerHTML=`<div class="edbar"><div class="g"><button class="btn ghost sm" id="back" type="button">← กลับ</button><b>${t.e} ${esc(t.t[0])}</b><button class="btn ghost sm mob" id="goPv" type="button">👁️ ดูเอกสาร</button></div>
    <div class="g"><label class="note">ภาษา</label><select class="sel" id="eL">${LANGS.map(([k,n])=>`<option value="${k}"${d.lang===k?" selected":""}>${n}</option>`).join("")}</select>
+   <label class="note">ฟอนต์</label>${ffSel("eF",d.font)}
    ${t.nomoney?"":`<label class="note">สกุลเงิน</label><select class="sel" id="eC">${CUR.map(c=>`<option value="${c[0]}"${d.cur===c[0]?" selected":""}>${c[0]} ${c[8]}</option>`).join("")}</select>`}
    <button class="btn ghost" id="eSave" type="button">💾 บันทึก</button><button class="btn main" id="ePdf" type="button">⬇️ PDF / พิมพ์</button></div></div>
   <div class="ed"><div class="side" style="display:flex;flex-direction:column;gap:12px">
@@ -450,7 +457,7 @@ function vEd(){const d=cur,t=TP(d.tpl),M=$("#main");needFont(d.lang);
       if(c==="qty"||c==="price"){calc(cur);const a=e.target.closest(".it-row").querySelector("[disabled]");if(a)a.value=r.amount?money(r.amount,cur.cur):""}pv()}});
   M.querySelector(".side").addEventListener("change",e=>{if(e.target.type==="radio"){if(e.target.name==="pm")cur.pm=e.target.value;else cur.f[e.target.dataset.k]=e.target.value;pv()}});
   $("#eNo").oninput=e=>{cur.no=e.target.value.trim();pv()};$("#eD").oninput=e=>{cur.date=e.target.value;$("#eNo").placeholder=nextNo(t,cur.date).no;pv()};
-  $("#eL").onchange=e=>{cur.lang=e.target.value;needFont(cur.lang);pv();setTimeout(pv,900)};const ec=$("#eC");if(ec)ec.onchange=e=>{cur.cur=e.target.value;drawIt();pv()};
+  loadFF(cur.font);$("#eF").onchange=e=>{cur.font=e.target.value;loadFF(cur.font,()=>cur&&pv());pv()};$("#eL").onchange=e=>{cur.lang=e.target.value;needFont(cur.lang);pv();setTimeout(pv,900)};const ec=$("#eC");if(ec)ec.onchange=e=>{cur.cur=e.target.value;drawIt();pv()};
   const ar=$("#addR");if(ar)ar.onclick=()=>{cur.items.push({});drawIt();pv();const L=$$("#itEd .it-row");L[L.length-1].querySelector("input:not([disabled])").focus()};
   const ie=$("#itEd");if(ie)ie.onclick=e=>{const b=e.target.closest("[data-del]");if(!b)return;cur.items.splice(+b.dataset.del,1);if(!cur.items.length)cur.items.push({});drawIt();pv()};
   $("#goPv").onclick=()=>$("#pvw").scrollIntoView({behavior:"smooth"});
@@ -466,7 +473,7 @@ function doSave(){const t=TP(cur.tpl);if(!cfg.co.name&&!confirm("ยังไม
   if(cur.no&&D.some(x=>x.no===cur.no&&x.id!==cur.id)&&!confirm("เลขที่ "+cur.no+" ซ้ำกับเอกสารอื่น บันทึกต่อไหม?"))return false;
   calc(cur);cur.ts=Date.now();if(!cur.id){cur.id=uid("f");D.push(JSON.parse(JSON.stringify(cur)))}else{const i=D.findIndex(x=>x.id===cur.id);if(i>=0)D[i]=JSON.parse(JSON.stringify(cur));else D.push(JSON.parse(JSON.stringify(cur)))}
   save();const n=$("#eNo");if(n)n.value=cur.no;if(!$("#eDel")){const s=$(".side");if(s)s.insertAdjacentHTML("beforeend",'<p class="note">✓ บันทึก'+(cur.no?'เป็น '+esc(cur.no):'')+" แล้ว</p>")}return true}
-function printDoc(d){needFont(d.lang);$("#printArea").innerHTML=docHtml(d);window.EDM_DOCNAME=d.no||((TP(d.t)||{}).t||["document"])[0]+(d.date?" "+d.date:"");
+function printDoc(d){needFont(d.lang);loadFF(d.font);$("#printArea").innerHTML=docHtml(d);window.EDM_DOCNAME=d.no||((TP(d.t)||{}).t||["document"])[0]+(d.date?" "+d.date:"");
   const go=()=>window.print();(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(go,d.lang==="ko"||d.lang==="ja"?600:50))}
 
 /* ---------- เอกสารของฉัน ---------- */
@@ -495,13 +502,13 @@ function vSet(){const M=$("#main"),c=cfg.co;
    <div class="f w2"><label>ที่อยู่ (ไทย)</label><input class="in-" data-c="addr" value="${esc(c.addr)}"></div><div class="f w2"><label>ที่อยู่ (อังกฤษ)</label><input class="in-" data-c="addrEn" value="${esc(c.addrEn)}"></div>
    <div class="f"><label>เลขประจำตัวผู้เสียภาษี</label><input class="in-" data-c="tax" value="${esc(c.tax)}" inputmode="numeric"></div><div class="f"><label>โทรศัพท์</label><input class="in-" data-c="phone" value="${esc(c.phone)}"></div></div></div>
   <div class="card"><h2>ค่าเริ่มต้นเอกสารใหม่</h2><div class="fg">
-   <div class="f"><label>ภาษา</label><select class="in-" id="sL">${LANGS.map(([k,n])=>`<option value="${k}"${cfg.lang===k?" selected":""}>${n}</option>`).join("")}</select></div>
+   <div class="f"><label>ภาษา</label><select class="in-" id="sL">${LANGS.map(([k,n])=>`<option value="${k}"${cfg.lang===k?" selected":""}>${n}</option>`).join("")}</select></div><div class="f"><label>ฟอนต์เริ่มต้น (เอกสารใหม่)</label>${ffSel("sF",cfg.font).replace('class="sel"','class="in-"')}</div>
    <div class="f"><label>สกุลเงิน</label><select class="in-" id="sC">${CUR.map(x=>`<option value="${x[0]}"${cfg.cur===x[0]?" selected":""}>${x[0]} · ${x[2]}</option>`).join("")}</select></div>
    <div class="f"><label>ปีในเลขที่เอกสาร</label><select class="in-" id="sY"><option value="be"${cfg.year!=="ad"?" selected":""}>พ.ศ. (PV2569-0001)</option><option value="ad"${cfg.year==="ad"?" selected":""}>ค.ศ. (PV2026-0001)</option></select></div>
    <div class="f"><label>สีหัวเอกสาร</label><input class="in-" type="color" id="sCol" value="${esc(cfg.color||"#2E6F9E")}" style="height:40px;padding:3px"></div></div></div>
   <div class="card"><h2>💾 ข้อมูล</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="xJ" type="button">⬇️ สำรองเป็นไฟล์</button><button class="btn ghost" id="xI" type="button">⬆️ นำเข้าไฟล์สำรอง</button><button class="btn ghost" id="xDm" type="button">✨ ใส่ข้อมูลตัวอย่าง</button><button class="btn ghost danger" id="xC" type="button">ล้างเอกสารทั้งหมด</button></div><p class="note">เข้าสู่ระบบแล้ว ข้อมูลสำรองขึ้นระบบออนไลน์ให้อัตโนมัติ ใช้กรอกทีละเครื่อง</p></div>`;
   M.querySelectorAll("[data-c]").forEach(i=>i.oninput=()=>{cfg.co[i.dataset.c]=i.value;saveC()});
-  $("#sL").onchange=e=>{cfg.lang=e.target.value;saveC()};$("#sC").onchange=e=>{cfg.cur=e.target.value;saveC()};$("#sY").onchange=e=>{cfg.year=e.target.value;saveC()};$("#sCol").oninput=e=>{cfg.color=e.target.value;saveC()};
+  $("#sL").onchange=e=>{cfg.lang=e.target.value;saveC()};$("#sF").onchange=e=>{cfg.font=e.target.value;saveC();loadFF(cfg.font)};$("#sC").onchange=e=>{cfg.cur=e.target.value;saveC()};$("#sY").onchange=e=>{cfg.year=e.target.value;saveC()};$("#sCol").oninput=e=>{cfg.color=e.target.value;saveC()};
   $("#lgUp").onclick=()=>$("#logoF").click();const ld=$("#lgDel");if(ld)ld.onclick=()=>{cfg.co.logo="";saveC();vSet()};
   $("#xJ").onclick=()=>{const b=new Blob([JSON.stringify({app:"edm-form",v:1,docs:D,cfg},null,1)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="form-backup-"+today()+".json";a.click()};
   $("#xI").onclick=()=>$("#impF").click();$("#xDm").onclick=()=>{if(D.length&&!confirm("ข้อมูลตัวอย่างจะแทนเอกสารที่มีอยู่ ต้องการต่อ?"))return;demo()};
@@ -525,7 +532,7 @@ let CPI=[];
 const CP_TY=["บัตรประชาชน","ทะเบียนบ้าน","หน้าสมุดบัญชี","ใบขับขี่","หนังสือเดินทาง","อื่นๆ"];
 const CP_P=["สมัครงาน","เปิดบัญชีธนาคาร","ยื่นกู้สินเชื่อ","ทำสัญญาเช่า","ติดต่อราชการ","รับเงิน/เบิกค่าใช้จ่าย"];
 const CP_C={blue:"#1F4FD8",black:"#111",red:"#C62828"};
-function cpCfg(){const d={ty:"บัตรประชาชน",x:"",two:true,name:"",col:"blue",dt:true};ui.cp=ui.cp||{};for(const k in d)if(!(k in ui.cp))ui.cp[k]=d[k];return ui.cp}
+function cpCfg(){const d={ty:"บัตรประชาชน",x:"",two:true,name:"",col:"blue",dt:true,font:""};ui.cp=ui.cp||{};for(const k in d)if(!(k in ui.cp))ui.cp[k]=d[k];return ui.cp}
 function vCp(){const M=$("#main"),c=cpCfg();
   M.innerHTML=`<div class="ed"><div class="card side">
   <h3 style="margin:0">🖊️ ขีดคร่อมสำเนาเอกสาร</h3>
@@ -536,12 +543,13 @@ function vCp(){const M=$("#main"),c=cpCfg();
   <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cpTwo"${c.two?" checked":""}> เพิ่มบรรทัด "ห้ามนำไปใช้เพื่อการอื่น"</label>
   <div class="f"><label>ชื่อผู้รับรองสำเนา (ใต้ลายเซ็น)</label><input class="in-" id="cpN" value="${esc(c.name)}" placeholder="เช่น นายสมชาย ใจดี"></div>
   <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cpDt"${c.dt?" checked":""}> ใส่วันที่วันนี้</label>
+  <div class="f"><label>ฟอนต์</label>${ffSel("cpFt",c.font).replace('class="sel"','class="in-"')}</div>
   <div class="f"><label>สีปากกา</label><div class="chips" id="cpC">${Object.keys(CP_C).map(k=>`<button class="chip${c.col===k?" on":""}" data-c="${k}"><span style="color:${CP_C[k]}">●</span> ${{blue:"น้ำเงิน",black:"ดำ",red:"แดง"}[k]}</button>`).join("")}</div></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="cpPdf">📄 PDF / ส่ง / พิมพ์</button><button class="btn ghost" id="cpPng">🖼️ บันทึกเป็นรูป</button></div>
   <p class="note" style="margin:0">พิมพ์แล้วเซ็นชื่อจริงบนเส้น "ลงชื่อ" ก่อนส่งทุกครั้ง</p>
   </div><div class="pvw"><canvas id="cpCv" width="1240" height="1754" style="width:100%;max-width:794px;display:block;margin:auto;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.12)"></canvas></div></div>`;
   const up=()=>{c.x=$("#cpX").value.trim();c.two=$("#cpTwo").checked;c.name=$("#cpN").value.trim();c.dt=$("#cpDt").checked;saveUi();cpDraw()};
-  ["#cpX","#cpN"].forEach(s=>$(s).oninput=up);["#cpTwo","#cpDt"].forEach(s=>$(s).onchange=up);
+  ["#cpX","#cpN"].forEach(s=>$(s).oninput=up);["#cpTwo","#cpDt"].forEach(s=>$(s).onchange=up);$("#cpFt").onchange=e=>{c.font=e.target.value;loadFF(c.font,cpDraw);saveUi();cpDraw()};loadFF(c.font,cpDraw);
   $("#cpTy").onclick=e=>{const b=e.target.closest("[data-ty]");if(!b)return;c.ty=b.dataset.ty;$$("#cpTy .chip").forEach(x=>x.classList.toggle("on",x===b));saveUi()};
   $("#cpP").onclick=e=>{const b=e.target.closest("[data-p]");if(!b)return;$("#cpX").value=b.dataset.p;up()};
   $("#cpC").onclick=e=>{const b=e.target.closest("[data-c]");if(!b)return;c.col=b.dataset.c;$$("#cpC .chip").forEach(x=>x.classList.toggle("on",x===b));up()};
@@ -553,8 +561,8 @@ function vCp(){const M=$("#main"),c=cpCfg();
   cpList();cpDraw();
 }
 function cpList(){const L=$("#cpL");if(L)L.innerHTML=CPI.map((x,i)=>`<span class="chip" style="display:inline-flex;gap:6px;align-items:center">รูป ${i+1}<button class="btn sm ghost" data-r="${i}" title="หมุน">⟳</button><button class="btn sm ghost danger" data-x="${i}" title="เอาออก">✕</button></span>`).join("")}
-async function cpDraw(){const cv=$("#cpCv");if(!cv)return;const c=cpCfg(),g=cv.getContext("2d"),W=1240,H=1754,col=CP_C[c.col]||CP_C.blue,F='"IBM Plex Sans Thai","Noto Sans Thai",Tahoma,sans-serif';
-  try{await document.fonts.load('700 40px "IBM Plex Sans Thai"')}catch(e){}
+async function cpDraw(){const cv=$("#cpCv");if(!cv)return;const c=cpCfg(),g=cv.getContext("2d"),W=1240,H=1754,col=CP_C[c.col]||CP_C.blue,fo=ffOf(c.font),F=(fo?`"${fo[2]}",`:"")+'"IBM Plex Sans Thai","Noto Sans Thai",Tahoma,sans-serif';
+  try{await document.fonts.load('700 40px '+(fo?`"${fo[2]}"`:'"IBM Plex Sans Thai"'),"สำเนา");await document.fonts.load('40px '+(fo?`"${fo[2]}"`:'"IBM Plex Sans Thai"'),"สำเนา")}catch(e){}
   g.setTransform(1,0,0,1,0,0);g.fillStyle="#fff";g.fillRect(0,0,W,H);
   if(!CPI.length){g.fillStyle="#9aa6a1";g.font=`600 34px ${F}`;g.textAlign="center";g.fillText("เลือกรูปเอกสารทางซ้าย 📷",W/2,H/2-60);g.font=`28px ${F}`;g.fillText("รูปอยู่ในเครื่องนี้เท่านั้น ไม่ส่งขึ้นระบบ",W/2,H/2);}
   const top=90,bot=1330,slot=(bot-top)/Math.max(1,CPI.length),line1="ใช้สำหรับ"+(c.x||"……………………………")+" เท่านั้น",line2=c.two?"ห้ามนำไปใช้เพื่อการอื่น":"";
