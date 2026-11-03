@@ -60,7 +60,7 @@ table.xl{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 .doc .co{display:flex;gap:10px;align-items:center;min-width:0}.doc .lg{width:48px;height:48px;border-radius:10px;object-fit:contain;flex:none}.doc .lgt{width:48px;height:48px;border-radius:10px;background:var(--dc,#2E6F9E);color:#fff;display:grid;place-items:center;font-weight:700;font-size:16pt;flex:none}
 .doc .co b{font-size:11.5pt}.doc .co small{display:block;color:#5b6762;font-size:8.5pt;line-height:1.35}
 .doc h1{font-size:19pt;line-height:1.15;color:var(--dc,#2E6F9E);text-align:right;margin:0}.doc .sub{text-align:right;font-size:8.5pt;color:#5b6762;font-weight:600;letter-spacing:.3px}
-.doc .mt{margin:4px 0 0 auto;border-collapse:collapse;font-size:9.5pt}.doc .mt td{padding:0 0 0 10px}.doc .mt td:first-child{color:#5b6762}
+.doc .hd.nh{justify-content:center;text-align:center}.doc .hd.nh>div{flex:1}.doc .hd.nh h1,.doc .hd.nh .sub{text-align:center}.doc .hd.nh .mt{margin:4px auto 0}.doc .mt{margin:4px 0 0 auto;border-collapse:collapse;font-size:9.5pt}.doc .mt td{padding:0 0 0 10px}.doc .mt td:first-child{color:#5b6762}
 .doc .s2{font-size:.82em;color:#5b6762;font-weight:400}
 .doc .kv{display:grid;grid-template-columns:1fr 1fr;column-gap:22px;margin:10px 0 4px}.doc .kv>div{display:flex;gap:8px;padding:5px 0;border-bottom:1px dotted #b8c4be;min-width:0}.doc .kv>div.w2{grid-column:1/-1}.doc .kv .k{color:#5b6762;font-weight:600;flex:none;max-width:48%}.doc .kv .v{min-width:0;overflow-wrap:anywhere;white-space:pre-wrap}
 .doc table.it{width:100%;border-collapse:collapse;margin-top:8px;font-size:10pt}.doc .it th{background:var(--dc,#2E6F9E);color:#fff;padding:6px;font-weight:600;font-size:9pt;line-height:1.25}.doc .it th .s2{color:#e3eef7}.doc .it td{border:1px solid #c9d4cf;padding:6px;vertical-align:top}.doc .it td.r{text-align:right;white-space:nowrap}.doc .it td.c{text-align:center;white-space:nowrap}.doc .it tr.tt td{background:#f1f6fa;font-weight:600}.doc .it tr.tt td.k{text-align:right}
@@ -319,6 +319,11 @@ NEW_T.forEach(t=>T.push(t));
 /* จัดกลุ่มแผนก (ของเดิม) */
 T.forEach(t=>{if(t.g==="การเงิน")t.g="การเงิน & บัญชี";if(t.g==="จัดซื้อ"||t.g==="จัดซื้อ & คลัง")t.g="จัดซื้อ & คลังสินค้า";if(t.g==="บุคคล")t.g="บุคคล (HR)"});
 ["mm"].forEach(id=>{const t=T.find(x=>x.id===id);if(t)t.g="ธุรการ · อาคาร · IT"});
+/* เอกสารที่บุคคลเขียนเอง = ไม่ใส่หัวบริษัท · แบบกรอกภายใน/ส่วนตัว = ไม่ใส่เลขที่ */
+["rc","rs","pa"].forEach(id=>{const t=T.find(x=>x.id===id);if(t)t.noHead=1});
+["lv","ot","ja","rs","sw","wf","mpn","ev","ho","ar","mp","tr","pa","vr","rb","mn","vh"].forEach(id=>{const t=T.find(x=>x.id===id);if(t)t.noNo=1});
+/* ลำดับตามการใช้งานจริงในแต่ละแผนก */
+{const O="pv rv pq pc cr ad cl te sr rc rf sa pr rq qc po gr mr st dn eb ja mp ol ev lv ot mpn sw wf tr ce wl ho ar rs pa vr da sm rt mm mn dt rp vh rb it gp ir".split(" ");T.sort((a,b)=>{const x=O.indexOf(a.id),y=O.indexOf(b.id);return(x<0?999:x)-(y<0?999:y)})}
 
 const TP=id=>T.find(x=>x.id===id);
 const tTitle=(t,l)=>l==="bi"?t.t[0]:t.t[LI[l]];
@@ -369,8 +374,8 @@ function bodyText(d,l){const t=TP(d.tpl),v=k=>esc(fv(d,k))||"…………",co=es
 function docHtml(d){const t=TP(d.tpl),l=d.lang||"th",c=calc(d),C=CU(d.cur),cc=d.cur;
   const lg=cfg.co.logo?`<img class="lg" src="${esc(cfg.co.logo)}" alt="">`:`<div class="lgt">${esc((coName("en")||"A").replace(/^(บริษัท|ห้างหุ้นส่วน(จำกัด)?|หจก\.?|บจก\.?)\s*/,"").trim().slice(0,1)||"A")}</div>`;
   const ttl=l==="bi"?`${esc(t.t[0])}`:esc(t.t[LI[l]]),sub=l==="th"||l==="en"?"":t.t[1];
-  const meta=`<table class="mt"><tr><td>${w("no",l)}</td><td><b>${esc(d.no||"—")}</b></td></tr><tr><td>${w("date",l)}</td><td>${esc(dt(d.date,l))}</td></tr></table>`;
-  let h=`<div class="doc ${l}" style="--dc:${esc(cfg.color||"#2E6F9E")}"><div class="hd"><div class="co">${lg}<div><b>${esc(coName(l))}</b><small>${esc(coAddr(l)||"")}</small><small>${cfg.co.tax?esc(wt("taxid",l==="bi"?"th":l))+" "+esc(cfg.co.tax):""}${cfg.co.phone?" · "+esc(wt("phone",l==="bi"?"th":l))+" "+esc(cfg.co.phone):""}</small></div></div><div><h1>${ttl}</h1>${l==="bi"||sub?`<div class="sub">${esc(t.t[1])}</div>`:""}${meta}</div></div>`;
+  const meta=`<table class="mt">${t.noNo?"":`<tr><td>${w("no",l)}</td><td><b>${esc(d.no||"—")}</b></td></tr>`}<tr><td>${w("date",l)}</td><td>${esc(dt(d.date,l))}</td></tr></table>`;
+  let h=t.noHead?`<div class="doc ${l}" style="--dc:${esc(cfg.color||"#2E6F9E")}"><div class="hd nh"><div><h1>${ttl}</h1>${l==="bi"||sub?`<div class="sub">${esc(t.t[1])}</div>`:""}${meta}</div></div>`:`<div class="doc ${l}" style="--dc:${esc(cfg.color||"#2E6F9E")}"><div class="hd"><div class="co">${lg}<div><b>${esc(coName(l))}</b><small>${esc(coAddr(l)||"")}</small><small>${cfg.co.tax?esc(wt("taxid",l==="bi"?"th":l))+" "+esc(cfg.co.tax):""}${cfg.co.phone?" · "+esc(wt("phone",l==="bi"?"th":l))+" "+esc(cfg.co.phone):""}</small></div></div><div><h1>${ttl}</h1>${l==="bi"||sub?`<div class="sub">${esc(t.t[1])}</div>`:""}${meta}</div></div>`;
   // ช่องข้อมูล
   const hideKV=new Set(["note","body","matters","whtPct","vatPct","signer","sPos"].concat(t.hide||[]).concat(t.memo?["pos"]:[]).concat(t.body==="pa"?["grantor","gAddr","grantee","gid","geAddr","valid"]:[]).concat(t.body==="ce"?["empName","idcard","pos","dept","start","salary","purpose"]:[]));
   const kv=t.f.filter(x=>!hideKV.has(x[0])&&!(t.memo&&x[0]==="body")).map(x=>{let v=fv(d,x[0]);if(!v)return null;if(x[1]==="d")v=dt(v,l);else if(x[1]==="m")v=money(num(v),cc)+" "+cc;else if(x[1]==="sel")v=x[4].map(o=>(o===v?"☑ ":"☐ ")+wt(o,l==="bi"?"th":l)).join("   ");return`<div class="${x[2]||x[1]==="sel"?"w2":""}"><span class="k">${w(x[0],l)}</span><span class="v">${esc(v)}</span></div>`}).filter(Boolean);
@@ -425,7 +430,7 @@ function vEd(){const d=cur,t=TP(d.tpl),M=$("#main");needFont(d.lang);
    ${t.nomoney?"":`<label class="note">สกุลเงิน</label><select class="sel" id="eC">${CUR.map(c=>`<option value="${c[0]}"${d.cur===c[0]?" selected":""}>${c[0]} ${c[8]}</option>`).join("")}</select>`}
    <button class="btn ghost" id="eSave" type="button">💾 บันทึก</button><button class="btn main" id="ePdf" type="button">⬇️ PDF / พิมพ์</button></div></div>
   <div class="ed"><div class="side" style="display:flex;flex-direction:column;gap:12px">
-   <div class="card"><div class="fg"><div class="f"><label>เลขที่ (ว่าง = รันให้อัตโนมัติ)</label><input class="in-" id="eNo" value="${esc(d.no)}" placeholder="${esc(nextNo(t,d.date).no)}"></div><div class="f"><label>วันที่เอกสาร</label><input class="in-" type="date" id="eD" value="${esc(d.date)}"></div>
+   <div class="card"><div class="fg">${t.noNo?`<input type="hidden" id="eNo" value="">`:`<div class="f"><label>เลขที่ (ว่าง = รันให้อัตโนมัติ)</label><input class="in-" id="eNo" value="${esc(d.no)}" placeholder="${esc(nextNo(t,d.date).no)}"></div>`}<div class="f"><label>วันที่เอกสาร</label><input class="in-" type="date" id="eD" value="${esc(d.date)}"></div>
    ${t.f.map(inp).join("")}${t.vat?`<div class="f"><label>VAT (%)</label><input class="in-" data-k="vatPct" inputmode="decimal" value="${esc(fv(d,"vatPct"))}" placeholder="7 (ใส่ 0 ถ้าไม่มี VAT)"></div>`:""}${t.wht?`<div class="f"><label>หัก ณ ที่จ่าย (%)</label><input class="in-" data-k="whtPct" inputmode="decimal" value="${esc(fv(d,"whtPct"))}" placeholder="0 / 1 / 3 / 5"></div>`:""}</div></div>
    ${itEd}
    ${t.pay?`<div class="card"><div class="f"><label>${t.pay==="pay"?"ชำระโดย":"รับเงินโดย"}</label><div class="radio">${["cash","transfer","cheque"].map(k=>`<label><input type="radio" name="pm" value="${k}"${d.pm===k?" checked":""}>${W[k][0]}</label>`).join("")}</div></div><div class="fg">${inp(["bank","t"])}${inp(["ref","t"])}</div></div>`:""}
@@ -450,18 +455,18 @@ function vEd(){const d=cur,t=TP(d.tpl),M=$("#main");needFont(d.lang);
   const ie=$("#itEd");if(ie)ie.onclick=e=>{const b=e.target.closest("[data-del]");if(!b)return;cur.items.splice(+b.dataset.del,1);if(!cur.items.length)cur.items.push({});drawIt();pv()};
   $("#goPv").onclick=()=>$("#pvw").scrollIntoView({behavior:"smooth"});
   $("#back").onclick=()=>{ui.v=cur.id?"docs":"new";cur=null;saveUi();render()};
-  $("#eSave").onclick=()=>{if(doSave()){pv();toast("บันทึกแล้ว ✓ "+cur.no)}};
+  $("#eSave").onclick=()=>{if(doSave()){pv();toast("บันทึกแล้ว ✓ "+(cur.no||""))}};
   $("#ePdf").onclick=()=>{if(!doSave())return;pv();printDoc(cur)};
   const dl=$("#eDel");if(dl)dl.onclick=()=>{if(!confirm("ลบเอกสาร "+cur.no+" ?"))return;D=D.filter(x=>x.id!==cur.id);save();cur=null;ui.v="docs";saveUi();render();toast("ลบแล้ว")};
   window.onresize=fit}
 function fit(){const w=$("#pvw"),s=$("#pvs");if(!w||!s)return;const avail=w.clientWidth-32,docW=794,k=Math.min(1,avail/docW);s.style.transform=`scale(${k})`;s.style.height=(s.firstElementChild?s.firstElementChild.offsetHeight*k:0)+"px";s.style.width=docW*k+"px"}
 function doSave(){const t=TP(cur.tpl);if(!cfg.co.name&&!confirm("ยังไม่ได้ใส่ชื่อบริษัท (ตั้งค่าบริษัท) บันทึกต่อเลยไหม?"))return false;
-  if(!cur.no){const n=nextNo(t,cur.date);cur.no=n.no;cfg.seq[n.key]=n.n;saveC()}
+  if(!cur.no&&!t.noNo){const n=nextNo(t,cur.date);cur.no=n.no;cfg.seq[n.key]=n.n;saveC()}
   else{const m=/^([A-Z]+)(\d{4})-(\d+)$/.exec(cur.no);if(m&&m[1]===t.pre){const key=m[1]+m[2];if(+m[3]>(cfg.seq[key]||0)){cfg.seq[key]=+m[3];saveC()}}}
-  if(D.some(x=>x.no===cur.no&&x.id!==cur.id)&&!confirm("เลขที่ "+cur.no+" ซ้ำกับเอกสารอื่น บันทึกต่อไหม?"))return false;
+  if(cur.no&&D.some(x=>x.no===cur.no&&x.id!==cur.id)&&!confirm("เลขที่ "+cur.no+" ซ้ำกับเอกสารอื่น บันทึกต่อไหม?"))return false;
   calc(cur);cur.ts=Date.now();if(!cur.id){cur.id=uid("f");D.push(JSON.parse(JSON.stringify(cur)))}else{const i=D.findIndex(x=>x.id===cur.id);if(i>=0)D[i]=JSON.parse(JSON.stringify(cur));else D.push(JSON.parse(JSON.stringify(cur)))}
-  save();const n=$("#eNo");if(n)n.value=cur.no;if(!$("#eDel")){const s=$(".side");if(s)s.insertAdjacentHTML("beforeend",'<p class="note">✓ บันทึกเป็น '+esc(cur.no)+" แล้ว</p>")}return true}
-function printDoc(d){needFont(d.lang);$("#printArea").innerHTML=docHtml(d);window.EDM_DOCNAME=d.no||"document";
+  save();const n=$("#eNo");if(n)n.value=cur.no;if(!$("#eDel")){const s=$(".side");if(s)s.insertAdjacentHTML("beforeend",'<p class="note">✓ บันทึก'+(cur.no?'เป็น '+esc(cur.no):'')+" แล้ว</p>")}return true}
+function printDoc(d){needFont(d.lang);$("#printArea").innerHTML=docHtml(d);window.EDM_DOCNAME=d.no||((TP(d.t)||{}).t||["document"])[0]+(d.date?" "+d.date:"");
   const go=()=>window.print();(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(go,d.lang==="ko"||d.lang==="ja"?600:50))}
 
 /* ---------- เอกสารของฉัน ---------- */
