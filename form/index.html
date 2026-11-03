@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="th" data-theme="light" data-tone="sky">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'self' blob: data:; worker-src 'self' blob:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>แบบฟอร์มเอกสารออนไลน์ ใบสำคัญจ่าย ใบเบิกเงินสดย่อย ใบลา ใบขออนุมัติจัดซื้อ หลายภาษา โหลด PDF | Excel Data Master</title>
+<meta name="description" content="แบบฟอร์มเอกสารที่องค์กรใช้บ่อย 14 แบบ ใบสำคัญจ่าย ใบสำคัญรับ ใบเบิกเงินสดย่อย เงินทดรองจ่าย ใบรับรองแทนใบเสร็จ ใบขออนุมัติจัดซื้อ ใบลา ขอทำ OT บันทึกข้อความ หนังสือรับรองการทำงาน หนังสือมอบอำนาจ แค่กรอกข้อมูล เลขที่รันอัตโนมัติ จำนวนเงินเป็นตัวหนังสือ เลือกภาษา ไทย อังกฤษ เกาหลี ญี่ปุ่น เลือกสกุลเงินได้ โหลด PDF">
+<link rel="canonical" href="https://exceldatamaster.com/form/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{--bg:#F3F7FB;--card:#fff;--ink:#1D2A36;--muted:#5E6E7D;--line:#DCE6EF;--soft:#EAF2F9;--accent:#2E6F9E;--accent2:#7FB2D9;--danger:#C0392B;--ok:#1F8A5B;--hd:#DCEBF7}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}a{color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top .in{max-width:1400px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px}.brand{font-weight:700;text-decoration:none;color:var(--accent);display:flex;align-items:center;gap:8px}.brand .edm-ic{width:26px;height:26px}.brand small{color:var(--muted);font-weight:500}.nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.tabs{max-width:1400px;margin:10px auto 0;padding:0 16px;display:flex;gap:6px;overflow-x:auto}.tabs button{flex:none;border:0;border-radius:999px;padding:7px 15px;background:var(--card);box-shadow:0 0 0 1px var(--line);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px}.tabs button .edm-ic{width:22px;height:22px}.tabs button.on{background:var(--accent);color:#fff;box-shadow:none}
+main{max-width:1400px;margin:0 auto;padding:12px 16px 90px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}.card h2{font-size:1.05rem;margin:0;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.card h2 small{font-weight:400;color:var(--muted);font-size:.8rem}
+.btn{border:0;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;background:var(--soft);justify-content:center;text-decoration:none;white-space:nowrap}.btn.main{background:var(--accent);color:#fff}.btn.ghost{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}.btn.sm{padding:5px 11px;font-size:.84rem}.btn.danger{color:var(--danger)}
+.in-{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 10px;outline:none}.in-:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(46,111,158,.12)}textarea.in-{resize:vertical;min-height:70px}
+.f{display:flex;flex-direction:column;gap:3px;min-width:0}.f label{font-size:.8rem;font-weight:600;color:var(--muted)}.f.w2{grid-column:1/-1}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:520px){.fg{grid-template-columns:1fr}}
+.note{font-size:.8rem;color:var(--muted)}.empty{text-align:center;padding:24px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100;max-width:92vw;text-align:center}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:0;border-radius:999px;padding:5px 12px;background:#fff;box-shadow:0 0 0 1px var(--line);cursor:pointer;font-size:.86rem;font-weight:600}.chip.on{background:var(--ink);color:#fff;box-shadow:none}
+dialog{border:0;border-radius:18px;padding:0;width:min(560px,96vw);max-height:92vh}dialog::backdrop{background:rgba(20,30,45,.45)}.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}.db{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+/* คลังแบบฟอร์ม */
+.hello{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}.hello h1{margin:0;font-size:1.3rem}.hello p{margin:2px 0 0;color:var(--muted)}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.tp{display:flex;gap:12px;align-items:center;text-align:left;background:#fff;border:0;border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px var(--line);cursor:pointer;transition:box-shadow .15s}.tp:hover{box-shadow:0 0 0 2px var(--accent)}
+.tp .e{font-size:1.7rem;width:46px;height:46px;border-radius:12px;background:var(--soft);display:grid;place-items:center;flex:none}.tp b{display:block;line-height:1.3}.tp small{display:block;color:var(--muted);font-size:.78rem;line-height:1.35}
+.cg{font-weight:700;margin:4px 0 -2px;color:var(--muted);font-size:.9rem}
+/* ตัวแก้เอกสาร */
+.ed{display:grid;grid-template-columns:minmax(330px,440px) 1fr;gap:14px;align-items:start}
+.ed .side{position:sticky;top:64px;max-height:calc(100vh - 80px);overflow:auto}
+.edbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}.edbar .g{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sel{border:1px solid var(--line);border-radius:9px;padding:6px 8px;background:#fff}
+.pvw{background:#E4EAF0;border-radius:16px;padding:16px;overflow:auto}.pvs{transform-origin:top left}
+.it-ed{display:flex;flex-direction:column;gap:8px}.it-row{display:grid;gap:6px;align-items:center;background:var(--soft);border-radius:10px;padding:8px}.it-row .x{border:0;background:none;color:var(--danger);cursor:pointer;font-size:1.1rem}
+.it-row .in-{padding:6px 8px;font-size:.9rem}
+.radio{display:flex;gap:6px;flex-wrap:wrap}.radio label{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 11px;cursor:pointer;font-size:.88rem;font-weight:600;color:var(--ink)}.radio input{accent-color:var(--accent)}
+.mob{display:none}@media(max-width:980px){.mob{display:inline-flex}}
+.sum{display:flex;justify-content:space-between;font-weight:700;background:var(--hd);border-radius:10px;padding:8px 12px}
+@media(max-width:980px){.ed{grid-template-columns:1fr}.ed .side{position:static;max-height:none}.pvw{padding:8px}}
+/* รายการเอกสาร */
+.tw{overflow-x:auto;border-radius:10px;box-shadow:0 0 0 2px var(--accent2)}
+table.xl{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums;background:#fff}
+.xl th{background:var(--hd);font-weight:700;padding:8px;border:1px solid #C3D8EA;text-align:center;white-space:nowrap}
+.xl td{padding:7px 8px;border:1px solid var(--line);vertical-align:middle}.xl td.r{text-align:right;white-space:nowrap}.xl td.c{text-align:center;white-space:nowrap}.xl tr[data-o]{cursor:pointer}.xl tr[data-o]:hover td{background:#F4F9FD}
+.lang{display:inline-block;border-radius:6px;padding:1px 6px;font-size:.72rem;font-weight:700;background:var(--soft);color:var(--accent)}
+/* ---------- เอกสาร A4 ---------- */
+.doc{width:210mm;min-height:297mm;background:#fff;padding:14mm 15mm;font-size:10.5pt;line-height:1.5;color:#1d2622;box-shadow:0 10px 30px -14px rgba(0,0,0,.35);display:flex;flex-direction:column}
+.doc.ko{font-family:"Noto Sans KR","IBM Plex Sans Thai",sans-serif}.doc.ja{font-family:"Noto Sans JP","IBM Plex Sans Thai",sans-serif}
+.doc .hd{display:flex;justify-content:space-between;gap:16px;border-bottom:3px solid var(--dc,#2E6F9E);padding-bottom:10px}
+.doc .co{display:flex;gap:10px;align-items:center;min-width:0}.doc .lg{width:48px;height:48px;border-radius:10px;object-fit:contain;flex:none}.doc .lgt{width:48px;height:48px;border-radius:10px;background:var(--dc,#2E6F9E);color:#fff;display:grid;place-items:center;font-weight:700;font-size:16pt;flex:none}
+.doc .co b{font-size:11.5pt}.doc .co small{display:block;color:#5b6762;font-size:8.5pt;line-height:1.35}
+.doc h1{font-size:19pt;line-height:1.15;color:var(--dc,#2E6F9E);text-align:right;margin:0}.doc .sub{text-align:right;font-size:8.5pt;color:#5b6762;font-weight:600;letter-spacing:.3px}
+.doc .mt{margin:4px 0 0 auto;border-collapse:collapse;font-size:9.5pt}.doc .mt td{padding:0 0 0 10px}.doc .mt td:first-child{color:#5b6762}
+.doc .s2{font-size:.82em;color:#5b6762;font-weight:400}
+.doc .kv{display:grid;grid-template-columns:1fr 1fr;column-gap:22px;margin:10px 0 4px}.doc .kv>div{display:flex;gap:8px;padding:5px 0;border-bottom:1px dotted #b8c4be;min-width:0}.doc .kv>div.w2{grid-column:1/-1}.doc .kv .k{color:#5b6762;font-weight:600;flex:none;max-width:48%}.doc .kv .v{min-width:0;overflow-wrap:anywhere;white-space:pre-wrap}
+.doc table.it{width:100%;border-collapse:collapse;margin-top:8px;font-size:10pt}.doc .it th{background:var(--dc,#2E6F9E);color:#fff;padding:6px;font-weight:600;font-size:9pt;line-height:1.25}.doc .it th .s2{color:#e3eef7}.doc .it td{border:1px solid #c9d4cf;padding:6px;vertical-align:top}.doc .it td.r{text-align:right;white-space:nowrap}.doc .it td.c{text-align:center;white-space:nowrap}.doc .it tr.tt td{background:#f1f6fa;font-weight:600}.doc .it tr.tt td.k{text-align:right}
+.doc .wd{margin-top:6px;background:#f1f6fa;border:1px solid #c9d4cf;padding:6px 8px;font-size:10pt}.doc .wd b{color:#5b6762}
+.doc .line{margin:8px 0;font-size:10pt}.doc .line .k{color:#5b6762;font-weight:600;margin-right:8px}
+.doc .body{margin:12px 0;white-space:pre-wrap;text-indent:0;line-height:1.75;font-size:11pt}.doc .body.t{text-indent:2.5em}.doc .body .s2{display:block;margin-top:6px;text-indent:0}
+.doc .sg{display:grid;gap:18px;text-align:center;font-size:9.5pt;margin-top:auto;padding-top:24px}.doc .sg .ln{height:34px}.doc .sg b{display:block}.doc .sg .nm{min-height:1.4em}
+.doc .ft{margin-top:10px;font-size:7.5pt;color:#9aa6a1;text-align:right}
+#printArea{display:none}
+@media print{header.top,.tabs,.toast,dialog,.edm-bar,.noprint,main{display:none!important}body{background:#fff}#printArea{display:block}#printArea .doc{box-shadow:none;width:auto;min-height:auto;padding:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+<style id="pageSize">@page{size:A4;margin:12mm}</style>
+<link rel="stylesheet" href="../assets/pastel.css?v=8">
+<script src="../assets/pastel.js?v=2" defer></script>
+<link rel="stylesheet" href="../assets/skin.css?v=1">
+<script src="../assets/skin.js?v=1"></script>
+<script src="../assets/lock.js?v=3"></script>
+<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="แบบฟอร์มเอกสารออนไลน์ แค่กรอก ได้ PDF | Excel Data Master"><meta property="og:description" content="ใบสำคัญจ่าย ใบเบิกเงินสดย่อย ใบลา ใบขออนุมัติจัดซื้อ และอีกหลายแบบ เลือกภาษา ไทย อังกฤษ เกาหลี ญี่ปุ่น เลือกสกุลเงินได้"><meta property="og:url" content="https://exceldatamaster.com/form/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-form.jpg?v=1">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-form.jpg?v=1">
+<meta name="theme-color" content="#2E6F9E">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="แบบฟอร์ม">
+</head>
+<body>
+<header class="top"><div class="in"><a class="brand" href="/">📝 Excel Data Master <small>· แบบฟอร์มเอกสาร</small></a><nav class="nav"></nav></div></header>
+<div class="tabs" id="tabs"><button data-v="new">📝 สร้างเอกสาร</button><button data-v="docs">📂 เอกสารของฉัน</button><button data-v="set">⚙️ ตั้งค่าบริษัท</button></div>
+<main id="main"></main>
+<div id="printArea"></div>
+<dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button">✕</button></div><div class="db" id="dlgB"></div></dialog>
+<div class="toast" id="toast" hidden></div>
+<input type="file" id="impF" accept=".json,application/json" hidden>
+<input type="file" id="logoF" accept="image/*" hidden>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่เต็ม)");return false}}};
+const K={docs:"edm_form_docs",cfg:"edm_form_cfg",ui:"edm_form_ui"};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),today=()=>ymd(new Date());
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0};
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
+
+/* ---------- ภาษา ---------- */
+const LANGS=[["th","ไทย"],["en","English"],["bi","ไทย + English"],["ko","한국어"],["ja","日本語"]];
+const LI={th:0,en:1,ko:2,ja:3};
+/* คำในเอกสาร [ไทย, อังกฤษ, เกาหลี, ญี่ปุ่น] */
+const W={
+no:["เลขที่","No.","번호","番号"],date:["วันที่","Date","날짜","日付"],payee:["จ่ายให้","Pay to","지급처","支払先"],payer:["รับจาก","Received from","입금처","入金元"],
+addr:["ที่อยู่","Address","주소","住所"],taxid:["เลขประจำตัวผู้เสียภาษี","Tax ID","사업자번호","納税者番号"],idcard:["เลขบัตรประชาชน","ID card No.","신분증 번호","身分証番号"],phone:["โทร","Tel.","전화","電話"],
+desc:["รายการ","Description","내용","摘要"],amount:["จำนวนเงิน","Amount","금액","金額"],qty:["จำนวน","Qty","수량","数量"],unit:["หน่วย","Unit","단위","単位"],price:["ราคาต่อหน่วย","Unit price","단가","単価"],
+total:["รวมเงิน","Total","합계","合計"],subtotal:["รวมก่อนหัก","Subtotal","소계","小計"],wht:["หัก ณ ที่จ่าย","Withholding tax","원천징수","源泉徴収"],net:["ยอดสุทธิ","Net amount","실지급액","差引金額"],words:["ตัวอักษร","In words","금액(문자)","金額(文字)"],
+paidby:["ชำระโดย","Paid by","지급방법","支払方法"],recvby:["รับเงินโดย","Received via","수령방법","受取方法"],cash:["เงินสด","Cash","현금","現金"],transfer:["โอนเงิน","Bank transfer","계좌이체","振込"],cheque:["เช็ค","Cheque","수표","小切手"],
+bank:["ธนาคาร","Bank","은행","銀行"],ref:["เลขที่เช็ค / อ้างอิง","Cheque / Ref. No.","수표 / 참조번호","小切手・参照番号"],note:["หมายเหตุ","Remarks","비고","備考"],purpose:["วัตถุประสงค์","Purpose","목적","目的"],
+requester:["ผู้ขอเบิก","Requested by","신청자","申請者"],dept:["แผนก","Department","부서","部署"],pos:["ตำแหน่ง","Position","직위","役職"],empid:["รหัสพนักงาน","Employee ID","사번","社員番号"],
+prepared:["ผู้จัดทำ","Prepared by","작성자","作成者"],approved:["ผู้อนุมัติ","Approved by","승인자","承認者"],received:["ผู้รับเงิน","Received by","수령인","受領者"],paidS:["ผู้จ่ายเงิน","Paid by","지급인","支払者"],checked:["ผู้ตรวจสอบ","Checked by","검토자","確認者"],
+supervisor:["หัวหน้างาน","Supervisor","상사","上長"],hr:["ฝ่ายบุคคล","HR","인사팀","人事部"],acct:["ฝ่ายบัญชี","Accounting","회계팀","経理部"],
+need:["วันที่ต้องการ","Required date","필요일","希望納期"],supplier:["ผู้ขาย / ร้านค้า","Suggested supplier","공급업체","仕入先"],reason:["เหตุผล","Reason","사유","理由"],
+advAmt:["จำนวนเงินที่ขอเบิก","Advance amount","가불 금액","仮払金額"],clearBy:["กำหนดเคลียร์เงิน","Settle by","정산 기한","精算期限"],advRef:["อ้างอิงใบเบิกทดรอง","Advance ref.","가불 번호","仮払番号"],
+advRecv:["เงินทดรองที่ได้รับ","Advance received","수령한 가불금","受領仮払金"],spent:["ใช้จ่ายจริง","Actual expenses","실제 지출","実費合計"],refund:["คืนเงินบริษัท","Return to company","회사 반환","会社へ返金"],extra:["เบิกเพิ่มจากบริษัท","Additional claim","추가 청구","追加請求"],
+trip:["สถานที่ / การเดินทาง","Destination / Trip","출장지","出張先"],from:["ตั้งแต่","From","부터","自"],to:["ถึง","To","까지","至"],days:["จำนวนวัน","Days","일수","日数"],cat:["ประเภทค่าใช้จ่าย","Expense type","비용 항목","費目"],
+leaveType:["ประเภทการลา","Leave type","휴가 종류","休暇種類"],sick:["ลาป่วย","Sick leave","병가","病気休暇"],personal:["ลากิจ","Personal leave","개인 휴가","私用休暇"],annual:["ลาพักร้อน","Annual leave","연차","年次有給休暇"],maternity:["ลาคลอด","Maternity leave","출산휴가","産前産後休暇"],other:["อื่นๆ","Other","기타","その他"],
+contact:["ติดต่อระหว่างลา","Contact during leave","휴가 중 연락처","休暇中の連絡先"],applicant:["ผู้ขอลา","Applicant","신청자","申請者"],employee:["พนักงาน","Employee","직원","従業員"],
+tFrom:["เวลาเริ่ม","Start","시작","開始"],tTo:["เวลาสิ้นสุด","End","종료","終了"],hours:["ชั่วโมง","Hours","시간","時間"],task:["งานที่ทำ","Work description","업무 내용","作業内容"],totalHrs:["รวมชั่วโมง","Total hours","총 시간","合計時間"],
+mFrom:["ส่วนงาน","From","발신","発信"],mTo:["เรียน","To","수신","宛先"],cc:["สำเนาเรียน","Cc","참조","写し"],subject:["เรื่อง","Subject","제목","件名"],body:["รายละเอียด","Details","내용","本文"],
+signer:["ผู้ลงนาม","Signatory","서명자","署名者"],empName:["ชื่อพนักงาน","Employee name","직원 성명","従業員氏名"],start:["วันที่เริ่มงาน","Start date","입사일","入社日"],salary:["เงินเดือน","Monthly salary","월급","月給"],
+grantor:["ผู้มอบอำนาจ","Grantor","위임인","委任者"],grantee:["ผู้รับมอบอำนาจ","Attorney","수임인","受任者"],matters:["เรื่องที่มอบอำนาจ","Authorized matters","위임 사항","委任事項"],witness:["พยาน","Witness","증인","証人"],valid:["มีผลถึง","Valid until","유효기간","有効期限"],place:["เขียนที่","Place","작성 장소","作成場所"],
+srReason:["เหตุที่ไม่มีใบเสร็จ","Reason for no receipt","영수증 미발급 사유","領収書がない理由"],receiver:["ผู้รับเงิน (ผู้ขาย)","Receiver","수령인","受領者"],certifier:["ผู้รับรอง","Certified by","확인자","証明者"],
+signDate:["วันที่ ____/____/______","Date ____/____/______","날짜 ____/____/______","日付 ____/____/______"],page:["สร้างด้วย exceldatamaster.com","Made with exceldatamaster.com","exceldatamaster.com","exceldatamaster.com"]
+};
+/* ข้อความตามภาษา: bi = ไทย / อังกฤษตัวเล็ก */
+const w=(k,l)=>{const a=W[k];if(!a)return k;if(l==="bi")return esc(a[0])+' / <span class="s2">'+esc(a[1])+"</span>";return esc(a[LI[l]])};
+const wt=(k,l)=>{const a=W[k];return a?a[LI[l==="bi"?"th":l]]:k};
+
+/* ---------- สกุลเงิน: [รหัส, ทศนิยม, ไทย, หน่วยย่อยไทย, อังกฤษ, หน่วยย่อยอังกฤษ, เกาหลี, ญี่ปุ่น, สัญลักษณ์] ---------- */
+const CUR=[["THB",2,"บาท","สตางค์","Baht","Satang","바트","バーツ","฿"],["USD",2,"ดอลลาร์สหรัฐ","เซนต์","US Dollars","Cents","미국 달러","米ドル","$"],["EUR",2,"ยูโร","เซนต์","Euros","Cents","유로","ユーロ","€"],["GBP",2,"ปอนด์สเตอร์ลิง","เพนนี","Pounds Sterling","Pence","파운드","ポンド","£"],
+["JPY",0,"เยน","","Yen","","엔","円","¥"],["KRW",0,"วอน","","Won","","원","ウォン","₩"],["CNY",2,"หยวน","เฟิน","Yuan","Fen","위안","人民元","¥"],["SGD",2,"ดอลลาร์สิงคโปร์","เซนต์","Singapore Dollars","Cents","싱가포르 달러","シンガポールドル","S$"],
+["MYR",2,"ริงกิต","เซน","Ringgit","Sen","링깃","リンギット","RM"],["HKD",2,"ดอลลาร์ฮ่องกง","เซนต์","Hong Kong Dollars","Cents","홍콩 달러","香港ドル","HK$"],["AUD",2,"ดอลลาร์ออสเตรเลีย","เซนต์","Australian Dollars","Cents","호주 달러","豪ドル","A$"],
+["VND",0,"ดอง","","Dong","","동","ドン","₫"],["LAK",0,"กีบ","","Kip","","킵","キープ","₭"],["MMK",0,"จ๊าต","","Kyat","","짯","チャット","K"]];
+const CU=c=>CUR.find(x=>x[0]===c)||CUR[0];
+const money=(n,c)=>{const d=CU(c)[1];return(+n||0).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d})};
+/* จำนวนเงินเป็นตัวหนังสือ */
+const TH_D=["","หนึ่ง","สอง","สาม","สี่","ห้า","หก","เจ็ด","แปด","เก้า"],TH_U=["","สิบ","ร้อย","พัน","หมื่น","แสน"];
+function thInt(n,hi){if(n===0)return hi?"":"ศูนย์";let s="";if(n>=1e6){s=thInt(Math.floor(n/1e6))+"ล้าน";n%=1e6;if(!n)return s;hi=true}const t=String(n);for(let i=0;i<t.length;i++){const d=+t[i],p=t.length-i-1;if(!d)continue;if(p===1&&d===1){s+="สิบ";continue}if(p===1&&d===2){s+="ยี่สิบ";continue}if(p===0&&d===1&&(t.length>1||hi)){s+="เอ็ด";continue}s+=TH_D[d]+TH_U[p]}return s}
+const EN_1=["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"],EN_10=["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+function en3(n){let s=[];if(n>=100){s.push(EN_1[Math.floor(n/100)]+" Hundred");n%=100}if(n>=20){s.push(EN_10[Math.floor(n/10)]+(n%10?"-"+EN_1[n%10]:""))}else if(n)s.push(EN_1[n]);return s.join(" ")}
+function enInt(n){if(n===0)return"Zero";const g=["","Thousand","Million","Billion","Trillion"];let s=[],i=0;while(n>0){const c=n%1000;if(c)s.unshift(en3(c)+(g[i]?" "+g[i]:""));n=Math.floor(n/1000);i++}return s.join(" ")}
+const KO_D=["","일","이","삼","사","오","육","칠","팔","구"];
+function ko4(n,big){let s="";[[1000,"천"],[100,"백"],[10,"십"],[1,""]].forEach(([v,u])=>{const d=Math.floor(n/v)%10;if(!d)return;s+=(d===1&&u?"":KO_D[d])+u});return s}
+function koInt(n){if(n===0)return"영";const g=["","만","억","조"];let s="",i=0;while(n>0){const c=n%10000;if(c)s=(c===1&&i===1?"":ko4(c))+g[i]+s;n=Math.floor(n/10000);i++}return s}
+const JA_D=["","壱","弐","参","四","五","六","七","八","九"];
+function ja4(n){let s="";[[1000,"千"],[100,"百"],[10,"拾"],[1,""]].forEach(([v,u])=>{const d=Math.floor(n/v)%10;if(d)s+=JA_D[d]+u});return s}
+function jaInt(n){if(n===0)return"零";const g=["","萬","億","兆"];let s="",i=0;while(n>0){const c=n%10000;if(c)s=ja4(c)+g[i]+s;n=Math.floor(n/10000);i++}return s}
+function words(n,c,l){const C=CU(c),neg=n<0;n=Math.abs(+n||0);const d=C[1],ip=Math.floor(n+1e-9),fr=d?Math.round((n-ip)*100):0;
+  if(l==="th"||l==="bi"){let s=thInt(ip)+C[2]+(fr?thInt(fr)+C[3]:(c==="THB"?"ถ้วน":""));if(neg)s="ลบ"+s;return l==="bi"?s+"\n("+words(neg?-n:n,c,"en")+")":s}
+  if(l==="en")return(neg?"Minus ":"")+enInt(ip)+" "+C[4]+(fr?" and "+enInt(fr)+" "+C[5]:"")+" Only";
+  if(l==="ko")return"일금 "+koInt(ip)+(c==="KRW"?"원":" "+C[6])+(fr?" "+fr+" "+(C[5]||""):"")+"정";
+  if(l==="ja")return"金"+jaInt(ip)+C[7]+(fr?fr+(c==="USD"?"セント":""):"")+"也";return""}
+/* วันที่ตามภาษา */
+const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],ME=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function dt(s,l){if(!s)return"";const[y,m,d]=s.split("-").map(Number);if(!y)return s;if(l==="th"||l==="bi")return d+" "+MS[m-1]+" "+(y+543);if(l==="en")return d+" "+ME[m-1]+" "+y;if(l==="ko")return y+"년 "+m+"월 "+d+"일";return y+"年"+m+"月"+d+"日"}
+
+/* ---------- แบบฟอร์ม ----------
+   f: ช่อง [key, ชนิด(t ข้อความ, d วันที่, n ตัวเลข, m เงิน, a ข้อความยาว, tm เวลา), w2 = เต็มแถว, เก็บค่าเดิม(keep)]
+   it: คอลัมน์ตาราง [key, ชนิด, ความกว้างในเอกสาร] · amt = คำนวณ qty*price · sum = คอลัมน์ที่รวม
+   pay: "pay" | "recv" · wht = มีหัก ณ ที่จ่าย · sg: ช่องลงนาม [คำ, ช่องชื่อ] · body: ข้อความรับรอง */
+const T=[
+ {id:"pv",pre:"PV",e:"🧾",g:"การเงิน",t:["ใบสำคัญจ่าย","PAYMENT VOUCHER","지출결의서","支払伝票"],d:"จ่ายเงินให้ผู้ขาย/บุคคล พร้อมหัก ณ ที่จ่าย",
+  f:[["payee","t",0,0],["taxid","t"],["addr","t",1],["note","a",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",wht:1,pay:"pay",sg:[["prepared","prep"],["approved","appr"],["received","payee"]],keep:["prep","appr","bank"]},
+ {id:"rv",pre:"RV",e:"💰",g:"การเงิน",t:["ใบสำคัญรับ","RECEIPT VOUCHER","입금전표","入金伝票"],d:"บันทึกเงินที่บริษัทได้รับ",
+  f:[["payer","t"],["taxid","t"],["addr","t",1],["note","a",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",pay:"recv",sg:[["prepared","prep"],["checked","chk"],["approved","appr"]],keep:["prep","chk","appr","bank"]},
+ {id:"pc",pre:"PC",e:"💵",g:"การเงิน",t:["ใบเบิกเงินสดย่อย","PETTY CASH VOUCHER","소액현금 지급청구서","小口現金支払伝票"],d:"เบิกค่าใช้จ่ายเล็กๆ น้อยๆ จากเงินสดย่อย",
+  f:[["requester","t"],["dept","t"],["purpose","t",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",sg:[["requester","requester"],["approved","appr"],["paidS","paid"]],keep:["dept","appr","paid"]},
+ {id:"ad",pre:"AD",e:"🏦",g:"การเงิน",t:["ใบขอเบิกเงินทดรองจ่าย","CASH ADVANCE REQUEST","가불 신청서","仮払金申請書"],d:"ขอเงินล่วงหน้าไปใช้จ่ายงาน แล้วค่อยเคลียร์",
+  f:[["requester","t"],["dept","t"],["purpose","t",1],["clearBy","d"],["note","a",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",pay:"pay",sg:[["requester","requester"],["approved","appr"],["paidS","paid"]],keep:["dept","appr","paid"]},
+ {id:"cl",pre:"CL",e:"🧮",g:"การเงิน",t:["ใบเคลียร์เงินทดรองจ่าย","CASH ADVANCE CLEARANCE","가불 정산서","仮払金精算書"],d:"สรุปใช้จ่ายจริง เทียบเงินทดรอง คืน/เบิกเพิ่ม",
+  f:[["requester","t"],["dept","t"],["advRef","t"],["advRecv","m"],["note","a",1]],it:[["date","d",90],["desc","t"],["amount","m",120]],sum:"amount",clear:1,sg:[["requester","requester"],["checked","chk"],["approved","appr"]],keep:["dept","chk","appr"]},
+ {id:"te",pre:"TE",e:"🚗",g:"การเงิน",t:["ใบเบิกค่าเดินทางและเบี้ยเลี้ยง","TRAVEL EXPENSE CLAIM","출장비 청구서","出張旅費精算書"],d:"ค่าน้ำมัน ค่าทางด่วน ที่พัก เบี้ยเลี้ยง",
+  f:[["requester","t"],["dept","t"],["trip","t",1],["from","d"],["to","d"],["purpose","t",1]],it:[["date","d",90],["cat","t",130],["desc","t"],["amount","m",110]],sum:"amount",sg:[["requester","requester"],["supervisor","sup"],["approved","appr"]],keep:["dept","sup","appr"]},
+ {id:"sr",pre:"SR",e:"📃",g:"การเงิน",t:["ใบรับรองแทนใบเสร็จรับเงิน","SUBSTITUTE RECEIPT","영수증 대체 확인서","領収書代替証明書"],d:"กรณีจ่ายเงินแล้วไม่มีใบเสร็จ",
+  f:[["requester","t"],["pos","t"],["dept","t"],["srReason","t",1]],it:[["date","d",90],["desc","t"],["amount","m",120]],sum:"amount",body:"sr",sg:[["certifier","requester"],["approved","appr"]],keep:["pos","dept","appr"]},
+ {id:"rc",pre:"RC",e:"✍️",g:"การเงิน",t:["ใบรับเงิน","RECEIPT","영수증","領収書"],d:"ให้บุคคลธรรมดาเซ็นรับเงินจากบริษัท",
+  f:[["receiver","t"],["idcard","t"],["addr","t",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",wht:1,pay:"pay",body:"rc",sg:[["received","receiver"],["paidS","paid"]],keep:["paid"]},
+ {id:"pr",pre:"PR",e:"🛒",g:"จัดซื้อ",t:["ใบขออนุมัติจัดซื้อ","PURCHASE REQUISITION","구매요청서","購買依頼書"],d:"ขออนุมัติซื้อของ/บริการ ก่อนสั่งซื้อจริง",
+  f:[["requester","t"],["dept","t"],["need","d"],["supplier","t"],["reason","t",1]],it:[["desc","t"],["qty","n",60],["unit","t",60],["price","m",100],["amount","amt",110]],sum:"amount",sg:[["requester","requester"],["supervisor","sup"],["approved","appr"]],keep:["dept","sup","appr"]},
+ {id:"lv",pre:"LV",e:"🗓️",g:"บุคคล",t:["ใบลา","LEAVE REQUEST","휴가 신청서","休暇届"],d:"ลาป่วย ลากิจ ลาพักร้อน ลาคลอด",nomoney:1,
+  f:[["applicant","t"],["empid","t"],["pos","t"],["dept","t"],["leaveType","sel",1,0,["sick","personal","annual","maternity","other"]],["from","d"],["to","d"],["days","n"],["contact","t"],["reason","a",1]],sg:[["applicant","applicant"],["supervisor","sup"],["hr","hrn"]],keep:["empid","pos","dept","sup","hrn"]},
+ {id:"ot",pre:"OT",e:"⏰",g:"บุคคล",t:["ใบขออนุมัติทำงานล่วงเวลา","OVERTIME REQUEST","연장근무 신청서","時間外勤務申請書"],d:"ขอทำ OT รายวัน รวมชั่วโมงให้อัตโนมัติ",nomoney:1,
+  f:[["employee","t"],["empid","t"],["dept","t"],["reason","t"]],it:[["date","d",90],["tFrom","tm",70],["tTo","tm",70],["hours","n",70],["task","t"]],sum:"hours",sg:[["employee","employee"],["supervisor","sup"],["approved","appr"]],keep:["empid","dept","sup","appr"]},
+ {id:"mm",pre:"MM",e:"📨",g:"บุคคล",t:["บันทึกข้อความ","MEMORANDUM","업무연락서","社内連絡書"],d:"หนังสือภายใน แจ้งเรื่อง ขออนุมัติ",nomoney:1,
+  f:[["mFrom","t"],["mTo","t"],["cc","t"],["subject","t",1],["body","a",1],["signer","t"],["pos","t"]],memo:1,sg:[["signer","signer"]],keep:["mFrom","signer","pos"]},
+ {id:"ce",pre:"CE",e:"🎓",g:"บุคคล",t:["หนังสือรับรองการทำงาน","EMPLOYMENT CERTIFICATE","재직증명서","在職証明書"],d:"รับรองการทำงาน/เงินเดือน ใช้ยื่นธนาคาร วีซ่า",
+  f:[["empName","t"],["idcard","t"],["pos","t"],["dept","t"],["start","d"],["salary","m"],["purpose","t",1],["signer","t"],["sPos","t"]],body:"ce",sg:[["signer","signer"]],keep:["signer","sPos"]},
+ {id:"pa",pre:"POA",e:"📜",g:"บุคคล",t:["หนังสือมอบอำนาจ","POWER OF ATTORNEY","위임장","委任状"],d:"มอบอำนาจให้ผู้อื่นทำธุระแทน",nomoney:1,
+  f:[["place","t",1],["grantor","t"],["gAddr","t"],["grantee","t"],["gid","t"],["geAddr","t",1],["matters","a",1],["valid","d"]],body:"pa",sg:[["grantor","grantor"],["grantee","grantee"],["witness","w1"],["witness","w2"]],keep:["place","grantor","gAddr"]}
+];
+/* ป้ายช่องที่ไม่มีใน W */
+Object.assign(W,{prep:W.prepared,appr:W.approved,chk:W.checked,paid:W.paidS,sup:W.supervisor,hrn:W.hr,sPos:["ตำแหน่งผู้ลงนาม","Signatory position","서명자 직위","署名者役職"],gAddr:["ที่อยู่ผู้มอบอำนาจ","Grantor address","위임인 주소","委任者住所"],gid:["เลขบัตรผู้รับมอบอำนาจ","Attorney ID No.","수임인 신분증 번호","受任者身分証番号"],geAddr:["ที่อยู่ผู้รับมอบอำนาจ","Attorney address","수임인 주소","受任者住所"],w1:W.witness,w2:W.witness});
+const TP=id=>T.find(x=>x.id===id);
+const tTitle=(t,l)=>l==="bi"?t.t[0]:t.t[LI[l]];
+
+/* ---------- ข้อมูล ---------- */
+let D=LS.get(K.docs,[])||[],cfg=Object.assign({co:{name:"",nameEn:"",addr:"",addrEn:"",tax:"",phone:"",logo:""},lang:"th",cur:"THB",year:"be",seq:{},color:"#2E6F9E",demo:false},LS.get(K.cfg,{})||{}),ui=Object.assign({v:"new",q:"",ft:""},LS.get(K.ui,{})||{});
+const save=()=>LS.set(K.docs,D),saveC=()=>LS.set(K.cfg,cfg),saveUi=()=>LS.set(K.ui,ui);
+let cur=null; // เอกสารที่กำลังแก้
+
+function nextNo(t,date){const y=+(date||today()).slice(0,4),yy=cfg.year==="ad"?y:y+543,key=t.pre+yy,n=(cfg.seq[key]||0)+1;return{key,n,no:t.pre+yy+"-"+String(n).padStart(4,"0")}}
+function calc(d){const t=TP(d.tpl),I=d.items||[];I.forEach(r=>{if(t.it&&t.it.some(c=>c[1]==="amt"))r.amount=Math.round(num(r.qty)*num(r.price)*100)/100});
+  const sub=t.sum?I.reduce((a,r)=>a+num(r[t.sum]),0):0,wh=t.wht?Math.round(sub*num(d.f.whtPct)/100*100)/100:0;
+  const o={sub,wht:wh,net:sub-wh};if(t.clear){o.adv=num(d.f.advRecv);o.diff=o.adv-sub}return o}
+function blank(t){const last=D.filter(x=>x.tpl===t.id).sort((a,b)=>(b.ts||0)-(a.ts||0))[0],f={};
+  (t.keep||[]).forEach(k=>{if(last&&last.f[k])f[k]=last.f[k]});if(t.id==="ce"||t.id==="mm"){}
+  return{id:"",tpl:t.id,no:"",date:today(),lang:cfg.lang||"th",cur:cfg.cur||"THB",f,items:t.it?[{},{}]:[],pm:t.pay?"transfer":"",ts:0}}
+
+/* ---------- วาดเอกสาร ---------- */
+const coName=l=>(l!=="th"&&l!=="bi"&&cfg.co.nameEn)?cfg.co.nameEn:(cfg.co.name||"ชื่อบริษัทของคุณ (ตั้งค่าในแท็บ ตั้งค่าบริษัท)");
+const coAddr=l=>(l!=="th"&&l!=="bi"&&cfg.co.addrEn)?cfg.co.addrEn:cfg.co.addr;
+const fv=(d,k)=>d.f[k]==null?"":String(d.f[k]);
+function bodyText(d,l){const t=TP(d.tpl),v=k=>esc(fv(d,k))||"…………",co=esc(coName(l)),L=l==="bi"?"th":l,c=calc(d);
+  const sal=fv(d,"salary")?money(num(d.f.salary),d.cur)+" "+CU(d.cur)[l==="en"?4:L==="th"?2:L==="ko"?6:7]:"";
+  const S={
+  sr:{th:`ข้าพเจ้า ${v("requester")} ตำแหน่ง ${v("pos")} ขอรับรองว่าได้จ่ายเงินในนาม ${co} ตามรายการข้างต้น ซึ่งไม่อาจเรียกใบเสร็จรับเงินจากผู้รับเงินได้ และเป็นการจ่ายเพื่อกิจการของบริษัทโดยแท้`,
+      en:`I, ${v("requester")}, ${v("pos")}, certify that the above expenses were paid on behalf of ${co}, that receipts could not be obtained from the payees, and that the expenses were incurred solely for company business.`,
+      ko:`본인 ${v("requester")}(${v("pos")})은(는) 위 금액을 ${co}을(를) 대신하여 지급하였으며, 수령인으로부터 영수증을 받을 수 없었고, 전적으로 회사 업무를 위한 지출임을 확인합니다.`,
+      ja:`私 ${v("requester")}（${v("pos")}）は、上記の費用を${co}に代わって支払ったこと、受取人から領収書を入手できなかったこと、及び専ら会社業務のための支出であることを証明します。`},
+  rc:{th:`ข้าพเจ้า ${v("receiver")} ได้รับเงินจาก ${co} ตามรายการข้างต้นไว้ถูกต้องครบถ้วนแล้ว`,en:`I, ${v("receiver")}, hereby acknowledge receipt of the above amount in full from ${co}.`,ko:`본인 ${v("receiver")}은(는) ${co}(으)로부터 위 금액을 정히 영수하였습니다.`,ja:`私 ${v("receiver")}は、${co}より上記金額を正に領収いたしました。`},
+  ce:{th:`หนังสือฉบับนี้ให้ไว้เพื่อรับรองว่า ${v("empName")} เลขบัตรประชาชน ${v("idcard")} เป็นพนักงานของ ${co} ตำแหน่ง ${v("pos")} แผนก ${v("dept")} เริ่มปฏิบัติงานตั้งแต่วันที่ ${esc(dt(fv(d,"start"),"th"))||"…………"} จนถึงปัจจุบัน${sal?` ได้รับเงินเดือนเดือนละ ${sal} (${esc(words(num(d.f.salary),d.cur,"th"))})`:""}\n\nให้ไว้ ณ วันที่ ${esc(dt(d.date,"th"))} เพื่อใช้ประกอบ${v("purpose")}`,
+      en:`This is to certify that ${v("empName")} (ID No. ${v("idcard")}) has been employed by ${co} as ${v("pos")}, ${v("dept")} Department, since ${esc(dt(fv(d,"start"),"en"))||"…………"} to the present.${sal?` The current monthly salary is ${sal} (${esc(words(num(d.f.salary),d.cur,"en"))}).`:""}\n\nThis certificate is issued on ${esc(dt(d.date,"en"))} for the purpose of ${v("purpose")}.`,
+      ko:`위 사람 ${v("empName")}(신분증 번호 ${v("idcard")})은(는) ${esc(dt(fv(d,"start"),"ko"))||"…………"}부터 현재까지 ${co} ${v("dept")} 부서에서 ${v("pos")}(으)로 재직 중임을 증명합니다.${sal?` 현재 월급은 ${sal}(${esc(words(num(d.f.salary),d.cur,"ko"))})입니다.`:""}\n\n본 증명서는 ${v("purpose")} 용도로 ${esc(dt(d.date,"ko"))}에 발급합니다.`,
+      ja:`${v("empName")}（身分証番号 ${v("idcard")}）は、${esc(dt(fv(d,"start"),"ja"))||"…………"}から現在まで、${co} ${v("dept")}部に${v("pos")}として在職していることを証明します。${sal?`現在の月給は${sal}（${esc(words(num(d.f.salary),d.cur,"ja"))}）です。`:""}\n\n本証明書は${v("purpose")}のため、${esc(dt(d.date,"ja"))}に発行します。`},
+  pa:{th:`ข้าพเจ้า ${v("grantor")} ที่อยู่ ${v("gAddr")} ขอมอบอำนาจให้ ${v("grantee")} เลขบัตรประชาชน ${v("gid")} ที่อยู่ ${v("geAddr")} เป็นผู้มีอำนาจกระทำการแทนข้าพเจ้าในเรื่องดังต่อไปนี้\n${v("matters")}\n\nการใดที่ผู้รับมอบอำนาจได้กระทำไปภายในขอบเขตที่มอบอำนาจนี้ ให้ถือเสมือนว่าข้าพเจ้าได้กระทำด้วยตนเองทุกประการ${fv(d,"valid")?` หนังสือมอบอำนาจนี้มีผลถึงวันที่ ${esc(dt(d.f.valid,"th"))}`:""}`,
+      en:`I/We, ${v("grantor")}, of ${v("gAddr")}, hereby authorize ${v("grantee")} (ID No. ${v("gid")}), of ${v("geAddr")}, to act on my/our behalf in the following matters:\n${v("matters")}\n\nAny act performed by the attorney within the scope of this authorization shall be deemed to have been performed by me/us in all respects.${fv(d,"valid")?` This power of attorney is valid until ${esc(dt(d.f.valid,"en"))}.`:""}`,
+      ko:`본인 ${v("grantor")}(주소: ${v("gAddr")})은(는) ${v("grantee")}(신분증 번호 ${v("gid")}, 주소: ${v("geAddr")})에게 다음 사항에 관한 권한을 위임합니다.\n${v("matters")}\n\n수임인이 위임 범위 내에서 행한 모든 행위는 본인이 직접 행한 것으로 간주합니다.${fv(d,"valid")?` 본 위임장의 유효기간은 ${esc(dt(d.f.valid,"ko"))}까지입니다.`:""}`,
+      ja:`私 ${v("grantor")}（住所：${v("gAddr")}）は、${v("grantee")}（身分証番号 ${v("gid")}、住所：${v("geAddr")}）を代理人と定め、下記の事項に関する権限を委任します。\n${v("matters")}\n\n代理人が本委任の範囲内で行った行為は、すべて私自身が行ったものとみなします。${fv(d,"valid")?`本委任状の有効期限は${esc(dt(d.f.valid,"ja"))}までとします。`:""}`}};
+  const s=S[t.body];if(!s)return"";if(l==="bi")return s.th+'<span class="s2">'+s.en+"</span>";return s[l]}
+function docHtml(d){const t=TP(d.tpl),l=d.lang||"th",c=calc(d),C=CU(d.cur),cc=d.cur;
+  const lg=cfg.co.logo?`<img class="lg" src="${esc(cfg.co.logo)}" alt="">`:`<div class="lgt">${esc((coName("en")||"A").replace(/^(บริษัท|ห้างหุ้นส่วน(จำกัด)?|หจก\.?|บจก\.?)\s*/,"").trim().slice(0,1)||"A")}</div>`;
+  const ttl=l==="bi"?`${esc(t.t[0])}`:esc(t.t[LI[l]]),sub=l==="th"||l==="en"?"":t.t[1];
+  const meta=`<table class="mt"><tr><td>${w("no",l)}</td><td><b>${esc(d.no||"—")}</b></td></tr><tr><td>${w("date",l)}</td><td>${esc(dt(d.date,l))}</td></tr></table>`;
+  let h=`<div class="doc ${l}" style="--dc:${esc(cfg.color||"#2E6F9E")}"><div class="hd"><div class="co">${lg}<div><b>${esc(coName(l))}</b><small>${esc(coAddr(l)||"")}</small><small>${cfg.co.tax?esc(wt("taxid",l==="bi"?"th":l))+" "+esc(cfg.co.tax):""}${cfg.co.phone?" · "+esc(wt("phone",l==="bi"?"th":l))+" "+esc(cfg.co.phone):""}</small></div></div><div><h1>${ttl}</h1>${l==="bi"||sub?`<div class="sub">${esc(t.t[1])}</div>`:""}${meta}</div></div>`;
+  // ช่องข้อมูล
+  const hideKV=new Set(["note","body","matters","whtPct","signer","sPos"].concat(t.memo?["pos"]:[]).concat(t.body==="pa"?["grantor","gAddr","grantee","gid","geAddr","valid"]:[]).concat(t.body==="ce"?["empName","idcard","pos","dept","start","salary","purpose"]:[]));
+  const kv=t.f.filter(x=>!hideKV.has(x[0])&&!(t.memo&&x[0]==="body")).map(x=>{let v=fv(d,x[0]);if(!v)return null;if(x[1]==="d")v=dt(v,l);else if(x[1]==="m")v=money(num(v),cc)+" "+cc;else if(x[1]==="sel")v=x[4].map(o=>(o===v?"☑ ":"☐ ")+wt(o,l==="bi"?"th":l)).join("   ");return`<div class="${x[2]||x[1]==="sel"?"w2":""}"><span class="k">${w(x[0],l)}</span><span class="v">${esc(v)}</span></div>`}).filter(Boolean);
+  if(kv.length)h+=`<div class="kv">${kv.join("")}</div>`;
+  if(t.memo)h+=`<div class="body t">${esc(fv(d,"body"))}</div>`;
+  // ตาราง
+  if(t.it){const I=(d.items||[]).filter(r=>t.it.some(col=>String(r[col[0]]||"").trim()));const rows=I.length?I:[{}];
+    const head=`<tr><th style="width:30px">#</th>${t.it.map(col=>`<th${col[2]?` style="width:${col[2]}px"`:""}>${w(col[0]==="amt"?"amount":col[0],l)}${col[1]==="m"||col[1]==="amt"?` (${cc})`:""}</th>`).join("")}</tr>`;
+    const body=rows.map((r,i)=>`<tr><td class="c">${I.length?i+1:""}</td>${t.it.map(col=>{let v=r[col[0]];if(col[1]==="m"||col[1]==="amt")return`<td class="r">${v===""||v==null?"":money(num(v),cc)}</td>`;if(col[1]==="d")return`<td class="c">${esc(dt(v,l))}</td>`;if(col[1]==="n"||col[1]==="tm")return`<td class="c">${esc(v==null?"":v)}</td>`;return`<td>${esc(v==null?"":v).replace(/\n/g,"<br>")}</td>`}).join("")}</tr>`).join("");
+    const pad=Array.from({length:Math.max(0,4-rows.length)},()=>`<tr><td style="height:24px"></td>${t.it.map(()=>"<td></td>").join("")}</tr>`).join("");
+    const span=t.it.length,si=t.it.findIndex(col=>col[0]===t.sum);let tot="";
+    if(t.sum==="hours")tot=`<tr class="tt"><td class="k" colspan="${si+1}">${w("totalHrs",l)}</td><td class="c">${c.sub}</td>${"<td></td>".repeat(span-si-1)}</tr>`;
+    else{const row=(k,v)=>`<tr class="tt"><td class="k" colspan="${span}">${w(k,l)}</td><td class="r">${money(v,cc)}</td></tr>`;
+      if(t.wht&&c.wht)tot=row("subtotal",c.sub)+`<tr class="tt"><td class="k" colspan="${span}">${w("wht",l)} ${num(d.f.whtPct)}%</td><td class="r">-${money(c.wht,cc)}</td></tr>`+row("net",c.net);else tot=row("total",c.sub);}
+    h+=`<table class="it">${head}${body}${pad}${tot}</table>`;
+    if(t.sum==="amount")h+=`<div class="wd"><b>${w("words",l)}:</b> ${esc(words(t.wht?c.net:c.sub,cc,l)).replace(/\n/g,"<br>")}</div>`;
+    if(t.clear){const r=(k,v)=>`<div><span class="k">${w(k,l)}</span><span class="v">${money(v,cc)} ${cc}</span></div>`;h+=`<div class="kv">${r("advRecv",c.adv)}${r("spent",c.sub)}${c.diff>=0?r("refund",c.diff):r("extra",-c.diff)}</div>`}}
+  if(t.body)h+=`<div class="body t">${bodyText(d,l)}</div>`;
+  if(t.pay){const pm=d.pm||"";h+=`<div class="line"><span class="k">${w(t.pay==="pay"?"paidby":"recvby",l)}</span>${["cash","transfer","cheque"].map(k=>(pm===k?"☑ ":"☐ ")+w(k,l)).join(" &nbsp; ")}${fv(d,"bank")?` &nbsp;·&nbsp; ${w("bank",l)} ${esc(fv(d,"bank"))}`:""}${fv(d,"ref")?` &nbsp;·&nbsp; ${w("ref",l)} ${esc(fv(d,"ref"))}`:""}</div>`}
+  if(fv(d,"note")&&t.f.some(x=>x[0]==="note"))h+=`<div class="line"><span class="k">${w("note",l)}</span>${esc(fv(d,"note")).replace(/\n/g,"<br>")}</div>`;
+  const sg=t.sg||[];h+=`<div class="sg" style="grid-template-columns:repeat(${Math.min(sg.length,4)},1fr)">${sg.map(([lab,k])=>{const nm=fv(d,k);const ps=k==="signer"&&fv(d,t.id==="ce"?"sPos":"pos");return`<div><div class="ln"></div><div class="nm">(${nm?esc(nm):"......................................"})</div>${ps?`<div>${esc(ps)}</div>`:""}<b>${w(lab,l)}</b><div class="s2">${w("signDate",l)}</div></div>`}).join("")}</div>`;
+  h+=`<div class="ft edm-brand">${esc(W.page[LI[l==="bi"?"th":l]])}</div></div>`;return h}
+
+/* ---------- ฟอนต์เกาหลี/ญี่ปุ่น (โหลดเมื่อเลือกภาษา) ---------- */
+const FONT={ko:"Noto+Sans+KR",ja:"Noto+Sans+JP"};
+function needFont(l){if(!FONT[l]||document.getElementById("fnt-"+l))return;const k=document.createElement("link");k.id="fnt-"+l;k.rel="stylesheet";k.href="https://fonts.googleapis.com/css2?family="+FONT[l]+":wght@400;600;700&display=swap";document.head.appendChild(k)}
+
+/* ---------- หน้า สร้างเอกสาร ---------- */
+function vNew(){const M=$("#main"),G=[...new Set(T.map(t=>t.g))];
+  M.innerHTML=`<div class="hello"><div><h1>เลือกแบบฟอร์ม</h1><p>แค่กรอกข้อมูล ระบบจัดหน้า รันเลขที่ และแปลงจำนวนเงินเป็นตัวหนังสือให้ · เลือกภาษาได้ ไทย · English · 한국어 · 日本語</p></div>${!cfg.co.name?`<button class="btn main" id="goSet" type="button">🏢 ใส่ชื่อบริษัทก่อน</button>`:""}</div>
+  ${G.map(g=>`<div class="cg">${esc(g)}</div><div class="gal">${T.filter(t=>t.g===g).map(t=>`<button class="tp" data-t="${t.id}" type="button"><span class="e">${t.e}</span><span><b>${esc(t.t[0])}</b><small>${esc(t.d)}</small></span></button>`).join("")}</div>`).join("")}`;
+  M.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>openEd(blank(TP(b.dataset.t))));const gs=$("#goSet");if(gs)gs.onclick=()=>{ui.v="set";saveUi();render()}}
+
+/* ---------- ตัวแก้เอกสาร ---------- */
+function hist(k){const s=new Set();D.forEach(x=>{const v=x.f&&x.f[k];if(v&&String(v).length<80)s.add(String(v))});return[...s].slice(-30)}
+function openEd(d){cur=JSON.parse(JSON.stringify(d));ui.v="ed";render()}
+function vEd(){const d=cur,t=TP(d.tpl),M=$("#main");needFont(d.lang);
+  const inp=x=>{const[k,ty,w2,,opt]=x,v=esc(fv(d,k)),lab=W[k]?W[k][0]:k;
+    if(ty==="a")return`<div class="f w2"><label>${esc(lab)}</label><textarea class="in-" data-k="${k}" rows="${k==="body"||k==="matters"?6:2}">${v}</textarea></div>`;
+    if(ty==="sel")return`<div class="f w2"><label>${esc(lab)}</label><div class="radio">${opt.map(o=>`<label><input type="radio" name="r-${k}" data-k="${k}" value="${o}"${fv(d,k)===o?" checked":""}>${esc(W[o][0])}</label>`).join("")}</div></div>`;
+    const typ=ty==="d"?"date":ty==="n"||ty==="m"?"text":"text",im=ty==="n"||ty==="m"?' inputmode="decimal"':"";
+    return`<div class="f${w2?" w2":""}"><label>${esc(lab)}</label><input class="in-" type="${typ}" data-k="${k}" value="${v}"${im} list="dl-${k}"><datalist id="dl-${k}">${ty==="t"?hist(k).map(s=>`<option value="${esc(s)}">`).join(""):""}</datalist></div>`};
+  const sgK=(t.sg||[]).map(s=>s[1]).filter(k=>!t.f.some(x=>x[0]===k));
+  const itEd=t.it?`<div class="card"><h2>${esc(t.sum==="hours"?"รายการ OT":"รายการ")} <button class="btn sm" id="addR" type="button">＋ เพิ่มแถว</button></h2><div class="it-ed" id="itEd"></div><div class="sum" id="sumBox"></div></div>`:"";
+  M.innerHTML=`<div class="edbar"><div class="g"><button class="btn ghost sm" id="back" type="button">← กลับ</button><b>${t.e} ${esc(t.t[0])}</b><button class="btn ghost sm mob" id="goPv" type="button">👁️ ดูเอกสาร</button></div>
+   <div class="g"><label class="note">ภาษา</label><select class="sel" id="eL">${LANGS.map(([k,n])=>`<option value="${k}"${d.lang===k?" selected":""}>${n}</option>`).join("")}</select>
+   ${t.nomoney?"":`<label class="note">สกุลเงิน</label><select class="sel" id="eC">${CUR.map(c=>`<option value="${c[0]}"${d.cur===c[0]?" selected":""}>${c[0]} ${c[8]}</option>`).join("")}</select>`}
+   <button class="btn ghost" id="eSave" type="button">💾 บันทึก</button><button class="btn main" id="ePdf" type="button">⬇️ PDF / พิมพ์</button></div></div>
+  <div class="ed"><div class="side" style="display:flex;flex-direction:column;gap:12px">
+   <div class="card"><div class="fg"><div class="f"><label>เลขที่ (ว่าง = รันให้อัตโนมัติ)</label><input class="in-" id="eNo" value="${esc(d.no)}" placeholder="${esc(nextNo(t,d.date).no)}"></div><div class="f"><label>วันที่เอกสาร</label><input class="in-" type="date" id="eD" value="${esc(d.date)}"></div>
+   ${t.f.map(inp).join("")}${t.wht?`<div class="f"><label>หัก ณ ที่จ่าย (%)</label><input class="in-" data-k="whtPct" inputmode="decimal" value="${esc(fv(d,"whtPct"))}" placeholder="0 / 1 / 3 / 5"></div>`:""}</div></div>
+   ${itEd}
+   ${t.pay?`<div class="card"><div class="f"><label>${t.pay==="pay"?"ชำระโดย":"รับเงินโดย"}</label><div class="radio">${["cash","transfer","cheque"].map(k=>`<label><input type="radio" name="pm" value="${k}"${d.pm===k?" checked":""}>${W[k][0]}</label>`).join("")}</div></div><div class="fg">${inp(["bank","t"])}${inp(["ref","t"])}</div></div>`:""}
+   ${sgK.length?`<div class="card"><h2>ชื่อผู้ลงนาม <small>ไม่ใส่ก็ได้ เว้นไว้เซ็นเอง</small></h2><div class="fg">${sgK.map(k=>inp([k,"t"])).join("")}</div></div>`:""}
+   <p class="note">💡 ชื่อผู้อนุมัติ แผนก ธนาคาร ฯลฯ ระบบจำจากเอกสารใบก่อนให้อัตโนมัติ · พิมพ์ช่องที่เคยกรอก มีคำเดิมให้เลือก</p>
+   ${d.id?`<button class="btn ghost danger sm" id="eDel" type="button" style="align-self:flex-start">🗑️ ลบเอกสารนี้</button>`:""}
+  </div><div class="pvw" id="pvw"><div class="pvs" id="pvs"></div></div></div>`;
+  const pv=()=>{if(!cur||!$("#pvs"))return;$("#pvs").innerHTML=docHtml(Object.assign({},cur,{no:cur.no||nextNo(t,cur.date).no+" (ร่าง)"}));fit();if(t.it)$("#sumBox").innerHTML=sumTxt()};
+  const sumTxt=()=>{const c=calc(cur);if(t.sum==="hours")return`<span>รวมชั่วโมง</span><span>${c.sub}</span>`;return`<span>${t.wht&&c.wht?"ยอดสุทธิ":"รวมเงิน"}</span><span>${money(t.wht?c.net:c.sub,cur.cur)} ${cur.cur}</span>`};
+  const drawIt=()=>{if(!t.it)return;const cols=t.it.map(c=>c[1]==="t"?"minmax(0,2fr)":"minmax(0,1fr)").join(" ");$("#itEd").innerHTML=cur.items.map((r,i)=>`<div class="it-row" style="grid-template-columns:${cols} 26px">${t.it.map(c=>{const v=r[c[0]]==null?"":r[c[0]];const ph=W[c[0]==="amt"?"amount":c[0]][0];
+      if(c[1]==="amt")return`<input class="in-" value="${v?money(v,cur.cur):""}" placeholder="${ph}" disabled title="${ph}">`;
+      return`<input class="in-" data-i="${i}" data-c="${c[0]}" type="${c[1]==="d"?"date":c[1]==="tm"?"time":"text"}"${c[1]==="m"||c[1]==="n"?' inputmode="decimal"':""} value="${esc(v)}" placeholder="${ph}" title="${ph}">`}).join("")}<button class="x" data-del="${i}" type="button" title="ลบแถว">✕</button></div>`).join("")};
+  drawIt();pv();
+  const syncF=e=>{const k=e.target.dataset.k;if(!k)return;cur.f[k]=e.target.value;pv()};
+  M.querySelector(".side").addEventListener("input",e=>{if(e.target.dataset.k&&e.target.type!=="radio")syncF(e);else if(e.target.dataset.i!=null){const r=cur.items[+e.target.dataset.i],c=e.target.dataset.c;r[c]=e.target.value;
+      if(c==="tFrom"||c==="tTo"){const a=r.tFrom,b=r.tTo;if(a&&b){let m=(+b.slice(0,2)*60+ +b.slice(3))-(+a.slice(0,2)*60+ +a.slice(3));if(m<0)m+=1440;r.hours=Math.round(m/60*100)/100;const h=e.target.closest(".it-row").querySelector('[data-c="hours"]');if(h)h.value=r.hours}}
+      if(c==="qty"||c==="price"){calc(cur);const a=e.target.closest(".it-row").querySelector("[disabled]");if(a)a.value=r.amount?money(r.amount,cur.cur):""}pv()}});
+  M.querySelector(".side").addEventListener("change",e=>{if(e.target.type==="radio"){if(e.target.name==="pm")cur.pm=e.target.value;else cur.f[e.target.dataset.k]=e.target.value;pv()}});
+  $("#eNo").oninput=e=>{cur.no=e.target.value.trim();pv()};$("#eD").oninput=e=>{cur.date=e.target.value;$("#eNo").placeholder=nextNo(t,cur.date).no;pv()};
+  $("#eL").onchange=e=>{cur.lang=e.target.value;needFont(cur.lang);pv();setTimeout(pv,900)};const ec=$("#eC");if(ec)ec.onchange=e=>{cur.cur=e.target.value;drawIt();pv()};
+  const ar=$("#addR");if(ar)ar.onclick=()=>{cur.items.push({});drawIt();pv();const L=$$("#itEd .it-row");L[L.length-1].querySelector("input:not([disabled])").focus()};
+  const ie=$("#itEd");if(ie)ie.onclick=e=>{const b=e.target.closest("[data-del]");if(!b)return;cur.items.splice(+b.dataset.del,1);if(!cur.items.length)cur.items.push({});drawIt();pv()};
+  $("#goPv").onclick=()=>$("#pvw").scrollIntoView({behavior:"smooth"});
+  $("#back").onclick=()=>{ui.v=cur.id?"docs":"new";cur=null;saveUi();render()};
+  $("#eSave").onclick=()=>{if(doSave()){pv();toast("บันทึกแล้ว ✓ "+cur.no)}};
+  $("#ePdf").onclick=()=>{if(!doSave())return;pv();printDoc(cur)};
+  const dl=$("#eDel");if(dl)dl.onclick=()=>{if(!confirm("ลบเอกสาร "+cur.no+" ?"))return;D=D.filter(x=>x.id!==cur.id);save();cur=null;ui.v="docs";saveUi();render();toast("ลบแล้ว")};
+  window.onresize=fit}
+function fit(){const w=$("#pvw"),s=$("#pvs");if(!w||!s)return;const avail=w.clientWidth-32,docW=794,k=Math.min(1,avail/docW);s.style.transform=`scale(${k})`;s.style.height=(s.firstElementChild?s.firstElementChild.offsetHeight*k:0)+"px";s.style.width=docW*k+"px"}
+function doSave(){const t=TP(cur.tpl);if(!cfg.co.name&&!confirm("ยังไม่ได้ใส่ชื่อบริษัท (ตั้งค่าบริษัท) บันทึกต่อเลยไหม?"))return false;
+  if(!cur.no){const n=nextNo(t,cur.date);cur.no=n.no;cfg.seq[n.key]=n.n;saveC()}
+  else{const m=/^([A-Z]+)(\d{4})-(\d+)$/.exec(cur.no);if(m&&m[1]===t.pre){const key=m[1]+m[2];if(+m[3]>(cfg.seq[key]||0)){cfg.seq[key]=+m[3];saveC()}}}
+  if(D.some(x=>x.no===cur.no&&x.id!==cur.id)&&!confirm("เลขที่ "+cur.no+" ซ้ำกับเอกสารอื่น บันทึกต่อไหม?"))return false;
+  calc(cur);cur.ts=Date.now();if(!cur.id){cur.id=uid("f");D.push(JSON.parse(JSON.stringify(cur)))}else{const i=D.findIndex(x=>x.id===cur.id);if(i>=0)D[i]=JSON.parse(JSON.stringify(cur));else D.push(JSON.parse(JSON.stringify(cur)))}
+  save();const n=$("#eNo");if(n)n.value=cur.no;if(!$("#eDel")){const s=$(".side");if(s)s.insertAdjacentHTML("beforeend",'<p class="note">✓ บันทึกเป็น '+esc(cur.no)+" แล้ว</p>")}return true}
+function printDoc(d){needFont(d.lang);$("#printArea").innerHTML=docHtml(d);window.EDM_DOCNAME=d.no||"document";
+  const go=()=>window.print();(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(go,d.lang==="ko"||d.lang==="ja"?600:50))}
+
+/* ---------- เอกสารของฉัน ---------- */
+function vDocs(){const M=$("#main"),q=ui.q.trim().toLowerCase();
+  let L=D.filter(x=>(!ui.ft||x.tpl===ui.ft)&&(!q||[x.no,JSON.stringify(x.f),JSON.stringify(x.items)].join(" ").toLowerCase().includes(q))).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.ts||0)-(a.ts||0));
+  const used=T.filter(t=>D.some(x=>x.tpl===t.id));
+  const who=x=>{const f=x.f||{};return f.payee||f.payer||f.requester||f.receiver||f.applicant||f.employee||f.empName||f.subject||f.grantee||""};
+  M.innerHTML=`<div class="card"><h2>เอกสารของฉัน <small>${D.length} ใบ</small><span style="display:flex;gap:6px"><button class="btn sm ghost" id="csv" type="button">⬇ Excel (CSV)</button></span></h2>
+   <input class="in-" id="q" placeholder="ค้นหา เลขที่ ชื่อ รายการ…" value="${esc(ui.q)}">
+   <div class="chips"><button class="chip${!ui.ft?" on":""}" data-ft="" type="button">ทั้งหมด</button>${used.map(t=>`<button class="chip${ui.ft===t.id?" on":""}" data-ft="${t.id}" type="button">${t.e} ${esc(t.t[0])}</button>`).join("")}</div>
+   ${L.length?`<div class="tw"><table class="xl"><tr><th>วันที่</th><th>เลขที่</th><th>แบบฟอร์ม</th><th>ชื่อ / เรื่อง</th><th>ยอด</th><th>ภาษา</th><th></th></tr>${L.map(x=>{const t=TP(x.tpl)||T[0],c=calc(x);return`<tr data-o="${x.id}"><td class="c">${esc(dt(x.date,"th"))}</td><td class="c"><b>${esc(x.no)}</b></td><td>${t.e} ${esc(t.t[0])}</td><td>${esc(who(x))}</td><td class="r">${t.sum==="amount"?money(t.wht?c.net:c.sub,x.cur)+" "+x.cur:t.sum==="hours"?c.sub+" ชม.":t.id==="ce"&&x.f.salary?"":""}</td><td class="c"><span class="lang">${esc((LANGS.find(a=>a[0]===x.lang)||LANGS[0])[1])}</span></td><td class="c" style="white-space:nowrap"><button class="btn sm ghost" data-p="${x.id}" type="button">⬇️ PDF</button> <button class="btn sm ghost" data-dup="${x.id}" type="button" title="ทำสำเนาเป็นใบใหม่">⧉</button></td></tr>`}).join("")}</table></div>`:`<div class="empty">${D.length?"ไม่พบเอกสารที่ค้นหา":"ยังไม่มีเอกสาร · ไปที่ 📝 สร้างเอกสาร เพื่อเริ่มใบแรก"}</div>`}</div>`;
+  $("#q").oninput=e=>{ui.q=e.target.value;saveUi();clearTimeout(vDocs.t);vDocs.t=setTimeout(()=>{vDocs();const i=$("#q");i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)};
+  M.querySelectorAll("[data-ft]").forEach(b=>b.onclick=()=>{ui.ft=b.dataset.ft;saveUi();vDocs()});
+  M.onclick=e=>{const p=e.target.closest("[data-p]"),u=e.target.closest("[data-dup]"),o=e.target.closest("[data-o]");
+    if(p){e.stopPropagation();printDoc(D.find(x=>x.id===p.dataset.p));return}
+    if(u){e.stopPropagation();const s=JSON.parse(JSON.stringify(D.find(x=>x.id===u.dataset.dup)));s.id="";s.no="";s.date=today();s.ts=0;openEd(s);toast("ทำสำเนาแล้ว แก้ข้อมูลแล้วกดบันทึก");return}
+    if(o)openEd(D.find(x=>x.id===o.dataset.o))};
+  $("#csv").onclick=()=>{const rows=[["วันที่","เลขที่","แบบฟอร์ม","ชื่อ/เรื่อง","ยอด","สกุลเงิน","ภาษา"]].concat(L.map(x=>{const t=TP(x.tpl),c=calc(x);return[x.date,x.no,t.t[0],who(x),t.sum==="amount"?(t.wht?c.net:c.sub):t.sum==="hours"?c.sub:"",t.nomoney?"":x.cur,x.lang]}));
+    const csv="﻿"+rows.map(r=>r.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",")).join("\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="documents-"+today()+".csv";a.click()}}
+
+/* ---------- ตั้งค่าบริษัท ---------- */
+function vSet(){const M=$("#main"),c=cfg.co;
+  M.innerHTML=`<div class="card"><h2>🏢 ข้อมูลบริษัท <small>แสดงบนหัวเอกสารทุกใบ</small></h2>
+   <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">${c.logo?`<img src="${esc(c.logo)}" alt="" style="width:64px;height:64px;object-fit:contain;border-radius:12px;box-shadow:0 0 0 1px var(--line)">`:`<div style="width:64px;height:64px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:1.6rem">🏢</div>`}<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm" id="lgUp" type="button">อัปโหลดโลโก้</button>${c.logo?`<button class="btn sm ghost danger" id="lgDel" type="button">ลบโลโก้</button>`:""}</div></div>
+   <div class="fg"><div class="f"><label>ชื่อบริษัท (ไทย)</label><input class="in-" data-c="name" value="${esc(c.name)}" placeholder="บริษัท ตัวอย่าง จำกัด"></div><div class="f"><label>ชื่อบริษัท (อังกฤษ) ใช้กับเอกสาร EN/KO/JA</label><input class="in-" data-c="nameEn" value="${esc(c.nameEn)}" placeholder="Example Co., Ltd."></div>
+   <div class="f w2"><label>ที่อยู่ (ไทย)</label><input class="in-" data-c="addr" value="${esc(c.addr)}"></div><div class="f w2"><label>ที่อยู่ (อังกฤษ)</label><input class="in-" data-c="addrEn" value="${esc(c.addrEn)}"></div>
+   <div class="f"><label>เลขประจำตัวผู้เสียภาษี</label><input class="in-" data-c="tax" value="${esc(c.tax)}" inputmode="numeric"></div><div class="f"><label>โทรศัพท์</label><input class="in-" data-c="phone" value="${esc(c.phone)}"></div></div></div>
+  <div class="card"><h2>ค่าเริ่มต้นเอกสารใหม่</h2><div class="fg">
+   <div class="f"><label>ภาษา</label><select class="in-" id="sL">${LANGS.map(([k,n])=>`<option value="${k}"${cfg.lang===k?" selected":""}>${n}</option>`).join("")}</select></div>
+   <div class="f"><label>สกุลเงิน</label><select class="in-" id="sC">${CUR.map(x=>`<option value="${x[0]}"${cfg.cur===x[0]?" selected":""}>${x[0]} · ${x[2]}</option>`).join("")}</select></div>
+   <div class="f"><label>ปีในเลขที่เอกสาร</label><select class="in-" id="sY"><option value="be"${cfg.year!=="ad"?" selected":""}>พ.ศ. (PV2569-0001)</option><option value="ad"${cfg.year==="ad"?" selected":""}>ค.ศ. (PV2026-0001)</option></select></div>
+   <div class="f"><label>สีหัวเอกสาร</label><input class="in-" type="color" id="sCol" value="${esc(cfg.color||"#2E6F9E")}" style="height:40px;padding:3px"></div></div></div>
+  <div class="card"><h2>💾 ข้อมูล</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="xJ" type="button">⬇️ สำรองเป็นไฟล์</button><button class="btn ghost" id="xI" type="button">⬆️ นำเข้าไฟล์สำรอง</button><button class="btn ghost" id="xDm" type="button">✨ ใส่ข้อมูลตัวอย่าง</button><button class="btn ghost danger" id="xC" type="button">ล้างเอกสารทั้งหมด</button></div><p class="note">เข้าสู่ระบบแล้ว ข้อมูลสำรองขึ้นระบบออนไลน์ให้อัตโนมัติ ใช้กรอกทีละเครื่อง</p></div>`;
+  M.querySelectorAll("[data-c]").forEach(i=>i.oninput=()=>{cfg.co[i.dataset.c]=i.value;saveC()});
+  $("#sL").onchange=e=>{cfg.lang=e.target.value;saveC()};$("#sC").onchange=e=>{cfg.cur=e.target.value;saveC()};$("#sY").onchange=e=>{cfg.year=e.target.value;saveC()};$("#sCol").oninput=e=>{cfg.color=e.target.value;saveC()};
+  $("#lgUp").onclick=()=>$("#logoF").click();const ld=$("#lgDel");if(ld)ld.onclick=()=>{cfg.co.logo="";saveC();vSet()};
+  $("#xJ").onclick=()=>{const b=new Blob([JSON.stringify({app:"edm-form",v:1,docs:D,cfg},null,1)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="form-backup-"+today()+".json";a.click()};
+  $("#xI").onclick=()=>$("#impF").click();$("#xDm").onclick=()=>{if(D.length&&!confirm("ข้อมูลตัวอย่างจะแทนเอกสารที่มีอยู่ ต้องการต่อ?"))return;demo()};
+  $("#xC").onclick=()=>{if(!confirm("ล้างเอกสารทั้งหมด? ย้อนกลับไม่ได้"))return;D=[];cfg.seq={};cfg.demo=false;save();saveC();toast("ล้างแล้ว");vSet()}}
+$("#logoF").onchange=e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const img=new Image();img.onload=()=>{const s=Math.min(1,240/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext("2d").drawImage(img,0,0,c.width,c.height);cfg.co.logo=c.toDataURL("image/png");saveC();URL.revokeObjectURL(img.src);vSet();toast("ใส่โลโก้แล้ว ✓")};img.src=URL.createObjectURL(f)};
+$("#impF").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{const d=JSON.parse(t);if(d.app!=="edm-form"||!Array.isArray(d.docs))throw 0;if(D.length&&!confirm("นำเข้า "+d.docs.length+" ใบ แทนข้อมูลเดิม?"))return;D=d.docs;cfg=Object.assign(cfg,d.cfg||{},{demo:false});save();saveC();toast("นำเข้า "+D.length+" ใบแล้ว ✓");render()}).catch(()=>alert("ไฟล์ไม่ถูกต้อง"));e.target.value=""};
+
+/* ---------- ตัวอย่าง (ข้อมูลสมมติ) ---------- */
+function demo(){const d=k=>{const x=new Date();x.setDate(x.getDate()+k);return ymd(x)};
+  cfg.co=Object.assign(cfg.co,{name:cfg.co.name||"บริษัท ตัวอย่าง จำกัด",nameEn:cfg.co.nameEn||"Example Co., Ltd.",addr:cfg.co.addr||"99 ถนนสมมติ แขวงตัวอย่าง เขตตัวอย่าง กรุงเทพฯ 10000",addrEn:cfg.co.addrEn||"99 Sample Rd., Bangkok 10000",tax:cfg.co.tax||"0105500000000",phone:cfg.co.phone||"02-000-0000"});cfg.seq={};cfg.demo=true;D=[];
+  const mk=(tpl,o)=>{const t=TP(tpl),n=nextNo(t,o.date);cfg.seq[n.key]=n.n;D.push(Object.assign({id:uid("f"),tpl,no:n.no,lang:"th",cur:"THB",pm:t.pay?"transfer":"",items:[],f:{},ts:Date.now()},o))};
+  mk("pv",{date:d(-6),f:{payee:"ร้านตัวอย่างการช่าง",addr:"12 หมู่บ้านตัวอย่าง นนทบุรี",prep:"สมหญิง บัญชีดี",appr:"สมชาย ผู้จัดการ",bank:"กสิกรไทย",whtPct:"3"},items:[{desc:"ค่าซ่อมเครื่องปรับอากาศ ห้องประชุม",amount:"4500"},{desc:"ค่าอะไหล่คอมเพรสเซอร์",amount:"2800"}]});
+  mk("pc",{date:d(-4),f:{requester:"มานี ธุรการ",dept:"ธุรการ",purpose:"ค่าใช้จ่ายสำนักงานประจำสัปดาห์",appr:"สมชาย ผู้จัดการ",paid:"สมหญิง บัญชีดี"},items:[{desc:"ค่าน้ำดื่ม",amount:"180"},{desc:"ค่าส่งเอกสาร (ไปรษณีย์)",amount:"95"},{desc:"ค่าแท็กซี่ไปธนาคาร",amount:"160"}]});
+  mk("te",{date:d(-2),lang:"bi",f:{requester:"วิชัย ขายเก่ง",dept:"ฝ่ายขาย",trip:"พบลูกค้า จ.ชลบุรี",from:d(-5),to:d(-4),purpose:"นำเสนอสินค้าและติดตั้งตัวอย่าง",sup:"สุดา หัวหน้าขาย",appr:"สมชาย ผู้จัดการ"},items:[{date:d(-5),cat:"ค่าน้ำมัน",desc:"กรุงเทพฯ – ชลบุรี ไป-กลับ",amount:"1200"},{date:d(-5),cat:"ค่าทางด่วน",desc:"มอเตอร์เวย์",amount:"240"},{date:d(-5),cat:"ค่าที่พัก",desc:"โรงแรม 1 คืน",amount:"1100"},{date:d(-4),cat:"เบี้ยเลี้ยง",desc:"2 วัน x 300",amount:"600"}]});
+  mk("lv",{date:d(-1),f:{applicant:"มานี ธุรการ",empid:"E012",pos:"เจ้าหน้าที่ธุรการ",dept:"ธุรการ",leaveType:"personal",from:d(3),to:d(3),days:"1",contact:"081-000-0000",reason:"ติดต่อราชการที่อำเภอ",sup:"สมชาย ผู้จัดการ"}});
+  mk("pr",{date:d(0),lang:"en",cur:"USD",f:{requester:"Somchai M.",dept:"IT",need:d(10),supplier:"Sample Tech Co.",reason:"Replace old laptops for new staff",sup:"Suda H.",appr:"Managing Director"},items:[{desc:"Laptop 14\" i5 / 16GB",qty:"2",unit:"pcs",price:"720"},{desc:"Wireless mouse",qty:"2",unit:"pcs",price:"15"}]});
+  save();saveC();ui.v="docs";saveUi();render();toast("ใส่ตัวอย่างแล้ว ✓ (ข้อมูลสมมติ)")}
+
+function render(){$("#main").onclick=null;$$("#tabs [data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v||(ui.v==="ed"&&b.dataset.v==="new"&&cur&&!cur.id)||(ui.v==="ed"&&b.dataset.v==="docs"&&cur&&cur.id)));
+  if(ui.v==="ed"&&!cur)ui.v="new";({new:vNew,docs:vDocs,set:vSet,ed:vEd}[ui.v]||vNew)()}
+$("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(!b)return;if(ui.v==="ed"&&cur&&!confirm("ออกจากหน้านี้? (ถ้ายังไม่กดบันทึก ข้อมูลที่กรอกจะหาย)"))return;cur=null;ui.v=b.dataset.v;saveUi();render();scrollTo(0,0)};
+$("#dlgX").onclick=()=>$("#dlg").close();
+window.addEventListener("storage",e=>{if(e.key===K.docs||e.key===K.cfg){D=LS.get(K.docs,[])||[];cfg=Object.assign(cfg,LS.get(K.cfg,{})||{});if(ui.v!=="ed")render()}});
+if(/[?&]demo=1/.test(location.search)&&!D.length)demo();else render();
+window.EDM_FORM={words,T,docHtml};
+})();
+</script>
+<script src="../assets/icons.js?v=10"></script>
+<script>/* ไอคอนวาดเองบนแท็บ/โลโก้ */(function(){if(!window.EDM_ICON)return;var I={new:["doc","#2E6F9E"],docs:["list","#2F80C9"],set:["sliders","#5B6B7F"]};document.querySelectorAll("#tabs [data-v]").forEach(function(b){var k=I[b.dataset.v];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.trim().replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON("doc",{color:"#2E6F9E"}))}})()</script>
+<script src="../assets/docshare.js?v=2" defer></script>
+<script src="../assets/track.js?v=6" defer></script><script src="../assets/member.js?v=109" defer></script>
+</body>
+</html>
