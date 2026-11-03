@@ -7,7 +7,7 @@
 <script>if(window.top!==window.self){try{if(window.top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.visibility="hidden";try{window.top.location.replace(location.href)}catch(_){}}}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>แบบฟอร์มเอกสารออนไลน์ ใบสำคัญจ่าย ใบเบิกเงินสดย่อย ใบลา ใบขออนุมัติจัดซื้อ หลายภาษา โหลด PDF | Excel Data Master</title>
-<meta name="description" content="แบบฟอร์มเอกสารที่องค์กรใช้บ่อย 14 แบบ ใบสำคัญจ่าย ใบสำคัญรับ ใบเบิกเงินสดย่อย เงินทดรองจ่าย ใบรับรองแทนใบเสร็จ ใบขออนุมัติจัดซื้อ ใบลา ขอทำ OT บันทึกข้อความ หนังสือรับรองการทำงาน หนังสือมอบอำนาจ แค่กรอกข้อมูล เลขที่รันอัตโนมัติ จำนวนเงินเป็นตัวหนังสือ เลือกภาษา ไทย อังกฤษ เกาหลี ญี่ปุ่น เลือกสกุลเงินได้ โหลด PDF">
+<meta name="description" content="แบบฟอร์มเอกสาร 50 แบบ ครบทุกแผนก บัญชี จัดซื้อ คลังสินค้า HR ขาย ธุรการ IT ใบสำคัญจ่าย ใบสำคัญรับ ใบเบิกเงินสดย่อย เงินทดรองจ่าย ใบรับรองแทนใบเสร็จ ใบสั่งซื้อ ใบรับสินค้า ใบเบิกวัสดุ ใบขออนุมัติจัดซื้อ ใบลา ขอทำ OT ใบสมัครงาน หนังสือเสนอจ้าง ใบแจ้งซ่อม ใบขอใช้รถ บันทึกการประชุม บันทึกข้อความ หนังสือรับรองการทำงาน หนังสือมอบอำนาจ แค่กรอกข้อมูล เลขที่รันอัตโนมัติ จำนวนเงินเป็นตัวหนังสือ เลือกภาษา ไทย อังกฤษ เกาหลี ญี่ปุ่น เลือกสกุลเงินได้ โหลด PDF">
 <link rel="canonical" href="https://exceldatamaster.com/form/">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
@@ -78,7 +78,7 @@ table.xl{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 <link rel="stylesheet" href="../assets/skin.css?v=1">
 <script src="../assets/skin.js?v=1"></script>
 <script src="../assets/lock.js?v=3"></script>
-<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="แบบฟอร์มเอกสารออนไลน์ แค่กรอก ได้ PDF | Excel Data Master"><meta property="og:description" content="ใบสำคัญจ่าย ใบเบิกเงินสดย่อย ใบลา ใบขออนุมัติจัดซื้อ และอีกหลายแบบ เลือกภาษา ไทย อังกฤษ เกาหลี ญี่ปุ่น เลือกสกุลเงินได้"><meta property="og:url" content="https://exceldatamaster.com/form/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-form.jpg?v=1">
+<meta property="og:type" content="website"><meta property="og:locale" content="th_TH"><meta property="og:title" content="แบบฟอร์มเอกสารออนไลน์ แค่กรอก ได้ PDF | Excel Data Master"><meta property="og:description" content="ใบสำคัญจ่าย ใบเบิกเงินสดย่อย ใบลา ใบสั่งซื้อ ใบแจ้งซ่อม รวม 50 แบบทุกแผนก เลือกภาษา ไทย อังกฤษ เกาหลี ญี่ปุ่น เลือกสกุลเงินได้"><meta property="og:url" content="https://exceldatamaster.com/form/"><meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-form.jpg?v=1">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://exceldatamaster.com/assets/shop/og-form.jpg?v=1">
 <meta name="theme-color" content="#2E6F9E">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="แบบฟอร์ม">
@@ -102,7 +102,7 @@ const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",
 const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),today=()=>ymd(new Date());
 const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return isFinite(n)?n:0};
-function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
+function toast(m){const t=$("#toast");if(!t)return;t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
 
 /* ---------- ภาษา ---------- */
 const LANGS=[["th","ไทย"],["en","English"],["bi","ไทย + English"],["ko","한국어"],["ja","日本語"]];
@@ -199,6 +199,127 @@ const T=[
 ];
 /* ป้ายช่องที่ไม่มีใน W */
 Object.assign(W,{prep:W.prepared,appr:W.approved,chk:W.checked,paid:W.paidS,sup:W.supervisor,hrn:W.hr,sPos:["ตำแหน่งผู้ลงนาม","Signatory position","서명자 직위","署名者役職"],gAddr:["ที่อยู่ผู้มอบอำนาจ","Grantor address","위임인 주소","委任者住所"],gid:["เลขบัตรผู้รับมอบอำนาจ","Attorney ID No.","수임인 신분증 번호","受任者身分証番号"],geAddr:["ที่อยู่ผู้รับมอบอำนาจ","Attorney address","수임인 주소","受任者住所"],w1:W.witness,w2:W.witness});
+/* ---------- แบบฟอร์มเพิ่ม (4 พ.ย.) ทุกแผนก ---------- */
+Object.assign(W,{
+dueDate:["วันที่ต้องจ่าย","Payment due date","지급 예정일","支払予定日"],invRef:["เลขที่ใบแจ้งหนี้ / อ้างอิง","Invoice / Ref. No.","송장 / 참조번호","請求書・参照番号"],
+fund:["วงเงินสดย่อย","Petty cash fund","소액현금 한도","小口現金枠"],custodian:["ผู้รักษาเงินสดย่อย","Custodian","관리자","管理者"],pcRef:["เลขที่ใบเบิก","Voucher No.","전표 번호","伝票番号"],
+customer:["ลูกค้า","Customer","고객","顧客"],contactP:["ผู้ติดต่อ","Contact person","담당자","担当者"],vendor:["ผู้ขาย","Vendor","공급업체","仕入先"],vAddr:["ที่อยู่ผู้ขาย","Vendor address","공급업체 주소","仕入先住所"],
+vat:["ภาษีมูลค่าเพิ่ม","VAT","부가가치세","消費税"],grand:["รวมทั้งสิ้น","Grand total","총계","総合計"],delivery:["กำหนดส่งของ","Delivery date","납기일","納期"],payTerm:["เงื่อนไขชำระเงิน","Payment terms","결제 조건","支払条件"],shipTo:["สถานที่ส่งของ","Ship to","배송지","納品先"],
+poRef:["อ้างอิงใบสั่งซื้อ","PO ref.","발주 번호","発注番号"],code:["รหัส","Code","코드","コード"],ordered:["จำนวนสั่ง","Ordered","주문 수량","発注数"],receivedQ:["จำนวนรับ","Received","입고 수량","受入数"],cond:["สภาพ / หมายเหตุ","Condition / Remarks","상태 / 비고","状態・備考"],
+fromWh:["จากคลัง / สาขา","From (location)","출고처","移動元"],toWh:["ไปคลัง / สาขา","To (location)","입고처","移動先"],replyBy:["ตอบกลับภายใน","Reply by","회신 기한","回答期限"],
+supA:["ผู้ขาย A","Supplier A","공급업체 A","仕入先A"],supB:["ผู้ขาย B","Supplier B","공급업체 B","仕入先B"],supC:["ผู้ขาย C","Supplier C","공급업체 C","仕入先C"],priceA:["ราคา A","Price A","가격 A","価格A"],priceB:["ราคา B","Price B","가격 B","価格B"],priceC:["ราคา C","Price C","가격 C","価格C"],selected:["ผู้ขายที่เลือก","Selected supplier","선정 업체","選定業者"],
+borrower:["ผู้ยืม","Borrower","대여자","借用者"],borrowDate:["วันที่ยืม","Borrow date","대여일","借用日"],returnDate:["กำหนดคืน","Return date","반납 예정일","返却予定日"],lender:["ผู้ให้ยืม","Lender","대여 담당","貸出担当"],returner:["ผู้รับคืน","Received back by","반납 확인자","返却確認者"],serial:["เลขที่ / Serial","Serial No.","일련번호","シリアル番号"],
+deliverer:["ผู้ส่งของ","Delivered by","배송자","配送者"],receiverG:["ผู้รับของ","Received by","인수자","受領者"],storekeeper:["เจ้าหน้าที่คลัง","Storekeeper","창고 담당","倉庫担当"],inspector:["ผู้ตรวจรับ","Inspected by","검수자","検収者"],
+fullName:["ชื่อ-นามสกุล","Full name","성명","氏名"],birth:["วันเกิด","Date of birth","생년월일","生年月日"],email:["อีเมล","Email","이메일","メール"],posApplied:["ตำแหน่งที่สมัคร","Position applied for","지원 직무","応募職種"],expSalary:["เงินเดือนที่ต้องการ","Expected salary","희망 급여","希望給与"],availDate:["พร้อมเริ่มงาน","Available from","입사 가능일","入社可能日"],
+edu:["วุฒิการศึกษา / สถาบัน","Education / Institution","학력 / 학교","学歴・学校"],skills:["ทักษะ / ภาษา","Skills / Languages","기술 / 언어","スキル・語学"],company:["บริษัท","Company","회사","会社名"],period:["ช่วงเวลา","Period","기간","期間"],duty:["หน้าที่","Duties","담당 업무","職務内容"],
+headcount:["จำนวนที่ต้องการ (คน)","Headcount","인원","人数"],empType:["ประเภทการจ้าง","Employment type","고용 형태","雇用形態"],full:["พนักงานประจำ","Permanent","정규직","正社員"],contract:["สัญญาจ้าง","Contract","계약직","契約社員"],part:["พาร์ทไทม์","Part-time","파트타임","パート"],
+qualif:["คุณสมบัติ","Qualifications","자격 요건","応募資格"],budget:["งบประมาณเงินเดือน","Salary budget","급여 예산","給与予算"],posType:["เหตุผลการขอ","Request type","요청 사유","要請区分"],newPos:["ตำแหน่งใหม่","New position","신규 직무","新規"],replace:["ทดแทนคนเดิม","Replacement","결원 충원","欠員補充"],
+prob:["ทดลองงาน (วัน)","Probation (days)","수습 기간(일)","試用期間(日)"],benefit:["สวัสดิการ","Benefits","복리후생","福利厚生"],acceptS:["ผู้รับข้อเสนอ","Accepted by","수락자","承諾者"],
+criteria:["หัวข้อประเมิน","Criteria","평가 항목","評価項目"],score:["คะแนน (1-5)","Score (1-5)","점수(1-5)","点数(1-5)"],comment:["ความเห็น","Comments","의견","コメント"],totalScore:["รวมคะแนน","Total score","총점","合計点"],
+result:["ผลการประเมิน","Result","평가 결과","評価結果"],pass:["ผ่านทดลองงาน","Passed","합격","合格"],extend:["ขยายเวลาทดลองงาน","Extend probation","수습 연장","試用延長"],fail:["ไม่ผ่าน","Not passed","불합격","不合格"],evaluator:["ผู้ประเมิน","Evaluator","평가자","評価者"],
+offDate:["วันที่เกิดเหตุ","Incident date","발생일","発生日"],offense:["รายละเอียดการกระทำผิด","Details of misconduct","위반 내용","違反内容"],level:["ระดับการเตือน","Warning level","경고 단계","警告段階"],wl1:["ตักเตือนครั้งที่ 1","First warning","1차 경고","第1回警告"],wl2:["ตักเตือนครั้งที่ 2","Second warning","2차 경고","第2回警告"],wlF:["ตักเตือนครั้งสุดท้าย","Final warning","최종 경고","最終警告"],
+fixReq:["สิ่งที่ต้องแก้ไข","Required correction","시정 사항","是正事項"],ackEmp:["พนักงานรับทราบ","Employee acknowledgment","직원 확인","本人確認"],last:["วันที่มีผล","Effective date","효력 발생일","効力発生日"],
+origDate:["วันทำงานเดิม","Original work date","기존 근무일","元の勤務日"],newDate:["วันที่ขอเปลี่ยน","Requested date","변경 요청일","変更希望日"],swapWith:["สลับกับ","Swap with","교대자","交代相手"],
+workType:["ลักษณะงาน","Work type","근무 형태","勤務形態"],wfh:["ทำงานที่บ้าน","Work from home","재택근무","在宅勤務"],offsite:["ทำงานนอกสถานที่","Off-site work","외근","外勤"],
+course:["หลักสูตร","Course","교육 과정","研修名"],provider:["ผู้จัด / สถาบัน","Provider","교육 기관","主催者"],cost:["ค่าใช้จ่าย","Cost","비용","費用"],benefitT:["ประโยชน์ที่คาดว่าจะได้","Expected benefit","기대 효과","期待効果"],
+fromEmp:["ผู้ส่งมอบ","Handed over by","인계자","引継者"],toEmp:["ผู้รับมอบ","Taken over by","인수자","後任者"],taskH:["งาน / เอกสาร","Task / Document","업무 / 서류","業務・書類"],statusH:["สถานะ","Status","상태","状況"],
+asset:["ทรัพย์สิน","Asset","자산","資産"],returned:["คืนแล้ว / สภาพ","Returned / Condition","반납 / 상태","返却・状態"],deductFrom:["หักคืนจากเดือน","Deduct from (month)","공제 월","控除月"],tIn:["เวลาเข้า","Time in","출근","出勤"],tOut:["เวลาออก","Time out","퇴근","退勤"],
+nextStep:["ขั้นตอนถัดไป","Next step","다음 단계","次のアクション"],salesRep:["พนักงานขาย","Sales rep.","영업 담당","営業担当"],normalPrice:["ราคาปกติ","Normal price","정상가","定価"],discPct:["ส่วนลด (%)","Discount (%)","할인율(%)","値引率(%)"],offerPrice:["ราคาที่เสนอ","Offer price","제안가","提示価格"],
+location:["สถานที่","Location","위치","場所"],problem:["อาการ / ปัญหา","Problem","문제 내용","不具合内容"],urgency:["ความเร่งด่วน","Urgency","긴급도","緊急度"],urgent:["ด่วนมาก","Urgent","긴급","至急"],normal:["ปกติ","Normal","보통","通常"],low:["ไม่เร่งด่วน","Low","낮음","低"],tech:["ผู้ซ่อม","Repaired by","수리 담당","修理担当"],fix:["ผลการซ่อม","Repair result","수리 결과","修理結果"],
+dest:["ปลายทาง","Destination","목적지","行先"],pax:["จำนวนผู้โดยสาร","Passengers","탑승 인원","乗車人数"],vehicle:["ทะเบียนรถ","Vehicle","차량","車両"],driver:["ผู้ขับ","Driver","운전자","運転手"],mileOut:["เลขไมล์ออก","Odometer out","출발 주행거리","出発時走行距離"],mileIn:["เลขไมล์กลับ","Odometer in","도착 주행거리","帰着時走行距離"],
+room:["ห้องประชุม","Room","회의실","会議室"],attendees:["จำนวนผู้เข้าประชุม","Attendees","참석 인원","参加人数"],equip:["อุปกรณ์ที่ต้องการ","Equipment needed","필요 장비","必要機材"],
+system:["ระบบ / โปรแกรม","System","시스템","システム"],access:["สิทธิ์ที่ขอ","Access level","권한 수준","権限"],reqType:["ประเภทคำขอ","Request type","요청 유형","申請区分"],newAcc:["ขอใหม่","New","신규","新規"],change:["เปลี่ยนแปลง","Change","변경","変更"],revoke:["ยกเลิก","Revoke","해지","削除"],itS:["ฝ่ายไอที","IT","IT팀","情報システム部"],
+incTime:["เวลาเกิดเหตุ","Time","발생 시각","発生時刻"],persons:["ผู้เกี่ยวข้อง","Persons involved","관련자","関係者"],damage:["ความเสียหาย / การบาดเจ็บ","Damage / Injury","피해 내용","損害・負傷"],actionT:["การดำเนินการ","Action taken","조치 사항","対応内容"],prevent:["แนวทางป้องกัน","Preventive action","재발 방지","再発防止策"],reporter:["ผู้รายงาน","Reported by","보고자","報告者"],
+carrier:["ผู้นำออก","Carried by","반출자","持出者"],willReturn:["การนำกลับ","Return","반입 여부","返却"],retYes:["นำกลับเข้ามา","Will return","반입 예정","返却予定あり"],retNo:["ไม่นำกลับ","No return","반입 없음","返却なし"],guard:["รปภ.","Security","경비","警備"],
+meeting:["ชื่อการประชุม","Meeting","회의명","会議名"],attend:["ผู้เข้าประชุม","Attendees","참석자","出席者"],agenda:["วาระ / สาระสำคัญ","Agenda / Key points","안건 / 주요 내용","議題・要点"],owner:["ผู้รับผิดชอบ","Owner","담당자","担当者"],dueD:["กำหนดเสร็จ","Due","기한","期限"],recorder:["ผู้บันทึก","Recorded by","작성자","記録者"],chair:["ประธาน","Chairperson","의장","議長"],time:["เวลา","Time","시간","時間"],
+doc:["เอกสาร","Document","문서","書類"],copies:["จำนวนชุด","Copies","부수","部数"],sender:["ผู้ส่ง","Sent by","발송자","送付者"],recipient:["ผู้รับ","Received by","수령자","受取人"],
+vAcc:["ผู้ขายยืนยัน","Vendor acceptance","공급업체 확인","仕入先承諾"],claim:["เหตุผลการคืน","Reason","반품 사유","返品理由"]});
+const NEW_T=[
+ /* การเงิน & บัญชี */
+ {id:"pq",pre:"PQ",e:"📤",g:"การเงิน",t:["ใบขออนุมัติจ่ายเงิน","PAYMENT REQUEST","지급 요청서","支払依頼書"],d:"ขออนุมัติจ่ายเงินให้ผู้ขาย ก่อนโอน",
+  f:[["payee","t"],["invRef","t"],["dueDate","d"],["purpose","t"],["note","a",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",wht:1,pay:"pay",sg:[["requester","requester"],["checked","chk"],["approved","appr"]],keep:["requester","chk","appr","bank"]},
+ {id:"cr",pre:"CR",e:"🔁",g:"การเงิน",t:["ใบขอเบิกชดเชยเงินสดย่อย","PETTY CASH REPLENISHMENT","소액현금 보충 청구서","小口現金補充申請書"],d:"รวมใบเบิกเงินสดย่อยทั้งรอบ ขอเติมวงเงิน",
+  f:[["custodian","t"],["dept","t"],["fund","m"],["from","d"],["to","d"]],it:[["date","d",90],["pcRef","t",110],["desc","t"],["amount","m",110]],sum:"amount",sg:[["custodian","custodian"],["checked","chk"],["approved","appr"]],keep:["custodian","dept","fund","chk","appr"]},
+ {id:"rf",pre:"RF",e:"↩️",g:"การเงิน",t:["ใบขอคืนเงินลูกค้า","REFUND REQUEST","환불 요청서","返金申請書"],d:"คืนเงินให้ลูกค้า ยกเลิกออเดอร์ โอนเกิน",
+  f:[["customer","t"],["invRef","t"],["reason","t",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",pay:"pay",sg:[["requester","requester"],["approved","appr"],["paidS","paid"]],keep:["appr","paid"]},
+ {id:"sa",pre:"SA",e:"💳",g:"การเงิน",t:["ใบขอเบิกเงินเดือนล่วงหน้า","SALARY ADVANCE REQUEST","급여 가불 신청서","給与前払申請書"],d:"พนักงานขอเบิกเงินเดือนก่อน หักคืนเดือนถัดไป",
+  f:[["employee","t"],["empid","t"],["dept","t"],["deductFrom","t"],["reason","t",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",pay:"pay",sg:[["employee","employee"],["supervisor","sup"],["approved","appr"]],keep:["empid","dept","sup","appr"]},
+ /* จัดซื้อ & คลังสินค้า */
+ {id:"po",pre:"PO",e:"📦",g:"จัดซื้อ & คลัง",t:["ใบสั่งซื้อ","PURCHASE ORDER","발주서","発注書"],d:"สั่งซื้อสินค้า/บริการจากผู้ขาย คิด VAT ได้",
+  f:[["vendor","t"],["contactP","t"],["vAddr","t",1],["delivery","d"],["payTerm","t"],["shipTo","t",1]],it:[["desc","t"],["qty","n",60],["unit","t",60],["price","m",100],["amount","amt",110]],sum:"amount",vat:1,sg:[["prepared","prep"],["approved","appr"],["vAcc","vAccN"]],keep:["prep","appr","payTerm","shipTo"]},
+ {id:"rq",pre:"RFQ",e:"📨",g:"จัดซื้อ & คลัง",t:["ใบขอใบเสนอราคา","REQUEST FOR QUOTATION","견적 요청서","見積依頼書"],d:"ส่งให้ผู้ขายเสนอราคา",nomoney:1,
+  f:[["vendor","t"],["contactP","t"],["replyBy","d"],["delivery","d"],["note","a",1]],it:[["desc","t"],["qty","n",70],["unit","t",70]],sg:[["prepared","prep"]],keep:["prep"]},
+ {id:"qc",pre:"QC",e:"⚖️",g:"จัดซื้อ & คลัง",t:["ใบเปรียบเทียบราคา","QUOTATION COMPARISON","견적 비교표","相見積比較表"],d:"เทียบราคา 3 ผู้ขาย เลือกรายที่คุ้มสุด",
+  f:[["supA","t"],["supB","t"],["supC","t"],["selected","t"],["reason","t",1]],it:[["desc","t"],["qty","n",50],["priceA","m",90],["priceB","m",90],["priceC","m",90]],sg:[["prepared","prep"],["checked","chk"],["approved","appr"]],keep:["prep","chk","appr"]},
+ {id:"gr",pre:"GR",e:"📥",g:"จัดซื้อ & คลัง",t:["ใบรับสินค้า","GOODS RECEIVED NOTE","입고 확인서","受入伝票"],d:"ตรวจรับของเข้า เทียบกับใบสั่งซื้อ",nomoney:1,
+  f:[["vendor","t"],["poRef","t"],["invRef","t"]],it:[["code","t",80],["desc","t"],["ordered","n",70],["receivedQ","n",70],["unit","t",60],["cond","t",120]],sg:[["receiverG","rcv"],["inspector","insp"],["storekeeper","store"]],keep:["rcv","insp","store"]},
+ {id:"mr",pre:"MR",e:"🧰",g:"จัดซื้อ & คลัง",t:["ใบเบิกวัสดุ / สินค้าจากคลัง","MATERIAL REQUISITION","자재 출고 요청서","資材出庫依頼書"],d:"แผนกขอเบิกของจากคลังไปใช้",nomoney:1,
+  f:[["requester","t"],["dept","t"],["purpose","t",1]],it:[["code","t",80],["desc","t"],["qty","n",70],["unit","t",70]],sg:[["requester","requester"],["approved","appr"],["storekeeper","store"]],keep:["dept","appr","store"]},
+ {id:"st",pre:"TF",e:"🚚",g:"จัดซื้อ & คลัง",t:["ใบโอนย้ายสินค้า","STOCK TRANSFER","재고 이동표","在庫移動票"],d:"ย้ายของระหว่างคลัง/สาขา",nomoney:1,
+  f:[["fromWh","t"],["toWh","t"],["note","a",1]],it:[["code","t",80],["desc","t"],["qty","n",70],["unit","t",70]],sg:[["deliverer","dlv"],["receiverG","rcv"],["approved","appr"]],keep:["fromWh","toWh","appr"]},
+ {id:"dn",pre:"DO",e:"🛻",g:"จัดซื้อ & คลัง",t:["ใบส่งของ","DELIVERY NOTE","납품서","納品書"],d:"ส่งของให้ลูกค้าเซ็นรับ",nomoney:1,
+  f:[["customer","t"],["contactP","t"],["addr","t",1],["poRef","t"]],it:[["code","t",80],["desc","t"],["qty","n",70],["unit","t",70]],sg:[["deliverer","dlv"],["receiverG","rcv"]],keep:["dlv"]},
+ {id:"eb",pre:"EB",e:"🔧",g:"จัดซื้อ & คลัง",t:["ใบยืม-คืนอุปกรณ์","EQUIPMENT LOAN FORM","장비 대여 신청서","備品貸出票"],d:"ยืมโน้ตบุ๊ก เครื่องมือ อุปกรณ์ของบริษัท",nomoney:1,
+  f:[["borrower","t"],["dept","t"],["borrowDate","d"],["returnDate","d"],["purpose","t",1]],it:[["desc","t"],["serial","t",120],["qty","n",50],["cond","t",120]],sg:[["borrower","borrower"],["lender","lender"],["returner","returner"]],keep:["lender","returner"]},
+ /* บุคคล (HR) */
+ {id:"ja",pre:"JA",e:"🧑‍💼",g:"บุคคล",t:["ใบสมัครงาน","JOB APPLICATION","입사 지원서","応募書"],d:"ข้อมูลผู้สมัคร การศึกษา ประวัติการทำงาน",nomoney:1,
+  f:[["posApplied","t"],["expSalary","t"],["fullName","t"],["birth","d"],["idcard","t"],["phone","t"],["email","t"],["availDate","d"],["addr","t",1],["edu","t",1],["skills","t",1]],it:[["company","t"],["pos","t",120],["period","t",110],["duty","t"]],sg:[["applicant","fullName"],["hr","hrn"]],keep:["hrn"]},
+ {id:"mp",pre:"MP",e:"👥",g:"บุคคล",t:["ใบขออัตรากำลังคน","MANPOWER REQUISITION","인력 충원 요청서","人員補充申請書"],d:"แผนกขอรับพนักงานเพิ่ม",nomoney:1,
+  f:[["dept","t"],["pos","t"],["headcount","n"],["need","d"],["posType","sel",1,0,["newPos","replace"]],["empType","sel",1,0,["full","contract","part"]],["budget","t"],["qualif","a",1],["reason","t",1]],sg:[["requester","requester"],["approved","appr"],["hr","hrn"]],keep:["dept","appr","hrn"]},
+ {id:"ol",pre:"OL",e:"🤝",g:"บุคคล",t:["หนังสือเสนอจ้างงาน","OFFER LETTER","채용 제안서","採用通知書"],d:"เสนอตำแหน่ง เงินเดือน วันเริ่มงาน",
+  f:[["fullName","t"],["pos","t"],["dept","t"],["start","d"],["salary","m"],["prob","n"],["benefit","t",1],["replyBy","d"],["signer","t"],["sPos","t"]],body:"ol",hide:["fullName","pos","dept","start","salary","prob","benefit","replyBy"],sg:[["signer","signer"],["acceptS","fullName"]],keep:["signer","sPos","prob","benefit"]},
+ {id:"ev",pre:"EV",e:"📊",g:"บุคคล",t:["แบบประเมินผลทดลองงาน","PROBATION EVALUATION","수습 평가서","試用期間評価表"],d:"ให้คะแนนรายหัวข้อ สรุปผ่าน/ไม่ผ่าน",nomoney:1,
+  f:[["employee","t"],["pos","t"],["dept","t"],["from","d"],["to","d"],["result","sel",1,0,["pass","extend","fail"]],["comment","a",1]],it:[["criteria","t"],["score","n",90],["comment","t"]],sum:"score",sumL:"totalScore",sg:[["evaluator","evaluator"],["hr","hrn"],["approved","appr"]],keep:["evaluator","hrn","appr"]},
+ {id:"wl",pre:"WL",e:"⚠️",g:"บุคคล",t:["หนังสือตักเตือน","WARNING LETTER","경고장","警告書"],d:"บันทึกการกระทำผิดของพนักงาน",nomoney:1,
+  f:[["employee","t"],["empid","t"],["pos","t"],["dept","t"],["offDate","d"],["level","sel",1,0,["wl1","wl2","wlF"]],["offense","a",1],["fixReq","a",1]],sg:[["supervisor","sup"],["hr","hrn"],["ackEmp","employee"]],keep:["sup","hrn"]},
+ {id:"rs",pre:"RS",e:"👋",g:"บุคคล",t:["หนังสือลาออก","RESIGNATION LETTER","사직서","退職届"],d:"พนักงานแจ้งลาออก พร้อมวันมีผล",nomoney:1,
+  f:[["employee","t"],["pos","t"],["dept","t"],["last","d"],["reason","t",1]],body:"rs",hide:["employee","pos","dept","last","reason"],sg:[["employee","employee"],["supervisor","sup"],["hr","hrn"]],keep:[]},
+ {id:"sw",pre:"SW",e:"🔄",g:"บุคคล",t:["ใบขอสลับวันหยุด / เปลี่ยนกะ","SHIFT / DAY-OFF SWAP REQUEST","근무 교대 신청서","勤務交代申請書"],d:"ขอสลับวันทำงานกับเพื่อนร่วมงาน",nomoney:1,
+  f:[["employee","t"],["dept","t"],["origDate","d"],["newDate","d"],["swapWith","t"],["reason","t",1]],sg:[["employee","employee"],["swapWith","swapWith"],["supervisor","sup"]],keep:["dept","sup"]},
+ {id:"wf",pre:"WF",e:"🏠",g:"บุคคล",t:["ใบขอทำงานนอกสถานที่ / WFH","REMOTE / OFF-SITE WORK REQUEST","재택·외근 신청서","在宅・外勤申請書"],d:"ขออนุมัติทำงานที่บ้านหรือนอกสถานที่",nomoney:1,
+  f:[["employee","t"],["dept","t"],["workType","sel",1,0,["wfh","offsite"]],["from","d"],["to","d"],["location","t"],["contact","t"],["task","a",1]],sg:[["employee","employee"],["supervisor","sup"]],keep:["dept","sup"]},
+ {id:"mpn",pre:"TA",e:"🕘",g:"บุคคล",t:["ใบแก้ไขเวลา / ลืมสแกนนิ้ว","TIME CORRECTION REQUEST","근태 정정 신청서","勤怠修正申請書"],d:"ลืมลงเวลา ขอแก้ไขเวลาเข้า-ออก",nomoney:1,
+  f:[["employee","t"],["empid","t"],["dept","t"]],it:[["date","d",100],["tIn","tm",80],["tOut","tm",80],["reason","t"]],sg:[["employee","employee"],["supervisor","sup"],["hr","hrn"]],keep:["empid","dept","sup","hrn"]},
+ {id:"tr",pre:"TR",e:"📚",g:"บุคคล",t:["ใบขออนุมัติฝึกอบรม","TRAINING REQUEST","교육 신청서","研修申請書"],d:"ขอไปอบรม สัมมนา พร้อมค่าใช้จ่าย",
+  f:[["employee","t"],["pos","t"],["dept","t"],["course","t",1],["provider","t"],["location","t"],["from","d"],["to","d"],["cost","m"],["benefitT","a",1]],sg:[["employee","employee"],["supervisor","sup"],["approved","appr"]],keep:["dept","sup","appr"]},
+ {id:"ho",pre:"HO",e:"📋",g:"บุคคล",t:["ใบส่งมอบงาน","WORK HANDOVER FORM","업무 인수인계서","業務引継書"],d:"ส่งมอบงาน/เอกสาร ก่อนลาออกหรือย้ายงาน",nomoney:1,
+  f:[["fromEmp","t"],["toEmp","t"],["dept","t"],["last","d"]],it:[["taskH","t"],["statusH","t",120],["note","t"]],sg:[["fromEmp","fromEmp"],["toEmp","toEmp"],["supervisor","sup"]],keep:["dept","sup"]},
+ {id:"ar",pre:"AR",e:"💻",g:"บุคคล",t:["ใบคืนทรัพย์สินบริษัท","COMPANY ASSET RETURN","회사 자산 반납서","会社資産返却書"],d:"เช็กคืนโน้ตบุ๊ก บัตร กุญแจ ก่อนลาออก",nomoney:1,
+  f:[["employee","t"],["empid","t"],["dept","t"],["last","d"]],it:[["asset","t"],["serial","t",120],["returned","t",140]],sg:[["employee","employee"],["returner","returner"],["hr","hrn"]],keep:["returner","hrn"]},
+ /* ขาย & ลูกค้า */
+ {id:"vr",pre:"VR",e:"🗣️",g:"ขาย & ลูกค้า",t:["รายงานการเข้าพบลูกค้า","CUSTOMER VISIT REPORT","고객 방문 보고서","顧客訪問報告書"],d:"สรุปการเข้าพบ ผลคุย ขั้นตอนต่อไป",nomoney:1,
+  f:[["customer","t"],["contactP","t"],["location","t"],["purpose","t"],["body","a",1],["nextStep","a",1]],memo:1,sg:[["salesRep","salesRep"],["supervisor","sup"]],keep:["salesRep","sup"]},
+ {id:"da",pre:"DA",e:"🏷️",g:"ขาย & ลูกค้า",t:["ใบขออนุมัติส่วนลดพิเศษ","SPECIAL DISCOUNT APPROVAL","특별 할인 승인서","特別値引承認書"],d:"ขอลดราคาให้ลูกค้าเกินสิทธิ์ปกติ",
+  f:[["customer","t"],["salesRep","t"],["reason","t",1]],it:[["desc","t"],["qty","n",60],["normalPrice","m",100],["discPct","n",80],["offerPrice","m",100]],sg:[["salesRep","salesRep"],["supervisor","sup"],["approved","appr"]],keep:["salesRep","sup","appr"]},
+ {id:"sm",pre:"SM",e:"🎁",g:"ขาย & ลูกค้า",t:["ใบขอเบิกสินค้าตัวอย่าง","SAMPLE REQUEST","샘플 요청서","サンプル依頼書"],d:"เบิกของตัวอย่างไปให้ลูกค้าทดลอง",nomoney:1,
+  f:[["customer","t"],["salesRep","t"],["purpose","t",1]],it:[["code","t",80],["desc","t"],["qty","n",70],["unit","t",70]],sg:[["salesRep","salesRep"],["approved","appr"],["storekeeper","store"]],keep:["salesRep","appr","store"]},
+ {id:"rt",pre:"RT",e:"📦",g:"ขาย & ลูกค้า",t:["ใบรับคืนสินค้า / เคลม","RETURN / CLAIM FORM","반품 / 클레임 접수서","返品・クレーム受付票"],d:"ลูกค้าคืนของ ของเสีย ส่งเคลม",nomoney:1,
+  f:[["customer","t"],["contactP","t"],["invRef","t"]],it:[["code","t",80],["desc","t"],["qty","n",60],["claim","t",150]],sg:[["receiverG","rcv"],["checked","chk"],["approved","appr"]],keep:["rcv","chk","appr"]},
+ /* ธุรการ · อาคาร · IT */
+ {id:"rp",pre:"RP",e:"🛠️",g:"ธุรการ · อาคาร · IT",t:["ใบแจ้งซ่อม","REPAIR REQUEST","수리 요청서","修理依頼書"],d:"แจ้งซ่อมแอร์ ไฟ คอมพิวเตอร์ อาคาร",nomoney:1,
+  f:[["requester","t"],["dept","t"],["location","t"],["asset","t"],["urgency","sel",1,0,["urgent","normal","low"]],["problem","a",1],["fix","a",1]],sg:[["requester","requester"],["tech","techN"],["supervisor","sup"]],keep:["dept","techN"]},
+ {id:"vh",pre:"VH",e:"🚙",g:"ธุรการ · อาคาร · IT",t:["ใบขอใช้รถ","VEHICLE REQUEST","차량 사용 신청서","車両使用申請書"],d:"จองรถบริษัท ปลายทาง เลขไมล์",nomoney:1,
+  f:[["requester","t"],["dept","t"],["dest","t",1],["purpose","t",1],["tFrom","tm"],["tTo","tm"],["pax","n"],["vehicle","t"],["driver","t"],["mileOut","n"],["mileIn","n"]],sg:[["requester","requester"],["approved","appr"],["driver","driver"]],keep:["dept","appr"]},
+ {id:"rb",pre:"RB",e:"🏢",g:"ธุรการ · อาคาร · IT",t:["ใบขอใช้ห้องประชุม","MEETING ROOM REQUEST","회의실 사용 신청서","会議室使用申請書"],d:"จองห้อง เวลา จำนวนคน อุปกรณ์",nomoney:1,
+  f:[["requester","t"],["dept","t"],["room","t"],["subject","t"],["tFrom","tm"],["tTo","tm"],["attendees","n"],["equip","t",1]],sg:[["requester","requester"],["approved","appr"]],keep:["dept","appr"]},
+ {id:"it",pre:"IT",e:"🖥️",g:"ธุรการ · อาคาร · IT",t:["ใบขอสิทธิ์ใช้งานระบบ IT","IT ACCESS REQUEST","IT 권한 신청서","IT権限申請書"],d:"ขออีเมล บัญชีระบบ สิทธิ์โฟลเดอร์",nomoney:1,
+  f:[["employee","t"],["empid","t"],["dept","t"],["reqType","sel",1,0,["newAcc","change","revoke"]],["system","t",1],["access","t",1],["reason","t",1]],sg:[["employee","employee"],["supervisor","sup"],["itS","itN"]],keep:["dept","sup","itN"]},
+ {id:"ir",pre:"IR",e:"🚨",g:"ธุรการ · อาคาร · IT",t:["รายงานเหตุการณ์ / อุบัติเหตุ","INCIDENT REPORT","사고 보고서","事故報告書"],d:"บันทึกอุบัติเหตุ ความเสียหาย การแก้ไข",nomoney:1,
+  f:[["location","t"],["incTime","tm"],["persons","t",1],["problem","a",1],["damage","a",1],["actionT","a",1],["prevent","a",1]],sg:[["reporter","reporter"],["supervisor","sup"],["approved","appr"]],keep:["sup","appr"]},
+ {id:"gp",pre:"GP",e:"🚪",g:"ธุรการ · อาคาร · IT",t:["ใบนำของออกนอกบริษัท","GATE PASS","물품 반출증","物品持出許可証"],d:"อนุญาตนำทรัพย์สินออก ให้ รปภ. ตรวจ",nomoney:1,
+  f:[["carrier","t"],["dept","t"],["purpose","t",1],["willReturn","sel",1,0,["retYes","retNo"]],["returnDate","d"]],it:[["desc","t"],["serial","t",120],["qty","n",60]],sg:[["carrier","carrier"],["approved","appr"],["guard","guardN"]],keep:["dept","appr"]},
+ {id:"mn",pre:"MN",e:"📝",g:"ธุรการ · อาคาร · IT",t:["บันทึกการประชุม","MINUTES OF MEETING","회의록","議事録"],d:"ผู้เข้าประชุม สาระสำคัญ งานที่ต้องทำ",nomoney:1,
+  f:[["meeting","t",1],["location","t"],["time","tm"],["chair","t"],["attend","a",1],["agenda","a",1]],it:[["task","t"],["owner","t",130],["dueD","d",100]],sg:[["recorder","recorder"],["chair","chair"]],keep:["recorder","chair","location"]},
+ {id:"dt",pre:"DT",e:"🗂️",g:"ธุรการ · อาคาร · IT",t:["ใบส่งเอกสาร","DOCUMENT TRANSMITTAL","문서 송부서","書類送付状"],d:"ส่งเอกสารระหว่างแผนก/บริษัท เซ็นรับ",nomoney:1,
+  f:[["mTo","t"],["mFrom","t"],["note","a",1]],it:[["doc","t"],["copies","n",80],["note","t",160]],sg:[["sender","senderN"],["recipient","recipN"]],keep:["mFrom","senderN"]}
+];
+/* ป้ายช่องชื่อผู้ลงนามเพิ่ม */
+Object.assign(W,{vAccN:W.vAcc,rcv:W.receiverG,insp:W.inspector,store:W.storekeeper,dlv:W.deliverer,techN:W.tech,itN:W.itS,guardN:W.guard,senderN:W.sender,recipN:W.recipient});
+NEW_T.forEach(t=>T.push(t));
+/* จัดกลุ่มแผนก (ของเดิม) */
+T.forEach(t=>{if(t.g==="การเงิน")t.g="การเงิน & บัญชี";if(t.g==="จัดซื้อ"||t.g==="จัดซื้อ & คลัง")t.g="จัดซื้อ & คลังสินค้า";if(t.g==="บุคคล")t.g="บุคคล (HR)"});
+["mm"].forEach(id=>{const t=T.find(x=>x.id===id);if(t)t.g="ธุรการ · อาคาร · IT"});
+
 const TP=id=>T.find(x=>x.id===id);
 const tTitle=(t,l)=>l==="bi"?t.t[0]:t.t[LI[l]];
 
@@ -210,7 +331,7 @@ let cur=null; // เอกสารที่กำลังแก้
 function nextNo(t,date){const y=+(date||today()).slice(0,4),yy=cfg.year==="ad"?y:y+543,key=t.pre+yy,n=(cfg.seq[key]||0)+1;return{key,n,no:t.pre+yy+"-"+String(n).padStart(4,"0")}}
 function calc(d){const t=TP(d.tpl),I=d.items||[];I.forEach(r=>{if(t.it&&t.it.some(c=>c[1]==="amt"))r.amount=Math.round(num(r.qty)*num(r.price)*100)/100});
   const sub=t.sum?I.reduce((a,r)=>a+num(r[t.sum]),0):0,wh=t.wht?Math.round(sub*num(d.f.whtPct)/100*100)/100:0;
-  const o={sub,wht:wh,net:sub-wh};if(t.clear){o.adv=num(d.f.advRecv);o.diff=o.adv-sub}return o}
+  const vt=t.vat?Math.round(sub*num(d.f.vatPct==null||d.f.vatPct===""?7:d.f.vatPct)/100*100)/100:0;const o={sub,wht:wh,vat:vt,net:sub-wh+vt};if(t.clear){o.adv=num(d.f.advRecv);o.diff=o.adv-sub}return o}
 function blank(t){const last=D.filter(x=>x.tpl===t.id).sort((a,b)=>(b.ts||0)-(a.ts||0))[0],f={};
   (t.keep||[]).forEach(k=>{if(last&&last.f[k])f[k]=last.f[k]});if(t.id==="ce"||t.id==="mm"){}
   return{id:"",tpl:t.id,no:"",date:today(),lang:cfg.lang||"th",cur:cfg.cur||"THB",f,items:t.it?[{},{}]:[],pm:t.pay?"transfer":"",ts:0}}
@@ -235,6 +356,15 @@ function bodyText(d,l){const t=TP(d.tpl),v=k=>esc(fv(d,k))||"…………",co=es
       en:`I/We, ${v("grantor")}, of ${v("gAddr")}, hereby authorize ${v("grantee")} (ID No. ${v("gid")}), of ${v("geAddr")}, to act on my/our behalf in the following matters:\n${v("matters")}\n\nAny act performed by the attorney within the scope of this authorization shall be deemed to have been performed by me/us in all respects.${fv(d,"valid")?` This power of attorney is valid until ${esc(dt(d.f.valid,"en"))}.`:""}`,
       ko:`본인 ${v("grantor")}(주소: ${v("gAddr")})은(는) ${v("grantee")}(신분증 번호 ${v("gid")}, 주소: ${v("geAddr")})에게 다음 사항에 관한 권한을 위임합니다.\n${v("matters")}\n\n수임인이 위임 범위 내에서 행한 모든 행위는 본인이 직접 행한 것으로 간주합니다.${fv(d,"valid")?` 본 위임장의 유효기간은 ${esc(dt(d.f.valid,"ko"))}까지입니다.`:""}`,
       ja:`私 ${v("grantor")}（住所：${v("gAddr")}）は、${v("grantee")}（身分証番号 ${v("gid")}、住所：${v("geAddr")}）を代理人と定め、下記の事項に関する権限を委任します。\n${v("matters")}\n\n代理人が本委任の範囲内で行った行為は、すべて私自身が行ったものとみなします。${fv(d,"valid")?`本委任状の有効期限は${esc(dt(d.f.valid,"ja"))}までとします。`:""}`}};
+  const sal2=fv(d,"salary")?money(num(d.f.salary),d.cur)+" "+d.cur:"";
+  S.rs={th:`ข้าพเจ้า ${v("employee")} ตำแหน่ง ${v("pos")} แผนก ${v("dept")} ขอลาออกจากการเป็นพนักงานของ ${co} โดยมีผลตั้งแต่วันที่ ${esc(dt(fv(d,"last"),"th"))||"…………"} เป็นต้นไป เนื่องจาก${v("reason")}\n\nข้าพเจ้าจะส่งมอบงานและคืนทรัพย์สินของบริษัทให้เรียบร้อยก่อนวันมีผล และขอขอบคุณบริษัทที่ให้โอกาสร่วมงานตลอดมา`,
+    en:`I, ${v("employee")}, ${v("pos")} of the ${v("dept")} Department, hereby resign from my employment with ${co}, effective ${esc(dt(fv(d,"last"),"en"))||"…………"}, due to ${v("reason")}.\n\nI will complete the handover of my work and return all company property before the effective date. Thank you for the opportunity to work with the company.`,
+    ko:`본인 ${v("employee")}(${v("dept")} ${v("pos")})은(는) ${v("reason")}(으)로 인하여 ${esc(dt(fv(d,"last"),"ko"))||"…………"}부로 ${co}을(를) 사직하고자 합니다.\n\n사직일 전까지 업무 인수인계와 회사 자산 반납을 완료하겠습니다. 그동안 함께 일할 기회를 주셔서 감사합니다.`,
+    ja:`私 ${v("employee")}（${v("dept")} ${v("pos")}）は、${v("reason")}のため、${esc(dt(fv(d,"last"),"ja"))||"…………"}付で${co}を退職いたしたく、ここにお届けいたします。\n\n退職日までに業務の引継ぎと会社資産の返却を完了いたします。これまでのご指導に心より感謝申し上げます。`};
+  S.ol={th:`เรียน ${v("fullName")}\n\n${co} มีความยินดีเสนอจ้างท่านในตำแหน่ง ${v("pos")} แผนก ${v("dept")} เริ่มงานวันที่ ${esc(dt(fv(d,"start"),"th"))||"…………"} อัตราเงินเดือน ${sal2||"…………"} ต่อเดือน ระยะทดลองงาน ${v("prob")} วัน${fv(d,"benefit")?` สวัสดิการ: ${v("benefit")}`:""}\n\nหากท่านตกลงรับข้อเสนอนี้ กรุณาลงนามตอบรับและส่งกลับภายในวันที่ ${esc(dt(fv(d,"replyBy"),"th"))||"…………"}`,
+    en:`Dear ${v("fullName")},\n\n${co} is pleased to offer you the position of ${v("pos")} in the ${v("dept")} Department, starting on ${esc(dt(fv(d,"start"),"en"))||"…………"}, with a monthly salary of ${sal2||"…………"} and a probation period of ${v("prob")} days.${fv(d,"benefit")?` Benefits: ${v("benefit")}.`:""}\n\nIf you accept this offer, please sign below and return this letter by ${esc(dt(fv(d,"replyBy"),"en"))||"…………"}.`,
+    ko:`${v("fullName")} 님께\n\n${co}은(는) 귀하를 ${v("dept")} 부서 ${v("pos")}(으)로 채용하고자 합니다. 입사일은 ${esc(dt(fv(d,"start"),"ko"))||"…………"}, 월급은 ${sal2||"…………"}, 수습 기간은 ${v("prob")}일입니다.${fv(d,"benefit")?` 복리후생: ${v("benefit")}.`:""}\n\n본 제안을 수락하시면 ${esc(dt(fv(d,"replyBy"),"ko"))||"…………"}까지 서명하여 회신해 주시기 바랍니다.`,
+    ja:`${v("fullName")} 様\n\n${co}は、貴殿を${v("dept")}部 ${v("pos")}として採用することを決定いたしましたので通知いたします。入社日は${esc(dt(fv(d,"start"),"ja"))||"…………"}、月給は${sal2||"…………"}、試用期間は${v("prob")}日です。${fv(d,"benefit")?`福利厚生：${v("benefit")}。`:""}\n\n本内容をご承諾いただける場合は、${esc(dt(fv(d,"replyBy"),"ja"))||"…………"}までに署名のうえご返送ください。`};
   const s=S[t.body];if(!s)return"";if(l==="bi")return s.th+'<span class="s2">'+s.en+"</span>";return s[l]}
 function docHtml(d){const t=TP(d.tpl),l=d.lang||"th",c=calc(d),C=CU(d.cur),cc=d.cur;
   const lg=cfg.co.logo?`<img class="lg" src="${esc(cfg.co.logo)}" alt="">`:`<div class="lgt">${esc((coName("en")||"A").replace(/^(บริษัท|ห้างหุ้นส่วน(จำกัด)?|หจก\.?|บจก\.?)\s*/,"").trim().slice(0,1)||"A")}</div>`;
@@ -242,7 +372,7 @@ function docHtml(d){const t=TP(d.tpl),l=d.lang||"th",c=calc(d),C=CU(d.cur),cc=d.
   const meta=`<table class="mt"><tr><td>${w("no",l)}</td><td><b>${esc(d.no||"—")}</b></td></tr><tr><td>${w("date",l)}</td><td>${esc(dt(d.date,l))}</td></tr></table>`;
   let h=`<div class="doc ${l}" style="--dc:${esc(cfg.color||"#2E6F9E")}"><div class="hd"><div class="co">${lg}<div><b>${esc(coName(l))}</b><small>${esc(coAddr(l)||"")}</small><small>${cfg.co.tax?esc(wt("taxid",l==="bi"?"th":l))+" "+esc(cfg.co.tax):""}${cfg.co.phone?" · "+esc(wt("phone",l==="bi"?"th":l))+" "+esc(cfg.co.phone):""}</small></div></div><div><h1>${ttl}</h1>${l==="bi"||sub?`<div class="sub">${esc(t.t[1])}</div>`:""}${meta}</div></div>`;
   // ช่องข้อมูล
-  const hideKV=new Set(["note","body","matters","whtPct","signer","sPos"].concat(t.memo?["pos"]:[]).concat(t.body==="pa"?["grantor","gAddr","grantee","gid","geAddr","valid"]:[]).concat(t.body==="ce"?["empName","idcard","pos","dept","start","salary","purpose"]:[]));
+  const hideKV=new Set(["note","body","matters","whtPct","vatPct","signer","sPos"].concat(t.hide||[]).concat(t.memo?["pos"]:[]).concat(t.body==="pa"?["grantor","gAddr","grantee","gid","geAddr","valid"]:[]).concat(t.body==="ce"?["empName","idcard","pos","dept","start","salary","purpose"]:[]));
   const kv=t.f.filter(x=>!hideKV.has(x[0])&&!(t.memo&&x[0]==="body")).map(x=>{let v=fv(d,x[0]);if(!v)return null;if(x[1]==="d")v=dt(v,l);else if(x[1]==="m")v=money(num(v),cc)+" "+cc;else if(x[1]==="sel")v=x[4].map(o=>(o===v?"☑ ":"☐ ")+wt(o,l==="bi"?"th":l)).join("   ");return`<div class="${x[2]||x[1]==="sel"?"w2":""}"><span class="k">${w(x[0],l)}</span><span class="v">${esc(v)}</span></div>`}).filter(Boolean);
   if(kv.length)h+=`<div class="kv">${kv.join("")}</div>`;
   if(t.memo)h+=`<div class="body t">${esc(fv(d,"body"))}</div>`;
@@ -252,11 +382,12 @@ function docHtml(d){const t=TP(d.tpl),l=d.lang||"th",c=calc(d),C=CU(d.cur),cc=d.
     const body=rows.map((r,i)=>`<tr><td class="c">${I.length?i+1:""}</td>${t.it.map(col=>{let v=r[col[0]];if(col[1]==="m"||col[1]==="amt")return`<td class="r">${v===""||v==null?"":money(num(v),cc)}</td>`;if(col[1]==="d")return`<td class="c">${esc(dt(v,l))}</td>`;if(col[1]==="n"||col[1]==="tm")return`<td class="c">${esc(v==null?"":v)}</td>`;return`<td>${esc(v==null?"":v).replace(/\n/g,"<br>")}</td>`}).join("")}</tr>`).join("");
     const pad=Array.from({length:Math.max(0,4-rows.length)},()=>`<tr><td style="height:24px"></td>${t.it.map(()=>"<td></td>").join("")}</tr>`).join("");
     const span=t.it.length,si=t.it.findIndex(col=>col[0]===t.sum);let tot="";
-    if(t.sum==="hours")tot=`<tr class="tt"><td class="k" colspan="${si+1}">${w("totalHrs",l)}</td><td class="c">${c.sub}</td>${"<td></td>".repeat(span-si-1)}</tr>`;
-    else{const row=(k,v)=>`<tr class="tt"><td class="k" colspan="${span}">${w(k,l)}</td><td class="r">${money(v,cc)}</td></tr>`;
-      if(t.wht&&c.wht)tot=row("subtotal",c.sub)+`<tr class="tt"><td class="k" colspan="${span}">${w("wht",l)} ${num(d.f.whtPct)}%</td><td class="r">-${money(c.wht,cc)}</td></tr>`+row("net",c.net);else tot=row("total",c.sub);}
+    if(t.sum&&t.sum!=="amount")tot=`<tr class="tt"><td class="k" colspan="${si+1}">${w(t.sumL||"totalHrs",l)}</td><td class="c">${c.sub}</td>${"<td></td>".repeat(span-si-1)}</tr>`;
+    else if(t.sum){const row=(k,v)=>`<tr class="tt"><td class="k" colspan="${span}">${w(k,l)}</td><td class="r">${money(v,cc)}</td></tr>`;
+      if(t.vat)tot=row("subtotal",c.sub)+`<tr class="tt"><td class="k" colspan="${span}">${w("vat",l)} ${num(d.f.vatPct==null||d.f.vatPct===""?7:d.f.vatPct)}%</td><td class="r">${money(c.vat,cc)}</td></tr>`+row("grand",c.net);
+      else if(t.wht&&c.wht)tot=row("subtotal",c.sub)+`<tr class="tt"><td class="k" colspan="${span}">${w("wht",l)} ${num(d.f.whtPct)}%</td><td class="r">-${money(c.wht,cc)}</td></tr>`+row("net",c.net);else tot=row("total",c.sub);}
     h+=`<table class="it">${head}${body}${pad}${tot}</table>`;
-    if(t.sum==="amount")h+=`<div class="wd"><b>${w("words",l)}:</b> ${esc(words(t.wht?c.net:c.sub,cc,l)).replace(/\n/g,"<br>")}</div>`;
+    if(t.sum==="amount")h+=`<div class="wd"><b>${w("words",l)}:</b> ${esc(words(t.wht||t.vat?c.net:c.sub,cc,l)).replace(/\n/g,"<br>")}</div>`;
     if(t.clear){const r=(k,v)=>`<div><span class="k">${w(k,l)}</span><span class="v">${money(v,cc)} ${cc}</span></div>`;h+=`<div class="kv">${r("advRecv",c.adv)}${r("spent",c.sub)}${c.diff>=0?r("refund",c.diff):r("extra",-c.diff)}</div>`}}
   if(t.body)h+=`<div class="body t">${bodyText(d,l)}</div>`;
   if(t.pay){const pm=d.pm||"";h+=`<div class="line"><span class="k">${w(t.pay==="pay"?"paidby":"recvby",l)}</span>${["cash","transfer","cheque"].map(k=>(pm===k?"☑ ":"☐ ")+w(k,l)).join(" &nbsp; ")}${fv(d,"bank")?` &nbsp;·&nbsp; ${w("bank",l)} ${esc(fv(d,"bank"))}`:""}${fv(d,"ref")?` &nbsp;·&nbsp; ${w("ref",l)} ${esc(fv(d,"ref"))}`:""}</div>`}
@@ -269,10 +400,14 @@ const FONT={ko:"Noto+Sans+KR",ja:"Noto+Sans+JP"};
 function needFont(l){if(!FONT[l]||document.getElementById("fnt-"+l))return;const k=document.createElement("link");k.id="fnt-"+l;k.rel="stylesheet";k.href="https://fonts.googleapis.com/css2?family="+FONT[l]+":wght@400;600;700&display=swap";document.head.appendChild(k)}
 
 /* ---------- หน้า สร้างเอกสาร ---------- */
-function vNew(){const M=$("#main"),G=[...new Set(T.map(t=>t.g))];
-  M.innerHTML=`<div class="hello"><div><h1>เลือกแบบฟอร์ม</h1><p>แค่กรอกข้อมูล ระบบจัดหน้า รันเลขที่ และแปลงจำนวนเงินเป็นตัวหนังสือให้ · เลือกภาษาได้ ไทย · English · 한국어 · 日本語</p></div>${!cfg.co.name?`<button class="btn main" id="goSet" type="button">🏢 ใส่ชื่อบริษัทก่อน</button>`:""}</div>
-  ${G.map(g=>`<div class="cg">${esc(g)}</div><div class="gal">${T.filter(t=>t.g===g).map(t=>`<button class="tp" data-t="${t.id}" type="button"><span class="e">${t.e}</span><span><b>${esc(t.t[0])}</b><small>${esc(t.d)}</small></span></button>`).join("")}</div>`).join("")}`;
-  M.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>openEd(blank(TP(b.dataset.t))));const gs=$("#goSet");if(gs)gs.onclick=()=>{ui.v="set";saveUi();render()}}
+function vNew(){const M=$("#main"),G=["การเงิน & บัญชี","จัดซื้อ & คลังสินค้า","บุคคล (HR)","ขาย & ลูกค้า","ธุรการ · อาคาร · IT"].filter(g=>T.some(t=>t.g===g));
+  M.innerHTML=`<div class="hello"><div><h1>เลือกแบบฟอร์ม</h1><p>${T.length} แบบฟอร์ม ครบทุกแผนก · แค่กรอกข้อมูล ระบบจัดหน้า รันเลขที่ และแปลงจำนวนเงินเป็นตัวหนังสือให้ · เลือกภาษาได้ ไทย · English · 한국어 · 日本語</p></div>${!cfg.co.name?`<button class="btn main" id="goSet" type="button">🏢 ใส่ชื่อบริษัทก่อน</button>`:""}</div>
+  <div class="card" style="padding:12px;gap:10px"><input class="in-" id="gq" placeholder="🔍 ค้นหาแบบฟอร์ม เช่น ใบลา เบิก ซ่อม สั่งซื้อ…" value="${esc(ui.gq||"")}"><div class="chips"><button class="chip${!ui.gd?" on":""}" data-gd="" type="button">ทุกแผนก (${T.length})</button>${G.map(g=>`<button class="chip${ui.gd===g?" on":""}" data-gd="${esc(g)}" type="button">${esc(g)} (${T.filter(t=>t.g===g).length})</button>`).join("")}</div></div><div id="galW"></div>`;
+  const draw=()=>{const q=(ui.gq||"").trim().toLowerCase(),L=T.filter(t=>(!ui.gd||t.g===ui.gd)&&(!q||(t.t.join(" ")+" "+t.d).toLowerCase().includes(q)));
+    $("#galW").innerHTML=L.length?G.filter(g=>L.some(t=>t.g===g)).map(g=>`<div class="cg">${esc(g)}</div><div class="gal">${L.filter(t=>t.g===g).map(t=>`<button class="tp" data-t="${t.id}" type="button"><span class="e">${t.e}</span><span><b>${esc(t.t[0])}</b><small>${esc(t.d)}</small></span></button>`).join("")}</div>`).join(""):`<div class="empty">ไม่พบแบบฟอร์ม “${esc(q)}” · อยากได้แบบไหนเพิ่ม ทัก LINE ร้านได้เลย</div>`;
+    $$("#galW [data-t]").forEach(b=>b.onclick=()=>openEd(blank(TP(b.dataset.t))))};draw();
+  $("#gq").oninput=e=>{ui.gq=e.target.value;saveUi();draw()};M.querySelectorAll("[data-gd]").forEach(b=>b.onclick=()=>{ui.gd=b.dataset.gd;saveUi();M.querySelectorAll("[data-gd]").forEach(x=>x.classList.toggle("on",x===b));draw()});
+  const gs=$("#goSet");if(gs)gs.onclick=()=>{ui.v="set";saveUi();render()}}
 
 /* ---------- ตัวแก้เอกสาร ---------- */
 function hist(k){const s=new Set();D.forEach(x=>{const v=x.f&&x.f[k];if(v&&String(v).length<80)s.add(String(v))});return[...s].slice(-30)}
@@ -281,25 +416,25 @@ function vEd(){const d=cur,t=TP(d.tpl),M=$("#main");needFont(d.lang);
   const inp=x=>{const[k,ty,w2,,opt]=x,v=esc(fv(d,k)),lab=W[k]?W[k][0]:k;
     if(ty==="a")return`<div class="f w2"><label>${esc(lab)}</label><textarea class="in-" data-k="${k}" rows="${k==="body"||k==="matters"?6:2}">${v}</textarea></div>`;
     if(ty==="sel")return`<div class="f w2"><label>${esc(lab)}</label><div class="radio">${opt.map(o=>`<label><input type="radio" name="r-${k}" data-k="${k}" value="${o}"${fv(d,k)===o?" checked":""}>${esc(W[o][0])}</label>`).join("")}</div></div>`;
-    const typ=ty==="d"?"date":ty==="n"||ty==="m"?"text":"text",im=ty==="n"||ty==="m"?' inputmode="decimal"':"";
+    const typ=ty==="d"?"date":ty==="tm"?"time":"text",im=ty==="n"||ty==="m"?' inputmode="decimal"':"";
     return`<div class="f${w2?" w2":""}"><label>${esc(lab)}</label><input class="in-" type="${typ}" data-k="${k}" value="${v}"${im} list="dl-${k}"><datalist id="dl-${k}">${ty==="t"?hist(k).map(s=>`<option value="${esc(s)}">`).join(""):""}</datalist></div>`};
   const sgK=(t.sg||[]).map(s=>s[1]).filter(k=>!t.f.some(x=>x[0]===k));
-  const itEd=t.it?`<div class="card"><h2>${esc(t.sum==="hours"?"รายการ OT":"รายการ")} <button class="btn sm" id="addR" type="button">＋ เพิ่มแถว</button></h2><div class="it-ed" id="itEd"></div><div class="sum" id="sumBox"></div></div>`:"";
+  const itEd=t.it?`<div class="card"><h2>${esc(t.sum==="hours"?"รายการ OT":"รายการในตาราง")} <button class="btn sm" id="addR" type="button">＋ เพิ่มแถว</button></h2><div class="it-ed" id="itEd"></div><div class="sum" id="sumBox"></div></div>`:"";
   M.innerHTML=`<div class="edbar"><div class="g"><button class="btn ghost sm" id="back" type="button">← กลับ</button><b>${t.e} ${esc(t.t[0])}</b><button class="btn ghost sm mob" id="goPv" type="button">👁️ ดูเอกสาร</button></div>
    <div class="g"><label class="note">ภาษา</label><select class="sel" id="eL">${LANGS.map(([k,n])=>`<option value="${k}"${d.lang===k?" selected":""}>${n}</option>`).join("")}</select>
    ${t.nomoney?"":`<label class="note">สกุลเงิน</label><select class="sel" id="eC">${CUR.map(c=>`<option value="${c[0]}"${d.cur===c[0]?" selected":""}>${c[0]} ${c[8]}</option>`).join("")}</select>`}
    <button class="btn ghost" id="eSave" type="button">💾 บันทึก</button><button class="btn main" id="ePdf" type="button">⬇️ PDF / พิมพ์</button></div></div>
   <div class="ed"><div class="side" style="display:flex;flex-direction:column;gap:12px">
    <div class="card"><div class="fg"><div class="f"><label>เลขที่ (ว่าง = รันให้อัตโนมัติ)</label><input class="in-" id="eNo" value="${esc(d.no)}" placeholder="${esc(nextNo(t,d.date).no)}"></div><div class="f"><label>วันที่เอกสาร</label><input class="in-" type="date" id="eD" value="${esc(d.date)}"></div>
-   ${t.f.map(inp).join("")}${t.wht?`<div class="f"><label>หัก ณ ที่จ่าย (%)</label><input class="in-" data-k="whtPct" inputmode="decimal" value="${esc(fv(d,"whtPct"))}" placeholder="0 / 1 / 3 / 5"></div>`:""}</div></div>
+   ${t.f.map(inp).join("")}${t.vat?`<div class="f"><label>VAT (%)</label><input class="in-" data-k="vatPct" inputmode="decimal" value="${esc(fv(d,"vatPct"))}" placeholder="7 (ใส่ 0 ถ้าไม่มี VAT)"></div>`:""}${t.wht?`<div class="f"><label>หัก ณ ที่จ่าย (%)</label><input class="in-" data-k="whtPct" inputmode="decimal" value="${esc(fv(d,"whtPct"))}" placeholder="0 / 1 / 3 / 5"></div>`:""}</div></div>
    ${itEd}
    ${t.pay?`<div class="card"><div class="f"><label>${t.pay==="pay"?"ชำระโดย":"รับเงินโดย"}</label><div class="radio">${["cash","transfer","cheque"].map(k=>`<label><input type="radio" name="pm" value="${k}"${d.pm===k?" checked":""}>${W[k][0]}</label>`).join("")}</div></div><div class="fg">${inp(["bank","t"])}${inp(["ref","t"])}</div></div>`:""}
    ${sgK.length?`<div class="card"><h2>ชื่อผู้ลงนาม <small>ไม่ใส่ก็ได้ เว้นไว้เซ็นเอง</small></h2><div class="fg">${sgK.map(k=>inp([k,"t"])).join("")}</div></div>`:""}
    <p class="note">💡 ชื่อผู้อนุมัติ แผนก ธนาคาร ฯลฯ ระบบจำจากเอกสารใบก่อนให้อัตโนมัติ · พิมพ์ช่องที่เคยกรอก มีคำเดิมให้เลือก</p>
    ${d.id?`<button class="btn ghost danger sm" id="eDel" type="button" style="align-self:flex-start">🗑️ ลบเอกสารนี้</button>`:""}
   </div><div class="pvw" id="pvw"><div class="pvs" id="pvs"></div></div></div>`;
-  const pv=()=>{if(!cur||!$("#pvs"))return;$("#pvs").innerHTML=docHtml(Object.assign({},cur,{no:cur.no||nextNo(t,cur.date).no+" (ร่าง)"}));fit();if(t.it)$("#sumBox").innerHTML=sumTxt()};
-  const sumTxt=()=>{const c=calc(cur);if(t.sum==="hours")return`<span>รวมชั่วโมง</span><span>${c.sub}</span>`;return`<span>${t.wht&&c.wht?"ยอดสุทธิ":"รวมเงิน"}</span><span>${money(t.wht?c.net:c.sub,cur.cur)} ${cur.cur}</span>`};
+  const pv=()=>{if(!cur||!$("#pvs"))return;$("#pvs").innerHTML=docHtml(Object.assign({},cur,{no:cur.no||nextNo(t,cur.date).no+" (ร่าง)"}));fit();if(t.it){$("#sumBox").innerHTML=sumTxt();$("#sumBox").hidden=!t.sum}};
+  const sumTxt=()=>{const c=calc(cur);if(!t.sum)return"";if(t.sum!=="amount")return`<span>${W[t.sumL||"totalHrs"][0]}</span><span>${c.sub}</span>`;return`<span>${t.vat?"รวมทั้งสิ้น (รวม VAT)":t.wht&&c.wht?"ยอดสุทธิ":"รวมเงิน"}</span><span>${money(t.wht||t.vat?c.net:c.sub,cur.cur)} ${cur.cur}</span>`};
   const drawIt=()=>{if(!t.it)return;const cols=t.it.map(c=>c[1]==="t"?"minmax(0,2fr)":"minmax(0,1fr)").join(" ");$("#itEd").innerHTML=cur.items.map((r,i)=>`<div class="it-row" style="grid-template-columns:${cols} 26px">${t.it.map(c=>{const v=r[c[0]]==null?"":r[c[0]];const ph=W[c[0]==="amt"?"amount":c[0]][0];
       if(c[1]==="amt")return`<input class="in-" value="${v?money(v,cur.cur):""}" placeholder="${ph}" disabled title="${ph}">`;
       return`<input class="in-" data-i="${i}" data-c="${c[0]}" type="${c[1]==="d"?"date":c[1]==="tm"?"time":"text"}"${c[1]==="m"||c[1]==="n"?' inputmode="decimal"':""} value="${esc(v)}" placeholder="${ph}" title="${ph}">`}).join("")}<button class="x" data-del="${i}" type="button" title="ลบแถว">✕</button></div>`).join("")};
@@ -337,14 +472,14 @@ function vDocs(){const M=$("#main"),q=ui.q.trim().toLowerCase();
   M.innerHTML=`<div class="card"><h2>เอกสารของฉัน <small>${D.length} ใบ</small><span style="display:flex;gap:6px"><button class="btn sm ghost" id="csv" type="button">⬇ Excel (CSV)</button></span></h2>
    <input class="in-" id="q" placeholder="ค้นหา เลขที่ ชื่อ รายการ…" value="${esc(ui.q)}">
    <div class="chips"><button class="chip${!ui.ft?" on":""}" data-ft="" type="button">ทั้งหมด</button>${used.map(t=>`<button class="chip${ui.ft===t.id?" on":""}" data-ft="${t.id}" type="button">${t.e} ${esc(t.t[0])}</button>`).join("")}</div>
-   ${L.length?`<div class="tw"><table class="xl"><tr><th>วันที่</th><th>เลขที่</th><th>แบบฟอร์ม</th><th>ชื่อ / เรื่อง</th><th>ยอด</th><th>ภาษา</th><th></th></tr>${L.map(x=>{const t=TP(x.tpl)||T[0],c=calc(x);return`<tr data-o="${x.id}"><td class="c">${esc(dt(x.date,"th"))}</td><td class="c"><b>${esc(x.no)}</b></td><td>${t.e} ${esc(t.t[0])}</td><td>${esc(who(x))}</td><td class="r">${t.sum==="amount"?money(t.wht?c.net:c.sub,x.cur)+" "+x.cur:t.sum==="hours"?c.sub+" ชม.":t.id==="ce"&&x.f.salary?"":""}</td><td class="c"><span class="lang">${esc((LANGS.find(a=>a[0]===x.lang)||LANGS[0])[1])}</span></td><td class="c" style="white-space:nowrap"><button class="btn sm ghost" data-p="${x.id}" type="button">⬇️ PDF</button> <button class="btn sm ghost" data-dup="${x.id}" type="button" title="ทำสำเนาเป็นใบใหม่">⧉</button></td></tr>`}).join("")}</table></div>`:`<div class="empty">${D.length?"ไม่พบเอกสารที่ค้นหา":"ยังไม่มีเอกสาร · ไปที่ 📝 สร้างเอกสาร เพื่อเริ่มใบแรก"}</div>`}</div>`;
+   ${L.length?`<div class="tw"><table class="xl"><tr><th>วันที่</th><th>เลขที่</th><th>แบบฟอร์ม</th><th>ชื่อ / เรื่อง</th><th>ยอด</th><th>ภาษา</th><th></th></tr>${L.map(x=>{const t=TP(x.tpl)||T[0],c=calc(x);return`<tr data-o="${x.id}"><td class="c">${esc(dt(x.date,"th"))}</td><td class="c"><b>${esc(x.no)}</b></td><td>${t.e} ${esc(t.t[0])}</td><td>${esc(who(x))}</td><td class="r">${t.sum==="amount"?money(t.wht||t.vat?c.net:c.sub,x.cur)+" "+x.cur:t.sum?c.sub+(t.sum==="hours"?" ชม.":" คะแนน"):""}</td><td class="c"><span class="lang">${esc((LANGS.find(a=>a[0]===x.lang)||LANGS[0])[1])}</span></td><td class="c" style="white-space:nowrap"><button class="btn sm ghost" data-p="${x.id}" type="button">⬇️ PDF</button> <button class="btn sm ghost" data-dup="${x.id}" type="button" title="ทำสำเนาเป็นใบใหม่">⧉</button></td></tr>`}).join("")}</table></div>`:`<div class="empty">${D.length?"ไม่พบเอกสารที่ค้นหา":"ยังไม่มีเอกสาร · ไปที่ 📝 สร้างเอกสาร เพื่อเริ่มใบแรก"}</div>`}</div>`;
   $("#q").oninput=e=>{ui.q=e.target.value;saveUi();clearTimeout(vDocs.t);vDocs.t=setTimeout(()=>{vDocs();const i=$("#q");i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)};
   M.querySelectorAll("[data-ft]").forEach(b=>b.onclick=()=>{ui.ft=b.dataset.ft;saveUi();vDocs()});
   M.onclick=e=>{const p=e.target.closest("[data-p]"),u=e.target.closest("[data-dup]"),o=e.target.closest("[data-o]");
     if(p){e.stopPropagation();printDoc(D.find(x=>x.id===p.dataset.p));return}
     if(u){e.stopPropagation();const s=JSON.parse(JSON.stringify(D.find(x=>x.id===u.dataset.dup)));s.id="";s.no="";s.date=today();s.ts=0;openEd(s);toast("ทำสำเนาแล้ว แก้ข้อมูลแล้วกดบันทึก");return}
     if(o)openEd(D.find(x=>x.id===o.dataset.o))};
-  $("#csv").onclick=()=>{const rows=[["วันที่","เลขที่","แบบฟอร์ม","ชื่อ/เรื่อง","ยอด","สกุลเงิน","ภาษา"]].concat(L.map(x=>{const t=TP(x.tpl),c=calc(x);return[x.date,x.no,t.t[0],who(x),t.sum==="amount"?(t.wht?c.net:c.sub):t.sum==="hours"?c.sub:"",t.nomoney?"":x.cur,x.lang]}));
+  $("#csv").onclick=()=>{const rows=[["วันที่","เลขที่","แบบฟอร์ม","ชื่อ/เรื่อง","ยอด","สกุลเงิน","ภาษา"]].concat(L.map(x=>{const t=TP(x.tpl),c=calc(x);return[x.date,x.no,t.t[0],who(x),t.sum==="amount"?(t.wht||t.vat?c.net:c.sub):t.sum?c.sub:"",t.nomoney?"":x.cur,x.lang]}));
     const csv="﻿"+rows.map(r=>r.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",")).join("\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="documents-"+today()+".csv";a.click()}}
 
 /* ---------- ตั้งค่าบริษัท ---------- */
