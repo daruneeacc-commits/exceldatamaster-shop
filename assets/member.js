@@ -327,47 +327,17 @@
   /* ---------- สำรองข้อมูลขึ้นระบบร้าน (Google Drive ของร้าน) ----------
    * เข้าสู่ระบบแล้ว: ดึงข้อมูลล่าสุดจากระบบ (ถ้าใหม่กว่า) แล้วสำรองให้อัตโนมัติทุกครั้งที่ข้อมูลเปลี่ยน
    * ใช้เปลี่ยนเครื่องได้ และข้อมูลไม่หายแม้ล้างเบราว์เซอร์ */
-  var CK = ["edm_due_items", "edm_due_del", "edm_due_cfg", "edm_acc", "edm_bill_docs", "edm_bill_seller", "edm_bill_counter", "edm_bill_customers", "edm_suppliers", "edm_services", "edm_stock_items", "edm_stock_tx", "edm_stock_cfg", "edm_pay_company", "edm_pay_emps", "edm_pay_records", "edm_pay_summary", "edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg", "edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit", "edm_todo_items", "edm_todo_log", "edm_todo_cfg", "edm_tdsheet_items", "edm_tdsheet_cfg", "edm_fin_items", "edm_fin_cfg", "edm_book_lease", "edm_users", "edm_ord_items", "edm_ord_cfg", "edm_pos_sales", "edm_pos_cfg", "edm_goal_items", "edm_goal_cfg", "edm_spend_items", "edm_spend_cfg", "edm_plan_tasks", "edm_plan_cfg", "edm_pet_owners", "edm_pet_pets", "edm_pet_recs", "edm_pet_appts", "edm_pet_sales", "edm_pet_cfg", "edm_loan_items", "edm_att_emps", "edm_att_rec", "edm_att_cfg", "edm_loan_cfg", "edm_hr_emps", "edm_hr_pay", "edm_hr_cfg", "edm_sales_cfg", "edm_sales_data"];
-  var KEEP = ["edm_due_items", "edm_due_del", "edm_due_cfg", "edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit", "edm_todo_items", "edm_todo_log", "edm_todo_cfg", "edm_tdsheet_items", "edm_tdsheet_cfg", "edm_fin_items", "edm_fin_cfg", "edm_book_lease", "edm_users", "edm_ord_items", "edm_ord_cfg", "edm_pos_sales", "edm_pos_cfg", "edm_goal_items", "edm_goal_cfg", "edm_spend_items", "edm_spend_cfg", "edm_plan_tasks", "edm_plan_cfg", "edm_pet_owners", "edm_pet_pets", "edm_pet_recs", "edm_pet_appts", "edm_pet_sales", "edm_pet_cfg", "edm_loan_items", "edm_att_emps", "edm_att_rec", "edm_att_cfg", "edm_loan_cfg", "edm_hr_emps", "edm_hr_pay", "edm_hr_cfg", "edm_sales_cfg", "edm_sales_data"]; // วัตถุดิบคาเฟ่ (เพิ่มภายหลัง): ข้อมูลบนระบบรุ่นเก่ายังไม่มี ไม่ลบของในเครื่อง
+  var CK = ["edm_due_items", "edm_due_cfg", "edm_acc", "edm_bill_docs", "edm_bill_seller", "edm_bill_counter", "edm_bill_customers", "edm_suppliers", "edm_services", "edm_stock_items", "edm_stock_tx", "edm_stock_cfg", "edm_pay_company", "edm_pay_emps", "edm_pay_records", "edm_pay_summary", "edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg", "edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit", "edm_todo_items", "edm_todo_log", "edm_todo_cfg", "edm_tdsheet_items", "edm_tdsheet_cfg", "edm_fin_items", "edm_fin_cfg", "edm_book_lease", "edm_users", "edm_ord_items", "edm_ord_cfg", "edm_pos_sales", "edm_pos_cfg", "edm_goal_items", "edm_goal_cfg", "edm_spend_items", "edm_spend_cfg", "edm_plan_tasks", "edm_plan_cfg", "edm_pet_owners", "edm_pet_pets", "edm_pet_recs", "edm_pet_appts", "edm_pet_sales", "edm_pet_cfg", "edm_loan_items", "edm_att_emps", "edm_att_rec", "edm_att_cfg", "edm_loan_cfg", "edm_hr_emps", "edm_hr_pay", "edm_hr_cfg", "edm_sales_cfg", "edm_sales_data"];
+  var KEEP = ["edm_due_items", "edm_due_cfg", "edm_cafe_items", "edm_cafe_stx", "edm_audit", "edm_audit_cfg", "edm_time_cfg", "edm_time_log", "edm_time_day", "edm_time_audit", "edm_todo_items", "edm_todo_log", "edm_todo_cfg", "edm_tdsheet_items", "edm_tdsheet_cfg", "edm_fin_items", "edm_fin_cfg", "edm_book_lease", "edm_users", "edm_ord_items", "edm_ord_cfg", "edm_pos_sales", "edm_pos_cfg", "edm_goal_items", "edm_goal_cfg", "edm_spend_items", "edm_spend_cfg", "edm_plan_tasks", "edm_plan_cfg", "edm_pet_owners", "edm_pet_pets", "edm_pet_recs", "edm_pet_appts", "edm_pet_sales", "edm_pet_cfg", "edm_loan_items", "edm_att_emps", "edm_att_rec", "edm_att_cfg", "edm_loan_cfg", "edm_hr_emps", "edm_hr_pay", "edm_hr_cfg", "edm_sales_cfg", "edm_sales_data"]; // วัตถุดิบคาเฟ่ (เพิ่มภายหลัง): ข้อมูลบนระบบรุ่นเก่ายังไม่มี ไม่ลบของในเครื่อง
   var NEWK = ["edm_book_res", "edm_book_list", "edm_book_cfg", "edm_cafe_menu", "edm_cafe_orders", "edm_cafe_shifts", "edm_cafe_cfg"]; // ระบบจอง (เพิ่มภายหลัง): ถ้าข้อมูลบนระบบยังไม่มี ไม่ลบข้อมูลในเครื่อง
   /* ระบบจองแต่ละรุ่นเก็บข้อมูลแยกชุด edm_book_<รุ่น>_* (ไม่ปนกัน) */
   ["hotel", "resort", "dorm", "meet", "salon", "tech"].forEach(function (e) { var p = "edm_book_" + e + "_"; CK.push(p + "res", p + "list", p + "cfg", p + "lease"); NEWK.push(p + "res", p + "list", p + "cfg"); KEEP.push(p + "lease"); });
   var SK = "edm_sync", cloudTimer = null, dirtySince = 0, pushing = false, cloudOn = false;
-  /* 3 พ.ย.: กรอกพร้อมกันหลายเครื่อง (เฉพาะหน้าที่รองรับ) — รวมรายการตาม id (u = เวลาแก้ล่าสุด) + รายการที่ลบ (ป้ายลบ {id:เวลา})
-     ขณะเปิดหน้านี้: ข้อมูลระบบอื่นยึดตามในระบบ (หน้านี้ไม่ได้แก้) · คีย์ของหน้านี้ที่ไม่ใช่รายการ (เช่น cfg) ยึดในเครื่อง */
-  var MERGE = { due: { list: "edm_due_items", del: "edm_due_del", own: /^edm_due_/ } }, syncing = false, syncTimer = null;
-  function mg() { return MERGE[curSys()] || null; }
-  function pj(v, d) { try { var x = JSON.parse(v); return x == null ? d : x; } catch (e) { return d; } }
-  function mergeKeys(cloudKeys) {   // คืน true ถ้าในเครื่องเปลี่ยน
-    var M = mg(); if (!M) return false; var ch = false;
-    var lo = pj(localStorage.getItem(M.list), []), cl = pj(cloudKeys[M.list], []), ld = pj(localStorage.getItem(M.del), {}), cd = pj(cloudKeys[M.del], {}), del = {};
-    [ld, cd].forEach(function (o) { Object.keys(o || {}).forEach(function (k) { del[k] = Math.max(del[k] || 0, +o[k] || 0); }); });
-    var map = {}, order = [];
-    (Array.isArray(cl) ? cl : []).forEach(function (x) { if (x && x.id != null) { if (!map[x.id]) order.push(x.id); map[x.id] = x; } });
-    (Array.isArray(lo) ? lo : []).forEach(function (x) { if (!x || x.id == null) return; if (!map[x.id]) { order.push(x.id); map[x.id] = x; } else if ((+x.u || 0) >= (+map[x.id].u || 0)) map[x.id] = x; });
-    var out = order.map(function (id) { return map[id]; }).filter(function (x) { return !(del[x.id] && del[x.id] >= (+x.u || 0)); });
-    var so = JSON.stringify(out), sd = JSON.stringify(del);
-    if (so !== JSON.stringify(lo)) { localStorage.setItem(M.list, so); ch = true; }
-    if (sd !== JSON.stringify(ld || {})) localStorage.setItem(M.del, sd);
-    CK.forEach(function (k) { if (M.own.test(k)) return; var v = cloudKeys[k]; try { if (v != null) { if (localStorage.getItem(k) !== v) localStorage.setItem(k, v); } else if (KEEP.indexOf(k) < 0) localStorage.removeItem(k); } catch (e) {} });
-    return ch;
-  }
-  function cloudSync() {   // ดึง → รวม → ส่ง (หน้าที่รองรับกรอกพร้อมกัน)
-    if (!me || !me.token || syncing || pushing || document.visibilityState === "hidden") return;
-    syncing = true; var S = cGet();
-    call({ a: "pull", email: me.email, token: me.token, since: S.at || 0 }).then(function (r) {
-      if (r && r.ok && r.data && !r.same && !r.none) {
-        var o = pj(r.data, null);
-        if (o && o.keys) { var ch = mergeKeys(o.keys); var S2 = cGet(); S2.at = r.ts; cSet(S2); if (ch) try { window.dispatchEvent(new Event("edm:cloud-merged")); } catch (e) {} }
-      }
-      syncing = false; return cloudPush();
-    }).catch(function () { syncing = false; });
-  }
   function cGet() { try { return JSON.parse(localStorage.getItem(SK) || "{}") || {}; } catch (e) { return {}; } }
   function cSet(o) { try { localStorage.setItem(SK, JSON.stringify(o)); } catch (e) {} }
   function snap() { var o = {}; CK.forEach(function (k) { var v = null; try { v = localStorage.getItem(k); } catch (e) {} if (v != null) o[k] = v; }); return JSON.stringify({ v: 1, keys: o }); }
   function hashOf(str) { var h = 5381; for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return String(h >>> 0) + ":" + str.length; }
-  function emptyLocal() { return ["edm_due_items", "edm_bill_docs", "edm_stock_items", "edm_pay_emps", "edm_book_list", "edm_book_res", "edm_book_hotel_list", "edm_book_resort_list", "edm_book_dorm_list", "edm_book_meet_list", "edm_book_salon_list", "edm_book_tech_list", "edm_cafe_menu", "edm_time_log", "edm_todo_items", "edm_tdsheet_items", "edm_fin_items", "edm_ord_items", "edm_pos_sales", "edm_goal_items", "edm_spend_items", "edm_plan_tasks", "edm_pet_pets", "edm_loan_items", "edm_att_emps", "edm_hr_emps"].every(function (k) { var v = localStorage.getItem(k); return !v || v === "[]"; }) && (localStorage.getItem("edm_due_del") || "{}").length < 3 && !/"pur":\[\{|"cash":\[\{/.test(localStorage.getItem("edm_acc") || ""); }
+  function emptyLocal() { return ["edm_due_items", "edm_bill_docs", "edm_stock_items", "edm_pay_emps", "edm_book_list", "edm_book_res", "edm_book_hotel_list", "edm_book_resort_list", "edm_book_dorm_list", "edm_book_meet_list", "edm_book_salon_list", "edm_book_tech_list", "edm_cafe_menu", "edm_time_log", "edm_todo_items", "edm_tdsheet_items", "edm_fin_items", "edm_ord_items", "edm_pos_sales", "edm_goal_items", "edm_spend_items", "edm_plan_tasks", "edm_pet_pets", "edm_loan_items", "edm_att_emps", "edm_hr_emps"].every(function (k) { var v = localStorage.getItem(k); return !v || v === "[]"; }) && !/"pur":\[\{|"cash":\[\{/.test(localStorage.getItem("edm_acc") || ""); }
   function timeTh(ts) { var d = new Date(ts); return thDate(ts) + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
   function cloudPush(force) {
     if (!me || !me.token || pushing) return Promise.resolve(false);
@@ -411,14 +381,14 @@
     var h = hashOf(snap()), S = cGet();
     if (h === S.h) { dirtySince = 0; return; }
     if (!dirtySince) dirtySince = Date.now();
-    if (Date.now() - dirtySince > (mg() ? 4000 : 20000)) mg() ? cloudSync() : cloudPush();
+    if (Date.now() - dirtySince > 20000) cloudPush();
   }
   function cloudInit() {
     if (cloudOn || !me || !me.token) return; cloudOn = true;
     var S = cGet(), mine = S.email === me.email, other = !mine && S.email ? S.email : ""; // other = เครื่องนี้เคยเป็นข้อมูลของอีเมลอื่น
     if (!mine) S = { email: me.email, h: "", at: 0 };
     var wipe = localStorage.getItem("edm_sync_wipe") === "1";
-    var begin = function () { if (!cloudTimer) cloudTimer = setInterval(cloudTick, mg() ? 5000 : 15000); if (mg() && !syncTimer) { syncTimer = setInterval(cloudSync, 20000); document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") cloudSync(); }); } if (!cGet().h) cloudPush(); else cloudTick(); };
+    var begin = function () { if (!cloudTimer) cloudTimer = setInterval(cloudTick, 15000); if (!cGet().h) cloudPush(); else cloudTick(); };
     if (wipe) { cloudPush(true).then(begin); return; }
     call({ a: "pull", email: me.email, token: me.token, since: mine ? S.at || 0 : 0 }).then(function (r) {
       if (other && r && r.ok && !emptyLocal()) {
@@ -433,7 +403,6 @@
       if (!r || !r.ok || r.none || r.same || !r.data) { if (r && r.ok && (r.same || r.none) && !mine) cSet(S); begin(); return; }
       var local = snap();
       if (emptyLocal() || (mine && hashOf(local) === S.h)) return cloudRestore(r); // เครื่องนี้ไม่มีอะไรใหม่ → ใช้ข้อมูลจากระบบ
-      if (mg() && !other) { var oo = pj(r.data, null); if (oo && oo.keys) { if (mergeKeys(oo.keys)) try { window.dispatchEvent(new Event("edm:cloud-merged")); } catch (e) {} var S3 = cGet(); S3.email = me.email; S3.at = r.ts; cSet(S3); cloudPush(true).then(begin); return; } }
       var cl = {}; try { cl = summ(JSON.parse(r.data).keys || {}); } catch (e) { cl = { txt: "", total: 0 }; }
       var lo = summ(keysNow());
       // ข้อมูลตัวอย่าง ไม่ทับข้อมูลจริง: เครื่องนี้มีแต่ตัวอย่าง → ใช้ข้อมูลจากระบบ · ระบบมีแต่ตัวอย่าง → สำรองข้อมูลจริงในเครื่องขึ้นระบบ
@@ -447,7 +416,7 @@
     }).catch(begin);
     document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") cloudPush(); });
   }
-  function cloudStop() { cloudOn = false; if (cloudTimer) clearInterval(cloudTimer); cloudTimer = null; if (syncTimer) clearInterval(syncTimer); syncTimer = null; }
+  function cloudStop() { cloudOn = false; if (cloudTimer) clearInterval(cloudTimer); cloudTimer = null; }
   function cloudLine() { var S = cGet(); return S.email && me && S.email === me.email && S.ok ? "☁️ สำรองขึ้นระบบแล้ว · " + timeTh(S.ok) : "☁️ ยังไม่ได้สำรองขึ้นระบบ"; }
 
   function startEmbed() {
