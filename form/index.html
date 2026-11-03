@@ -531,7 +531,7 @@ function vCp(){const M=$("#main"),c=cpCfg();
   <h3 style="margin:0">🖊️ ขีดคร่อมสำเนาเอกสาร</h3>
   <p class="note" style="margin:0">ถ่ายรูปหรือเลือกรูปบัตร/เอกสาร ระบบจะขีดคร่อม เขียน "ใช้สำหรับ…เท่านั้น" และ "สำเนาถูกต้อง" ให้ · <b>รูปอยู่ในเครื่องนี้เท่านั้น ไม่บันทึก ไม่ส่งขึ้นระบบ</b></p>
   <div class="f"><label>เอกสาร</label><div class="chips" id="cpTy">${CP_TY.map(t=>`<button class="chip${c.ty===t?" on":""}" data-ty="${esc(t)}">${esc(t)}</button>`).join("")}</div></div>
-  <div class="f"><label>รูปเอกสาร (ได้หลายรูป เช่น หน้า-หลังบัตร)</label><label class="btn main" style="cursor:pointer">📷 ถ่าย / เลือกรูป<input type="file" id="cpF" accept="image/*" multiple hidden></label><div id="cpL" class="chips"></div></div>
+  <div class="f"><label>รูปหน้าบัตร / หน้าเอกสาร (1 รูป)</label><label class="btn main" style="cursor:pointer">📷 ถ่าย / เลือกรูป<input type="file" id="cpF" accept="image/*" hidden></label><div id="cpL" class="chips"></div></div>
   <div class="f"><label>ใช้สำหรับ … เท่านั้น</label><input class="in-" id="cpX" value="${esc(c.x)}" placeholder="เช่น สมัครงานกับ บริษัท ตัวอย่าง จำกัด"><div class="chips" id="cpP">${CP_P.map(t=>`<button class="chip" data-p="${esc(t)}">${esc(t)}</button>`).join("")}</div></div>
   <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="cpTwo"${c.two?" checked":""}> เพิ่มบรรทัด "ห้ามนำไปใช้เพื่อการอื่น"</label>
   <div class="f"><label>ชื่อผู้รับรองสำเนา (ใต้ลายเซ็น)</label><input class="in-" id="cpN" value="${esc(c.name)}" placeholder="เช่น นายสมชาย ใจดี"></div>
@@ -545,7 +545,7 @@ function vCp(){const M=$("#main"),c=cpCfg();
   $("#cpTy").onclick=e=>{const b=e.target.closest("[data-ty]");if(!b)return;c.ty=b.dataset.ty;$$("#cpTy .chip").forEach(x=>x.classList.toggle("on",x===b));saveUi()};
   $("#cpP").onclick=e=>{const b=e.target.closest("[data-p]");if(!b)return;$("#cpX").value=b.dataset.p;up()};
   $("#cpC").onclick=e=>{const b=e.target.closest("[data-c]");if(!b)return;c.col=b.dataset.c;$$("#cpC .chip").forEach(x=>x.classList.toggle("on",x===b));up()};
-  $("#cpF").onchange=e=>{const fs=[...e.target.files];e.target.value="";fs.forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1800/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);if(CPI.length<4)CPI.push({cv,rot:0});else toast("ใส่ได้สูงสุด 4 รูป");cpList();cpDraw()};im.src=r.result};r.readAsDataURL(f)})};
+  $("#cpF").onchange=e=>{const fs=[...e.target.files].slice(0,1);e.target.value="";fs.forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1800/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);CPI=[{cv,rot:0}];cpList();cpDraw()};im.src=r.result};r.readAsDataURL(f)})};
   $("#cpL").onclick=e=>{const b=e.target.closest("[data-r],[data-x]");if(!b)return;if(b.dataset.r!=null)CPI[+b.dataset.r].rot=(CPI[+b.dataset.r].rot+90)%360;else CPI.splice(+b.dataset.x,1);cpList();cpDraw()};
   const name=()=>"สำเนา"+c.ty+"-"+new Date().toISOString().slice(0,10);
   $("#cpPng").onclick=()=>{if(!CPI.length)return toast("เลือกรูปเอกสารก่อน");$("#cpCv").toBlob(b=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name()+".png";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)},"image/png")};
