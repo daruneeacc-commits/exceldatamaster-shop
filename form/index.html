@@ -69,7 +69,7 @@ table.xl{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 .lang{display:inline-block;border-radius:6px;padding:1px 6px;font-size:.72rem;font-weight:700;background:var(--soft);color:var(--accent)}
 /* ---------- เอกสาร A4 ---------- */
 .doc{width:210mm;min-height:297mm;background:#fff;padding:14mm 15mm;font-size:10.5pt;line-height:1.5;color:#1d2622;box-shadow:0 10px 30px -14px rgba(0,0,0,.35);display:flex;flex-direction:column}
-.doc.ko{font-family:"Noto Sans KR","IBM Plex Sans Thai",sans-serif}.doc.ja{font-family:"Noto Sans JP","IBM Plex Sans Thai",sans-serif}
+.doc.ko{font-family:"Noto Sans KR","IBM Plex Sans Thai",sans-serif}.doc.ja{font-family:"Noto Sans JP","IBM Plex Sans Thai",sans-serif}.doc.zh{font-family:"Noto Sans SC","IBM Plex Sans Thai",sans-serif}
 .doc .hd{display:flex;justify-content:space-between;gap:16px;border-bottom:3px solid var(--dc,#2E6F9E);padding-bottom:10px}
 .doc .co{display:flex;gap:10px;align-items:center;min-width:0}.doc .lg{width:48px;height:48px;border-radius:10px;object-fit:contain;flex:none}.doc .lgt{width:48px;height:48px;border-radius:10px;background:var(--dc,#2E6F9E);color:#fff;display:grid;place-items:center;font-weight:700;font-size:16pt;flex:none}
 .doc .co b{font-size:11.5pt}.doc .co small{display:block;color:#5b6762;font-size:8.5pt;line-height:1.35}
@@ -119,8 +119,8 @@ const num=v=>{const n=parseFloat(String(v==null?"":v).replace(/,/g,""));return i
 function toast(m){const t=$("#toast");if(!t)return;t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
 
 /* ---------- ภาษา ---------- */
-const LANGS=[["th","ไทย"],["en","English"],["bi","ไทย + English"],["ko","한국어"],["ja","日本語"]];
-const LI={th:0,en:1,ko:2,ja:3};
+const LANGS=[["th","ไทย"],["en","English"],["bi","ไทย + English"],["zh","中文 (简体)"],["ko","한국어"],["ja","日本語"]];
+const LI={th:0,en:1,ko:2,ja:3,zh:4};
 /* คำในเอกสาร [ไทย, อังกฤษ, เกาหลี, ญี่ปุ่น] */
 const W={
 no:["เลขที่","No.","번호","番号"],date:["วันที่","Date","날짜","日付"],payee:["จ่ายให้","Pay to","지급처","支払先"],payer:["รับจาก","Received from","입금처","入金元"],
@@ -154,6 +154,8 @@ const CUR=[["THB",2,"บาท","สตางค์","Baht","Satang","바트","�
 ["JPY",0,"เยน","","Yen","","엔","円","¥"],["KRW",0,"วอน","","Won","","원","ウォン","₩"],["CNY",2,"หยวน","เฟิน","Yuan","Fen","위안","人民元","¥"],["SGD",2,"ดอลลาร์สิงคโปร์","เซนต์","Singapore Dollars","Cents","싱가포르 달러","シンガポールドル","S$"],
 ["MYR",2,"ริงกิต","เซน","Ringgit","Sen","링깃","リンギット","RM"],["HKD",2,"ดอลลาร์ฮ่องกง","เซนต์","Hong Kong Dollars","Cents","홍콩 달러","香港ドル","HK$"],["AUD",2,"ดอลลาร์ออสเตรเลีย","เซนต์","Australian Dollars","Cents","호주 달러","豪ドル","A$"],
 ["VND",0,"ดอง","","Dong","","동","ドン","₫"],["LAK",0,"กีบ","","Kip","","킵","キープ","₭"],["MMK",0,"จ๊าต","","Kyat","","짯","チャット","K"]];
+const ZHC={THB:["泰铢","萨当"],USD:["美元","美分"],EUR:["欧元","欧分"],GBP:["英镑","便士"],JPY:["日元",""],KRW:["韩元",""],CNY:["元","分"],SGD:["新加坡元","分"],MYR:["林吉特","仙"],HKD:["港元","仙"],AUD:["澳元","分"],VND:["越南盾",""],LAK:["基普",""],MMK:["缅元",""]};
+CUR.forEach(c=>{if(c.length<10)c.push(...(ZHC[c[0]]||[c[4],""]))});
 const CU=c=>CUR.find(x=>x[0]===c)||CUR[0];
 const money=(n,c)=>{const d=CU(c)[1];return(+n||0).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d})};
 /* จำนวนเงินเป็นตัวหนังสือ */
@@ -168,10 +170,14 @@ function koInt(n){if(n===0)return"영";const g=["","만","억","조"];let s="",i
 const JA_D=["","壱","弐","参","四","五","六","七","八","九"];
 function ja4(n){let s="";[[1000,"千"],[100,"百"],[10,"拾"],[1,""]].forEach(([v,u])=>{const d=Math.floor(n/v)%10;if(d)s+=JA_D[d]+u});return s}
 function jaInt(n){if(n===0)return"零";const g=["","萬","億","兆"];let s="",i=0;while(n>0){const c=n%10000;if(c)s=ja4(c)+g[i]+s;n=Math.floor(n/10000);i++}return s}
+const ZH_D="零壹贰叁肆伍陆柒捌玖";
+function zh4(n){let s="",st=false,z=false;[[1000,"仟"],[100,"佰"],[10,"拾"],[1,""]].forEach(([v,u])=>{const d=Math.floor(n/v)%10;if(!d){if(st)z=true;return}if(z)s+="零";s+=ZH_D[d]+u;st=true;z=false});return s}
+function zhInt(n){if(n===0)return"零";const G=[],U=["","万","亿","万亿"];while(n>0){G.push(n%10000);n=Math.floor(n/10000)}let s="",pz=false;for(let i=G.length-1;i>=0;i--){const c=G[i];if(!c){if(s)pz=true;continue}if(s&&(pz||c<1000))s+="零";s+=zh4(c)+U[i];pz=false}return s}
 function words(n,c,l){const C=CU(c),neg=n<0;n=Math.abs(+n||0);const d=C[1],ip=Math.floor(n+1e-9),fr=d?Math.round((n-ip)*100):0;
   if(l==="th"||l==="bi"){let s=thInt(ip)+C[2]+(fr?thInt(fr)+C[3]:(c==="THB"?"ถ้วน":""));if(neg)s="ลบ"+s;return l==="bi"?s+"\n("+words(neg?-n:n,c,"en")+")":s}
   if(l==="en")return(neg?"Minus ":"")+enInt(ip)+" "+C[4]+(fr?" and "+enInt(fr)+" "+C[5]:"")+" Only";
   if(l==="ko")return"일금 "+koInt(ip)+(c==="KRW"?"원":" "+C[6])+(fr?" "+fr+" "+(C[5]||""):"")+"정";
+  if(l==="zh"){const ng=neg?"负":"";if(c==="CNY")return"人民币"+ng+zhInt(ip)+"元"+(fr?(Math.floor(fr/10)?ZH_D[Math.floor(fr/10)]+"角":(ip?"零":""))+(fr%10?ZH_D[fr%10]+"分":""):"整");return ng+zhInt(ip)+C[9]+(fr?zhInt(fr)+(C[10]||""):"整")}
   if(l==="ja")return"金"+jaInt(ip)+C[7]+(fr?fr+(c==="USD"?"セント":""):"")+"也";return""}
 /* วันที่ตามภาษา */
 const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],ME=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -329,6 +335,31 @@ const NEW_T=[
 ];
 /* ป้ายช่องชื่อผู้ลงนามเพิ่ม */
 Object.assign(W,{vAccN:W.vAcc,rcv:W.receiverG,insp:W.inspector,store:W.storekeeper,dlv:W.deliverer,techN:W.tech,itN:W.itS,guardN:W.guard,senderN:W.sender,recipN:W.recipient});
+/* ภาษาจีนตัวย่อ (4 พ.ย.): เติมคำลำดับที่ 5 ให้ W และชื่อแบบฟอร์ม */
+const ZH={no:"编号",date:"日期",payee:"收款方",payer:"付款方",addr:"地址",taxid:"税号",idcard:"身份证号",phone:"电话",desc:"摘要",amount:"金额",qty:"数量",unit:"单位",price:"单价",total:"合计",subtotal:"小计",wht:"代扣税",net:"实付金额",words:"金额大写",
+paidby:"付款方式",recvby:"收款方式",cash:"现金",transfer:"银行转账",cheque:"支票",bank:"银行",ref:"支票号 / 参考号",note:"备注",purpose:"用途",requester:"申请人",dept:"部门",pos:"职位",empid:"员工编号",
+prepared:"制单人",approved:"审批人",received:"收款人",paidS:"付款人",checked:"审核人",supervisor:"主管",hr:"人事部",acct:"财务部",need:"需求日期",supplier:"建议供应商",reason:"原因",
+advAmt:"借款金额",clearBy:"报销期限",advRef:"借款单号",advRecv:"已借款金额",spent:"实际支出",refund:"退还公司",extra:"补领金额",trip:"出差地点",from:"自",to:"至",days:"天数",cat:"费用类别",
+leaveType:"请假类型",sick:"病假",personal:"事假",annual:"年假",maternity:"产假",other:"其他",contact:"请假期间联系方式",applicant:"申请人",employee:"员工",tFrom:"开始时间",tTo:"结束时间",hours:"小时",task:"工作内容",totalHrs:"合计小时",
+mFrom:"发文部门",mTo:"致",cc:"抄送",subject:"事由",body:"内容",signer:"签署人",empName:"员工姓名",start:"入职日期",salary:"月薪",grantor:"委托人",grantee:"受托人",matters:"委托事项",witness:"见证人",valid:"有效期至",place:"签署地点",
+srReason:"无收据原因",receiver:"收款人",certifier:"证明人",signDate:"日期 ____/____/______",page:"exceldatamaster.com",sPos:"签署人职位",gAddr:"委托人地址",gid:"受托人身份证号",geAddr:"受托人地址",
+dueDate:"付款日期",invRef:"发票号 / 参考号",fund:"备用金额度",custodian:"保管人",pcRef:"凭证号",customer:"客户",contactP:"联系人",vendor:"供应商",vAddr:"供应商地址",vat:"增值税",grand:"总计",delivery:"交货日期",payTerm:"付款条件",shipTo:"收货地址",poRef:"采购单号",
+code:"代码",ordered:"订购数量",receivedQ:"实收数量",cond:"状况 / 备注",fromWh:"调出地点",toWh:"调入地点",replyBy:"回复期限",supA:"供应商A",supB:"供应商B",supC:"供应商C",priceA:"报价A",priceB:"报价B",priceC:"报价C",selected:"选定供应商",
+borrower:"借用人",borrowDate:"借用日期",returnDate:"归还日期",lender:"出借经办人",returner:"归还确认人",serial:"序列号",deliverer:"送货人",receiverG:"收货人",storekeeper:"仓管员",inspector:"验收人",
+fullName:"姓名",birth:"出生日期",email:"电子邮箱",posApplied:"应聘职位",expSalary:"期望薪资",availDate:"可入职日期",edu:"学历 / 学校",skills:"技能 / 语言",company:"公司名称",period:"期间",duty:"工作职责",
+headcount:"人数",empType:"雇佣类型",full:"正式员工",contract:"合同工",part:"兼职",qualif:"任职要求",budget:"薪资预算",posType:"申请类型",newPos:"新增岗位",replace:"离职补缺",prob:"试用期（天）",benefit:"福利",acceptS:"接受人",
+criteria:"评估项目",score:"分数 (1-5)",comment:"评语",totalScore:"总分",result:"评估结果",pass:"通过",extend:"延长试用期",fail:"不通过",evaluator:"评估人",offDate:"发生日期",offense:"违规内容",level:"警告级别",wl1:"第一次警告",wl2:"第二次警告",wlF:"最后警告",fixReq:"改正要求",ackEmp:"员工确认",
+last:"生效日期",origDate:"原上班日期",newDate:"申请调整日期",swapWith:"调班对象",workType:"工作方式",wfh:"居家办公",offsite:"外勤",course:"培训课程",provider:"主办方",cost:"费用",benefitT:"预期效果",fromEmp:"移交人",toEmp:"接收人",taskH:"工作 / 文件",statusH:"状态",
+asset:"资产",returned:"归还 / 状况",deductFrom:"扣款月份",tIn:"上班时间",tOut:"下班时间",nextStep:"下一步",salesRep:"销售代表",normalPrice:"原价",discPct:"折扣 (%)",offerPrice:"报价",location:"地点",problem:"故障内容",urgency:"紧急程度",urgent:"紧急",normal:"一般",low:"低",
+tech:"维修人",fix:"维修结果",dest:"目的地",pax:"乘车人数",vehicle:"车辆",driver:"司机",mileOut:"出车里程",mileIn:"回车里程",room:"会议室",attendees:"参会人数",equip:"所需设备",system:"系统",access:"权限",reqType:"申请类型",newAcc:"新增",change:"变更",revoke:"注销",itS:"IT部",
+incTime:"发生时间",persons:"相关人员",damage:"损失 / 伤害",actionT:"处理措施",prevent:"预防措施",reporter:"报告人",carrier:"携带人",willReturn:"是否归还",retYes:"需归还",retNo:"不归还",guard:"保安",meeting:"会议名称",attend:"出席人员",agenda:"议题 / 要点",owner:"负责人",dueD:"期限",
+recorder:"记录人",chair:"主持人",time:"时间",doc:"文件",copies:"份数",sender:"发送人",recipient:"接收人",vAcc:"供应商确认",claim:"退货原因"};
+for(const k in W){const a=W[k];if(a.length<5)a.push(ZH[k]||a[1])}
+const ZHT={pv:"付款凭证",rv:"收款凭证",pq:"付款申请单",pc:"备用金支出单",cr:"备用金补充申请单",ad:"借款申请单",cl:"借款报销单",te:"差旅费报销单",sr:"无收据支出证明",rc:"收据",rf:"退款申请单",sa:"预支工资申请单",
+pr:"请购单",rq:"询价单",qc:"比价表",po:"采购订单",gr:"收货单",mr:"领料单",st:"库存调拨单",dn:"送货单",eb:"物品借用单",ja:"求职申请表",mp:"人员需求申请表",ol:"录用通知书",ev:"试用期评估表",lv:"请假单",ot:"加班申请单",
+mpn:"考勤更正申请单",sw:"调班 / 换休申请单",wf:"居家 / 外勤申请单",tr:"培训申请单",ce:"在职证明",wl:"警告信",ho:"工作交接单",ar:"公司资产归还单",rs:"辞职信",pa:"授权委托书",vr:"客户拜访报告",da:"特别折扣审批单",sm:"样品申请单",rt:"退货 / 投诉单",
+mm:"内部通知",mn:"会议记录",dt:"文件交接单",rp:"维修申请单",vh:"用车申请单",rb:"会议室申请单",it:"IT权限申请单",gp:"物品出门证",ir:"事故报告"};
+T.forEach(t=>{if(t.t.length<5)t.t.push(ZHT[t.id]||t.t[1])});
 NEW_T.forEach(t=>T.push(t));
 /* จัดกลุ่มแผนก (ของเดิม) */
 T.forEach(t=>{if(t.g==="การเงิน")t.g="การเงิน & บัญชี";if(t.g==="จัดซื้อ"||t.g==="จัดซื้อ & คลัง")t.g="จัดซื้อ & คลังสินค้า";if(t.g==="บุคคล")t.g="บุคคล (HR)"});
@@ -360,7 +391,7 @@ const coName=l=>(l!=="th"&&l!=="bi"&&cfg.co.nameEn)?cfg.co.nameEn:(cfg.co.name||
 const coAddr=l=>(l!=="th"&&l!=="bi"&&cfg.co.addrEn)?cfg.co.addrEn:cfg.co.addr;
 const fv=(d,k)=>d.f[k]==null?"":String(d.f[k]);
 function bodyText(d,l){const t=TP(d.tpl),v=k=>esc(fv(d,k))||"…………",co=esc(coName(l)),L=l==="bi"?"th":l,c=calc(d);
-  const sal=fv(d,"salary")?money(num(d.f.salary),d.cur)+" "+CU(d.cur)[l==="en"?4:L==="th"?2:L==="ko"?6:7]:"";
+  const sal=fv(d,"salary")?money(num(d.f.salary),d.cur)+" "+CU(d.cur)[l==="en"?4:L==="th"?2:L==="ko"?6:L==="zh"?9:7]:"";
   const S={
   sr:{th:`ข้าพเจ้า ${v("requester")} ตำแหน่ง ${v("pos")} ขอรับรองว่าได้จ่ายเงินในนาม ${co} ตามรายการข้างต้น ซึ่งไม่อาจเรียกใบเสร็จรับเงินจากผู้รับเงินได้ และเป็นการจ่ายเพื่อกิจการของบริษัทโดยแท้`,
       en:`I, ${v("requester")}, ${v("pos")}, certify that the above expenses were paid on behalf of ${co}, that receipts could not be obtained from the payees, and that the expenses were incurred solely for company business.`,
@@ -384,6 +415,12 @@ function bodyText(d,l){const t=TP(d.tpl),v=k=>esc(fv(d,k))||"…………",co=es
     en:`Dear ${v("fullName")},\n\n${co} is pleased to offer you the position of ${v("pos")} in the ${v("dept")} Department, starting on ${esc(dt(fv(d,"start"),"en"))||"…………"}, with a monthly salary of ${sal2||"…………"} and a probation period of ${v("prob")} days.${fv(d,"benefit")?` Benefits: ${v("benefit")}.`:""}\n\nIf you accept this offer, please sign below and return this letter by ${esc(dt(fv(d,"replyBy"),"en"))||"…………"}.`,
     ko:`${v("fullName")} 님께\n\n${co}은(는) 귀하를 ${v("dept")} 부서 ${v("pos")}(으)로 채용하고자 합니다. 입사일은 ${esc(dt(fv(d,"start"),"ko"))||"…………"}, 월급은 ${sal2||"…………"}, 수습 기간은 ${v("prob")}일입니다.${fv(d,"benefit")?` 복리후생: ${v("benefit")}.`:""}\n\n본 제안을 수락하시면 ${esc(dt(fv(d,"replyBy"),"ko"))||"…………"}까지 서명하여 회신해 주시기 바랍니다.`,
     ja:`${v("fullName")} 様\n\n${co}は、貴殿を${v("dept")}部 ${v("pos")}として採用することを決定いたしましたので通知いたします。入社日は${esc(dt(fv(d,"start"),"ja"))||"…………"}、月給は${sal2||"…………"}、試用期間は${v("prob")}日です。${fv(d,"benefit")?`福利厚生：${v("benefit")}。`:""}\n\n本内容をご承諾いただける場合は、${esc(dt(fv(d,"replyBy"),"ja"))||"…………"}までに署名のうえご返送ください。`};
+  S.sr.zh=`本人 ${v("requester")}（${v("pos")}）兹证明：上述费用系代${co}支付，因收款方无法开具收据，且该支出仅用于公司业务。`;
+  S.rc.zh=`本人 ${v("receiver")} 已从${co}如数收到上述款项。`;
+  S.ce.zh=`兹证明 ${v("empName")}（身份证号 ${v("idcard")}）自${esc(dt(fv(d,"start"),"zh"))||"…………"}起至今在${co}${v("dept")}部任职，职位为${v("pos")}。${sal?`现月薪为${sal}（${esc(words(num(d.f.salary),d.cur,"zh"))}）。`:""}\n\n本证明于${esc(dt(d.date,"zh"))}出具，用于${v("purpose")}。`;
+  S.pa.zh=`本人/本公司 ${v("grantor")}（地址：${v("gAddr")}）兹委托 ${v("grantee")}（身份证号 ${v("gid")}，地址：${v("geAddr")}）代为办理以下事项：\n${v("matters")}\n\n受托人在委托权限范围内所办理的一切事项，均视为本人/本公司亲自办理。${fv(d,"valid")?`本委托书有效期至${esc(dt(d.f.valid,"zh"))}。`:""}`;
+  S.rs.zh=`本人 ${v("employee")}（${v("dept")} ${v("pos")}）因${v("reason")}，特此申请自${esc(dt(fv(d,"last"),"zh"))||"…………"}起辞去在${co}的职务。\n\n本人将于离职日前完成工作交接并归还全部公司财物。感谢公司给予的工作机会。`;
+  S.ol.zh=`${v("fullName")} 您好：\n\n${co}很高兴通知您，您已被录用为${v("dept")}部 ${v("pos")}，入职日期为${esc(dt(fv(d,"start"),"zh"))||"…………"}，月薪${sal2||"…………"}，试用期${v("prob")}天。${fv(d,"benefit")?`福利：${v("benefit")}。`:""}\n\n如接受本录用，请于${esc(dt(fv(d,"replyBy"),"zh"))||"…………"}前签字并回传本通知书。`;
   const s=S[t.body];if(!s)return"";if(l==="bi")return s.th+'<span class="s2">'+s.en+"</span>";return s[l]}
 function docHtml(d){const t=TP(d.tpl),l=d.lang||"th",c=calc(d),C=CU(d.cur),cc=d.cur;
   const lg=cfg.co.logo?`<img class="lg" src="${esc(cfg.co.logo)}" alt="">`:`<div class="lgt">${esc((coName("en")||"A").replace(/^(บริษัท|ห้างหุ้นส่วน(จำกัด)?|หจก\.?|บจก\.?)\s*/,"").trim().slice(0,1)||"A")}</div>`;
@@ -415,7 +452,7 @@ function docHtml(d){const t=TP(d.tpl),l=d.lang||"th",c=calc(d),C=CU(d.cur),cc=d.
   h+=`<div class="ft edm-brand">${esc(W.page[LI[l==="bi"?"th":l]])}</div></div>`;return h}
 
 /* ---------- ฟอนต์เกาหลี/ญี่ปุ่น (โหลดเมื่อเลือกภาษา) ---------- */
-const FONT={ko:"Noto+Sans+KR",ja:"Noto+Sans+JP"};
+const FONT={ko:"Noto+Sans+KR",ja:"Noto+Sans+JP",zh:"Noto+Sans+SC"};
 /* ฟอนต์ให้เลือก (Google Fonts โหลดเมื่อใช้) */
 const FF=[["","ค่าเริ่มต้น (IBM Plex)","",""],["sarabun","สารบรรณ · ทางการ","Sarabun","400;700"],["pridi","ปรีดี · มีหัว","Pridi","400;600;700"],["taviraj","ทวิราช · มีหัว คลาสสิก","Taviraj","400;600;700"],["prompt","พรอมต์ · ทันสมัย","Prompt","400;600;700"],["kanit","คณิต · ตัวหนาชัด","Kanit","400;600;700"],["niramit","นิรมิต · อ่านง่าย","Niramit","400;600;700"],["krub","ครับ · โปร่ง","Krub","400;600;700"],["chakra","จักรเพชร · เหลี่ยม","Chakra Petch","400;600;700"],["mali","มะลิ · กลมน่ารัก","Mali","400;600;700"],["itim","อิทิม · ลายมือ","Itim","400"],["sriracha","ศรีราชา · ลายมือ","Sriracha","400"],["charm","ชาม · ลายมือหวัด","Charm","400;700"]];
 const ffOf=k=>FF.find(x=>x[0]===k&&k);
@@ -426,7 +463,7 @@ function needFont(l){if(!FONT[l]||document.getElementById("fnt-"+l))return;const
 
 /* ---------- หน้า สร้างเอกสาร ---------- */
 function vNew(){const M=$("#main"),G=["การเงิน & บัญชี","จัดซื้อ & คลังสินค้า","บุคคล (HR)","ขาย & ลูกค้า","ธุรการ · อาคาร · IT"].filter(g=>T.some(t=>t.g===g));
-  M.innerHTML=`<section class="hero"><div class="hero-t"><h1>วันนี้จะทำเอกสารอะไรดี?</h1><p>เลือกแบบฟอร์ม กรอกข้อมูล ได้ PDF พร้อมส่ง</p><div class="hero-k"><span>📄 ${T.length} แบบฟอร์ม</span><span>🌏 ไทย · EN · 한국어 · 日本語</span><span>🔢 รันเลขที่ + ตัวหนังสือให้อัตโนมัติ</span></div></div>${!cfg.co.name?`<button class="btn hero-b" id="goSet" type="button">🏢 ใส่ชื่อบริษัทก่อน</button>`:""}
+  M.innerHTML=`<section class="hero"><div class="hero-t"><h1>วันนี้จะทำเอกสารอะไรดี?</h1><p>เลือกแบบฟอร์ม กรอกข้อมูล ได้ PDF พร้อมส่ง</p><div class="hero-k"><span>📄 ${T.length} แบบฟอร์ม</span><span>🌏 ไทย · EN · 中文 · 한국어 · 日本語</span><span>🔢 รันเลขที่ + ตัวหนังสือให้อัตโนมัติ</span></div></div>${!cfg.co.name?`<button class="btn hero-b" id="goSet" type="button">🏢 ใส่ชื่อบริษัทก่อน</button>`:""}
   <div class="hero-s"><input class="in-" id="gq" placeholder="🔍 ค้นหา เช่น ใบลา เบิก ซ่อม สั่งซื้อ…" value="${esc(ui.gq||"")}"></div></section>
   <div class="chips gchips"><button class="chip${!ui.gd?" on":""}" data-gd="" type="button">ทุกแผนก (${T.length})</button>${G.map(g=>`<button class="chip${ui.gd===g?" on":""}" data-gd="${esc(g)}" type="button">${esc(g)} (${T.filter(t=>t.g===g).length})</button>`).join("")}</div><div id="galW"></div>`;
   const draw=()=>{const q=(ui.gq||"").trim().toLowerCase(),L=T.filter(t=>(!ui.gd||t.g===ui.gd)&&(!q||(t.t.join(" ")+" "+t.d).toLowerCase().includes(q)));
@@ -462,7 +499,7 @@ function vEd(){const d=cur,t=TP(d.tpl),M=$("#main");needFont(d.lang);
    <p class="note">💡 ชื่อผู้อนุมัติ แผนก ธนาคาร ฯลฯ ระบบจำจากเอกสารใบก่อนให้อัตโนมัติ · พิมพ์ช่องที่เคยกรอก มีคำเดิมให้เลือก</p>
    ${d.id?`<button class="btn ghost danger sm" id="eDel" type="button" style="align-self:flex-start">🗑️ ลบเอกสารนี้</button>`:""}
   </div><div class="pvw" id="pvw"><div class="pvs" id="pvs"></div></div></div>`;
-  const pv=()=>{if(!cur||!$("#pvs"))return;$("#pvs").innerHTML=docHtml(Object.assign({},cur,{no:cur.no||nextNo(t,cur.date).no+" (ร่าง)"}));fit();if(t.it){$("#sumBox").innerHTML=sumTxt();$("#sumBox").hidden=!t.sum}};
+  const pv=()=>{if(!cur||!$("#pvs"))return;$("#pvs").innerHTML=docHtml(Object.assign({},cur,{no:cur.no||nextNo(t,cur.date).no+" (ร่าง)"}));fit();const sb=$("#sumBox");if(t.it&&sb){sb.innerHTML=sumTxt();sb.hidden=!t.sum}};
   const sumTxt=()=>{const c=calc(cur);if(!t.sum)return"";if(t.sum!=="amount")return`<span>${W[t.sumL||"totalHrs"][0]}</span><span>${c.sub}</span>`;return`<span>${t.vat?"รวมทั้งสิ้น (รวม VAT)":t.wht&&c.wht?"ยอดสุทธิ":"รวมเงิน"}</span><span>${money(t.wht||t.vat?c.net:c.sub,cur.cur)} ${cur.cur}</span>`};
   const drawIt=()=>{if(!t.it)return;const cols=t.it.map(c=>c[1]==="t"?"minmax(0,2fr)":"minmax(0,1fr)").join(" ");$("#itEd").innerHTML=cur.items.map((r,i)=>`<div class="it-row" style="grid-template-columns:${cols} 26px">${t.it.map(c=>{const v=r[c[0]]==null?"":r[c[0]];const ph=W[c[0]==="amt"?"amount":c[0]][0];
       if(c[1]==="amt")return`<input class="in-" value="${v?money(v,cur.cur):""}" placeholder="${ph}" disabled title="${ph}">`;
@@ -491,7 +528,7 @@ function doSave(){const t=TP(cur.tpl);if(!cfg.co.name&&!confirm("ยังไม
   calc(cur);cur.ts=Date.now();if(!cur.id){cur.id=uid("f");D.push(JSON.parse(JSON.stringify(cur)))}else{const i=D.findIndex(x=>x.id===cur.id);if(i>=0)D[i]=JSON.parse(JSON.stringify(cur));else D.push(JSON.parse(JSON.stringify(cur)))}
   save();const n=$("#eNo");if(n)n.value=cur.no;if(!$("#eDel")){const s=$(".side");if(s)s.insertAdjacentHTML("beforeend",'<p class="note">✓ บันทึก'+(cur.no?'เป็น '+esc(cur.no):'')+" แล้ว</p>")}return true}
 function printDoc(d){needFont(d.lang);loadFF(d.font);$("#printArea").innerHTML=docHtml(d);window.EDM_DOCNAME=d.no||((TP(d.t)||{}).t||["document"])[0]+(d.date?" "+d.date:"");
-  const go=()=>window.print();(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(go,d.lang==="ko"||d.lang==="ja"?600:50))}
+  const go=()=>window.print();(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(go,d.lang==="ko"||d.lang==="ja"||d.lang==="zh"?600:50))}
 
 /* ---------- เอกสารของฉัน ---------- */
 function vDocs(){const M=$("#main"),q=ui.q.trim().toLowerCase();
