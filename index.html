@@ -723,6 +723,14 @@ header.top .logo span{white-space:nowrap}
 @media (min-width:1101px){.fx-g{grid-template-columns:repeat(7,minmax(0,1fr))}}
 @media (max-width:560px){.fx-k,.fx-all{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding:2px 16px 4px}.fx-k::-webkit-scrollbar,.fx-all::-webkit-scrollbar{display:none}.fx-k>*,.fx-all>*{flex:none}
  .fx-e{width:44px;height:44px;border-radius:13px}}
+/* 4 พ.ย.: ทางเข้า 4 อย่าง ใต้แบนเนอร์ */
+.d4s{padding-block:4px 18px}.d4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.d4-b{position:relative;display:flex;flex-direction:column;gap:4px;padding:18px 18px 16px;border-radius:20px;background:#fff;border:1.5px solid color-mix(in srgb,var(--dc) 22%,var(--line));text-decoration:none;color:var(--ink);overflow:hidden;transition:transform .15s,box-shadow .15s;min-width:0}
+.d4-b:before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--dc)}
+.d4-b:hover{transform:translateY(-3px);box-shadow:0 16px 30px -18px color-mix(in srgb,var(--dc) 70%,transparent)}
+.d4-i{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:1.8rem;background:color-mix(in srgb,var(--dc) 12%,#fff);margin-bottom:6px}
+.d4-b b{font-size:1.08rem;line-height:1.3}.d4-b small{color:var(--muted);font-size:.88rem;line-height:1.4}.d4-b em{font-style:normal;font-weight:700;color:var(--dc);margin-top:auto;padding-top:8px;font-size:.92rem}
+@media (max-width:900px){.d4{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.d4-b{padding:14px 12px 12px;border-radius:16px}.d4-i{width:44px;height:44px;font-size:1.45rem;border-radius:13px}.d4-b b{font-size:.98rem}.d4-b small{font-size:.8rem}.d4-b em{font-size:.84rem}}
 </style><div id="app"><!--pre--><header class="top"><div class="wrap hd">
     <a class="logo" href="#top"><img class="logo-img" src="/assets/shop/avatar.webp" alt=""><span>Excel Data Master</span></a>
     <nav class="links" aria-label="เมนูหลัก"><a href="#find">หาสินค้า</a><a href="#shop">เทมเพลต Excel</a><a href="#tools">ระบบออนไลน์</a><a href="/form/">แบบฟอร์มออนไลน์</a><a href="/course/">คอร์สออนไลน์</a><a href="#pricing">ราคา</a><a href="#how">วิธีสั่งซื้อ</a><a href="#faq">คำถาม</a></nav>
@@ -748,6 +756,13 @@ header.top .logo span{white-space:nowrap}
         <div class="hx-pop p2"><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#C2410C"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" fill-opacity=".34" stroke="none" d="M3 10.5h18v9H3z"></path><rect x="3" y="6.5" width="18" height="13" rx="2.5"></rect><path d="M3 10.5h18M7 6.5 9 3.6l7 2.9"></path><circle cx="16.5" cy="15" r="1.4" fill="#fff"></circle></g></svg></span><span><b>เงินเดือนพร้อมจ่าย</b>6 คน · สลิปครบ</span></div>
       </div>
     </div></section>
+
+    <section class="d4s" aria-label="เลือกสินค้า"><div class="wrap"><div class="d4">
+      <a class="d4-b" href="#shop" style="--dc:#1F7A4D"><span class="d4-i">📊</span><b>เทมเพลต Excel สำเร็จรูป</b><small>ซื้อครั้งเดียว ใช้ได้ตลอด · 11 แบบ</small><em>เริ่ม 459 บาท ›</em></a>
+      <a class="d4-b" href="#tools" style="--dc:#2F80C9"><span class="d4-i">🌐</span><b>ระบบออนไลน์</b><small>ใช้ผ่านมือถือ/คอม · 21 ระบบ</small><em>เริ่ม 49 บาท/เดือน ›</em></a>
+      <a class="d4-b" href="/form/" style="--dc:#7B5CC4"><span class="d4-i">📝</span><b>แบบฟอร์มออนไลน์</b><small>50 แบบ กรอกแล้วได้ PDF</small><em>ทดลองใช้ฟรี ›</em></a>
+      <a class="d4-b" href="/course/" style="--dc:#D9822B"><span class="d4-i">🎓</span><b>คอร์สเรียน Excel</b><small>เรียนพร้อมได้ไฟล์ไปใช้</small><em>ดูคอร์ส ›</em></a>
+    </div></div></section>
 
     <section class="fxs" id="find"><div class="wrap">
       <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">เลือกแบบที่ชอบ แล้วแตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้</p>
@@ -1197,6 +1212,13 @@ function render(){
         <div class="hx-pop p2">${ico("payroll","sm")}<span><b>เงินเดือนพร้อมจ่าย</b>6 คน · สลิปครบ</span></div>
       </div>
     </div></section>
+
+    <section class="d4s" aria-label="เลือกสินค้า"><div class="wrap"><div class="d4">
+      <a class="d4-b" href="#shop" style="--dc:#1F7A4D"><span class="d4-i">📊</span><b>เทมเพลต Excel สำเร็จรูป</b><small>ซื้อครั้งเดียว ใช้ได้ตลอด · ${tpl.length} แบบ</small><em>เริ่ม ${(()=>{const m=Math.min(...tpl.map(x=>+x.price||1e9));return m<1e9?m.toLocaleString()+" บาท":"ดูสินค้า"})()} ›</em></a>
+      <a class="d4-b" href="#tools" style="--dc:#2F80C9"><span class="d4-i">🌐</span><b>ระบบออนไลน์</b><small>ใช้ผ่านมือถือ/คอม · ${SYS.length} ระบบ</small><em>เริ่ม ${MINP} บาท/เดือน ›</em></a>
+      <a class="d4-b" href="${base}form/"${tg} style="--dc:#7B5CC4"><span class="d4-i">📝</span><b>แบบฟอร์มออนไลน์</b><small>50 แบบ กรอกแล้วได้ PDF</small><em>ทดลองใช้ฟรี ›</em></a>
+      <a class="d4-b" href="${base}course/"${tg} style="--dc:#D9822B"><span class="d4-i">🎓</span><b>คอร์สเรียน Excel</b><small>เรียนพร้อมได้ไฟล์ไปใช้</small><em>ดูคอร์ส ›</em></a>
+    </div></div></section>
 
     <section class="fxs" id="find"><div class="wrap">
       <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">เลือกแบบที่ชอบ แล้วแตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้</p>
