@@ -202,7 +202,7 @@ function dt(s,l){if(!s)return"";const[y,m,d]=s.split("-").map(Number);if(!y)retu
    pay: "pay" | "recv" · wht = มีหัก ณ ที่จ่าย · sg: ช่องลงนาม [คำ, ช่องชื่อ] · body: ข้อความรับรอง */
 const T=[
  {id:"pv",pre:"PV",e:"🧾",g:"การเงิน",t:["ใบสำคัญจ่าย","PAYMENT VOUCHER","지출결의서","支払伝票"],d:"จ่ายเงินให้ผู้ขาย/บุคคล พร้อมหัก ณ ที่จ่าย",
-  f:[["payee","t",0,0],["taxid","t"],["addr","t",1],["note","a",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",wht:1,pay:"pay",sg:[["prepared","prep"],["approved","appr"],["received","payee"]],keep:["prep","appr","bank"]},
+  f:[["payee","t",0,0],["taxid","t"],["addr","t",1],["note","a",1]],it:[["desc","t"],["whtR","n",70],["amount","m",130]],sum:"amount",wht:1,pay:"pay",sg:[["prepared","prep"],["approved","appr"],["received","payee"]],keep:["prep","appr","bank"]},
  {id:"rv",pre:"RV",e:"💰",g:"การเงิน",t:["ใบสำคัญรับ","RECEIPT VOUCHER","입금전표","入金伝票"],d:"บันทึกเงินที่บริษัทได้รับ",
   f:[["payer","t"],["taxid","t"],["addr","t",1],["note","a",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",pay:"recv",sg:[["prepared","prep"],["checked","chk"],["approved","appr"]],keep:["prep","chk","appr","bank"]},
  {id:"pc",pre:"PC",e:"💵",g:"การเงิน",t:["ใบเบิกเงินสดย่อย","PETTY CASH VOUCHER","소액현금 지급청구서","小口現金支払伝票"],d:"เบิกค่าใช้จ่ายเล็กๆ น้อยๆ จากเงินสดย่อย",
@@ -216,7 +216,7 @@ const T=[
  {id:"sr",pre:"SR",e:"📃",g:"การเงิน",t:["ใบรับรองแทนใบเสร็จรับเงิน","SUBSTITUTE RECEIPT","영수증 대체 확인서","領収書代替証明書"],d:"กรณีจ่ายเงินแล้วไม่มีใบเสร็จ",
   f:[["requester","t"],["pos","t"],["dept","t"],["srReason","t",1]],it:[["date","d",90],["desc","t"],["amount","m",120]],sum:"amount",body:"sr",sg:[["certifier","requester"],["approved","appr"]],keep:["pos","dept","appr"]},
  {id:"rc",pre:"RC",e:"✍️",g:"การเงิน",t:["ใบรับเงิน","RECEIPT","영수증","領収書"],d:"ให้บุคคลธรรมดาเซ็นรับเงินจากบริษัท",
-  f:[["receiver","t"],["idcard","t"],["addr","t",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",wht:1,pay:"pay",body:"rc",sg:[["received","receiver"],["paidS","paid"]],keep:["paid"]},
+  f:[["receiver","t"],["idcard","t"],["addr","t",1]],it:[["desc","t"],["whtR","n",70],["amount","m",130]],sum:"amount",wht:1,pay:"pay",body:"rc",sg:[["received","receiver"],["paidS","paid"]],keep:["paid"]},
  {id:"pr",pre:"PR",e:"🛒",g:"จัดซื้อ",t:["ใบขออนุมัติจัดซื้อ","PURCHASE REQUISITION","구매요청서","購買依頼書"],d:"ขออนุมัติซื้อของ/บริการ ก่อนสั่งซื้อจริง",
   f:[["requester","t"],["dept","t"],["need","d"],["supplier","t"],["reason","t",1]],it:[["desc","t"],["qty","n",60],["unit","t",60],["price","m",100],["amount","amt",110]],sum:"amount",sg:[["requester","requester"],["supervisor","sup"],["approved","appr"]],keep:["dept","sup","appr"]},
  {id:"lv",pre:"LV",e:"🗓️",g:"บุคคล",t:["ใบลา","LEAVE REQUEST","휴가 신청서","休暇届"],d:"ลาป่วย ลากิจ ลาพักร้อน ลาคลอด",nomoney:1,
@@ -270,7 +270,7 @@ vAcc:["ผู้ขายยืนยัน","Vendor acceptance","공급업체 �
 const NEW_T=[
  /* การเงิน & บัญชี */
  {id:"pq",pre:"PQ",e:"📤",g:"การเงิน",t:["ใบขออนุมัติจ่ายเงิน","PAYMENT REQUEST","지급 요청서","支払依頼書"],d:"ขออนุมัติจ่ายเงินให้ผู้ขาย ก่อนโอน",
-  f:[["payee","t"],["invRef","t"],["dueDate","d"],["purpose","t"],["note","a",1]],it:[["desc","t"],["amount","m",130]],sum:"amount",wht:1,pay:"pay",sg:[["requester","requester"],["checked","chk"],["approved","appr"]],keep:["requester","chk","appr","bank"]},
+  f:[["payee","t"],["invRef","t"],["dueDate","d"],["purpose","t"],["note","a",1]],it:[["desc","t"],["whtR","n",70],["amount","m",130]],sum:"amount",wht:1,pay:"pay",sg:[["requester","requester"],["checked","chk"],["approved","appr"]],keep:["requester","chk","appr","bank"]},
  {id:"cr",pre:"CR",e:"🔁",g:"การเงิน",t:["ใบขอเบิกชดเชยเงินสดย่อย","PETTY CASH REPLENISHMENT","소액현금 보충 청구서","小口現金補充申請書"],d:"รวมใบเบิกเงินสดย่อยทั้งรอบ ขอเติมวงเงิน",
   f:[["custodian","t"],["dept","t"],["fund","m"],["from","d"],["to","d"]],it:[["date","d",90],["pcRef","t",110],["desc","t"],["amount","m",110]],sum:"amount",sg:[["custodian","custodian"],["checked","chk"],["approved","appr"]],keep:["custodian","dept","fund","chk","appr"]},
  {id:"rf",pre:"RF",e:"↩️",g:"การเงิน",t:["ใบขอคืนเงินลูกค้า","REFUND REQUEST","환불 요청서","返金申請書"],d:"คืนเงินให้ลูกค้า ยกเลิกออเดอร์ โอนเกิน",
@@ -349,7 +349,7 @@ const NEW_T=[
 /* ป้ายช่องชื่อผู้ลงนามเพิ่ม */
 Object.assign(W,{vAccN:W.vAcc,rcv:W.receiverG,insp:W.inspector,store:W.storekeeper,dlv:W.deliverer,techN:W.tech,itN:W.itS,guardN:W.guard,senderN:W.sender,recipN:W.recipient});
 /* หนังสือรับรองการหักภาษี ณ ที่จ่าย (50 ทวิ) — 4 พ.ย. */
-Object.assign(W,{wcPayee:["ผู้ถูกหักภาษี ณ ที่จ่าย","Payee (person withheld)","원천징수 대상자","被源泉徴収者","被扣缴人"],seqNo:["ลำดับที่ในแบบ","Sequence No. in form","신고서 순번","申告書内番号","申报表序号"],
+Object.assign(W,{whtR:["หัก ณ ที่จ่าย %","WHT %","원천징수 %","源泉 %","代扣 %"],wcPayee:["ผู้ถูกหักภาษี ณ ที่จ่าย","Payee (person withheld)","원천징수 대상자","被源泉徴収者","被扣缴人"],seqNo:["ลำดับที่ในแบบ","Sequence No. in form","신고서 순번","申告書内番号","申报表序号"],
 pnd:["ยื่นแบบ","Return form","신고 양식","申告様式","申报表"],pnd1a:["ภ.ง.ด.1ก","P.N.D.1A","P.N.D.1A","P.N.D.1A","P.N.D.1A"],pnd1ak:["ภ.ง.ด.1ก พิเศษ","P.N.D.1A (special)","P.N.D.1A 특별","P.N.D.1A特別","P.N.D.1A 特别"],pnd2:["ภ.ง.ด.2","P.N.D.2","P.N.D.2","P.N.D.2","P.N.D.2"],pnd3:["ภ.ง.ด.3","P.N.D.3","P.N.D.3","P.N.D.3","P.N.D.3"],pnd53:["ภ.ง.ด.53","P.N.D.53","P.N.D.53","P.N.D.53","P.N.D.53"],
 incType:["ประเภทเงินได้พึงประเมินที่จ่าย","Type of income paid","지급 소득 유형","支払所得の種類","所支付收入类型"],payDate:["วัน เดือน ปี ที่จ่าย","Date paid","지급일","支払日","支付日期"],rate:["อัตรา %","Rate %","세율 %","税率 %","税率 %"],
 tax:["ภาษีที่หักและนำส่งไว้","Tax withheld","원천징수 세액","源泉徴収税額","代扣税额"],taxWords:["ภาษีที่หักนำส่ง (ตัวอักษร)","Tax withheld (in words)","원천징수세액(문자)","源泉徴収税額(文字)","代扣税额大写"],
@@ -406,8 +406,8 @@ let cur=null; // เอกสารที่กำลังแก้
 
 function nextNo(t,date,lang){const D0=(date||today()),y=+D0.slice(0,4),mm=D0.slice(5,7),f=cfg.noFmt||"ym0",th=t.official||!lang||lang==="th"||lang==="bi",yy=f==="y"?(cfg.year==="ad"?y:y+543):String(th?y+543:y).slice(-2),ym=f==="y"?String(yy):yy+mm,key=t.pre+ym,n=(cfg.seq[key]||0)+1;return{key,n,no:(f==="ym0"?"":t.pre)+ym+"-"+String(n).padStart(4,"0")}}
 function calc(d){const t=TP(d.tpl),I=d.items||[];I.forEach(r=>{if(t.it&&t.it.some(c=>c[1]==="amt"))r.amount=Math.round(num(r.qty)*num(r.price)*100)/100});
-  const sub=t.sum?I.reduce((a,r)=>a+num(r[t.sum]),0):0,wh=t.wht?Math.round(sub*num(d.f.whtPct)/100*100)/100:0;
-  const vt=t.vat?Math.round(sub*num(d.f.vatPct==null||d.f.vatPct===""?7:d.f.vatPct)/100*100)/100:0;const o={sub,wht:wh,vat:vt,net:sub-wh+vt};if(t.official){const f=d.f||{};o.sub=num(f.amount);o.tax=String(f.rate||"").trim()!==""?Math.round(num(f.amount)*num(f.rate))/100:num(f.tax);o.net=o.sub;return o}if(t.taxCol){I.forEach(r=>{if(String(r.rate||"").trim()!=="")r.tax=Math.round(num(r.amount)*num(r.rate))/100});o.tax=I.reduce((a,r)=>a+num(r.tax),0);o.net=sub}if(t.clear){o.adv=num(d.f.advRecv);o.diff=o.adv-sub}return o}
+  const sub=t.sum?I.reduce((a,r)=>a+num(r[t.sum]),0):0,whRow=t.wht&&I.some(r=>String(r.whtR||"").trim()!==""),whB={},wh=!t.wht?0:whRow?Math.round(I.reduce((a,r)=>{const x=num(r.whtR);if(!x)return a;whB[x]=(whB[x]||0)+num(r.amount);return a+num(r.amount)*x/100},0)*100)/100:Math.round(sub*num(d.f.whtPct)/100*100)/100;
+  const vt=t.vat?Math.round(sub*num(d.f.vatPct==null||d.f.vatPct===""?7:d.f.vatPct)/100*100)/100:0;const o={sub,wht:wh,vat:vt,net:sub-wh+vt,whRow,whB};if(t.official){const f=d.f||{};o.sub=num(f.amount);o.tax=String(f.rate||"").trim()!==""?Math.round(num(f.amount)*num(f.rate))/100:num(f.tax);o.net=o.sub;return o}if(t.taxCol){I.forEach(r=>{if(String(r.rate||"").trim()!=="")r.tax=Math.round(num(r.amount)*num(r.rate))/100});o.tax=I.reduce((a,r)=>a+num(r.tax),0);o.net=sub}if(t.clear){o.adv=num(d.f.advRecv);o.diff=o.adv-sub}return o}
 function blank(t){const last=D.filter(x=>x.tpl===t.id).sort((a,b)=>(b.ts||0)-(a.ts||0))[0],f={};
   (t.keep||[]).forEach(k=>{if(last&&last.f[k])f[k]=last.f[k]});if(t.id==="ce"||t.id==="mm"){}
   return{id:"",tpl:t.id,no:"",date:today(),lang:cfg.lang||"th",cur:cfg.cur||"THB",font:cfg.font||"",f,items:t.it?[{},{}]:[],pm:t.pay?"transfer":"",ts:0}}
@@ -493,15 +493,15 @@ function docHtml(d){const t=TP(d.tpl),l=d.lang||"th",c=calc(d),C=CU(d.cur),cc=d.
   if(kv.length)h+=`<div class="kv">${kv.join("")}</div>`;
   if(t.memo)h+=`<div class="body t">${esc(fv(d,"body"))}</div>`;
   // ตาราง
-  if(t.it){const I=(d.items||[]).filter(r=>t.it.some(col=>String(r[col[0]]||"").trim()));const rows=I.length?I:[{}];
-    const head=`<tr><th style="width:30px">#</th>${t.it.map(col=>`<th${col[2]?` style="width:${col[2]}px"`:""}>${w(col[0]==="amt"?"amount":col[0],l)}${col[1]==="m"||col[1]==="amt"?` (${cc})`:""}</th>`).join("")}</tr>`;
-    const body=rows.map((r,i)=>`<tr><td class="c">${I.length?i+1:""}</td>${t.it.map(col=>{let v=r[col[0]];if(col[1]==="m"||col[1]==="amt")return`<td class="r">${v===""||v==null?"":money(num(v),cc)}</td>`;if(col[1]==="d")return`<td class="c">${esc(dt(v,l))}</td>`;if(col[1]==="n"||col[1]==="tm")return`<td class="c">${esc(v==null?"":v)}</td>`;return`<td>${esc(v==null?"":v).replace(/\n/g,"<br>")}</td>`}).join("")}</tr>`).join("");
-    const pad=Array.from({length:Math.max(0,4-rows.length)},()=>`<tr><td style="height:24px"></td>${t.it.map(()=>"<td></td>").join("")}</tr>`).join("");
-    const span=t.it.length,si=t.it.findIndex(col=>col[0]===t.sum);let tot="";
+  if(t.it){const IT=t.wht&&!c.whRow?t.it.filter(x=>x[0]!=="whtR"):t.it;const I=(d.items||[]).filter(r=>IT.some(col=>String(r[col[0]]||"").trim()));const rows=I.length?I:[{}];
+    const head=`<tr><th style="width:30px">#</th>${IT.map(col=>`<th${col[2]?` style="width:${col[2]}px"`:""}>${w(col[0]==="amt"?"amount":col[0],l)}${col[1]==="m"||col[1]==="amt"?` (${cc})`:""}</th>`).join("")}</tr>`;
+    const body=rows.map((r,i)=>`<tr><td class="c">${I.length?i+1:""}</td>${IT.map(col=>{let v=r[col[0]];if(col[1]==="m"||col[1]==="amt")return`<td class="r">${v===""||v==null?"":money(num(v),cc)}</td>`;if(col[1]==="d")return`<td class="c">${esc(dt(v,l))}</td>`;if(col[1]==="n"||col[1]==="tm")return`<td class="c">${esc(v==null?"":v)}</td>`;return`<td>${esc(v==null?"":v).replace(/\n/g,"<br>")}</td>`}).join("")}</tr>`).join("");
+    const pad=Array.from({length:Math.max(0,4-rows.length)},()=>`<tr><td style="height:24px"></td>${IT.map(()=>"<td></td>").join("")}</tr>`).join("");
+    const span=IT.length,si=IT.findIndex(col=>col[0]===t.sum);let tot="";
     if(t.taxCol)tot=`<tr class="tt"><td class="k" colspan="3">${w("total",l)}</td><td class="r">${money(c.sub,cc)}</td><td></td><td class="r">${money(c.tax,cc)}</td></tr>`;else if(t.sum&&t.sum!=="amount")tot=`<tr class="tt"><td class="k" colspan="${si+1}">${w(t.sumL||"totalHrs",l)}</td><td class="c">${c.sub}</td>${"<td></td>".repeat(span-si-1)}</tr>`;
     else if(t.sum){const row=(k,v)=>`<tr class="tt"><td class="k" colspan="${span}">${w(k,l)}</td><td class="r">${money(v,cc)}</td></tr>`;
       if(t.vat)tot=row("subtotal",c.sub)+`<tr class="tt"><td class="k" colspan="${span}">${w("vat",l)} ${num(d.f.vatPct==null||d.f.vatPct===""?7:d.f.vatPct)}%</td><td class="r">${money(c.vat,cc)}</td></tr>`+row("grand",c.net);
-      else if(t.wht&&c.wht)tot=row("subtotal",c.sub)+`<tr class="tt"><td class="k" colspan="${span}">${w("wht",l)} ${num(d.f.whtPct)}%</td><td class="r">-${money(c.wht,cc)}</td></tr>`+row("net",c.net);else tot=row("total",c.sub);}
+      else if(t.wht&&c.wht)tot=row("subtotal",c.sub)+`<tr class="tt"><td class="k" colspan="${span}">${w("wht",l)} ${c.whRow?Object.keys(c.whB).sort((a,b)=>a-b).map(k=>k+"% × "+money(c.whB[k],cc)).join(" + "):num(d.f.whtPct)+"%"}</td><td class="r">-${money(c.wht,cc)}</td></tr>`+row("net",c.net);else tot=row("total",c.sub);}
     h+=`<table class="it">${head}${body}${pad}${tot}</table>`;
     if(t.taxCol)h+=`<div class="wd"><b>${w("taxWords",l)}:</b> ${esc(words(c.tax,cc,l)).replace(/\n/g,"<br>")}</div>`;else if(t.sum==="amount")h+=`<div class="wd"><b>${w("words",l)}:</b> ${esc(words(t.wht||t.vat?c.net:c.sub,cc,l)).replace(/\n/g,"<br>")}</div>`;
     if(t.clear){const r=(k,v)=>`<div><span class="k">${w(k,l)}</span><span class="v">${money(v,cc)} ${cc}</span></div>`;h+=`<div class="kv">${r("advRecv",c.adv)}${r("spent",c.sub)}${c.diff>=0?r("refund",c.diff):r("extra",-c.diff)}</div>`}}
@@ -552,7 +552,7 @@ function vEd(){const d=cur,t=TP(d.tpl),M=$("#main");needFont(d.lang);
    <button class="btn ghost" id="eSave" type="button">💾 บันทึก</button><button class="btn main" id="ePdf" type="button">⬇️ PDF / พิมพ์</button></div></div>
   <div class="ed"><div class="side" style="display:flex;flex-direction:column;gap:12px">
    <div class="card"><div class="fg">${t.noNo?`<input type="hidden" id="eNo" value="">`:`<div class="f"><label>เลขที่ (ว่าง = รันให้อัตโนมัติ)</label><input class="in-" id="eNo" value="${esc(d.no)}" placeholder="${esc(nextNo(t,d.date,d.lang).no)}"></div>`}<div class="f"><label>วันที่เอกสาร</label><input class="in-" type="date" id="eD" value="${esc(d.date)}"></div>
-   ${t.f.map(inp).join("")}${t.vat?`<div class="f"><label>VAT (%)</label><input class="in-" data-k="vatPct" inputmode="decimal" value="${esc(fv(d,"vatPct"))}" placeholder="7 (ใส่ 0 ถ้าไม่มี VAT)"></div>`:""}${t.wht?`<div class="f"><label>หัก ณ ที่จ่าย (%)</label><input class="in-" data-k="whtPct" inputmode="decimal" value="${esc(fv(d,"whtPct"))}" placeholder="0 / 1 / 3 / 5"></div>`:""}</div></div>
+   ${t.f.map(inp).join("")}${t.vat?`<div class="f"><label>VAT (%)</label><input class="in-" data-k="vatPct" inputmode="decimal" value="${esc(fv(d,"vatPct"))}" placeholder="7 (ใส่ 0 ถ้าไม่มี VAT)"></div>`:""}${t.wht?`<div class="f"><label>หัก ณ ที่จ่าย (%) ทั้งใบ · ถ้าหักไม่เท่ากัน ใส่ % ในแต่ละรายการแทน</label><input class="in-" data-k="whtPct" inputmode="decimal" value="${esc(fv(d,"whtPct"))}" placeholder="0 / 1 / 3 / 5"></div>`:""}</div></div>
    ${itEd}
    ${t.pay?`<div class="card"><div class="f"><label>${t.pay==="pay"?"ชำระโดย":"รับเงินโดย"}</label><div class="radio">${["cash","transfer","cheque"].map(k=>`<label><input type="radio" name="pm" value="${k}"${d.pm===k?" checked":""}>${W[k][0]}</label>`).join("")}</div></div><div class="fg">${inp(["bank","t"])}${inp(["ref","t"])}</div></div>`:""}
    ${sgK.length?`<div class="card"><h2>ชื่อผู้ลงนาม <small>ไม่ใส่ก็ได้ เว้นไว้เซ็นเอง</small></h2><div class="fg">${sgK.map(k=>inp([k,"t"])).join("")}</div></div>`:""}
