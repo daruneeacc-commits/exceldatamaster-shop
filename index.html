@@ -731,6 +731,11 @@ header.top .logo span{white-space:nowrap}
 .d4-i{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:1.8rem;background:color-mix(in srgb,var(--dc) 12%,#fff);margin-bottom:6px}
 .d4-b b{font-size:1.08rem;line-height:1.3}.d4-b small{color:var(--muted);font-size:.88rem;line-height:1.4}.d4-b em{font-style:normal;font-weight:700;color:var(--dc);margin-top:auto;padding-top:8px;font-size:.92rem}
 @media (max-width:900px){.d4{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.d4-b{padding:14px 12px 12px;border-radius:16px}.d4-i{width:44px;height:44px;font-size:1.45rem;border-radius:13px}.d4-b b{font-size:.98rem}.d4-b small{font-size:.8rem}.d4-b em{font-size:.84rem}}
+/* 4 พ.ย.: รีวิวลูกค้าจริง (ได้รับอนุญาต ไม่ระบุชื่อ) */
+.rvq{padding-block:2px 18px}.rvq-in{margin:0;position:relative;background:#fff;border:1.5px solid var(--line);border-left:6px solid #F2B705;border-radius:18px;padding:18px 22px 16px 64px}
+.rvq-in:before{content:"“";position:absolute;left:16px;top:2px;font:700 64px/1 Georgia,serif;color:#F2B705}
+.rvq-st{color:#F2B705;letter-spacing:2px;font-size:1rem}.rvq blockquote{margin:4px 0 6px;font-size:1.08rem;font-weight:600;line-height:1.6;color:var(--ink)}.rvq figcaption{color:var(--muted);font-size:.9rem}
+@media (max-width:560px){.rvq-in{padding:14px 14px 12px 46px}.rvq-in:before{left:10px;font-size:48px}.rvq blockquote{font-size:.98rem}}
 </style><div id="app"><!--pre--><header class="top"><div class="wrap hd">
     <a class="logo" href="#top"><img class="logo-img" src="/assets/shop/avatar.webp" alt=""><span>Excel Data Master</span></a>
     <nav class="links" aria-label="เมนูหลัก"><a href="#find">หาสินค้า</a><a href="#shop">เทมเพลต Excel</a><a href="#tools">ระบบออนไลน์</a><a href="/form/">แบบฟอร์มออนไลน์</a><a href="/course/">คอร์สออนไลน์</a><a href="#pricing">ราคา</a><a href="#how">วิธีสั่งซื้อ</a><a href="#faq">คำถาม</a></nav>
@@ -763,6 +768,11 @@ header.top .logo span{white-space:nowrap}
       <a class="d4-b" href="/form/" style="--dc:#7B5CC4"><span class="d4-i">📝</span><b>แบบฟอร์มออนไลน์</b><small>51 แบบ กรอกแล้วได้ PDF</small><em>ทดลองใช้ฟรี 7 วัน ›</em></a>
       <a class="d4-b" href="/course/" style="--dc:#D9822B"><span class="d4-i">🎓</span><b>คอร์สเรียน Excel</b><small>เรียนพร้อมได้ไฟล์ไปใช้</small><em>ดูคอร์ส ›</em></a>
     </div></div></section>
+
+    <section class="rvq" aria-label="เสียงจากลูกค้า"><div class="wrap"><figure class="rvq-in">
+      <blockquote>“ส่วนตัวและพนักงานชอบระบบของทางร้าน น้องๆ แจ้งว่าใช้ง่ายมากค่ะ ลองใช้มาหลายระบบ หลายโปรแกรมยังไม่ค่อยตอบโจทย์เท่าไหร่ค่ะ”</blockquote>
+      <figcaption>— ลูกค้าบริษัทก่อสร้าง · ใช้ระบบออนไลน์ทั้งทีม · ข้อความจริงจากแชต LINE</figcaption>
+    </figure></div></section>
 
     <section class="fxs" id="find"><div class="wrap">
       <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">เลือกแบบที่ชอบ แล้วแตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้</p>
@@ -1219,6 +1229,11 @@ function render(){
       <a class="d4-b" href="${base}form/"${tg} style="--dc:#7B5CC4"><span class="d4-i">📝</span><b>แบบฟอร์มออนไลน์</b><small>51 แบบ กรอกแล้วได้ PDF</small><em>ทดลองใช้ฟรี 7 วัน ›</em></a>
       <a class="d4-b" href="${base}course/"${tg} style="--dc:#D9822B"><span class="d4-i">🎓</span><b>คอร์สเรียน Excel</b><small>เรียนพร้อมได้ไฟล์ไปใช้</small><em>ดูคอร์ส ›</em></a>
     </div></div></section>
+
+    <section class="rvq" aria-label="เสียงจากลูกค้า"><div class="wrap"><figure class="rvq-in">
+      <blockquote>“ส่วนตัวและพนักงานชอบระบบของทางร้าน น้องๆ แจ้งว่าใช้ง่ายมากค่ะ ลองใช้มาหลายระบบ หลายโปรแกรมยังไม่ค่อยตอบโจทย์เท่าไหร่ค่ะ”</blockquote>
+      <figcaption>— ลูกค้าบริษัทก่อสร้าง · ใช้ระบบออนไลน์ทั้งทีม · ข้อความจริงจากแชต LINE</figcaption>
+    </figure></div></section>
 
     <section class="fxs" id="find"><div class="wrap">
       <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">เลือกแบบที่ชอบ แล้วแตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้</p>
