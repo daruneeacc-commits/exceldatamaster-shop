@@ -63,7 +63,7 @@ html[data-tone] aside a.on{box-shadow:0 2px 0 var(--accent-d)}
 html[data-tone] .seg button.on,html[data-tone] .seg button.on *{color:var(--accent-ink)!important}
 /* มือถือ: แท็บของหน้าเดี่ยวอยู่ล่างจอแบบแผ่นงาน Excel (เหมือน To-Do / การเงิน) */
 @media(max-width:760px){
-  html[data-tone]:not(.edm-embed) body:not(.kiosk) .tabs{position:fixed;left:0;right:0;bottom:0;z-index:40;margin:0;max-width:none;padding:0 0 env(safe-area-inset-bottom,0px);gap:0;background:#F3F2F1;border-top:1px solid #D6D4D2;border-radius:0;display:flex;overflow-x:auto}
+  html[data-tone]:not(.edm-embed) body:not(.kiosk) .tabs{position:fixed;left:0;right:0;bottom:0;top:auto;height:auto;z-index:40;margin:0;max-width:none;padding:0 0 env(safe-area-inset-bottom,0px);gap:0;background:#F3F2F1;border-top:1px solid #D6D4D2;border-radius:0;display:flex;overflow-x:auto}
   html[data-tone]:not(.edm-embed) body:not(.kiosk) .tabs button{flex:1 0 auto;border-radius:0;background:transparent;box-shadow:none;padding:10px 12px;min-height:54px;color:#555;border-bottom:3px solid transparent;font-size:.84rem}
   html[data-tone]:not(.edm-embed) body:not(.kiosk) .tabs button.on{background:#fff;color:var(--accent);border-bottom-color:var(--accent)}
   html[data-tone]:not(.edm-embed) body:not(.kiosk):has(.tabs){padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
