@@ -34,6 +34,9 @@
   }
   function allowed(u, k) { var L = sysList(u); return !k || !L || L.indexOf(k) >= 0; }
   var PRICE = 199, DAYS = 30, TRIAL = 7, KEY = "edm_member";
+  // ราคาต่อ 30 วัน (ตรงกับ PLANS หน้าร้าน) · รายปี = ×10 · แสดงในแถบทดลองใช้/หน้าหมดอายุ
+  var PRM = { shop: 249, todo: 49, goals: 49, finance: 199, sales: 199, spend: 79, plan: 79, loan: 79, due: 79, att: 79 };
+  function priceTxt() { var k = curSys(); if (!k) return ""; var m = PRM[k] || 149; return m.toLocaleString() + " บาท / 30 วัน หรือ " + (m * 10).toLocaleString() + " บาท / ปี"; }
   var BASE = (document.querySelector('script[src*="member.js"]') || {}).src || "";
   BASE = BASE.replace(/assets\/member\.js.*$/, "");
 
@@ -83,7 +86,7 @@
     ".edm-menu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;background:var(--card,#fff);color:var(--ink,#0F1513);border-radius:16px;box-shadow:0 0 0 1px var(--line,#E2E6E4),0 20px 40px -20px rgba(0,0,0,.35);padding:14px;width:260px;display:flex;flex-direction:column;gap:8px;font-size:.88rem}" +
     ".edm-menu b{word-break:break-all}" +
     ".edm-bar{position:sticky;top:0;z-index:19;background:#FDE8E7;color:#7A1C16;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:.9rem;text-align:center}" +
-    ".edm-bar.warn{background:#FFF4DC;color:#6B4600}.edm-bar .edm-btn{padding:6px 14px;font-size:.85rem}" +
+    ".edm-bar.warn{background:#FFF4DC;color:#6B4600}.edm-bar.soft{background:#EAF6EF;color:#1F5B3D;padding:6px 12px;font-size:.84rem}.edm-bar .edm-btn{padding:6px 14px;font-size:.85rem}" +
     "body.edm-ro .editor>*:not(.edm-free){pointer-events:none;opacity:.45;filter:grayscale(.4)}" +
     "body.edm-ro #saveBtn,body.edm-ro #convertBtn,body.edm-ro #newBtn,body.edm-ro #addEmp,body.edm-ro #delEmp,body.edm-ro #demo,body.edm-ro #empCard{display:none!important}" +
     "body.edm-locked main,body.edm-locked .mtabs{filter:blur(2px);pointer-events:none}" +
@@ -242,6 +245,7 @@
     var tr = me.status === "ทดลองใช้" || !me.paid;
     deny.innerHTML = '<div class="edm-card"><span class="edm-badge">' + esc(me.email) + '</span><h2>' + (tr ? "หมดช่วงทดลองใช้แล้ว" : "บัญชีหมดอายุแล้ว") + '</h2>' +
       '<p class="edm-muted">หมดอายุเมื่อ ' + thDate(expAt()) + ' · ' + (tr ? "สั่งซื้อเพื่อใช้งานต่อ" : "ต่ออายุเพื่อใช้งานต่อ") + ' ข้อมูลเดิมยังอยู่ครบ ใช้ต่อได้ทันทีเมื่อร้านตรวจสลิปแล้ว</p>' +
+      (priceTxt() ? '<p style="margin:4px 0 2px;font-size:1.05rem"><b>💰 ราคา ' + priceTxt() + '</b></p>' : '') +
       '<a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">' + (tr ? "🛒 สั่งซื้อ / ใช้งานต่อ" : "🔄 ต่ออายุสมาชิก") + '</a>' +
       '<button class="edm-btn ghost" id="edmExpChk" type="button">โอนแล้ว · ตรวจสอบอีกครั้ง</button>' +
       '<button class="edm-link" id="edmDenyOut" type="button" style="align-self:center">ใช้อีเมลอื่น · ออกจากระบบ</button></div>';
@@ -267,13 +271,16 @@
     chip.innerHTML = '<button type="button" class="' + (ex ? "bad" : left <= 3 ? "warn" : "") + '" aria-haspopup="true">' + esc(lbl) + '</button>';
     chip.firstChild.onclick = function (e) { e.stopPropagation(); toggleMenu(); };
     // banner
-    var need = ex || left <= 3;
+    var tri = me.status === "ทดลองใช้" && !me.paid;
+    var need = ex || left <= 3 || (tri && priceTxt());
     if (need) {
       if (!bar) { bar = document.createElement("div"); var hd = document.querySelector("header.top"); hd.parentNode.insertBefore(bar, hd.nextSibling); }
       bar.className = "edm-bar" + (ex ? "" : " warn");
       bar.innerHTML = (ex ? "บัญชีหมดอายุแล้ว · ต่ออายุหรือสั่งซื้อเพื่อใช้งานต่อ"
-        : (me.status === "ทดลองใช้" ? "ช่วงทดลองใช้" : "บัญชีของคุณ") + "จะหมดอายุใน " + left + " วัน (" + thDate(expAt()) + ")") +
-        ' <a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">ต่ออายุสมาชิก</a>';
+        : tri ? (nar ? "🎁 ฟรีถึง " + thDate(expAt()) + " · ต่อไป " + priceTxt().replace(" หรือ ", " / ").replace(" บาท / ปี", " ต่อปี") : "🎁 ทดลองใช้ฟรีถึง " + thDate(expAt()) + " (เหลือ " + left + " วัน) · ครบแล้ว " + priceTxt())
+        : "บัญชีของคุณจะหมดอายุใน " + left + " วัน (" + thDate(expAt()) + ")") +
+        ' <a class="edm-btn" href="' + esc(renewUrl()) + '" target="_blank" rel="noopener">' + (tri ? "🛒 สั่งซื้อ" : "ต่ออายุสมาชิก") + '</a>';
+      bar.className = "edm-bar" + (ex ? "" : " warn") + (tri && !ex && left > 3 ? " soft" : "");
     } else if (bar) { bar.remove(); bar = null; }
     markFree();
   }
