@@ -85,7 +85,7 @@ table.sh{border-collapse:collapse;width:100%;min-width:860px;font-size:.9rem}
 .pill{display:inline-block;border-radius:999px;padding:1px 10px;font-size:.8rem;font-weight:600;white-space:nowrap}
 .p-late{background:var(--latebg);color:var(--late)}.p-soon{background:var(--soonbg);color:var(--soon)}.p-ok{background:var(--okbg);color:var(--ok)}.p-n{background:var(--a2);color:var(--ink)}
 .pr-0{color:var(--late);font-weight:700}.pr-1{color:var(--soon);font-weight:600}.pr-2{color:var(--ok)}
-.sh .del{width:40px;text-align:center}.sh .del button{border:0;background:none;cursor:pointer;color:#bbb;font-size:1rem;min-width:36px;min-height:36px}.sh .del button:hover{color:var(--late)}
+.sh .del{width:76px;text-align:center;white-space:nowrap}.del button.ics{color:inherit;font-size:.95rem;min-width:32px}.sh .del button{border:0;background:none;cursor:pointer;color:#bbb;font-size:1rem;min-width:36px;min-height:36px}.sh .del button:hover{color:var(--late)}
 .sh tr.new td{background:#FFFDF2!important}.sh tr.new input.ti::placeholder{color:#c9a}
 .empty{padding:22px;text-align:center;color:var(--muted)}
 /* big calendar */
@@ -235,7 +235,7 @@ function row(i,n){const c=catOf(i.cat);return`<tr data-id="${i.id}" class="${i.d
   <td class="dt" style="width:130px"><span class="${i.due?"":"ph"}">${i.due?thD(i.due):"เลือกวันที่"}</span><input type="date" data-f="due" value="${i.due||""}" aria-label="วันที่กำหนดเสร็จ"></td>
   <td style="width:140px">${i.done?`<span style="padding:8px;display:block;color:var(--ok);font-weight:600">${DONE}</span>`:`<select class="cell" data-f="st" aria-label="สถานะ">${opts(cfg.sts,i.st||cfg.sts[0])}</select>`}</td>
   <td class="left" style="width:110px">${leftPill(i)}</td>
-  <td class="del"><button type="button" data-del="${i.id}" title="ลบแถว" aria-label="ลบแถว">✕</button></td></tr>`}
+  <td class="del">${i.due&&!i.done?`<button type="button" class="ics" data-ics="${i.id}" title="เพิ่มลงปฏิทินมือถือ (เตือนตามเวลา)" aria-label="เพิ่มลงปฏิทิน">📅</button>`:""}<button type="button" data-del="${i.id}" title="ลบแถว" aria-label="ลบแถว">✕</button></td></tr>`}
 function vList(){const L=filtered(),A=live(),dn=A.filter(i=>i.done).length,p=A.length?Math.round(dn/A.length*100):0;
   return demoBanner()+`<div class="band"><h1>รายการสิ่งที่ต้องทำ</h1><small>${A.length} งาน · เสร็จ ${dn} · เกินกำหนด ${items.filter(isLate).length}</small></div>
   <div class="qa"><input id="qa" autocomplete="off" enterkeyhint="done" placeholder="พิมพ์งานแล้วกด Enter เช่น ส่งใบเสนอราคา พรุ่งนี้ ด่วน #ลูกค้า" aria-label="เพิ่มงาน"><button class="btn main" id="qaGo" type="button">+ เพิ่ม</button></div>
@@ -255,7 +255,7 @@ function vList(){const L=filtered(),A=live(),dn=A.filter(i=>i.done).length,p=A.l
   <p class="small muted" style="margin:0">แตะช่องเพื่อแก้ได้เลยเหมือนตาราง Excel · ติ๊ก ✓ แล้วรายการถูกขีดฆ่าให้อัตโนมัติ · ช่องวันคงเหลือนับให้เอง เลยกำหนดขึ้นสีแดง</p>`}
 function quickAdd(v,el){v=(v||"").trim();if(!v||ro())return;const r=TH.parse(v);let cat="";const m=/#(\S+)/.exec(r.t);let t=r.t;if(m){cat=m[1];t=t.replace(m[0],"").trim();if(!catOf(cat)){cfg.cats.push({n:cat,c:"#E8779F"});svCfg()}}
   const it=newItem({t:t||v,due:r.d||"",cat,pri:r.pri?cfg.pris[0]:(cfg.pris[1]||cfg.pris[0])});toast("เพิ่มแล้ว: "+it.t+(it.due?" · "+thD(it.due):""));render();const n=$(el);if(n)n.focus()}
-function bindList(){
+function bindList(){$$("[data-ics]").forEach(b=>b.onclick=()=>{const it=items.find(x=>x.id===b.dataset.ics);if(it)icsDl([it])});
   const qa=$("#qa");qa.onkeydown=e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();const v=qa.value;qa.value="";quickAdd(v,"#qa")}};$("#qaGo").onclick=()=>{const v=qa.value;qa.value="";quickAdd(v,"#qa")};
   const nr=$("#newRow");nr.onkeydown=e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();const v=nr.value;nr.value="";quickAdd(v,"#newRow")}};nr.onblur=()=>{const v=nr.value;if(v.trim()){nr.value="";quickAdd(v)}};
   const q=$("#q");q.oninput=()=>{ui.q=q.value;svUi();const p=q.selectionStart;render();const n=$("#q");n.focus();n.setSelectionRange(p,p)};
@@ -305,11 +305,25 @@ function vSet(){return`<div class="band"><h1>ตั้งค่า (TO-DO LIST T
    <span class="small">เตือนใกล้ถึงกำหนดล่วงหน้า <select id="soon">${[1,2,3,5,7].map(k=>`<option ${cfg.soon===k?"selected":""}>${k}</option>`).join("")}</select> วัน</span></div>
    <div class="skins" style="margin-top:10px"><button type="button" class="skin ${cfg.skin==="pink"?"on":""}" data-skin="pink"><i style="background:#E8779F"></i>โทนชมพู (แบบ Excel)</button><button type="button" class="skin ${cfg.skin==="beige"?"on":""}" data-skin="beige"><i style="background:#A9805E"></i>โทนน้ำตาล (แบบ Google Sheets)</button></div></section>
   <div class="lists">${lst("cats","หมวดหมู่","เพิ่มหมวดเร็ว ๆ ได้ด้วย #ชื่อหมวด ตอนพิมพ์งาน")}${lst("pris","ความสำคัญ","เรียงจากสำคัญมาก → น้อย · คำว่า “ด่วน” = อันดับแรก")}${lst("sts","สถานะ","สถานะ “เสร็จสิ้น” ใช้การติ๊ก ✓ · “ยกเลิก” ไม่นับในความคืบหน้า")}</div>
+  <section class="card"><h2>🔔 เตือนบนมือถือ</h2>
+   <div class="row" style="gap:12px;flex-wrap:wrap"><span class="small">เวลาเตือนในปฏิทิน <input type="time" id="icsT" value="${esc(cfg.icsT||"09:00")}" style="border:1px solid var(--line);border-radius:8px;padding:4px 8px"></span>
+   <span class="small">เตือน <select id="icsA">${[["0","ตรงเวลา"],["60","ก่อน 1 ชม."],["1440","ก่อน 1 วัน + ตรงเวลา"]].map(([v,n])=>`<option value="${v}" ${String(cfg.icsA==null?"0":cfg.icsA)===v?"selected":""}>${n}</option>`).join("")}</select></span></div>
+   <div class="row" style="margin-top:10px"><button class="btn sm main" id="icsAll" type="button">📅 เพิ่มงานค้างทั้งหมดลงปฏิทินมือถือ</button></div>
+   <p class="small muted" style="margin:6px 0 0">ปฏิทินของมือถือจะเด้งเตือนเองตามวันและเวลา แม้ไม่ได้เปิดเว็บ · ทีละงานกด 📅 ท้ายแถวในหน้ารายการ · ถ้าแก้วันกำหนดทีหลัง ให้กดเพิ่มใหม่</p>
+   <hr style="border:0;border-top:1px dashed var(--line);margin:12px 0">
+   <div class="row"><button class="btn sm" id="bdgOn" type="button">🔴 แสดงตัวเลขงานค้างบนไอคอนแอป</button><span class="small muted" id="bdgSt"></span></div>
+   <p class="small muted" style="margin:6px 0 0">ตัวเลข = งานที่ครบกำหนดวันนี้หรือเลยกำหนด (เหมือนข้อความยังไม่อ่านใน LINE) · ต้องเพิ่มไอคอนไว้หน้า Home ก่อน — iPhone: Safari › ปุ่มแชร์ › “เพิ่มไปยังหน้าจอโฮม” (iOS 16.4 ขึ้นไป) แล้วเปิดจากไอคอนและกดปุ่มนี้ · Android ส่วนใหญ่ไม่แสดงตัวเลขบนไอคอน ใช้ปฏิทินแทน · ตัวเลขอัปเดตทุกครั้งที่เปิดแอป</p></section>
   <section class="card"><h2>${ic("cart","s")} ซื้อใช้งานต่อเนื่อง</h2><div class="row"><button class="btn sm buy" data-buy="m" type="button">รายเดือน 49 บาท</button><button class="btn sm main" data-buy="y" type="button">รายปี 490 บาท · ฟรี 2 เดือน</button></div>
    <p class="small muted" style="margin:8px 0 0">โอนแล้วแนบสลิปในหน้าถัดไป ใช้งานต่อได้ทันที 24 ชม. ระหว่างร้านตรวจยอด แล้วได้อีเมลแจ้งวันใช้งานเต็มแพ็ก</p></section>
   <section class="card"><h2>ข้อมูล</h2><div class="row"><button class="btn sm" id="demo" type="button">ใส่งานตัวอย่าง</button><button class="btn sm" id="clrDone" type="button">ลบงานที่เสร็จแล้ว</button><button class="btn sm ghost danger" id="wipe" type="button">ล้างข้อมูลทั้งหมด</button></div>
    <p class="small muted" style="margin:8px 0 0">ข้อมูลเก็บในเครื่องนี้ สมาชิกที่เข้าสู่ระบบจะสำรองขึ้นคลาวด์และใช้ได้หลายเครื่อง · กด ${ic("dl","s")} Excel ด้านบนเพื่อดาวน์โหลดเก็บไว้ในเครื่องกันพลาด (ไฟล์เป็นข้อมูลอย่างเดียว ไม่มีสูตร)</p></section>`}
 function bindSet(){
+  $("#icsT").onchange=e=>{cfg.icsT=e.target.value||"09:00";svCfg()};$("#icsA").onchange=e=>{cfg.icsA=e.target.value;svCfg()};$("#icsAll").onclick=()=>icsDl(items.slice());
+  {const st=$("#bdgSt"),ok="setAppBadge" in navigator,inApp=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+   st.textContent=!ok?(inApp?"เครื่องนี้ไม่รองรับตัวเลขบนไอคอน":"เปิดจากไอคอนหน้า Home ก่อนนะคะ"):(window.Notification&&Notification.permission==="granted"&&cfg.badge!==false?"✓ เปิดอยู่ · ตอนนี้ "+badgeN()+" งาน":"");
+   $("#bdgOn").onclick=async()=>{if(!ok){toast(inApp?"มือถือ/เบราว์เซอร์นี้ไม่รองรับตัวเลขบนไอคอน ใช้ปฏิทินแทนได้ค่ะ":"เพิ่มไอคอนไว้หน้า Home แล้วเปิดจากไอคอนก่อนนะคะ");return}
+     try{if(window.Notification&&Notification.permission!=="granted"){const p=await Notification.requestPermission();if(p!=="granted"){toast("ต้องกดอนุญาตการแจ้งเตือนก่อน ตัวเลขจึงจะขึ้น");return}}}catch(e){}
+     cfg.badge=true;svCfg();badge();toast("เปิดแล้ว · ตอนนี้มีงานค้าง "+badgeN()+" งาน");render()}}
   $("#ttl").onchange=e=>{cfg.title=e.target.value.trim()||"TO-DO LIST";svCfg()};$("#soon").onchange=e=>{cfg.soon=+e.target.value;svCfg()};
   $$("[data-skin]").forEach(b=>b.onclick=()=>{cfg.skin=b.dataset.skin;svCfg();document.documentElement.dataset.skin=cfg.skin;render()});
   $$("[data-lk]").forEach(el=>el.onchange=()=>{const k=el.dataset.lk,j=+el.dataset.lj,v=el.value.trim();if(!v){render();return}
@@ -348,7 +362,20 @@ function xlsx(){const L=items.filter(i=>i.t),A=live(),dn=A.filter(i=>i.done).len
 
 /* ---------- render ---------- */
 const V={dash:[vDash,bindDash],list:[vList,bindList],cal:[vCal,bindCal],set:[vSet,bindSet]};
-function render(){if(!V[ui.tab])ui.tab="dash";{const bb=$("#buyBtn"),M=window.EDM_MEMBER;if(bb)bb.hidden=!!(M&&M.me&&M.me.paid)}const late=items.filter(isLate).length;
+/* ---------- เตือนบนมือถือ: ปฏิทิน (.ics) + ตัวเลขบนไอคอน ---------- */
+function icsDl(L){L=L.filter(i=>i.due&&!i.done&&stOf(i)!=="ยกเลิก");if(!L.length){toast("ไม่มีงานที่มีวันกำหนดและยังไม่เสร็จ");return}
+  const t=(cfg.icsT||"09:00").split(":"),hh=t[0].padStart(2,"0"),mm=(t[1]||"00").padStart(2,"0"),pre=cfg.icsA==null?"0":String(cfg.icsA),now=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
+  const tx=s=>String(s||"").replace(/\\/g,"\\\\").replace(/[,;]/g,m=>"\\"+m).replace(/\r?\n/g,"\\n");
+  const end=(d)=>{const x=new Date(+d.slice(0,4),+d.slice(4,6)-1,+d.slice(6,8),+hh,+mm+30);const p=n=>String(n).padStart(2,"0");return x.getFullYear()+p(x.getMonth()+1)+p(x.getDate())+"T"+p(x.getHours())+p(x.getMinutes())+"00"};
+  const ev=L.map(i=>{const d=i.due.replace(/-/g,"");const al=[`BEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:${tx(i.t)}\r\nTRIGGER:-PT${pre==="1440"?"0M":pre+"M"}\r\nEND:VALARM`];if(pre==="1440")al.push(`BEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:พรุ่งนี้ครบกำหนด: ${tx(i.t)}\r\nTRIGGER:-P1D\r\nEND:VALARM`);
+    return`BEGIN:VEVENT\r\nUID:${i.id}@todo.exceldatamaster.com\r\nDTSTAMP:${now}\r\nDTSTART;TZID=Asia/Bangkok:${d}T${hh}${mm}00\r\nDTEND;TZID=Asia/Bangkok:${end(d)}\r\nSUMMARY:📋 ${tx(i.t)}\r\nDESCRIPTION:${tx([i.cat&&"หมวด: "+i.cat,i.pri&&"ความสำคัญ: "+i.pri,"จาก To-Do List · exceldatamaster.com/todo/"].filter(Boolean).join("\n"))}\r\nURL:https://exceldatamaster.com/todo/\r\n${al.join("\r\n")}\r\nEND:VEVENT`}).join("\r\n");
+  const ics=`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Excel Data Master//To-Do//TH\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Asia/Bangkok\r\nBEGIN:STANDARD\r\nDTSTART:19700101T000000\r\nTZOFFSETFROM:+0700\r\nTZOFFSETTO:+0700\r\nTZNAME:ICT\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\n${ev}\r\nEND:VCALENDAR\r\n`;
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar;charset=utf-8"}));a.download=(L.length===1?"todo-"+L[0].due:"todo-"+L.length+"-tasks")+".ics";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);
+  toast(L.length===1?"เปิดไฟล์แล้วกด “เพิ่ม” ลงปฏิทิน มือถือจะเตือนตามเวลา":"เพิ่ม "+L.length+" งานลงปฏิทิน · เปิดไฟล์แล้วกด “เพิ่มทั้งหมด”")}
+const badgeN=()=>items.filter(i=>!i.done&&i.due&&i.due<=today()&&stOf(i)!=="ยกเลิก").length;
+function badge(){try{if(!("setAppBadge" in navigator)||cfg.badge===false)return;const n=badgeN();(n?navigator.setAppBadge(n):navigator.clearAppBadge()).catch(()=>{})}catch(e){}}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)badge()});
+function render(){badge();if(!V[ui.tab])ui.tab="dash";{const bb=$("#buyBtn"),M=window.EDM_MEMBER;if(bb)bb.hidden=!!(M&&M.me&&M.me.paid)}const late=items.filter(isLate).length;
   $$("[data-tab]").forEach(b=>{b.classList.toggle("on",b.dataset.tab===ui.tab);b.setAttribute("aria-selected",b.dataset.tab===ui.tab);if(b.dataset.tab==="list")b.innerHTML=ic("list")+"รายการ"+(late?`<span class="n">${late}</span>`:"")});
   $("#main").innerHTML=V[ui.tab][0]();V[ui.tab][1]();
   const dc=$("#demoClr");if(dc)dc.onclick=()=>{items=[];cfg.demo=false;sv();svCfg();render();toast("ล้างตัวอย่างแล้ว เริ่มเพิ่มงานจริงได้เลย")}}
