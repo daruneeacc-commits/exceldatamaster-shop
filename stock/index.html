@@ -125,6 +125,7 @@ html{overscroll-behavior-y:contain}
 <link rel="stylesheet" href="../assets/pastel.css?v=9">
 <script src="../assets/pastel.js?v=2" defer></script>
 <script src="../assets/safedel.js?v=1"></script>
+<script src="../assets/i18n-stock.js?v=1"></script>
 <link rel="stylesheet" href="../assets/skin.css?v=1">
 <script src="../assets/skin.js?v=1"></script>
 <meta name="theme-color" content="#C08A0E">
@@ -450,10 +451,10 @@ function printReport(){
 /* แก้ไขรายการรับเข้า/เบิก/ปรับยอด (5 พ.ย. ลูกค้าขอ: เดิมต้องลบแล้วทำใหม่) */
 function editTx(id){const t=tx.find(x=>x.id===id);if(!t)return;const i=byId(t.pid)||{name:"(ลบแล้ว)",unit:""},T=TY[t.type];
   const sib=t.batch?tx.filter(x=>x.batch===t.batch&&x.id!==t.id):[];
-  openDlg("✏️ แก้ไขรายการ "+T[0],`<div style="display:flex;flex-direction:column;gap:10px">
+  openDlg("✏️ แก้ไขรายการ · "+T[0],`<div style="display:flex;flex-direction:column;gap:10px">
     <div><b>${esc(i.name)}</b> <span class="pill ${T[1]}">${T[0]}</span></div>
     <label class="f">วันที่<input class="in-" id="eD" type="date" value="${esc(t.date||today())}"></label>
-    <label class="f">${t.type==="adj"?"ปรับยอด (+ เพิ่ม / − ลด)":"จำนวน"} (${esc(i.unit||"")})<input class="in-" id="eQ" type="number" step="any" inputmode="decimal" value="${num(t.qty)}"></label>
+    <label class="f"><span><span>${t.type==="adj"?"ปรับยอด (+ เพิ่ม / − ลด)":"จำนวน"}</span> <span>(${esc(i.unit||"")})</span></span><input class="in-" id="eQ" type="number" step="any" inputmode="decimal" value="${num(t.qty)}"></label>
     ${t.type==="in"?`<label class="f">ทุนต่อหน่วย (บาท)<input class="in-" id="eC" type="number" min="0" step="any" inputmode="decimal" value="${num(t.cost)}"></label>`:""}
     <label class="f">คู่ค้า / ผู้รับ<input class="in-" id="eP" value="${esc(t.party||"")}"></label>
     <label class="f">เลขที่อ้างอิง<input class="in-" id="eR" value="${esc(t.ref||"")}"></label>
