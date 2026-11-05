@@ -259,7 +259,7 @@ details.adv{border:1px solid var(--line);border-radius:10px;padding:8px 12px}det
     </div>
 
     <div class="card" id="empCard" hidden>
-      <h2><span id="empTitle">รายการเดือนนี้</span><button class="btn sm ghost danger" id="delEmp">ลบพนักงาน</button></h2>
+      <h2><span id="empTitle">รายการเดือนนี้</span><button class="btn sm ghost danger" id="delEmp">พนักงานออก / ลบ</button></h2>
       <div class="row">
         <div class="f"><label id="rateLabel">เงินเดือน (บาท)</label><input class="in-" data-m="rate" type="number" min="0" step="0.01" inputmode="decimal"></div>
         <div class="f qf" id="daysF"><label>วันทำงาน (วัน)</label><input class="in-" data-m="days" type="number" min="0" step="0.5" inputmode="decimal"></div>
@@ -792,8 +792,23 @@ function openWizard(){let ty=(BIZ[co.biz]||{}).type||"m";$("#dlgTitle").textCont
 $("#addEmp").onclick=openWizard;
 $("#fillAll").onclick=()=>{const act=activeEmps();if(!act.length)return toast("ยังไม่มีพนักงาน");if(!recs[key()])recs[key()]={};let n=0;act.forEach(e=>{if(!recs[key()][e.id]){rec(e.id,null,true);n++}});svRecs();if(!ui.sel&&act[0])ui.sel=act[0].id;renderAll();
   const need=act.filter(needQty).map(e=>e.name||e.code);toast((n?"คิดยอดปกติให้ "+n+" คนแล้ว":"ทุกคนคิดเดือนนี้แล้ว")+(need.length?" · ใส่ชั่วโมง/ชิ้นงานให้: "+need.join(", "):" · แก้เฉพาะคนที่มี OT ขาด หรือลา"))};
-$("#delEmp").onclick=()=>{const e=empById(ui.sel);if(!e)return;if(!confirm(`ลบ "${e.name||e.code}" และประวัติเงินเดือนทั้งหมดของคนนี้?`))return;
-  emps=emps.filter(x=>x.id!==e.id);Object.values(recs).forEach(R=>delete R[e.id]);svEmps();svRecs();ui.sel=emps[0]?emps[0].id:null;svUi();renderAll();toast("ลบแล้ว")};
+$("#delEmp").onclick=()=>{const e=empById(ui.sel);if(!e)return;const nm=esc(e.name||e.code||"");
+  // ลาออก = ใส่วันพ้นสภาพ เก็บประวัติเดือนก่อน ๆ ไว้ · ลบถาวร = ลบทุกเดือน (เดิม)
+  const ld=ymKey(ui.y,ui.m)+"-"+pad(new Date(ui.y,ui.m+1,0).getDate());
+  $("#dlgTitle").textContent="พนักงานออก / ลบ";
+  $("#dlgBody").innerHTML=`<div class="wz">
+    <div class="f"><span class="q"><i>1</i>พนักงานลาออก (แนะนำ)</span><p class="note" style="margin:0">เงินเดือนเดือนก่อน ๆ ของ "${nm}" ยังอยู่ครบ · ตั้งแต่เดือนหลังวันที่ออก จะไม่แสดงในรายชื่อ</p>
+      <label class="note" style="margin:6px 0 0">วันที่ออก (วันทำงานวันสุดท้าย)</label><input class="in-" id="rEnd" type="date" value="${e.end||ld}"></div>
+    <div class="acts"><button type="button" class="btn ghost" id="rCancel">ยกเลิก</button><button type="button" class="btn main" id="rOk">บันทึกว่าลาออก</button></div>
+    <hr style="border:0;border-top:1px dashed #ddd;margin:6px 0">
+    <div class="f"><span class="q"><i>2</i>ลบถาวร</span><p class="note" style="margin:0">ใช้กรณีเพิ่มผิดคน · ลบ "${nm}" และเงินเดือน<b>ทุกเดือน</b> กู้คืนไม่ได้</p>
+      <button type="button" class="btn sm ghost danger" id="rDel" style="align-self:flex-start;margin-top:6px">ลบถาวรทุกเดือน</button></div></div>`;
+  $("#rCancel").onclick=()=>dlg.close();
+  $("#rOk").onclick=()=>{const d=$("#rEnd").value;if(!d){toast("เลือกวันที่ออกก่อน");return}e.end=d;svEmps();dlg.close();
+    const vis=activeEmps();if(!vis.some(x=>x.id===e.id))ui.sel=vis[0]?vis[0].id:null;svUi();renderAll();toast("บันทึกลาออกแล้ว · ประวัติเงินเดือนยังอยู่")};
+  $("#rDel").onclick=()=>{if(!confirm(`ลบ "${e.name||e.code}" และประวัติเงินเดือนทุกเดือน? กู้คืนไม่ได้`))return;dlg.close();
+    emps=emps.filter(x=>x.id!==e.id);Object.values(recs).forEach(R=>delete R[e.id]);svEmps();svRecs();ui.sel=emps[0]?emps[0].id:null;svUi();renderAll();toast("ลบแล้ว")};
+  dlg.showModal()};
 $("#certDate").onchange=e=>{certDate=e.target.value;renderPaper()};
 $$("#viewSeg button").forEach(b=>b.onclick=()=>{ui.view=b.dataset.v;svUi();renderPaper()});
 $("#printBtn").onclick=()=>{if(!$("#pages .page"))return;const wasHidden=!$("#previewWrap").classList.contains("show");$("#previewWrap").classList.add("show");setTimeout(()=>{window.print();if(wasHidden&&innerWidth<980&&$(".mtabs .on").dataset.mt==="edit")$("#previewWrap").classList.remove("show")},60)};
