@@ -296,7 +296,7 @@ function vHome(){
 function txTable(list,withDel){
   if(!list.length)return`<div class="empty" style="padding:14px">ยังไม่มีรายการ</div>`;
   return`<div class="tbl-wrap"><table class="t"><thead><tr><th>วันที่</th><th>ประเภท</th><th>สินค้า</th><th class="r">จำนวน</th><th class="r">ทุน/หน่วย</th><th>คู่ค้า / อ้างอิง</th>${withDel?"<th></th>":""}</tr></thead><tbody>${list.map(t=>{const i=byId(t.pid)||{name:"(ลบแล้ว)",unit:""},T=TY[t.type];const q=num(t.qty);
-    return`<tr><td style="white-space:nowrap">${thD(t.date)}</td><td><span class="pill ${T[1]}">${T[0]}</span></td><td>${esc(i.name)}</td><td class="r ${T[2]}">${t.type==="adj"?(q>0?"+":""):T[3]}${fq(q)} ${esc(i.unit)}</td><td class="r">${t.type==="in"?fmt(t.cost):""}</td><td>${esc(t.party||"")}${t.ref?` <span class="sku">${esc(t.ref)}</span>`:""}${t.src==="bill"?` <span class="pill p-adj">จากบิล</span>`:t.src==="acc"?` <span class="pill p-adj">จากใบซื้อ</span>`:t.src==="cafe"?` <span class="pill p-adj">จากคาเฟ่</span>`:""}${t.note?`<br><span class="note">${esc(t.note)}</span>`:""}</td>${withDel?`<td class="r">${t.src==="bill"?`<span class="note">แก้ที่หน้าเปิดบิล</span>`:t.src==="acc"?`<span class="note">แก้ที่หน้าบัญชี</span>`:`<button class="btn sm ghost danger edm-lock" data-deltx="${t.id}">ลบ</button>`}</td>`:""}</tr>`}).join("")}</tbody></table></div>`;
+    return`<tr><td style="white-space:nowrap">${thD(t.date)}</td><td><span class="pill ${T[1]}">${T[0]}</span></td><td>${esc(i.name)}</td><td class="r ${T[2]}">${t.type==="adj"?(q>0?"+":""):T[3]}${fq(q)} ${esc(i.unit)}</td><td class="r">${t.type==="in"?fmt(t.cost):""}</td><td>${esc(t.party||"")}${t.ref?` <span class="sku">${esc(t.ref)}</span>`:""}${t.src==="bill"?` <span class="pill p-adj">จากบิล</span>`:t.src==="acc"?` <span class="pill p-adj">จากใบซื้อ</span>`:t.src==="cafe"?` <span class="pill p-adj">จากคาเฟ่</span>`:""}${t.note?`<br><span class="note">${esc(t.note)}</span>`:""}</td>${withDel?`<td class="r">${t.src==="bill"?`<span class="note">แก้ที่หน้าเปิดบิล</span>`:t.src==="acc"?`<span class="note">แก้ที่หน้าบัญชี</span>`:`<span style="white-space:nowrap"><button class="btn sm ghost edm-lock" data-edtx="${t.id}">✏️ แก้ไข</button> <button class="btn sm ghost danger edm-lock" data-deltx="${t.id}">ลบ</button></span>`}</td>`:""}</tr>`}).join("")}</tbody></table></div>`;
 }
 
 function vItems(){
@@ -447,6 +447,25 @@ function printReport(){
 }
 
 /* ---------- dialogs ---------- */
+/* แก้ไขรายการรับเข้า/เบิก/ปรับยอด (5 พ.ย. ลูกค้าขอ: เดิมต้องลบแล้วทำใหม่) */
+function editTx(id){const t=tx.find(x=>x.id===id);if(!t)return;const i=byId(t.pid)||{name:"(ลบแล้ว)",unit:""},T=TY[t.type];
+  const sib=t.batch?tx.filter(x=>x.batch===t.batch&&x.id!==t.id):[];
+  openDlg("✏️ แก้ไขรายการ "+T[0],`<div style="display:flex;flex-direction:column;gap:10px">
+    <div><b>${esc(i.name)}</b> <span class="pill ${T[1]}">${T[0]}</span></div>
+    <label class="f">วันที่<input class="in-" id="eD" type="date" value="${esc(t.date||today())}"></label>
+    <label class="f">${t.type==="adj"?"ปรับยอด (+ เพิ่ม / − ลด)":"จำนวน"} (${esc(i.unit||"")})<input class="in-" id="eQ" type="number" step="any" inputmode="decimal" value="${num(t.qty)}"></label>
+    ${t.type==="in"?`<label class="f">ทุนต่อหน่วย (บาท)<input class="in-" id="eC" type="number" min="0" step="any" inputmode="decimal" value="${num(t.cost)}"></label>`:""}
+    <label class="f">คู่ค้า / ผู้รับ<input class="in-" id="eP" value="${esc(t.party||"")}"></label>
+    <label class="f">เลขที่อ้างอิง<input class="in-" id="eR" value="${esc(t.ref||"")}"></label>
+    <label class="f">หมายเหตุ<input class="in-" id="eN" value="${esc(t.note||"")}"></label>
+    ${sib.length?`<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="eAll" checked> ใช้วันที่ / คู่ค้า / เลขที่อ้างอิง นี้กับอีก ${sib.length} รายการในเอกสารเดียวกัน</label>`:""}
+    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" id="eX" type="button">ยกเลิก</button><button class="btn main" id="eOk" type="button">💾 บันทึก</button></div></div>`);
+  $("#eX").onclick=()=>dlg.close();
+  $("#eOk").onclick=()=>{const q=num($("#eQ").value);if(t.type!=="adj"&&q<=0)return toast("ใส่จำนวนมากกว่า 0");if(t.type==="adj"&&q===0)return toast("ปรับยอดต้องไม่เป็น 0");
+    const d=$("#eD").value||today(),pa=$("#eP").value.trim(),rf=$("#eR").value.trim();
+    Object.assign(t,{date:d,qty:q,party:pa,ref:rf,note:$("#eN").value.trim()});if(t.type==="in")t.cost=num($("#eC").value);t.ed=Date.now();
+    if(sib.length&&$("#eAll")&&$("#eAll").checked)sib.forEach(x=>Object.assign(x,{date:d,party:pa,ref:rf}));
+    svT();dlg.close();toast("แก้ไขแล้ว ✓");render()}}
 function openDlg(t,h){$("#dlgTitle").textContent=t;$("#dlgBody").innerHTML=h;if(!dlg.open)dlg.showModal()}
 function itemForm(id){
   const i=id?byId(id):{sku:"",name:"",brand:"",cat:"",unit:"ชิ้น",cost:"",price:"",min:"",note:""};const cats=[...new Set(items.map(x=>x.cat).filter(Boolean))],brs=[...new Set(items.map(x=>x.brand).filter(Boolean))];
@@ -527,7 +546,7 @@ window.edmStockView=v=>{if(!["home","dash","items","move","in","out","adj","hist
 const cardFromHash=()=>{const m=/card=([\w-]+)/.exec(location.hash);if(!m)return;history.replaceState(null,"",location.pathname+location.search);if(items.some(i=>i.id===m[1]))stockCard(m[1])};
 window.addEventListener("hashchange",cardFromHash);setTimeout(cardFromHash,0);
 $("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;ui.v=b.dataset.v;svU();render();scrollTo(0,0)};
-document.addEventListener("click",e=>{const b=e.target.closest("[data-act],[data-card],[data-in],[data-outq],[data-adjq],[data-edit],[data-deltx],[data-go]");if(!b)return;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-act],[data-card],[data-in],[data-outq],[data-adjq],[data-edit],[data-deltx],[data-edtx],[data-go]");if(!b)return;
   if(b.dataset.act==="add")return itemForm();
   if(b.dataset.act==="demo"){if(confirm("ใส่ข้อมูลตัวอย่างร้านค้าย้อนหลัง 3 เดือน ให้ทุกระบบ?\n(เปิดบิล · ภาษี · สต๊อก · ซื้อสินค้า · ค่าใช้จ่าย · บัญชี)\n\nข้อมูลเดิมในเครื่องนี้จะถูกแทนที่ ถ้ามีข้อมูลจริง ให้สำรองก่อน"))location.href="/account/?v=62#demo&back=/stock/";return}
   if(b.dataset.go){ui.v=b.dataset.go;svU();render();tellShell(ui.v);return}
@@ -537,6 +556,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-act],[data
   if(b.dataset.in)return go("in",b.dataset.in);
   if(b.dataset.outq)return go("out",b.dataset.outq);
   if(b.dataset.adjq)return go("adj",b.dataset.adjq);
+  if(b.dataset.edtx){editTx(b.dataset.edtx);return}
   if(b.dataset.deltx){const t=tx.find(x=>x.id===b.dataset.deltx);if(!t||!confirm("ลบรายการ "+TY[t.type][0]+" "+((byId(t.pid)||{}).name||"")+" "+fq(t.qty)+"?"))return;tx=tx.filter(x=>x.id!==t.id);svT();render()}
 });
 $("#dataBtn").onclick=()=>{openDlg("สำรอง / นำเข้าข้อมูล",`<div class="f"><label>ชื่อร้าน (แสดงบนรายงาน)</label><input class="in-" id="cName" value="${esc(cfg.name)}"></div>
