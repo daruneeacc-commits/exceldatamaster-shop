@@ -188,8 +188,9 @@ function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise(
 $("#rpXls").onclick=()=>{if(!cur||!last)return;toast("กำลังสร้างไฟล์ Excel...");loadXLSX().then(XL=>{const R=last.view,T=last.T,S=LS.get("edm_bill_seller",{})||{};
   const aoa=[[S.name||""],[cur.t],[perTxt(cur)],[],R.cols.map(c=>c[0])].concat(R.rows.map(x=>R.cols.map(c=>{const v=x[c[1]];return v===""||v==null?"":(c[2]==="n"||c[2]==="q")?n(v):c[2]==="d"?thD(v):String(v)})));
   if(Object.keys(T).length&&R.rows.length)aoa.push(R.cols.map((c,i)=>i===0?"รวม":c[3]?T[c[1]]:""));
+  const TRX=x=>window.EDM_I18N&&EDM_I18N.lang()!=="th"&&typeof x==="string"?EDM_I18N.tr(x):x;aoa.forEach((r,ri)=>r.forEach((v,ci)=>{r[ci]=TRX(v)}));const ttl=TRX(cur.t);
   const ws=XL.utils.aoa_to_sheet(aoa);ws["!cols"]=R.cols.map(c=>({wch:c[2]==="n"?14:c[2]==="d"?12:c[2]==="q"?10:24}));
   R.cols.forEach((c,ci)=>{if(c[2]!=="n")return;for(let ri=5;ri<aoa.length;ri++){const a=XL.utils.encode_cell({r:ri,c:ci});if(ws[a]&&typeof ws[a].v==="number")ws[a].z="#,##0.00"}});
-  const wb=XL.utils.book_new();XL.utils.book_append_sheet(wb,ws,cur.t.slice(0,28).replace(/[\\/?*\[\]:]/g," "));XL.writeFile(wb,cur.t.replace(/[\\/?*\[\]:]/g," ")+" "+st.f+"_"+st.t+".xlsx");toast("ดาวน์โหลดไฟล์ Excel แล้ว ✓")}).catch(()=>toast("สร้างไฟล์ไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองใหม่"))};
+  const wb=XL.utils.book_new();XL.utils.book_append_sheet(wb,ws,ttl.slice(0,28).replace(/[\\/?*\[\]:]/g," "));XL.writeFile(wb,ttl.replace(/[\\/?*\[\]:]/g," ")+" "+st.f+"_"+st.t+".xlsx");toast("ดาวน์โหลดไฟล์ Excel แล้ว ✓")}).catch(()=>toast("สร้างไฟล์ไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองใหม่"))};
 if(/^#\/?rpt/.test(location.hash)&&window.route)route();
 })();
