@@ -50,6 +50,7 @@ dialog{border:0;border-radius:18px;padding:0;width:min(580px,96vw);max-height:92
 </style>
 <link rel="stylesheet" href="../assets/pastel.css?v=9">
 <script src="../assets/pastel.js?v=2" defer></script>
+<script src="../assets/safedel.js?v=1"></script>
 <link rel="stylesheet" href="../assets/skin.css?v=1">
 <script src="../assets/skin.js?v=1"></script>
 <script src="../assets/lock.js?v=3"></script>
@@ -183,7 +184,7 @@ function eDlg(id){const e=id?E.find(x=>x.id===id):null;
     const v={code:$("#xC").value.trim(),name:n,dept:$("#xD").value.trim(),pos:$("#xP").value.trim(),lv:$("#xL").value,sal:s,rate:Math.min(5,num($("#xR").value))||"",start:b,st:$("#xT").value,end:$("#xT").value==="t"?($("#xE").value||today()):""};
     if(v.dept&&!cfg.depts.includes(v.dept)){cfg.depts.push(v.dept);saveC()}
     if(e)Object.assign(e,v);else E.push(Object.assign({id:uid("e")},v));save();$("#dlg").close();render();toast("บันทึกแล้ว ✓")};
-  const d=$("#xDel");if(d)d.onclick=()=>{if(!confirm("ลบ "+e.name+" ?"))return;E=E.filter(x=>x!==e);save();$("#dlg").close();render()};
+  const d=$("#xDel");if(d)d.onclick=()=>EDM_SAFEDEL({name:e.name,lose:"ข้อมูลพนักงานคนนี้ (สถิติย้อนหลังจะนับคนลดลง)",keep:{label:"บันทึกว่าลาออก",note:"สถานะเป็นลาออก วันที่ออก = วันนี้ (แก้ได้) · สถิติเดือนก่อน ๆ ยังนับคนนี้ถูกต้อง",fn:()=>{e.st="t";if(!e.end)e.end=new Date(Date.now()+252e5).toISOString().slice(0,10);save();$("#dlg").close();render()}},del:()=>{E=E.filter(x=>x!==e);save();$("#dlg").close();render()}});
   setTimeout(()=>$("#xN").focus(),60)}
 function pasteDlg(){openDlg("วางรายชื่อจาก Excel",`<p class="note" style="margin:0">คัดลอกจาก Excel แล้ววางได้เลย เรียงคอลัมน์: <b>รหัส · ชื่อ · แผนก · ตำแหน่ง · เงินเดือน · วันเริ่มงาน · สถานะ</b> (ระดับ · คะแนนประเมิน ถ้ามี) · วันที่ใช้ 15/02/2023 หรือ 2023-02-15 · สถานะ: ทำงานอยู่ / ลาพัก / ลาออก</p>
   <textarea class="in-" id="pT" placeholder="E001	สมชาย ใจดี	ไอที	โปรแกรมเมอร์	35000	01/01/2023	ทำงานอยู่"></textarea><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="pR"> แทนข้อมูลเดิมทั้งหมด</label><div class="note" id="pH"></div><button class="btn main" id="pOk" type="button">นำเข้า</button>`);

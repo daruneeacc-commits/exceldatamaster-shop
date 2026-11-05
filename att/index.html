@@ -81,6 +81,7 @@ svg text{font-family:inherit}
 </style>
 <link rel="stylesheet" href="../assets/pastel.css?v=9">
 <script src="../assets/pastel.js?v=2" defer></script>
+<script src="../assets/safedel.js?v=1"></script>
 <link rel="stylesheet" href="../assets/skin.css?v=1">
 <script src="../assets/skin.js?v=1"></script>
 <script src="../assets/lock.js?v=3"></script>
@@ -222,7 +223,7 @@ function empDlg(e){const n=!e;e=e||{};dlg(n?"เพิ่มพนักงา�
   <div class="bar"><button class="btn main" id="es">บันทึก</button>${n?"":`<button class="btn ghost danger" id="edel">ลบ</button>`}</div>`);
   setTimeout(()=>$("#en").focus(),50);
   $("#es").onclick=()=>{const nm=$("#en").value.trim();if(!nm)return toast("ใส่ชื่อก่อน");const o={code:$("#ec").value.trim(),name:nm,dept:$("#ed").value.trim(),pos:$("#ep").value.trim()};if(n){E.push(Object.assign({id:uid()},o))}else{Object.assign(e,o);e.x=$("#ex").checked}if(C.demo){C.demo=false;saveC()}save();$("#dlg").close();render();toast("บันทึกแล้ว")};
-  if(!n)$("#edel").onclick=()=>{if(!confirm("ลบ "+e.name+" และประวัติเช็กชื่อทั้งหมดของคนนี้?"))return;E=E.filter(x=>x!==e);Object.values(R).forEach(m=>delete m[e.id]);save();$("#dlg").close();render()}}
+  if(!n)$("#edel").onclick=()=>EDM_SAFEDEL({name:e.name,lose:"ประวัติเช็กชื่อทุกเดือนของคนนี้",keep:{label:"พนักงานออก / พักไว้",note:"ไม่แสดงในเช็กชื่อวันนี้ แต่ประวัติเดือนก่อน ๆ ยังอยู่ครบ",fn:()=>{e.x=1;save();$("#dlg").close();render()}},del:()=>{E=E.filter(x=>x!==e);Object.values(R).forEach(m=>delete m[e.id]);save();$("#dlg").close();render()}})}
 function pasteDlg(){dlg("วางรายชื่อจาก Excel",`<p class="note" style="margin:0">คัดลอกจาก Excel / Google Sheets มาวางได้เลย หนึ่งบรรทัดต่อหนึ่งคน · ลำดับคอลัมน์ <b>รหัส · ชื่อ · แผนก · ตำแหน่ง</b> (มีแค่ชื่อก็ได้)</p><textarea class="in-" id="pt" rows="9" placeholder="5431&#9;สมชาย ใจดี&#9;ขาย&#10;6446&#9;อรวรรณ ศรีสุข&#9;บัญชี"></textarea><button class="btn main" id="pg">เพิ่มรายชื่อ</button>`);
   $("#pg").onclick=()=>{let k=0;$("#pt").value.split(/\r?\n/).forEach(l=>{const c=l.split(/\t|,(?=\S)/).map(s=>s.trim());if(!c.join(""))return;let code="",name,dept="",pos="";if(c.length===1)name=c[0];else if(/^[A-Za-z0-9\-_.\/]+$/.test(c[0])){[code,name,dept="",pos=""]=c}else{[name,dept="",pos=""]=c}if(!name||/^(ชื่อ|name)/i.test(name))return;E.push({id:uid(),code,name,dept,pos});k++});if(C.demo){E=E.filter(e=>!e.demo);R={};C.demo=false;saveC()}save();$("#dlg").close();render();toast(`เพิ่ม ${k} คน`)}}
 

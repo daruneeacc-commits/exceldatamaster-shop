@@ -200,6 +200,7 @@ html{overscroll-behavior-y:contain}
 </style>
 <link rel="stylesheet" href="../assets/pastel.css?v=9">
 <script src="../assets/pastel.js?v=2" defer></script>
+<script src="../assets/safedel.js?v=1"></script>
 <link rel="stylesheet" href="../assets/skin.css?v=1">
 <script src="../assets/skin.js?v=1"></script>
 <meta name="theme-color" content="#6E55C0">
@@ -559,7 +560,7 @@ function leaseDlg(id){loadLZ();const old=id?LZ.L.find(x=>x.id===id):null;const L
   if(old){$("#lzCt").onclick=()=>{grab();printContract(L)};
     if($("#lzOut"))$("#lzOut").onclick=()=>moveOutDlg(L.id);
     if($("#lzBack"))$("#lzBack").onclick=()=>{const o=LZ.L.find(x=>x.id===L.id);o.st="on";delete o.out;delete o.settle;saveLZ();closeDlg();vLease()};
-    $("#lzDel").onclick=()=>{if(!confirm("ลบผู้เช่า "+L.name+" และบิลทั้งหมดของผู้เช่านี้?"))return;LZ.L=LZ.L.filter(x=>x.id!==L.id);Object.keys(LZ.B).forEach(k=>{if(k.split("|")[0]===L.id)delete LZ.B[k]});saveLZ();closeDlg();vLease()}}}
+    $("#lzDel").onclick=()=>EDM_SAFEDEL({name:L.name,lose:"ผู้เช่าและบิลทุกเดือนของผู้เช่านี้",keep:{label:"ย้ายออก (เก็บบิลไว้)",note:"คืนเงินประกัน/หักค่าค้าง บิลเดือนก่อน ๆ ยังอยู่ครบ",fn:()=>moveOutDlg(L.id)},del:()=>{LZ.L=LZ.L.filter(x=>x.id!==L.id);Object.keys(LZ.B).forEach(k=>{if(k.split("|")[0]===L.id)delete LZ.B[k]});saveLZ();closeDlg();vLease()}})}}
 
 function meterDlg(m){loadLZ();const act=LZ.L.filter(L=>lzOn(L,m)&&(needW(L)||needE(L))).sort((a,b)=>lzRoom(a).localeCompare(lzRoom(b),"th",{numeric:true}));
   openDlg("📟 จดมิเตอร์ "+ymTh(m),`<div class="db"><p class="note">ใส่เลขบนมิเตอร์ตอนนี้ ระบบลบเลขเดือนก่อนให้ · กด Enter ไปช่องถัดไป · ห้องที่ออกบิลแล้วแก้ไม่ได้</p>

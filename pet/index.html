@@ -54,6 +54,7 @@ dialog{border:0;border-radius:18px;padding:0;width:min(560px,96vw);max-height:92
 </style>
 <link rel="stylesheet" href="../assets/pastel.css?v=9">
 <script src="../assets/pastel.js?v=2" defer></script>
+<script src="../assets/safedel.js?v=1"></script>
 <link rel="stylesheet" href="../assets/skin.css?v=1">
 <script src="../assets/skin.js?v=1"></script>
 <script src="../assets/lock.js?v=3"></script>
@@ -101,7 +102,7 @@ const avatar=(p,lg)=>`<span class="av${lg?" lg":""}">${p&&p.photo?`<img src="${p
 const pLabel=p=>{const o=own(p.oid);return p.name+" ("+(SP[p.sp]||SP.other)[1]+")"+(o.name?" · "+o.name:"")+(o.phone?" "+o.phone:"")};
 const lastW=pid=>{const r=R.filter(x=>x.pid===pid&&num(x.weight)>0).sort((a,b)=>a.date<b.date?1:-1)[0];return r?num(r.weight):0};
 /* วัคซีน/ยาที่ครบกำหนด: รายการล่าสุดของแต่ละชื่อ ที่มีวันนัดครั้งถัดไป */
-function dues(within){const lim=addD(today(),within),M={};R.filter(r=>r.next).forEach(r=>{const k=r.pid+"|"+(r.name||r.t);if(!M[k]||M[k].date<r.date)M[k]=r});return Object.values(M).filter(r=>r.next<=lim&&pet(r.pid)&&!pet(r.pid).dead).sort((a,b)=>a.next<b.next?-1:1)}
+function dues(within){const lim=addD(today(),within),M={};R.filter(r=>r.next&&!(PT.find(p=>p.id===r.pid)||{}).dead).forEach(r=>{const k=r.pid+"|"+(r.name||r.t);if(!M[k]||M[k].date<r.date)M[k]=r});return Object.values(M).filter(r=>r.next<=lim&&pet(r.pid)&&!pet(r.pid).dead).sort((a,b)=>a.next<b.next?-1:1)}
 function render(){if(!cfg.biz)return bizPick();$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));({home:vHome,pets:vPets,appt:vAppt,sell:vSell,rpt:vRpt,set:vSet}[ui.v]||vHome)()}
 $("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b){ui.v=b.dataset.v;if(b.dataset.v==="pets")ui.pet="";sv.ui();render();scrollTo(0,0)}};
 const go=(v,x)=>{ui.v=v;Object.assign(ui,x||{});sv.ui();render();scrollTo(0,0)};
@@ -173,7 +174,7 @@ function petDlg(id){const p=id?pet(id):null,o=p?own(p.oid):{};
     const v={name:n,sp:$("#pSp").value,breed:$("#pB").value.trim(),sex:$("#pSx").value,birth:$("#pBd").value,color:$("#pC").value.trim(),chip:$("#pCh").value.trim(),neut:!!$("#pNt").value,allergy:$("#pAl").value.trim(),note:$("#pNo").value,photo,oid:ow?ow.id:""};
     if(p){Object.assign(p,v);p.dead=$("#pDead").checked}else{const np=Object.assign({id:uid("p")},v);PT.push(np);ui.pet=np.id;ui.v="pets"}
     if(!LS.set(K.pet,PT))return;sv.own();sv.ui();$("#dlg").close();render();toast("บันทึกแล้ว ✓")};
-  const d=$("#pDel");if(d)d.onclick=()=>{if(!confirm("ลบ "+p.name+" และประวัติทั้งหมดของน้อง?"))return;PT=PT.filter(x=>x!==p);R=R.filter(r=>r.pid!==p.id);A=A.filter(a=>a.pid!==p.id);sv.pet();sv.rec();sv.appt();ui.pet="";sv.ui();$("#dlg").close();render()};
+  const d=$("#pDel");if(d)d.onclick=()=>EDM_SAFEDEL({name:p.name,lose:"ประวัติรักษา วัคซีน นัด ทั้งหมดของน้อง",keep:{label:"น้องไม่มาแล้ว (เก็บประวัติ)",note:"ไม่เตือนวันเกิด ประวัติรักษา/วัคซีนยังเปิดดูได้",fn:()=>{p.dead=1;sv.pet();$("#dlg").close();render()}},del:()=>{PT=PT.filter(x=>x!==p);R=R.filter(r=>r.pid!==p.id);A=A.filter(a=>a.pid!==p.id);sv.pet();sv.rec();sv.appt();ui.pet="";sv.ui();$("#dlg").close();render()}});
   if(!p)setTimeout(()=>$("#pN").focus(),60)}
 function recDlg(id,pid,t){const r=id?R.find(x=>x.id===id):null;pid=r?r.pid:pid;t=r?r.t:t||"visit";const p=pet(pid);
   const vn=t==="vac"?cfg.vacs.filter(v=>!/พยาธิ|เห็บ|หมัด/.test(v.n)):t==="dew"?cfg.vacs.filter(v=>/พยาธิ|เห็บ|หมัด/.test(v.n)):[];

@@ -58,6 +58,7 @@ table.xl{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeri
 </style>
 <link rel="stylesheet" href="../assets/pastel.css?v=9">
 <script src="../assets/pastel.js?v=2" defer></script>
+<script src="../assets/safedel.js?v=1"></script>
 <link rel="stylesheet" href="../assets/skin.css?v=1">
 <script src="../assets/skin.js?v=1"></script>
 <script src="../assets/lock.js?v=3"></script>
@@ -176,7 +177,7 @@ function cDlg(id){const c=id?C.find(x=>x.id===id):null,nx=C.reduce((a,x)=>Math.m
     if(!n)return toast("ใส่ชื่อผู้เช่าซื้อก่อน");if(d<1||d>31)return toast("วันที่ชำระต้องเป็น 1–31");if(!fmv)return toast("ใส่เดือนของงวดแรก");if(nn<1||nn>480)return toast("จำนวนงวดไม่ถูกต้อง");
     const v={no:$("#cNo").value.trim(),name:n,cno:$("#cC").value.trim(),fin:$("#cF").value.trim(),asset:$("#cA").value.trim(),start:$("#cS").value,day:d,fm:fmv,ev:num($("#cEv").value)||1,n:nn,a1:num($("#cA1").value),a:num($("#cAa").value),note:$("#cNt").value.trim()};
     if(!v.a1)v.a1=v.a;if(c)Object.assign(c,v);else C.push(Object.assign({id:uid("c"),paid:{}},v));if(cfg.demo&&!c){}save();$("#dlg").close();render();toast("บันทึกแล้ว ✓")};
-  const dl=$("#cDel");if(dl)dl.onclick=()=>{if(!confirm("ลบสัญญา "+c.name+" ?"))return;C=C.filter(x=>x!==c);save();$("#dlg").close();ui.v="list";saveUi();render()};
+  const dl=$("#cDel");if(dl)dl.onclick=()=>{const go=()=>{C=C.filter(x=>x!==c);save();$("#dlg").close();ui.v="list";saveUi();render()};if(!Object.keys(c.paid||{}).length){if(confirm("ลบสัญญา "+c.name+" ?"))go();return}EDM_SAFEDEL({name:c.name,lose:"สัญญานี้และประวัติชำระทุกงวด",del:go})};
   setTimeout(()=>$("#cN").focus(),60)}
 
 /* ---------- ตั้งค่า ---------- */

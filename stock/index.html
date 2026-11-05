@@ -124,6 +124,7 @@ html{overscroll-behavior-y:contain}
 </style>
 <link rel="stylesheet" href="../assets/pastel.css?v=9">
 <script src="../assets/pastel.js?v=2" defer></script>
+<script src="../assets/safedel.js?v=1"></script>
 <link rel="stylesheet" href="../assets/skin.css?v=1">
 <script src="../assets/skin.js?v=1"></script>
 <meta name="theme-color" content="#C08A0E">
@@ -463,7 +464,7 @@ function itemForm(id){
     const o={sku,name,brand:$("#iBrand").value.trim(),cat:$("#iCat").value.trim(),unit:$("#iUnit").value.trim()||"ชิ้น",cost:num($("#iCost").value),price:num($("#iPrice").value),min:num($("#iMin").value),note:$("#iNote").value.trim()};
     if(id)Object.assign(byId(id),o);else{const it=Object.assign({id:uid("p"),created:Date.now()},o);items.push(it);const op=num(($("#iOpen")||{}).value);if(op>0){tx.push({id:uid("t"),type:"in",date:today(),pid:it.id,qty:op,cost:o.cost,note:"ยอดยกมา",ts:Date.now()});svT()}}
     svI();dlg.close();toast("บันทึกสินค้าแล้ว ✓");render()};
-  if(id)$("#iDel").onclick=()=>{const n=tx.filter(t=>t.pid===id).length;if(!confirm("ลบ \""+i.name+"\""+(n?" และประวัติรับ-จ่าย "+n+" รายการ":"")+"?"))return;items=items.filter(x=>x.id!==id);tx=tx.filter(t=>t.pid!==id);svI();svT();dlg.close();render()};
+  if(id)$("#iDel").onclick=()=>{const n=tx.filter(t=>t.pid===id).length,go=()=>{items=items.filter(x=>x.id!==id);tx=tx.filter(t=>t.pid!==id);svI();svT();dlg.close();render()};if(!n){if(confirm("ลบ \""+i.name+"\"?"))go();return}EDM_SAFEDEL({name:i.name,lose:"สินค้านี้และประวัติรับ-จ่าย "+n+" รายการ",del:go})};
 }
 function stockCard(id){
   const i=byId(id);if(!i)return;let bal=0,avg=num(i.cost);

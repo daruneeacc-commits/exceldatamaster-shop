@@ -806,7 +806,7 @@ $("#delEmp").onclick=()=>{const e=empById(ui.sel);if(!e)return;const nm=esc(e.na
   $("#rCancel").onclick=()=>dlg.close();
   $("#rOk").onclick=()=>{const d=$("#rEnd").value;if(!d){toast("เลือกวันที่ออกก่อน");return}e.end=d;svEmps();dlg.close();
     const vis=activeEmps();if(!vis.some(x=>x.id===e.id))ui.sel=vis[0]?vis[0].id:null;svUi();renderAll();toast("บันทึกลาออกแล้ว · ประวัติเงินเดือนยังอยู่")};
-  $("#rDel").onclick=()=>{if(!confirm(`ลบ "${e.name||e.code}" และประวัติเงินเดือนทุกเดือน? กู้คืนไม่ได้`))return;dlg.close();
+  $("#rDel").onclick=()=>{if((prompt(`ลบ "${e.name||e.code}" และเงินเดือนทุกเดือน กู้คืนไม่ได้\nพิมพ์คำว่า ลบ เพื่อยืนยัน`)||"").trim()!=="ลบ")return;dlg.close();
     emps=emps.filter(x=>x.id!==e.id);Object.values(recs).forEach(R=>delete R[e.id]);svEmps();svRecs();ui.sel=emps[0]?emps[0].id:null;svUi();renderAll();toast("ลบแล้ว")};
   dlg.showModal()};
 $("#certDate").onchange=e=>{certDate=e.target.value;renderPaper()};

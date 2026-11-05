@@ -79,6 +79,7 @@ table.gt{border-collapse:separate;border-spacing:0;font-size:.84rem;table-layout
 </style>
 <link rel="stylesheet" href="../assets/pastel.css?v=9">
 <script src="../assets/pastel.js?v=2" defer></script>
+<script src="../assets/safedel.js?v=1"></script>
 <link rel="stylesheet" href="../assets/skin.css?v=1">
 <script src="../assets/skin.js?v=1"></script>
 <script src="../assets/lock.js?v=3"></script>
@@ -190,7 +191,7 @@ function projDlg(id){const p=id?P(id):null,c=p?p.c:PC[cfg.projects.length%PC.len
   <div style="display:flex;gap:8px;justify-content:space-between">${p?`<button class="btn ghost danger" id="pDel" type="button">ลบโปรเจกต์</button>`:"<span></span>"}<button class="btn main" id="pOk" type="button">บันทึก</button></div>`);
   $("#pOk").onclick=()=>{const n=$("#pN").value.trim();if(!n){$("#pN").focus();return toast("ใส่ชื่อโปรเจกต์ก่อน")}const o={name:n,start:$("#pS").value,end:$("#pE").value,c:($("input[name=pc]:checked")||{}).value||c};
     if(p)Object.assign(p,o);else{const np=Object.assign({id:uid("p")},o);cfg.projects.push(np);ui.pid=np.id;saveUi()}if(cfg.demo&&!p)cfg.demo=false;saveC();$("#dlg").close();ui.v="gantt";saveUi();render();toast(p?"บันทึกแล้ว ✓":"สร้างโปรเจกต์แล้ว · เพิ่มงานในตารางได้เลย")};
-  const d=$("#pDel");if(d)d.onclick=()=>{const n=T.filter(t=>t.pid===p.id).length;if(!confirm("ลบโปรเจกต์ \""+p.name+"\""+(n?" และงาน "+n+" รายการ":"")+" ?"))return;cfg.projects=cfg.projects.filter(x=>x!==p);T=T.filter(t=>t.pid!==p.id);if(ui.pid===p.id)ui.pid="";save();saveC();saveUi();$("#dlg").close();render()};
+  const d=$("#pDel");if(d)d.onclick=()=>{const n=T.filter(t=>t.pid===p.id).length,go=()=>{cfg.projects=cfg.projects.filter(x=>x!==p);T=T.filter(t=>t.pid!==p.id);if(ui.pid===p.id)ui.pid="";save();saveC();saveUi();$("#dlg").close();render()};if(!n){if(confirm("ลบโปรเจกต์ \""+p.name+"\" ?"))go();return}EDM_SAFEDEL({name:p.name,lose:"โปรเจกต์นี้และงาน "+n+" รายการ",del:go})};
   setTimeout(()=>$("#pN").focus(),50)}
 
 /* ---------- ภาพรวม ---------- */
