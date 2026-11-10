@@ -65,7 +65,7 @@ dialog{border:0;border-radius:18px;padding:0;width:min(560px,96vw);max-height:92
 </head>
 <body>
 <header class="top"><div class="in"><a class="brand" href="/">🐾 Excel Data Master <small>· ร้านสัตว์เลี้ยง</small></a><nav class="nav"></nav></div></header>
-<div class="tabs" id="tabs"><button data-v="home">🏠 วันนี้</button><button data-v="pets">🐶 สัตว์เลี้ยง</button><button data-v="appt">📅 นัดหมาย</button><button data-v="sell">💰 ขาย / ใบเสร็จ</button><button data-v="rpt">📊 รายงาน</button><button data-v="set">⚙️ ตั้งค่า</button></div>
+<div class="tabs" id="tabs"><button data-v="home">🏠 วันนี้</button><button data-v="pets">🐶 สัตว์เลี้ยง</button><button data-v="appt">📅 นัดหมาย</button><button data-v="sell">💰 ขาย / ใบเสร็จ</button><button data-v="rpt">📊 รายงาน</button><button data-v="exp">💸 รายจ่าย / กำไร</button><button data-v="set">⚙️ ตั้งค่า</button></div>
 <main id="main"></main>
 <dialog id="dlg"><div class="dh"><b id="dlgT"></b><button class="btn sm ghost" id="dlgX" type="button">✕</button></div><div class="db" id="dlgB"></div></dialog>
 <div class="toast" id="toast" hidden></div>
@@ -75,7 +75,7 @@ dialog{border:0;border-radius:18px;padding:0;width:min(560px,96vw);max-height:92
 "use strict";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert("บันทึกไม่ได้ (พื้นที่เต็ม) ลองลดรูปสัตว์เลี้ยงหรือสำรองข้อมูลก่อน");return false}}};
-const K={own:"edm_pet_owners",pet:"edm_pet_pets",rec:"edm_pet_recs",appt:"edm_pet_appts",sale:"edm_pet_sales",cfg:"edm_pet_cfg",ui:"edm_pet_ui"};
+const K={own:"edm_pet_owners",pet:"edm_pet_pets",rec:"edm_pet_recs",appt:"edm_pet_appts",sale:"edm_pet_sales",exp:"edm_pet_exp",cfg:"edm_pet_cfg",ui:"edm_pet_ui"};
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),today=()=>ymd(new Date());
 const MS=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],DW=["อา.","จ.","อ.","พ.","พฤ.","ศ.","ส."];
@@ -90,10 +90,10 @@ const AS={bk:["นัดแล้ว","wait"],in:["มาแล้ว",""],done:
 const PCAT={svc:"บริการ",prod:"สินค้า",med:"ยา/เวชภัณฑ์",vac:"วัคซีน"};
 const DEF={clinic:{prices:[["ค่าตรวจ","svc",300],["ฉีดวัคซีนรวม 5 โรค (หมา)","vac",450],["ฉีดวัคซีนพิษสุนัขบ้า","vac",250],["ฉีดวัคซีนรวม 4 โรค (แมว)","vac",500],["ถ่ายพยาธิ","med",150],["ยาหยดกันเห็บหมัด","med",390],["ยาฆ่าเชื้อ (ต่อวัน)","med",60],["น้ำเกลือ","med",350],["ทำหมันแมวตัวเมีย","svc",1500],["ทำหมันหมาตัวผู้","svc",1800],["อาบน้ำ","svc",250],["อาหารเม็ด 1.5 กก.","prod",420]],vacs:[["วัคซีนรวม (หมา)",365],["พิษสุนัขบ้า",365],["วัคซีนรวม (แมว)",365],["ถ่ายพยาธิ",90],["หยดเห็บหมัด",30]]},
   shop:{prices:[["อาบน้ำ หมาเล็ก","svc",250],["อาบน้ำ หมากลาง","svc",350],["อาบน้ำ + ตัดขน หมาเล็ก","svc",450],["อาบน้ำ + ตัดขน หมากลาง","svc",650],["อาบน้ำแมว","svc",350],["ตัดเล็บ","svc",80],["ฝากเลี้ยง (ต่อคืน)","svc",300],["อาหารเม็ด 1.5 กก.","prod",420],["อาหารเปียก (ซอง)","prod",25],["ทรายแมว 10 ลิตร","prod",180],["ขนมขัดฟัน","prod",89],["ยาหยดกันเห็บหมัด","med",390]],vacs:[["หยดเห็บหมัด",30],["ถ่ายพยาธิ",90]]}};
-let O=LS.get(K.own,[])||[],PT=LS.get(K.pet,[])||[],R=LS.get(K.rec,[])||[],A=LS.get(K.appt,[])||[],S=LS.get(K.sale,[])||[];
+let O=LS.get(K.own,[])||[],PT=LS.get(K.pet,[])||[],R=LS.get(K.rec,[])||[],A=LS.get(K.appt,[])||[],S=LS.get(K.sale,[])||[],E=LS.get(K.exp,[])||[];
 let cfg=Object.assign({biz:"",shop:{name:"",phone:"",addr:"",line:""},prices:[],vacs:[],staff:[],paper:"80",rno:0,demo:false},LS.get(K.cfg,{})||{});
 let ui=Object.assign({v:"home",pet:"",q:"",day:today(),cart:[],cpid:"",pay:"เงินสด",disc:"",rm:today().slice(0,7)},LS.get(K.ui,{})||{});
-const sv={own:()=>LS.set(K.own,O),pet:()=>LS.set(K.pet,PT),rec:()=>LS.set(K.rec,R),appt:()=>LS.set(K.appt,A),sale:()=>LS.set(K.sale,S),cfg:()=>LS.set(K.cfg,cfg),ui:()=>LS.set(K.ui,ui)};
+const sv={own:()=>LS.set(K.own,O),pet:()=>LS.set(K.pet,PT),rec:()=>LS.set(K.rec,R),appt:()=>LS.set(K.appt,A),sale:()=>LS.set(K.sale,S),exp:()=>LS.set(K.exp,E),cfg:()=>LS.set(K.cfg,cfg),ui:()=>LS.set(K.ui,ui)};
 const own=id=>O.find(o=>o.id===id)||{},pet=id=>PT.find(p=>p.id===id);
 const kn=n=>n?(/^คุณ/.test(n)?n:"คุณ"+n):"";
 const isC=()=>cfg.biz==="clinic",W=(c,s)=>isC()?c:s;
@@ -103,7 +103,7 @@ const pLabel=p=>{const o=own(p.oid);return p.name+" ("+(SP[p.sp]||SP.other)[1]+"
 const lastW=pid=>{const r=R.filter(x=>x.pid===pid&&num(x.weight)>0).sort((a,b)=>a.date<b.date?1:-1)[0];return r?num(r.weight):0};
 /* วัคซีน/ยาที่ครบกำหนด: รายการล่าสุดของแต่ละชื่อ ที่มีวันนัดครั้งถัดไป */
 function dues(within){const lim=addD(today(),within),M={};R.filter(r=>r.next&&!(PT.find(p=>p.id===r.pid)||{}).dead).forEach(r=>{const k=r.pid+"|"+(r.name||r.t);if(!M[k]||M[k].date<r.date)M[k]=r});return Object.values(M).filter(r=>r.next<=lim&&pet(r.pid)&&!pet(r.pid).dead).sort((a,b)=>a.next<b.next?-1:1)}
-function render(){if(!cfg.biz)return bizPick();$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));({home:vHome,pets:vPets,appt:vAppt,sell:vSell,rpt:vRpt,set:vSet}[ui.v]||vHome)()}
+function render(){if(!cfg.biz)return bizPick();$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===ui.v));({home:vHome,pets:vPets,appt:vAppt,sell:vSell,rpt:vRpt,exp:vExp,set:vSet}[ui.v]||vHome)()}
 $("#tabs").onclick=e=>{const b=e.target.closest("[data-v]");if(b){ui.v=b.dataset.v;if(b.dataset.v==="pets")ui.pet="";sv.ui();render();scrollTo(0,0)}};
 const go=(v,x)=>{ui.v=v;Object.assign(ui,x||{});sv.ui();render();scrollTo(0,0)};
 function bizPick(){$$("#tabs button").forEach(b=>b.classList.remove("on"));$("#main").innerHTML=`<div class="card" style="text-align:center;align-items:center;padding:30px 16px"><div style="font-size:3rem">🐶🐱</div><h2 style="justify-content:center">ร้านของคุณเป็นแบบไหน?</h2><p class="note" style="margin:0">เลือกเพื่อตั้งรายการราคาและคำเรียกให้เหมาะ (เปลี่ยนทีหลังได้ที่ ตั้งค่า)</p>
@@ -277,6 +277,34 @@ function vRpt(){const M=$("#main"),m=ui.rm||today().slice(0,7),L=S.filter(s=>!s.
   <div class="card"><h2>ขายดี / ใช้บริการบ่อย</h2>${top.length?`<div class="hb">${top.map(([n,v])=>`<div><span title="${esc(n)}" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(n)}</span><i style="width:${Math.round(v.v/tmx*100)}%"></i><span>${fmt(v.v)} (${fmt(v.q)})</span></div>`).join("")}</div>`:`<div class="empty">ยังไม่มียอดขายเดือนนี้</div>`}</div>`;
   $("#rm").onchange=e=>{ui.rm=e.target.value||today().slice(0,7);sv.ui();vRpt()}}
 
+/* ---------- รายจ่าย / กำไร (10 พ.ย. 2569 · ข้อมูลแยก edm_pet_exp ไม่แตะบิลเดิม) ---------- */
+const ECAT=()=>isC()?["ยา / วัคซีน / เวชภัณฑ์","สินค้าเข้าร้าน","ค่าเช่า","เงินเดือน / ค่าแรง","ค่าน้ำ ค่าไฟ ค่าเน็ต","อุปกรณ์ / เครื่องมือ","ค่าแล็บ / ส่งต่อ","การตลาด / โฆษณา","อื่น ๆ"]:["สินค้าเข้าร้าน","แชมพู / อุปกรณ์อาบน้ำ","ค่าเช่า","เงินเดือน / ค่าแรง","ค่าน้ำ ค่าไฟ ค่าเน็ต","อุปกรณ์ / เครื่องมือ","การตลาด / โฆษณา","อื่น ๆ"];
+const incM=m=>S.filter(s=>!s.void&&s.date.slice(0,7)===m).reduce((a,s)=>a+s.total,0),expM=m=>E.filter(x=>x.date.slice(0,7)===m).reduce((a,x)=>a+num(x.amt),0);
+function vExp(){const M=$("#main"),m=ui.rm||today().slice(0,7),inc=incM(m),L=E.filter(x=>x.date.slice(0,7)===m).sort((a,b)=>a.date<b.date?1:-1),ex=L.reduce((a,x)=>a+num(x.amt),0),pf=inc-ex;
+  const ms=[];for(let i=5;i>=0;i--){const d=new Date(m+"-01T00:00");d.setMonth(d.getMonth()-i);ms.push(ymd(d).slice(0,7))}
+  const iv=ms.map(incM),ev=ms.map(expM),mx=Math.max(1,...iv,...ev);
+  const bc={};L.forEach(x=>bc[x.cat]=(bc[x.cat]||0)+num(x.amt));const cs=Object.keys(bc).sort((a,b)=>bc[b]-bc[a]),cmx=Math.max(1,...cs.map(k=>bc[k]));
+  const pm=(()=>{const d=new Date(m+"-01T00:00");d.setMonth(d.getMonth()-1);return ymd(d).slice(0,7)})(),fx=E.filter(x=>x.fix&&x.date.slice(0,7)===pm&&!L.some(y=>y.fix&&y.cat===x.cat&&y.desc===x.desc));
+  M.innerHTML=`<div class="hello"><div><h1>รายจ่าย / กำไร</h1><p>เดือน ${MS[+m.slice(5)-1]} ${+m.slice(0,4)+543} · รายได้ดึงจากบิลที่ขายอัตโนมัติ</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><input class="in-" type="month" id="em" value="${m}" style="width:auto"><button class="btn main" id="eAdd" type="button">＋ เพิ่มรายจ่าย</button></div></div>
+  <div class="kpis"><div class="kpi" style="--k:var(--ok)"><span>รายได้</span><b>${fmt(inc)}</b><small>บาท · จากบิล</small></div><div class="kpi" style="--k:#E06A5B"><span>รายจ่าย</span><b>${fmt(ex)}</b><small>${L.length} รายการ</small></div><div class="kpi${pf<0?" bad":""}" style="--k:#5B9BD5"><span>${pf<0?"ขาดทุน":"กำไร"}</span><b style="${pf<0?"color:var(--danger)":""}">${fmt(Math.abs(pf))}</b><small>บาท</small></div><div class="kpi" style="--k:#9B7BD4"><span>% กำไร</span><b>${inc?fmt(Math.round(pf/inc*1000)/10):0}%</b><small>ของรายได้</small></div></div>
+  ${fx.length?`<div class="card" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#FFF8E8"><span>📌 รายจ่ายประจำจากเดือนก่อน ${fx.length} รายการ (${esc(fx.map(x=>x.desc||x.cat).join(", "))}) ยังไม่ได้ใส่เดือนนี้</span><button class="btn sm main" id="eFix" type="button">ใส่ให้เลย</button></div>`:""}
+  <div class="g2"><div class="card"><h2>รายได้ เทียบ รายจ่าย 6 เดือน</h2><div class="bars" style="gap:10px">${ms.map((x,i)=>`<div><span style="white-space:nowrap">${fmt(Math.round((iv[i]-ev[i])/100)/10)}k</span><span style="display:flex;gap:3px;align-items:flex-end;width:100%;justify-content:center;height:110px"><i style="height:${Math.round(iv[i]/mx*110)}px;max-width:20px;background:linear-gradient(#9ED9BC,#2E9E7B)"></i><i style="height:${Math.round(ev[i]/mx*110)}px;max-width:20px;background:linear-gradient(#F3A79C,#E06A5B)"></i></span>${MS[+x.slice(5)-1]}</div>`).join("")}</div><p class="note" style="margin:0">เขียว = รายได้ · แดง = รายจ่าย · ตัวเลขบน = กำไร (พันบาท)</p></div>
+   <div class="card"><h2>รายจ่ายตามหมวด</h2>${cs.length?`<div class="hb">${cs.map(k=>`<div><span title="${esc(k)}" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(k)}</span><i style="width:${Math.round(bc[k]/cmx*100)}%;background:#F3A79C"></i><span>${fmt(bc[k])}</span></div>`).join("")}</div>`:`<div class="empty">ยังไม่มีรายจ่ายเดือนนี้</div>`}</div></div>
+  <div class="card"><h2>รายการรายจ่าย</h2>${L.length?L.map(x=>`<div class="li"><span class="tm" style="min-width:70px"><small class="note">${thD(x.date)}</small></span><div class="t"><b>${esc(x.desc||x.cat)}${x.fix?" 📌":""}</b><small>${esc(x.cat)}${x.pay?" · "+esc(x.pay):""}</small></div><b>${fm2(x.amt)}</b><div class="acts"><button class="btn sm ghost" data-ee="${x.id}" type="button">แก้ไข</button></div></div>`).join(""):`<div class="empty">ยังไม่มีรายจ่ายเดือนนี้<br><br><button class="btn main" id="eAdd2" type="button">＋ เพิ่มรายจ่ายแรก</button></div>`}</div>`;
+  $("#em").onchange=e=>{ui.rm=e.target.value||today().slice(0,7);sv.ui();vExp()};
+  $("#eAdd").onclick=()=>expDlg();if($("#eAdd2"))$("#eAdd2").onclick=()=>expDlg();
+  $$("[data-ee]").forEach(b=>b.onclick=()=>expDlg(b.dataset.ee));
+  if($("#eFix"))$("#eFix").onclick=()=>{const dm=new Date(m+"-01T00:00").getMonth();fx.forEach(x=>{let d=m+x.date.slice(7);const t=new Date(d+"T00:00");if(t.getMonth()!==dm)d=m+"-28";E.push(Object.assign({},x,{id:uid("e"),date:d}))});sv.exp();vExp();toast("ใส่รายจ่ายประจำแล้ว ✓")}}
+function expDlg(id){const x=id?E.find(e=>e.id===id):null,C=ECAT(),m=ui.rm||today().slice(0,7),dd=x?x.date:(today().slice(0,7)===m?today():m+"-01");
+  openDlg(x?"แก้ไขรายจ่าย":"เพิ่มรายจ่าย",`<div class="row"><div class="f"><label>วันที่</label><input class="in-" type="date" id="eD" value="${dd}"></div><div class="f"><label>จำนวนเงิน (บาท) *</label><input class="in-" id="eA" inputmode="decimal" value="${x?x.amt:""}" placeholder="0"></div></div>
+  <div class="f"><label>หมวด</label><select class="in-" id="eC">${C.concat(x&&C.indexOf(x.cat)<0?[x.cat]:[]).map(c=>`<option${x&&x.cat===c?" selected":""}>${esc(c)}</option>`).join("")}</select></div>
+  <div class="f"><label>รายการ</label><input class="in-" id="eT" value="${esc(x?x.desc:"")}" placeholder="เช่น ซื้อวัคซีนรวม 10 โด๊ส / ค่าเช่าเดือนนี้"></div>
+  <div class="row"><div class="f"><label>จ่ายโดย</label><select class="in-" id="eP">${["เงินสด","โอน","บัตร"].map(c=>`<option${x&&x.pay===c?" selected":""}>${c}</option>`).join("")}</select></div><div class="f"><label>&nbsp;</label><label style="display:flex;gap:6px;align-items:center;font-weight:500;color:var(--ink)"><input type="checkbox" id="eF"${x&&x.fix?" checked":""}> 📌 รายจ่ายประจำทุกเดือน</label></div></div>
+  <div style="display:flex;gap:8px">${x?`<button class="btn ghost danger" id="eDel" type="button">ลบ</button>`:""}<button class="btn main" id="eOk" type="button" style="flex:1">💾 บันทึก</button></div>`);
+  $("#eOk").onclick=()=>{const a=num($("#eA").value);if(!(a>0)){toast("ใส่จำนวนเงินก่อน");return}const v={date:$("#eD").value||today(),amt:a,cat:$("#eC").value,desc:$("#eT").value.trim(),pay:$("#eP").value,fix:$("#eF").checked};
+    if(x)Object.assign(x,v);else E.push(Object.assign({id:uid("e")},v));sv.exp();$("#dlg").close();ui.rm=v.date.slice(0,7);sv.ui();vExp();toast("บันทึกแล้ว ✓")};
+  if(x)$("#eDel").onclick=()=>{if(!confirm("ลบรายจ่ายนี้?"))return;E=E.filter(e=>e.id!==x.id);sv.exp();$("#dlg").close();vExp();toast("ลบแล้ว")}}
+
 /* ---------- ตั้งค่า ---------- */
 function vSet(){const M=$("#main"),s=cfg.shop;
   M.innerHTML=`<div class="card"><h2>ข้อมูลร้าน <small>แสดงบนใบเสร็จและข้อความเตือน</small></h2><div class="row"><div class="f"><label>ชื่อร้าน</label><input class="in-" data-s="name" value="${esc(s.name)}"></div><div class="f"><label>เบอร์โทร</label><input class="in-" data-s="phone" value="${esc(s.phone)}"></div></div><div class="row"><div class="f"><label>ที่อยู่</label><input class="in-" data-s="addr" value="${esc(s.addr)}"></div><div class="f"><label>LINE</label><input class="in-" data-s="line" value="${esc(s.line)}"></div></div>
@@ -296,7 +324,7 @@ function vSet(){const M=$("#main"),s=cfg.shop;
   $("#xCsv").onclick=()=>dl([["ชื่อน้อง","ชนิด","สายพันธุ์","เพศ","วันเกิด","ไมโครชิป","แพ้","เจ้าของ","เบอร์โทร","LINE","ที่อยู่"]].concat(PT.map(p=>{const o=own(p.oid);return[p.name,(SP[p.sp]||SP.other)[1],p.breed,p.sex==="m"?"ผู้":p.sex==="f"?"เมีย":"",p.birth,p.chip,p.allergy,o.name,o.phone,o.line,o.addr]})),"pets");
   $("#xSale").onclick=()=>dl([["เลขที่","วันที่","น้อง","รายการ","จำนวน","ราคา","ส่วนลดบิล","รวมบิล","ชำระ","สถานะ"]].concat(S.flatMap(s=>s.items.map((l,i)=>[s.no,s.date,(pet(s.pid)||{}).name||"",l.n,l.q,l.p,i?"":s.disc,i?"":s.total,s.pay,s.void?"ยกเลิก":""]))),"pet-sales");
   $("#xDemo").onclick=()=>{if(PT.length&&!confirm("ข้อมูลตัวอย่างจะแทนข้อมูลที่มีอยู่ ต้องการต่อ?"))return;demo(cfg.biz)};
-  $("#xClr").onclick=()=>{if(!confirm("ล้างข้อมูลทั้งหมด (สัตว์ เจ้าของ ประวัติ นัด บิล)? ย้อนกลับไม่ได้"))return;O=[];PT=[];R=[];A=[];S=[];cfg.rno=0;cfg.demo=false;["own","pet","rec","appt","sale","cfg"].forEach(k=>sv[k]());ui.pet="";sv.ui();render();toast("ล้างแล้ว")}}
+  $("#xClr").onclick=()=>{if(!confirm("ล้างข้อมูลทั้งหมด (สัตว์ เจ้าของ ประวัติ นัด บิล รายจ่าย)? ย้อนกลับไม่ได้"))return;O=[];PT=[];R=[];A=[];S=[];E=[];cfg.rno=0;cfg.demo=false;["own","pet","rec","appt","sale","exp","cfg"].forEach(k=>sv[k]());ui.pet="";sv.ui();render();toast("ล้างแล้ว")}}
 
 /* ---------- ตัวอย่าง ---------- */
 function demo(biz){cfg.biz=biz||"clinic";cfg.prices=DEF[cfg.biz].prices.map(x=>({id:uid("i"),n:x[0],c:x[1],p:x[2]}));cfg.vacs=DEF[cfg.biz].vacs.map(x=>({n:x[0],d:x[1]}));
@@ -313,13 +341,18 @@ function demo(biz){cfg.biz=biz||"clinic";cfg.prices=DEF[cfg.biz].prices.map(x=>(
   A=[[0,"09:30",isC()?"ฉีดวัคซีนรวม 5 โรค (หมา)":"อาบน้ำ + ตัดขน หมาเล็ก","in"],[2,"11:00",isC()?"ค่าตรวจ":"อาบน้ำ หมาเล็ก","bk"],[6,"14:00",isC()?"ทำหมันหมาตัวผู้":"อาบน้ำ + ตัดขน หมากลาง","bk"],[1,"16:30",isC()?"ฉีดวัคซีนรวม 4 โรค (แมว)":"อาบน้ำแมว","bk"]].map((x,i)=>({id:uid("a"),pid:PT[x[0]].id,date:t,time:x[1],svc:x[2],staff:cfg.staff[i%cfg.staff.length],st:x[3],note:""}));
   A.push({id:uid("a"),pid:PT[3].id,date:addD(t,2),time:"10:00",svc:isC()?"ค่าตรวจ":"อาบน้ำแมว",staff:cfg.staff[0],st:"bk",note:""},{id:uid("a"),pid:PT[5].id,date:addD(t,4),time:"13:00",svc:sv1[0].n,staff:cfg.staff[1],st:"bk",note:""});
   S=[];cfg.rno=0;for(let d=-170;d<=0;d+=1){const n=d===0?2:(Math.random()<.55?1+Math.floor(Math.random()*3):0);for(let k=0;k<n;k++){const p=PT[Math.floor(Math.random()*PT.length)],it=[pick(Math.floor(Math.random()*40))];if(Math.random()<.4)it.push(pick(Math.floor(Math.random()*40)));cfg.rno++;const items=it.map(x=>({n:x.n,c:x.c,q:1,p:x.p}));S.push({id:uid("s"),no:cfg.rno,date:addD(t,d),pid:p.id,oid:p.oid,items,disc:0,total:items.reduce((a,l)=>a+l.p,0),pay:Math.random()<.6?"โอน/พร้อมเพย์":"เงินสด",at:0})}}
-  ["own","pet","rec","appt","sale","cfg"].forEach(k=>sv[k]());ui=Object.assign(ui,{v:"home",pet:"",q:"",day:t,cart:[],cpid:""});sv.ui();render();toast("ใส่ตัวอย่างแล้ว ✓")}
-window.addEventListener("storage",e=>{if(Object.values(K).includes(e.key)&&e.key!==K.ui){O=LS.get(K.own,[])||[];PT=LS.get(K.pet,[])||[];R=LS.get(K.rec,[])||[];A=LS.get(K.appt,[])||[];S=LS.get(K.sale,[])||[];cfg=Object.assign(cfg,LS.get(K.cfg,{})||{});if(!$("#dlg").open)render()}});
+  E=[];{const C=ECAT(),av=(()=>{let a=0;for(let i=1;i<=5;i++){const d=new Date(t.slice(0,7)+"-01T00:00");d.setMonth(d.getMonth()-i);a+=incM(ymd(d).slice(0,7))}return a/5||20000})(),r10=v=>Math.max(10,Math.round(v/10)*10);
+  const fixd=isC()?[[C[2],"ค่าเช่าคลินิก",.2,5],[C[3],"เงินเดือนผู้ช่วย",.26,30],[C[4],"ค่าไฟ + น้ำ + เน็ต",.06,10]]:[[C[2],"ค่าเช่าร้าน",.2,5],[C[3],"ค่าแรงช่าง",.24,30],[C[4],"ค่าไฟ + น้ำ + เน็ต",.06,10]],vard=[[C[0],isC()?"ซื้อยา + วัคซีน":"ซื้อสินค้าเข้าร้าน",.12,12],[C[1],isC()?"สินค้าหน้าร้าน (อาหาร/ขนม)":"แชมพู + อุปกรณ์",.06,18]];
+  for(let i=5;i>=0;i--){const d=new Date(t.slice(0,7)+"-01T00:00");d.setMonth(d.getMonth()-i);const ym=ymd(d).slice(0,7);
+    fixd.forEach(f=>{const dt=ym+"-"+pad(Math.min(f[3],28));if(dt<=t)E.push({id:uid("e"),date:dt,cat:f[0],desc:f[1],amt:r10(av*f[2]),pay:"โอน",fix:true})});
+    vard.forEach(f=>{const dt=ym+"-"+pad(f[3]);if(dt<=t)E.push({id:uid("e"),date:dt,cat:f[0],desc:f[1],amt:r10(av*f[2]*(0.8+Math.random()*0.4)),pay:"โอน",fix:false})})}}
+  ["own","pet","rec","appt","sale","exp","cfg"].forEach(k=>sv[k]());ui=Object.assign(ui,{v:"home",pet:"",q:"",day:t,cart:[],cpid:""});sv.ui();render();toast("ใส่ตัวอย่างแล้ว ✓")}
+window.addEventListener("storage",e=>{if(Object.values(K).includes(e.key)&&e.key!==K.ui){O=LS.get(K.own,[])||[];PT=LS.get(K.pet,[])||[];R=LS.get(K.rec,[])||[];A=LS.get(K.appt,[])||[];S=LS.get(K.sale,[])||[];E=LS.get(K.exp,[])||[];cfg=Object.assign(cfg,LS.get(K.cfg,{})||{});if(!$("#dlg").open)render()}});
 const dq=(/[?&]demo=(\w+)/.exec(location.search)||[])[1];if(dq&&!PT.length)demo(dq==="shop"?"shop":"clinic");else render();
 })();
 </script>
 <script src="../assets/icons.js?v=10"></script>
-<script>/* ไอคอนวาดเองบนแท็บ/โลโก้ */(function(){if(!window.EDM_ICON)return;var I={home:["home","#E0703F"],pets:["paw","#D9822B"],appt:["calendar","#2F80C9"],sell:["coins","#2E9E7B"],rpt:["chart","#9B7BD4"],set:["sliders","#5B6B7F"]};document.querySelectorAll("#tabs [data-v]").forEach(function(b){var k=I[b.dataset.v];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.trim().replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON("paw",{color:"#E0703F"}))}})()</script>
-<script src="../assets/track.js?v=6" defer></script><script src="../assets/member.js?v=111" defer></script>
+<script>/* ไอคอนวาดเองบนแท็บ/โลโก้ */(function(){if(!window.EDM_ICON)return;var I={home:["home","#E0703F"],pets:["paw","#D9822B"],appt:["calendar","#2F80C9"],sell:["coins","#2E9E7B"],rpt:["chart","#9B7BD4"],exp:["wallet","#E06A5B"],set:["sliders","#5B6B7F"]};document.querySelectorAll("#tabs [data-v]").forEach(function(b){var k=I[b.dataset.v];if(!k)return;b.innerHTML=EDM_ICON(k[0],{color:k[1]})+"<span>"+b.textContent.trim().replace(/^\S+\s*/,"")+"</span>"});var br=document.querySelector("header .brand");if(br&&br.firstChild&&br.firstChild.nodeType===3){br.firstChild.textContent=br.firstChild.textContent.replace(/^\S+\s*/,"");br.insertAdjacentHTML("afterbegin",EDM_ICON("paw",{color:"#E0703F"}))}})()</script>
+<script src="../assets/track.js?v=6" defer></script><script src="../assets/member.js?v=112" defer></script>
 </body>
 </html>
