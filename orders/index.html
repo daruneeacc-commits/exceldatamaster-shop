@@ -210,7 +210,7 @@ function vSet(){const M=$("#main");
 function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="/assets/vendor/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
 const IMF=[["id","เลขคำสั่งซื้อ *",["order id","order sn","order no","ordernumber","order number","หมายเลขคำสั่งซื้อ","เลขที่คำสั่งซื้อ","รหัสคำสั่งซื้อ","หมายเลขออเดอร์"]],
  ["date","วันที่สั่งซื้อ",["created time","order creation date","order date","createtime","created at","วันที่ทำการสั่งซื้อ","วันที่สั่งซื้อ","เวลาที่สั่งซื้อ","paid time"]],
- ["name","ชื่อผู้รับ",["recipient","receiver","shipping name","customername","ชื่อผู้รับ","ผู้รับ","buyer username","username (buyer)","ชื่อผู้ใช้ (ผู้ซื้อ)"]],
+ ["name","ชื่อผู้รับ",["recipient","receiver","shipping name","shippingname","customername","ชื่อผู้รับ","ผู้รับ","buyer username","username (buyer)","ชื่อผู้ใช้ (ผู้ซื้อ)"]],
  ["phone","เบอร์โทร",["phone #","phone","หมายเลขโทรศัพท์","เบอร์โทรศัพท์","เบอร์","tel","shippingphone"]],
  ["addr","ที่อยู่",["detail address","shipping address","address","ที่อยู่ในการจัดส่ง","ที่อยู่จัดส่ง","ที่อยู่","shippingaddress"]],
  ["dist","ตำบล/อำเภอ (ถ้าแยกคอลัมน์)",["districts","district","อำเภอ","เขต","shippingcity"]],
@@ -236,7 +236,9 @@ function imAuto(H){const m={},used=new Set();IMF.forEach(([k,,keys])=>{let best=
   if(best>=0){m[k]=H[best];used.add(best)}});return m}
 function imDate(v){if(v==null||v==="")return today();if(typeof v==="number"&&window.XLSX){const d=XLSX.SSF.parse_date_code(v);if(d)return d.y+"-"+pad(d.m)+"-"+pad(d.d)}
   if(v instanceof Date&&!isNaN(v))return ymd(v);const s=String(v).trim();let m=/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/.exec(s);if(m){let y=+m[1];if(y>2400)y-=543;return y+"-"+pad(+m[2])+"-"+pad(+m[3])}
-  m=/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})/.exec(s);if(m){let y=+m[3];if(y<100)y+=2000;if(y>2400)y-=543;return y+"-"+pad(+m[2])+"-"+pad(+m[1])}return today()}
+  m=/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})/.exec(s);if(m){let y=+m[3];if(y<100)y+=2000;if(y>2400)y-=543;return y+"-"+pad(+m[2])+"-"+pad(+m[1])}
+  m=/^(\d{1,2})\s+([A-Za-z]{3})[a-z]*\.?\s+(\d{4})/.exec(s);if(m){const mi=["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"].indexOf(m[2].toLowerCase());if(mi>=0)return m[3]+"-"+pad(mi+1)+"-"+pad(+m[1])}
+  const dt=new Date(s);return isNaN(dt)?today():ymd(dt)}
 function imSt(s){s=nk(s);if(!s)return"paid";if(/cancel|ยกเลิก|คืนเงิน|refund|return|ตีกลับ/.test(s))return"cancel";if(/complete|delivered|สำเร็จ|ได้รับแล้ว|ได้รับสินค้า/.test(s))return"done";
   if(/shipped|in transit|transit|จัดส่งแล้ว|กำลังจัดส่ง|ระหว่างจัดส่ง|ที่ต้องได้รับ|to receive/.test(s))return"shipped";if(/unpaid|รอชำระ|ยังไม่ชำระ|pending payment/.test(s))return"new";return"paid"}
 let IMP=null;
