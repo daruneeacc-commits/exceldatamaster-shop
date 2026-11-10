@@ -142,8 +142,8 @@ const live=()=>O.filter(o=>o.st!=="cancel");
 function vHome(){const M=$("#main"),t=today(),m=t.slice(0,7),L=live();
   if(!O.length){M.innerHTML=`<div class="hello"><h1>📦 จัดการออเดอร์ร้านออนไลน์</h1><p>รับออเดอร์จาก Facebook LINE TikTok Shopee ในที่เดียว · วางข้อความจากแชต ระบบดึงชื่อ เบอร์ ที่อยู่ให้ · ติดตามสถานะ พิมพ์ใบปะหน้า แยก COD ตัดสต๊อกอัตโนมัติ</p></div>
     <div class="card"><h2>เริ่มใน 3 ขั้นตอน</h2><div class="note" style="font-size:.92rem;line-height:1.8">1) กด <b>＋</b> มุมขวาล่าง วางข้อความลูกค้าจากแชต แล้วใส่สินค้า<br>2) ลูกค้าโอนแล้วกด "ได้รับเงิน" → แพ็ก → ใส่เลขพัสดุ "ส่งแล้ว"<br>3) พิมพ์ใบปะหน้าทีละหลายออเดอร์ ส่งเลขพัสดุให้ลูกค้าทาง LINE ในคลิกเดียว</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="b1" type="button">＋ เพิ่มออเดอร์แรก</button><button class="btn ghost" id="bd" type="button">✨ ลองข้อมูลตัวอย่าง</button></div></div>`;
-    $("#b1").onclick=()=>orderDlg(null);$("#bd").onclick=demo;return}
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn main" id="b1" type="button">＋ เพิ่มออเดอร์แรก</button><button class="btn ghost" id="bd" type="button">✨ ลองข้อมูลตัวอย่าง</button><button class="btn ghost" id="bi" type="button">📥 นำเข้าจาก TikTok / Shopee / Lazada</button></div></div>`;
+    $("#b1").onclick=()=>orderDlg(null);$("#bd").onclick=demo;$("#bi").onclick=importDlg;return}
   const td=L.filter(o=>o.date===t),mo=L.filter(o=>o.date.slice(0,7)===m),sum=a=>a.reduce((s,o)=>s+tot(o).total,0);
   const toPack=O.filter(o=>o.st==="paid"||(o.st==="new"&&o.pay==="cod")).length,toShip=O.filter(o=>o.st==="packed").length,waitPay=O.filter(o=>o.st==="new"&&o.pay!=="cod").length;
   const codOut=L.filter(o=>o.pay==="cod"&&(o.st==="shipped"||o.st==="packed")&&!o.codGot).reduce((s,o)=>s+tot(o).total,0);
@@ -172,11 +172,12 @@ function vList(){const M=$("#main"),q=(ui.q||"").trim().toLowerCase();
   const f=F[ui.f]?ui.f:"open",L=O.filter(F[f]).filter(o=>!q||[o.no,o.cust.name,o.cust.phone,o.track,(o.lines||[]).map(l=>l.d).join(" ")].join(" ").toLowerCase().includes(q)).sort((a,b)=>(b.ts||0)-(a.ts||0));
   const lab={open:"ยังไม่จบ",new:"รอโอน",paid:"รอแพ็ก",packed:"รอส่ง",shipped:"ส่งแล้ว",cod:"COD ค้างเงิน",done:"จบแล้ว",cancel:"ยกเลิก",all:"ทั้งหมด"};
   M.innerHTML=`<div class="hello"><h1>🧾 ออเดอร์</h1><p>กดชื่อลูกค้าเพื่อแก้ไข · ปุ่มสีเพื่อไปขั้นถัดไป</p></div>
+  <div class="card"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><b>นำเข้าออเดอร์จาก TikTok Shop / Shopee / Lazada ได้แล้ว</b><button class="btn main" id="impB" type="button">📥 นำเข้าจากไฟล์</button></div></div>
   <div class="card"><div class="chips" id="fl">${Object.keys(lab).map(k=>`<button class="${k===f?"on":""}" data-k="${k}" type="button">${lab[k]} (${O.filter(F[k]).length})</button>`).join("")}</div>
   <input class="in-" id="q" placeholder="🔎 ค้นหา ชื่อ เบอร์ เลขที่ เลขพัสดุ สินค้า" value="${esc(ui.q||"")}">
   <div class="ol">${L.map(row).join("")||`<div class="empty">ไม่พบออเดอร์</div>`}</div>
   <div class="note">${L.length} ออเดอร์ · รวม ฿${fmt(L.reduce((s,o)=>s+tot(o).total,0))}</div></div>`;
-  $("#fl").onclick=e=>{const b=e.target.closest("[data-k]");if(b){ui.f=b.dataset.k;saveUi();vList()}};
+  $("#fl").onclick=e=>{const b=e.target.closest("[data-k]");if(b){ui.f=b.dataset.k;saveUi();vList()}};$("#impB").onclick=importDlg;
   $("#q").oninput=e=>{ui.q=e.target.value;clearTimeout(vList.t);vList.t=setTimeout(()=>{vList();const x=$("#q");x.focus();x.setSelectionRange(x.value.length,x.value.length)},250)};bindRows()}
 function vPack(){const M=$("#main"),P=O.filter(o=>o.st==="paid"||(o.st==="new"&&o.pay==="cod")),S=O.filter(o=>o.st==="packed");
   const need={};P.forEach(o=>(o.lines||[]).forEach(l=>{if(l.d)need[l.d]=(need[l.d]||0)+num(l.q)}));
@@ -197,11 +198,81 @@ function vSet(){const M=$("#main");
     <div class="f"><label>ขนส่งที่ใช้ (บรรทัดละ 1 เจ้า)</label><textarea class="in-" id="sC" rows="4">${esc(cfg.carriers.join("\n"))}</textarea></div>
     <div><button class="btn main" id="sv" type="button">💾 บันทึก</button></div></div>
   <div class="card"><h2>ข้อมูล</h2><p class="note">สินค้าและสต๊อกใช้ร่วมกับ "ระบบสต๊อกสินค้า" (ถ้ามี) · ออเดอร์ที่แพ็กแล้วจะตัดสต๊อกให้อัตโนมัติ ยกเลิกแล้วคืนสต๊อก</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="xl" type="button">📊 ดาวน์โหลดออเดอร์ (CSV เปิดใน Excel)</button><button class="btn ghost" id="dm" type="button">✨ ใส่ข้อมูลตัวอย่าง</button><button class="btn ghost danger" id="wp" type="button">🗑️ ลบออเดอร์ทั้งหมด</button></div></div>`;
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="xl" type="button">📊 ดาวน์โหลดออเดอร์ (CSV เปิดใน Excel)</button><button class="btn ghost" id="imS2" type="button">📥 นำเข้าออเดอร์ (TikTok / Shopee / Lazada)</button><button class="btn ghost" id="dm" type="button">✨ ใส่ข้อมูลตัวอย่าง</button><button class="btn ghost danger" id="wp" type="button">🗑️ ลบออเดอร์ทั้งหมด</button></div></div>`;
   $("#sv").onclick=()=>{cfg.shop={name:$("#sN").value.trim(),phone:$("#sP").value.trim(),addr:$("#sA").value.trim()};cfg.ship=num($("#sS").value);cfg.prefix=$("#sX").value.trim()||"OD";cfg.carriers=$("#sC").value.split("\n").map(s=>s.trim()).filter(Boolean);saveCfg();toast("บันทึกแล้ว ✓")};
   $("#xl").onclick=()=>{const rows=[["เลขที่","วันที่","ช่องทาง","ลูกค้า","เบอร์","ที่อยู่","สินค้า","ยอดรวม","ชำระ","สถานะ","ขนส่ง","เลขพัสดุ","หมายเหตุ"]].concat(O.map(o=>[o.no,o.date,CH[o.ch]||"",o.cust.name,o.cust.phone,o.cust.addr,(o.lines||[]).map(l=>l.d+" x"+l.q).join(", "),tot(o).total,o.pay==="cod"?"COD":"โอน",(ST[o.st]||ST.new)[0],o.carrier||"",o.track||"",o.note||""]));
     const csv="﻿"+rows.map(r=>r.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",")).join("\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="ออเดอร์-"+today()+".csv";a.click()};
-  $("#dm").onclick=demo;$("#wp").onclick=()=>{if(!confirm("ลบออเดอร์ทั้งหมด? (กู้คืนไม่ได้)"))return;O=[];save();toast("ลบแล้ว");render()}}
+  $("#dm").onclick=demo;$("#imS2").onclick=importDlg;$("#wp").onclick=()=>{if(!confirm("ลบออเดอร์ทั้งหมด? (กู้คืนไม่ได้)"))return;O=[];save();toast("ลบแล้ว");render()}}
+
+/* ---------- นำเข้าออเดอร์จากไฟล์ TikTok Shop / Shopee / Lazada (10 พ.ย. 2569) ----------
+   อ่าน .xlsx/.xls/.csv ที่ดาวน์โหลดจาก Seller Center · เดาคอลัมน์จากชื่อหัวตาราง (ไทย/อังกฤษ) + ให้ผู้ใช้แก้เองได้ (จำไว้ใน cfg.imap)
+   ออเดอร์ซ้ำ (o.ext = แพลตฟอร์ม:เลขคำสั่งซื้อ) ข้าม · ไม่แก้ออเดอร์เดิม */
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((ok,no)=>{const s=document.createElement("script");s.src="/assets/vendor/xlsx.full.min.js";s.onload=()=>ok(window.XLSX);s.onerror=no;document.head.appendChild(s)})}
+const IMF=[["id","เลขคำสั่งซื้อ *",["order id","order sn","order no","ordernumber","order number","หมายเลขคำสั่งซื้อ","เลขที่คำสั่งซื้อ","รหัสคำสั่งซื้อ","หมายเลขออเดอร์"]],
+ ["date","วันที่สั่งซื้อ",["created time","order creation date","order date","createtime","created at","วันที่ทำการสั่งซื้อ","วันที่สั่งซื้อ","เวลาที่สั่งซื้อ","paid time"]],
+ ["name","ชื่อผู้รับ",["recipient","receiver","shipping name","customername","ชื่อผู้รับ","ผู้รับ","buyer username","username (buyer)","ชื่อผู้ใช้ (ผู้ซื้อ)"]],
+ ["phone","เบอร์โทร",["phone #","phone","หมายเลขโทรศัพท์","เบอร์โทรศัพท์","เบอร์","tel","shippingphone"]],
+ ["addr","ที่อยู่",["detail address","shipping address","address","ที่อยู่ในการจัดส่ง","ที่อยู่จัดส่ง","ที่อยู่","shippingaddress"]],
+ ["dist","ตำบล/อำเภอ (ถ้าแยกคอลัมน์)",["districts","district","อำเภอ","เขต","shippingcity"]],
+ ["prov","จังหวัด (ถ้าแยกคอลัมน์)",["province","จังหวัด","state","shippingregion"]],
+ ["zip","รหัสไปรษณีย์ (ถ้าแยกคอลัมน์)",["zipcode","postcode","postal code","รหัสไปรษณีย์","shippingpostcode"]],
+ ["prod","ชื่อสินค้า *",["product name","ชื่อสินค้า","itemname","item name","สินค้า"]],
+ ["vari","ตัวเลือกสินค้า",["variation","sku name","ชื่อตัวเลือก","ตัวเลือกสินค้า","variation name"]],
+ ["sku","รหัสสินค้า (SKU)",["seller sku","sku reference no.","sellersku","เลขอ้างอิง sku","รหัส sku","sku"]],
+ ["qty","จำนวน",["quantity","จำนวน","qty"]],
+ ["price","ราคาต่อชิ้น",["sku unit original price","unit price","deal price","ราคาขาย","ราคาต่อชิ้น","ราคาตั้งต้น","unitprice","paidprice","item price"]],
+ ["ship","ค่าส่ง",["shipping fee after discount","original shipping fee","shipping fee","ค่าจัดส่งที่ผู้ซื้อชำระ","ค่าจัดส่ง","shippingfee"]],
+ ["track","เลขพัสดุ",["tracking id","tracking number","หมายเลขติดตามพัสดุ","หมายเลขพัสดุ","trackingcode","tracking no"]],
+ ["carrier","ขนส่ง",["shipping provider name","shipping provider","delivery option","ผู้ให้บริการขนส่ง","ตัวเลือกการจัดส่ง","shippingprovider"]],
+ ["status","สถานะ",["order status","order substatus","สถานะการสั่งซื้อ","สถานะคำสั่งซื้อ","status"]],
+ ["pay","วิธีชำระเงิน",["payment method","ช่องทางการชำระเงิน","วิธีการชำระเงิน","paymentmethod"]],
+ ["note","หมายเหตุผู้ซื้อ",["buyer message","buyer note","หมายเหตุจากผู้ซื้อ","ข้อความจากผู้ซื้อ","remarks"]]];
+const IMP_CH={tiktok:"TikTok Shop",shopee:"Shopee",lazada:"Lazada",other:"อื่น ๆ"};
+const nk=s=>String(s==null?"":s).toLowerCase().replace(/\s+/g," ").trim();
+function imGuessCh(H){const j=H.map(nk).join("|");if(/ordernumber|orderitemid|lazada/.test(j))return"lazada";if(/username \(buyer\)|ชื่อผู้ใช้ \(ผู้ซื้อ\)|shopee|หมายเลขคำสั่งซื้อ/.test(j))return"shopee";if(/tracking id|seller sku|created time|tiktok/.test(j))return"tiktok";return"other"}
+function imAuto(H){const m={},used=new Set();IMF.forEach(([k,,keys])=>{let best=-1;
+  for(const key of keys){const i=H.findIndex((h,ix)=>!used.has(ix)&&nk(h)===key);if(i>=0){best=i;break}}
+  if(best<0)for(const key of keys){const i=H.findIndex((h,ix)=>!used.has(ix)&&nk(h).includes(key));if(i>=0){best=i;break}}
+  if(best>=0){m[k]=H[best];used.add(best)}});return m}
+function imDate(v){if(v==null||v==="")return today();if(typeof v==="number"&&window.XLSX){const d=XLSX.SSF.parse_date_code(v);if(d)return d.y+"-"+pad(d.m)+"-"+pad(d.d)}
+  if(v instanceof Date&&!isNaN(v))return ymd(v);const s=String(v).trim();let m=/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/.exec(s);if(m){let y=+m[1];if(y>2400)y-=543;return y+"-"+pad(+m[2])+"-"+pad(+m[3])}
+  m=/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})/.exec(s);if(m){let y=+m[3];if(y<100)y+=2000;if(y>2400)y-=543;return y+"-"+pad(+m[2])+"-"+pad(+m[1])}return today()}
+function imSt(s){s=nk(s);if(!s)return"paid";if(/cancel|ยกเลิก|คืนเงิน|refund|return|ตีกลับ/.test(s))return"cancel";if(/complete|delivered|สำเร็จ|ได้รับแล้ว|ได้รับสินค้า/.test(s))return"done";
+  if(/shipped|in transit|transit|จัดส่งแล้ว|กำลังจัดส่ง|ระหว่างจัดส่ง|ที่ต้องได้รับ|to receive/.test(s))return"shipped";if(/unpaid|รอชำระ|ยังไม่ชำระ|pending payment/.test(s))return"new";return"paid"}
+let IMP=null;
+function importDlg(){openDlg("📥 นำเข้าออเดอร์จากไฟล์",`<p class="note" style="margin:0;line-height:1.7">ดาวน์โหลดไฟล์รายการคำสั่งซื้อจาก <b>TikTok Shop / Shopee / Lazada Seller Center</b> (Excel หรือ CSV) แล้วเลือกไฟล์ที่นี่ ระบบจะเพิ่มเฉพาะออเดอร์ใหม่ ออเดอร์ที่เคยนำเข้าแล้วจะข้ามให้</p>
+  <div class="f"><label>เลือกไฟล์ (.xlsx .xls .csv)</label><input class="in-" type="file" id="imF" accept=".xlsx,.xls,.csv"></div><div id="imB"></div>`);
+  $("#imF").onchange=e=>{const f=e.target.files[0];if(!f)return;$("#imB").innerHTML=`<div class="note">กำลังอ่านไฟล์…</div>`;
+    loadXLSX().then(X=>f.arrayBuffer().then(buf=>{const wb=X.read(buf,{type:"array",cellDates:true}),ws=wb.Sheets[wb.SheetNames[0]],A=X.utils.sheet_to_json(ws,{header:1,defval:"",raw:true});
+      let hi=0,bs=-1;for(let i=0;i<Math.min(15,A.length);i++){const sc=A[i].filter(c=>typeof c==="string"&&c.trim()).length+IMF.reduce((a,f)=>a+(A[i].some(c=>f[2].includes(nk(c)))?3:0),0);if(sc>bs){bs=sc;hi=i}}
+      const H=A[hi].map((h,i)=>String(h||"").trim()||"คอลัมน์ "+(i+1)),R=A.slice(hi+1).filter(r=>r.some(c=>String(c).trim()!==""));
+      const ch=imGuessCh(H),saved=(cfg.imap||{})[ch]||{},m=imAuto(H);Object.keys(saved).forEach(k=>{if(H.includes(saved[k]))m[k]=saved[k]});
+      IMP={H,R,ch,m,stock:false};imMap()})).catch(err=>{$("#imB").innerHTML=`<div class="note" style="color:var(--danger)">อ่านไฟล์ไม่ได้ (${esc(err&&err.message||err)}) · ลองบันทึกเป็น .xlsx หรือ .csv แล้วเลือกใหม่</div>`})}}
+function imGroup(){const {H,R,m,ch}=IMP,ix=k=>m[k]?H.indexOf(m[k]):-1,g=(r,k)=>{const i=ix(k);return i<0?"":r[i]},G=new Map(),S=items();
+  R.forEach(r=>{const id=String(g(r,"id")).replace(/\.0$/,"").trim();if(!id||!/\d/.test(id))return;let o=G.get(id);
+    if(!o){const addr=[g(r,"addr"),g(r,"dist"),g(r,"prov"),g(r,"zip")].map(x=>String(x).trim()).filter(Boolean).filter((x,i,a)=>i===0||!String(a[0]).includes(x)).join(" ");
+      const pay=/cod|ปลายทาง|cash on delivery/i.test(String(g(r,"pay")))?"COD (เก็บโดย "+IMP_CH[ch]+")":"";
+      o={ext:ch+":"+id,pid:id,date:imDate(g(r,"date")),cust:{name:String(g(r,"name")).trim(),phone:(x=>{const d=x.replace(/[^\d*]/g,"");return /^66\d{8,9}$/.test(d)?"0"+d.slice(2):(d||x)})(String(g(r,"phone")).replace(/\.0$/,"").trim()),addr},lines:[],ship:num(g(r,"ship")),st:imSt(g(r,"status")),track:String(g(r,"track")).trim(),carrier:String(g(r,"carrier")).trim(),note:[IMP_CH[ch]+" #"+id,pay,String(g(r,"note")).trim()].filter(Boolean).join(" · ")};G.set(id,o)}
+    const nm=[String(g(r,"prod")).trim(),String(g(r,"vari")).trim()].filter(Boolean).join(" · ")||"สินค้า",sku=String(g(r,"sku")).trim(),q=num(g(r,"qty"))||1,p=num(g(r,"price"));
+    const it=S.find(x=>(sku&&x.code&&String(x.code).trim()===sku)||x.name===nm||x.name===String(g(r,"prod")).trim());
+    o.lines.push(Object.assign({d:nm,q,p},it?{pid:it.id}:{}))});
+  return[...G.values()]}
+function imMap(){const {H,ch,m}=IMP,L=imGroup(),have=new Set(O.map(o=>o.ext).filter(Boolean)),nw=L.filter(o=>!have.has(o.ext)),dup=L.length-nw.length,ok=m.id&&m.prod;
+  const sel=k=>`<select class="in-" data-im="${k}"><option value="">— ไม่ใช้ —</option>${H.map(h=>`<option${m[k]===h?" selected":""}>${esc(h)}</option>`).join("")}</select>`;
+  const cnt={};nw.forEach(o=>cnt[o.st]=(cnt[o.st]||0)+1);
+  $("#imB").innerHTML=`<div class="f"><label>มาจาก</label><div class="chips" id="imC">${Object.keys(IMP_CH).map(k=>`<button type="button" data-c="${k}" class="${k===ch?"on":""}">${IMP_CH[k]}</button>`).join("")}</div></div>
+   <details${ok?"":" open"}><summary style="cursor:pointer;font-weight:600">🔧 จับคู่คอลัมน์ (ระบบเดาให้แล้ว ${Object.keys(m).length} ช่อง · แก้ได้)</summary><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-top:8px">${IMF.map(f=>`<div class="f"><label>${f[1]}</label>${sel(f[0])}</div>`).join("")}</div></details>
+   ${ok?`<div class="card" style="background:var(--soft);gap:6px"><b>พบ ${L.length} ออเดอร์ · ใหม่ ${nw.length}${dup?` · เคยนำเข้าแล้ว ${dup} (จะข้าม)`:""}</b><small class="note">${Object.keys(cnt).map(k=>(ST[k]||[k])[0]+" "+cnt[k]).join(" · ")}</small>
+     ${nw.slice(0,3).map(o=>`<div class="note" style="border-top:1px dashed var(--line);padding-top:6px">#${esc(o.pid)} · ${thD(o.date)} · <b>${esc(o.cust.name||"-")}</b> ${esc(o.cust.phone)}<br>${esc(o.lines.map(l=>l.d+" x"+l.q).join(", "))} · ฿${fmt(o.lines.reduce((a,l)=>a+l.q*l.p,0)+o.ship)}</div>`).join("")}</div>
+   <label style="display:flex;gap:8px;align-items:flex-start;font-size:.9rem"><input type="checkbox" id="imS"${IMP.stock?" checked":""}> ตัดสต๊อกให้ออเดอร์ที่ส่งแล้ว/สำเร็จด้วย (เฉพาะสินค้าที่ชื่อหรือ SKU ตรงกับระบบสต๊อก · ออเดอร์ที่ยังไม่ส่ง จะตัดตอนกด "แพ็กแล้ว" ตามปกติ)</label>
+   <button class="btn main" id="imGo" type="button"${nw.length?"":" disabled"}>📥 นำเข้า ${nw.length} ออเดอร์</button>`:`<div class="note" style="color:var(--danger)">เลือกคอลัมน์ "เลขคำสั่งซื้อ" และ "ชื่อสินค้า" ก่อน</div>`}`;
+  $("#imC").onclick=e=>{const b=e.target.closest("[data-c]");if(b){IMP.ch=b.dataset.c;const sv=(cfg.imap||{})[IMP.ch];if(sv)Object.keys(sv).forEach(k=>{if(H.includes(sv[k]))IMP.m[k]=sv[k]});imMap()}};
+  $$("[data-im]").forEach(s=>s.onchange=()=>{if(s.value)IMP.m[s.dataset.im]=s.value;else delete IMP.m[s.dataset.im];imMap();const d=$("#imB details");if(d)d.open=true});
+  if($("#imS"))$("#imS").onchange=e=>IMP.stock=e.target.checked;
+  if($("#imGo"))$("#imGo").onclick=()=>{let n=0;nw.sort((a,b)=>a.date<b.date?-1:1).forEach(x=>{const o={id:uid("o"),no:nextNo(x.date),date:x.date,ch:IMP.ch==="other"?"other":IMP.ch,cust:x.cust,lines:x.lines,ship:x.ship,disc:0,pay:"transfer",st:x.st,note:x.note,ts:Date.now()+n,cut:false,ext:x.ext,src:"import"};
+      if(x.track)o.track=x.track;if(x.carrier)o.carrier=x.carrier;if(o.st==="paid"||o.st==="shipped"||o.st==="done")o.paidAt=x.date;if(o.st==="shipped"||o.st==="done")o.shipAt=x.date;
+      if(IMP.stock&&["shipped","done"].includes(o.st))stockCut(o,false);O.push(o);n++});
+    cfg.imap=Object.assign({},cfg.imap||{},{[IMP.ch]:IMP.m});saveCfg();save();$("#dlg").close();ui.v="list";ui.f="all";saveUi();render();toast("นำเข้าแล้ว "+n+" ออเดอร์ ✓")}}
 
 /* ---------- ฟอร์มออเดอร์ ---------- */
 function openDlg(t,h){$("#dlgT").textContent=t;$("#dlgB").innerHTML=h;const d=$("#dlg");if(!d.open)d.showModal();$("#dlgB").scrollTop=0}
