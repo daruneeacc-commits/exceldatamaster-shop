@@ -1,0 +1,14 @@
+{
+ "name": "สมุดสุขภาพสัตว์เลี้ยง · Excel Data Master",
+ "short_name": "สมุดสัตว์เลี้ยง",
+ "start_url": "/petbook/",
+ "scope": "/petbook/",
+ "display": "standalone",
+ "background_color": "#F6F2EA",
+ "theme_color": "#2F5D50",
+ "lang": "th",
+ "icons": [
+  {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+  {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+ ]
+}
