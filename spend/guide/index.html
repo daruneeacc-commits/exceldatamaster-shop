@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>คู่มือใช้งาน ระบบบันทึกรายรับ-รายจ่าย (ใช้ง่าย) | Excel Data Master</title>
+<meta name="description" content="คู่มือใช้งานระบบบันทึกรายรับ-รายจ่ายออนไลน์ ทีละขั้นพร้อมรูป สมัคร เข้าสู่ระบบ จดรายจ่าย จดรายรับ ดูสรุป แก้ไข ตั้งงบ ตั้งหมวด ส่งออก Excel">
+<link rel="canonical" href="https://exceldatamaster.com/spend/guide/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="คู่มือใช้งาน · บันทึกรายรับ-รายจ่าย (ใช้ง่าย)">
+<meta property="og:description" content="ทีละขั้นพร้อมรูป เริ่มใช้ได้ใน 5 นาที">
+<meta property="og:image" content="https://exceldatamaster.com/assets/shop/og-spend.jpg">
+<meta property="og:url" content="https://exceldatamaster.com/spend/guide/">
+<link rel="icon" href="/assets/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#2b1d1b;--sub:#6b5753;--line:#f1dfda;--bg:#fff8f5;--c:#e0533d;--c2:#f6e1db;--green:#1d7a46;--f:"IBM Plex Sans Thai",sans-serif;--h:"Anuphan","IBM Plex Sans Thai",sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f);color:var(--ink);background:var(--bg);line-height:1.65}
+a{color:inherit}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--h);font-weight:700}
+.brand img{width:36px;height:36px;border-radius:50%}
+.homeb{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;text-decoration:none;font-size:15px;font-weight:700;padding:9px 16px;border-radius:999px;white-space:nowrap}
+.hero{text-align:center;padding:32px 0 10px}
+.tag{display:inline-block;background:var(--c);color:#fff;font-weight:700;font-size:14px;padding:5px 14px;border-radius:999px}
+h1{font-family:var(--h);font-size:clamp(26px,5vw,40px);line-height:1.25;margin:12px 0 8px}
+.lead{color:var(--sub);font-size:clamp(15px,2.2vw,18px)}
+.cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:700;border-radius:12px;padding:12px 20px}
+.btn.main{background:var(--c);color:#fff}.btn.line{background:#06C755;color:#fff}.btn.ghost{background:#fff;border:1.5px solid var(--line)}
+.toc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:22px 0 6px}
+.toc b{font-family:var(--h)}
+.toc ol{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;margin:8px 0 0 20px}
+.toc a{text-decoration:none;color:var(--c);font-weight:600}
+section.step{display:grid;grid-template-columns:1fr 280px;gap:22px;align-items:start;background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;margin:16px 0;scroll-margin-top:72px}
+section.step.r{grid-template-columns:280px 1fr}section.step.r .shot{order:-1}
+.num{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--c);color:#fff;font-weight:700;margin-right:8px;font-family:var(--h)}
+h2{font-family:var(--h);font-size:clamp(20px,3vw,26px);display:flex;align-items:center;margin-bottom:8px}
+h3{font-size:16px;margin:12px 0 4px}
+ol.do,ul.do{margin:6px 0 0 22px;display:grid;gap:6px}
+.do b{color:var(--c)}
+.tip{background:var(--c2);border-radius:12px;padding:10px 14px;margin-top:12px;font-size:14.5px}
+.warn{background:#fdecec;color:#9b2c2c;border-radius:12px;padding:10px 14px;margin-top:12px;font-size:14.5px}
+.shot{display:grid;gap:10px}
+.shot img{width:100%;height:auto;border-radius:22px;border:7px solid #2b1d1b;background:#fff;box-shadow:0 14px 30px -14px rgba(60,20,10,.45)}
+.shot.two{grid-template-columns:1fr 1fr}
+.shot.two img{border-width:5px;border-radius:16px}
+.shot small{display:block;text-align:center;color:var(--sub);font-size:13px}
+.k{display:inline-block;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:0 8px;font-weight:700;font-size:14px;white-space:nowrap}
+details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:8px 0}
+summary{cursor:pointer;font-weight:700}
+details p{margin-top:8px;color:var(--sub)}
+.end{text-align:center;background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;margin:22px 0}
+footer{text-align:center;color:var(--sub);font-size:14px;padding:20px 0 40px}
+@media(max-width:720px){
+ section.step,section.step.r{grid-template-columns:1fr}
+ section.step.r .shot{order:0}
+ .shot{max-width:300px;margin:0 auto;width:100%}
+ .shot.two{max-width:none}
+ .toc ol{grid-template-columns:1fr}
+ .homeb{font-size:13px;padding:8px 12px}
+}
+@media print{header,.cta,.end .btn{display:none}section.step{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.jpg" alt="">Excel Data Master</a><a class="homeb" href="/spend/">💸 เปิดระบบ</a></div></header>
+<main class="wrap">
+  <div class="hero">
+    <span class="tag">📖 คู่มือใช้งาน</span>
+    <h1>บันทึกรายรับ-รายจ่าย (ใช้ง่าย)</h1>
+    <p class="lead">ทีละขั้นพร้อมรูป อ่านจบเริ่มใช้ได้ใน 5 นาที · ใช้ได้ทั้งมือถือและคอม</p>
+    <div class="cta"><a class="btn main" href="/spend/">💸 เข้าระบบ</a><a class="btn line" href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 ติดตรงไหน ทัก LINE</a></div>
+  </div>
+
+  <nav class="toc"><b>📌 สารบัญ</b>
+    <ol>
+      <li><a href="#s1">สมัคร / เข้าสู่ระบบ</a></li>
+      <li><a href="#s2">ไว้ที่หน้าจอโฮมเหมือนแอป</a></li>
+      <li><a href="#s3">จดรายจ่าย</a></li>
+      <li><a href="#s4">จดรายรับ</a></li>
+      <li><a href="#s5">ดูสรุป (ภาพรวม)</a></li>
+      <li><a href="#s6">ดูรายการ ค้นหา ส่งออก Excel</a></li>
+      <li><a href="#s7">แก้ไข / ลบรายการ</a></li>
+      <li><a href="#s8">ตั้งค่า งบ และหมวด</a></li>
+      <li><a href="#faq">คำถามที่พบบ่อย</a></li>
+    </ol>
+  </nav>
+
+  <section class="step" id="s1">
+    <div>
+      <h2><span class="num">1</span>สมัคร / เข้าสู่ระบบ</h2>
+      <h3>ครั้งแรก (สมัครทดลองใช้ฟรี 7 วัน)</h3>
+      <ol class="do">
+        <li>เปิด <b>exceldatamaster.com/spend</b></li>
+        <li>แท็บ <span class="k">สมัครใหม่</span> ใส่ชื่อ อีเมล และตั้งรหัสผ่าน (อย่างน้อย 8 ตัว)</li>
+        <li>กด <span class="k">สมัครทดลองใช้ฟรี</span></li>
+        <li>รอร้านเปิดใช้งาน <b>ภายใน 2 ชม. (8:00–22:00)</b> ระบบส่งอีเมลแจ้ง</li>
+      </ol>
+      <h3>ครั้งต่อไป</h3>
+      <ol class="do">
+        <li>เปิดลิงก์เดิม เลือกแท็บ <span class="k">เข้าสู่ระบบ</span></li>
+        <li>ใส่อีเมล + รหัสผ่านที่ตั้งไว้ แล้วกด <span class="k">เข้าสู่ระบบ</span></li>
+      </ol>
+      <div class="tip">🔐 เพื่อความปลอดภัย ปิดเบราว์เซอร์แล้วต้องใส่อีเมล + รหัสผ่านใหม่ทุกครั้ง · ลืมรหัส กด <b>ลืมรหัสผ่าน?</b> ระบบส่งลิงก์ตั้งใหม่ทางอีเมล</div>
+    </div>
+    <div class="shot two"><div><img src="0-login.webp" alt="หน้าสมัครใหม่" loading="lazy"><small>สมัครใหม่</small></div><div><img src="0b-signin.webp" alt="หน้าเข้าสู่ระบบ" loading="lazy"><small>เข้าสู่ระบบ</small></div></div>
+  </section>
+
+  <section class="step r" id="s2">
+    <div>
+      <h2><span class="num">2</span>ไว้ที่หน้าจอโฮม เหมือนแอป</h2>
+      <p>ไม่ต้องติดตั้งแอป กดครั้งเดียว ครั้งต่อไปแตะไอคอนเข้าได้เลย</p>
+      <h3>📱 iPhone (Safari)</h3>
+      <ol class="do"><li>เปิด exceldatamaster.com/spend ใน Safari</li><li>กดปุ่ม <span class="k">แชร์ ⬆️</span> ด้านล่าง</li><li>เลือก <span class="k">เพิ่มไปยังหน้าจอโฮม</span> แล้วกด <span class="k">เพิ่ม</span></li></ol>
+      <h3>🤖 Android (Chrome)</h3>
+      <ol class="do"><li>เปิดลิงก์ใน Chrome</li><li>กด <span class="k">⋮</span> มุมขวาบน</li><li>เลือก <span class="k">เพิ่มลงในหน้าจอหลัก</span></li></ol>
+      <div class="tip">💡 ถ้าเปิดลิงก์จาก LINE ให้กด <b>⋯ › เปิดในเบราว์เซอร์</b> ก่อน</div>
+    </div>
+    <div class="shot"><img src="1-empty.webp" alt="หน้าแรกของระบบตอนยังไม่มีรายการ" loading="lazy"><small>หน้าแรกตอนยังไม่มีรายการ · กด ✨ ดูตัวอย่าง เพื่อลองดูก่อนได้</small></div>
+  </section>
+
+  <section class="step" id="s3">
+    <div>
+      <h2><span class="num">3</span>จดรายจ่าย 💸</h2>
+      <ol class="do">
+        <li>กดปุ่ม <span class="k">＋</span> วงกลมสีส้ม มุมขวาล่าง</li>
+        <li>ด้านบนเลือก <span class="k">💸 รายจ่าย</span> (ค่าเริ่มต้น)</li>
+        <li>พิมพ์ <b>จำนวนเงิน</b> ในช่องใหญ่</li>
+        <li>แตะ <b>หมวด</b> เช่น อาหาร/เครื่องดื่ม เดินทาง/น้ำมัน</li>
+        <li>รายละเอียด <b>ไม่ใส่ก็ได้</b> เช่น ข้าวมันไก่</li>
+        <li>วันที่ตั้งเป็นวันนี้ให้แล้ว เปลี่ยนได้ · เลือกจ่ายด้วย เงินสด / โอน / บัตร</li>
+        <li>กด <span class="k">บันทึก</span> เสร็จ!</li>
+      </ol>
+      <div class="tip">⚡ จดหลายรายการติดกัน กด <b>บันทึก + จดต่อ</b> หน้าต่างจะไม่ปิด จดรายการถัดไปได้ทันที · ระบบจำหมวดล่าสุดให้</div>
+    </div>
+    <div class="shot"><img src="2-add-out.webp" alt="หน้าต่างจดรายจ่าย" loading="lazy"></div>
+  </section>
+
+  <section class="step r" id="s4">
+    <div>
+      <h2><span class="num">4</span>จดรายรับ 💰</h2>
+      <ol class="do">
+        <li>กดปุ่ม <span class="k">＋</span> เหมือนเดิม</li>
+        <li>แตะ <span class="k">💰 รายรับ</span> ด้านบน (หมวดจะเปลี่ยนเป็นหมวดรายรับ)</li>
+        <li>ใส่จำนวนเงิน แตะหมวด เช่น เงินเดือน ขายของ</li>
+        <li>เลือกรับเป็น เงินสด / โอน / บัตร แล้วกด <span class="k">บันทึก</span></li>
+      </ol>
+      <div class="tip">💡 ตัวเลขรายรับเป็นสีเขียว รายจ่ายเป็นสีแดง ดูง่ายไม่สับสน</div>
+    </div>
+    <div class="shot"><img src="3-add-in.webp" alt="หน้าต่างจดรายรับ" loading="lazy"></div>
+  </section>
+
+  <section class="step" id="s5">
+    <div>
+      <h2><span class="num">5</span>ดูสรุป (เมนู 📊 ภาพรวม)</h2>
+      <p>ระบบสรุปให้อัตโนมัติทุกครั้งที่จด</p>
+      <ul class="do">
+        <li><b>รายรับ / รายจ่ายเดือนนี้</b> และเทียบกับช่วงเดียวกันของเดือนก่อน</li>
+        <li><b>คงเหลือ</b> (รับ − จ่าย) และ <b>งบรายจ่ายที่เหลือ</b> (ถ้าตั้งงบไว้)</li>
+        <li><b>รายจ่ายหมดไปกับอะไร</b> กราฟโดนัทแยกหมวด พร้อม %</li>
+        <li><b>รายรับ vs รายจ่าย 6 เดือน</b> เห็นแนวโน้ม</li>
+        <li><b>รายจ่ายรายวัน</b> และ <b>จ่ายเยอะที่สุด</b> 5 อันดับ</li>
+      </ul>
+      <div class="tip">📅 ดูเดือนอื่น กดลูกศร <span class="k">‹</span> <span class="k">›</span> ข้างชื่อเดือน</div>
+    </div>
+    <div class="shot two"><div><img src="4-dash.webp" alt="ภาพรวม KPI" loading="lazy"></div><div><img src="5-dash2.webp" alt="กราฟ 6 เดือน" loading="lazy"></div></div>
+  </section>
+
+  <section class="step r" id="s6">
+    <div>
+      <h2><span class="num">6</span>ดูรายการ ค้นหา ส่งออก Excel</h2>
+      <p>เมนู <span class="k">📋 รายการ</span> ด้านล่าง</p>
+      <ul class="do">
+        <li>เลือกดู <span class="k">ทั้งหมด</span> <span class="k">รายจ่าย</span> <span class="k">รายรับ</span></li>
+        <li>พิมพ์ในช่อง <span class="k">🔎 ค้นหา</span> เช่น "ข้าว" "น้ำมัน"</li>
+        <li>ด้านบนบอกจำนวนรายการ และยอดรับ / จ่ายรวมของเดือน</li>
+        <li>กด <span class="k">⬇️ ส่งออก Excel (CSV)</span> เพื่อเปิดใน Excel หรือ Google Sheets</li>
+      </ul>
+    </div>
+    <div class="shot"><img src="6-list.webp" alt="หน้ารายการ" loading="lazy"></div>
+  </section>
+
+  <section class="step" id="s7">
+    <div>
+      <h2><span class="num">7</span>แก้ไข / ลบรายการ</h2>
+      <ol class="do">
+        <li>ในหน้า 📋 รายการ <b>แตะรายการที่ต้องการ</b></li>
+        <li>หน้าต่าง <b>แก้ไขรายการ</b> จะเปิดขึ้น แก้จำนวน หมวด วันที่ได้</li>
+        <li>กด <span class="k">บันทึก</span> · หรือกด <span class="k">ลบ</span> เพื่อลบรายการนั้น</li>
+      </ol>
+      <div class="tip">↩️ จดผิดประเภท (เช่น รายรับจดเป็นรายจ่าย) แตะเปลี่ยน 💸/💰 ด้านบนได้เลย</div>
+    </div>
+    <div class="shot"><img src="7-edit.webp" alt="หน้าต่างแก้ไขรายการ" loading="lazy"></div>
+  </section>
+
+  <section class="step r" id="s8">
+    <div>
+      <h2><span class="num">8</span>ตั้งค่า งบ และหมวด</h2>
+      <p>เมนู <span class="k">⚙️ ตั้งค่า</span></p>
+      <ul class="do">
+        <li><b>ชื่อที่แสดง</b> เช่น "บ้านเรา" "ร้านป้าแดง"</li>
+        <li><b>งบรายจ่ายต่อเดือน</b> เช่น 15,000 (ใส่ 0 = ไม่ตั้ง) ระบบจะบอกว่างบเหลือเท่าไหร่</li>
+        <li><b>หมวดรายจ่าย / หมวดรายรับ</b> แก้ชื่อ เปลี่ยนอีโมจิ กด <span class="k">＋ เพิ่มหมวด</span> หรือ <span class="k">ลบ</span> ได้</li>
+        <li>เสร็จแล้วกด <span class="k">บันทึกการตั้งค่า</span></li>
+      </ul>
+      <div class="warn">⚠️ ปุ่ม <b>ล้างรายการทั้งหมด</b> จะลบทุกรายการ ใช้เมื่อต้องการเริ่มใหม่เท่านั้น · ถ้าเคยกด ✨ ข้อมูลตัวอย่าง แล้วจะเริ่มจดจริง ให้กดปุ่มนี้ก่อน</div>
+    </div>
+    <div class="shot"><img src="8-set.webp" alt="หน้าตั้งค่า" loading="lazy"></div>
+  </section>
+
+  <h2 id="faq" style="margin-top:26px;scroll-margin-top:72px">❓ คำถามที่พบบ่อย</h2>
+  <details><summary>ใช้หลายเครื่องได้ไหม (มือถือ + คอม / คนในบ้าน)</summary><p>ได้ค่ะ เข้าด้วยอีเมล + รหัสผ่านเดียวกัน ข้อมูลจะซิงก์ให้ทุกเครื่อง ถ้าเข้าเครื่องใหม่ไม่ได้ ทัก LINE ร้านได้เลย</p></details>
+  <details><summary>เปลี่ยนมือถือ ข้อมูลหายไหม</summary><p>ไม่หายค่ะ ข้อมูลเก็บในระบบออนไลน์และร้านสำรองให้ทุกวัน เข้าระบบในเครื่องใหม่ข้อมูลจะกลับมาเอง</p></details>
+  <details><summary>ลืมรหัสผ่านทำยังไง</summary><p>หน้าเข้าสู่ระบบ กด "ลืมรหัสผ่าน?" ใส่อีเมลที่สมัคร ระบบจะส่งลิงก์ตั้งรหัสใหม่ให้ (เช็กในกล่องจดหมายขยะด้วย)</p></details>
+  <details><summary>หมวดไม่ตรงกับที่ใช้จริง</summary><p>ไปที่ ⚙️ ตั้งค่า แก้ชื่อหมวด เพิ่ม หรือลบได้ตามต้องการ แล้วกดบันทึกการตั้งค่า</p></details>
+  <details><summary>อยากได้ข้อมูลไปทำต่อใน Excel</summary><p>หน้า 📋 รายการ กด "ส่งออก Excel (CSV)" ไฟล์จะดาวน์โหลดลงเครื่อง เปิดด้วย Excel หรือ Google Sheets ได้เลย</p></details>
+  <details><summary>ครบ 7 วันแล้วต้องทำยังไง</summary><p>ถ้าถูกใจและอยากใช้ต่อ ทัก LINE ร้าน หรือกดปุ่มสั่งซื้อในระบบ ข้อมูลที่จดไว้ช่วงทดลองยังอยู่ครบ ไม่ต้องจดใหม่ ระบบไม่ตัดเงินอัตโนมัติ</p></details>
+
+  <div class="end">
+    <h2 style="justify-content:center">ติดตรงไหน ทักร้านได้เลยค่ะ 💚</h2>
+    <p class="lead">ตอบทุกวัน 8:00–22:00</p>
+    <div class="cta"><a class="btn line" href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 LINE @856tvnxs</a><a class="btn main" href="/spend/">💸 เข้าระบบ</a><a class="btn ghost" href="/check/">🩺 เช็กสุขภาพการเงินฟรี</a></div>
+  </div>
+</main>
+<footer>© Excel Data Master · <a href="/">exceldatamaster.com</a></footer>
+<script src="/assets/track.js?v=6" defer></script>
+</body>
+</html>
