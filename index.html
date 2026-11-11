@@ -751,6 +751,16 @@ header.top .logo span{white-space:nowrap}
 .bn-dots button[aria-current]{background:var(--brand);border-color:var(--brand);color:#fff}
 @media (max-width:1100px){.bn-ar{display:none}}
 @media (max-width:900px){.bn-s>.hx-in{height:100%;align-content:center}#bn1 .hx-ok{display:none}.bn-port img{max-height:340px}.bn-h{font-size:clamp(1.6rem,7vw,2.2rem)}.bn-dots{gap:6px;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.bn-dots button{flex:none;padding:5px 11px;font-size:.8rem}}
+/* 11 พ.ย.: หน้าแรกเข้าใจง่าย — อยากทำอะไร ขึ้นก่อน · ประเภทสินค้า 5 ประตู · 3 ขั้นเริ่มใช้ */
+.d4-h{font-family:var(--f-head);font-size:1.15rem;margin:0 0 10px;color:var(--muted);font-weight:600}
+@media (min-width:901px){.d4{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (max-width:900px){.d4 .d4-b:last-child{grid-column:1/-1}}
+.stp3{padding-block:2px 18px}.stp3-in{display:flex;align-items:center;gap:14px 22px;flex-wrap:wrap;background:#fff;border:1.5px dashed color-mix(in srgb,var(--brand) 35%,var(--line));border-radius:18px;padding:14px 18px}
+.stp3-t{font-size:1rem}.stp3 ol{list-style:none;display:flex;gap:10px 22px;flex-wrap:wrap;margin:0;padding:0;flex:1}
+.stp3 li{display:flex;align-items:center;gap:8px;font-weight:600}.stp3 li small{color:var(--muted);font-weight:400;font-size:.82rem}
+.stp3 li i{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:.85rem;flex:none}
+.stp3-b{background:#06C755;color:#fff;text-decoration:none;font-weight:700;border-radius:999px;padding:9px 16px;white-space:nowrap}
+@media (max-width:700px){.stp3-in{flex-direction:column;align-items:stretch;gap:10px}.stp3 ol{flex-direction:column;flex:none}.stp3 li{align-items:flex-start;flex-wrap:wrap}.stp3-b{width:100%;text-align:center}}
 /* 4 พ.ย.: รีวิวลูกค้าจริง (ได้รับอนุญาต ไม่ระบุชื่อ) */
 .rvq{padding-block:2px 18px}.rvq-in{margin:0;position:relative;background:#fff;border:1.5px solid var(--line);border-left:6px solid #F2B705;border-radius:18px;padding:18px 22px 16px 64px}
 .rvq-in:before{content:"“";position:absolute;left:16px;top:2px;font:700 64px/1 Georgia,serif;color:#F2B705}
@@ -758,7 +768,7 @@ header.top .logo span{white-space:nowrap}
 @media (max-width:560px){.rvq-in{padding:14px 14px 12px 46px}.rvq-in:before{left:10px;font-size:48px}.rvq blockquote{font-size:.98rem}}
 </style><div id="app"><!--pre--><header class="top"><div class="wrap hd">
     <a class="logo" href="#top"><img class="logo-img" src="/assets/shop/avatar.webp" alt=""><span>Excel Data Master</span></a>
-    <nav class="links" aria-label="เมนูหลัก"><a href="#find">หาสินค้า</a><a href="#tools">ระบบออนไลน์</a><a href="#pricing">ราคา</a><a href="/form/">แบบฟอร์มออนไลน์</a><a href="#shop">เทมเพลต Excel</a><a href="/course/">คอร์สออนไลน์</a><a href="/free/">🎁 ตำราฟรี</a><a href="#how">วิธีสั่งซื้อ</a><a href="#faq">คำถาม</a></nav>
+    <nav class="links" aria-label="เมนูหลัก"><a href="#find">หาสินค้า</a><a href="#tools">ระบบออนไลน์</a><a href="#pricing">ราคา</a><a href="/form/">แบบฟอร์มออนไลน์</a><a href="#shop">เทมเพลต Excel</a><a href="/course/">คอร์สออนไลน์</a><a href="/free/">🎁 ของฟรี</a><a href="#how">วิธีสั่งซื้อ</a><a href="#faq">คำถาม</a></nav>
     <div class="head-actions">
       <button class="btn btn-line btn-sm" id="adminBtn" hidden="">หลังร้าน</button>
       <a class="hd-line" href="https://line.me/R/ti/p/%40856tvnxs" target="_blank" rel="noopener"><svg class="ln-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C6.5 3 2 6.6 2 11c0 3.9 3.5 7.2 8.3 7.9.3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.6 1.1-.5 6-3.5 8.2-6.1 1.5-1.6 2.2-3.3 2.2-5C22.4 6.6 17.5 3 12 3Zm-5.3 10.6H4.8c-.3 0-.5-.2-.5-.5V9.4c0-.3.2-.5.5-.5s.5.2.5.5v3.2h1.4c.3 0 .5.2.5.5s-.2.5-.5.5Zm2-.5c0 .3-.2.5-.5.5s-.5-.2-.5-.5V9.4c0-.3.2-.5.5-.5s.5.2.5.5v3.7Zm4.5 0c0 .2-.1.4-.3.5h-.2c-.2 0-.3-.1-.4-.2l-1.9-2.6v2.3c0 .3-.2.5-.5.5s-.5-.2-.5-.5V9.4c0-.2.1-.4.3-.5h.2c.2 0 .3.1.4.2l1.9 2.6V9.4c0-.3.2-.5.5-.5s.5.2.5.5v3.7Zm3.1-2.3c.3 0 .5.2.5.5s-.2.5-.5.5h-1.4v.9h1.4c.3 0 .5.2.5.5s-.2.5-.5.5h-1.9c-.3 0-.5-.2-.5-.5V9.4c0-.3.2-.5.5-.5h1.9c.3 0 .5.2.5.5s-.2.5-.5.5h-1.4v.9h1.4Z"></path></svg><span>ทักแชท</span></a>
@@ -828,11 +838,26 @@ header.top .logo span{white-space:nowrap}
     <div class="bn-dots" role="tablist"><button type="button" data-bd="0" aria-label="ระบบออนไลน์" aria-current="true"><span>ระบบออนไลน์</span></button><button type="button" data-bd="1" aria-label="แบบฟอร์ม"><span>แบบฟอร์ม</span></button><button type="button" data-bd="2" aria-label="ไฟล์ Excel"><span>ไฟล์ Excel</span></button><button type="button" data-bd="3" aria-label="คอร์ส"><span>คอร์ส</span></button><button type="button" data-bd="4" aria-label="แจกฟรี"><span>แจกฟรี</span></button></div>
     </section>
 
-    <section class="d4s" aria-label="เลือกสินค้า"><div class="wrap"><div class="d4">
+    <section class="fxs" id="find"><div class="wrap">
+      <h2 class="fx-h">👋 อยากทำอะไรคะ? แตะเรื่องที่ต้องการได้เลย</h2><p class="fx-s">ร้านคัดสินค้าที่ตรงงานให้ทันที · ไม่แน่ใจ ทัก LINE ถามได้ค่ะ</p>
+      <div class="fx-k" role="group" aria-label="เลือกแบบ"><span>อยากได้แบบไหน:</span><button type="button" data-fk="all" aria-pressed="true">ทั้ง 2 แบบ</button><button type="button" data-fk="file" aria-pressed="false">📊 ไฟล์ Excel (ซื้อครั้งเดียว)</button><button type="button" data-fk="web" aria-pressed="false">🌐 ใช้ออนไลน์ผ่านเว็บ</button></div>
+      <div class="fx-g" role="group" aria-label="เลือกงานที่ต้องการ"><button type="button" class="fx-b" data-need="money" aria-pressed="false"><span class="fx-e">💰</span>จดรายรับ-รายจ่าย</button><button type="button" class="fx-b" data-need="bill" aria-pressed="false"><span class="fx-e">🧾</span>เปิดบิล ใบเสร็จ ใบกำกับภาษี</button><button type="button" class="fx-b" data-need="debt" aria-pressed="false"><span class="fx-e">📒</span>ติดตามลูกหนี้ เก็บเงิน</button><button type="button" class="fx-b" data-need="pay" aria-pressed="false"><span class="fx-e">👥</span>คิดเงินเดือน</button><button type="button" class="fx-b" data-need="time" aria-pressed="false"><span class="fx-e">⏰</span>ลงเวลา เช็กชื่อ</button><button type="button" class="fx-b" data-need="stock" aria-pressed="false"><span class="fx-e">📦</span>สต๊อก ขายหน้าร้าน</button><button type="button" class="fx-b" data-need="online" aria-pressed="false"><span class="fx-e">🛍️</span>ขายของออนไลน์</button><button type="button" class="fx-b" data-need="book" aria-pressed="false"><span class="fx-e">🏨</span>รับจอง ห้องพัก คิว</button><button type="button" class="fx-b" data-need="cafe" aria-pressed="false"><span class="fx-e">☕</span>ร้านกาแฟ ร้านอาหาร</button><button type="button" class="fx-b" data-need="work" aria-pressed="false"><span class="fx-e">✅</span>จดงาน วางแผน</button><button type="button" class="fx-b" data-need="contract" aria-pressed="false"><span class="fx-e">📅</span>ค่างวด สัญญา ครบกำหนด</button><button type="button" class="fx-b" data-need="doc" aria-pressed="false"><span class="fx-e">📝</span>เอกสาร ใบสำคัญจ่าย ใบลา</button><a class="fx-b" href="/course/"><span class="fx-e">🎓</span>เรียน Excel</a></div>
+      <div class="fx-r" id="fxR" hidden=""></div>
+      <div class="fx-all">หรือดูทั้งหมด: <a href="#tools">🌐 ใช้ผ่านเว็บ (22)</a><a href="#shop">📊 ไฟล์ Excel (11)</a><a href="/course/">🎓 คอร์สเรียน</a></div>
+    </div></section>
+
+    <section class="d4s" aria-label="เลือกสินค้า"><div class="wrap"><h2 class="d4-h">หรือเลือกดูตามประเภทสินค้า</h2><div class="d4">
       <a class="d4-b" href="#tools" style="--dc:#2F80C9"><span class="d4-i">🌐</span><b>ระบบออนไลน์</b><small>ใช้ผ่านมือถือ/คอม · 22 ระบบ</small><em>เริ่ม 49 บาท/เดือน ›</em></a>
       <a class="d4-b" href="/form/" style="--dc:#7B5CC4"><span class="d4-i">📝</span><b>แบบฟอร์มออนไลน์</b><small>51 แบบ กรอกแล้วได้ PDF</small><em>ทดลองใช้ฟรี 7 วัน ›</em></a>
       <a class="d4-b" href="#shop" style="--dc:#1F7A4D"><span class="d4-i">📊</span><b>เทมเพลต Excel สำเร็จรูป</b><small>ซื้อครั้งเดียว ใช้ได้ตลอด · 11 แบบ</small><em>เริ่ม 459 บาท ›</em></a>
       <a class="d4-b" href="/course/" style="--dc:#D9822B"><span class="d4-i">🎓</span><b>คอร์สเรียน Excel</b><small>เรียนพร้อมได้ไฟล์ไปใช้</small><em>ดูคอร์ส ›</em></a>
+      <a class="d4-b" href="/free/" style="--dc:#E8433F"><span class="d4-i">🎁</span><b>ของฟรี</b><small>ตำรา Excel PDF · เช็กสุขภาพการเงิน</small><em>รับฟรีเลย ›</em></a>
+    </div></div></section>
+
+    <section class="stp3" aria-label="เริ่มต้นง่าย 3 ขั้น"><div class="wrap"><div class="stp3-in">
+      <b class="stp3-t">เริ่มใช้ระบบออนไลน์ง่าย ๆ 3 ขั้น</b>
+      <ol><li><i>1</i>เลือกระบบที่อยากใช้</li><li><i>2</i>สมัครทดลองฟรี 7 วัน <small>ร้านเปิดให้ภายใน 2 ชม. (8:00–22:00)</small></li><li><i>3</i>ถูกใจค่อยชำระ <small>ไม่ตัดเงินอัตโนมัติ</small></li></ol>
+      <a class="stp3-b" href="https://line.me/R/ti/p/%40856tvnxs" target="_blank" rel="noopener">💬 ไม่แน่ใจ ทัก LINE ถามร้าน</a>
     </div></div></section>
 
     <section class="rvq" aria-label="เสียงจากลูกค้า"><div class="wrap"><figure class="rvq-in">
@@ -840,13 +865,6 @@ header.top .logo span{white-space:nowrap}
       <figcaption>— ลูกค้าบริษัทก่อสร้าง · ใช้ระบบออนไลน์ทั้งทีม · ข้อความจริงจากแชต LINE</figcaption>
     </figure></div></section>
 
-    <section class="fxs" id="find"><div class="wrap">
-      <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">เลือกแบบที่ชอบ แล้วแตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้</p>
-      <div class="fx-k" role="group" aria-label="เลือกแบบ"><span>อยากได้แบบไหน:</span><button type="button" data-fk="all" aria-pressed="true">ทั้ง 2 แบบ</button><button type="button" data-fk="file" aria-pressed="false">📊 ไฟล์ Excel (ซื้อครั้งเดียว)</button><button type="button" data-fk="web" aria-pressed="false">🌐 ใช้ออนไลน์ผ่านเว็บ</button></div>
-      <div class="fx-g" role="group" aria-label="เลือกงานที่ต้องการ"><button type="button" class="fx-b" data-need="money" aria-pressed="false"><span class="fx-e">💰</span>จดรายรับ-รายจ่าย</button><button type="button" class="fx-b" data-need="bill" aria-pressed="false"><span class="fx-e">🧾</span>เปิดบิล ใบเสร็จ ใบกำกับภาษี</button><button type="button" class="fx-b" data-need="debt" aria-pressed="false"><span class="fx-e">📒</span>ติดตามลูกหนี้ เก็บเงิน</button><button type="button" class="fx-b" data-need="pay" aria-pressed="false"><span class="fx-e">👥</span>คิดเงินเดือน</button><button type="button" class="fx-b" data-need="time" aria-pressed="false"><span class="fx-e">⏰</span>ลงเวลา เช็กชื่อ</button><button type="button" class="fx-b" data-need="stock" aria-pressed="false"><span class="fx-e">📦</span>สต๊อก ขายหน้าร้าน</button><button type="button" class="fx-b" data-need="online" aria-pressed="false"><span class="fx-e">🛍️</span>ขายของออนไลน์</button><button type="button" class="fx-b" data-need="book" aria-pressed="false"><span class="fx-e">🏨</span>รับจอง ห้องพัก คิว</button><button type="button" class="fx-b" data-need="cafe" aria-pressed="false"><span class="fx-e">☕</span>ร้านกาแฟ ร้านอาหาร</button><button type="button" class="fx-b" data-need="work" aria-pressed="false"><span class="fx-e">✅</span>จดงาน วางแผน</button><button type="button" class="fx-b" data-need="contract" aria-pressed="false"><span class="fx-e">📅</span>ค่างวด สัญญา ครบกำหนด</button><button type="button" class="fx-b" data-need="doc" aria-pressed="false"><span class="fx-e">📝</span>เอกสาร ใบสำคัญจ่าย ใบลา</button><a class="fx-b" href="/course/"><span class="fx-e">🎓</span>เรียน Excel</a></div>
-      <div class="fx-r" id="fxR" hidden=""></div>
-      <div class="fx-all">หรือดูทั้งหมด: <a href="#tools">🌐 ใช้ผ่านเว็บ (22)</a><a href="#shop">📊 ไฟล์ Excel (11)</a><a href="/course/">🎓 คอร์สเรียน</a></div>
-    </div></section>
 
     <section id="tools" class="sx"><div class="wrap">
       <div class="sx-head"><h2>ระบบออนไลน์ เลือกใช้ตามงานของร้าน</h2><p>แต่ละระบบใช้แยกกันได้ ข้อมูลของระบบหนึ่งไม่ปนกับอีกระบบ หรือใช้ระบบร้านค้าตัวเต็มที่รวมเปิดบิล สต๊อก และบัญชีไว้ด้วยกัน</p></div>
@@ -1056,7 +1074,7 @@ header.top .logo span{white-space:nowrap}
   </main>
   <footer class="ft"><div class="wrap ft-in">
     <div class="ft-brand"><a class="logo" href="#top"><img class="logo-img" src="/assets/shop/avatar.webp" alt=""><span>Excel Data Master</span></a><p>เทมเพลต Excel และระบบร้านค้าออนไลน์สำหรับธุรกิจไทย</p></div>
-    <div><h4>เมนู</h4><a href="#tools">ระบบออนไลน์</a><a href="#shop">เทมเพลต Excel</a><a href="/course/">คอร์สออนไลน์</a><a href="/free/">🎁 ตำราฟรี</a><a href="/form/">แบบฟอร์มออนไลน์</a><a href="#pricing">ราคา</a><a href="#how">วิธีสั่งซื้อ</a><a href="/privacy/">นโยบายความเป็นส่วนตัว</a></div>
+    <div><h4>เมนู</h4><a href="#tools">ระบบออนไลน์</a><a href="#shop">เทมเพลต Excel</a><a href="/course/">คอร์สออนไลน์</a><a href="/free/">🎁 ของฟรี</a><a href="/form/">แบบฟอร์มออนไลน์</a><a href="#pricing">ราคา</a><a href="#how">วิธีสั่งซื้อ</a><a href="/privacy/">นโยบายความเป็นส่วนตัว</a></div>
     <div><h4>ติดต่อ</h4><a href="https://line.me/R/ti/p/%40856tvnxs" target="_blank" rel="noopener">LINE @856tvnxs</a><a href="https://www.facebook.com/Exceldatamaster" target="_blank" rel="noopener">เพจ Facebook</a></div>
     <div><h4>ชำระเงิน</h4><span>พร้อมเพย์ (สแกน QR)</span><span>โอนเข้า กสิกรไทย (KBank)</span></div>
   </div><div class="wrap ft-bot"><span>© 2026 Excel Data Master</span><button class="link-btn" id="ownerLink">หลังร้าน (เจ้าของร้าน)</button></div></footer>
@@ -1269,7 +1287,7 @@ function render(){
   $("#app").innerHTML=`
   <header class="top"><div class="wrap hd">
     <a class="logo" href="#top">${s.avatar?`<img class="logo-img" src="${esc(s.avatar)}" alt="">`:`<span class="logo-cell">A1</span>`}<span>${esc(s.name)}</span></a>
-    <nav class="links" aria-label="เมนูหลัก"><a href="#find">หาสินค้า</a><a href="#tools">ระบบออนไลน์</a><a href="#pricing">ราคา</a><a href="/form/">แบบฟอร์มออนไลน์</a><a href="#shop">เทมเพลต Excel</a><a href="/course/">คอร์สออนไลน์</a><a href="/free/">🎁 ตำราฟรี</a><a href="#how">วิธีสั่งซื้อ</a><a href="#faq">คำถาม</a></nav>
+    <nav class="links" aria-label="เมนูหลัก"><a href="#find">หาสินค้า</a><a href="#tools">ระบบออนไลน์</a><a href="#pricing">ราคา</a><a href="/form/">แบบฟอร์มออนไลน์</a><a href="#shop">เทมเพลต Excel</a><a href="/course/">คอร์สออนไลน์</a><a href="/free/">🎁 ของฟรี</a><a href="#how">วิธีสั่งซื้อ</a><a href="#faq">คำถาม</a></nav>
     <div class="head-actions">
       <button class="btn btn-line btn-sm" id="adminBtn" hidden>หลังร้าน</button>
       <a class="hd-line" href="${lineUrl}" target="_blank" rel="noopener">${LINEIC}<span>ทักแชท</span></a>
@@ -1339,11 +1357,26 @@ function render(){
     <div class="bn-dots" role="tablist">${["ระบบออนไลน์","แบบฟอร์ม","ไฟล์ Excel","คอร์ส","แจกฟรี"].map((n,i)=>`<button type="button" data-bd="${i}" aria-label="${n}"${i?"":' aria-current="true"'}><span>${n}</span></button>`).join("")}</div>
     </section>
 
-    <section class="d4s" aria-label="เลือกสินค้า"><div class="wrap"><div class="d4">
+    <section class="fxs" id="find"><div class="wrap">
+      <h2 class="fx-h">👋 อยากทำอะไรคะ? แตะเรื่องที่ต้องการได้เลย</h2><p class="fx-s">ร้านคัดสินค้าที่ตรงงานให้ทันที · ไม่แน่ใจ ทัก LINE ถามได้ค่ะ</p>
+      <div class="fx-k" role="group" aria-label="เลือกแบบ"><span>อยากได้แบบไหน:</span><button type="button" data-fk="all" aria-pressed="true">ทั้ง 2 แบบ</button><button type="button" data-fk="file" aria-pressed="false">📊 ไฟล์ Excel (ซื้อครั้งเดียว)</button><button type="button" data-fk="web" aria-pressed="false">🌐 ใช้ออนไลน์ผ่านเว็บ</button></div>
+      <div class="fx-g" role="group" aria-label="เลือกงานที่ต้องการ">${NEEDS.map(n=>n[0]==="learn"?`<a class="fx-b" href="${base}course/"${tg}><span class="fx-e">${n[1]}</span>${n[2]}</a>`:`<button type="button" class="fx-b" data-need="${n[0]}" aria-pressed="false"><span class="fx-e">${n[1]}</span>${n[2]}</button>`).join("")}</div>
+      <div class="fx-r" id="fxR" hidden></div>
+      <div class="fx-all">หรือดูทั้งหมด: <a href="#tools">🌐 ใช้ผ่านเว็บ (${SYS.length})</a><a href="#shop">📊 ไฟล์ Excel (${tpl.length})</a><a href="${base}course/"${tg}>🎓 คอร์สเรียน</a></div>
+    </div></section>
+
+    <section class="d4s" aria-label="เลือกสินค้า"><div class="wrap"><h2 class="d4-h">หรือเลือกดูตามประเภทสินค้า</h2><div class="d4">
       <a class="d4-b" href="#tools" style="--dc:#2F80C9"><span class="d4-i">🌐</span><b>ระบบออนไลน์</b><small>ใช้ผ่านมือถือ/คอม · ${SYS.length} ระบบ</small><em>เริ่ม ${MINP} บาท/เดือน ›</em></a>
       <a class="d4-b" href="${base}form/"${tg} style="--dc:#7B5CC4"><span class="d4-i">📝</span><b>แบบฟอร์มออนไลน์</b><small>51 แบบ กรอกแล้วได้ PDF</small><em>ทดลองใช้ฟรี 7 วัน ›</em></a>
       <a class="d4-b" href="#shop" style="--dc:#1F7A4D"><span class="d4-i">📊</span><b>เทมเพลต Excel สำเร็จรูป</b><small>ซื้อครั้งเดียว ใช้ได้ตลอด · ${tpl.length} แบบ</small><em>เริ่ม ${(()=>{const m=Math.min(...tpl.map(x=>+x.price||1e9));return m<1e9?m.toLocaleString()+" บาท":"ดูสินค้า"})()} ›</em></a>
       <a class="d4-b" href="${base}course/"${tg} style="--dc:#D9822B"><span class="d4-i">🎓</span><b>คอร์สเรียน Excel</b><small>เรียนพร้อมได้ไฟล์ไปใช้</small><em>ดูคอร์ส ›</em></a>
+      <a class="d4-b" href="${base}free/"${tg} style="--dc:#E8433F"><span class="d4-i">🎁</span><b>ของฟรี</b><small>ตำรา Excel PDF · เช็กสุขภาพการเงิน</small><em>รับฟรีเลย ›</em></a>
+    </div></div></section>
+
+    <section class="stp3" aria-label="เริ่มต้นง่าย 3 ขั้น"><div class="wrap"><div class="stp3-in">
+      <b class="stp3-t">เริ่มใช้ระบบออนไลน์ง่าย ๆ 3 ขั้น</b>
+      <ol><li><i>1</i>เลือกระบบที่อยากใช้</li><li><i>2</i>สมัครทดลองฟรี 7 วัน <small>ร้านเปิดให้ภายใน 2 ชม. (8:00–22:00)</small></li><li><i>3</i>ถูกใจค่อยชำระ <small>ไม่ตัดเงินอัตโนมัติ</small></li></ol>
+      <a class="stp3-b" href="${lineUrl}" target="_blank" rel="noopener">💬 ไม่แน่ใจ ทัก LINE ถามร้าน</a>
     </div></div></section>
 
     <section class="rvq" aria-label="เสียงจากลูกค้า"><div class="wrap"><figure class="rvq-in">
@@ -1351,13 +1384,6 @@ function render(){
       <figcaption>— ลูกค้าบริษัทก่อสร้าง · ใช้ระบบออนไลน์ทั้งทีม · ข้อความจริงจากแชต LINE</figcaption>
     </figure></div></section>
 
-    <section class="fxs" id="find"><div class="wrap">
-      <h2 class="fx-h">อยากทำอะไรคะ?</h2><p class="fx-s">เลือกแบบที่ชอบ แล้วแตะเรื่องที่ต้องการ ร้านคัดสินค้าที่ตรงงานให้</p>
-      <div class="fx-k" role="group" aria-label="เลือกแบบ"><span>อยากได้แบบไหน:</span><button type="button" data-fk="all" aria-pressed="true">ทั้ง 2 แบบ</button><button type="button" data-fk="file" aria-pressed="false">📊 ไฟล์ Excel (ซื้อครั้งเดียว)</button><button type="button" data-fk="web" aria-pressed="false">🌐 ใช้ออนไลน์ผ่านเว็บ</button></div>
-      <div class="fx-g" role="group" aria-label="เลือกงานที่ต้องการ">${NEEDS.map(n=>n[0]==="learn"?`<a class="fx-b" href="${base}course/"${tg}><span class="fx-e">${n[1]}</span>${n[2]}</a>`:`<button type="button" class="fx-b" data-need="${n[0]}" aria-pressed="false"><span class="fx-e">${n[1]}</span>${n[2]}</button>`).join("")}</div>
-      <div class="fx-r" id="fxR" hidden></div>
-      <div class="fx-all">หรือดูทั้งหมด: <a href="#tools">🌐 ใช้ผ่านเว็บ (${SYS.length})</a><a href="#shop">📊 ไฟล์ Excel (${tpl.length})</a><a href="${base}course/"${tg}>🎓 คอร์สเรียน</a></div>
-    </div></section>
 
     <section id="tools" class="sx"><div class="wrap">
       <div class="sx-head"><h2>ระบบออนไลน์ เลือกใช้ตามงานของร้าน</h2><p>แต่ละระบบใช้แยกกันได้ ข้อมูลของระบบหนึ่งไม่ปนกับอีกระบบ หรือใช้ระบบร้านค้าตัวเต็มที่รวมเปิดบิล สต๊อก และบัญชีไว้ด้วยกัน</p></div>
@@ -1443,7 +1469,7 @@ function render(){
   </main>
   <footer class="ft"><div class="wrap ft-in">
     <div class="ft-brand"><a class="logo" href="#top">${s.avatar?`<img class="logo-img" src="${esc(s.avatar)}" alt="">`:""}<span>${esc(s.name)}</span></a><p>เทมเพลต Excel และระบบร้านค้าออนไลน์สำหรับธุรกิจไทย</p></div>
-    <div><h4>เมนู</h4><a href="#tools">ระบบออนไลน์</a><a href="#shop">เทมเพลต Excel</a><a href="/course/">คอร์สออนไลน์</a><a href="/free/">🎁 ตำราฟรี</a><a href="/form/">แบบฟอร์มออนไลน์</a><a href="#pricing">ราคา</a><a href="#how">วิธีสั่งซื้อ</a><a href="${base}privacy/">นโยบายความเป็นส่วนตัว</a></div>
+    <div><h4>เมนู</h4><a href="#tools">ระบบออนไลน์</a><a href="#shop">เทมเพลต Excel</a><a href="/course/">คอร์สออนไลน์</a><a href="/free/">🎁 ของฟรี</a><a href="/form/">แบบฟอร์มออนไลน์</a><a href="#pricing">ราคา</a><a href="#how">วิธีสั่งซื้อ</a><a href="${base}privacy/">นโยบายความเป็นส่วนตัว</a></div>
     <div><h4>ติดต่อ</h4><a href="${lineUrl}" target="_blank" rel="noopener">LINE ${esc(lineId)}</a>${s.fb?`<a href="${esc(s.fb)}" target="_blank" rel="noopener">เพจ Facebook</a>`:""}</div>
     <div><h4>ชำระเงิน</h4><span>พร้อมเพย์ (สแกน QR)</span>${s.bankName?`<span>โอนเข้า ${esc(s.bankName)}</span>`:""}</div>
   </div><div class="wrap ft-bot"><span>© ${new Date().getFullYear()} ${esc(s.name)}</span><button class="link-btn" id="ownerLink">หลังร้าน (เจ้าของร้าน)</button></div></footer>
