@@ -2316,7 +2316,7 @@ function go(i){var t=T();if(!t)return;var n=t.children.length;i=(i+n)%n;t.scroll
 function mark(){var t=T();if(!t)return;var i=cur(t);document.querySelectorAll(".bn-dots button").forEach(function(b,j){if(j===i)b.setAttribute("aria-current","true");else b.removeAttribute("aria-current")})}
 document.addEventListener("scroll",function(e){if(e.target&&e.target.id==="bnT")mark()},true);
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-bn],[data-bd]");if(!b)return;var t=T();if(!t)return;idle=Date.now();if(b.dataset.bd!=null)go(+b.dataset.bd);else go(cur(t)+ +b.dataset.bn)});
-["pointerdown","touchstart","mouseover"].forEach(function(ev){document.addEventListener(ev,function(e){if(e.target.closest&&e.target.closest(".bnr"))idle=Date.now()},{passive:true})});
-setInterval(function(){var t=T();if(!t||document.hidden||Date.now()-idle<12000)return;var r=t.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;go(cur(t)+1)},6500);
+["pointerdown","touchstart"].forEach(function(ev){document.addEventListener(ev,function(e){if(e.target.closest&&e.target.closest(".bnr"))idle=Date.now()},{passive:true})});
+setInterval(function(){var t=T();if(!t||document.hidden||Date.now()-idle<8000)return;var r=t.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;go(cur(t)+1)},5000);
 })();</script>
 </body></html>
