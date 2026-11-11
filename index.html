@@ -731,6 +731,26 @@ header.top .logo span{white-space:nowrap}
 .d4-i{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:1.8rem;background:color-mix(in srgb,var(--dc) 12%,#fff);margin-bottom:6px}
 .d4-b b{font-size:1.08rem;line-height:1.3}.d4-b small{color:var(--muted);font-size:.88rem;line-height:1.4}.d4-b em{font-style:normal;font-weight:700;color:var(--dc);margin-top:auto;padding-top:8px;font-size:.92rem}
 @media (max-width:900px){.d4{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.d4-b{padding:14px 12px 12px;border-radius:16px}.d4-i{width:44px;height:44px;font-size:1.45rem;border-radius:13px}.d4-b b{font-size:.98rem}.d4-b small{font-size:.8rem}.d4-b em{font-size:.84rem}}
+/* 11 พ.ย.: แบนเนอร์สไลด์ทีละเรื่อง (ระบบออนไลน์ / แบบฟอร์ม / ไฟล์ Excel / คอร์ส / แจกฟรี) */
+.bnr{position:relative;padding:0}
+.bn-t{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;scroll-behavior:smooth}
+.bn-t::-webkit-scrollbar{display:none}
+.bn-s{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always}
+.bn-s[style*="--bs"]{background:linear-gradient(180deg,var(--bs),var(--bg) 92%)}
+.bn-tag{display:inline-block;background:color-mix(in srgb,var(--bt) 13%,#fff);color:var(--bt);font-weight:700;font-size:.9rem;padding:5px 14px;border-radius:999px;margin-bottom:12px}
+.bn-h{font-size:clamp(1.9rem,4.2vw,3.1rem);line-height:1.18;font-weight:700;letter-spacing:-.01em;color:var(--ink);margin:0}
+.bn-h span{display:block;color:var(--brand)}
+.bn-art{display:block;text-decoration:none}
+.bn-art .dev-pc img{transition:transform .3s}.bn-art:hover .dev-pc img{transform:scale(1.02)}
+.bn-port{display:flex;justify-content:center;padding-bottom:0}
+.bn-port img{display:block;width:auto;max-width:100%;max-height:420px;border-radius:16px;box-shadow:0 28px 54px -26px rgba(14,60,38,.5),0 0 0 1px rgba(19,32,26,.08);background:#fff}
+.bn-ar{position:absolute;top:44%;width:44px;height:44px;border-radius:50%;border:0;background:#fff;color:var(--ink);font-size:28px;line-height:1;cursor:pointer;box-shadow:0 8px 20px -8px rgba(14,60,38,.4),0 0 0 1px rgba(19,32,26,.06);z-index:2;display:grid;place-items:center;padding-bottom:3px}
+.bn-pv{left:12px}.bn-nx{right:12px}.bn-ar:hover{background:var(--brand);color:#fff}
+.bn-dots{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:4px 16px 14px}
+.bn-dots button{border:1.5px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:6px 14px;font:inherit;font-size:.86rem;font-weight:600;cursor:pointer}
+.bn-dots button[aria-current]{background:var(--brand);border-color:var(--brand);color:#fff}
+@media (max-width:1100px){.bn-ar{display:none}}
+@media (max-width:900px){.bn-s>.hx-in{height:100%;align-content:center}#bn1 .hx-ok{display:none}.bn-port img{max-height:340px}.bn-h{font-size:clamp(1.6rem,7vw,2.2rem)}.bn-dots{gap:6px;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.bn-dots button{flex:none;padding:5px 11px;font-size:.8rem}}
 /* 4 พ.ย.: รีวิวลูกค้าจริง (ได้รับอนุญาต ไม่ระบุชื่อ) */
 .rvq{padding-block:2px 18px}.rvq-in{margin:0;position:relative;background:#fff;border:1.5px solid var(--line);border-left:6px solid #F2B705;border-radius:18px;padding:18px 22px 16px 64px}
 .rvq-in:before{content:"“";position:absolute;left:16px;top:2px;font:700 64px/1 Georgia,serif;color:#F2B705}
@@ -746,8 +766,10 @@ header.top .logo span{white-space:nowrap}
     </div>
   </div></header>
   <main id="top">
-    <section class="hx"><div class="wrap hx-in">
+    <section class="bnr" aria-label="เรื่องเด่นของร้าน"><div class="bn-t" id="bnT">
+    <div class="hx bn-s" id="bn1"><div class="wrap hx-in">
       <div class="hx-copy">
+        <span class="bn-tag" style="--bt:#1F7A4D">🌐 ระบบออนไลน์</span>
         <h1>เปิดบิล คิดเงินเดือน จดรายรับ-รายจ่าย<span>จบในเว็บเดียว</span></h1>
         <p class="hx-sub">ระบบออนไลน์ 22 ระบบ สำหรับร้านค้า ธุรกิจบริการ และคนทำงาน เลือกซื้อเฉพาะที่ใช้ ใช้ได้ทั้งมือถือและคอม ไม่ต้องติดตั้งโปรแกรม หรือเลือกเทมเพลต Excel ซื้อครั้งเดียวใช้ได้ตลอด</p>
         <div class="hx-cta"><a class="btn btn-main btn-lg" data-pick="" href="/app/?start=signup">ทดลองใช้ฟรี 7 วัน</a><a class="btn btn-line btn-lg" href="#pricing">ดูราคา</a></div>
@@ -760,7 +782,51 @@ header.top .logo span{white-space:nowrap}
         <div class="hx-pop p1"><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#149060"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" fill-opacity=".34" stroke="none" d="M3.8 2.5h11.5v14.5"></path><path d="M3.8 2.5h11.5v8.3M3.8 2.5v18.2l2-1.4 2 1.4 2-1.4 1.6 1.1M7 7h5.2M7 10.4h4"></path><circle cx="16.4" cy="16.6" r="5.4" fill="#fff" stroke="none"></circle><path d="M16.6 12.9v7.4M15 14.1h2.3a1.25 1.25 0 0 1 0 2.5H15zm0 2.5h2.6a1.25 1.25 0 0 1 0 2.5H15z" stroke="#149060" stroke-width="1.5"></path></g></svg></span><span><b>ออกบิลแล้ว</b>฿9,520 · ส่ง PDF ทางไลน์</span></div>
         <div class="hx-pop p2"><span class="ico2 sm"><svg class="edm-ic " viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 1.5h15.5L30.5 9.5V25a5.5 5.5 0 0 1-5.5 5.5H7A5.5 5.5 0 0 1 1.5 25V7A5.5 5.5 0 0 1 7 1.5z" fill="#C2410C"></path><path d="M22.5 1.5v4.3a3.7 3.7 0 0 0 3.7 3.7h4.3z" fill="#fff" fill-opacity=".42"></path><g transform="translate(5.5 6.5) scale(.86)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" fill-opacity=".34" stroke="none" d="M3 10.5h18v9H3z"></path><rect x="3" y="6.5" width="18" height="13" rx="2.5"></rect><path d="M3 10.5h18M7 6.5 9 3.6l7 2.9"></path><circle cx="16.5" cy="15" r="1.4" fill="#fff"></circle></g></svg></span><span><b>เงินเดือนพร้อมจ่าย</b>6 คน · สลิปครบ</span></div>
       </div>
-    </div></section>
+    </div></div>
+    <div class="hx bn-s" id="bn2" style="--bs:#F1ECFB"><div class="wrap hx-in">
+      <div class="hx-copy">
+        <span class="bn-tag" style="--bt:#7B5CC4">📝 แบบฟอร์มออนไลน์</span>
+        <h2 class="bn-h">ใบสำคัญจ่าย ใบเสนอราคา ใบลา<span style="color:#7B5CC4">กรอกแล้วได้ PDF ทันที</span></h2>
+        <p class="hx-sub">แบบฟอร์มสำนักงานสำเร็จรูป 51 แบบ ภาษาไทย/อังกฤษ/จีน ตัวเลขเป็นตัวหนังสืออัตโนมัติ ใส่โลโก้บริษัท ใช้บนมือถือได้</p>
+        <div class="hx-cta"><a class="btn btn-main btn-lg" href="/form/" style="--brand:#7B5CC4;background:#7B5CC4;border-color:#7B5CC4">ดูแบบฟอร์ม 51 แบบ</a></div>
+        <p class="hx-price">ทดลองใช้ฟรี 7 วัน · ครบแล้วเดือนละ <b>149 บาท</b></p>
+      </div>
+      <a class="hx-art bn-art" href="/form/" tabindex="-1"><figure class="dev-pc"><div class="dev-bar"><i></i><i></i><i></i><span>exceldatamaster.com/form</span></div><img src="/assets/shop/ui-form.webp?v=2" alt="ตัวอย่างแบบฟอร์มออนไลน์" width="1280" height="800" loading="lazy"></figure></a>
+    </div></div>
+    <div class="hx bn-s" id="bn3" style="--bs:#E6F4EC"><div class="wrap hx-in">
+      <div class="hx-copy">
+        <span class="bn-tag" style="--bt:#1F7A4D">📊 ไฟล์ Excel สำเร็จรูป</span>
+        <h2 class="bn-h">แดชบอร์ดยอดขาย คลังสินค้า จัดการงาน<span>ซื้อครั้งเดียว ใช้ได้ตลอด</span></h2>
+        <p class="hx-sub">ไฟล์ Excel ใส่สูตรไว้ครบ แค่กรอกข้อมูล กราฟและสรุปขึ้นเอง ชำระเงินแล้วได้ไฟล์ทางอีเมล</p>
+        <div class="hx-cta"><a class="btn btn-main btn-lg" href="#shop">ดูเทมเพลต Excel</a></div>
+        <p class="hx-price">เริ่ม 459 บาท · ไม่มีรายเดือน</p>
+      </div>
+      <a class="hx-art bn-art" href="#shop" tabindex="-1"><figure class="dev-pc"><img src="/assets/shop/bn-excel.webp?v=1" alt="ตัวอย่างแดชบอร์ด Excel" width="1100" height="944" loading="lazy"></figure></a>
+    </div></div>
+    <div class="hx bn-s" id="bn4" style="--bs:#FCEFE0"><div class="wrap hx-in">
+      <div class="hx-copy">
+        <span class="bn-tag" style="--bt:#D9822B">🎓 คอร์สเรียน Excel</span>
+        <h2 class="bn-h">เรียน Excel ทีละขั้น<span style="color:#C26A16">ได้ไฟล์ไปใช้งานจริง</span></h2>
+        <p class="hx-sub">คลิปสอนทำตามได้ แม้ไม่เก่ง Excel · เช่น ตารางลงเวลา ติ๊กแล้วบันทึกเวลาให้อัตโนมัติ</p>
+        <div class="hx-cta"><a class="btn btn-main btn-lg" href="/course/" style="background:#D9822B;border-color:#D9822B">ดูคอร์สทั้งหมด</a></div>
+        <p class="hx-price">ซื้อครั้งเดียว ดูซ้ำได้ · ได้ไฟล์ที่ใช้สอน</p>
+      </div>
+      <a class="hx-art bn-art bn-port" href="/course/" tabindex="-1"><img src="/assets/course/c02-template.webp" alt="ตัวอย่างไฟล์จากคอร์ส" width="475" height="661" loading="lazy"></a>
+    </div></div>
+    <div class="hx bn-s" id="bn5" style="--bs:#FDF3D1"><div class="wrap hx-in">
+      <div class="hx-copy">
+        <span class="bn-tag" style="--bt:#E8433F">🎁 แจกฟรี</span>
+        <h2 class="bn-h">ตำราสูตรและฟังก์ชัน Excel<span>ฉบับเข้าใจง่าย บทที่ 1</span></h2>
+        <p class="hx-sub">ภาษาไทย อ่านง่าย มีรูปประกอบ ตัวอย่างจริง แบบฝึกหัดพร้อมเฉลย ดาวน์โหลด PDF ได้ทันที ไม่ต้องสมัคร</p>
+        <div class="hx-cta"><a class="btn btn-main btn-lg" href="/free/">📥 ดาวน์โหลดฟรี</a></div>
+        <p class="hx-price">ฟรี 100% · บทต่อไปแจ้งทาง LINE</p>
+      </div>
+      <a class="hx-art bn-art bn-port" href="/free/" tabindex="-1"><img src="/free/ch1-cover.webp?v=1" alt="ตัวอย่างตำรา Excel บทที่ 1" width="1199" height="1312" loading="lazy"></a>
+    </div></div>
+    </div>
+    <button class="bn-ar bn-pv" type="button" data-bn="-1" aria-label="ก่อนหน้า">‹</button><button class="bn-ar bn-nx" type="button" data-bn="1" aria-label="ถัดไป">›</button>
+    <div class="bn-dots" role="tablist"><button type="button" data-bd="0" aria-label="ระบบออนไลน์" aria-current="true"><span>ระบบออนไลน์</span></button><button type="button" data-bd="1" aria-label="แบบฟอร์ม"><span>แบบฟอร์ม</span></button><button type="button" data-bd="2" aria-label="ไฟล์ Excel"><span>ไฟล์ Excel</span></button><button type="button" data-bd="3" aria-label="คอร์ส"><span>คอร์ส</span></button><button type="button" data-bd="4" aria-label="แจกฟรี"><span>แจกฟรี</span></button></div>
+    </section>
 
     <section class="d4s" aria-label="เลือกสินค้า"><div class="wrap"><div class="d4">
       <a class="d4-b" href="#tools" style="--dc:#2F80C9"><span class="d4-i">🌐</span><b>ระบบออนไลน์</b><small>ใช้ผ่านมือถือ/คอม · 22 ระบบ</small><em>เริ่ม 49 บาท/เดือน ›</em></a>
@@ -1211,8 +1277,10 @@ function render(){
     </div>
   </div></header>
   <main id="top">
-    <section class="hx"><div class="wrap hx-in">
+    <section class="bnr" aria-label="เรื่องเด่นของร้าน"><div class="bn-t" id="bnT">
+    <div class="hx bn-s" id="bn1"><div class="wrap hx-in">
       <div class="hx-copy">
+        <span class="bn-tag" style="--bt:#1F7A4D">🌐 ระบบออนไลน์</span>
         <h1>เปิดบิล คิดเงินเดือน จดรายรับ-รายจ่าย<span>จบในเว็บเดียว</span></h1>
         <p class="hx-sub">ระบบออนไลน์ ${SYS.length} ระบบ สำหรับร้านค้า ธุรกิจบริการ และคนทำงาน เลือกซื้อเฉพาะที่ใช้ ใช้ได้ทั้งมือถือและคอม ไม่ต้องติดตั้งโปรแกรม หรือเลือกเทมเพลต Excel ซื้อครั้งเดียวใช้ได้ตลอด</p>
         <div class="hx-cta"><a class="btn btn-main btn-lg" data-pick href="${base}app/?start=signup"${tg}>ทดลองใช้ฟรี 7 วัน</a><a class="btn btn-line btn-lg" href="#pricing">ดูราคา</a></div>
@@ -1225,7 +1293,51 @@ function render(){
         <div class="hx-pop p1">${ico("bill","sm")}<span><b>ออกบิลแล้ว</b>฿9,520 · ส่ง PDF ทางไลน์</span></div>
         <div class="hx-pop p2">${ico("payroll","sm")}<span><b>เงินเดือนพร้อมจ่าย</b>6 คน · สลิปครบ</span></div>
       </div>
-    </div></section>
+    </div></div>
+    <div class="hx bn-s" id="bn2" style="--bs:#F1ECFB"><div class="wrap hx-in">
+      <div class="hx-copy">
+        <span class="bn-tag" style="--bt:#7B5CC4">📝 แบบฟอร์มออนไลน์</span>
+        <h2 class="bn-h">ใบสำคัญจ่าย ใบเสนอราคา ใบลา<span style="color:#7B5CC4">กรอกแล้วได้ PDF ทันที</span></h2>
+        <p class="hx-sub">แบบฟอร์มสำนักงานสำเร็จรูป 51 แบบ ภาษาไทย/อังกฤษ/จีน ตัวเลขเป็นตัวหนังสืออัตโนมัติ ใส่โลโก้บริษัท ใช้บนมือถือได้</p>
+        <div class="hx-cta"><a class="btn btn-main btn-lg" href="${base}form/"${tg} style="--brand:#7B5CC4;background:#7B5CC4;border-color:#7B5CC4">ดูแบบฟอร์ม 51 แบบ</a></div>
+        <p class="hx-price">ทดลองใช้ฟรี 7 วัน · ครบแล้วเดือนละ <b>${(PLANS.find(x=>x[1]==="form")||[])[3]||149} บาท</b></p>
+      </div>
+      <a class="hx-art bn-art" href="${base}form/"${tg} tabindex="-1"><figure class="dev-pc"><div class="dev-bar"><i></i><i></i><i></i><span>exceldatamaster.com/form</span></div><img src="/assets/shop/ui-form.webp?v=2" alt="ตัวอย่างแบบฟอร์มออนไลน์" width="1280" height="800" loading="lazy"></figure></a>
+    </div></div>
+    <div class="hx bn-s" id="bn3" style="--bs:#E6F4EC"><div class="wrap hx-in">
+      <div class="hx-copy">
+        <span class="bn-tag" style="--bt:#1F7A4D">📊 ไฟล์ Excel สำเร็จรูป</span>
+        <h2 class="bn-h">แดชบอร์ดยอดขาย คลังสินค้า จัดการงาน<span>ซื้อครั้งเดียว ใช้ได้ตลอด</span></h2>
+        <p class="hx-sub">ไฟล์ Excel ใส่สูตรไว้ครบ แค่กรอกข้อมูล กราฟและสรุปขึ้นเอง ชำระเงินแล้วได้ไฟล์ทางอีเมล</p>
+        <div class="hx-cta"><a class="btn btn-main btn-lg" href="#shop">ดูเทมเพลต Excel</a></div>
+        <p class="hx-price">${(()=>{const m=Math.min(...tpl.map(x=>+x.price||1e9));return m<1e9?"เริ่ม "+m.toLocaleString()+" บาท":""})()} · ไม่มีรายเดือน</p>
+      </div>
+      <a class="hx-art bn-art" href="#shop" tabindex="-1"><figure class="dev-pc"><img src="/assets/shop/bn-excel.webp?v=1" alt="ตัวอย่างแดชบอร์ด Excel" width="1100" height="944" loading="lazy"></figure></a>
+    </div></div>
+    <div class="hx bn-s" id="bn4" style="--bs:#FCEFE0"><div class="wrap hx-in">
+      <div class="hx-copy">
+        <span class="bn-tag" style="--bt:#D9822B">🎓 คอร์สเรียน Excel</span>
+        <h2 class="bn-h">เรียน Excel ทีละขั้น<span style="color:#C26A16">ได้ไฟล์ไปใช้งานจริง</span></h2>
+        <p class="hx-sub">คลิปสอนทำตามได้ แม้ไม่เก่ง Excel · เช่น ตารางลงเวลา ติ๊กแล้วบันทึกเวลาให้อัตโนมัติ</p>
+        <div class="hx-cta"><a class="btn btn-main btn-lg" href="${base}course/"${tg} style="background:#D9822B;border-color:#D9822B">ดูคอร์สทั้งหมด</a></div>
+        <p class="hx-price">ซื้อครั้งเดียว ดูซ้ำได้ · ได้ไฟล์ที่ใช้สอน</p>
+      </div>
+      <a class="hx-art bn-art bn-port" href="${base}course/"${tg} tabindex="-1"><img src="/assets/course/c02-template.webp" alt="ตัวอย่างไฟล์จากคอร์ส" width="475" height="661" loading="lazy"></a>
+    </div></div>
+    <div class="hx bn-s" id="bn5" style="--bs:#FDF3D1"><div class="wrap hx-in">
+      <div class="hx-copy">
+        <span class="bn-tag" style="--bt:#E8433F">🎁 แจกฟรี</span>
+        <h2 class="bn-h">ตำราสูตรและฟังก์ชัน Excel<span>ฉบับเข้าใจง่าย บทที่ 1</span></h2>
+        <p class="hx-sub">ภาษาไทย อ่านง่าย มีรูปประกอบ ตัวอย่างจริง แบบฝึกหัดพร้อมเฉลย ดาวน์โหลด PDF ได้ทันที ไม่ต้องสมัคร</p>
+        <div class="hx-cta"><a class="btn btn-main btn-lg" href="${base}free/"${tg}>📥 ดาวน์โหลดฟรี</a></div>
+        <p class="hx-price">ฟรี 100% · บทต่อไปแจ้งทาง LINE</p>
+      </div>
+      <a class="hx-art bn-art bn-port" href="${base}free/"${tg} tabindex="-1"><img src="/free/ch1-cover.webp?v=1" alt="ตัวอย่างตำรา Excel บทที่ 1" width="1199" height="1312" loading="lazy"></a>
+    </div></div>
+    </div>
+    <button class="bn-ar bn-pv" type="button" data-bn="-1" aria-label="ก่อนหน้า">‹</button><button class="bn-ar bn-nx" type="button" data-bn="1" aria-label="ถัดไป">›</button>
+    <div class="bn-dots" role="tablist">${["ระบบออนไลน์","แบบฟอร์ม","ไฟล์ Excel","คอร์ส","แจกฟรี"].map((n,i)=>`<button type="button" data-bd="${i}" aria-label="${n}"${i?"":' aria-current="true"'}><span>${n}</span></button>`).join("")}</div>
+    </section>
 
     <section class="d4s" aria-label="เลือกสินค้า"><div class="wrap"><div class="d4">
       <a class="d4-b" href="#tools" style="--dc:#2F80C9"><span class="d4-i">🌐</span><b>ระบบออนไลน์</b><small>ใช้ผ่านมือถือ/คอม · ${SYS.length} ระบบ</small><em>เริ่ม ${MINP} บาท/เดือน ›</em></a>
@@ -2197,4 +2309,14 @@ var p=e.target.closest&&e.target.closest("#plist .pli");if(!p)return;var src=doc
 function x(){ov.remove();document.removeEventListener("keydown",k)}function k(ev){if(ev.key==="Escape")x()}ov.onclick=function(ev){if(ev.target===ov||ev.target.closest(".pm-x"))x()};document.addEventListener("keydown",k);document.body.appendChild(ov)})})();
 </script>
 <script src="/assets/track.js?v=6" defer></script><script src="/assets/reviews.js?v=6" defer></script>
+<script>/* แบนเนอร์สไลด์ 11 พ.ย. (ใช้ event delegation เพราะ render() สร้าง DOM ใหม่ได้) */
+(function(){var idle=0,T=function(){return document.getElementById("bnT")};
+function cur(t){return Math.round(t.scrollLeft/Math.max(1,t.clientWidth))}
+function go(i){var t=T();if(!t)return;var n=t.children.length;i=(i+n)%n;t.scrollTo({left:i*t.clientWidth,behavior:"smooth"})}
+function mark(){var t=T();if(!t)return;var i=cur(t);document.querySelectorAll(".bn-dots button").forEach(function(b,j){if(j===i)b.setAttribute("aria-current","true");else b.removeAttribute("aria-current")})}
+document.addEventListener("scroll",function(e){if(e.target&&e.target.id==="bnT")mark()},true);
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-bn],[data-bd]");if(!b)return;var t=T();if(!t)return;idle=Date.now();if(b.dataset.bd!=null)go(+b.dataset.bd);else go(cur(t)+ +b.dataset.bn)});
+["pointerdown","touchstart","mouseover"].forEach(function(ev){document.addEventListener(ev,function(e){if(e.target.closest&&e.target.closest(".bnr"))idle=Date.now()},{passive:true})});
+setInterval(function(){var t=T();if(!t||document.hidden||Date.now()-idle<12000)return;var r=t.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;go(cur(t)+1)},6500);
+})();</script>
 </body></html>
