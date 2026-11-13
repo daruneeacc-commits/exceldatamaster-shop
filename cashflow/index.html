@@ -194,7 +194,7 @@ th:{app:"งบกระแสเงินสด",dash:"ภาพรวม",dire
  trend:"เงินรับ-จ่ายรายเดือน และเงินสดปลายงวด",topOut:"จ่ายมากที่สุด",byGrp:"แยกตามกิจกรรม",
  demoNote:"โหมดข้อมูลตัวอย่าง · ไม่บันทึก",localNote:"ข้อมูลเก็บในเครื่องนี้ · สำรองไฟล์เป็นประจำที่หน้าตั้งค่า",
  pasteH:"คัดลอกจาก Excel แล้ววาง · คอลัมน์: วันที่ | รับ/จ่าย | จำนวนเงิน | หมวด | คู่ค้า | รายละเอียด | บัญชี",
- import:"นำเข้า",saved:"บันทึกแล้ว",deleted:"ลบแล้ว",need:"ใส่จำนวนเงินก่อน",confirmDel:"ลบรายการนี้?",confirmWipe:"พิมพ์คำว่า ลบ เพื่อยืนยันล้างข้อมูลทั้งหมด",
+ import:"นำเข้า",saved:"บันทึกแล้ว",deleted:"ลบแล้ว",need:"ใส่จำนวนเงิน หรือราคาสินค้าก่อน",confirmDel:"ลบรายการนี้?",confirmWipe:"พิมพ์คำว่า ลบ เพื่อยืนยันล้างข้อมูลทั้งหมด",
  notMatch:"ไม่ตรง",ofTotal:"ของทั้งหมด",bal:"คงเหลือ",in:"รับ",out:"จ่าย"},
 ja:{app:"キャッシュフロー計算書",dash:"概要",direct:"直接法",indirect:"間接法",tx:"取引",rep:"レポート",set:"設定",
  open:"期首現金残高",inflow:"収入",outflow:"支出",net:"現金増減額",close:"期末現金残高",
@@ -308,7 +308,7 @@ document.addEventListener("click",function(e){var b=e.target.closest(".dtb");if(
 document.addEventListener("change",function(e){if(!e.target.classList||!e.target.classList.contains("dtp"))return;var x=e.target.parentNode.querySelector(".dtx");x.value=dmy(e.target.value);x.dispatchEvent(new Event("change",{bubbles:true}))});
 function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
 function num(v){if(typeof v==="number")return v;v=String(v==null?"":v).trim();var neg=/^\(.*\)$/.test(v)||/^-/.test(v);v=v.replace(/[^\d.]/g,"");return v?(neg?-1:1)*parseFloat(v):0}
-var tt;function toast(m){var e=$("#toast");e.textContent=m;e.classList.add("on");clearTimeout(tt);tt=setTimeout(function(){e.classList.remove("on")},2200)}
+var tt;function toast(m){var e=$("#toast"),dd=[].slice.call(document.querySelectorAll("dialog[open]")).pop();(dd||document.body).appendChild(e);e.textContent=m;e.classList.add("on");clearTimeout(tt);tt=setTimeout(function(){e.classList.remove("on")},2200)}
 
 /* ========== periods ========== */
 function cols(per,y){var c=[];if(per==="q"){for(var q=0;q<4;q++)c.push({k:"q"+q,ms:[q*3,q*3+1,q*3+2],lb:function(lg){return(lg==="ja"?"第"+(this.i+1)+"四半期":"Q"+(this.i+1))},i:q})}else for(var m=0;m<12;m++)c.push({k:"m"+m,ms:[m],lb:function(lg){return MON[lg||lang][this.i]},i:m});return c}
@@ -553,7 +553,7 @@ function txDlg(x,second){var isNew=!x;x=x||{id:uid(),d:today(),t:ui.lastT||"out"
   if(!LL.length&&vt==="exc")a=r2(a*(1+r));
   x.t=st.t;x.a=Math.abs(a);x.d=pd(Q("#fD").value)||today();x.c=Q("#fC").value;x.ac=Q("#fAc").value;x.p=Q("#fP").value.trim();x.r=Q("#fR").value.trim();x.n=Q("#fN").value.trim();
   if(vt){x.vt=vt;x.tid=Q("#fT").value.trim()}else{delete x.vt;delete x.tid}
-  if(LL.length){x.lines=LL;if(!sale()&&ship)x.ship=ship;else delete x.ship;x.a=r2(calcX(x).tot)}else{delete x.lines;delete x.ship}delete x.stk;
+  if(LL.length){x.lines=LL;if(!sale()&&ship)x.ship=ship;else delete x.ship;var ct=calcX(x).tot;if(ct>0)x.a=r2(ct);else if(!LL.some(function(l){return l.u>0})){var aa=x.a;LL.forEach(function(l){l.u=r2((vt==="exc"?aa/(1+r):aa)/LL.reduce(function(s2,z){return s2+z.q},0))})}}else{delete x.lines;delete x.ship}delete x.stk;
   if(isNew)tx.push(x);ui.lastT=x.t;ui.lastC=x.c;ui.lastAc=x.ac;saveAll();$(D).close();if(second&&$("#dlg").open)$("#dlg").close();toast(t("saved"));render()};
  var dl=Q("#fDel");if(dl)dl.onclick=function(){if(!confirm(t("confirmDel")))return;tx=tx.filter(function(y){return y.id!==x.id});saveAll();$(D).close();if(second&&$("#dlg").open)$("#dlg").close();toast(t("deleted"));render()}}
 $("#fab").onclick=function(){txDlg(null)};
