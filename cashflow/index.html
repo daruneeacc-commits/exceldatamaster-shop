@@ -73,12 +73,14 @@ table.cf{border-collapse:separate;border-spacing:0;width:100%;font-size:14px}
 .amt{font-weight:700;text-align:right}
 .amt.in{color:var(--in)}.amt.out{color:var(--out)}
 .tag{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:999px;background:#eef3f8;color:var(--sub);margin-left:4px;font-weight:600}
-dialog{border:0;border-radius:18px;padding:0;width:min(640px,94vw);max-height:90vh;box-shadow:0 30px 80px rgba(20,30,40,.35)}
+dialog{margin:auto;border:0;border-radius:18px;padding:0;width:min(640px,94vw);max-height:90vh;box-shadow:0 30px 80px rgba(20,30,40,.35)}
 dialog::backdrop{background:rgba(20,30,40,.45)}
 .dh{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;position:sticky;top:0;background:#fff;z-index:2}
 .dh h3{font-size:17px;flex:1}
 .db{padding:16px 18px;overflow:auto;max-height:calc(90vh - 130px)}
-.df{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;background:#fff;position:sticky;bottom:0}
+.df{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:center;flex-wrap:wrap;background:#fff;position:sticky;bottom:0}
+.df .btn{min-width:110px;padding:10px 18px}.df .btn.p{min-width:160px;font-size:16px}.df #fDel{margin-right:0!important}
+@media (max-width:600px){.df{flex-wrap:nowrap}.df .btn{min-width:0;flex:1;padding:10px 8px}.df .btn.p{flex:2;min-width:0}}
 .x{border:0;background:#eef3f8;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
 .fg label{display:block;font-size:13px;font-weight:600;color:var(--sub);margin-bottom:3px}
