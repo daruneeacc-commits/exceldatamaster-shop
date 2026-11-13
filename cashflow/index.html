@@ -167,7 +167,7 @@ dialog::backdrop{background:rgba(20,30,40,.45)}
 (function(){
 "use strict";
 /* ========== storage ========== */
-var K={tx:"edm_cf_tx",cfg:"edm_cf_cfg",ind:"edm_cf_ind",ui:"edm_cf_ui"};
+var K={tx:"edm_cf_tx",cfg:"edm_cf_cfg",ind:"edm_cf_ind",ui:"edm_cf_ui",coa:"edm_cf_coa",je:"edm_cf_je"};
 var DEMO=/[?&]demo=1/.test(location.search);
 function ld(k,d){if(DEMO)return d;try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
 function sv(k,v){if(DEMO)return;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast("บันทึกไม่ได้ (หน่วยความจำเต็ม?)")}}
@@ -240,6 +240,9 @@ en:{app:"Cash Flow Statement",dash:"Overview",direct:"Direct",indirect:"Indirect
  pasteH:"Copy from Excel and paste · columns: Date | In/Out | Amount | Category | Counterparty | Description | Account",
  import:"Import",saved:"Saved",deleted:"Deleted",need:"Enter an amount",confirmDel:"Delete this transaction?",confirmWipe:"Type DELETE to confirm",
  notMatch:"Mismatch",ofTotal:"of total",bal:"Balance",in:"In",out:"Out"}};
+Object.assign(L.th,{acc:"บัญชี",accS:"บัญชี",accT:"บัญชี · งบการเงิน",av_coa:"ผังบัญชี",av_jnl:"สมุดรายวัน",av_gl:"บัญชีแยกประเภท (GL)",av_tb:"งบทดลอง",av_pl:"งบกำไรขาดทุน",av_bs:"งบดุล",jeAdd:"บันทึกบัญชีทั่วไป (JV)",jeHint:"ใช้บันทึกรายการที่ไม่ใช่เงินสด เช่น ค่าเสื่อมราคา ลูกหนี้/เจ้าหนี้ ค่าใช้จ่ายค้างจ่าย ปรับปรุงสินค้า · เดบิตต้องเท่ากับเครดิต",jePh:"เช่น ค่าเสื่อมราคาประจำเดือน",addLine2:"เพิ่มบรรทัด",accHint:"ระบบลงบัญชีให้อัตโนมัติจากทุกรายการเงินรับ-จ่าย (รวม VAT/หัก ณ ที่จ่าย/ต้นทุนขาย) + ยอดยกมา + รายการบันทึกบัญชีทั่วไป · เปลี่ยนรหัสบัญชีของแต่ละหมวดได้ที่ ⚙️ ตั้งค่า",acCode:"รหัสบัญชี",acName:"ชื่อบัญชี",acType:"ประเภท",tyA:"สินทรัพย์",tyL:"หนี้สิน",tyE:"ส่วนของเจ้าของ",tyR:"รายได้",tyX:"ค่าใช้จ่าย",acctTag:"บัญชีเงิน",coaAdd:"เพิ่มบัญชี",coaHint:"รหัส 1xxx สินทรัพย์ (12xx ไม่หมุนเวียน) · 2xxx หนี้สิน (22xx ระยะยาว) · 3xxx ทุน · 4xxx รายได้ · 5xxx ต้นทุน · 6xxx ค่าใช้จ่าย",acCodeErr:"รหัสบัญชีเป็นตัวเลข 3–6 หลัก",acDup:"มีรหัสนี้แล้ว",acUsed:"บัญชีนี้มีรายการแล้ว ลบไม่ได้",dr:"เดบิต",cr:"เครดิต",openBF:"ยอดยกมา",closeBal:"ยอดคงเหลือ",allAcc:"ทุกบัญชี",balDr:"คงเหลือ เดบิต",balCr:"คงเหลือ เครดิต",balanced:"สมดุล",notBal:"เดบิต-เครดิต ไม่เท่ากัน",plRev:"รายได้",plRevT:"รวมรายได้",plCogs:"ต้นทุนขาย",plExp:"ค่าใช้จ่ายในการดำเนินงาน",plExpT:"รวมค่าใช้จ่าย",plNI:"กำไร(ขาดทุน)สุทธิ",plNIy:"กำไร(ขาดทุน)สุทธิปีนี้",bsAsOf:"ณ วันที่",bsA:"สินทรัพย์",bsCA:"สินทรัพย์หมุนเวียน",bsNCA:"สินทรัพย์ไม่หมุนเวียน",bsTA:"รวมสินทรัพย์",bsLE:"หนี้สินและส่วนของเจ้าของ",bsCL:"หนี้สินหมุนเวียน",bsNCL:"หนี้สินไม่หมุนเวียน",bsTL:"รวมหนี้สิน",bsEq:"ส่วนของเจ้าของ",bsTE:"รวมส่วนของเจ้าของ",bsTLE:"รวมหนี้สินและส่วนของเจ้าของ",openJE:"ยอดยกมาต้นงวด",glAcc:"รหัสบัญชี (GL)"});
+Object.assign(L.ja,{acc:"会計",accS:"会計",accT:"会計・財務諸表",av_coa:"勘定科目",av_jnl:"仕訳帳",av_gl:"総勘定元帳",av_tb:"試算表",av_pl:"損益計算書",av_bs:"貸借対照表",jeAdd:"振替伝票",jeHint:"現金以外の取引（減価償却、売掛・買掛、未払費用、棚卸調整など）· 借方＝貸方",jePh:"例：月次減価償却",addLine2:"行を追加",accHint:"すべての入出金（VAT・源泉・売上原価含む）と期首残高・振替伝票から自動で仕訳 · 区分ごとの勘定科目は⚙️設定で変更",acCode:"科目コード",acName:"勘定科目",acType:"区分",tyA:"資産",tyL:"負債",tyE:"純資産",tyR:"収益",tyX:"費用",acctTag:"口座",coaAdd:"科目を追加",coaHint:"1xxx 資産（12xx 固定）· 2xxx 負債（22xx 固定）· 3xxx 純資産 · 4xxx 収益 · 5xxx 原価 · 6xxx 費用",acCodeErr:"科目コードは3～6桁の数字",acDup:"このコードは既に存在します",acUsed:"使用中のため削除できません",dr:"借方",cr:"貸方",openBF:"前期繰越",closeBal:"残高",allAcc:"全科目",balDr:"借方残高",balCr:"貸方残高",balanced:"一致",notBal:"借方・貸方が一致しません",plRev:"売上高・収益",plRevT:"収益合計",plCogs:"売上原価",plExp:"販売費及び一般管理費",plExpT:"費用合計",plNI:"当期純利益",plNIy:"当期純利益",bsAsOf:"",bsA:"資産の部",bsCA:"流動資産",bsNCA:"固定資産",bsTA:"資産合計",bsLE:"負債・純資産の部",bsCL:"流動負債",bsNCL:"固定負債",bsTL:"負債合計",bsEq:"純資産",bsTE:"純資産合計",bsTLE:"負債・純資産合計",openJE:"期首残高",glAcc:"勘定科目"});
+Object.assign(L.en,{acc:"Accounting",accS:"Books",accT:"Accounting · Financial statements",av_coa:"Chart of accounts",av_jnl:"Journal",av_gl:"General ledger",av_tb:"Trial balance",av_pl:"Profit & loss",av_bs:"Balance sheet",jeAdd:"Journal voucher",jeHint:"For non-cash entries (depreciation, AR/AP, accruals, stock adjustments) · debits must equal credits",jePh:"e.g. monthly depreciation",addLine2:"Add line",accHint:"Posted automatically from every cash in/out (incl. VAT, WHT, COGS) + opening balances + journal vouchers · change the account per category in ⚙️ Settings",acCode:"Code",acName:"Account",acType:"Type",tyA:"Asset",tyL:"Liability",tyE:"Equity",tyR:"Revenue",tyX:"Expense",acctTag:"Money account",coaAdd:"Add account",coaHint:"1xxx assets (12xx non-current) · 2xxx liabilities (22xx long-term) · 3xxx equity · 4xxx revenue · 5xxx cost · 6xxx expenses",acCodeErr:"Code must be 3–6 digits",acDup:"Code already exists",acUsed:"Account in use, cannot delete",dr:"Debit",cr:"Credit",openBF:"Opening",closeBal:"Closing",allAcc:"All accounts",balDr:"Debit balance",balCr:"Credit balance",balanced:"Balanced",notBal:"Debits ≠ credits",plRev:"Revenue",plRevT:"Total revenue",plCogs:"Cost of sales",plExp:"Operating expenses",plExpT:"Total expenses",plNI:"Net profit (loss)",plNIy:"Net profit for the year",bsAsOf:"As at",bsA:"Assets",bsCA:"Current assets",bsNCA:"Non-current assets",bsTA:"Total assets",bsLE:"Liabilities & equity",bsCL:"Current liabilities",bsNCL:"Non-current liabilities",bsTL:"Total liabilities",bsEq:"Equity",bsTE:"Total equity",bsTLE:"Total liabilities & equity",openJE:"Opening balances",glAcc:"GL account"});
 Object.assign(L.th,{copy:"ทำสำเนา",copyT:"ทำสำเนารายการ",copyHint:"คัดลอกจากรายการเดิมแล้ว · แก้วันที่และยอดเงิน แล้วกดบันทึก (รายการเดิมไม่เปลี่ยน)"});
 Object.assign(L.ja,{copy:"複製",copyT:"取引を複製",copyHint:"元の取引をコピーしました · 日付と金額を修正して保存（元の取引は変更されません）"});
 Object.assign(L.en,{copy:"Duplicate",copyT:"Duplicate transaction",copyHint:"Copied from the original · change the date and amount, then save (original unchanged)"});
@@ -282,11 +285,14 @@ var DEF_CATS=[
  {id:"loan",g:"fin",d:"in",th:"เงินกู้ยืมรับ",ja:"借入による収入",en:"Loan proceeds"},
  {id:"cap",g:"fin",d:"in",th:"เพิ่มทุน",ja:"増資による収入",en:"Capital injection"},
  {id:"repay",g:"fin",d:"out",th:"ชำระคืนเงินกู้",ja:"借入金の返済",en:"Loan repayment"},
- {id:"div",g:"fin",d:"out",th:"จ่ายเงินปันผล",ja:"配当金の支払",en:"Dividends paid"}];
+ {id:"div",g:"fin",d:"out",th:"จ่ายเงินปันผล",ja:"配当金の支払",en:"Dividends paid"},
+ {id:"whtpay",g:"op",d:"out",th:"นำส่งภาษีหัก ณ ที่จ่าย (ภ.ง.ด.3/53)",ja:"源泉税の納付",en:"Withholding tax remitted"},
+ {id:"vatpay",g:"op",d:"out",th:"นำส่ง VAT (ภ.พ.30)",ja:"消費税の納付",en:"VAT remitted"}];
 var DEF_CFG={name:"",cur:"THB",year:new Date().getFullYear(),open:{},accts:[{id:"cash",n:"เงินสด"},{id:"bank",n:"ธนาคาร"}],cats:DEF_CATS,prep:"",appr:""};
-var tx=ld(K.tx,[]),cfg=Object.assign({},DEF_CFG,ld(K.cfg,{})),ind=ld(K.ind,{}),ui=Object.assign({v:"dash",lang:"th",y:null,per:"m",f:"all",q:"",open:{},rep:{dir:1,ind:1,sum:1,vat:1,det:1,lang:null}},ld(K.ui,{}));
+var tx=ld(K.tx,[]),cfg=Object.assign({},DEF_CFG,ld(K.cfg,{})),ind=ld(K.ind,{}),ui=Object.assign({v:"dash",lang:"th",y:null,per:"m",f:"all",q:"",open:{},rep:{dir:1,ind:1,sum:1,vat:1,pl:1,bs:1,det:1,lang:null}},ld(K.ui,{}));
 if(!cfg.cats||!cfg.cats.length)cfg.cats=DEF_CATS;
 if(!cfg.co)cfg.co={};
+["whtpay","vatpay"].forEach(function(id){if(!cfg.cats.some(function(c){return c.id===id}))cfg.cats.push(DEF_CATS.filter(function(c){return c.id===id})[0])});
 cfg.cats.forEach(function(c){if(c.id==="sales"){if(c.th==="รับเงินจากลูกค้า")c.th="รายรับจากการขาย";if(c.ja==="営業収入（売上入金）")c.ja="売上による収入";if(c.en==="Receipts from customers")c.en="Revenue from sales"}});
 function capInfo(y){var co=cfg.co||{},reg=+co.reg||0,p0=+co.paid0||0,add=0;tx.forEach(function(x){if(x.c==="cap"&&x.d&&+x.d.slice(0,4)<=y)add+=x.t==="in"?x.a:-x.a});var paid=p0+add;return{reg:reg,p0:p0,add:add,paid:paid,un:Math.max(0,reg-paid),pct:reg?Math.min(100,paid/reg*100):0}}
 function capCard(lg){var c=capInfo(ui.y),co=cfg.co||{};if(!c.reg&&!c.paid)return"";
@@ -365,7 +371,7 @@ function indVal(y,m,k){var r=ind[y+"-"+("0"+(m+1)).slice(-2)];return r?(+r[k]||0
 function indCol(y,c,k){return sum(c.ms.map(function(m){return indVal(y,m,k)}))}
 
 /* ========== nav ========== */
-var VIEWS=[["dash","📊"],["direct","📑"],["indirect","🔄"],["tx","🧾"],["cost","📦"],["vat","🧾"],["rep","🖨️"],["set","⚙️"]];
+var VIEWS=[["dash","📊"],["direct","📑"],["indirect","🔄"],["tx","🧾"],["cost","📦"],["vat","🧾"],["acc","📒"],["rep","🖨️"],["set","⚙️"]];
 function nav(){
  $("#nav").innerHTML=VIEWS.map(function(v){return'<button data-v="'+v[0]+'" class="'+(ui.v===v[0]?"on":"")+'">'+v[1]+" "+t(v[0])+"</button>"}).join("");
  $("#mtab").innerHTML=VIEWS.map(function(v){return'<button data-v="'+v[0]+'" class="'+(ui.v===v[0]?"on":"")+'"><b>'+v[1]+"</b>"+(L[lang][v[0]+"S"]||t(v[0]))+"</button>"}).join("");
@@ -386,7 +392,7 @@ function bindTb(){var y=$("#yy");if(y)y.onchange=function(){ui.y=+this.value;sui
 
 /* ========== render ========== */
 function render(){nav();var v=ui.v;var h=(DEMO?'<div class="card" style="background:#fff7d6;border-color:#f1dca3;padding:10px 14px">🧪 '+t("demoNote")+"</div>":"");
- h+=v==="vat"?vVat():v==="cost"?vCost():v==="dash"?vDash():v==="direct"?vDirect():v==="indirect"?vIndirect():v==="tx"?vTx():v==="rep"?vRep():vSet();
+ h+=v==="acc"?vAcc():v==="vat"?vVat():v==="cost"?vCost():v==="dash"?vDash():v==="direct"?vDirect():v==="indirect"?vIndirect():v==="tx"?vTx():v==="rep"?vRep():vSet();
  $("#main").innerHTML=h;bindTb();bind[v]&&bind[v]()}
 var bind={};
 
@@ -680,10 +686,146 @@ function findCat(s,tp){s=String(s||"").trim().toLowerCase();var hit=cfg.cats.fil
 function findAcct(s){s=String(s||"").trim().toLowerCase();var a=cfg.accts.filter(function(a){return a.id===s||a.n.toLowerCase()===s})[0];return a?a.id:cfg.accts[cfg.accts.length>1?1:0].id}
 
 /* ---- report ---- */
+/* ========== ACCOUNTING: COA · Journal · GL · TB · P&L · BS ========== */
+var DEF_COA=[
+ {c:"1130",t:"A",th:"ลูกหนี้การค้า",ja:"売掛金",en:"Accounts receivable"},
+ {c:"1140",t:"A",th:"สินค้าคงเหลือ",ja:"棚卸資産",en:"Inventory"},
+ {c:"1150",t:"A",th:"ภาษีซื้อ",ja:"仮払消費税（仕入VAT）",en:"Input VAT"},
+ {c:"1151",t:"A",th:"ภาษีถูกหัก ณ ที่จ่าย",ja:"源泉徴収税（前払）",en:"Withholding tax receivable"},
+ {c:"1160",t:"A",th:"ค่าใช้จ่ายจ่ายล่วงหน้า",ja:"前払費用",en:"Prepaid expenses"},
+ {c:"1210",t:"A",th:"อุปกรณ์และสินทรัพย์ถาวร",ja:"有形固定資産",en:"Property & equipment"},
+ {c:"1219",t:"A",th:"ค่าเสื่อมราคาสะสม",ja:"減価償却累計額",en:"Accumulated depreciation",neg:1},
+ {c:"2110",t:"L",th:"เจ้าหนี้การค้า",ja:"買掛金",en:"Accounts payable"},
+ {c:"2120",t:"L",th:"ค่าใช้จ่ายค้างจ่าย",ja:"未払費用",en:"Accrued expenses"},
+ {c:"2130",t:"L",th:"ภาษีขาย",ja:"仮受消費税（売上VAT）",en:"Output VAT"},
+ {c:"2140",t:"L",th:"ภาษีหัก ณ ที่จ่ายค้างนำส่ง",ja:"預り源泉税",en:"Withholding tax payable"},
+ {c:"2210",t:"L",th:"เงินกู้ยืม",ja:"借入金",en:"Loans payable"},
+ {c:"3110",t:"E",th:"ทุนเรือนหุ้น (ชำระแล้ว)",ja:"資本金",en:"Share capital"},
+ {c:"3200",t:"E",th:"กำไร(ขาดทุน)สะสม",ja:"利益剰余金",en:"Retained earnings"},
+ {c:"3300",t:"E",th:"เงินปันผลจ่าย",ja:"配当金",en:"Dividends",neg:1},
+ {c:"4110",t:"R",th:"รายได้จากการขาย",ja:"売上高",en:"Sales revenue"},
+ {c:"4190",t:"R",th:"รายได้อื่น",ja:"その他の収益",en:"Other income"},
+ {c:"5110",t:"X",th:"ต้นทุนขาย",ja:"売上原価",en:"Cost of goods sold"},
+ {c:"6110",t:"X",th:"เงินเดือนและสวัสดิการ",ja:"給与・福利厚生費",en:"Salaries & benefits"},
+ {c:"6120",t:"X",th:"ค่าเช่า",ja:"地代家賃",en:"Rent"},
+ {c:"6130",t:"X",th:"ค่าสาธารณูปโภค",ja:"水道光熱費・通信費",en:"Utilities & telecom"},
+ {c:"6140",t:"X",th:"ค่าโฆษณาและการตลาด",ja:"広告宣伝費",en:"Marketing"},
+ {c:"6150",t:"X",th:"ภาษีและค่าธรรมเนียม",ja:"租税公課",en:"Taxes & fees"},
+ {c:"6160",t:"X",th:"ค่าเสื่อมราคา",ja:"減価償却費",en:"Depreciation"},
+ {c:"6170",t:"X",th:"ดอกเบี้ยจ่าย",ja:"支払利息",en:"Interest expense"},
+ {c:"6190",t:"X",th:"ค่าใช้จ่ายอื่น",ja:"その他の費用",en:"Other expenses"}];
+var CAT_ACC={sales:"4110",oin:"4190",supp:"5110",sal:"6110",rent:"6120",util:"6130",mkt:"6140",tax:"6150",oout:"6190",asell:"1210",capex:"1210",loan:"2210",cap:"3110",repay:"2210",div:"3300",whtpay:"2140",vatpay:"2130"};
+var coaX=ld(K.coa,[]),jeM=ld(K.je,[]);
+function saveAcc(){sv(K.coa,coaX);sv(K.je,jeM)}
+function acCode(id){var i=0,code="";cfg.accts.forEach(function(a){if(code)return;if(a.id==="cash"&&id==="cash")code="1101";else if(a.id!=="cash"){if(a.id===id)code="11"+("0"+(2+i)).slice(-2);i++}});return code||"1199"}
+function COA(){var L=cfg.accts.map(function(a){return{c:acCode(a.id),t:"A",th:a.n,ja:a.n,en:a.n,cashAc:a.id,sys:1}});
+ DEF_COA.forEach(function(d){var o=coaX.filter(function(z){return z.c===d.c})[0];L.push(Object.assign({},d,{sys:1},o?{th:o.th||d.th,ja:o.ja||d.ja,en:o.en||d.en}:{}))});
+ coaX.forEach(function(z){if(!L.some(function(q){return q.c===z.c}))L.push(z)});return L.sort(function(a,b){return a.c<b.c?-1:1})}
+function acc(c){return COA().filter(function(a){return a.c===c})[0]}
+function an(c,lg){var a=acc(c);return a?(a[lg||lang]||a.th):c}
+function catAcc(x){var k=cat(x.c);if(x.c==="supp"&&x.lines&&x.lines.length&&x.lk!=="exp")return"1140";return(k&&k.acc)||CAT_ACC[x.c]||(x.t==="in"?"4190":"6190")}
+function J(a,dr,cr,m){return{a:a,dr:r2(dr||0),cr:r2(cr||0),m:m||""}}
+function txJE(x,avg){
+ if(x.t==="tr")return[J(acCode(x.ac2),x.a,0),J(acCode(x.ac),0,x.a)];
+ var c=calcX(x),T=r2(c.tot),V=r2(c.vat),W=r2(c.wht),N=r2(T-W),B=r2(T-V),ca=acCode(x.ac),a=catAcc(x),L=[];
+ if(x.t==="out"){L.push(J(a,B,0));if(V)L.push(J("1150",V,0));if(W)L.push(J("2140",0,W));L.push(J(ca,0,N))}
+ else{L.push(J(ca,N,0));if(W)L.push(J("1151",W,0));L.push(J(a,0,B));if(V)L.push(J("2130",0,V));
+  if(x.lines&&x.lines.length&&x.lk!=="exp"){var cg=r2(x.lines.reduce(function(s,l){return s+(+l.q||0)*(avg[l.name.toLowerCase()]||0)},0));if(cg){L.push(J("5110",cg,0));L.push(J("1140",0,cg))}}}
+ return L.filter(function(l){return l.dr||l.cr})}
+var _jeC=null;
+function jeAll(){var avg={};itemStats(9999).forEach(function(r){avg[r.name.toLowerCase()]=r.avg});var out=[];
+ var y0=cfg.year;if(y0){var L=[],tot=0;cfg.accts.forEach(function(a){var v=+cfg.open[a.id]||0;if(v){L.push(J(acCode(a.id),v>0?v:0,v<0?-v:0));tot+=v}});var p0=+(cfg.co||{}).paid0||0;if(p0)L.push(J("3110",0,p0));var re=r2(tot-p0);if(re>0)L.push(J("3200",0,re));else if(re<0)L.push(J("3200",-re,0));if(L.length)out.push({id:"open",d:y0+"-01-01",src:"open",n:t("openJE"),lines:L})}
+ tx.forEach(function(x){if(!x.d)return;out.push({id:x.id,d:x.d,src:"tx",n:(x.t==="tr"?"🔁 "+acctN(x.ac)+" → "+acctN(x.ac2):(x.p?x.p+" · ":"")+(x.n||lineDesc(x))),ref:x.r||"",lines:txJE(x,avg)})});
+ jeM.forEach(function(j){out.push({id:j.id,d:j.d,src:"je",n:j.n||"",ref:j.ref||"",lines:j.lines.map(function(l){return J(l.a,l.dr,l.cr,l.m)})})});
+ return out.sort(function(a,b){return a.d<b.d?-1:a.d>b.d?1:(a.src==="open"?-1:0)})}
+function natDr(c){var a=acc(c),ty=a?a.t:"X";return ty==="A"||ty==="X"?!(a&&a.neg):!!(a&&a.neg)}
+function ledger(y){var JE=jeAll(),end=y+"-12-31",st=y+"-01-01",B={};
+ function g(c){return B[c]||(B[c]={c:c,op:0,dr:0,cr:0,m:[],rows:[]})}
+ var preNI=0;for(var i=0;i<12;i++);
+ JE.forEach(function(e){if(e.d>end)return;var inY=e.d>=st;e.lines.forEach(function(l){var o=g(l.a),ty=(acc(l.a)||{t:"X"}).t,v=l.dr-l.cr;
+  if(!inY){if(ty==="R"||ty==="X")preNI+=-v;else o.op+=v}else{o.dr+=l.dr;o.cr+=l.cr;var mm=+e.d.slice(5,7)-1;o.m[mm]=(o.m[mm]||0)+v;o.rows.push({e:e,l:l})}})});
+ var re=g("3200");re.op+=-preNI;re.preNI=preNI;
+ Object.keys(B).forEach(function(k){var o=B[k];o.cl=o.op+o.dr-o.cr});return B}
+function plData(y){var B=ledger(y),R=[],X=[];COA().forEach(function(a){var o=B[a.c];if(!o||(!o.dr&&!o.cr))return;var m=[];for(var i=0;i<12;i++)m[i]=-(o.m[i]||0);if(a.t==="R")R.push({a:a,m:m,tot:sum(m)});if(a.t==="X")X.push({a:a,m:m.map(function(v){return-v}),tot:-sum(m)})});
+ var mR=[],mC=[],mE=[];for(var i=0;i<12;i++){mR[i]=sum(R.map(function(r){return r.m[i]}));mC[i]=sum(X.filter(function(r){return r.a.c[0]==="5"}).map(function(r){return r.m[i]}));mE[i]=sum(X.filter(function(r){return r.a.c[0]!=="5"}).map(function(r){return r.m[i]}))}
+ return{R:R,C:X.filter(function(r){return r.a.c[0]==="5"}),E:X.filter(function(r){return r.a.c[0]!=="5"}),mR:mR,mC:mC,mE:mE,mGP:mR.map(function(v,i){return v-mC[i]}),mNI:mR.map(function(v,i){return v-mC[i]-mE[i]})}}
+function bsData(y){var B=ledger(y),P=plData(y),ni=sum(P.mNI),S={ca:[],nca:[],cl:[],ncl:[],eq:[]};
+ COA().forEach(function(a){var o=B[a.c];if(!o)return;var v=o.cl;if(Math.abs(v)<.005&&!o.dr&&!o.cr&&!o.op)return;
+  if(a.t==="A")(a.c.slice(0,2)==="12"?S.nca:S.ca).push({a:a,v:v});else if(a.t==="L")(a.c.slice(0,2)==="22"?S.ncl:S.cl).push({a:a,v:-v});else if(a.t==="E")S.eq.push({a:a,v:-v})});
+ S.ni=ni;S.ta=sum(S.ca.concat(S.nca).map(function(o){return o.v}));S.tl=sum(S.cl.concat(S.ncl).map(function(o){return o.v}));S.te=sum(S.eq.map(function(o){return o.v}))+ni;return S}
+/* ---- views ---- */
+var ACV=[["coa","🗂️"],["jnl","📓"],["gl","📒"],["tb","⚖️"],["pl","📈"],["bs","🏛️"]];
+function vAcc(){var s=ui.av||"pl";var h=tb("📒 "+t("accT"),s==="pl"?"":"")+'<div class="chips" style="margin-bottom:12px">'+ACV.map(function(v){return'<button class="chip'+(s===v[0]?" on":"")+'" data-av="'+v[0]+'">'+v[1]+" "+t("av_"+v[0])+"</button>"}).join("")+'<span style="flex:1"></span><button class="btn" data-je>＋ '+t("jeAdd")+"</button></div>";
+ h+=s==="coa"?coaHtml():s==="jnl"?jnlHtml():s==="gl"?glHtml():s==="tb"?'<div class="tw">'+tbHtml(lang)+"</div>":s==="pl"?'<div class="tw">'+plHtml(lang,true)+"</div>":'<div class="tw">'+bsHtml(lang)+"</div>";
+ return h+'<p class="hint" style="margin-top:10px">ℹ️ '+t("accHint")+"</p>"}
+bind.acc=function(){$$("[data-av]").forEach(function(b){b.onclick=function(){ui.av=b.dataset.av;sui();render()}});
+ var gs=$("#glA");if(gs)gs.onchange=function(){ui.gla=this.value;sui();render()};
+ $$("[data-gla]").forEach(function(e){e.onclick=function(){ui.av="gl";ui.gla=e.dataset.gla;sui();render();scrollTo(0,0)}});
+ var ca=$("#coaAdd");if(ca)ca.onclick=function(){coaDlg(null)};$$("[data-coa]").forEach(function(e){e.onclick=function(){coaDlg(e.dataset.coa)}})};
+function coaHtml(){var B=ledger(ui.y),TY={A:"tyA",L:"tyL",E:"tyE",R:"tyR",X:"tyX"};
+ return'<div class="tw"><table class="cf"><thead><tr><th>'+t("acCode")+"</th><th style='text-align:left'>"+t("acName")+"</th><th style='text-align:left'>"+t("acType")+"</th><th>"+t("bal")+" ("+yDisp(ui.y)+")</th><th></th></tr></thead><tbody>"+
+ COA().map(function(a){var o=B[a.c];return'<tr><td>'+a.c+'</td><td style="text-align:left;position:static"><b>'+esc(a[lang]||a.th)+"</b>"+(a.cashAc?' <span class="tag">'+t("acctTag")+"</span>":"")+'</td><td style="text-align:left">'+t(TY[a.t])+'</td><td class="n" data-gla="'+a.c+'">'+(o?fm(natDr(a.c)?o.cl:-o.cl):"-")+"</td><td>"+(a.cashAc?"":'<button class="btn" data-coa="'+a.c+'" style="padding:3px 9px;font-size:12.5px">✏️</button>')+"</td></tr>"}).join("")+
+ '</tbody></table></div><button class="btn" id="coaAdd" style="margin-top:10px">＋ '+t("coaAdd")+'</button>'}
+function coaDlg(c){var a=c?acc(c):null,isNew=!a;a=a||{c:"",t:"X",th:"",ja:"",en:""};
+ showDlg(isNew?"＋ "+t("coaAdd"):"✏️ "+a.c,'<div class="fg"><div><label>'+t("acCode")+'</label><input id="kC" value="'+esc(a.c)+'"'+(isNew?"":" disabled")+' inputmode="numeric"></div><div><label>'+t("acType")+'</label><select id="kT"'+(a.sys?" disabled":"")+'>'+["A","L","E","R","X"].map(function(k){return'<option value="'+k+'"'+(a.t===k?" selected":"")+">"+t("ty"+k)+"</option>"}).join("")+"</select></div>"+
+ ["th","ja","en"].map(function(l){return'<div class="full"><label>'+t("acName")+" ("+l+')</label><input data-kn="'+l+'" value="'+esc(a[l]||"")+'"></div>'}).join("")+'</div><p class="hint" style="margin-top:8px">'+t("coaHint")+"</p>",
+ (!isNew&&!a.sys?'<button class="btn d" id="kD">🗑 '+t("del")+"</button>":"")+'<button class="btn" data-close>'+t("cancel")+'</button><button class="btn p" id="kS">'+t("save")+"</button>");
+ $("#kS").onclick=function(){var code=$("#kC").value.trim();if(!/^\d{3,6}$/.test(code)){toast(t("acCodeErr"));return}if(isNew&&acc(code)){toast(t("acDup"));return}
+  var o=coaX.filter(function(z){return z.c===code})[0];if(!o){o={c:code};coaX.push(o)}o.t=a.sys?a.t:$("#kT").value;$$("[data-kn]").forEach(function(e){o[e.dataset.kn]=e.value.trim()});if(!o.th){toast(t("need"));return}saveAcc();$("#dlg").close();toast(t("saved"));render()};
+ var d=$("#kD");if(d)d.onclick=function(){if(jeAll().some(function(e){return e.lines.some(function(l){return l.a===a.c})})||cfg.cats.some(function(k){return k.acc===a.c})){toast(t("acUsed"));return}coaX=coaX.filter(function(z){return z.c!==a.c});saveAcc();$("#dlg").close();render()}}
+function jnlHtml(){var JE=jeAll().filter(function(e){return +e.d.slice(0,4)===ui.y});
+ if(!JE.length)return'<div class="card empty"><b>'+t("noTx")+"</b></div>";
+ return'<div class="tw"><table class="cf"><thead><tr><th>'+t("date")+"</th><th style='text-align:left'>"+t("desc")+"</th><th style='text-align:left'>"+t("acName")+"</th><th>"+t("dr")+"</th><th>"+t("cr")+"</th></tr></thead><tbody>"+
+ JE.map(function(e){var ed=e.src==="tx"?' data-ed="'+e.id+'"':e.src==="je"?' data-je="'+e.id+'"':"";return e.lines.map(function(l,i){return'<tr'+(i===0?' style="border-top:2px solid var(--line)"':"")+(ed?ed+' class="e"':"")+">"+(i===0?'<td rowspan="'+e.lines.length+'" style="vertical-align:top;white-space:nowrap">'+dDisp(e.d)+'</td><td rowspan="'+e.lines.length+'" style="text-align:left;vertical-align:top;white-space:normal;max-width:280px">'+(e.src==="je"?"✍️ ":e.src==="open"?"📂 ":"")+esc(e.n)+(e.ref?' <span class="tag">#'+esc(e.ref)+"</span>":"")+"</td>":"")+'<td style="text-align:left;'+(l.cr?"padding-left:34px":"")+'">'+l.a+" "+esc(an(l.a))+"</td><td>"+(l.dr?fm(l.dr):"")+"</td><td>"+(l.cr?fm(l.cr):"")+"</td></tr>"}).join("")}).join("")+
+ '<tr class="tot"><td colspan="3">'+t("total")+"</td><td>"+fm(sum(JE.map(function(e){return sum(e.lines.map(function(l){return l.dr}))})))+"</td><td>"+fm(sum(JE.map(function(e){return sum(e.lines.map(function(l){return l.cr}))})))+"</td></tr></tbody></table></div>"}
+function glRows(c,B,lg){var o=B[c]||{op:0,dr:0,cr:0,rows:[],cl:0},sg=natDr(c)?1:-1,run=o.op*sg;
+ return'<tr class="grp" style="--gc:var(--brand)"><td colspan="6">'+c+" "+esc(an(c,lg))+'</td></tr><tr><td></td><td style="text-align:left">'+t("openBF",lg)+"</td><td></td><td></td><td></td><td>"+fm(run,lg)+"</td></tr>"+
+ o.rows.map(function(r){run+=(r.l.dr-r.l.cr)*sg;var ed=r.e.src==="tx"?' class="e" data-ed="'+r.e.id+'"':r.e.src==="je"?' class="e" data-je="'+r.e.id+'"':"";return"<tr"+ed+'><td style="white-space:nowrap">'+dDisp(r.e.d,lg)+'</td><td style="text-align:left;white-space:normal;max-width:300px">'+esc(r.e.n)+"</td><td>"+esc(r.e.ref||"")+"</td><td>"+(r.l.dr?fm(r.l.dr,lg):"")+"</td><td>"+(r.l.cr?fm(r.l.cr,lg):"")+'</td><td class="'+(run<0?"neg":"")+'">'+fm(run,lg)+"</td></tr>"}).join("")+
+ '<tr class="sub"><td></td><td style="text-align:left">'+t("closeBal",lg)+"</td><td></td><td>"+fm(o.dr,lg)+"</td><td>"+fm(o.cr,lg)+"</td><td>"+fm(run,lg)+"</td></tr>"}
+function glHead(lg){return"<thead><tr><th>"+t("date",lg)+"</th><th style='text-align:left'>"+t("desc",lg)+"</th><th>"+t("ref",lg)+"</th><th>"+t("dr",lg)+"</th><th>"+t("cr",lg)+"</th><th>"+t("bal",lg)+"</th></tr></thead>"}
+function glUsed(B){return COA().filter(function(a){var o=B[a.c];return o&&(o.dr||o.cr||Math.abs(o.op)>.005)}).map(function(a){return a.c})}
+function glHtml(){var B=ledger(ui.y),U=glUsed(B),sel=ui.gla||"";if(sel&&U.indexOf(sel)<0)U.unshift(sel);
+ return'<div class="bar"><select class="sm" id="glA"><option value="">'+t("allAcc")+"</option>"+COA().map(function(a){return'<option value="'+a.c+'"'+(a.c===sel?" selected":"")+">"+a.c+" "+esc(a[lang]||a.th)+"</option>"}).join("")+'</select></div><div class="tw"><table class="cf">'+glHead()+"<tbody>"+(sel?[sel]:U).map(function(c){return glRows(c,B)}).join("")+"</tbody></table></div>"}
+function tbHtml(lg){var B=ledger(ui.y),U=glUsed(B),TD=0,TC=0;
+ var rows=U.map(function(c){var o=B[c],d=o.cl>0?o.cl:0,cr=o.cl<0?-o.cl:0;TD+=d;TC+=cr;return'<tr data-gla="'+c+'" class="e"><td>'+c+'</td><td style="text-align:left">'+esc(an(c,lg))+"</td><td>"+fm(o.op,lg)+"</td><td>"+fm(o.dr,lg)+"</td><td>"+fm(o.cr,lg)+"</td><td>"+(d?fm(d,lg):"")+"</td><td>"+(cr?fm(cr,lg):"")+"</td></tr>"}).join("");
+ var ok=Math.abs(TD-TC)<.01;
+ return'<table class="cf"><thead><tr><th>'+t("acCode",lg)+"</th><th style='text-align:left'>"+t("acName",lg)+"</th><th>"+t("openBF",lg)+"</th><th>"+t("dr",lg)+"</th><th>"+t("cr",lg)+"</th><th>"+t("balDr",lg)+"</th><th>"+t("balCr",lg)+"</th></tr></thead><tbody>"+rows+
+ '<tr class="big"><td colspan="5">'+t("total",lg)+" "+(ok?'<span class="ok">✓ '+t("balanced",lg)+"</span>":'<span class="bad">✗</span>')+"</td><td>"+fm(TD,lg)+"</td><td>"+fm(TC,lg)+"</td></tr></tbody></table>"}
+function plHtml(lg,monthly){var P=plData(ui.y),M=[0,1,2,3,4,5,6,7,8,9,10,11];
+ function rw(lb,m,cls,code){return"<tr"+(cls?' class="'+cls+'"':"")+(code?' data-gla="'+code+'" style="cursor:pointer"':"")+'><td style="text-align:left'+(cls?"":";padding-left:26px")+'">'+lb+"</td>"+(monthly?M.map(function(i){return'<td class="'+(m[i]<0?"neg":"")+'">'+(Math.abs(m[i])<.005?"-":fm(m[i],lg))+"</td>"}).join(""):"")+'<td class="'+(sum(m)<0?"neg":"")+'"><b>'+fm(sum(m),lg)+"</b></td></tr>"}
+ var h='<table class="cf"><thead><tr><th>'+t("item",lg)+" ("+cfg.cur+")</th>"+(monthly?M.map(function(i){return"<th>"+MON[lg][i]+"</th>"}).join(""):"")+"<th>"+t("total",lg)+"</th></tr></thead><tbody>";
+ h+='<tr class="grp" style="--gc:var(--in)"><td colspan="14">'+t("plRev",lg)+"</td></tr>"+P.R.map(function(r){return rw(r.a.c+" "+esc(r.a[lg]||r.a.th),r.m,"",r.a.c)}).join("")+rw(t("plRevT",lg),P.mR,"sub");
+ h+='<tr class="grp" style="--gc:var(--out)"><td colspan="14">'+t("plCogs",lg)+"</td></tr>"+P.C.map(function(r){return rw(r.a.c+" "+esc(r.a[lg]||r.a.th),r.m,"",r.a.c)}).join("")+rw(t("gp",lg),P.mGP,"tot");
+ h+='<tr class="grp" style="--gc:var(--fin)"><td colspan="14">'+t("plExp",lg)+"</td></tr>"+P.E.map(function(r){return rw(r.a.c+" "+esc(r.a[lg]||r.a.th),r.m,"",r.a.c)}).join("")+rw(t("plExpT",lg),P.mE,"sub");
+ return h+rw(t("plNI",lg),P.mNI,"big")+"</tbody></table>"}
+function bsHtml(lg){var S=bsData(ui.y);
+ function sec(title,arr,tot,gc){return'<tr class="grp" style="--gc:'+gc+'"><td colspan="2">'+title+"</td></tr>"+arr.map(function(o){return'<tr data-gla="'+o.a.c+'" style="cursor:pointer"><td style="text-align:left;padding-left:26px">'+o.a.c+" "+esc(o.a[lg]||o.a.th)+'</td><td class="'+(o.v<0?"neg":"")+'">'+fm(o.v,lg)+"</td></tr>"}).join("")+'<tr class="sub"><td style="text-align:left">'+t("total",lg)+" "+title+"</td><td>"+fm(tot,lg)+"</td></tr>"}
+ var s=function(a){return sum(a.map(function(o){return o.v}))};var ok=Math.abs(S.ta-S.tl-S.te)<.01;
+ return'<table class="cf" style="max-width:760px"><thead><tr><th>'+t("bsAsOf",lg)+" "+dDisp(ui.y+"-12-31",lg)+" ("+cfg.cur+")</th><th>"+t("amount",lg)+"</th></tr></thead><tbody>"+
+ '<tr class="big"><td colspan="2" style="text-align:left">'+t("bsA",lg)+"</td></tr>"+sec(t("bsCA",lg),S.ca,s(S.ca),"var(--in)")+sec(t("bsNCA",lg),S.nca,s(S.nca),"var(--in)")+'<tr class="big"><td>'+t("bsTA",lg)+"</td><td>"+fm(S.ta,lg)+"</td></tr>"+
+ '<tr class="big"><td colspan="2" style="text-align:left">'+t("bsLE",lg)+"</td></tr>"+sec(t("bsCL",lg),S.cl,s(S.cl),"var(--out)")+sec(t("bsNCL",lg),S.ncl,s(S.ncl),"var(--out)")+'<tr class="sub"><td>'+t("bsTL",lg)+"</td><td>"+fm(S.tl,lg)+"</td></tr>"+
+ '<tr class="grp" style="--gc:var(--fin)"><td colspan="2">'+t("bsEq",lg)+"</td></tr>"+S.eq.map(function(o){return'<tr data-gla="'+o.a.c+'" style="cursor:pointer"><td style="text-align:left;padding-left:26px">'+o.a.c+" "+esc(o.a[lg]||o.a.th)+'</td><td class="'+(o.v<0?"neg":"")+'">'+fm(o.v,lg)+"</td></tr>"}).join("")+
+ '<tr><td style="text-align:left;padding-left:26px">'+t("plNIy",lg)+'</td><td class="'+(S.ni<0?"neg":"")+'">'+fm(S.ni,lg)+'</td></tr><tr class="sub"><td>'+t("bsTE",lg)+"</td><td>"+fm(S.te,lg)+"</td></tr>"+
+ '<tr class="big"><td>'+t("bsTLE",lg)+" "+(ok?'<span class="ok">✓ '+t("balanced",lg)+"</span>":'<span class="bad">✗ '+fm(S.ta-S.tl-S.te,lg)+"</span>")+"</td><td>"+fm(S.tl+S.te,lg)+"</td></tr></tbody></table>"}
+/* ---- manual journal entry ---- */
+function jeDlg(id){var j=id?jeM.filter(function(z){return z.id===id})[0]:null,isNew=!j;j=j?JSON.parse(JSON.stringify(j)):{id:uid(),d:today(),n:"",ref:"",lines:[{a:"",dr:"",cr:""},{a:"",dr:"",cr:""}]};
+ var opts=function(sel){return'<option value="">—</option>'+COA().map(function(a){return'<option value="'+a.c+'"'+(a.c===sel?" selected":"")+">"+a.c+" "+esc(a[lang]||a.th)+"</option>"}).join("")};
+ function draw(){$("#jL").innerHTML=j.lines.map(function(l,i){return'<tr><td><select data-jl="'+i+'" data-k="a" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:6px">'+opts(l.a)+'</select></td><td><input data-jl="'+i+'" data-k="dr" inputmode="decimal" value="'+(l.dr||"")+'" style="width:100%;text-align:right"></td><td><input data-jl="'+i+'" data-k="cr" inputmode="decimal" value="'+(l.cr||"")+'" style="width:100%;text-align:right"></td><td><button type="button" class="x" data-jx="'+i+'" style="width:26px;height:26px;font-size:12px">✕</button></td></tr>'}).join("");
+  $$("[data-jl]").forEach(function(e){(e.tagName==="SELECT"?e.onchange=null:0);e[e.tagName==="SELECT"?"onchange":"oninput"]=function(){var l=j.lines[+e.dataset.jl];l[e.dataset.k]=e.dataset.k==="a"?e.value:num(e.value);tot()}});
+  $$("[data-jx]").forEach(function(e){e.onclick=function(){j.lines.splice(+e.dataset.jx,1);draw()}});tot()}
+ function tot(){var d=sum(j.lines.map(function(l){return+l.dr||0})),c=sum(j.lines.map(function(l){return+l.cr||0})),ok=Math.abs(d-c)<.005&&d>0;$("#jT").innerHTML=t("dr")+" <b>"+fm(d)+"</b> · "+t("cr")+" <b>"+fm(c)+"</b> · "+(ok?'<span class="ok">✓ '+t("balanced")+"</span>":'<span class="bad">'+t("notBal")+" "+fm(d-c)+"</span>")}
+ showDlg((isNew?"＋ ":"✏️ ")+t("jeAdd"),'<p class="hint" style="margin-bottom:8px">'+t("jeHint")+'</p><div class="fg"><div><label>'+t("date")+"</label>"+dateField("jD",j.d,"")+'</div><div><label>'+t("ref")+'</label><input id="jR" value="'+esc(j.ref)+'"></div><div class="full"><label>'+t("desc")+'</label><input id="jN" value="'+esc(j.n)+'" placeholder="'+t("jePh")+'"></div></div><table class="dt li" style="margin-top:10px"><thead><tr><th>'+t("acName")+'</th><th class="r" style="width:110px">'+t("dr")+'</th><th class="r" style="width:110px">'+t("cr")+'</th><th></th></tr></thead><tbody id="jL"></tbody></table><button type="button" class="btn" id="jAdd" style="margin:8px 0">＋ '+t("addLine2")+'</button><div id="jT" style="padding:8px 10px;background:#f6f8fb;border-radius:10px"></div>',
+ (isNew?"":'<button class="btn d" id="jDel">🗑 '+t("del")+"</button>")+'<button class="btn" data-close>'+t("cancel")+'</button><button class="btn p" id="jS">'+t("save")+"</button>");$("#dlg").style.width="min(760px,96vw)";
+ draw();$("#jAdd").onclick=function(){j.lines.push({a:"",dr:"",cr:""});draw()};
+ $("#jS").onclick=function(){var L=j.lines.filter(function(l){return l.a&&((+l.dr||0)||(+l.cr||0))}).map(function(l){return{a:l.a,dr:+l.dr||0,cr:+l.cr||0}});var d=sum(L.map(function(l){return l.dr})),c=sum(L.map(function(l){return l.cr}));
+  if(L.length<2||Math.abs(d-c)>.005||!d){toast(t("notBal"));return}j.lines=L;j.d=pd($("#jD").value)||today();j.ref=$("#jR").value.trim();j.n=$("#jN").value.trim();
+  if(isNew)jeM.push(j);else jeM=jeM.map(function(z){return z.id===j.id?j:z});saveAcc();$("#dlg").close();toast(t("saved"));render()};
+ var dl=$("#jDel");if(dl)dl.onclick=function(){if(!confirm(t("confirmDel")))return;jeM=jeM.filter(function(z){return z.id!==j.id});saveAcc();$("#dlg").close();render()}}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-je]");if(b){jeDlg(b.dataset.je||null)}});
 function vRep(){var R=ui.rep,rl=R.lang||lang;
  return tb("🖨️ "+t("repT"),perSel())+'<div class="card"><div class="fg"><div><label>'+t("repLang")+'</label><select id="rL"><option value="th">ไทย</option><option value="ja">日本語</option><option value="en">English</option></select></div><div><label>'+t("company")+'</label><input id="rN" value="'+esc(cfg.name)+'"></div>'+
  '<div><label>'+t("prep")+'</label><input id="rP" value="'+esc(cfg.prep||"")+'"></div><div><label>'+t("appr")+'</label><input id="rA" value="'+esc(cfg.appr||"")+'"></div>'+
- '<div class="full"><label>'+t("repInc")+"</label>"+[["sum",t("repSum")],["dir",t("directT")],["ind",t("indirectT")],["vat",t("repVat")],["det",t("repDet")]].map(function(o){return'<label style="display:flex;gap:8px;align-items:center;font-weight:500;color:var(--ink);margin:6px 0"><input type="checkbox" data-ro="'+o[0]+'"'+(R[o[0]]?" checked":"")+' style="width:auto"> '+o[1]+"</label>"}).join("")+
+ '<div class="full"><label>'+t("repInc")+"</label>"+[["sum",t("repSum")],["dir",t("directT")],["ind",t("indirectT")],["vat",t("repVat")],["pl",t("av_pl")],["bs",t("av_bs")],["tb",t("av_tb")],["det",t("repDet")]].map(function(o){return'<label style="display:flex;gap:8px;align-items:center;font-weight:500;color:var(--ink);margin:6px 0"><input type="checkbox" data-ro="'+o[0]+'"'+(R[o[0]]?" checked":"")+' style="width:auto"> '+o[1]+"</label>"}).join("")+
  '</div></div><div class="bar" style="margin:14px 0 0"><button class="btn p" id="rPrint">🖨️ '+t("print")+'</button><button class="btn g" id="rX">📗 '+t("exportX")+'</button></div><p class="hint" style="margin-top:8px">💡 PDF: '+(lang==="ja"?"印刷画面で「PDFに保存」を選択":lang==="en"?"choose “Save as PDF” in the print dialog":"ในหน้าพิมพ์ เลือก “บันทึกเป็น PDF”")+"</p></div>"+
  '<div class="card"><h2>👀 Preview</h2><div class="tw" style="padding:14px;max-height:70vh">'+repHtml(rl,true)+"</div></div>"}
 bind.rep=function(){var R=ui.rep;$("#rL").value=R.lang||lang;$("#rL").onchange=function(){R.lang=this.value;sui();render()};
@@ -701,6 +843,9 @@ function repHtml(lg,preview){var R=ui.rep,r=calc(ui.y,ui.per),h='<div class="rp"
  if(R.dir)h+='<div class="'+(R.sum?"pb":"")+'">'+hd+"<h2>"+t("directT",lg)+"</h2>"+meta+tbl(directRows(r,lg,true))+"</div>";
  if(R.ind)h+='<div class="'+(R.sum||R.dir?"pb":"")+'">'+hd+"<h2>"+t("indirectT",lg)+"</h2>"+meta+tbl(indirectRows(r,ui.y,lg,false))+"</div>";
  if(R.vat&&vatRows(ui.y).length){var VM=vatMonths(ui.y),VT={sb:0,sv:0,pb:0,pv:0};VM.forEach(function(r){for(var k in VT)VT[k]+=r[k]});h+='<div class="pb">'+hd+"<h2>"+t("repVat",lg)+"</h2>"+meta+'<table class="cf"'+st+"><thead><tr><th>"+t("month",lg)+"</th><th>"+t("salesBase",lg)+"</th><th>"+t("outVat",lg)+"</th><th>"+t("buyBase",lg)+"</th><th>"+t("inVat",lg)+"</th><th>"+t("vatNet",lg)+"</th></tr></thead><tbody>"+VM.map(function(r,i){return"<tr><td>"+MON[lg][i]+"</td><td>"+fm(r.sb,lg)+"</td><td>"+fm(r.sv,lg)+"</td><td>"+fm(r.pb,lg)+"</td><td>"+fm(r.pv,lg)+'</td><td class="'+(r.sv-r.pv<0?"neg":"")+'">'+fm(r.sv-r.pv,lg)+"</td></tr>"}).join("")+'<tr class="big"><td>'+t("total",lg)+"</td><td>"+fm(VT.sb,lg)+"</td><td>"+fm(VT.sv,lg)+"</td><td>"+fm(VT.pb,lg)+"</td><td>"+fm(VT.pv,lg)+"</td><td>"+fm(VT.sv-VT.pv,lg)+"</td></tr></tbody></table></div>"}
+ if(R.pl)h+='<div class="pb">'+hd+"<h2>"+t("av_pl",lg)+"</h2>"+meta+plHtml(lg,true).replace('<table class="cf"','<table class="cf"'+st)+"</div>";
+ if(R.bs)h+='<div class="pb">'+hd+"<h2>"+t("av_bs",lg)+"</h2>"+meta+bsHtml(lg).replace('<table class="cf" style="max-width:760px"','<table class="cf"'+(st||"")).replace(/ data-gla="\d+"/g,"")+"</div>";
+ if(R.tb)h+='<div class="pb">'+hd+"<h2>"+t("av_tb",lg)+"</h2>"+meta+tbHtml(lg).replace('<table class="cf"','<table class="cf"'+st)+"</div>";
  if(R.det){h+='<div class="pb">'+hd+"<h2>"+t("repDet",lg)+"</h2>"+meta;
   ["op","inv","fin"].forEach(function(g){catsBy(g).forEach(function(c){var L2=r.Y.filter(function(x){return x.c===c.id}).sort(function(a,b){return a.d<b.d?-1:1});if(!L2.length)return;
    h+="<h2 style='font-size:12px'>"+t(g,lg)+" › "+esc(cn(c,lg))+"</h2><table class='cf'"+st+"><thead><tr><th>"+t("date",lg)+"</th><th style='text-align:left'>"+t("party",lg)+"</th><th style='text-align:left'>"+t("desc",lg)+"</th><th>"+t("ref",lg)+"</th><th>"+t("acct",lg)+"</th><th>"+t("amount",lg)+"</th></tr></thead><tbody>"+
@@ -716,6 +861,10 @@ function xlsx(lg){loadX(function(){var r=calc(ui.y,ui.per),wb=XLSX.utils.book_ne
  function add(name,title,body){var aoa=[[cfg.name||""],[title],[t("period",lg)+" "+yDisp(ui.y,lg)+" · "+cfg.cur],[]].concat(tableAoa("<table>"+head(r,lg)+"<tbody>"+body+"</tbody></table>"));var ws=XLSX.utils.aoa_to_sheet(aoa);ws["!cols"]=[{wch:42}].concat(r.cols.map(function(){return{wch:14}}),[{wch:16}]);
   var rg=XLSX.utils.decode_range(ws["!ref"]);for(var R=4;R<=rg.e.r;R++)for(var C=1;C<=rg.e.c;C++){var a=XLSX.utils.encode_cell({r:R,c:C});if(ws[a]&&ws[a].t==="n")ws[a].z="#,##0.00;(#,##0.00);-"}XLSX.utils.book_append_sheet(wb,ws,name)}
  add(t("direct",lg).slice(0,28),t("directT",lg),directRows(r,lg,true));add(t("indirect",lg).slice(0,28),t("indirectT",lg),indirectRows(r,ui.y,lg,false));
+ function addT(name,title,html){var aoa=[[cfg.name||""],[title],[t("period",lg)+" "+yDisp(ui.y,lg)+" · "+cfg.cur],[]].concat(tableAoa(html));var ws=XLSX.utils.aoa_to_sheet(aoa);ws["!cols"]=[{wch:40}].concat([1,2,3,4,5,6,7,8,9,10,11,12,13].map(function(){return{wch:14}}));var rg=XLSX.utils.decode_range(ws["!ref"]);for(var R=4;R<=rg.e.r;R++)for(var C=1;C<=rg.e.c;C++){var ad=XLSX.utils.encode_cell({r:R,c:C});if(ws[ad]&&ws[ad].t==="n")ws[ad].z="#,##0.00;(#,##0.00);-"}XLSX.utils.book_append_sheet(wb,ws,name.replace(/[\\\/?*\[\]:]/g,"").slice(0,28))}
+ addT(t("av_pl",lg),t("av_pl",lg),plHtml(lg,true));addT(t("av_bs",lg),t("av_bs",lg),bsHtml(lg));addT(t("av_tb",lg),t("av_tb",lg),tbHtml(lg));
+ var B=ledger(ui.y);addT("GL",t("av_gl",lg),'<table>'+glHead(lg)+"<tbody>"+glUsed(B).map(function(c){return glRows(c,B,lg)}).join("")+"</tbody></table>");
+ var JR=[[t("date",lg),t("desc",lg),t("ref",lg),t("acCode",lg),t("acName",lg),t("dr",lg),t("cr",lg)]];jeAll().filter(function(e){return +e.d.slice(0,4)===ui.y}).forEach(function(e){e.lines.forEach(function(l,i){JR.push([i?"":e.d,i?"":e.n,i?"":(e.ref||""),l.a,an(l.a,lg),l.dr||"",l.cr||""])})});var wj=XLSX.utils.aoa_to_sheet(JR);wj["!cols"]=[{wch:12},{wch:40},{wch:12},{wch:8},{wch:30},{wch:14},{wch:14}];XLSX.utils.book_append_sheet(wb,wj,t("av_jnl",lg).slice(0,28));
  var rows=[[t("date",lg),t("dir",lg),t("amount",lg),t("cat",lg),t("grp",lg),t("party",lg),t("desc",lg),t("ref",lg),t("acct",lg)]].concat(r.Y.slice().sort(function(a,b){return a.d<b.d?-1:1}).map(function(x){var c=cat(x.c);return[x.d,x.t==="in"?t("in",lg):t("out",lg),sgn(x),cn(c,lg),c?t(c.g,lg):"",x.p||"",x.n||"",x.r||"",acctN(x.ac)]}));
  var ws=XLSX.utils.aoa_to_sheet(rows);ws["!cols"]=[{wch:12},{wch:8},{wch:14},{wch:28},{wch:22},{wch:24},{wch:30},{wch:12},{wch:12}];ws["!autofilter"]={ref:"A1:I"+rows.length};XLSX.utils.book_append_sheet(wb,ws,t("tx",lg).slice(0,28));
  XLSX.writeFile(wb,(cfg.name?cfg.name.replace(/[\\\/:*?"<>|]/g,"")+"_":"")+"CashFlow_"+ui.y+".xlsx")})}
@@ -732,8 +881,8 @@ function vSet(){var y=ui.y;
  '<div class="card"><div class="fg"><div><label>'+t("currency")+'</label><select id="sCur">'+["THB","JPY","USD","EUR","CNY"].map(function(c){return"<option"+(c===cfg.cur?" selected":"")+">"+c+"</option>"}).join("")+"</select></div>"+'<div><label>'+t("vatR")+'</label><input id="sVr" inputmode="decimal" value="'+(cfg.vatR||7)+'"></div>'+
  '<div><label>'+t("openBal")+" ("+t("year")+')</label><select id="sY">'+[y-2,y-1,y,y+1].map(function(v){return'<option value="'+v+'"'+(v===cfg.year?" selected":"")+">"+yDisp(v)+"</option>"}).join("")+"</select></div></div>";
  h+='<h2 style="margin-top:16px">🏦 '+t("accts")+" · "+t("openBal")+"</h2>"+cfg.accts.map(function(a,i){return'<div class="fg" style="margin-bottom:6px;grid-template-columns:1fr 1fr auto"><input data-an="'+i+'" value="'+esc(a.n)+'" style="border:1px solid var(--line);border-radius:10px;padding:8px"><input data-ao="'+a.id+'" value="'+(cfg.open[a.id]||"")+'" inputmode="decimal" placeholder="0" style="border:1px solid var(--line);border-radius:10px;padding:8px;text-align:right"><button class="btn d" data-adel="'+i+'"'+(cfg.accts.length<2?" disabled":"")+">✕</button></div>"}).join("")+'<button class="btn" id="aAdd">'+t("addAcct")+"</button></div>";
- h+='<div class="card"><h2>🏷️ '+t("cats")+'</h2><div class="tw"><table class="dt"><thead><tr><th>'+t("grp")+"</th><th>"+t("dir")+"</th><th>ไทย</th><th>日本語</th><th>English</th><th></th></tr></thead><tbody>"+
-  cfg.cats.map(function(c,i){var used=tx.some(function(x){return x.c===c.id});return'<tr><td><select data-cg="'+i+'">'+["op","inv","fin"].map(function(g){return'<option value="'+g+'"'+(c.g===g?" selected":"")+">"+t(g)+"</option>"}).join("")+'</select></td><td><select data-cd="'+i+'"><option value="in"'+(c.d==="in"?" selected":"")+">"+t("in")+'</option><option value="out"'+(c.d==="out"?" selected":"")+">"+t("out")+"</option></select></td>"+["th","ja","en"].map(function(l){return'<td><input data-cl="'+l+'" data-ci="'+i+'" value="'+esc(c[l]||"")+'" style="width:100%;min-width:130px;border:1px solid var(--line);border-radius:8px;padding:5px"></td>'}).join("")+'<td><button class="btn d" data-cdel="'+i+'"'+(used?' disabled title="used"':"")+">✕</button></td></tr>"}).join("")+
+ h+='<div class="card"><h2>🏷️ '+t("cats")+'</h2><div class="tw"><table class="dt"><thead><tr><th>'+t("grp")+"</th><th>"+t("dir")+"</th><th>"+t("glAcc")+"</th><th>ไทย</th><th>日本語</th><th>English</th><th></th></tr></thead><tbody>"+
+  cfg.cats.map(function(c,i){var used=tx.some(function(x){return x.c===c.id});return'<tr><td><select data-cg="'+i+'">'+["op","inv","fin"].map(function(g){return'<option value="'+g+'"'+(c.g===g?" selected":"")+">"+t(g)+"</option>"}).join("")+'</select></td><td><select data-cd="'+i+'"><option value="in"'+(c.d==="in"?" selected":"")+">"+t("in")+'</option><option value="out"'+(c.d==="out"?" selected":"")+">"+t("out")+"</option></select></td>"+'<td><select data-ca="'+i+'" style="max-width:190px">'+COA().map(function(a){var cur=c.acc||CAT_ACC[c.id]||(c.d==="in"?"4190":"6190");return'<option value="'+a.c+'"'+(a.c===cur?" selected":"")+">"+a.c+" "+esc(a[lang]||a.th)+"</option>"}).join("")+"</select></td>"+["th","ja","en"].map(function(l){return'<td><input data-cl="'+l+'" data-ci="'+i+'" value="'+esc(c[l]||"")+'" style="width:100%;min-width:130px;border:1px solid var(--line);border-radius:8px;padding:5px"></td>'}).join("")+'<td><button class="btn d" data-cdel="'+i+'"'+(used?' disabled title="used"':"")+">✕</button></td></tr>"}).join("")+
   '</tbody></table></div><button class="btn" id="cAdd" style="margin-top:8px">'+t("addCat")+"</button></div>";
  h+='<div class="card"><h2>💾 '+t("backup")+'</h2><div class="bar"><button class="btn p" id="bk">⬇️ '+t("backup")+'</button><label class="btn">⬆️ '+t("restore")+'<input type="file" id="rs" accept=".json" hidden></label><button class="btn d" id="wp" style="margin-left:auto">🗑 '+t("wipe")+'</button></div><p class="hint">🔒 '+t("localNote")+"</p></div>";
  return h}
@@ -745,7 +894,7 @@ bind.set=function(){function S(){sv(K.cfg,cfg)}
  $$("[data-adel]").forEach(function(e){e.onclick=function(){var a=cfg.accts[+e.dataset.adel];if(tx.some(function(x){return x.ac===a.id})){toast("used");return}cfg.accts.splice(+e.dataset.adel,1);delete cfg.open[a.id];S();render()}});
  $("#aAdd").onclick=function(){cfg.accts.push({id:uid(),n:"บัญชีใหม่"});S();render()};
  $$("[data-cg]").forEach(function(e){e.onchange=function(){cfg.cats[+e.dataset.cg].g=e.value;S()}});
- $$("[data-cd]").forEach(function(e){e.onchange=function(){cfg.cats[+e.dataset.cd].d=e.value;S()}});
+ $$("[data-cd]").forEach(function(e){e.onchange=function(){cfg.cats[+e.dataset.cd].d=e.value;S()}});$$("[data-ca]").forEach(function(e){e.onchange=function(){cfg.cats[+e.dataset.ca].acc=e.value;S()}});
  $$("[data-cl]").forEach(function(e){e.onchange=function(){cfg.cats[+e.dataset.ci][e.dataset.cl]=e.value.trim();S()}});
  $$("[data-cdel]").forEach(function(e){e.onclick=function(){cfg.cats.splice(+e.dataset.cdel,1);S();render()}});
  $("#cAdd").onclick=function(){cfg.cats.push({id:uid(),g:"op",d:"out",th:"หมวดใหม่",ja:"新しい区分",en:"New category"});S();render()};
@@ -754,7 +903,7 @@ bind.set=function(){function S(){sv(K.cfg,cfg)}
  $("#wp").onclick=function(){var v=prompt(t("confirmWipe"));if(v==="ลบ"||(v||"").toUpperCase()==="DELETE"){tx=[];ind={};saveAll();toast(t("deleted"));render()}}};
 
 /* ========== demo ========== */
-if(DEMO){(function(){var y=new Date().getFullYear();ui.y=y;cfg=Object.assign({},DEF_CFG,{name:"บริษัท ตัวอย่าง จำกัด",year:y,open:{cash:50000,bank:850000},prep:"สมใจ บัญชีดี",appr:"Tanaka Hiroshi",co:{tax:"0105569000000",addr:"99 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110",rd:"2024-04-01",reg:5000000,paid0:2000000,sh:50000,par:100}});
+if(DEMO){(function(){var y=new Date().getFullYear();ui.y=y;cfg=Object.assign({},DEF_CFG,{name:"บริษัท ตัวอย่าง จำกัด",year:y,open:{cash:50000,bank:850000},prep:"สมใจ บัญชีดี",appr:"Tanaka Hiroshi",co:{tax:"0105569000000",addr:"99 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110",rd:"2024-04-01",reg:5000000,paid0:800000,sh:50000,par:100}});
  var rnd=(function(s){return function(){s=(s*9301+49297)%233280;return s/233280}})(7);
  var cust=["ABC Trading","สยามมาร์ท","Tokyo Foods Co.","บ้านขนม","Kyoto Imports","ร้านป้าแดง"],sup=["ไทยแพ็คเกจจิ้ง","Osaka Supply","ซีพี ฟู้ด","Global Logistics"];
  function add(m,d,tp,a,c,p,n,ac){tx.push({id:uid(),d:y+"-"+("0"+(m+1)).slice(-2)+"-"+("0"+d).slice(-2),t:tp,a:Math.round(a),c:c,p:p,n:n||"",r:"",ac:ac||"bank"})}
@@ -768,6 +917,7 @@ if(DEMO){(function(){var y=new Date().getFullYear();ui.y=y;cfg=Object.assign({},
  li(9,3,"out","Tokyo Foods Co.",[{name:"ชาเขียวมัทฉะ 100g",q:200,u:180},{name:"ซอสโชยุ 1L",q:120,u:95}],1500);li(10,2,"out","Tokyo Foods Co.",[{name:"ชาเขียวมัทฉะ 100g",q:150,u:185}],900);
  li(9,15,"in","สยามมาร์ท",[{name:"ชาเขียวมัทฉะ 100g",q:120,u:290},{name:"ซอสโชยุ 1L",q:60,u:150}]);li(10,9,"in","ร้านป้าแดง",[{name:"ชาเขียวมัทฉะ 100g",q:90,u:300},{name:"ซอสโชยุ 1L",q:35,u:155}]);li(10,20,"in","บ้านขนม",[{name:"ชาเขียวมัทฉะ 100g",q:60,u:295}]);
  [2,6,9].forEach(function(m){tx.push({id:uid(),t:"tr",d:y+"-"+("0"+(m+1)).slice(-2)+"-28",a:20000,ac:"bank",ac2:"cash",c:"",n:"ถอนเงินสดใช้หน้าร้าน"})});tx.push({id:uid(),t:"tr",d:y+"-11-30",a:30000,ac:"cash",ac2:"bank",c:"",n:"นำเงินสดฝากธนาคาร"});
+ for(var dm=0;dm<12;dm++)jeM.push({id:uid(),d:y+"-"+("0"+(dm+1)).slice(-2)+"-28",n:"ค่าเสื่อมราคาประจำเดือน",ref:"JV"+(dm+1),lines:[{a:"6160",dr:18000,cr:0},{a:"1219",dr:0,cr:18000}]});
  add(8,1,"in",500000,"cap","ผู้ถือหุ้น","เรียกชำระค่าหุ้นเพิ่ม");add(9,22,"in",40000,"asell","ร้านรับซื้อ","ขายรถเก่า");add(11,20,"out",150000,"div","ผู้ถือหุ้น","ปันผลระหว่างกาล");
  var r=calc(y,"m");for(var i=0;i<12;i++){var op=r.grp.op[i],dep=18000,dAR=Math.round((rnd()-.55)*60000),dInv=Math.round((rnd()-.5)*40000),dAP=Math.round((rnd()-.45)*30000);
   ind[y+"-"+("0"+(i+1)).slice(-2)]={ni:op-dep-dAR-dInv-dAP,dep:dep,dAR:dAR,dInv:dInv,dAP:dAP,oth:0}}
