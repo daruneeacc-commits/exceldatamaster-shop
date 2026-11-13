@@ -240,6 +240,9 @@ en:{app:"Cash Flow Statement",dash:"Overview",direct:"Direct",indirect:"Indirect
  pasteH:"Copy from Excel and paste · columns: Date | In/Out | Amount | Category | Counterparty | Description | Account",
  import:"Import",saved:"Saved",deleted:"Deleted",need:"Enter an amount",confirmDel:"Delete this transaction?",confirmWipe:"Type DELETE to confirm",
  notMatch:"Mismatch",ofTotal:"of total",bal:"Balance",in:"In",out:"Out"}};
+Object.assign(L.th,{byAcct:"เงินแยกตามบัญชี (เงินสด · ธนาคาร)",transfer:"โอนระหว่างบัญชี",trHint:"เช่น นำเงินสดฝากธนาคาร หรือถอนเงินจากธนาคาร · ไม่นับเป็นรายรับ/รายจ่าย",trFrom:"จากบัญชี",trTo:"เข้าบัญชี",trPh:"เช่น นำเงินสดฝากธนาคาร",trSame:"เลือกบัญชีต้นทางและปลายทางให้ต่างกัน",acctHint:"ยอดคงเหลือ ณ สิ้นแต่ละเดือน แยกตามบัญชี · รวมทุกบัญชี = เงินสดปลายงวดในงบกระแสเงินสด",allAcct:"ทุกบัญชี"});
+Object.assign(L.ja,{byAcct:"口座別残高（現金・銀行）",transfer:"口座間振替",trHint:"例：現金を銀行に預け入れ · 収入・支出には含まれません",trFrom:"振替元",trTo:"振替先",trPh:"例：現金を銀行へ入金",trSame:"異なる口座を選択してください",acctHint:"各月末の口座別残高 · 合計＝期末現金残高",allAcct:"全口座"});
+Object.assign(L.en,{byAcct:"Balance by account (cash · bank)",transfer:"Transfer",trHint:"e.g. deposit cash to bank · not counted as income/expense",trFrom:"From",trTo:"To",trPh:"e.g. cash deposit to bank",trSame:"Choose two different accounts",acctHint:"Month-end balance by account · total = closing cash",allAcct:"All accounts"});
 Object.assign(L.th,{whtT:"ภาษีหัก ณ ที่จ่าย",w3:"หักไว้ ภ.ง.ด.3 (บุคคล)",w53:"หักไว้ ภ.ง.ด.53 (นิติบุคคล)",wi:"ถูกหัก ณ ที่จ่าย (เครดิตภาษี)",wPay:"ต้องนำส่งสรรพากร",wPayRep:"รายการหัก ณ ที่จ่าย (นำส่ง ภ.ง.ด.3/53)",whtHint:"ยอดหัก ณ ที่จ่ายที่เราหักไว้ ต้องนำส่งสรรพากรภายในวันที่ 7 (ยื่นออนไลน์ 15) ของเดือนถัดไป · เมื่อนำส่งแล้วให้บันทึกเงินจ่ายหมวด \"ภาษี\"",whtL:"หัก ณ ที่จ่าย",whtIn:"ถูกหัก ณ ที่จ่าย",wNone:"ไม่หัก",wForm:"แบบ",wf3:"บุคคลธรรมดา",wf53:"นิติบุคคล",wBase:"เงินได้ที่จ่าย",wAmt:"ภาษีที่หัก",ofBase:"ของ",netOut:"ยอดจ่ายจริง",netIn:"ยอดรับจริง",totInc:"รวม VAT",expItems:"📝 จ่ายค่าอะไร",payFor:"รายการที่จ่าย",payForPh:"เช่น ค่าออกแบบ ค่าขนส่ง",addExp:"＋ เพิ่มรายการ",useExp:"📝 ใส่รายการที่จ่าย",noLines:"ไม่แยกรายการ"});
 Object.assign(L.ja,{whtT:"源泉徴収税",w3:"源泉 PND3（個人）",w53:"源泉 PND53（法人）",wi:"源泉徴収された額（税額控除）",wPay:"納付額",wPayRep:"源泉徴収明細（PND3/53）",whtHint:"源泉徴収した税は翌月7日（電子申告15日）までに納付 · 納付時は「税金」で出金を記録",whtL:"源泉徴収",whtIn:"源泉徴収された額",wNone:"なし",wForm:"様式",wf3:"個人",wf53:"法人",wBase:"支払金額",wAmt:"源泉税額",ofBase:"対象",netOut:"実支払額",netIn:"実入金額",totInc:"税込合計",expItems:"📝 支払内容",payFor:"支払項目",payForPh:"例：デザイン料、運送費",addExp:"＋ 項目を追加",useExp:"📝 支払項目を入力",noLines:"明細なし"});
 Object.assign(L.en,{whtT:"Withholding tax",w3:"Withheld PND3 (individuals)",w53:"Withheld PND53 (companies)",wi:"Withheld from us (tax credit)",wPay:"To remit",wPayRep:"Withholding details (PND3/53)",whtHint:"Withholding tax must be remitted by the 7th (15th e-filing) of the next month · record the remittance as a cash out in “Taxes”",whtL:"Withholding tax",whtIn:"Withheld by customer",wNone:"None",wForm:"Form",wf3:"Individual",wf53:"Company",wBase:"Amount paid",wAmt:"Tax withheld",ofBase:"of",netOut:"Net paid",netIn:"Net received",totInc:"Total incl. VAT",expItems:"📝 What was paid for",payFor:"Item",payForPh:"e.g. design fee, transport",addExp:"＋ Add item",useExp:"📝 Enter items paid",noLines:"No lines"});
@@ -319,7 +322,27 @@ var tt;function toast(m){var e=$("#toast"),dd=[].slice.call(document.querySelect
 function cols(per,y){var c=[];if(per==="q"){for(var q=0;q<4;q++)c.push({k:"q"+q,ms:[q*3,q*3+1,q*3+2],lb:function(lg){return(lg==="ja"?"第"+(this.i+1)+"四半期":"Q"+(this.i+1))},i:q})}else for(var m=0;m<12;m++)c.push({k:"m"+m,ms:[m],lb:function(lg){return MON[lg||lang][this.i]},i:m});return c}
 function inYear(x,y){return x.d&&+x.d.slice(0,4)===y}
 function mo(x){return +x.d.slice(5,7)-1}
-function sgn(x){return x.t==="in"?x.a:-x.a}
+function sgn(x){return x.t==="tr"?0:x.t==="in"?x.a:-x.a}
+function acctFx(x,id){var a=+x.a||0;if(x.t==="tr")return(x.ac===id?-a:0)+(x.ac2===id?a:0);return x.ac===id?(x.t==="in"?a:-a):0}
+function acctData(y){var y0=cfg.year||y,res=cfg.accts.map(function(ac){var o={id:ac.id,n:ac.n,open:y>=y0?(+cfg.open[ac.id]||0):0,inn:0,out:0,m:[]};for(var i=0;i<12;i++)o.m[i]=0;return o});
+ tx.forEach(function(x){if(!x.d)return;var yy=+x.d.slice(0,4);if(yy<y0||yy>y)return;res.forEach(function(o){var v=acctFx(x,o.id);if(!v)return;if(yy<y)o.open+=v;else{if(v>0)o.inn+=v;else o.out-=v;o.m[mo(x)]+=v}})});
+ res.forEach(function(o){var b=o.open;o.close=[];for(var i=0;i<12;i++){b+=o.m[i];o.close[i]=b}o.end=b});return res}
+function acctCard(y){var A=acctData(y),tot=A.reduce(function(s2,o){return s2+o.end},0);
+ return'<div class="card"><h2>🏦 '+t("byAcct")+'<span style="flex:1"></span><button class="btn" data-tr style="font-size:13px;padding:5px 10px">🔁 '+t("transfer")+'</button></h2><div class="list">'+A.map(function(o){var pc=tot>0?Math.max(0,o.end)/tot*100:0;return'<div class="row" data-acb="'+o.id+'" style="grid-template-columns:1fr auto"><b>'+(/สด|cash|現金/i.test(o.n)?"💵 ":"🏦 ")+esc(o.n)+'<small>'+t("open")+" "+fm(o.open)+" · "+t("in")+" +"+fm(o.inn)+" · "+t("out")+" −"+fm(o.out)+'</small><div style="height:6px;border-radius:9px;background:#eef3f8;margin-top:4px;overflow:hidden"><div style="height:100%;width:'+pc+'%;background:var(--brand)"></div></div></b><span class="amt '+(o.end<0?"out":"")+'" style="font-size:18px">'+fm(o.end)+"</span></div>"}).join("")+
+ '<div class="row" style="grid-template-columns:1fr auto;cursor:default"><b>'+t("close")+'</b><span class="amt" style="font-size:18px;color:var(--brand)">'+fm(tot)+"</span></div></div></div>"}
+function acctDlg(focus){var A=acctData(ui.y);var h='<div class="tw"><table class="cf"><thead><tr><th>'+t("month")+"</th>"+A.map(function(o){return"<th>"+esc(o.n)+"</th>"}).join("")+"<th>"+t("total")+"</th></tr></thead><tbody>"+
+ '<tr><td>'+t("open")+"</td>"+A.map(function(o){return"<td>"+fm(o.open)+"</td>"}).join("")+"<td>"+fm(sum(A.map(function(o){return o.open})))+"</td></tr>"+
+ [0,1,2,3,4,5,6,7,8,9,10,11].map(function(i){return"<tr><td>"+MON[lang][i]+" "+yDisp(ui.y)+"</td>"+A.map(function(o){return'<td class="'+(o.close[i]<0?"neg":"")+'"'+(o.id===focus?' style="font-weight:700"':"")+">"+fm(o.close[i])+"</td>"}).join("")+"<td><b>"+fm(sum(A.map(function(o){return o.close[i]})))+"</b></td></tr>"}).join("")+
+ '</tbody></table></div><p class="hint" style="margin-top:8px">'+t("acctHint")+"</p>";
+ showDlg("🏦 "+t("byAcct")+" · "+yDisp(ui.y),h,'<button class="btn p" data-close>'+t("close2")+"</button>");$("#dlg").style.width="min(820px,96vw)"}
+function trDlg(x){var isNew=!x;x=x||{id:uid(),t:"tr",d:today(),a:"",ac:"cash",ac2:"bank",n:""};var opt=function(sel){return cfg.accts.map(function(a){return'<option value="'+a.id+'"'+(a.id===sel?" selected":"")+">"+esc(a.n)+"</option>"}).join("")};
+ showDlg((isNew?"🔁 ":"✏️ ")+t("transfer"),'<p class="hint" style="margin-bottom:10px">'+t("trHint")+'</p><div class="fg"><div><label>'+t("amount")+" ("+cfg.cur+')</label><input id="tA" inputmode="decimal" value="'+(x.a||"")+'" style="font-size:20px;font-weight:700"></div><div><label>'+t("date")+"</label>"+dateField("tD",x.d,"")+'</div><div><label>'+t("trFrom")+'</label><select id="tF">'+opt(x.ac)+'</select></div><div><label>'+t("trTo")+'</label><select id="tT">'+opt(x.ac2)+'</select></div><div class="full"><label>'+t("desc")+'</label><input id="tN" value="'+esc(x.n||"")+'" placeholder="'+t("trPh")+'"></div></div>',
+ (isNew?"":'<button class="btn d" id="tDel">🗑 '+t("del")+"</button>")+'<button class="btn" data-close>'+t("cancel")+'</button><button class="btn p" id="tS">'+t("save")+"</button>");
+ setTimeout(function(){$("#tA").focus()},50);
+ $("#tS").onclick=function(){var a=num($("#tA").value);if(!(a>0)){toast(t("need"));return}if($("#tF").value===$("#tT").value){toast(t("trSame"));return}
+  x.a=a;x.d=pd($("#tD").value)||today();x.ac=$("#tF").value;x.ac2=$("#tT").value;x.n=$("#tN").value.trim();x.c="";if(isNew)tx.push(x);saveAll();$("#dlg").close();toast(t("saved"));render()};
+ var d=$("#tDel");if(d)d.onclick=function(){if(!confirm(t("confirmDel")))return;tx=tx.filter(function(y){return y.id!==x.id});saveAll();$("#dlg").close();toast(t("deleted"));render()}}
+document.addEventListener("click",function(e){var a=e.target.closest("[data-acb]");if(a){acctDlg(a.dataset.acb);return}if(e.target.closest("[data-tr]")){trDlg(null)}});
 
 /* ========== core calc ========== */
 function openBal(y){var s=0;for(var k in cfg.open)s+=+cfg.open[k]||0;
@@ -327,7 +350,7 @@ function openBal(y){var s=0;for(var k in cfg.open)s+=+cfg.open[k]||0;
 function calc(y,per){
  var C=cols(per,y),res={cols:C,cat:{},grp:{op:[],inv:[],fin:[]},tIn:[],tOut:[],net:[],open:[],close:[]};
  C.forEach(function(c,i){res.tIn[i]=0;res.tOut[i]=0;res.net[i]=0;["op","inv","fin"].forEach(function(g){res.grp[g][i]=0})});
- var Y=tx.filter(function(x){return inYear(x,y)});
+ var Y=tx.filter(function(x){return inYear(x,y)&&x.t!=="tr"});
  Y.forEach(function(x){var m=mo(x),ci=per==="q"?Math.floor(m/3):m,c=cat(x.c),g=c?c.g:"op",v=sgn(x);
   if(!res.cat[x.c])res.cat[x.c]=C.map(function(){return 0});res.cat[x.c][ci]+=v;res.grp[g][ci]+=v;res.net[ci]+=v;if(v>=0)res.tIn[ci]+=v;else res.tOut[ci]+=-v});
  var ob=openBal(y);C.forEach(function(c,i){res.open[i]=ob;ob+=res.net[i];res.close[i]=ob});
@@ -368,7 +391,8 @@ function vDash(){
  if(!tx.length&&!DEMO)return tb(t("dash"))+'<div class="card empty"><b>💧 '+t("noTx")+"</b>"+t("noTxH")+'<div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn p" data-add>＋ '+t("add")+'</button><button class="btn" data-paste>📋 '+t("paste")+'</button><a class="btn" href="?demo=1">🧪 '+t("demo")+"</a></div></div>";
  var r=calc(ui.y,"m"),ti=sum(r.tIn),to=sum(r.tOut),n=sum(r.net);
  var h=tb(t("dash"),'<button class="btn g" data-addt="in">'+t("addIn")+'</button><button class="btn" data-addt="out" style="background:var(--out);border-color:var(--out);color:#fff">'+t("addOut")+'</button>')+'<div class="kpis">'+
-  kp(t("open"),r.open[0],"#5d6c78","")+kp(t("inflow"),ti,"var(--in)","in")+kp(t("outflow"),-to,"var(--out)","out")+kp(t("net"),n,n>=0?"var(--in)":"var(--out)","")+kp(t("close"),r.close[11],"var(--brand)","")+"</div>";
+  kp(t("open"),r.open[0],"#5d6c78","")+kp(t("inflow"),ti,"var(--in)","in")+kp(t("outflow"),-to,"var(--out)","out")+kp(t("net"),n,n>=0?"var(--in)":"var(--out)","").replace('class="kpi"','class="kpi" data-acb=""')+kp(t("close"),r.close[11],"var(--brand)","").replace('class="kpi"','class="kpi" data-acb=""')+"</div>";
+ h+=acctCard(ui.y);
  h+=salesCard(r);
  h+='<div class="g2"><div class="card"><h2>📈 '+t("trend")+"</h2>"+chart(r)+'<div class="leg"><span><i style="background:#7fc79e"></i>'+t("inflow")+'</span><span><i style="background:#ee9a94"></i>'+t("outflow")+'</span><span><i style="background:var(--brand)"></i>'+t("close")+"</span></div></div>";
  var gs=["op","inv","fin"].map(function(g){return[g,sum(r.grp[g])]});
@@ -422,7 +446,8 @@ function directRows(r,lg,forRep){
 function tailRows(r,lg){var C=r.cols;
  return'<tr class="tot"><td>'+t("net",lg)+"</td>"+r.net.map(function(v,i){return cell(v,"t:all:"+C[i].k)}).join("")+cell(sum(r.net),"t:all:all")+"</tr>"+
  '<tr><td>'+t("open",lg)+"</td>"+r.open.map(function(v){return'<td class="'+(v<0?"neg":"")+'">'+fm(v,lg)+"</td>"}).join("")+'<td>'+fm(r.open[0],lg)+"</td></tr>"+
- '<tr class="big"><td>'+t("close",lg)+"</td>"+r.close.map(function(v){return'<td class="'+(v<0?"neg":"")+'">'+fm(v,lg)+"</td>"}).join("")+'<td>'+fm(r.close[r.close.length-1],lg)+"</td></tr>"}
+ '<tr class="big"><td>'+t("close",lg)+"</td>"+r.close.map(function(v){return'<td class="'+(v<0?"neg":"")+'">'+fm(v,lg)+"</td>"}).join("")+'<td>'+fm(r.close[r.close.length-1],lg)+"</td></tr>"+
+ acctData(ui.y).map(function(o){var cl=C.map(function(c){return o.close[c.ms[c.ms.length-1]]});return'<tr class="pty"><td>↳ '+esc(o.n)+"</td>"+cl.map(function(v){return'<td class="'+(v<0?"neg":"")+'">'+fm(v,lg)+"</td>"}).join("")+"<td>"+fm(o.end,lg)+"</td></tr>"}).join("")}
 function head(r,lg){return"<thead><tr><th>"+t("item",lg)+" ("+cfg.cur+")</th>"+r.cols.map(function(c){return"<th>"+c.lb(lg)+"</th>"}).join("")+"<th>"+t("total",lg)+"</th></tr></thead>"}
 function vDirect(){var r=calc(ui.y,ui.per);
  return tb(t("directT"),perSel()+'<button class="btn" id="xAll">⇕</button><button class="btn" id="goRep">🖨️ '+t("rep")+"</button>")+
@@ -456,7 +481,7 @@ bind.indirect=function(){$("#goRep").onclick=function(){ui.v="rep";sui();render(
 /* ---- drill-down ---- */
 function drillTx(spec){var p=spec.split(":"),kind=p[0],key=p[1],ck=p[2],pty=p[3]!=null?decodeURIComponent(p[3]):null;
  var ms=null;if(ck&&ck!=="all"){var i=+ck.slice(1);ms=ck[0]==="q"?[i*3,i*3+1,i*3+2]:[i]}
- return tx.filter(function(x){if(!inYear(x,ui.y))return false;if(ms&&ms.indexOf(mo(x))<0)return false;var c=cat(x.c),g=c?c.g:"op";
+ return tx.filter(function(x){if(!inYear(x,ui.y)||x.t==="tr")return false;if(ms&&ms.indexOf(mo(x))<0)return false;var c=cat(x.c),g=c?c.g:"op";
   if(kind==="c")return x.c===key;if(kind==="p")return x.c===key&&(x.p||"—")===pty;if(kind==="g")return g===key;if(kind==="t")return key==="all"||x.t===key;if(kind==="io")return g==="op";return false}).sort(function(a,b){return a.d<b.d?-1:1})}
 function drillTitle(spec){var p=spec.split(":"),kind=p[0],key=p[1],ck=p[2];var per=ck==="all"||!ck?yDisp(ui.y):(ck[0]==="q"?"Q"+(+ck.slice(1)+1)+" ":MON[lang][+ck.slice(1)]+" ")+(ck==="all"?"":yDisp(ui.y));
  var nm=kind==="c"||kind==="p"?cn(cat(key))+(kind==="p"?" · "+decodeURIComponent(p[3]):""):kind==="g"?t(key):kind==="t"?(key==="in"?t("inflow"):key==="out"?t("outflow"):t("net")):kind==="io"?t("opNet")+" ("+t("direct")+")":kind==="i"?t(key):"";
@@ -542,7 +567,7 @@ function vatCsv(L){return[["#",t("date"),t("taxInv"),t("party"),t("ptid"),t("bas
 function whtCsv(L){return[["#",t("date"),t("party"),t("ptid"),t("wForm"),t("desc"),t("wBase"),"%",t("wAmt")]].concat(L.map(function(o,i){return[i+1,dDisp(o.x.d),o.x.p||"",o.x.tid||"",o.x.t==="in"?"":"ภ.ง.ด."+(o.x.wf||"3"),lineDesc(o.x),r2(o.c.base),+o.x.wr,o.c.wht]}))}
 function knownExp(){var m={};tx.forEach(function(x){if(x.lk==="exp")(x.lines||[]).forEach(function(l){m[l.name]=1})});return Object.keys(m)}
 var WR=[0,1,1.5,2,3,5,10,15];
-function txDlg(x,second){var isNew=!x;x=x||{id:uid(),d:today(),t:ui.lastT||"out",a:"",c:ui.lastC||"",ac:ui.lastAc||cfg.accts[0].id,p:"",n:"",r:""};
+function txDlg(x,second){if(x&&x.t==="tr"){trDlg(x);return}var isNew=!x;x=x||{id:uid(),d:today(),t:ui.lastT||"out",a:"",c:ui.lastC||"",ac:ui.lastAc||cfg.accts[0].id,p:"",n:"",r:""};
  var st={t:x.t},vt=x.vt||"",r=VR(),wr=+x.wr||0,wf=x.wf||"3";
  function catOpts(){var d=st.t;return["op","inv","fin"].map(function(g){var cs=cfg.cats.filter(function(c){return c.g===g&&c.d===d});return cs.length?'<optgroup label="'+t(g)+'">'+cs.map(function(c){return'<option value="'+c.id+'"'+(c.id===x.c?" selected":"")+">"+esc(cn(c))+"</option>"}).join("")+"</optgroup>":""}).join("")}
  var parties={};tx.forEach(function(y){if(y.p)parties[y.p]=1});
@@ -615,14 +640,14 @@ $("#fab").onclick=function(){txDlg(null)};
 
 /* ---- tx list ---- */
 function vTx(){var Y=tx.filter(function(x){return inYear(x,ui.y)});var q=(ui.q||"").toLowerCase();
- var L2=Y.filter(function(x){if(ui.f==="in"&&x.t!=="in")return false;if(ui.f==="out"&&x.t!=="out")return false;if(["op","inv","fin"].indexOf(ui.f)>=0){var c=cat(x.c);if(!c||c.g!==ui.f)return false}
+ var L2=Y.filter(function(x){if(ui.fa&&x.ac!==ui.fa&&x.ac2!==ui.fa)return false;if(ui.f==="tr"&&x.t!=="tr")return false;if(ui.f==="in"&&x.t!=="in")return false;if(ui.f==="out"&&x.t!=="out")return false;if(["op","inv","fin"].indexOf(ui.f)>=0){var c=cat(x.c);if(!c||c.g!==ui.f)return false}
   if(q){var s=[x.p,x.n,x.r,cn(cat(x.c)),x.a].join(" ").toLowerCase();if(s.indexOf(q)<0)return false}return true}).sort(function(a,b){return a.d<b.d?1:-1});
- var h=tb(t("tx"),'<button class="btn g" data-addt="in">'+t("addIn")+'</button><button class="btn" data-addt="out" style="background:var(--out);border-color:var(--out);color:#fff">'+t("addOut")+'</button><button class="btn" data-paste>📋 '+t("paste")+'</button><button class="btn" id="xC">⬇️ CSV</button>')+
-  '<div class="card"><div class="bar" style="margin-bottom:8px"><div class="chips">'+[["all",t("all")],["in",t("in")],["out",t("out")],["op",t("op")],["inv",t("inv")],["fin",t("fin")]].map(function(c){return'<button class="chip'+(ui.f===c[0]?" on":"")+'" data-f="'+c[0]+'">'+c[1]+"</button>"}).join("")+'</div><input id="q" class="sm" placeholder="🔎 '+t("search")+'" value="'+esc(ui.q||"")+'" style="border:1px solid var(--line);border-radius:10px;padding:7px 12px;margin-left:auto;min-width:180px"></div>'+
+ var h=tb(t("tx"),'<button class="btn g" data-addt="in">'+t("addIn")+'</button><button class="btn" data-tr>🔁 '+t("transfer")+'</button><button class="btn" data-addt="out" style="background:var(--out);border-color:var(--out);color:#fff">'+t("addOut")+'</button><button class="btn" data-paste>📋 '+t("paste")+'</button><button class="btn" id="xC">⬇️ CSV</button>')+
+  '<div class="card"><div class="bar" style="margin-bottom:8px"><div class="chips">'+[["all",t("all")],["in",t("in")],["out",t("out")],["tr","🔁 "+t("transfer")],["op",t("op")],["inv",t("inv")],["fin",t("fin")]].map(function(c){return'<button class="chip'+(ui.f===c[0]?" on":"")+'" data-f="'+c[0]+'">'+c[1]+"</button>"}).join("")+'</div><div class="chips" style="width:100%">'+[["",t("allAcct")]].concat(cfg.accts.map(function(a){return[a.id,(/สด|cash|現金/i.test(a.n)?"💵 ":"🏦 ")+a.n]})).map(function(c){return'<button class="chip'+((ui.fa||"")===c[0]?" on":"")+'" data-fa="'+c[0]+'">'+esc(c[1])+"</button>"}).join("")+'</div><input id="q" class="sm" placeholder="🔎 '+t("search")+'" value="'+esc(ui.q||"")+'" style="border:1px solid var(--line);border-radius:10px;padding:7px 12px;margin-left:auto;min-width:180px"></div>'+
   '<p class="hint" style="margin-bottom:6px">✏️ '+t("editHint")+' · '+L2.length+" "+t("count")+" · "+t("in")+" "+fm(sum(L2.filter(function(x){return x.t==="in"}).map(function(x){return x.a})))+" · "+t("out")+" "+fm(sum(L2.filter(function(x){return x.t==="out"}).map(function(x){return x.a})))+"</p>";
- h+=L2.length?'<div class="list">'+L2.slice(0,500).map(function(x){var c=cat(x.c);return'<div class="row" data-ed="'+x.id+'"><span class="hint">'+dDisp(x.d)+"</span><b>"+esc(x.p||cn(c))+"<small>"+esc(cn(c))+(x.n?" · "+esc(x.n):"")+' · '+esc(acctN(x.ac))+(x.lines?' · '+(x.t==="in"?"🛒 ":"📦 ")+x.lines.length:"")+(x.vt?' · VAT':"")+(+x.wr?' · ✂️'+x.wr+'%':"")+'</small></b><span class="amt '+x.t+'">'+fm(sgn(x))+'</span><span class="btn" style="padding:4px 10px;font-size:13px">✏️ '+t("editB")+"</span></div>"}).join("")+"</div>":'<div class="empty"><b>'+t("noTx")+"</b>"+t("noTxH")+"</div>";
+ h+=L2.length?'<div class="list">'+L2.slice(0,500).map(function(x){if(x.t==="tr")return'<div class="row" data-ed="'+x.id+'"><span class="hint">'+dDisp(x.d)+"</span><b>🔁 "+esc(acctN(x.ac))+" → "+esc(acctN(x.ac2))+"<small>"+t("transfer")+(x.n?" · "+esc(x.n):"")+'</small></b><span class="amt" style="color:var(--brand)">'+fm(x.a)+'</span><span class="btn" style="padding:4px 10px;font-size:13px">✏️ '+t("editB")+"</span></div>";var c=cat(x.c);return'<div class="row" data-ed="'+x.id+'"><span class="hint">'+dDisp(x.d)+"</span><b>"+esc(x.p||cn(c))+"<small>"+esc(cn(c))+(x.n?" · "+esc(x.n):"")+' · '+esc(acctN(x.ac))+(x.lines?' · '+(x.t==="in"?"🛒 ":"📦 ")+x.lines.length:"")+(x.vt?' · VAT':"")+(+x.wr?' · ✂️'+x.wr+'%':"")+'</small></b><span class="amt '+x.t+'">'+fm(sgn(x))+'</span><span class="btn" style="padding:4px 10px;font-size:13px">✏️ '+t("editB")+"</span></div>"}).join("")+"</div>":'<div class="empty"><b>'+t("noTx")+"</b>"+t("noTxH")+"</div>";
  return h+"</div>"}
-bind.tx=function(){$$("[data-f]").forEach(function(b){b.onclick=function(){ui.f=b.dataset.f;sui();render()}});
+bind.tx=function(){$$("[data-f]").forEach(function(b){b.onclick=function(){ui.f=b.dataset.f;sui();render()}});$$("[data-fa]").forEach(function(b){b.onclick=function(){ui.fa=b.dataset.fa;sui();render()}});
  var q=$("#q");q.oninput=function(){ui.q=q.value;clearTimeout(q._t);q._t=setTimeout(function(){var p=q.selectionStart;render();var n=$("#q");n.focus();n.setSelectionRange(p,p)},250)};
  $("#xC").onclick=function(){csv(tx.filter(function(x){return inYear(x,ui.y)}),t("tx")+" "+yDisp(ui.y))}};
 function csv(L2,name){var rows=[[t("date"),t("dir"),t("amount"),t("cat"),t("grp"),t("party"),t("desc"),t("ref"),t("acct")]].concat(L2.map(function(x){var c=cat(x.c);return[x.d,x.t==="in"?t("in"):t("out"),sgn(x),cn(c),c?t(c.g):"",x.p,x.n,x.r,acctN(x.ac)]}));
@@ -732,6 +757,7 @@ if(DEMO){(function(){var y=new Date().getFullYear();ui.y=y;cfg=Object.assign({},
  function li(m,d,tp,p,lines,ship){var x={id:uid(),d:y+"-"+("0"+(m+1)).slice(-2)+"-"+("0"+d).slice(-2),t:tp,c:tp==="in"?"sales":"supp",p:p,n:"",r:(tp==="in"?"IV":"PI")+(m+1)+d,ac:"bank",vt:"inc",tid:"0105560012345",lines:lines};if(ship)x.ship=ship;x.a=r2(calcX(x).tot);tx.push(x)}
  li(9,3,"out","Tokyo Foods Co.",[{name:"ชาเขียวมัทฉะ 100g",q:200,u:180},{name:"ซอสโชยุ 1L",q:120,u:95}],1500);li(10,2,"out","Tokyo Foods Co.",[{name:"ชาเขียวมัทฉะ 100g",q:150,u:185}],900);
  li(9,15,"in","สยามมาร์ท",[{name:"ชาเขียวมัทฉะ 100g",q:120,u:290},{name:"ซอสโชยุ 1L",q:60,u:150}]);li(10,9,"in","ร้านป้าแดง",[{name:"ชาเขียวมัทฉะ 100g",q:90,u:300},{name:"ซอสโชยุ 1L",q:35,u:155}]);li(10,20,"in","บ้านขนม",[{name:"ชาเขียวมัทฉะ 100g",q:60,u:295}]);
+ [2,6,9].forEach(function(m){tx.push({id:uid(),t:"tr",d:y+"-"+("0"+(m+1)).slice(-2)+"-28",a:20000,ac:"bank",ac2:"cash",c:"",n:"ถอนเงินสดใช้หน้าร้าน"})});tx.push({id:uid(),t:"tr",d:y+"-11-30",a:30000,ac:"cash",ac2:"bank",c:"",n:"นำเงินสดฝากธนาคาร"});
  add(8,1,"in",500000,"cap","ผู้ถือหุ้น","เรียกชำระค่าหุ้นเพิ่ม");add(9,22,"in",40000,"asell","ร้านรับซื้อ","ขายรถเก่า");add(11,20,"out",150000,"div","ผู้ถือหุ้น","ปันผลระหว่างกาล");
  var r=calc(y,"m");for(var i=0;i<12;i++){var op=r.grp.op[i],dep=18000,dAR=Math.round((rnd()-.55)*60000),dInv=Math.round((rnd()-.5)*40000),dAP=Math.round((rnd()-.45)*30000);
   ind[y+"-"+("0"+(i+1)).slice(-2)]={ni:op-dep-dAR-dInv-dAP,dep:dep,dAR:dAR,dInv:dInv,dAP:dAP,oth:0}}
