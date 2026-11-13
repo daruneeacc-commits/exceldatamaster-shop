@@ -66,7 +66,7 @@ table.cf{border-collapse:separate;border-spacing:0;width:100%;font-size:14px}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
 .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13.5px;font-weight:600}
 .chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
-.list .row{display:grid;grid-template-columns:96px 1fr auto;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line);cursor:pointer;align-items:center}
+.list .row{display:grid;grid-template-columns:96px 1fr auto auto;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line);cursor:pointer;align-items:center}
 .list .row:hover{background:#f8fafc}
 .list .row b{font-weight:600}
 .list .row small{display:block;color:var(--sub);font-size:12.5px}
@@ -236,6 +236,9 @@ en:{app:"Cash Flow Statement",dash:"Overview",direct:"Direct",indirect:"Indirect
  pasteH:"Copy from Excel and paste · columns: Date | In/Out | Amount | Category | Counterparty | Description | Account",
  import:"Import",saved:"Saved",deleted:"Deleted",need:"Enter an amount",confirmDel:"Delete this transaction?",confirmWipe:"Type DELETE to confirm",
  notMatch:"Mismatch",ofTotal:"of total",bal:"Balance",in:"In",out:"Out"}};
+Object.assign(L.th,{coInfo:"ข้อมูลบริษัท · ทุนจดทะเบียน",taxId:"เลขประจำตัวผู้เสียภาษี",addr:"ที่อยู่",regDate:"วันที่จดทะเบียน",regCap:"ทุนจดทะเบียน",paidCap0:"ทุนชำระแล้ว (ยกมา)",paidCap:"ทุนชำระแล้ว",unpaid:"ทุนยังไม่เรียกชำระ",shares:"จำนวนหุ้น",par:"มูลค่าหุ้นละ",capT:"ทุนจดทะเบียน",capHint:"ทุนชำระแล้ว = ยอดยกมา + รายการ \"เพิ่มทุน\" ที่บันทึก",addIn:"＋ เงินรับ",addOut:"＋ เงินจ่าย",editHint:"แตะรายการเพื่อแก้ไข / ลบ",editB:"แก้ไข"});
+Object.assign(L.ja,{coInfo:"会社情報・資本金",taxId:"納税者番号",addr:"所在地",regDate:"設立日",regCap:"資本金（登録）",paidCap0:"払込済資本金（期首）",paidCap:"払込済資本金",unpaid:"未払込資本金",shares:"発行株式数",par:"1株あたり額面",capT:"資本金",capHint:"払込済＝期首額＋「増資による収入」の取引",addIn:"＋ 入金",addOut:"＋ 出金",editHint:"取引をタップして編集・削除",editB:"編集"});
+Object.assign(L.en,{coInfo:"Company info · Registered capital",taxId:"Tax ID",addr:"Address",regDate:"Registration date",regCap:"Registered capital",paidCap0:"Paid-up capital (opening)",paidCap:"Paid-up capital",unpaid:"Uncalled capital",shares:"Number of shares",par:"Par value per share",capT:"Capital",capHint:"Paid-up = opening + recorded “Capital injection” transactions",addIn:"＋ Cash in",addOut:"＋ Cash out",editHint:"Tap a transaction to edit / delete",editB:"Edit"});
 var MON={th:["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],ja:["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],en:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]};
 
 /* ========== default data ========== */
@@ -258,6 +261,14 @@ var DEF_CATS=[
 var DEF_CFG={name:"",cur:"THB",year:new Date().getFullYear(),open:{},accts:[{id:"cash",n:"เงินสด"},{id:"bank",n:"ธนาคาร"}],cats:DEF_CATS,prep:"",appr:""};
 var tx=ld(K.tx,[]),cfg=Object.assign({},DEF_CFG,ld(K.cfg,{})),ind=ld(K.ind,{}),ui=Object.assign({v:"dash",lang:"th",y:null,per:"m",f:"all",q:"",open:{},rep:{dir:1,ind:1,sum:1,det:1,lang:null}},ld(K.ui,{}));
 if(!cfg.cats||!cfg.cats.length)cfg.cats=DEF_CATS;
+if(!cfg.co)cfg.co={};
+function capInfo(y){var co=cfg.co||{},reg=+co.reg||0,p0=+co.paid0||0,add=0;tx.forEach(function(x){if(x.c==="cap"&&x.d&&+x.d.slice(0,4)<=y)add+=x.t==="in"?x.a:-x.a});var paid=p0+add;return{reg:reg,p0:p0,add:add,paid:paid,un:Math.max(0,reg-paid),pct:reg?Math.min(100,paid/reg*100):0}}
+function capCard(lg){var c=capInfo(ui.y),co=cfg.co||{};if(!c.reg&&!c.paid)return"";
+ return'<div class="card"><h2>🏛️ '+t("capT",lg)+'</h2><div class="kpis" style="grid-template-columns:repeat(3,1fr);margin-bottom:10px">'+
+ '<div class="kpi" style="--c:#5d6c78;cursor:default"><small>'+t("regCap",lg)+"</small><b>"+fm(c.reg,lg)+"</b><em>"+(co.sh?fm(+co.sh,lg).replace(/\.00$/,"")+" × "+fm(+co.par||0,lg):"")+"</em></div>"+
+ '<div class="kpi" style="--c:var(--in)" data-drill="c:cap:all"><small>'+t("paidCap",lg)+"</small><b>"+fm(c.paid,lg)+"</b><em>"+c.pct.toFixed(0)+"%</em></div>"+
+ '<div class="kpi" style="--c:var(--fin);cursor:default"><small>'+t("unpaid",lg)+"</small><b>"+fm(c.un,lg)+"</b><em>"+(100-c.pct).toFixed(0)+"%</em></div></div>"+
+ '<div style="height:12px;border-radius:99px;background:#eef3f8;overflow:hidden"><div style="height:100%;width:'+c.pct+'%;background:var(--in)"></div></div><p class="hint" style="margin-top:6px">'+t("capHint",lg)+"</p></div>"}
 if(!ui.y)ui.y=cfg.year||new Date().getFullYear();
 var lang=ui.lang||"th";
 function t(k,lg){var d=L[lg||lang]||L.th;return d[k]!=null?d[k]:(L.th[k]||k)}
@@ -332,13 +343,14 @@ var bind={};
 function vDash(){
  if(!tx.length&&!DEMO)return tb(t("dash"))+'<div class="card empty"><b>💧 '+t("noTx")+"</b>"+t("noTxH")+'<div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn p" data-add>＋ '+t("add")+'</button><button class="btn" data-paste>📋 '+t("paste")+'</button><a class="btn" href="?demo=1">🧪 '+t("demo")+"</a></div></div>";
  var r=calc(ui.y,"m"),ti=sum(r.tIn),to=sum(r.tOut),n=sum(r.net);
- var h=tb(t("dash"))+'<div class="kpis">'+
+ var h=tb(t("dash"),'<button class="btn g" data-addt="in">'+t("addIn")+'</button><button class="btn" data-addt="out" style="background:var(--out);border-color:var(--out);color:#fff">'+t("addOut")+'</button>')+'<div class="kpis">'+
   kp(t("open"),r.open[0],"#5d6c78","")+kp(t("inflow"),ti,"var(--in)","in")+kp(t("outflow"),-to,"var(--out)","out")+kp(t("net"),n,n>=0?"var(--in)":"var(--out)","")+kp(t("close"),r.close[11],"var(--brand)","")+"</div>";
  h+='<div class="g2"><div class="card"><h2>📈 '+t("trend")+"</h2>"+chart(r)+'<div class="leg"><span><i style="background:#7fc79e"></i>'+t("inflow")+'</span><span><i style="background:#ee9a94"></i>'+t("outflow")+'</span><span><i style="background:var(--brand)"></i>'+t("close")+"</span></div></div>";
  var gs=["op","inv","fin"].map(function(g){return[g,sum(r.grp[g])]});
  h+='<div class="card"><h2>🧭 '+t("byGrp")+"</h2>"+gs.map(function(g){var c={op:"var(--op)",inv:"var(--inv)",fin:"var(--fin)"}[g[0]];return'<div class="list"><div class="row" data-drill="g:'+g[0]+':all" style="grid-template-columns:1fr auto"><b><span style="color:'+c+'">●</span> '+t(g[0])+'</b><span class="amt '+(g[1]>=0?"in":"out")+'">'+fm(g[1])+"</span></div></div>"}).join("");
  var co={};r.Y.forEach(function(x){if(x.t==="out")co[x.c]=(co[x.c]||0)+x.a});var top=Object.keys(co).sort(function(a,b){return co[b]-co[a]}).slice(0,5);
  h+='<h2 style="margin-top:16px">🔥 '+t("topOut")+'</h2><div class="list">'+top.map(function(c){return'<div class="row" data-drill="c:'+c+':all" style="grid-template-columns:1fr auto"><b>'+esc(cn(cat(c)))+'<small>'+Math.round(co[c]/(to||1)*100)+"% "+t("ofTotal")+'</small></b><span class="amt out">'+fm(-co[c])+"</span></div>"}).join("")+"</div></div></div>";
+ h+=capCard();
  h+='<p class="hint" style="text-align:center">🔒 '+t("localNote")+"</p>";
  return h}
 function kp(lb,v,c,dr){return'<div class="kpi" style="--c:'+c+'"'+(dr?' data-drill="t:'+dr+':all"':"")+'><small>'+lb+"</small><b>"+symb()+fs(v)+"</b><em>"+fm(v)+"</em></div>"}
@@ -424,7 +436,7 @@ function openDrill(spec){
  $("#dX").onclick=function(){csv(L2,drillTitle(spec))}}
 document.addEventListener("click",function(e){var d=e.target.closest("[data-drill]");if(d&&!e.target.closest("input")){openDrill(d.dataset.drill);return}
  var ed=e.target.closest("[data-ed]");if(ed){var x=tx.filter(function(y){return y.id===ed.dataset.ed})[0];if(x)txDlg(x,$("#dlg").open);return}
- if(e.target.closest("[data-add]")){txDlg(null);return}if(e.target.closest("[data-paste]")){pasteDlg();return}
+ if(e.target.closest("[data-add]")){txDlg(null);return}var at=e.target.closest("[data-addt]");if(at){ui.lastT=at.dataset.addt;txDlg(null);return}if(e.target.closest("[data-paste]")){pasteDlg();return}
  var c=e.target.closest("[data-close]");if(c){c.closest("dialog").close()}});
 function showDlg(tl,b,f,second){var D=second?"#dlg2":"#dlg";$(D+"T").textContent=tl;$(D+"B").innerHTML=b;$(D+"F").innerHTML=f||"";if(!$(D).open)$(D).showModal();$(D+"B").scrollTop=0}
 
@@ -452,10 +464,10 @@ $("#fab").onclick=function(){txDlg(null)};
 function vTx(){var Y=tx.filter(function(x){return inYear(x,ui.y)});var q=(ui.q||"").toLowerCase();
  var L2=Y.filter(function(x){if(ui.f==="in"&&x.t!=="in")return false;if(ui.f==="out"&&x.t!=="out")return false;if(["op","inv","fin"].indexOf(ui.f)>=0){var c=cat(x.c);if(!c||c.g!==ui.f)return false}
   if(q){var s=[x.p,x.n,x.r,cn(cat(x.c)),x.a].join(" ").toLowerCase();if(s.indexOf(q)<0)return false}return true}).sort(function(a,b){return a.d<b.d?1:-1});
- var h=tb(t("tx"),'<button class="btn" data-paste>📋 '+t("paste")+'</button><button class="btn" id="xC">⬇️ CSV</button>')+
+ var h=tb(t("tx"),'<button class="btn g" data-addt="in">'+t("addIn")+'</button><button class="btn" data-addt="out" style="background:var(--out);border-color:var(--out);color:#fff">'+t("addOut")+'</button><button class="btn" data-paste>📋 '+t("paste")+'</button><button class="btn" id="xC">⬇️ CSV</button>')+
   '<div class="card"><div class="bar" style="margin-bottom:8px"><div class="chips">'+[["all",t("all")],["in",t("in")],["out",t("out")],["op",t("op")],["inv",t("inv")],["fin",t("fin")]].map(function(c){return'<button class="chip'+(ui.f===c[0]?" on":"")+'" data-f="'+c[0]+'">'+c[1]+"</button>"}).join("")+'</div><input id="q" class="sm" placeholder="🔎 '+t("search")+'" value="'+esc(ui.q||"")+'" style="border:1px solid var(--line);border-radius:10px;padding:7px 12px;margin-left:auto;min-width:180px"></div>'+
-  '<p class="hint" style="margin-bottom:6px">'+L2.length+" "+t("count")+" · "+t("in")+" "+fm(sum(L2.filter(function(x){return x.t==="in"}).map(function(x){return x.a})))+" · "+t("out")+" "+fm(sum(L2.filter(function(x){return x.t==="out"}).map(function(x){return x.a})))+"</p>";
- h+=L2.length?'<div class="list">'+L2.slice(0,500).map(function(x){var c=cat(x.c);return'<div class="row" data-ed="'+x.id+'"><span class="hint">'+dDisp(x.d)+"</span><b>"+esc(x.p||cn(c))+"<small>"+esc(cn(c))+(x.n?" · "+esc(x.n):"")+' · '+esc(acctN(x.ac))+'</small></b><span class="amt '+x.t+'">'+fm(sgn(x))+"</span></div>"}).join("")+"</div>":'<div class="empty"><b>'+t("noTx")+"</b>"+t("noTxH")+"</div>";
+  '<p class="hint" style="margin-bottom:6px">✏️ '+t("editHint")+' · '+L2.length+" "+t("count")+" · "+t("in")+" "+fm(sum(L2.filter(function(x){return x.t==="in"}).map(function(x){return x.a})))+" · "+t("out")+" "+fm(sum(L2.filter(function(x){return x.t==="out"}).map(function(x){return x.a})))+"</p>";
+ h+=L2.length?'<div class="list">'+L2.slice(0,500).map(function(x){var c=cat(x.c);return'<div class="row" data-ed="'+x.id+'"><span class="hint">'+dDisp(x.d)+"</span><b>"+esc(x.p||cn(c))+"<small>"+esc(cn(c))+(x.n?" · "+esc(x.n):"")+' · '+esc(acctN(x.ac))+'</small></b><span class="amt '+x.t+'">'+fm(sgn(x))+'</span><span class="btn" style="padding:4px 10px;font-size:13px">✏️ '+t("editB")+"</span></div>"}).join("")+"</div>":'<div class="empty"><b>'+t("noTx")+"</b>"+t("noTxH")+"</div>";
  return h+"</div>"}
 bind.tx=function(){$$("[data-f]").forEach(function(b){b.onclick=function(){ui.f=b.dataset.f;sui();render()}});
  var q=$("#q");q.oninput=function(){ui.q=q.value;clearTimeout(q._t);q._t=setTimeout(function(){var p=q.selectionStart;render();var n=$("#q");n.focus();n.setSelectionRange(p,p)},250)};
@@ -492,12 +504,12 @@ bind.rep=function(){var R=ui.rep;$("#rL").value=R.lang||lang;$("#rL").onchange=f
  $("#rPrint").onclick=function(){$("#rep").innerHTML=repHtml(R.lang||lang,false);setTimeout(function(){window.print()},50)};
  $("#rX").onclick=function(){xlsx(R.lang||lang)}};
 function repHtml(lg,preview){var R=ui.rep,r=calc(ui.y,ui.per),h='<div class="rp">';var now=new Date();
- var hd='<h1>'+esc(cfg.name||"—")+"</h1>";
+ var co=cfg.co||{},cp=capInfo(ui.y);var hd='<h1>'+esc(cfg.name||"—")+"</h1>"+((co.tax||co.addr||cp.reg)?'<div class="meta" style="margin:0">'+[co.tax?t("taxId",lg)+" "+esc(co.tax):"",co.addr?esc(co.addr):"",cp.reg?t("regCap",lg)+" "+fm(cp.reg,lg)+" · "+t("paidCap",lg)+" "+fm(cp.paid,lg)+" "+cfg.cur:""].filter(Boolean).join(" · ")+"</div>":"");
  var meta='<div class="meta">'+t("period",lg)+": "+(lg==="ja"?ui.y+"年1月1日 – "+ui.y+"年12月31日":lg==="en"?"1 Jan – 31 Dec "+ui.y:"1 ม.ค. – 31 ธ.ค. "+(ui.y+543))+" · "+t("currency",lg)+": "+cfg.cur+" · "+t("printed",lg)+": "+dDisp(today(),lg)+"</div>";
  var st=preview?' style="width:100%;border-collapse:collapse"':"";
  var tbl=function(body){return'<table class="cf"'+st+">"+head(r,lg)+"<tbody>"+body+"</tbody></table>"};
  if(R.sum){var o=r;h+=hd+"<h2>"+t("repSum",lg)+"</h2>"+meta+'<div class="kp" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">'+[["open",o.open[0]],["inflow",sum(o.tIn)],["outflow",-sum(o.tOut)],["net",sum(o.net)],["close",o.close[o.close.length-1]]].map(function(k){return'<div style="border:1px solid var(--line,#ccd);border-radius:8px;padding:6px 10px;flex:1;min-width:120px"><small>'+t(k[0],lg)+"</small><b style='display:block'>"+fm(k[1],lg)+"</b></div>"}).join("")+"</div>"+
-  '<table class="cf"'+st+"><thead><tr><th>"+t("grp",lg)+"</th><th>"+t("total",lg)+"</th></tr></thead><tbody>"+["op","inv","fin"].map(function(g){return"<tr><td>"+t(g+"Net",lg)+'</td><td class="'+(sum(r.grp[g])<0?"neg":"")+'">'+fm(sum(r.grp[g]),lg)+"</td></tr>"}).join("")+'<tr class="big"><td>'+t("net",lg)+"</td><td>"+fm(sum(r.net),lg)+"</td></tr></tbody></table>"}
+  (cp.reg?'<table class="cf"'+st+'><thead><tr><th>'+t("capT",lg)+"</th><th>"+cfg.cur+"</th></tr></thead><tbody><tr><td>"+t("regCap",lg)+"</td><td>"+fm(cp.reg,lg)+"</td></tr><tr><td>"+t("paidCap",lg)+" ("+cp.pct.toFixed(0)+"%)</td><td>"+fm(cp.paid,lg)+"</td></tr><tr><td>"+t("unpaid",lg)+"</td><td>"+fm(cp.un,lg)+"</td></tr></tbody></table>":"")+'<table class="cf"'+st+"><thead><tr><th>"+t("grp",lg)+"</th><th>"+t("total",lg)+"</th></tr></thead><tbody>"+["op","inv","fin"].map(function(g){return"<tr><td>"+t(g+"Net",lg)+'</td><td class="'+(sum(r.grp[g])<0?"neg":"")+'">'+fm(sum(r.grp[g]),lg)+"</td></tr>"}).join("")+'<tr class="big"><td>'+t("net",lg)+"</td><td>"+fm(sum(r.net),lg)+"</td></tr></tbody></table>"}
  if(R.dir)h+='<div class="'+(R.sum?"pb":"")+'">'+hd+"<h2>"+t("directT",lg)+"</h2>"+meta+tbl(directRows(r,lg,true))+"</div>";
  if(R.ind)h+='<div class="'+(R.sum||R.dir?"pb":"")+'">'+hd+"<h2>"+t("indirectT",lg)+"</h2>"+meta+tbl(indirectRows(r,ui.y,lg,false))+"</div>";
  if(R.det){h+='<div class="pb">'+hd+"<h2>"+t("repDet",lg)+"</h2>"+meta;
@@ -521,7 +533,14 @@ function xlsx(lg){loadX(function(){var r=calc(ui.y,ui.per),wb=XLSX.utils.book_ne
 
 /* ---- settings ---- */
 function vSet(){var y=ui.y;
- var h=tb("⚙️ "+t("set"))+'<div class="card"><div class="fg"><div><label>'+t("company")+'</label><input id="sN" value="'+esc(cfg.name)+'"></div><div><label>'+t("currency")+'</label><select id="sCur">'+["THB","JPY","USD","EUR","CNY"].map(function(c){return"<option"+(c===cfg.cur?" selected":"")+">"+c+"</option>"}).join("")+"</select></div>"+
+ var co=cfg.co||{},ci=capInfo(ui.y);
+ var h=tb("⚙️ "+t("set"))+'<div class="card"><h2>🏢 '+t("coInfo")+'</h2><div class="fg"><div class="full"><label>'+t("company")+'</label><input id="sN" value="'+esc(cfg.name)+'"></div>'+
+ '<div><label>'+t("taxId")+'</label><input data-co="tax" value="'+esc(co.tax||"")+'" inputmode="numeric"></div><div><label>'+t("regDate")+'</label><input data-co="rd" type="date" value="'+esc(co.rd||"")+'"></div>'+
+ '<div class="full"><label>'+t("addr")+'</label><input data-co="addr" value="'+esc(co.addr||"")+'"></div>'+
+ '<div><label>'+t("regCap")+' ('+cfg.cur+')</label><input data-co="reg" data-num value="'+(co.reg||"")+'" inputmode="decimal" style="font-weight:700"></div><div><label>'+t("paidCap0")+' ('+cfg.cur+')</label><input data-co="paid0" data-num value="'+(co.paid0||"")+'" inputmode="decimal"></div>'+
+ '<div><label>'+t("shares")+'</label><input data-co="sh" data-num value="'+(co.sh||"")+'" inputmode="numeric"></div><div><label>'+t("par")+'</label><input data-co="par" data-num value="'+(co.par||"")+'" inputmode="decimal"></div>'+
+ '<div class="full hint">'+t("paidCap")+": <b>"+fm(ci.paid)+"</b> · "+t("unpaid")+": <b>"+fm(ci.un)+"</b> ("+t("year")+" "+yDisp(ui.y)+") · "+t("capHint")+'</div></div></div>'+
+ '<div class="card"><div class="fg"><div><label>'+t("currency")+'</label><select id="sCur">'+["THB","JPY","USD","EUR","CNY"].map(function(c){return"<option"+(c===cfg.cur?" selected":"")+">"+c+"</option>"}).join("")+"</select></div>"+
  '<div><label>'+t("openBal")+" ("+t("year")+')</label><select id="sY">'+[y-2,y-1,y,y+1].map(function(v){return'<option value="'+v+'"'+(v===cfg.year?" selected":"")+">"+yDisp(v)+"</option>"}).join("")+"</select></div></div>";
  h+='<h2 style="margin-top:16px">🏦 '+t("accts")+" · "+t("openBal")+"</h2>"+cfg.accts.map(function(a,i){return'<div class="fg" style="margin-bottom:6px;grid-template-columns:1fr 1fr auto"><input data-an="'+i+'" value="'+esc(a.n)+'" style="border:1px solid var(--line);border-radius:10px;padding:8px"><input data-ao="'+a.id+'" value="'+(cfg.open[a.id]||"")+'" inputmode="decimal" placeholder="0" style="border:1px solid var(--line);border-radius:10px;padding:8px;text-align:right"><button class="btn d" data-adel="'+i+'"'+(cfg.accts.length<2?" disabled":"")+">✕</button></div>"}).join("")+'<button class="btn" id="aAdd">'+t("addAcct")+"</button></div>";
  h+='<div class="card"><h2>🏷️ '+t("cats")+'</h2><div class="tw"><table class="dt"><thead><tr><th>'+t("grp")+"</th><th>"+t("dir")+"</th><th>ไทย</th><th>日本語</th><th>English</th><th></th></tr></thead><tbody>"+
@@ -530,7 +549,8 @@ function vSet(){var y=ui.y;
  h+='<div class="card"><h2>💾 '+t("backup")+'</h2><div class="bar"><button class="btn p" id="bk">⬇️ '+t("backup")+'</button><label class="btn">⬆️ '+t("restore")+'<input type="file" id="rs" accept=".json" hidden></label><button class="btn d" id="wp" style="margin-left:auto">🗑 '+t("wipe")+'</button></div><p class="hint">🔒 '+t("localNote")+"</p></div>";
  return h}
 bind.set=function(){function S(){sv(K.cfg,cfg)}
- $("#sN").onchange=function(){cfg.name=this.value.trim();S();nav()};$("#sCur").onchange=function(){cfg.cur=this.value;S()};$("#sY").onchange=function(){cfg.year=+this.value;S()};
+ $("#sN").onchange=function(){cfg.name=this.value.trim();S();nav()};
+ $$("[data-co]").forEach(function(e){e.onchange=function(){cfg.co=cfg.co||{};cfg.co[e.dataset.co]=e.hasAttribute("data-num")?num(e.value):e.value.trim();if(e.dataset.co==="sh"||e.dataset.co==="par"){if(cfg.co.sh&&cfg.co.par&&!cfg.co.reg)cfg.co.reg=cfg.co.sh*cfg.co.par}S();render()}});$("#sCur").onchange=function(){cfg.cur=this.value;S()};$("#sY").onchange=function(){cfg.year=+this.value;S()};
  $$("[data-an]").forEach(function(e){e.onchange=function(){cfg.accts[+e.dataset.an].n=e.value.trim()||"—";S()}});
  $$("[data-ao]").forEach(function(e){e.onchange=function(){cfg.open[e.dataset.ao]=num(e.value);S()}});
  $$("[data-adel]").forEach(function(e){e.onclick=function(){var a=cfg.accts[+e.dataset.adel];if(tx.some(function(x){return x.ac===a.id})){toast("used");return}cfg.accts.splice(+e.dataset.adel,1);delete cfg.open[a.id];S();render()}});
@@ -545,7 +565,7 @@ bind.set=function(){function S(){sv(K.cfg,cfg)}
  $("#wp").onclick=function(){var v=prompt(t("confirmWipe"));if(v==="ลบ"||(v||"").toUpperCase()==="DELETE"){tx=[];ind={};saveAll();toast(t("deleted"));render()}}};
 
 /* ========== demo ========== */
-if(DEMO){(function(){var y=new Date().getFullYear();ui.y=y;cfg=Object.assign({},DEF_CFG,{name:"บริษัท ตัวอย่าง จำกัด",year:y,open:{cash:50000,bank:850000},prep:"สมใจ บัญชีดี",appr:"Tanaka Hiroshi"});
+if(DEMO){(function(){var y=new Date().getFullYear();ui.y=y;cfg=Object.assign({},DEF_CFG,{name:"บริษัท ตัวอย่าง จำกัด",year:y,open:{cash:50000,bank:850000},prep:"สมใจ บัญชีดี",appr:"Tanaka Hiroshi",co:{tax:"0105569000000",addr:"99 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110",rd:"2024-04-01",reg:5000000,paid0:2000000,sh:50000,par:100}});
  var rnd=(function(s){return function(){s=(s*9301+49297)%233280;return s/233280}})(7);
  var cust=["ABC Trading","สยามมาร์ท","Tokyo Foods Co.","บ้านขนม","Kyoto Imports","ร้านป้าแดง"],sup=["ไทยแพ็คเกจจิ้ง","Osaka Supply","ซีพี ฟู้ด","Global Logistics"];
  function add(m,d,tp,a,c,p,n,ac){tx.push({id:uid(),d:y+"-"+("0"+(m+1)).slice(-2)+"-"+("0"+d).slice(-2),t:tp,a:Math.round(a),c:c,p:p,n:n||"",r:"",ac:ac||"bank"})}
@@ -554,7 +574,7 @@ if(DEMO){(function(){var y=new Date().getFullYear();ui.y=y;cfg=Object.assign({},
   add(m,25,"out",185000,"sal","พนักงาน 8 คน","เงินเดือน "+MON.th[m]);add(m,1,"out",45000,"rent","บจก. อาคารดี","ค่าเช่าสำนักงาน");add(m,15,"out",8000+rnd()*4000,"util","การไฟฟ้า","ค่าไฟ/น้ำ/เน็ต");
   add(m,10,"out",12000+rnd()*20000,"mkt",m%2?"Facebook Ads":"Google Ads","โฆษณา");if(m%3===2)add(m,28,"out",30000+rnd()*15000,"tax","กรมสรรพากร","ภาษีเงินได้/VAT");
   add(m,20,"out",3000+rnd()*5000,"oout","อื่น ๆ","ค่าใช้จ่ายเบ็ดเตล็ด","cash");add(m,12,"out",25000,"repay","ธนาคารกรุงเทพ","ผ่อนเงินกู้")}
- add(2,8,"out",320000,"capex","Office Pro","เครื่องจักรบรรจุภัณฑ์");add(7,18,"out",95000,"capex","IT Shop","คอมพิวเตอร์ 5 เครื่อง");add(5,3,"in",500000,"loan","ธนาคารกรุงเทพ","เงินกู้ขยายกิจการ");add(9,22,"in",40000,"asell","ร้านรับซื้อ","ขายรถเก่า");add(11,20,"out",150000,"div","ผู้ถือหุ้น","ปันผลระหว่างกาล");
+ add(2,8,"out",320000,"capex","Office Pro","เครื่องจักรบรรจุภัณฑ์");add(7,18,"out",95000,"capex","IT Shop","คอมพิวเตอร์ 5 เครื่อง");add(5,3,"in",500000,"loan","ธนาคารกรุงเทพ","เงินกู้ขยายกิจการ");add(8,1,"in",500000,"cap","ผู้ถือหุ้น","เรียกชำระค่าหุ้นเพิ่ม");add(9,22,"in",40000,"asell","ร้านรับซื้อ","ขายรถเก่า");add(11,20,"out",150000,"div","ผู้ถือหุ้น","ปันผลระหว่างกาล");
  var r=calc(y,"m");for(var i=0;i<12;i++){var op=r.grp.op[i],dep=18000,dAR=Math.round((rnd()-.55)*60000),dInv=Math.round((rnd()-.5)*40000),dAP=Math.round((rnd()-.45)*30000);
   ind[y+"-"+("0"+(i+1)).slice(-2)]={ni:op-dep-dAR-dInv-dAP,dep:dep,dAR:dAR,dInv:dInv,dAP:dAP,oth:0}}
 })()}
