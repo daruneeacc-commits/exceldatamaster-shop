@@ -240,7 +240,9 @@ en:{app:"Cash Flow Statement",dash:"Overview",direct:"Direct",indirect:"Indirect
  pasteH:"Copy from Excel and paste · columns: Date | In/Out | Amount | Category | Counterparty | Description | Account",
  import:"Import",saved:"Saved",deleted:"Deleted",need:"Enter an amount",confirmDel:"Delete this transaction?",confirmWipe:"Type DELETE to confirm",
  notMatch:"Mismatch",ofTotal:"of total",bal:"Balance",in:"In",out:"Out"}};
-Object.assign(L.th,{costS:"สต๊อก",vatS:"VAT"});Object.assign(L.ja,{costS:"在庫",vatS:"VAT"});Object.assign(L.en,{costS:"Stock",vatS:"VAT"});
+Object.assign(L.th,{costS:"สต๊อก",vatS:"VAT",saleAct:"กิจกรรมการขายสินค้า",saleNo:"ยังไม่มีการขายที่ใส่รายการสินค้า · บันทึกเงินรับหมวด \"รายรับจากการขาย\" แล้วใส่สินค้า เพื่อดูกำไรขั้นต้น",cogs:"ต้นทุนขาย",margin:"อัตรากำไรขั้นต้น",topGp:"สินค้ากำไรสูงสุด",saleHint:"คิดจากการขายที่ใส่รายการสินค้า · ต้นทุนขาย = จำนวนที่ขาย × ต้นทุนเฉลี่ย · ไม่รวม VAT",inByCat:"รายรับแยกตามหมวด"});
+Object.assign(L.ja,{saleAct:"商品販売活動",saleNo:"商品明細付きの売上がありません",cogs:"売上原価",margin:"粗利率",topGp:"粗利の高い商品",saleHint:"商品明細付きの売上から計算 · 売上原価＝販売数×平均原価 · 税抜",inByCat:"区分別の収入"});
+Object.assign(L.en,{saleAct:"Product sales activity",saleNo:"No sales with item lines yet",cogs:"Cost of goods sold",margin:"Gross margin",topGp:"Top products by gross profit",saleHint:"From sales with item lines · COGS = qty sold × avg cost · ex VAT",inByCat:"Income by category"});Object.assign(L.ja,{costS:"在庫",vatS:"VAT"});Object.assign(L.en,{costS:"Stock",vatS:"VAT"});
 Object.assign(L.th,{vat:"ภาษี VAT",vatT:"ภาษีมูลค่าเพิ่ม (ภาษีขาย · ภาษีซื้อ)",outVat:"ภาษีขาย",inVat:"ภาษีซื้อ",vatNet:"ภาษีที่ต้องชำระ (ขอคืน)",salesBase:"ยอดขาย (ก่อน VAT)",buyBase:"ยอดซื้อ (ก่อน VAT)",vatHint:"แตะเดือนเพื่อดูรายงานภาษีขาย/ภาษีซื้อ และส่งออก CSV",salesRep:"รายงานภาษีขาย",buyRep:"รายงานภาษีซื้อ",taxInv:"เลขที่ใบกำกับภาษี",ptid:"เลขผู้เสียภาษีคู่ค้า",base:"มูลค่าก่อน VAT",vNone:"ไม่มี VAT",vInc:"ราคารวม VAT แล้ว",vExc:"ราคาไม่รวม VAT (บวกเพิ่ม)",amtEx:"ยอดก่อน VAT",amtInc:"ยอดรวม VAT",itemsS:"🛒 รายการสินค้าที่ขาย",sprice:"ราคาขาย/หน่วย",onhand:"คงเหลือ",noStock:"ไม่มีในสต๊อก",bought:"ซื้อเข้า",sold:"ขายออก",ohv:"มูลค่าคงเหลือ",salesV:"ยอดขาย (ก่อน VAT)",gp:"กำไรขั้นต้น",buyValY:"ซื้อเข้า (มูลค่า)",month:"เดือน",vatR:"อัตรา VAT (%)",repVat:"สรุปภาษีมูลค่าเพิ่มรายเดือน"});
 Object.assign(L.ja,{vat:"消費税",vatT:"付加価値税（売上税・仕入税）",outVat:"売上VAT",inVat:"仕入VAT",vatNet:"納付税額（還付）",salesBase:"売上（税抜）",buyBase:"仕入（税抜）",vatHint:"月をタップで売上・仕入VAT明細とCSV出力",salesRep:"売上VAT明細",buyRep:"仕入VAT明細",taxInv:"税務請求書番号",ptid:"取引先納税者番号",base:"税抜金額",vNone:"VATなし",vInc:"税込価格",vExc:"税抜価格（VAT加算）",amtEx:"税抜金額",amtInc:"税込金額",itemsS:"🛒 販売商品",sprice:"販売単価",onhand:"在庫",noStock:"在庫なし",bought:"仕入",sold:"販売",ohv:"在庫金額",salesV:"売上（税抜）",gp:"粗利益",buyValY:"仕入金額",month:"月",vatR:"VAT率（%）",repVat:"月次VAT集計"});
 Object.assign(L.en,{vat:"VAT",vatT:"VAT (output · input)",outVat:"Output VAT",inVat:"Input VAT",vatNet:"VAT payable (refund)",salesBase:"Sales (ex VAT)",buyBase:"Purchases (ex VAT)",vatHint:"Tap a month for output/input VAT reports and CSV",salesRep:"Output VAT report",buyRep:"Input VAT report",taxInv:"Tax invoice no.",ptid:"Counterparty tax ID",base:"Amount ex VAT",vNone:"No VAT",vInc:"Price includes VAT",vExc:"Price excludes VAT (add)",amtEx:"Amount ex VAT",amtInc:"Amount incl. VAT",itemsS:"🛒 Items sold",sprice:"Selling price",onhand:"On hand",noStock:"Not in stock",bought:"Bought",sold:"Sold",ohv:"Stock value",salesV:"Sales (ex VAT)",gp:"Gross profit",buyValY:"Purchases",month:"Month",vatR:"VAT rate (%)",repVat:"Monthly VAT summary"});
@@ -364,6 +366,7 @@ function vDash(){
  var r=calc(ui.y,"m"),ti=sum(r.tIn),to=sum(r.tOut),n=sum(r.net);
  var h=tb(t("dash"),'<button class="btn g" data-addt="in">'+t("addIn")+'</button><button class="btn" data-addt="out" style="background:var(--out);border-color:var(--out);color:#fff">'+t("addOut")+'</button>')+'<div class="kpis">'+
   kp(t("open"),r.open[0],"#5d6c78","")+kp(t("inflow"),ti,"var(--in)","in")+kp(t("outflow"),-to,"var(--out)","out")+kp(t("net"),n,n>=0?"var(--in)":"var(--out)","")+kp(t("close"),r.close[11],"var(--brand)","")+"</div>";
+ h+=salesCard(r);
  h+='<div class="g2"><div class="card"><h2>📈 '+t("trend")+"</h2>"+chart(r)+'<div class="leg"><span><i style="background:#7fc79e"></i>'+t("inflow")+'</span><span><i style="background:#ee9a94"></i>'+t("outflow")+'</span><span><i style="background:var(--brand)"></i>'+t("close")+"</span></div></div>";
  var gs=["op","inv","fin"].map(function(g){return[g,sum(r.grp[g])]});
  h+='<div class="card"><h2>🧭 '+t("byGrp")+"</h2>"+gs.map(function(g){var c={op:"var(--op)",inv:"var(--inv)",fin:"var(--fin)"}[g[0]];return'<div class="list"><div class="row" data-drill="g:'+g[0]+':all" style="grid-template-columns:1fr auto"><b><span style="color:'+c+'">●</span> '+t(g[0])+'</b><span class="amt '+(g[1]>=0?"in":"out")+'">'+fm(g[1])+"</span></div></div>"}).join("");
@@ -372,6 +375,21 @@ function vDash(){
  h+=capCard();
  h+='<p class="hint" style="text-align:center">🔒 '+t("localNote")+"</p>";
  return h}
+function salesCard(r){var S=itemStats(ui.y),sv=0,cg=0;S.forEach(function(x){sv+=x.ysv;cg+=x.cogs});var gp=sv-cg,mg=sv?gp/sv*100:0;
+ var ci={},ti=0;r.Y.forEach(function(x){if(x.t==="in"){ci[x.c]=(ci[x.c]||0)+x.a;ti+=x.a}});var ik=Object.keys(ci).sort(function(a,b){return ci[b]-ci[a]});
+ var h='<div class="g2"><div class="card"><h2>🛒 '+t("saleAct")+'</h2>';
+ if(!sv)h+='<div class="hint" style="padding:10px 0">'+t("saleNo")+'</div><button class="btn g" data-addt="in">'+t("addIn")+"</button>";
+ else{h+='<div class="kpis" style="grid-template-columns:repeat(2,1fr);margin-bottom:10px">'+
+  '<div class="kpi" style="--c:var(--in);cursor:default"><small>'+t("salesV")+"</small><b>"+fm(sv)+"</b></div>"+
+  '<div class="kpi" style="--c:var(--out);cursor:default"><small>'+t("cogs")+"</small><b>"+fm(cg)+"</b></div>"+
+  '<div class="kpi" style="--c:'+(gp>=0?"var(--in)":"var(--out)")+';cursor:default"><small>'+t("gp")+"</small><b>"+fm(gp)+"</b></div>"+
+  '<div class="kpi" style="--c:var(--brand);cursor:default"><small>'+t("margin")+"</small><b>"+mg.toFixed(1)+"%</b></div></div>"+
+  '<div style="height:14px;border-radius:99px;background:#fdeceb;overflow:hidden;display:flex"><div style="width:'+Math.max(0,Math.min(100,100-mg))+'%;background:#ee9a94"></div><div style="flex:1;background:#7fc79e"></div></div><div class="leg"><span><i style="background:#ee9a94"></i>'+t("cogs")+'</span><span><i style="background:#7fc79e"></i>'+t("gp")+"</span></div>"+
+  '<h2 style="margin-top:14px">🏆 '+t("topGp")+'</h2><div class="list">'+S.filter(function(x){return x.ysv}).sort(function(a,b){return b.gp-a.gp}).slice(0,5).map(function(x){return'<div class="row" data-v2="cost" style="grid-template-columns:1fr auto"><b>'+esc(x.name)+"<small>"+t("sold")+" "+fq(x.ysq)+" · "+t("salesV")+" "+fm(x.ysv)+" · "+(x.ysv?(x.gp/x.ysv*100).toFixed(1):0)+'%</small></b><span class="amt '+(x.gp>=0?"in":"out")+'">'+fm(x.gp)+"</span></div>"}).join("")+"</div>"+
+  '<p class="hint" style="margin-top:8px">ℹ️ '+t("saleHint")+"</p>"}
+ h+='</div><div class="card"><h2>💰 '+t("inByCat")+'</h2><div class="list">'+(ik.length?ik.map(function(c){return'<div class="row" data-drill="c:'+c+':all" style="grid-template-columns:1fr auto"><b>'+esc(cn(cat(c)))+"<small>"+(cat(c)?t(cat(c).g):"")+" · "+Math.round(ci[c]/(ti||1)*100)+"% "+t("ofTotal")+'</small></b><span class="amt in">'+fm(ci[c])+"</span></div>"}).join(""):'<div class="hint">—</div>')+"</div></div></div>";
+ return h}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-v2]");if(b){ui.v=b.dataset.v2;sui();render();scrollTo(0,0)}});
 function kp(lb,v,c,dr){return'<div class="kpi" style="--c:'+c+'"'+(dr?' data-drill="t:'+dr+':all"':"")+'><small>'+lb+"</small><b>"+symb()+fs(v)+"</b><em>"+fm(v)+"</em></div>"}
 function chart(r){var W=640,H=230,P=34,mx=1;r.tIn.forEach(function(v,i){mx=Math.max(mx,v,r.tOut[i])});var cmx=Math.max.apply(null,r.close.map(Math.abs).concat([1]));
  var bw=(W-P*2)/12,s='<svg class="svgc" viewBox="0 0 '+W+" "+H+'">';
