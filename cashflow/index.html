@@ -949,7 +949,7 @@ function bnInvs(b){return(b.invs||[]).map(docById).filter(function(z){return z&&
 function invLeft(d){return r2(docCalc(d).due-docPaid(d))}
 function bnLeft(b){return r2(sum(bnInvs(b).map(invLeft)))}
 function docAmt(d){return d.type==="bn"?r2(sum(bnInvs(d).map(function(z){return docCalc(z).due}))):d.type==="inv"?docCalc(d).due:docCalc(d).tot}
-function docNo(type,d){var y=+d.slice(0,4),m=d.slice(5,7),pre=DT[type]?DT[type].p:"RC",key=pre+String(y+543).slice(2)+m,n=0,re=new RegExp("^"+key+"-(\\d+)$");docs.forEach(function(z){var r=re.exec(z.no||"");if(r)n=Math.max(n,+r[1])});tx.forEach(function(x){var r=re.exec(x.rcno||"");if(r)n=Math.max(n,+r[1])});n++;cfg.dseq=cfg.dseq||{};cfg.dseq[key]=n;return key+"-"+("000"+n).slice(-4)}
+function docNo(type,d){var y=+d.slice(0,4),m=d.slice(5,7),pre=DT[type]?DT[type].p:"RC",key=pre+String(y+543).slice(2)+m,n=1,U={},re=new RegExp("^"+key+"-(\\d+)$");docs.forEach(function(z){var r=re.exec(z.no||"");if(r)U[+r[1]]=1});tx.forEach(function(x){var r=re.exec(x.rcno||"");if(r)U[+r[1]]=1});while(U[n])n++;cfg.dseq=cfg.dseq||{};cfg.dseq[key]=n;return key+"-"+("000"+n).slice(-4)}
 function docCalc(d){var vt=d.vt||"",r=VR(),L=(d.lines||[]).map(function(l){return Object.assign({},l,{tot:(+l.q||0)*(+l.u||0)-(+l.dc||0)})}),sub=sum(L.map(function(l){return l.tot})),disc=+d.disc||0,g=sub-disc,base,vat,tot;
  if(vt==="exc"){base=g;vat=r2(g*r);tot=base+vat}else if(vt==="inc"){tot=g;vat=r2(g-g/(1+r));base=tot-vat}else{base=tot=g;vat=0}
  var f=sub?(vt==="inc"?base/sub:g/sub):0;L.forEach(function(l){l.ux=(+l.u||0)*f;l.uc=0});var wr=(+d.wr||0)/100;
