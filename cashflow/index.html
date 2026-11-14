@@ -271,7 +271,7 @@ dialog::backdrop{background:rgba(20,30,40,.45)}
 "use strict";
 /* ========== storage ========== */
 /* multi-company (15 พ.ย.): edm_cf_cos {cur,list[{id,n}]} · บริษัทแรก = คีย์เดิม edm_cf_* · บริษัทอื่น = edm_cf_c<id>_* */
-var KN=["tx","cfg","ind","ui","coa","je","docs","cust","items","sup","fa"];
+var KN=["tx","cfg","ind","ui","coa","je","docs","cust","items","sup","fa","chqx"];
 function kpOf(id){return id?"edm_cf_c"+id+"_":"edm_cf_"}
 var CO=(function(){var o;try{o=JSON.parse(localStorage.getItem("edm_cf_cos")||"null")}catch(e){}o=o&&o.list?o:{cur:"",list:[]};if(/[?&]demo=1/.test(location.search))o.cur="";if(o.cur&&!o.list.some(function(c){return c.id===o.cur}))o.cur="";return o})();
 var K={};KN.forEach(function(n){K[n]=kpOf(CO.cur)+n});
@@ -347,6 +347,10 @@ en:{app:"Cash Flow Statement",dash:"Overview",direct:"Direct",indirect:"Indirect
  pasteH:"Copy from Excel and paste · columns: Date | In/Out | Amount | Category | Counterparty | Description | Account",
  import:"Import",saved:"Saved",deleted:"Deleted",need:"Enter an amount",confirmDel:"Delete this transaction?",confirmWipe:"Type DELETE to confirm",
  notMatch:"Mismatch",ofTotal:"of total",bal:"Balance",in:"In",out:"Out"}};
+Object.assign(L.th,{chqIn:"เช็ครับ",chqOut:"เช็คจ่าย"});Object.assign(L.ja,{chqIn:"受取小切手",chqOut:"支払小切手"});Object.assign(L.en,{chqIn:"Cheques received",chqOut:"Cheques issued"});
+Object.assign(L.th,{j_all:"สมุดรายวันทั้งหมด",j_rv:"สมุดรายวันรับเงิน",j_pv:"สมุดรายวันจ่ายเงิน",j_sj:"สมุดรายวันขาย",j_pj:"สมุดรายวันซื้อ",j_jv:"สมุดรายวันทั่วไป"});
+Object.assign(L.ja,{j_all:"仕訳帳（全体）",j_rv:"入金仕訳帳",j_pv:"出金仕訳帳",j_sj:"売上仕訳帳",j_pj:"仕入仕訳帳",j_jv:"振替仕訳帳"});
+Object.assign(L.en,{j_all:"All journals",j_rv:"Cash receipts journal",j_pv:"Cash payments journal",j_sj:"Sales journal",j_pj:"Purchases journal",j_jv:"General journal"});
 Object.assign(L.th,{g_purA:"ซื้อ",g_arA:"ลูกหนี้",g_apA:"เจ้าหนี้",g_bankA:"เงินสด·ธนาคาร",g_glA:"บัญชีแยกประเภท",ex_pcr:"ซื้อเงินเชื่อ",ex_pcs:"ซื้อเงินสด · ค่าใช้จ่าย",ex_rcv:"รับชำระหนี้",ex_pay:"จ่ายชำระหนี้"});
 Object.assign(L.ja,{g_purA:"仕入",g_arA:"売掛金",g_apA:"買掛金",g_bankA:"現金·銀行",g_glA:"総勘定元帳",ex_pcr:"掛仕入",ex_pcs:"現金仕入・経費",ex_rcv:"入金消込",ex_pay:"支払"});
 Object.assign(L.en,{g_purA:"Purchase",g_arA:"Receivables",g_apA:"Payables",g_bankA:"Cash·Bank",g_glA:"Ledger",ex_pcr:"Credit purchases",ex_pcs:"Cash purchases · expenses",ex_rcv:"Receive payments",ex_pay:"Pay bills"});
@@ -436,13 +440,13 @@ var DEF_CATS=[
  {id:"repay",g:"fin",d:"out",th:"ชำระคืนเงินกู้",ja:"借入金の返済",en:"Loan repayment"},
  {id:"div",g:"fin",d:"out",th:"จ่ายเงินปันผล",ja:"配当金の支払",en:"Dividends paid"},
  {id:"whtpay",g:"op",d:"out",th:"นำส่งภาษีหัก ณ ที่จ่าย (ภ.ง.ด.3/53)",ja:"源泉税の納付",en:"Withholding tax remitted"},
- {id:"vatpay",g:"op",d:"out",th:"นำส่ง VAT (ภ.พ.30)",ja:"消費税の納付",en:"VAT remitted"},
+ {id:"vatpay",g:"op",d:"out",th:"นำส่ง VAT (ภ.พ.30)",ja:"消費税の納付",en:"VAT remitted"},{id:"ssopay",g:"op",d:"out",th:"นำส่งเงินประกันสังคม (สปส.1-10)",ja:"社会保険料の納付",en:"Social security remitted"},
  {id:"depo",g:"op",d:"in",th:"รับเงินมัดจำจากลูกค้า",ja:"前受金の受取",en:"Customer deposits received"}];
 var DEF_CFG={name:"",cur:"THB",year:new Date().getFullYear(),open:{},accts:[{id:"cash",n:"เงินสด"},{id:"bank",n:"ธนาคาร"}],cats:DEF_CATS,prep:"",appr:""};
 var tx=ld(K.tx,[]),cfg=Object.assign({},DEF_CFG,ld(K.cfg,{})),ind=ld(K.ind,{}),ui=Object.assign({v:"dash",lang:"th",y:null,per:"m",f:"all",q:"",open:{},rep:{dir:1,ind:1,sum:1,vat:1,pl:1,bs:1,det:1,lang:null}},ld(K.ui,{}));
 if(!cfg.cats||!cfg.cats.length)cfg.cats=DEF_CATS;
 if(!cfg.co)cfg.co={};
-["whtpay","vatpay","depo"].forEach(function(id){if(!cfg.cats.some(function(c){return c.id===id}))cfg.cats.push(DEF_CATS.filter(function(c){return c.id===id})[0])});
+try{chqEnsure()}catch(e){}["whtpay","vatpay","depo","ssopay"].forEach(function(id){if(!cfg.cats.some(function(c){return c.id===id}))cfg.cats.push(DEF_CATS.filter(function(c){return c.id===id})[0])});
 cfg.cats.forEach(function(c){if(c.id==="sales"){if(c.th==="รับเงินจากลูกค้า")c.th="รายรับจากการขาย";if(c.ja==="営業収入（売上入金）")c.ja="売上による収入";if(c.en==="Receipts from customers")c.en="Revenue from sales"}});
 function capInfo(y){var co=cfg.co||{},reg=+co.reg||0,p0=+co.paid0||0,add=0;tx.forEach(function(x){if(x.c==="cap"&&x.d&&+x.d.slice(0,4)<=y)add+=x.t==="in"?x.a:-x.a});var paid=p0+add;return{reg:reg,p0:p0,add:add,paid:paid,un:Math.max(0,reg-paid),pct:reg?Math.min(100,paid/reg*100):0}}
 function capCard(lg){var c=capInfo(ui.y),co=cfg.co||{};if(!c.reg&&!c.paid)return"";
@@ -457,7 +461,7 @@ function t(k,lg){var d=L[lg||lang]||L.th;return d[k]!=null?d[k]:(L.th[k]||k)}
 function cn(c,lg){lg=lg||lang;return c?(c[lg]||c.th||c.en||c.id):"?"}
 function cat(id){for(var i=0;i<cfg.cats.length;i++)if(cfg.cats[i].id===id)return cfg.cats[i];return null}
 function acctN(id){for(var i=0;i<cfg.accts.length;i++)if(cfg.accts[i].id===id)return cfg.accts[i].n;return id||""}
-function saveAll(){sv(K.tx,tx);sv(K.cfg,cfg);sv(K.ind,ind);sv(K.ui,ui)}
+function saveAll(){try{chqApply()}catch(e){}sv(K.tx,tx);sv(K.cfg,cfg);sv(K.ind,ind);sv(K.ui,ui)}
 function sui(){ui.lang=lang;sv(K.ui,ui)}
 
 /* ========== utils ========== */
@@ -529,21 +533,21 @@ var MENU,MENU_A=[["dash","📊",[["dash","dash"]]],
  ["arA","💰",[["dt_bn","bill",{bf:"bn"}],["ex_rcv","bill",{bf:"ar"}],["rcList","bill",{bf:"rc"}],["dt_dp","bill",{bf:"dp"}],["paidS","bill",{bf:"paid"}],["custT","bill",{bf:"cu"}],["cashIn","tx",{f:"in"}]]],
  ["apA","💸",[["apT","buy",{pf:"open"}],["ex_pay","buy",{pf:"pv"}],["whtG","vat"]]],
  ["stk","📦",[["cost","cost"]]],
- ["bankA","🏦",[["allTx","tx",{f:"all"}],["trT","tx",{f:"tr"}],["av_rec","acc",{av:"rec"}],["direct","direct"]]],
- ["glA","📒",[["av_jnl","acc",{av:"jnl"}],["av_gl","acc",{av:"gl"}],["av_tb","acc",{av:"tb"}],["av_fa","acc",{av:"fa"}]]],
+ ["bankA","🏦",[["chqIn","chq",{cq:"in"}],["chqOut","chq",{cq:"out"}],["allTx","tx",{f:"all"}],["trT","tx",{f:"tr"}],["av_rec","acc",{av:"rec"}],["direct","direct"]]],
+ ["glA","📒",[["j_all","acc",{av:"jnl",jt:"all"}],["j_rv","acc",{av:"jnl",jt:"rv"}],["j_pv","acc",{av:"jnl",jt:"pv"}],["j_sj","acc",{av:"jnl",jt:"sj"}],["j_pj","acc",{av:"jnl",jt:"pj"}],["j_jv","acc",{av:"jnl",jt:"jv"}],["av_gl","acc",{av:"gl"}],["av_tb","acc",{av:"tb"}],["av_fa","acc",{av:"fa"}]]],
  ["repG","📈",[["av_pl","acc",{av:"pl"}],["av_bs","acc",{av:"bs"}],["vat","vat"],["rep","rep"]]],
  ["docsG","🖨️",[["docAll","docs",{df:"all"}],["docSale","docs",{df:"sale"}],["rcList","docs",{df:"rc"}],["pvList","docs",{df:"pv"}],["wcT","docs",{df:"wc"}]]],
  ["setG","⚙️",[["set","set"],["av_coa","acc",{av:"coa"}],["custT","bill",{bf:"cu"}],["supT","buy",{pf:"sup"}],["itemT","bill",{bf:"it"}]]]];
 var MENU_O=[["dash","🏠",[["dash","dash"]]],
  ["sell","🧾",[["sAll","bill",{bf:"all"}],["o_ar","bill",{bf:"ar"}],["rcList","bill",{bf:"rc"}],["custT","bill",{bf:"cu"}],["itemT","bill",{bf:"it"}]]],
  ["buyG","🛒",[["pAll","buy",{pf:"all"}],["o_ap","buy",{pf:"open"}],["cashOut","tx",{f:"out"}],["supT","buy",{pf:"sup"}]]],
- ["money","💰",[["allTx","tx",{f:"all"}],["direct","direct"],["trT","tx",{f:"tr"}]]],
+ ["money","💰",[["allTx","tx",{f:"all"}],["direct","direct"],["trT","tx",{f:"tr"}],["chqIn","chq",{cq:"in"}],["chqOut","chq",{cq:"out"}]]],
  ["docsG","🖨️",[["docAll","docs",{df:"all"}],["docSale","docs",{df:"sale"}],["rcList","docs",{df:"rc"}],["pvList","docs",{df:"pv"}],["wcT","docs",{df:"wc"}]]],
  ["stk","📦",[["cost","cost"]]],
  ["repG","📈",[["av_pl","acc",{av:"pl"}],["vat","vat"],["rep","rep"]]],
  ["setG","⚙️",[["set","set"]]]];
 function pickMenu(){var M=cfg.mode==="acct"?MENU_A:MENU_O;MENU=M.map(function(g){return[g[0],g[1],g[2].filter(function(sb){return!(sb[1]==="vat"&&cfg.novat&&cfg.nowht)&&!(sb[1]==="docs"&&sb[2]&&sb[2].df==="wc"&&cfg.nowht)})]}).filter(function(g){return g[2].length&&!(g[0]==="stk"&&cfg.biz==="service")});return MENU}
-var SUBDEF={bf:"all",pf:"all",f:"all",av:"pl",df:"all"};
+var SUBDEF={bf:"all",pf:"all",f:"all",av:"pl",df:"all",jt:"all",cq:"in"};
 function subOn(sb){if(sb[1]!==ui.v)return false;var o=sb[2]||{};for(var k in o)if((ui[k]||SUBDEF[k])!==o[k])return false;return true}
 function curG(){var m=MENU.filter(function(m){return m[0]===ui.g})[0];if(m&&m[2].some(subOn))return m[0];m=MENU.filter(function(m){return m[2].some(subOn)})[0]||MENU.filter(function(m){return m[2].some(function(sb){return sb[1]===ui.v})})[0];return m?m[0]:"dash"}
 function goSub(sb){ui.v=sb[1];var o=sb[2]||{};for(var k in o)ui[k]=o[k];sui();render();scrollTo(0,0)}
@@ -570,7 +574,7 @@ function bindTb(){var y=$("#yy");if(y)y.onchange=function(){ui.y=+this.value;sui
 
 /* ========== render ========== */
 function render(){if(ui.v==="indirect")ui.v="dash";nav();var v=ui.v;var h=(DEMO?'<div class="card" style="background:#fff7d6;border-color:#f1dca3;padding:10px 14px">🧪 '+t("demoNote")+"</div>":"");
- h+=v==="docs"?vDocs():v==="bill"?vBill():v==="buy"?vBuy():v==="acc"?vAcc():v==="vat"?vVat():v==="cost"?vCost():v==="dash"?vDash():v==="direct"?vDirect():v==="indirect"?vIndirect():v==="tx"?vTx():v==="rep"?vRep():vSet();
+ h+=v==="chq"?vChq():v==="docs"?vDocs():v==="bill"?vBill():v==="buy"?vBuy():v==="acc"?vAcc():v==="vat"?vVat():v==="cost"?vCost():v==="dash"?vDash():v==="direct"?vDirect():v==="indirect"?vIndirect():v==="tx"?vTx():v==="rep"?vRep():vSet();
  $("#main").innerHTML=h;bindTb();bind[v]&&bind[v]()}
 var bind={};
 
@@ -692,7 +696,7 @@ document.addEventListener("click",function(e){var d=e.target.closest("[data-dril
  var ed=e.target.closest("[data-ed]");if(ed){var x=tx.filter(function(y){return y.id===ed.dataset.ed})[0];if(x)txDlg(x,$("#dlg").open);return}
  if(e.target.closest("[data-add]")){txDlg(null);return}var at=e.target.closest("[data-addt]");if(at){ui.lastT=at.dataset.addt;txDlg(null);return}if(e.target.closest("[data-paste]")){pasteDlg();return}
  var c=e.target.closest("[data-close]");if(c){c.closest("dialog").close()}});
-function showDlg(tl,b,f,second){var D=second?"#dlg2":"#dlg";$(D).style.width="";$(D+"T").textContent=tl;$(D+"B").innerHTML=b;$(D+"F").innerHTML=f||"";if(!$(D).open)$(D).showModal();$(D+"B").scrollTop=0;
+function showDlg(tl,b,f,second){var D=second?"#dlg2":"#dlg";$(D).style.width="";$(D+"T").textContent=tl;$(D+"B").innerHTML=b;$(D+"F").innerHTML=f||"";if(!$(D).open)$(D).showModal();$(D+"B").scrollTop=0;try{chqInject($(D))}catch(e){}
  var fx=function(q,v){var e=$(q);if(e&&e.value!==v&&!(v==="0"&&!+e.value)){if(e.tagName==="SELECT"&&!e.querySelector('option[value="'+v+'"]'))v=e.options[0].value;e.value=v;["input","change"].forEach(function(n){e.dispatchEvent(new Event(n,{bubbles:true}))})}};
  setTimeout(function(){if(cfg.novat){fx("#fV","");fx("#bV","")}if(cfg.nowht){fx("#bW","0");fx("#fW","0")}},0)}
 
@@ -885,7 +889,7 @@ var DEF_COA=[
  {c:"2130",t:"L",th:"ภาษีขาย",ja:"仮受消費税（売上VAT）",en:"Output VAT"},
  {c:"2131",t:"L",th:"ภาษีขายยังไม่ถึงกำหนดชำระ",ja:"仮受消費税（未確定）",en:"Deferred output VAT"},
  {c:"2140",t:"L",th:"ภาษีหัก ณ ที่จ่ายค้างนำส่ง",ja:"預り源泉税",en:"Withholding tax payable"},
- {c:"2150",t:"L",th:"เงินรับล่วงหน้า / มัดจำรับ",ja:"前受金",en:"Customer deposits"},
+ {c:"2150",t:"L",th:"เงินรับล่วงหน้า / มัดจำรับ",ja:"前受金",en:"Customer deposits"},{c:"2160",t:"L",th:"เงินประกันสังคมค้างจ่าย",ja:"未払社会保険料",en:"Social security payable"},
  {c:"2210",t:"L",th:"เงินกู้ยืม",ja:"借入金",en:"Loans payable"},
  {c:"3110",t:"E",th:"ทุนเรือนหุ้น (ชำระแล้ว)",ja:"資本金",en:"Share capital"},
  {c:"3200",t:"E",th:"กำไร(ขาดทุน)สะสม",ja:"利益剰余金",en:"Retained earnings"},
@@ -894,7 +898,7 @@ var DEF_COA=[
  {c:"4120",t:"R",th:"รายได้จากการให้บริการ",ja:"役務収益",en:"Service revenue"},
  {c:"4190",t:"R",th:"รายได้อื่น",ja:"その他の収益",en:"Other income"},
  {c:"5110",t:"X",th:"ต้นทุนขาย",ja:"売上原価",en:"Cost of goods sold"},
- {c:"6110",t:"X",th:"เงินเดือนและสวัสดิการ",ja:"給与・福利厚生費",en:"Salaries & benefits"},
+ {c:"6110",t:"X",th:"เงินเดือนและสวัสดิการ",ja:"給与・福利厚生費",en:"Salaries & benefits"},{c:"6111",t:"X",th:"เงินสมทบกองทุนประกันสังคม (ส่วนนายจ้าง)",ja:"法定福利費（社会保険・事業主負担）",en:"Social security contribution (employer)"},
  {c:"6120",t:"X",th:"ค่าเช่า",ja:"地代家賃",en:"Rent"},
  {c:"6130",t:"X",th:"ค่าสาธารณูปโภค",ja:"水道光熱費・通信費",en:"Utilities & telecom"},
  {c:"6140",t:"X",th:"ค่าโฆษณาและการตลาด",ja:"広告宣伝費",en:"Marketing"},
@@ -902,13 +906,13 @@ var DEF_COA=[
  {c:"6160",t:"X",th:"ค่าเสื่อมราคา",ja:"減価償却費",en:"Depreciation"},
  {c:"6170",t:"X",th:"ดอกเบี้ยจ่าย",ja:"支払利息",en:"Interest expense"},
  {c:"6190",t:"X",th:"ค่าใช้จ่ายอื่น",ja:"その他の費用",en:"Other expenses"}];
-var CAT_ACC={sales:"4110",oin:"4190",supp:"5110",sal:"6110",rent:"6120",util:"6130",mkt:"6140",tax:"6150",oout:"6190",asell:"1210",capex:"1210",loan:"2210",cap:"3110",repay:"2210",div:"3300",whtpay:"2140",vatpay:"2130",depo:"2150"};
+var CAT_ACC={sales:"4110",oin:"4190",supp:"5110",sal:"6110",rent:"6120",util:"6130",mkt:"6140",tax:"6150",oout:"6190",asell:"1210",capex:"1210",loan:"2210",cap:"3110",repay:"2210",div:"3300",whtpay:"2140",vatpay:"2130",depo:"2150",ssopay:"2160"};
 var coaX=ld(K.coa,[]),jeM=ld(K.je,[]),fas=ld(K.fa,[]);
 /* period lock: nothing dated on/before cfg.lock may be added, changed or deleted */
 function LK(){for(var i=0;i<arguments.length;i++){var d=arguments[i];if(cfg.lock&&d&&d<=cfg.lock){toast("🔒 "+t("lockedV")+" "+dmy(cfg.lock));return true}}return false}
 function saveAcc(){sv(K.coa,coaX);sv(K.je,jeM);sv(K.fa,fas)}
-function acCode(id){var i=0,code="";cfg.accts.forEach(function(a){if(code)return;if(a.id==="cash"&&id==="cash")code="1101";else if(a.id!=="cash"){if(a.id===id)code="11"+("0"+(2+i)).slice(-2);i++}});return code||"1199"}
-function COA(){var L=cfg.accts.map(function(a){return{c:acCode(a.id),t:"A",th:a.n,ja:a.n,en:a.n,cashAc:a.id,sys:1}});
+function acCode(id){if(id==="chqin")return"1105";if(id==="chqout")return"2105";var i=0,code="";cfg.accts.forEach(function(a){if(code||a.id==="chqin"||a.id==="chqout")return;if(a.id==="cash"&&id==="cash")code="1101";else if(a.id!=="cash"){if(a.id===id)code="11"+("0"+(2+i)).slice(-2);i++}});return code||"1199"}
+function COA(){var L=cfg.accts.map(function(a){return{c:acCode(a.id),t:a.id==="chqout"?"L":"A",th:a.n,ja:a.n,en:a.n,cashAc:a.id,sys:1}});
  DEF_COA.forEach(function(d){var o=coaX.filter(function(z){return z.c===d.c})[0];L.push(Object.assign({},d,{sys:1},o?{th:o.th||d.th,ja:o.ja||d.ja,en:o.en||d.en}:{}))});
  coaX.forEach(function(z){if(!L.some(function(q){return q.c===z.c}))L.push(z)});return L.sort(function(a,b){return a.c<b.c?-1:1})}
 function acc(c){return COA().filter(function(a){return a.c===c})[0]}
@@ -933,8 +937,8 @@ function depAcc(a,end){var s=0,D=faDep(a);Object.keys(D).forEach(function(k){if(
 function jeAll(){var avg={};itemStats(9999).forEach(function(r){avg[r.name.toLowerCase()]=r.avg});var out=[];
  var DM={};fas.forEach(function(a){var D=faDep(a);Object.keys(D).forEach(function(k){DM[k]=r2((DM[k]||0)+D[k])})});Object.keys(DM).sort().forEach(function(k){if(DM[k])out.push({id:"dep"+k,d:lastDay(k),src:"dep",n:"🏢 "+t("depJE")+" "+k,lines:[J("6160",DM[k],0),J("1219",0,DM[k])]})});
  var y0=cfg.year;if(y0){var L=[],tot=0;cfg.accts.forEach(function(a){var v=+cfg.open[a.id]||0;if(v){L.push(J(acCode(a.id),v>0?v:0,v<0?-v:0));tot+=v}});var p0=+(cfg.co||{}).paid0||0;if(p0)L.push(J("3110",0,p0));var re=r2(tot-p0);if(re>0)L.push(J("3200",0,re));else if(re<0)L.push(J("3200",-re,0));if(L.length)out.push({id:"open",d:y0+"-01-01",src:"open",n:t("openJE"),lines:L})}
- tx.forEach(function(x){if(!x.d)return;out.push({id:x.id,d:x.d,src:"tx",n:(x.t==="tr"?"🔁 "+acctN(x.ac)+" → "+acctN(x.ac2):(x.p?x.p+" · ":"")+(x.n||lineDesc(x))),ref:x.r||"",lines:txJE(x,avg)})});
- docTx().forEach(function(v){out.push({id:v.id,d:v.d,src:"doc",n:"🧾 "+v.r+" · "+v.p,ref:v.r,lines:txJE(v,avg)})});
+ tx.forEach(function(x){if(!x.d)return;out.push({id:x.id,d:x.d,src:"tx",tr:x.t==="tr",ref2:x.rcno||"",n:(x.t==="tr"?"🔁 "+acctN(x.ac)+" → "+acctN(x.ac2):(x.p?x.p+" · ":"")+(x.n||lineDesc(x))),ref:x.r||"",lines:txJE(x,avg)})});
+ docTx().forEach(function(v){out.push({id:v.id,d:v.d,src:"doc",k:v._ap?"pj":"sj",n:"🧾 "+v.r+" · "+v.p,ref:v.r,lines:txJE(v,avg)})});
  jeM.forEach(function(j){out.push({id:j.id,d:j.d,src:"je",n:j.n||"",ref:j.ref||"",lines:j.lines.map(function(l){return J(l.a,l.dr,l.cr,l.m)})})});
  return out.sort(function(a,b){return a.d<b.d?-1:a.d>b.d?1:(a.src==="open"?-1:0)})}
 function natDr(c){var a=acc(c),ty=a?a.t:"X";return ty==="A"||ty==="X"?!(a&&a.neg):!!(a&&a.neg)}
@@ -1000,11 +1004,27 @@ function coaDlg(c){var a=c?acc(c):null,isNew=!a;a=a||{c:"",t:"X",th:"",ja:"",en:
  $("#kS").onclick=function(){var code=$("#kC").value.trim();if(!/^\d{3,6}$/.test(code)){toast(t("acCodeErr"));return}if(isNew&&acc(code)){toast(t("acDup"));return}
   var o=coaX.filter(function(z){return z.c===code})[0];if(!o){o={c:code};coaX.push(o)}o.t=a.sys?a.t:$("#kT").value;$$("[data-kn]").forEach(function(e){o[e.dataset.kn]=e.value.trim()});if(!o.th){toast(t("need"));return}saveAcc();$("#dlg").close();toast(t("saved"));render()};
  var d=$("#kD");if(d)d.onclick=function(){if(jeAll().some(function(e){return e.lines.some(function(l){return l.a===a.c})})||cfg.cats.some(function(k){return k.acc===a.c})){toast(t("acUsed"));return}coaX=coaX.filter(function(z){return z.c!==a.c});saveAcc();$("#dlg").close();render()}}
-function jnlHtml(){var JE=jeAll().filter(function(e){return +e.d.slice(0,4)===ui.y});
+/* สมุดรายวันเฉพาะ (15 พ.ย.): รับเงิน rv · จ่ายเงิน pv · ขาย sj · ซื้อ pj · ทั่วไป jv */
+var JT=["all","rv","pv","sj","pj","jv"];
+function jType(e){if(e.src==="open"||e.src==="je"||e.src==="dep"||e.tr)return"jv";var M={};cfg.accts.forEach(function(a){M[acCode(a.id)]=1});var dr=e.lines.some(function(l){return M[l.a]&&l.dr>0}),cr=e.lines.some(function(l){return M[l.a]&&l.cr>0});if(dr&&!cr)return"rv";if(cr&&!dr)return"pv";if(e.k)return e.k;return"jv"}
+function jnlRows(jt){return jeAll().filter(function(e){return +e.d.slice(0,4)===ui.y&&(jt==="all"||jType(e)===jt)})}
+function jnlCsv(jt){var R=[[t("date"),t("dcNo"),t("desc"),t("acCode")||"Code",t("acName"),t("dr"),t("cr")]];jnlRows(jt).forEach(function(e){e.lines.forEach(function(l,i){R.push([e.d,i?"":(e.ref2||e.ref||""),i?"":e.n,l.a,an(l.a),l.dr||"",l.cr||""])})});
+ dl(new Blob(["\ufeff"+R.map(function(r){return r.map(function(v){v=String(v);return/[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(",")}).join("\n")],{type:"text/csv"}),t("j_"+jt)+"-"+ui.y+".csv")}
+function jnlPrint(jt){var E=jnlRows(jt),td='style="border:1px solid #999;padding:3px 5px;font-size:10.5px;vertical-align:top"',tr='style="border:1px solid #999;padding:3px 5px;font-size:10.5px;text-align:right;vertical-align:top"';
+ var h='<div style="padding:12mm 10mm;font-family:Sarabun,Tahoma,sans-serif;color:#111"><div style="text-align:center;font-weight:700;font-size:15px">'+esc(cfg.name||"")+'</div><div style="text-align:center;font-weight:700;font-size:14px;margin:2px 0">'+t("j_"+jt)+'</div><div style="text-align:center;font-size:11px;margin-bottom:8px">'+t("year")+" "+(lang==="th"?ui.y+543:ui.y)+'</div><table style="width:100%;border-collapse:collapse"><thead><tr style="background:#eef2f7"><th '+td+'>'+t("date")+"</th><th "+td+">"+t("dcNo")+"</th><th "+td+">"+t("desc")+"</th><th "+td+">"+t("acName")+"</th><th "+td+">"+t("dr")+"</th><th "+td+">"+t("cr")+"</th></tr></thead><tbody>"+
+ E.map(function(e){return e.lines.map(function(l,i){return"<tr>"+(i?"<td "+td+"></td><td "+td+"></td><td "+td+"></td>":"<td "+td+' nowrap>'+dDisp(e.d)+"</td><td "+td+">"+esc(e.ref2||e.ref||"")+"</td><td "+td+">"+esc(e.n)+"</td>")+"<td "+td+">"+(l.cr?"&nbsp;&nbsp;&nbsp;&nbsp;":"")+l.a+" "+esc(an(l.a))+"</td><td "+tr+">"+(l.dr?fm(l.dr):"")+"</td><td "+tr+">"+(l.cr?fm(l.cr):"")+"</td></tr>"}).join("")}).join("")+
+ '<tr style="font-weight:700"><td '+td+' colspan="4">'+t("total")+"</td><td "+tr+">"+fm(sum(E.map(function(e){return sum(e.lines.map(function(l){return l.dr}))})))+"</td><td "+tr+">"+fm(sum(E.map(function(e){return sum(e.lines.map(function(l){return l.cr}))})))+"</td></tr></tbody></table></div>";
+ showDoc(h,t("j_"+jt)+"-"+ui.y)}
+document.addEventListener("click",function(e){var a=e.target.closest("[data-jcsv]");if(a)jnlCsv(a.dataset.jcsv);a=e.target.closest("[data-jprt]");if(a)jnlPrint(a.dataset.jprt)});
+function jnlHtml(){var jt=ui.jt||"all",JE=jnlRows(jt);
+ var hd='<div class="card" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px"><b style="font-size:16px">📒 '+t("j_"+jt)+'</b><span class="mut">'+JE.length+" "+t("count")+'</span><span style="flex:1"></span><button class="btn" data-jprt="'+jt+'">🖨️ '+t("print")+'</button><button class="btn" data-jcsv="'+jt+'">⬇️ CSV</button></div>';
+ if(!JE.length)return hd+'<div class="card empty"><b>'+t("noTx")+"</b></div>";
+ return hd+jnlTbl(JE)}
+function jnlTbl(JE){
  if(!JE.length)return'<div class="card empty"><b>'+t("noTx")+"</b></div>";
- return'<div class="tw"><table class="cf"><thead><tr><th>'+t("date")+"</th><th style='text-align:left'>"+t("desc")+"</th><th style='text-align:left'>"+t("acName")+"</th><th>"+t("dr")+"</th><th>"+t("cr")+"</th></tr></thead><tbody>"+
- JE.map(function(e){var ed=e.src==="tx"?' data-ed="'+e.id+'"':e.src==="je"?' data-je="'+e.id+'"':e.src==="doc"?' data-od="'+e.id+'"':"";return e.lines.map(function(l,i){return'<tr'+(i===0?' style="border-top:2px solid var(--line)"':"")+(ed?ed+' class="e"':"")+">"+(i===0?'<td rowspan="'+e.lines.length+'" style="vertical-align:top;white-space:nowrap">'+dDisp(e.d)+'</td><td rowspan="'+e.lines.length+'" style="text-align:left;vertical-align:top;white-space:normal;max-width:280px">'+(e.src==="je"?"✍️ ":e.src==="open"?"📂 ":"")+esc(e.n)+(e.ref?' <span class="tag">#'+esc(e.ref)+"</span>":"")+"</td>":"")+'<td style="text-align:left;'+(l.cr?"padding-left:34px":"")+'">'+l.a+" "+esc(an(l.a))+"</td><td>"+(l.dr?fm(l.dr):"")+"</td><td>"+(l.cr?fm(l.cr):"")+"</td></tr>"}).join("")}).join("")+
- '<tr class="tot"><td colspan="3">'+t("total")+"</td><td>"+fm(sum(JE.map(function(e){return sum(e.lines.map(function(l){return l.dr}))})))+"</td><td>"+fm(sum(JE.map(function(e){return sum(e.lines.map(function(l){return l.cr}))})))+"</td></tr></tbody></table></div>"}
+ return'<div class="tw"><table class="cf"><thead><tr><th>'+t("date")+"</th><th style='text-align:left'>"+t("dcNo")+"</th><th style='text-align:left'>"+t("desc")+"</th><th style='text-align:left'>"+t("acName")+"</th><th>"+t("dr")+"</th><th>"+t("cr")+"</th></tr></thead><tbody>"+
+ JE.map(function(e){var ed=e.src==="tx"?' data-ed="'+e.id+'"':e.src==="je"?' data-je="'+e.id+'"':e.src==="doc"?' data-od="'+e.id+'"':"";return e.lines.map(function(l,i){return'<tr'+(i===0?' style="border-top:2px solid var(--line)"':"")+(ed?ed+' class="e"':"")+">"+(i===0?'<td rowspan="'+e.lines.length+'" style="vertical-align:top;white-space:nowrap">'+dDisp(e.d)+'</td><td rowspan="'+e.lines.length+'" style="text-align:left;vertical-align:top;white-space:nowrap">'+esc(e.ref2||e.ref||"")+'</td><td rowspan="'+e.lines.length+'" style="text-align:left;vertical-align:top;white-space:normal;max-width:280px">'+(e.src==="je"?"✍️ ":e.src==="open"?"📂 ":"")+esc(e.n)+(e.ref?' <span class="tag">#'+esc(e.ref)+"</span>":"")+"</td>":"")+'<td style="text-align:left;'+(l.cr?"padding-left:34px":"")+'">'+l.a+" "+esc(an(l.a))+"</td><td>"+(l.dr?fm(l.dr):"")+"</td><td>"+(l.cr?fm(l.cr):"")+"</td></tr>"}).join("")}).join("")+
+ '<tr class="tot"><td colspan="4">'+t("total")+"</td><td>"+fm(sum(JE.map(function(e){return sum(e.lines.map(function(l){return l.dr}))})))+"</td><td>"+fm(sum(JE.map(function(e){return sum(e.lines.map(function(l){return l.cr}))})))+"</td></tr></tbody></table></div>"}
 function glRows(c,B,lg){var o=B[c]||{op:0,dr:0,cr:0,rows:[],cl:0},sg=natDr(c)?1:-1,run=o.op*sg;
  return'<tr class="grp" style="--gc:var(--brand)"><td colspan="6">'+c+" "+esc(an(c,lg))+'</td></tr><tr><td></td><td style="text-align:left">'+t("openBF",lg)+"</td><td></td><td></td><td></td><td>"+fm(run,lg)+"</td></tr>"+
  o.rows.map(function(r){run+=(r.l.dr-r.l.cr)*sg;var ed=r.e.src==="tx"?' class="e" data-ed="'+r.e.id+'"':r.e.src==="je"?' class="e" data-je="'+r.e.id+'"':r.e.src==="doc"?' class="e" data-od="'+r.e.id+'"':"";return"<tr"+ed+'><td style="white-space:nowrap">'+dDisp(r.e.d,lg)+'</td><td style="text-align:left;white-space:normal;max-width:300px">'+esc(r.e.n)+"</td><td>"+esc(r.e.ref||"")+"</td><td>"+(r.l.dr?fm(r.l.dr,lg):"")+"</td><td>"+(r.l.cr?fm(r.l.cr,lg):"")+'</td><td class="'+(run<0?"neg":"")+'">'+fm(run,lg)+"</td></tr>"}).join("")+
@@ -1252,7 +1272,7 @@ function setupDlg(){var A={biz:cfg.biz||"goods",vat:cfg.novat?"n":"y",wht:cfg.no
  $("#stS").onclick=function(){cfg.biz=A.biz;cfg.novat=A.vat==="n";cfg.nowht=A.wht==="n";cfg.mode=A.mode;cfg.setup=1;sv(K.cfg,cfg);$("#dlg").close();ui.g="";sui();render();toast(t("saved"))}}
 /* ---- dashboard: what needs doing ---- */
 function todoCard(){var T=[],td=today(),y=+td.slice(0,4),m=+td.slice(5,7),day=+td.slice(8,10),pm=m-1,py=y;if(pm<1){pm=12;py--}var mm=("0"+m).slice(-2);
- var ov=docs.filter(function(d){return d.type==="inv"&&d.st!=="void"&&/^(over|partO)$/.test(docState(d))});if(ov.length)T.push(["🔴",t("tdAR").replace("{n}",ov.length)+" · "+fm(sum(ov.map(invLeft))),"sell","o_ar"]);
+ var ov=docs.filter(function(d){return d.type==="inv"&&d.st!=="void"&&/^(over|partO)$/.test(docState(d))});if(ov.length)(function(){var n=chqList().filter(function(c){return c.st==="p"&&c.d&&c.d<=td});if(n.length)T.push(["🏦","เช็คถึงกำหนด รอผ่านเช็ค "+n.length+" ใบ · "+fm(sum(n.map(function(c){return c.a}))),cfg.mode==="acct"?"bankA":"money",n.some(function(c){return c.t==="in"})?"chqIn":"chqOut"])})();T.push(["🔴",t("tdAR").replace("{n}",ov.length)+" · "+fm(sum(ov.map(invLeft))),"sell","o_ar"]);
  var ap=docs.filter(function(d){return d.type==="pi"&&d.st!=="void"&&docState(d)!=="paid"&&d.due&&d.due<=addDays(td,7)});if(ap.length)T.push(["🟠",t("tdAP").replace("{n}",ap.length)+" · "+fm(sum(ap.map(apLeft))),"buyG","o_ap"]);
  if(!cfg.novat&&day<=23){var V=vatRows(py,pm-1),ov2=sum(V.filter(function(o){return o.x.t==="in"}).map(function(o){return o.c.vat})),iv2=sum(V.filter(function(o){return o.x.t==="out"}).map(function(o){return o.c.vat})),net=r2(ov2-iv2);if(V.length)T.push(["🧾",t("tdVat").replace("{m}",pm+"/"+py).replace("{d}","15/"+mm).replace("{e}","23/"+mm)+" · "+(net>=0?t("tdPay")+" "+fm(net):t("tdCredit")+" "+fm(-net)),"repG","vat"])}
  if(!cfg.nowht&&day<=15){var WR=whtRows(py,pm-1).filter(function(o){return o.x.t==="out"});["3","53"].forEach(function(f){var L=WR.filter(function(o){return(o.x.wf||"3")===f});if(L.length)T.push(["📄",t("tdWht").replace("{f}",f).replace("{m}",pm+"/"+py).replace("{d}","7/"+mm).replace("{e}","15/"+mm)+" · "+fm(sum(L.map(function(o){return o.c.wht}))),"repG","vat"])})}
@@ -1269,7 +1289,7 @@ function docDlg(d,type,fromQt){var isNew=!d||!docById(d.id);d=d?JSON.parse(JSON.
  var PS=isNew&&!d.from&&type!=="qt"&&!isPi&&!isAdj?docs.filter(function(z){return z.st!=="void"&&!(z.type==="qt"&&isDone(z))&&(z.type==="qt"||((type==="inv"||type==="cs")&&(z.type==="inv"||z.type==="cs")))}).sort(function(p,q){return p.d<q.d?1:-1}).slice(0,60):[];
  var b=(PS.length?'<div class="pull"><b>📥 '+t("pullFrom")+'</b><select id="bFrom"><option value="">'+t("pullNone")+"</option>"+PS.map(function(z){return'<option value="'+z.id+'">'+DT[z.type].ic+" "+esc(z.no)+" · "+esc((z.cu||{}).n||"")+" · "+fm(docCalc(z).tot)+"</option>"}).join("")+"</select></div>":"")+(locked?'<div class="hint" style="background:#fff7d6;padding:8px 12px;border-radius:10px;margin-bottom:10px">🔒 '+t("docLocked")+"</div>":"")+
  '<div class="fg"><div><label>'+t("docDate")+"</label>"+dateField("bD",d.d,"")+"</div>"+(isAdj?'<div><label>'+t("refInv")+'</label><input value="'+esc(d.from||"")+'" disabled></div>':(type==="inv"||isPi)?'<div><label>'+t("due")+"</label>"+dateField("bDue",d.due,"")+"</div>":(type==="cs"||type==="dp")?'<div><label>'+t("acct")+'</label><select id="bAc">'+cfg.accts.map(function(a){return'<option value="'+a.id+'"'+(a.id===d.ac?" selected":"")+">"+esc(a.n)+"</option>"}).join("")+"</select></div>":'<div><label>'+t("validTo")+"</label>"+dateField("bDue",d.due||addDays(today(),15),"")+"</div>")+
- '<div class="full"><label>'+t(isPi?"supT":"cust")+'</label><input id="bCn" list="cul" value="'+esc(d.cu.n)+'"><datalist id="cul">'+Object.keys(CU).map(function(n){return'<option value="'+esc(n)+'">'+esc(CU[n].code||"")+"</option>"}).join("")+'</datalist></div><div><label>'+t("ptid")+'</label><input id="bCt" inputmode="numeric" value="'+esc(d.cu.tax)+'"></div><div><label>'+t("branch")+'</label><input id="bCb" value="'+esc(d.cu.br||"")+'" placeholder="'+t("hq")+'"></div><div class="full"><label>'+t("addr")+'</label><input id="bCa" value="'+esc(d.cu.addr)+'"></div><div'+(isPi?' style="display:none"':"")+'><label>'+t("seller")+'</label><input id="bSl" value="'+esc(d.seller!=null?d.seller:(ui.lastSeller||""))+'"></div>'+(isPi?'<div><label>'+t("sref")+'</label><input id="bSr" value="'+esc(d.sref||"")+'"></div>':"")+'<div><label>'+t("kindL")+'</label><select id="bK"><option value="g">'+t(isPi?"kStock":"kGoods")+'</option><option value="s"'+(d.kind==="s"?" selected":"")+">"+t(isPi?"kExp":"kSvc")+"</option></select></div>"+(isPi?'<div id="bCatW"><label>'+t("cat")+'</label><select id="bCat">'+cfg.cats.filter(function(c){return c.g==="op"&&c.d==="out"&&c.id!=="supp"&&c.id!=="whtpay"&&c.id!=="vatpay"}).map(function(c){return'<option value="'+c.id+'"'+(c.id===d.cat?" selected":"")+">"+esc(cn(c))+"</option>"}).join("")+"</select></div>":"")+(d.from&&type==="dp"?'<div><label>'+t("refQt")+'</label><input value="'+esc(d.from)+'" disabled></div>':"")+(QC&&type==="dp"?'<div class="full chips" style="align-items:center">'+[30,50,100].map(function(p){return'<button type="button" class="chip" data-pct="'+p+'">'+p+"%</button>"}).join("")+' <span class="hint">'+t("qtTot")+" "+fm(QC.tot)+"</span></div>":"")+'</div>'+
+ '<div class="full"><label>'+t(isPi?"supT":"cust")+'</label><input id="bCn" list="cul" value="'+esc(d.cu.n)+'"><datalist id="cul">'+Object.keys(CU).map(function(n){return'<option value="'+esc(n)+'">'+esc(CU[n].code||"")+"</option>"}).join("")+'</datalist></div><div><label>'+t("ptid")+'</label><input id="bCt" inputmode="numeric" value="'+esc(d.cu.tax)+'"></div><div><label>'+t("branch")+'</label><input id="bCb" value="'+esc(d.cu.br||"")+'" placeholder="'+t("hq")+'"></div><div class="full"><label>'+t("addr")+'</label><input id="bCa" value="'+esc(d.cu.addr)+'"></div><div'+(isPi?' style="display:none"':"")+'><label>'+t("seller")+'</label><input id="bSl" value="'+esc(d.seller!=null?d.seller:(ui.lastSeller||""))+'"></div>'+(isPi?'<div><label>'+t("sref")+'</label><input id="bSr" value="'+esc(d.sref||"")+'"></div>':"")+'<div><label>'+t("kindL")+'</label><select id="bK"><option value="g">'+t(isPi?"kStock":"kGoods")+'</option><option value="s"'+(d.kind==="s"?" selected":"")+">"+t(isPi?"kExp":"kSvc")+"</option></select></div>"+(isPi?'<div id="bCatW"><label>'+t("cat")+'</label><select id="bCat">'+cfg.cats.filter(function(c){return c.g==="op"&&c.d==="out"&&c.id!=="supp"&&c.id!=="whtpay"&&c.id!=="vatpay"&&c.id!=="ssopay"}).map(function(c){return'<option value="'+c.id+'"'+(c.id===d.cat?" selected":"")+">"+esc(cn(c))+"</option>"}).join("")+"</select></div>":"")+(d.from&&type==="dp"?'<div><label>'+t("refQt")+'</label><input value="'+esc(d.from)+'" disabled></div>':"")+(QC&&type==="dp"?'<div class="full chips" style="align-items:center">'+[30,50,100].map(function(p){return'<button type="button" class="chip" data-pct="'+p+'">'+p+"%</button>"}).join("")+' <span class="hint">'+t("qtTot")+" "+fm(QC.tot)+"</span></div>":"")+'</div>'+
  '<datalist id="bil">'+SI.map(function(i){return'<option value="'+esc(i.name)+'">'+(i.code?i.code+" · ":"")+(i.svc?t("kSvc"):t("onhand")+" "+fq(i.oh))+"</option>"}).join("")+'</datalist><table class="dt li" style="margin-top:12px"><thead><tr><th>'+t("item")+'</th><th class="r" style="width:70px">'+t("qty")+'</th><th class="r" style="width:105px">'+t("uprice")+'</th><th class="r" style="width:90px">'+t("disc")+'</th><th class="r">'+t("lineTot")+'</th><th></th></tr></thead><tbody id="bL"></tbody></table><button type="button" class="btn" id="bAdd" style="margin:8px 0">'+t("addLine2")+'</button>'+
  '<div class="fg"><div><label>'+t("disc")+'</label><input id="bDs" inputmode="decimal" value="'+(d.disc||"")+'"></div><div><label>VAT</label><select id="bV"><option value="">'+t("vNone")+'</option><option value="exc"'+(d.vt==="exc"?" selected":"")+">"+t("vExc")+'</option><option value="inc"'+(d.vt==="inc"?" selected":"")+">"+t("vInc")+"</option></select></div>"+
  '<div><label>'+t(isPi?"whtPay":"whtIn")+'</label><select id="bW">'+WR.map(function(v){return'<option value="'+v+'"'+(v===(+d.wr||0)?" selected":"")+">"+(v?v+"%":t("wNone"))+"</option>"}).join("")+'</select></div><div><label>'+t("docLang")+'</label><select id="bLg"><option value="th">ไทย</option><option value="en">English</option><option value="ja">日本語</option></select></div>'+
@@ -1533,16 +1553,50 @@ bind.set=function(){function S(){sv(K.cfg,cfg)}
  $$("[data-cl]").forEach(function(e){e.onchange=function(){cfg.cats[+e.dataset.ci][e.dataset.cl]=e.value.trim();S()}});
  $$("[data-cdel]").forEach(function(e){e.onclick=function(){cfg.cats.splice(+e.dataset.cdel,1);S();render()}});
  $("#cAdd").onclick=function(){cfg.cats.push({id:uid(),g:"op",d:"out",th:"หมวดใหม่",ja:"新しい区分",en:"New category"});S();render()};
- $("#bk").onclick=function(){dl(new Blob([JSON.stringify({app:"edm-cashflow",v:1,at:new Date().toISOString(),tx:tx,cfg:cfg,ind:ind,docs:docs,coa:coaX,je:jeM,cust:custs,items:items,sup:sups,fa:fas},null,1)],{type:"application/json"}),"cashflow-backup-"+today()+".json")};
- $("#rs").onchange=function(){var f=this.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){try{var o=JSON.parse(rd.result);if(o.app!=="edm-cashflow")throw 0;tx=o.tx||[];cfg=Object.assign({},DEF_CFG,o.cfg||{});ind=o.ind||{};if(o.docs){docs=o.docs;coaX=o.coa||[];jeM=o.je||[];custs=o.cust||null;items=o.items||null;sups=o.sup||[];fas=o.fa||[];saveDocs();saveAcc()}saveAll();toast("✓ "+tx.length+" "+t("count"));render()}catch(e){toast("❌ file")}};rd.readAsText(f)};
+ $("#bk").onclick=function(){dl(new Blob([JSON.stringify({app:"edm-cashflow",v:1,at:new Date().toISOString(),tx:tx,cfg:cfg,ind:ind,docs:docs,coa:coaX,je:jeM,cust:custs,items:items,sup:sups,fa:fas,chqx:chqx},null,1)],{type:"application/json"}),"cashflow-backup-"+today()+".json")};
+ $("#rs").onchange=function(){var f=this.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){try{var o=JSON.parse(rd.result);if(o.app!=="edm-cashflow")throw 0;tx=o.tx||[];cfg=Object.assign({},DEF_CFG,o.cfg||{});ind=o.ind||{};if(o.docs){docs=o.docs;coaX=o.coa||[];jeM=o.je||[];custs=o.cust||null;items=o.items||null;sups=o.sup||[];fas=o.fa||[];chqx=o.chqx||[];sv(K.chqx,chqx);saveDocs();saveAcc()}saveAll();toast("✓ "+tx.length+" "+t("count"));render()}catch(e){toast("❌ file")}};rd.readAsText(f)};
  $("#wp").onclick=function(){var v=prompt(t("confirmWipe"));if(v==="ลบ"||(v||"").toUpperCase()==="DELETE"){tx=[];ind={};saveAll();toast(t("deleted"));render()}}};
 
+/* ========== เช็ค (15 พ.ย.) ==========
+ รับ/จ่ายด้วยเช็ค = เลือกบัญชีเงิน "เช็ครับรอเรียกเก็บ" (chqin → 1105) / "เช็คจ่ายรอตัดบัญชี" (chqout → 2105) แล้วกรอกเลขที่เช็ค ธนาคาร วันที่หน้าเช็ค (x.chq {no,bank,br,d,to,st:p|c,cd,ctx})
+ ผ่านเช็ค = โอน chqin → ธนาคาร / ธนาคาร → chqout (tx t:"tr" chqOf) · เช็คคืน/ยกเลิก = ลบรายการรับ/จ่าย (+โอนที่ผ่านแล้ว) เก็บประวัติใน edm_cf_chqx */
+var chqx=ld(K.chqx,[]);
+function chqEnsure(){var ch=0;if(!cfg.accts.some(function(a){return a.id==="chqin"})){cfg.accts.push({id:"chqin",n:"เช็ครับรอเรียกเก็บ"});ch=1}if(!cfg.accts.some(function(a){return a.id==="chqout"})){cfg.accts.push({id:"chqout",n:"เช็คจ่ายรอตัดบัญชี"});ch=1}if(ch&&!DEMO)sv(K.cfg,cfg)}
+function isChqAc(id){return id==="chqin"||id==="chqout"}
+function bankAccts(){return cfg.accts.filter(function(a){return!isChqAc(a.id)})}
+var chqP=null;
+function chqInject(D){$$("select",D).forEach(function(sel){if(!sel.querySelector('option[value="chqin"]')||sel.dataset.cqi)return;sel.dataset.cqi=1;var box=document.createElement("div");box.className="chqf";box.style.cssText="grid-column:1/-1;background:#f3f7ff;border:1px dashed #9db4e0;border-radius:10px;padding:8px 10px;margin-top:6px";
+  box.innerHTML='<div style="font-weight:700;font-size:13px;margin-bottom:6px">💳 ข้อมูลเช็ค</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px"><input data-cq="no" placeholder="เลขที่เช็ค"><input data-cq="bank" placeholder="ธนาคาร" list="chqBanks"><input data-cq="br" placeholder="สาขา"><label style="font-size:12px">วันที่หน้าเช็ค<input data-cq="d" type="date" value="'+today()+'"></label></div><datalist id="chqBanks">'+["กสิกรไทย","กรุงเทพ","ไทยพาณิชย์","กรุงไทย","กรุงศรีอยุธยา","ทหารไทยธนชาต","ออมสิน","ยูโอบี","ซีไอเอ็มบี ไทย","เกียรตินาคินภัทร","แลนด์ แอนด์ เฮ้าส์","ธ.ก.ส."].map(function(b){return'<option value="'+b+'">'}).join("")+"</datalist>";
+  var host=sel.parentNode;host.parentNode.insertBefore(box,host.nextSibling);function upd(){box.style.display=isChqAc(sel.value)?"":"none"}sel.addEventListener("change",upd);upd()})}
+document.addEventListener("click",function(e){var b=e.target.closest("dialog .btn,dialog button");if(!b)return;var D=b.closest("dialog"),f=D.querySelector(".chqf");if(!f||f.style.display==="none"){return}var o={};$$("[data-cq]",f).forEach(function(i){o[i.dataset.cq]=i.value.trim()});if(o.no||o.bank)chqP=o},true);
+function chqApply(){if(!chqP)return;var o=chqP;chqP=null;var now=Date.now();tx.forEach(function(x){if(!isChqAc(x.ac))return;if(x.chq&&x.chq.no)return;x.chq={no:o.no,bank:o.bank,br:o.br,d:o.d||x.d,st:"p"}})}
+function chqList(){var G={};tx.forEach(function(x){if(!isChqAc(x.ac)||x.t==="tr")return;var c=x.chq||{},k=(x.ac)+"|"+(c.no||"#"+x.id)+"|"+(c.bank||"");var g=G[k];if(!g)g=G[k]={k:k,t:x.ac==="chqin"?"in":"out",no:c.no||"",bank:c.bank||"",br:c.br||"",d:c.d||x.d,rd:x.d,p:x.p||"",a:0,st:c.st||"p",cd:c.cd||"",ctx:c.ctx||"",xs:[]};g.a=r2(g.a+(+x.a||0));g.xs.push(x)});
+ return Object.keys(G).map(function(k){return G[k]}).concat(chqx.map(function(c){return Object.assign({},c,{st:"b",xs:[]})}))}
+function chqClear(g){var bs=bankAccts();var to=(g.xs[0].chq||{}).to||(bs[1]||bs[0]).id,cd=g.d>today()?today():g.d;
+ showDlg("✅ ผ่านเช็ค "+(g.no||""),'<p>'+(g.t==="in"?"นำเช็คเข้าบัญชี":"เช็คถูกตัดจากบัญชี")+" · "+esc(g.bank)+" · "+esc(g.p)+" · <b>"+fm(g.a)+'</b></p><div class="fg"><div><label>วันที่เช็คผ่าน</label><input type="date" id="cqD" value="'+cd+'"></div><div><label>บัญชีธนาคาร</label><select id="cqA">'+bs.map(function(a){return'<option value="'+a.id+'"'+(a.id===to?" selected":"")+">"+esc(a.n)+"</option>"}).join("")+"</select></div></div>",'<button class="btn pri" id="cqOk">✅ ผ่านเช็ค</button><button class="btn" data-close>'+t("cancel")+"</button>");
+ $("#cqOk").onclick=function(){var d=$("#cqD").value,ac=$("#cqA").value;if(!d||LK(d))return;var id=uid();tx.push({id:id,d:d,t:"tr",a:g.a,ac:g.t==="in"?"chqin":ac,ac2:g.t==="in"?ac:"chqout",n:"ผ่านเช็ค "+(g.no||"")+" "+(g.bank||""),r:g.no||"",chqOf:g.k});g.xs.forEach(function(x){x.chq=Object.assign({},x.chq||{},{st:"c",cd:d,to:ac,ctx:id})});saveAll();$("#dlg").close();toast("✅ ผ่านเช็คแล้ว");render()}}
+function chqUnclear(g){if(LK(g.cd))return;if(!confirm("ยกเลิกการผ่านเช็ค "+g.no+" ?"))return;tx=tx.filter(function(z){return z.id!==g.ctx});g.xs.forEach(function(x){x.chq=Object.assign({},x.chq,{st:"p",cd:"",ctx:""})});saveAll();render()}
+function chqBounce(g){if(LK(g.rd)||(g.cd&&LK(g.cd)))return;var v=prompt((g.t==="in"?"เช็คคืน":"ยกเลิกเช็คจ่าย")+" "+g.no+" "+fm(g.a)+"\nระบบจะลบรายการ"+(g.t==="in"?"รับ":"จ่าย")+"เงินของเช็คนี้ (เอกสารที่ชำระด้วยเช็คนี้จะกลับเป็นค้างชำระ) และเก็บประวัติเช็คไว้\n\nพิมพ์คำว่า คืน เพื่อยืนยัน");if(v!=="คืน")return;
+ var ids={};g.xs.forEach(function(x){ids[x.id]=1});if(g.ctx)ids[g.ctx]=1;tx=tx.filter(function(z){return!ids[z.id]});chqx.push({k:g.k+"|"+Date.now(),t:g.t,no:g.no,bank:g.bank,br:g.br,d:g.d,rd:g.rd,p:g.p,a:g.a,at:today(),docs:g.xs.map(function(x){return x.rcno||x.r||""}).filter(Boolean).join(", ")});sv(K.chqx,chqx);saveAll();toast("บันทึกเช็คคืนแล้ว");render()}
+function chqEdit(g){var c=g.xs[0].chq||{};showDlg("✏️ ข้อมูลเช็ค",'<div class="fg"><div><label>เลขที่เช็ค</label><input id="ceN" value="'+esc(c.no||"")+'"></div><div><label>ธนาคาร</label><input id="ceB" value="'+esc(c.bank||"")+'"></div><div><label>สาขา</label><input id="ceR" value="'+esc(c.br||"")+'"></div><div><label>วันที่หน้าเช็ค</label><input type="date" id="ceD" value="'+(c.d||g.rd)+'"></div></div>','<button class="btn pri" id="ceOk">'+t("save")+'</button><button class="btn" data-close>'+t("cancel")+"</button>");
+ $("#ceOk").onclick=function(){g.xs.forEach(function(x){x.chq=Object.assign({st:"p"},x.chq||{},{no:$("#ceN").value.trim(),bank:$("#ceB").value.trim(),br:$("#ceR").value.trim(),d:$("#ceD").value})});saveAll();$("#dlg").close();render()}}
+function vChq(){chqEnsure();var cq=ui.cq||"in",fs=ui.cqs||"p",td=today(),A=chqList().filter(function(c){return c.t===cq}),Y=A.filter(function(c){return fs==="all"||c.st===fs});
+ Y.sort(function(a,b){return a.st==="p"&&b.st==="p"?(a.d<b.d?-1:1):(a.rd<b.rd?1:-1)});
+ var P=A.filter(function(c){return c.st==="p"}),due=P.filter(function(c){return c.d<=td}),cm=A.filter(function(c){return c.st==="c"&&c.cd.slice(0,7)===td.slice(0,7)});
+ var h=tb((cq==="in"?"📥 เช็ครับ":"📤 เช็คจ่าย"))+'<div class="kpis dck"><div class="kpi e"><div class="l">⏳ รอผ่านเช็ค</div><div class="v">'+fm(sum(P.map(function(c){return c.a})))+'</div><div class="mut">'+P.length+' ใบ</div></div><div class="kpi e" style="border-left-color:#e11d48"><div class="l">📅 ถึงกำหนด/เลยกำหนด</div><div class="v">'+fm(sum(due.map(function(c){return c.a})))+'</div><div class="mut">'+due.length+' ใบ</div></div><div class="kpi e" style="border-left-color:#16a34a"><div class="l">✅ ผ่านแล้วเดือนนี้</div><div class="v">'+fm(sum(cm.map(function(c){return c.a})))+'</div><div class="mut">'+cm.length+' ใบ</div></div><div class="kpi e" style="border-left-color:#64748b"><div class="l">↩️ '+(cq==="in"?"เช็คคืน":"ยกเลิก")+'</div><div class="v">'+A.filter(function(c){return c.st==="b"}).length+'</div><div class="mut">ใบ</div></div></div>';
+ h+='<div class="card"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">'+[["p","⏳ รอผ่าน"],["c","✅ ผ่านแล้ว"],["b",cq==="in"?"↩️ คืน":"↩️ ยกเลิก"],["all","ทั้งหมด"]].map(function(c){return'<button class="chip'+(fs===c[0]?" on":"")+'" data-cqs="'+c[0]+'">'+c[1]+"</button>"}).join("")+'<span style="flex:1"></span><span class="mut" style="font-size:12px">'+(cq==="in"?"รับเงินด้วยเช็ค: ตอนบันทึกรับเงิน เลือกบัญชี “เช็ครับรอเรียกเก็บ” แล้วกรอกข้อมูลเช็ค":"จ่ายด้วยเช็ค: ตอนบันทึกจ่ายเงิน เลือกบัญชี “เช็คจ่ายรอตัดบัญชี” แล้วกรอกข้อมูลเช็ค")+"</span></div>";
+ if(!Y.length)h+='<div class="empty">ยังไม่มีเช็ค</div>';
+ else h+='<div style="overflow:auto"><table class="dt" id="cqT"><thead><tr><th>วันที่หน้าเช็ค</th><th>เลขที่เช็ค</th><th>ธนาคาร</th><th>'+(cq==="in"?"รับจาก":"จ่ายให้")+'</th><th class="r">จำนวนเงิน</th><th>สถานะ</th><th></th></tr></thead><tbody>'+Y.map(function(g,i){var late=g.st==="p"&&g.d<=td;return'<tr><td style="white-space:nowrap'+(late?";color:#e11d48;font-weight:700":"")+'">'+dDisp(g.d)+'<div class="mut" style="font-size:11px">'+(cq==="in"?"รับ":"จ่าย")+" "+dDisp(g.rd)+"</div></td><td><b>"+esc(g.no||"—")+"</b></td><td>"+esc(g.bank)+(g.br?'<div class="mut" style="font-size:11px">'+esc(g.br)+"</div>":"")+"</td><td>"+esc(g.p)+'</td><td class="r"><b>'+fm(g.a)+"</b></td><td>"+(g.st==="p"?'<span class="tag" style="background:#fff4d6">⏳ รอผ่าน</span>':g.st==="c"?'<span class="tag" style="background:#dcfce7">✅ '+dDisp(g.cd)+"</span>":'<span class="tag" style="background:#eee">↩️ '+dDisp(g.at)+"</span>")+'</td><td style="white-space:nowrap">'+(g.st==="p"?'<button class="btn pri" data-cqc="'+i+'">✅ ผ่านเช็ค</button> <button class="btn" data-cqe="'+i+'">✏️</button> <button class="btn" data-cqb="'+i+'" title="เช็คคืน/ยกเลิก">↩️</button>':g.st==="c"?'<button class="btn" data-cqu="'+i+'">ยกเลิกผ่าน</button> <button class="btn" data-cqb="'+i+'" title="เช็คคืน">↩️</button>':"")+"</td></tr>"}).join("")+"</tbody></table></div>";
+ vChq.Y=Y;return h+"</div>"}
+bind.chq=function(){var Y=vChq.Y||[];$$("[data-cqs]").forEach(function(e){e.onclick=function(){ui.cqs=e.dataset.cqs;sui();render()}});
+ $$("[data-cqc]").forEach(function(e){e.onclick=function(){chqClear(Y[+e.dataset.cqc])}});$$("[data-cqu]").forEach(function(e){e.onclick=function(){chqUnclear(Y[+e.dataset.cqu])}});
+ $$("[data-cqb]").forEach(function(e){e.onclick=function(){chqBounce(Y[+e.dataset.cqb])}});$$("[data-cqe]").forEach(function(e){e.onclick=function(){chqEdit(Y[+e.dataset.cqe])}})};
 /* ========== companies (สำนักงานบัญชี: 1 บริษัท = 1 แฟ้มข้อมูล) ========== */
 function coSave(){try{localStorage.setItem("edm_cf_cos",JSON.stringify(CO))}catch(e){}}
 function coAll(){return[{id:""}].concat(CO.list.filter(function(c){return c.id}))}
 function coInfo(id){var p=kpOf(id),sz=0,o={};KN.forEach(function(n){var v=null;try{v=localStorage.getItem(p+n)}catch(e){}if(v){sz+=v.length;try{o[n]=JSON.parse(v)}catch(e){}}});var c=CO.list.filter(function(x){return x.id===id})[0]||{};
  return{id:id,n:(o.cfg&&o.cfg.name)||c.n||(id?"(ไม่มีชื่อ)":"บริษัทแรก"),tax:o.cfg&&o.cfg.co&&o.cfg.co.tax||"",kb:Math.round(sz*2/1024),nt:(o.tx||[]).length,nd:(o.docs||[]).length,lock:o.cfg&&o.cfg.lock||"",o:o}}
-function coPack(i){var o=i.o;return{app:"edm-cashflow",v:1,at:new Date().toISOString(),tx:o.tx||[],cfg:o.cfg||{},ind:o.ind||{},docs:o.docs||[],coa:o.coa||[],je:o.je||[],cust:o.cust||null,items:o.items||null,sup:o.sup||[],fa:o.fa||[]}}
+function coPack(i){var o=i.o;return{app:"edm-cashflow",v:1,at:new Date().toISOString(),tx:o.tx||[],cfg:o.cfg||{},ind:o.ind||{},docs:o.docs||[],coa:o.coa||[],je:o.je||[],cust:o.cust||null,items:o.items||null,sup:o.sup||[],fa:o.fa||[],chqx:o.chqx||[]}}
 function coGo(id){if(DEMO)return;CO.cur=id;coSave();location.reload()}
 function coNewId(){var id;do{id=Math.random().toString(36).slice(2,7)}while(CO.list.some(function(c){return c.id===id}));return id}
 function coWrite(id,o){var p=kpOf(id);try{KN.forEach(function(n){if(n!=="ui"&&o[n]!=null)localStorage.setItem(p+n,JSON.stringify(o[n]))});return true}catch(e){KN.forEach(function(n){try{localStorage.removeItem(p+n)}catch(x){}});alert("พื้นที่เก็บข้อมูลในเบราว์เซอร์เต็ม — ลบบริษัทที่ไม่ใช้ หรือส่งออกเป็นไฟล์เก็บไว้ก่อน");return false}}
