@@ -342,6 +342,9 @@ en:{app:"Cash Flow Statement",dash:"Overview",direct:"Direct",indirect:"Indirect
  pasteH:"Copy from Excel and paste · columns: Date | In/Out | Amount | Category | Counterparty | Description | Account",
  import:"Import",saved:"Saved",deleted:"Deleted",need:"Enter an amount",confirmDel:"Delete this transaction?",confirmWipe:"Type DELETE to confirm",
  notMatch:"Mismatch",ofTotal:"of total",bal:"Balance",in:"In",out:"Out"}};
+Object.assign(L.th,{g_purA:"ซื้อ",g_arA:"ลูกหนี้",g_apA:"เจ้าหนี้",g_bankA:"เงินสด·ธนาคาร",g_glA:"บัญชีแยกประเภท",ex_pcr:"ซื้อเงินเชื่อ",ex_pcs:"ซื้อเงินสด · ค่าใช้จ่าย",ex_rcv:"รับชำระหนี้",ex_pay:"จ่ายชำระหนี้"});
+Object.assign(L.ja,{g_purA:"仕入",g_arA:"売掛金",g_apA:"買掛金",g_bankA:"現金·銀行",g_glA:"総勘定元帳",ex_pcr:"掛仕入",ex_pcs:"現金仕入・経費",ex_rcv:"入金消込",ex_pay:"支払"});
+Object.assign(L.en,{g_purA:"Purchase",g_arA:"Receivables",g_apA:"Payables",g_bankA:"Cash·Bank",g_glA:"Ledger",ex_pcr:"Credit purchases",ex_pcs:"Cash purchases · expenses",ex_rcv:"Receive payments",ex_pay:"Pay bills"});
 Object.assign(L.th,{g_docsG:"พิมพ์เอกสาร",dcNo:"เลขที่",dcAmt:"จำนวนเงิน",docsG:"พิมพ์เอกสาร",docAll:"เอกสารทั้งหมด",docSale:"เอกสารขาย",wcT:"หนังสือรับรองหัก ณ ที่จ่าย (50 ทวิ)",dcHint:"แตะ 🖨️ เพื่อดู / พิมพ์ / ส่ง LINE · เอกสารสร้างจากรายการที่บันทึกไว้ ไม่ต้องกรอกใหม่",dcKind:"ประเภท",dcNoYet:"(ออกเลขตอนพิมพ์)",dcNone:"ยังไม่มีเอกสารในปีนี้",dcWcNone:"ยังไม่มีรายการจ่ายที่หัก ณ ที่จ่าย — ตอนบันทึกเงินจ่าย ใส่ % หัก ณ ที่จ่าย แล้วจะพิมพ์ 50 ทวิ ได้ที่นี่",dcAfter:"บันทึกแล้ว · พิมพ์เอกสาร",dcLater:"ไว้ทีหลัง",dcPvBtn:"🧾 ใบสำคัญจ่าย",dcWcBtn:"📄 50 ทวิ",dcRcBtn:"🧾 ใบเสร็จรับเงิน"});
 Object.assign(L.ja,{g_docsG:"書類印刷",dcNo:"番号",dcAmt:"金額",docsG:"書類印刷",docAll:"全書類",docSale:"販売書類",wcT:"源泉徴収証明書 (50 Tawi)",dcHint:"🖨️ で表示・印刷・LINE送信 · 記録済みデータから作成、再入力不要",dcKind:"種類",dcNoYet:"（印刷時に採番）",dcNone:"今年の書類はまだありません",dcWcNone:"源泉徴収のある支払いがまだありません — 支払い記録で源泉%を入れるとここで50 Tawiを印刷できます",dcAfter:"保存しました · 書類を印刷",dcLater:"あとで",dcPvBtn:"🧾 支払伝票",dcWcBtn:"📄 50 Tawi",dcRcBtn:"🧾 領収書"});
 Object.assign(L.en,{g_docsG:"Documents",dcNo:"No.",dcAmt:"Amount",docsG:"Print documents",docAll:"All documents",docSale:"Sales documents",wcT:"WHT certificate (50 Tawi)",dcHint:"Tap 🖨️ to view / print / send via LINE · built from saved records, no retyping",dcKind:"Type",dcNoYet:"(numbered when printed)",dcNone:"No documents this year yet",dcWcNone:"No payments with withholding tax yet — enter WHT % when recording a payment and the 50 Tawi can be printed here",dcAfter:"Saved · print documents",dcLater:"Later",dcPvBtn:"🧾 Payment voucher",dcWcBtn:"📄 50 Tawi",dcRcBtn:"🧾 Receipt"});
@@ -516,14 +519,16 @@ function indCol(y,c,k){return sum(c.ms.map(function(m){return indVal(y,m,k)}))}
 var VIEWS=[["dash","📊"],["bill","📄"],["buy","🛒"],["direct","📑"],["tx","🧾"],["cost","📦"],["vat","🧾"],["acc","📒"],["rep","🖨️"],["set","⚙️"]];
 /* grouped menu: ขาย · จ่าย · รับชำระ · จ่ายชำระ · สต๊อก · รายงาน · ตั้งค่า (sub-items = existing views + filters) */
 var MENU,MENU_A=[["dash","📊",[["dash","dash"]]],
- ["sell","🧾",[["sAll","bill",{bf:"all"}],["dt_qt","bill",{bf:"qt"}],["bAR","bill",{bf:"ar"}],["dt_bn","bill",{bf:"bn"}],["dt_cs","bill",{bf:"cs"}],["adjChip","bill",{bf:"adj"}],["paidS","bill",{bf:"paid"}],["custT","bill",{bf:"cu"}],["itemT","bill",{bf:"it"}]]],
- ["buyG","🛒",[["pAll","buy",{pf:"all"}],["supT","buy",{pf:"sup"}],["cashOut","tx",{f:"out"}]]],
- ["rcvG","💰",[["bAR","bill",{bf:"ar"}],["rcList","bill",{bf:"rc"}],["dt_dp","bill",{bf:"dp"}],["cashIn","tx",{f:"in"}]]],
- ["payG","💸",[["apT","buy",{pf:"open"}],["pvList","buy",{pf:"pv"}],["whtG","vat"]]],
- ["docsG","🖨️",[["docAll","docs",{df:"all"}],["docSale","docs",{df:"sale"}],["rcList","docs",{df:"rc"}],["pvList","docs",{df:"pv"}],["wcT","docs",{df:"wc"}]]],
+ ["purA","🛒",[["ex_pcr","buy",{pf:"all"}],["ex_pcs","tx",{f:"out"}],["supT","buy",{pf:"sup"}]]],
+ ["sell","🧾",[["dt_qt","bill",{bf:"qt"}],["sAll","bill",{bf:"all"}],["dt_cs","bill",{bf:"cs"}],["adjChip","bill",{bf:"adj"}],["itemT","bill",{bf:"it"}]]],
+ ["arA","💰",[["dt_bn","bill",{bf:"bn"}],["ex_rcv","bill",{bf:"ar"}],["rcList","bill",{bf:"rc"}],["dt_dp","bill",{bf:"dp"}],["paidS","bill",{bf:"paid"}],["custT","bill",{bf:"cu"}],["cashIn","tx",{f:"in"}]]],
+ ["apA","💸",[["apT","buy",{pf:"open"}],["ex_pay","buy",{pf:"pv"}],["whtG","vat"]]],
  ["stk","📦",[["cost","cost"]]],
- ["repG","📈",[["direct","direct"],["vat","vat"],["av_pl","acc",{av:"pl"}],["av_bs","acc",{av:"bs"}],["av_tb","acc",{av:"tb"}],["av_gl","acc",{av:"gl"}],["av_jnl","acc",{av:"jnl"}],["av_fa","acc",{av:"fa"}],["av_rec","acc",{av:"rec"}],["allTx","tx",{f:"all"}],["rep","rep"]]],
- ["setG","⚙️",[["set","set"],["av_coa","acc",{av:"coa"}],["trT","tx",{f:"tr"}]]]];
+ ["bankA","🏦",[["allTx","tx",{f:"all"}],["trT","tx",{f:"tr"}],["av_rec","acc",{av:"rec"}],["direct","direct"]]],
+ ["glA","📒",[["av_jnl","acc",{av:"jnl"}],["av_gl","acc",{av:"gl"}],["av_tb","acc",{av:"tb"}],["av_fa","acc",{av:"fa"}]]],
+ ["repG","📈",[["av_pl","acc",{av:"pl"}],["av_bs","acc",{av:"bs"}],["vat","vat"],["rep","rep"]]],
+ ["docsG","🖨️",[["docAll","docs",{df:"all"}],["docSale","docs",{df:"sale"}],["rcList","docs",{df:"rc"}],["pvList","docs",{df:"pv"}],["wcT","docs",{df:"wc"}]]],
+ ["setG","⚙️",[["set","set"],["av_coa","acc",{av:"coa"}],["custT","bill",{bf:"cu"}],["supT","buy",{pf:"sup"}],["itemT","bill",{bf:"it"}]]]];
 var MENU_O=[["dash","🏠",[["dash","dash"]]],
  ["sell","🧾",[["sAll","bill",{bf:"all"}],["o_ar","bill",{bf:"ar"}],["rcList","bill",{bf:"rc"}],["custT","bill",{bf:"cu"}],["itemT","bill",{bf:"it"}]]],
  ["buyG","🛒",[["pAll","buy",{pf:"all"}],["o_ap","buy",{pf:"open"}],["cashOut","tx",{f:"out"}],["supT","buy",{pf:"sup"}]]],
