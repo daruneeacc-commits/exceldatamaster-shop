@@ -8,7 +8,7 @@
 <link rel="icon" href="/assets/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Sarabun:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
 <style>
 :root{--ink:#1d2b36;--sub:#5d6c78;--line:#dfe6ec;--bg:#f4f7fa;--card:#fff;--brand:#2563a6;--brand2:#e8f0fa;--in:#1f8a4c;--inb:#e5f5ec;--out:#c2413b;--outb:#fdeceb;--op:#2563a6;--inv:#8a5cc2;--fin:#c27a1d;--f:"IBM Plex Sans Thai","Noto Sans JP",system-ui,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -142,7 +142,8 @@ dialog::backdrop{background:rgba(20,30,40,.45)}
 @media print{
  @page{size:A4 landscape;margin:10mm}
  body{background:#fff;font-size:11px}
- header.top,main,.fab,.mtab,dialog,.toast{display:none!important}
+ header.top,main,.fab,.mtab,dialog,.toast,#subnav,#nav,#mtab,nav,.subnav,.edm-bar{display:none!important}
+ body>*:not(#rep){display:none!important}
  #rep{display:block}
  .rp h1{font-size:18px}.rp .meta{color:#555;margin:2px 0 10px}
  .rp table{border-collapse:collapse;width:100%;font-size:10px;margin-bottom:12px}
@@ -176,20 +177,20 @@ dialog::backdrop{background:rgba(20,30,40,.45)}
  [data-done]{background:#f3f4f6;opacity:.6}
  [data-done]:hover{opacity:.9}
 
-.w50{font-size:8.2pt;line-height:1.22;padding:9mm 10mm}
+.w50{font-size:8.5pt;line-height:1.24;padding:8mm 10mm 6mm}
 .w50 .fd{font-size:7.8pt}
 .w50 .cp{font-size:7.5pt;margin-bottom:2mm}
 .w50 .frame{border:1.2px solid #222;padding:2mm 3mm;display:flex;flex-direction:column;gap:1.2mm}
 .w50 .top{display:flex;justify-content:space-between;align-items:flex-start}
 .w50 .tt{flex:1;text-align:center}
-.w50 .tt h1{font-size:15pt;color:#111;text-align:center;margin:0}
+.w50 .tt h1{font-size:17pt;color:#111;text-align:center;margin:0;letter-spacing:.3px}
 .w50 .bn{line-height:1.7;min-width:44mm}
-.w50 .bx{border:1px solid #333;border-radius:2mm;padding:1.2mm 2.5mm}
+.w50 .bx{border:1px solid #333;border-radius:2mm;padding:1.6mm 3mm}
 .w50 .r1{display:flex;align-items:center;gap:3mm}
 .w50 .r1 .tl{margin-left:auto;font-weight:700}
 .w50 .tid{display:inline-flex;align-items:center;gap:1mm}
 .w50 .tid span{display:inline-flex}
-.w50 .tid i{font-style:normal;width:4.2mm;height:4.8mm;border:1px solid #444;margin-left:-1px;display:inline-grid;place-items:center;font-size:8pt}
+.w50 .tid i{font-style:normal;width:4.5mm;height:5.2mm;font-weight:600;border:1px solid #444;margin-left:-1px;display:inline-grid;place-items:center;font-size:8pt}
 .w50 .tid b{font-weight:400}
 .w50 .ln2{display:flex;gap:2mm;align-items:flex-end}
 .w50 .ln2 .k{font-weight:700}
@@ -203,14 +204,14 @@ dialog::backdrop{background:rgba(20,30,40,.45)}
 .w50 .pg{display:grid;grid-template-columns:repeat(4,auto);gap:1mm 4mm;align-content:center}
 .w50 .cb{font-style:normal;display:inline-grid;place-items:center;width:3.6mm;height:3.6mm;border:1px solid #333;font-size:7pt;vertical-align:-1px;color:#0b3a8a;font-weight:700}
 .w50 table.inc{width:100%;border-collapse:collapse;border:1px solid #333}
-.w50 .inc th{border:1px solid #333;font-weight:700;padding:1mm;text-align:center;background:#fff;color:#111;font-size:8.2pt}
+.w50 .inc th{border:1px solid #333;font-weight:700;padding:1.4mm 1mm;text-align:center;background:#f1f3f5;color:#111;font-size:8.9pt}
 .w50 .inc td{border-left:1px solid #333;padding:0 1.5mm;vertical-align:bottom}
 .w50 .inc td.c,.w50 .inc td.r{border-bottom:1px dotted #999;white-space:nowrap;color:#0b3a8a}
 .w50 .inc td.r{text-align:right}
 .w50 .inc td.c{text-align:center}
 .w50 .inc .i3{padding-left:11mm;display:inline-block}
 .w50 .inc tr.hd2 td.c,.w50 .inc tr.hd2 td.r{border-bottom:0}
-.w50 .inc tr.wsum td{border-top:1px solid #333;padding:1mm 1.5mm;color:#111}
+.w50 .inc tr.wsum td{border-top:1px solid #333;padding:1.4mm 1.5mm;color:#111;background:#f8f9fa;font-weight:700}
 .w50 .inc tr.wsum td.r{color:#0b3a8a}
 .w50 .cd span{margin-left:4mm}
 .w50 .ft2{display:grid;grid-template-columns:42mm 1fr;border:1px solid #333;border-radius:2mm}
