@@ -280,7 +280,7 @@ var CO=(function(){var o;try{o=JSON.parse(localStorage.getItem("edm_cf_cos")||"n
 var K={};KN.forEach(function(n){K[n]=kpOf(CO.cur)+n});
 var DEMO=/[?&]demo=1/.test(location.search);
 function ld(k,d){if(DEMO)return d;try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
-function sv(k,v){if(DEMO)return;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast("บันทึกไม่ได้ (หน่วยความจำเต็ม?)")}try{drvKick()}catch(e){}}
+var demoW=0;function sv(k,v){if(DEMO){if(!demoW&&!/_ui$/.test(k)&&typeof toast==="function"){demoW=1;setTimeout(function(){toast("⚠️ โหมดตัวอย่าง ไม่บันทึก · กด \"ไปหน้าข้อมูลจริงของฉัน\" ด้านบน")},50)}return}try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast("บันทึกไม่ได้ (หน่วยความจำเต็ม?)")}try{drvKick()}catch(e){}}
 
 /* ========== i18n ========== */
 var L={
@@ -579,7 +579,7 @@ function perSel(){return'<select class="sm" id="per"><option value="m"'+(ui.per=
 function bindTb(){var y=$("#yy");if(y)y.onchange=function(){ui.y=+this.value;sui();render()};var p=$("#per");if(p)p.onchange=function(){ui.per=this.value;sui();render()}}
 
 /* ========== render ========== */
-function render(){if(ui.v==="indirect")ui.v="dash";nav();var v=ui.v;var h=(DEMO?'<div class="card" style="background:#fff7d6;border-color:#f1dca3;padding:10px 14px">🧪 '+t("demoNote")+"</div>":"");
+function render(){if(ui.v==="indirect")ui.v="dash";nav();var v=ui.v;var h=(DEMO?'<div class="card" style="background:#fde8e8;border:2px solid #e11d48;padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:5"><b style="color:#b91c1c">⚠️ หน้านี้คือข้อมูลตัวอย่าง · ที่คีย์จะไม่ถูกบันทึก</b><a class="btn p" href="./" style="margin-left:auto">ไปหน้าข้อมูลจริงของฉัน →</a></div>':"");
  h+=v==="tax"?vTax():v==="pay"?vPay():v==="chq"?vChq():v==="docs"?vDocs():v==="bill"?vBill():v==="buy"?vBuy():v==="acc"?vAcc():v==="vat"?vVat():v==="cost"?vCost():v==="dash"?vDash():v==="direct"?vDirect():v==="indirect"?vIndirect():v==="tx"?vTx():v==="rep"?vRep():vSet();
  $("#main").innerHTML=h;bindTb();bind[v]&&bind[v]()}
 var bind={};
