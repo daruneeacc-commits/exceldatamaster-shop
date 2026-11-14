@@ -422,7 +422,7 @@ function indVal(y,m,k){var r=ind[y+"-"+("0"+(m+1)).slice(-2)];return r?(+r[k]||0
 function indCol(y,c,k){return sum(c.ms.map(function(m){return indVal(y,m,k)}))}
 
 /* ========== nav ========== */
-var VIEWS=[["dash","📊"],["bill","📄"],["direct","📑"],["indirect","🔄"],["tx","🧾"],["cost","📦"],["vat","🧾"],["acc","📒"],["rep","🖨️"],["set","⚙️"]];
+var VIEWS=[["dash","📊"],["bill","📄"],["direct","📑"],["tx","🧾"],["cost","📦"],["vat","🧾"],["acc","📒"],["rep","🖨️"],["set","⚙️"]];
 function nav(){
  $("#nav").innerHTML=VIEWS.map(function(v){return'<button data-v="'+v[0]+'" class="'+(ui.v===v[0]?"on":"")+'">'+v[1]+" "+t(v[0])+"</button>"}).join("");
  $("#mtab").innerHTML=VIEWS.map(function(v){return'<button data-v="'+v[0]+'" class="'+(ui.v===v[0]?"on":"")+'"><b>'+v[1]+"</b>"+(L[lang][v[0]+"S"]||t(v[0]))+"</button>"}).join("");
@@ -442,7 +442,7 @@ function perSel(){return'<select class="sm" id="per"><option value="m"'+(ui.per=
 function bindTb(){var y=$("#yy");if(y)y.onchange=function(){ui.y=+this.value;sui();render()};var p=$("#per");if(p)p.onchange=function(){ui.per=this.value;sui();render()}}
 
 /* ========== render ========== */
-function render(){nav();var v=ui.v;var h=(DEMO?'<div class="card" style="background:#fff7d6;border-color:#f1dca3;padding:10px 14px">🧪 '+t("demoNote")+"</div>":"");
+function render(){if(ui.v==="indirect")ui.v="dash";nav();var v=ui.v;var h=(DEMO?'<div class="card" style="background:#fff7d6;border-color:#f1dca3;padding:10px 14px">🧪 '+t("demoNote")+"</div>":"");
  h+=v==="bill"?vBill():v==="acc"?vAcc():v==="vat"?vVat():v==="cost"?vCost():v==="dash"?vDash():v==="direct"?vDirect():v==="indirect"?vIndirect():v==="tx"?vTx():v==="rep"?vRep():vSet();
  $("#main").innerHTML=h;bindTb();bind[v]&&bind[v]()}
 var bind={};
