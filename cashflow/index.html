@@ -244,6 +244,7 @@ dialog::backdrop{background:rgba(20,30,40,.45)}
  .stq{display:grid;gap:8px;margin:8px 0 16px}.stq button{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:12px 14px;font:inherit;text-align:left;cursor:pointer;color:inherit}.stq button.on{border-color:var(--brand);background:#eef4fb;font-weight:700}
 .kpis.dck{grid-template-columns:repeat(4,minmax(0,1fr))}.kpis.dck .kpi{grid-column:auto!important}
 @media(max-width:700px){.kpis.dck{grid-template-columns:repeat(2,minmax(0,1fr))}#dcT thead{display:none}#dcT tr{display:grid;grid-template-columns:1fr auto auto;grid-template-areas:"k a b" "p a b" "d n b";gap:2px 10px;padding:9px 2px;border-bottom:1px solid var(--line);align-items:center}#dcT td{border:0;padding:0}#dcT td:nth-child(1){grid-area:d;font-size:12px;color:var(--mut,#64748b)}#dcT td:nth-child(2){grid-area:k;font-weight:700}#dcT td:nth-child(3){grid-area:n;font-size:12px;text-align:right}#dcT td:nth-child(4){grid-area:p}#dcT td:nth-child(5){grid-area:a;font-weight:700}#dcT td:nth-child(6){grid-area:b}}
+.mdb.drvErr{border-color:#e11d48;color:#e11d48}
 </style>
 </head>
 <body>
@@ -276,7 +277,7 @@ var CO=(function(){var o;try{o=JSON.parse(localStorage.getItem("edm_cf_cos")||"n
 var K={};KN.forEach(function(n){K[n]=kpOf(CO.cur)+n});
 var DEMO=/[?&]demo=1/.test(location.search);
 function ld(k,d){if(DEMO)return d;try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
-function sv(k,v){if(DEMO)return;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast("บันทึกไม่ได้ (หน่วยความจำเต็ม?)")}}
+function sv(k,v){if(DEMO)return;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast("บันทึกไม่ได้ (หน่วยความจำเต็ม?)")}try{drvKick()}catch(e){}}
 
 /* ========== i18n ========== */
 var L={
@@ -1549,12 +1550,37 @@ function coDlg(){if(DEMO){toast(t("demoNote"));return}var A=coAll().map(function
  var h='<div class="mut" style="margin-bottom:10px">แต่ละบริษัทมีข้อมูลแยกกันทั้งหมด (ผังบัญชี เอกสาร เลขที่ ลูกค้า งวดบัญชี) · ส่งออกเป็นไฟล์ 1 ไฟล์ต่อ 1 บริษัท เก็บในโฟลเดอร์/Drive ได้</div><div style="overflow:auto"><table class="dt"><thead><tr><th>บริษัท</th><th class="r">รายการ</th><th class="r">เอกสาร</th><th>ปิดงวดถึง</th><th class="r">KB</th><th></th></tr></thead><tbody>'+
  A.map(function(i){var cur=i.id===CO.cur;return'<tr'+(cur?' style="background:#eef6ff"':"")+'><td><b>'+esc(i.n)+"</b>"+(cur?' <span class="pill" style="background:#2563eb;color:#fff;padding:1px 8px;border-radius:9px;font-size:11px">กำลังใช้</span>':"")+(i.tax?'<div class="mut" style="font-size:12px">'+esc(i.tax)+"</div>":"")+'</td><td class="r">'+i.nt+'</td><td class="r">'+i.nd+"</td><td>"+(i.lock?dDisp(i.lock):"-")+'</td><td class="r">'+i.kb+'</td><td style="white-space:nowrap">'+(cur?"":'<button class="btn pri" data-cgo="'+i.id+'">เปิด</button> ')+'<button class="btn" data-cex="'+i.id+'" title="ส่งออกไฟล์">💾</button>'+(i.id&&!cur?' <button class="btn" data-cdl="'+i.id+'" title="ลบ">🗑</button>':"")+"</td></tr>"}).join("")+
  '</tbody></table></div><div class="mut" style="margin-top:8px;font-size:12px">ใช้พื้นที่รวม '+tot+' KB (เบราว์เซอร์ส่วนใหญ่เก็บได้ราว 5,000 KB) · ข้อมูลอยู่ในเครื่องนี้เท่านั้น ส่งออกไฟล์สำรองเป็นประจำ</div>';
- showDlg("🏢 บริษัท / ลูกค้าทำบัญชี",h,'<button class="btn pri" id="coAdd">＋ สร้างบริษัทใหม่</button><label class="btn" style="cursor:pointer">📂 นำเข้าไฟล์เป็นบริษัทใหม่<input type="file" id="coImp" accept=".json,application/json" hidden></label><button class="btn" data-close>'+t("close2")+"</button>");
+ showDlg("🏢 บริษัท / ลูกค้าทำบัญชี",h,'<button class="btn pri" id="coAdd">＋ สร้างบริษัทใหม่</button><button class="btn" id="coDrv">☁️ Google Drive</button><label class="btn" style="cursor:pointer">📂 นำเข้าไฟล์เป็นบริษัทใหม่<input type="file" id="coImp" accept=".json,application/json" hidden></label><button class="btn" data-close>'+t("close2")+"</button>");
  $$("[data-cgo]").forEach(function(e){e.onclick=function(){coGo(e.dataset.cgo)}});
  $$("[data-cex]").forEach(function(e){e.onclick=function(){var i=coInfo(e.dataset.cex);dl(new Blob([JSON.stringify(coPack(i),null,1)],{type:"application/json"}),"cashflow-"+i.n.replace(/[\\/:*?"<>|\s]+/g,"_").slice(0,40)+"-"+today()+".json")}});
  $$("[data-cdl]").forEach(function(e){e.onclick=function(){var i=coInfo(e.dataset.cdl);var v=prompt("ลบข้อมูลบริษัท \""+i.n+"\" ทั้งหมดออกจากเครื่องนี้ ("+i.nt+" รายการ, "+i.nd+" เอกสาร)\nแนะนำให้กด 💾 ส่งออกไฟล์เก็บไว้ก่อน\n\nพิมพ์คำว่า ลบ เพื่อยืนยัน");if(v!=="ลบ")return;KN.forEach(function(n){try{localStorage.removeItem(kpOf(i.id)+n)}catch(x){}});CO.list=CO.list.filter(function(c){return c.id!==i.id});coSave();toast(t("deleted"));coDlg()}});
+ $("#coDrv").onclick=drvDlg;
  $("#coAdd").onclick=function(){var n=(prompt("ชื่อบริษัทลูกค้า")||"").trim();if(!n)return;if(A.some(function(i){return i.n.replace(/\s/g,"")===n.replace(/\s/g,"")})&&!confirm("มีบริษัทชื่อนี้แล้ว สร้างซ้ำหรือไม่?"))return;var id=coNewId();if(!coWrite(id,{cfg:{name:n}}))return;CO.list.push({id:id,n:n});coGo(id)};
  $("#coImp").onchange=function(){var f=this.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){var o;try{o=JSON.parse(rd.result);if(o.app!=="edm-cashflow")throw 0}catch(e){toast("❌ file");return}var n=(o.cfg&&o.cfg.name)||f.name.replace(/\.json$/i,"");if(!confirm("นำเข้า \""+n+"\" เป็นบริษัทใหม่ ("+(o.tx||[]).length+" รายการ, "+(o.docs||[]).length+" เอกสาร)?"))return;var id=coNewId();if(!coWrite(id,o))return;CO.list.push({id:id,n:n});coGo(id)};rd.readAsText(f)}}
+/* ========== Google Drive (หลังบ้านแยก tools/cashflow-drive/Code.gs · edm_cf_drive {url,key,auto,last{id:iso}}) ========== */
+function drv(){try{return JSON.parse(localStorage.getItem("edm_cf_drive")||"null")||{}}catch(e){return{}}}
+function drvSet(o){try{localStorage.setItem("edm_cf_drive",JSON.stringify(o))}catch(e){}}
+function drvId(id){return id||"main"}
+function drvPost(o,c){var g=c||drv();if(!g.url||!g.key)return Promise.reject("nocfg");o.k=g.key;return fetch(g.url,{method:"POST",body:JSON.stringify(o)}).then(function(r){return r.json()}).then(function(j){if(!j.ok)throw j.err||"err";return j})}
+function drvSave(id){var i=coInfo(id);return drvPost({a:"save",id:drvId(id),n:i.n,data:coPack(i)}).then(function(j){var g=drv();g.last=g.last||{};g.last[drvId(id)]=j.at;drvSet(g);return j})}
+var drvT=0;function drvKick(){var g=drv();if(DEMO||!g.auto||!g.url)return;clearTimeout(drvT);drvT=setTimeout(function(){drvSave(CO.cur).then(function(){var b=$("#coBtn");if(b)b.classList.remove("drvErr")}).catch(function(){var b=$("#coBtn");if(b)b.classList.add("drvErr")})},15000)}
+window.addEventListener("pagehide",function(){var g=drv();if(drvT&&g.auto&&g.url&&navigator.sendBeacon){clearTimeout(drvT);drvT=0;var i=coInfo(CO.cur);navigator.sendBeacon(g.url,JSON.stringify({k:g.key,a:"save",id:drvId(CO.cur),n:i.n,data:coPack(i)}))}});
+function drvDlg(){var g=drv(),L=g.last||{};
+ var h='<div class="mut" style="margin-bottom:10px">เก็บข้อมูลทุกบริษัทขึ้น Google Drive ของคุณ แยกโฟลเดอร์ต่อบริษัท (โฟลเดอร์ "EDM งบกระแสเงินสด (ห้ามแชร์)") + สำเนาย้อนหลังรายวัน 30 วัน · ติดตั้งหลังบ้านตามไฟล์ tools/cashflow-drive/Code.gs</div>'+
+ '<label class="fl">ลิงก์หลังบ้าน (/exec)<input id="dvU" value="'+esc(g.url||"")+'" placeholder="https://script.google.com/macros/s/…/exec" style="width:100%"></label>'+
+ '<label class="fl" style="margin-top:8px">รหัส<input id="dvK" type="password" value="'+esc(g.key||"")+'" style="width:100%"></label>'+
+ '<label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input type="checkbox" id="dvA"'+(g.auto?" checked":"")+'> บันทึกขึ้น Drive อัตโนมัติ (15 วินาทีหลังแก้ไข · บริษัทที่เปิดอยู่)</label>'+
+ '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn pri" id="dvS">💾 บันทึกการตั้งค่า + ทดสอบ</button><button class="btn" id="dvUp">⬆️ บันทึกทุกบริษัทขึ้น Drive</button><button class="btn" id="dvLs">⬇️ ดึงข้อมูลจาก Drive</button></div><div id="dvO" style="margin-top:12px"></div>'+
+ '<div class="mut" style="margin-top:8px;font-size:12px">ล่าสุดบน Drive: '+(coAll().map(function(c){var i=coInfo(c.id),a=L[drvId(c.id)];return esc(i.n)+" "+(a?new Date(a).toLocaleString("th-TH"):"—")}).join(" · "))+"</div>";
+ showDlg("☁️ Google Drive",h,'<button class="btn" data-close>'+t("close2")+"</button>",1);
+ var O=$("#dvO");function msg(x){O.innerHTML=x}
+ $("#dvS").onclick=function(){var c={url:$("#dvU").value.trim(),key:$("#dvK").value};msg("⏳ กำลังทดสอบ…");drvPost({a:"list"},c).then(function(j){var n=drv();n.url=c.url;n.key=c.key;n.auto=$("#dvA").checked?1:0;drvSet(n);msg("✅ เชื่อมต่อได้ · บน Drive มี "+j.list.length+" บริษัท")}).catch(function(e){msg("❌ เชื่อมต่อไม่ได้ ("+esc(String(e))+") — ตรวจลิงก์ /exec และรหัส")})};
+ $("#dvA").onchange=function(){var n=drv();n.auto=this.checked?1:0;drvSet(n)};
+ $("#dvUp").onclick=function(){var A=coAll(),k=0,bad=0;msg("⏳ 0/"+A.length);(function nx(){if(k>=A.length){msg(bad?"⚠️ สำเร็จ "+(A.length-bad)+" · ไม่สำเร็จ "+bad:"✅ บันทึกครบ "+A.length+" บริษัท");return}drvSave(A[k].id).catch(function(){bad++}).then(function(){k++;msg("⏳ "+k+"/"+A.length);nx()})})()};
+ $("#dvLs").onclick=function(){msg("⏳ กำลังดึงรายชื่อ…");drvPost({a:"list"}).then(function(j){if(!j.list.length){msg("ยังไม่มีข้อมูลบน Drive");return}
+  msg('<table class="dt"><thead><tr><th>บริษัทบน Drive</th><th>อัปเดต</th><th></th></tr></thead><tbody>'+j.list.map(function(c){var lid=c.id==="main"?"":c.id,has=lid===""||CO.list.some(function(x){return x.id===lid});return"<tr><td>"+esc(c.n)+"</td><td>"+(c.at?new Date(c.at).toLocaleString("th-TH"):"-")+'</td><td><button class="btn" data-dvl="'+esc(c.id)+'" data-dvn="'+esc(c.n)+'">'+(has?"แทนที่ข้อมูลในเครื่อง":"นำเข้า")+"</button></td></tr>"}).join("")+"</tbody></table>");
+  $$("[data-dvl]").forEach(function(b){b.onclick=function(){var id=b.dataset.dvl,lid=id==="main"?"":id,has=lid===""||CO.list.some(function(x){return x.id===lid});if(!confirm(has?"แทนที่ข้อมูลบริษัท \""+b.dataset.dvn+"\" ในเครื่องนี้ด้วยข้อมูลจาก Drive?\n(ข้อมูลในเครื่องที่ยังไม่ได้บันทึกขึ้น Drive จะหาย)":"นำเข้า \""+b.dataset.dvn+"\" จาก Drive?"))return;msg("⏳ กำลังดึง…");
+   drvPost({a:"load",id:id}).then(function(r){if(!coWrite(lid,r.data))return;if(!has)CO.list.push({id:lid,n:b.dataset.dvn});coSave();if(lid===CO.cur)location.reload();else coGo(lid)}).catch(function(e){msg("❌ "+esc(String(e)))})}})}).catch(function(e){msg("❌ "+esc(String(e)))})}}
 /* ========== demo ========== */
 if(DEMO){(function(){var y=new Date().getFullYear();ui.y=y;cfg=Object.assign({},DEF_CFG,{name:"บริษัท ตัวอย่าง จำกัด",year:y,open:{cash:50000,bank:850000},prep:"สมใจ บัญชีดี",appr:"Tanaka Hiroshi",co:{tax:"0105569000000",addr:"99 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110",rd:"2024-04-01",reg:5000000,paid0:800000,sh:50000,par:100}});
  var rnd=(function(s){return function(){s=(s*9301+49297)%233280;return s/233280}})(7);
