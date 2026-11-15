@@ -1980,7 +1980,9 @@ function setup(){
   '<p class="mut">ใส่ลิงก์ Apps Script (/exec) ของระบบถ่ายบิล และรหัส API_KEY · เก็บไว้ในเครื่องนี้เท่านั้น</p>'+
   '<label>ลิงก์ Apps Script</label><input id="lbU" value="'+esc(c.url||"")+'" placeholder="https://script.google.com/macros/s/.../exec">'+
   '<label style="margin-top:8px">รหัส API_KEY</label><input id="lbK" value="'+esc(c.key||"")+'">'+
-  '<div style="margin-top:12px;display:flex;gap:8px"><button class="ok" id="lbS">บันทึก</button><button data-x>ยกเลิก</button></div>');
+  '<div style="margin-top:12px;display:flex;gap:8px"><button class="ok" id="lbS">บันทึก</button><button data-x>ยกเลิก</button></div>'+
+  '<h4 style="margin:16px 0 6px">🔗 ไลน์ลูกค้าที่ผูกกับบริษัท</h4>'+(Object.keys(c.map||{}).map(function(w){return'<div class="lbc" style="display:flex;justify-content:space-between;align-items:center;gap:8px">'+esc(w)+' → '+esc(coN(c.map[w]))+' <button data-unl="'+esc(w)+'">เลิกผูก</button></div>'}).join("")||'<p class="mut">ยังไม่มี · ผูกได้จากหน้ารายการบิล</p>'));
+  box.querySelectorAll("[data-unl]").forEach(function(e){e.onclick=function(){link(e.dataset.unl,null);setup()}});
   box.querySelector("#lbS").onclick=function(){var u=box.querySelector("#lbU").value.trim(),k=box.querySelector("#lbK").value.trim();
     if(!/^https:\/\/script\.google\.com\//.test(u)||!k){toast("ใส่ลิงก์ script.google.com และรหัสให้ครบ");return}
     localStorage.setItem(LK,JSON.stringify({url:u,key:k}));open()};
@@ -1988,19 +1990,31 @@ function setup(){
 }
 function bindX(){box.querySelectorAll("[data-x]").forEach(function(b){b.onclick=close})}
 
-var BILLS=[];
+var BILLS=[],ALL=[],FREE=[];
+function cur(){return CO.cur||""}
+function cos(){var L=(CO.list||[]).slice();if(!L.some(function(c){return c.id===""}))L.unshift({id:"",n:"บริษัทแรก"});return L}
+function coN(id){var c=cos().filter(function(x){return x.id===id})[0];return c?c.n:"(ไม่พบบริษัท)"}
+function split(){var m=lc().map||{};BILLS=ALL.filter(function(b){return m[b.customer]===cur()});FREE=ALL.filter(function(b){return !(b.customer in m)});count(BILLS.length+FREE.length)}
+function link(who,co){var c=lc();c.map=c.map||{};if(co==null)delete c.map[who];else c.map[who]=co;localStorage.setItem(LK,JSON.stringify(c));split()}
+function drop(id){ALL=ALL.filter(function(b){return b.bill_id!==id});split();list()}
 function open(){
   var c=lc();if(!c.url){setup();return}
   panel('<h3>📥 บิลจาก LINE <button data-x>✕</button></h3><p class="mut">กำลังโหลด…</p>');bindX();
-  api("list").then(function(j){BILLS=j.bills||[];count(BILLS.length);list()}).catch(function(e){
+  api("list").then(function(j){ALL=j.bills||[];split();list()}).catch(function(e){
     panel('<h3>📥 บิลจาก LINE <button data-x>✕</button></h3><p>โหลดไม่ได้: '+esc(e.message)+'</p><button id="lbSet">⚙️ ตั้งค่าการเชื่อม</button>');bindX();box.querySelector("#lbSet").onclick=setup});
 }
 function count(n){btn.innerHTML="📥 บิลจาก LINE"+(n?"<b>"+n+"</b>":"")}
 function catOpts(sel){return(cfg.cats||[]).filter(function(k){return k.d==="out"&&k.g==="op"}).map(function(k){return'<option value="'+k.id+'"'+(k.id===sel?" selected":"")+'>'+esc(k.th)+'</option>'}).join("")}
 function accOpts(){return(cfg.accts||[]).map(function(a,i){return'<option value="'+esc(a.id)+'"'+(i===0?" selected":"")+'>'+esc(a.n)+'</option>'}).join("")}
 function list(){
-  var h='<h3>📥 บิลจาก LINE · รอนำเข้า '+BILLS.length+' ใบ <span><button id="lbSet" title="ตั้งค่า">⚙️</button> <button data-x>✕</button></span></h3>';
-  if(!BILLS.length)h+='<p class="mut">ยังไม่มีบิลใหม่ · ให้ลูกค้าส่งรูปบิลหรือ PDF เข้า LINE OA</p>';
+  var h='<h3>📥 บิลจาก LINE · '+esc(coN(cur()))+' รอนำเข้า '+BILLS.length+' ใบ <span><button id="lbSet" title="ตั้งค่า">⚙️</button> <button data-x>✕</button></span></h3>';
+  var g={};FREE.forEach(function(b){g[b.customer]=(g[b.customer]||0)+1});
+  Object.keys(g).forEach(function(w){h+='<div class="lbc" style="background:#fff8e1;border-color:#f5d77a">🔗 ไลน์ <b>'+esc(w)+'</b> ส่งบิลมา '+g[w]+' ใบ · ยังไม่ได้ผูกกับบริษัท'+
+    '<div style="display:flex;gap:8px;margin-top:6px"><select data-cow="'+esc(w)+'">'+cos().map(function(c){return'<option value="'+esc(c.id)+'"'+(c.id===cur()?" selected":"")+'>'+esc(c.n)+'</option>'}).join("")+'</select>'+
+    '<button class="ok" data-link="'+esc(w)+'">ผูกกับบริษัทนี้</button></div></div>'});
+  var others={};ALL.forEach(function(b){var m=(lc().map||{})[b.customer];if(m!=null&&m!==cur())others[m]=(others[m]||0)+1});
+  Object.keys(others).forEach(function(id){h+='<div class="mut" style="margin:4px 0">🏢 '+esc(coN(id))+' มีบิลรอ '+others[id]+' ใบ <button data-goco="'+esc(id)+'">ไปที่บริษัทนี้</button></div>'});
+  if(!BILLS.length&&!FREE.length)h+='<p class="mut">ยังไม่มีบิลใหม่ของบริษัทนี้ · ให้ลูกค้าส่งรูปบิลหรือ PDF เข้า LINE OA</p>';
   BILLS.forEach(function(b,i){var c=MAPC[b.exp_acc]||"oout";
     h+='<div class="lbc" data-i="'+i+'"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>'+esc(b.vendor||"ไม่ระบุผู้ขาย")+'</b>'+
     '<a href="'+esc(b.url)+'" target="_blank" rel="noopener">🧾 ดูรูปบิล</a></div>'+
@@ -2014,9 +2028,12 @@ function list(){
     '<div style="margin-top:8px;display:flex;gap:8px"><button class="ok" data-imp="'+i+'">✅ นำเข้าเป็นเงินจ่าย</button><button data-skip="'+i+'">ไม่ใช้บิลนี้</button></div></div>'});
   panel(h);bindX();
   box.querySelector("#lbSet").onclick=setup;
+  box.querySelectorAll("[data-link]").forEach(function(e){e.onclick=function(){var w=e.dataset.link,sel=[].filter.call(box.querySelectorAll("[data-cow]"),function(x){return x.dataset.cow===w})[0];
+    link(w,sel.value);list();toast("ผูกไลน์ "+w+" กับ "+coN(sel.value)+" แล้ว")}});
+  box.querySelectorAll("[data-goco]").forEach(function(e){e.onclick=function(){CO.cur=e.dataset.goco;localStorage.setItem("edm_lb_cos",JSON.stringify(CO));location.reload()}});
   box.querySelectorAll("[data-imp]").forEach(function(e){e.onclick=function(){imp(+e.dataset.imp,e)}});
   box.querySelectorAll("[data-skip]").forEach(function(e){e.onclick=function(){e.disabled=true;var b=BILLS[+e.dataset.skip];
-    api("skip&id="+encodeURIComponent(b.bill_id)).then(function(){BILLS.splice(+e.dataset.skip,1);count(BILLS.length);list();toast("ข้ามบิลแล้ว")}).catch(function(x){e.disabled=false;toast("❌ "+x.message)})}});
+    api("skip&id="+encodeURIComponent(b.bill_id)).then(function(){drop(b.bill_id);toast("ข้ามบิลแล้ว")}).catch(function(x){e.disabled=false;toast("❌ "+x.message)})}});
 }
 function imp(i,el){
   var b=BILLS[i],card=box.querySelector('[data-i="'+i+'"]'),v={};
@@ -2029,11 +2046,11 @@ function imp(i,el){
     vt:vat>0?"inc":"",tid:b.tax_id||"",lines:[{name:v.p||"ค่าใช้จ่ายตามบิล",q:1,u:a}],lk:"exp",line:b.bill_id,lineUrl:b.url});
   saveAll();render();
   api("done&id="+encodeURIComponent(b.bill_id)).catch(function(){});
-  BILLS.splice(i,1);count(BILLS.length);list();
+  drop(b.bill_id);
   toast("✅ นำเข้าแล้ว "+money(a)+" บาท"+(vat>0&&Math.abs(vat-(a-a/1.07))>1?" · VAT ในบิลไม่ใช่ 7% โปรดตรวจ":""));
 }
 btn.onclick=open;
-if(lc().url)api("list").then(function(j){count((j.bills||[]).length)}).catch(function(){});
+if(lc().url)api("list").then(function(j){ALL=j.bills||[];split()}).catch(function(){});
 })();
 
 render();
