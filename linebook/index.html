@@ -1996,11 +1996,17 @@ function nameHit(a,b){a=nz(a);b=nz(b);if(a.length<2||b.length<2)return false;ret
 // p = บิลซื้อ (เราจ่าย) · s = บิลขาย (เราออกให้ลูกค้า) · x = สลิปโอนเงิน
 function kindOf(b){if(b._k)return b._k;if(b.kind==="slip")return"x";var me=myTax();if(me&&dig(b.tax_id)===me)return"s";if(me&&dig(b.buyer_tax)===me)return"p";if(!me&&nameHit(b.vendor,myName()))return"s";return"p"}
 function slipDir(b){if(nameHit(b.payee,myName()))return"in";if(nameHit(b.payer,myName()))return"out";if(openDocs("inv").some(function(d){return nameHit(d.cu.n,b.payer)}))return"in";if(openDocs("pi").some(function(d){return nameHit(d.cu.n,b.payee)}))return"out";return""}
-function cleanLines(b){return(b.lines||[]).filter(function(l){return(l.name||"").trim()&&(+l.q)>0&&(+l.u)>0}).map(function(l){return{name:String(l.name).trim(),q:+l.q,u:rr(l.u)}})}
+function cleanLines(b){return(b.lines||[]).filter(function(l){return(l.name||"").trim()&&(+l.q)>0&&(+l.u)>0}).map(function(l){var o={name:String(l.name).trim(),q:+l.q,u:rr(l.u)};if(+l.dc>0)o.dc=rr(l.dc);return o})}
 // เลือก vt ให้ยอดตรงบิล: ราคาก่อน VAT (exc) / รวม VAT (inc) / ไม่มี VAT · ไม่ตรง = 1 บรรทัดยอดรวม
-function docLines(b,label){var L=cleanLines(b),S=rr(L.reduce(function(s,l){return s+l.q*l.u},0)),tot=rr(b.total),vat=rr(b.vat);
-  if(L.length){if(vat>0&&Math.abs(S+vat-tot)<=1)return{lines:L,vt:"exc"};if(Math.abs(S-tot)<=1)return{lines:L,vt:vat>0?"inc":""}}
-  return{lines:[{name:label,q:1,u:tot}],vt:vat>0?"inc":""}}
+// noDisc = เอกสารที่ไม่รองรับส่วนลด (บิลซื้อ PI / รายการเงิน) → มีส่วนลดเมื่อไหร่ใช้ 1 บรรทัดยอดรวม
+function docLines(b,label,noDisc){var L=cleanLines(b),disc=rr(b.disc),hasD=disc>0||L.some(function(l){return l.dc}),tot=rr(b.total),vat=rr(b.vat),
+  S=rr(L.reduce(function(s,l){return s+l.q*l.u-(l.dc||0)},0)-disc);
+  if(L.length&&!(noDisc&&hasD)){if(vat>0&&Math.abs(S+vat-tot)<=1)return{lines:L,vt:"exc",disc:disc};if(Math.abs(S-tot)<=1)return{lines:L,vt:vat>0?"inc":"",disc:disc}}
+  return{lines:[{name:label,q:1,u:tot}],vt:vat>0?"inc":"",disc:0}}
+// อัตราหัก ณ ที่จ่ายจากยอดที่ระบุในเอกสาร (ปัดเป็นจำนวนเต็มเมื่อใกล้ 1/2/3/5%)
+function whtRate(b){var w=rr(b.wht),base=rr(b.total)-rr(b.vat);if(!(w>0)||!(base>0))return 0;var r=w/base*100,n=Math.round(r);return Math.abs(r-n)<0.06?n:rr(r)}
+function wfOf(n){return/บริษัท|จำกัด|หจก|บจก|co\.|ltd|inc/i.test(n||"")?"53":"3"}
+function noteOf(b){return(b.remark?b.remark+" · ":"")+"เอกสารจาก LINE"}
 
 /* ---------- ตรวจว่านำเข้าแล้ว (กันซ้ำ) ---------- */
 function usedIds(){var U={};tx.forEach(function(x){if(x.line)U[x.line]=1});docs.forEach(function(d){if(d.line)U[d.line]=1});return U}
@@ -2071,18 +2077,20 @@ function list(){
   box.querySelectorAll("[data-free]").forEach(function(e){e.onclick=function(){impFree(+e.dataset.free)}});
 }
 function skipBtn(i){return'<button data-skip="'+i+'">ไม่ใช้เอกสารนี้</button>'}
-function head(b,who,tax){return'<div style="margin-top:6px"><b>'+esc(who||"ไม่ระบุชื่อ")+'</b> <span class="mut">· เลขที่ '+esc(b.bill_no||"-")+' · เลขภาษี '+esc(tax||"-")+' · วันที่ '+esc(b.date||"-")+'</span></div>'+
-  '<div class="mut">ยอดรวม <b>'+money(b.total)+'</b>'+(+b.vat?' · VAT '+money(b.vat):"")+' · ส่งโดยไลน์ '+esc(b.customer)+'</div>'}
+function head(b,who,tax,addr){return'<div style="margin-top:6px"><b>'+esc(who||"ไม่ระบุชื่อ")+'</b> <span class="mut">· เลขที่ '+esc(b.bill_no||"-")+' · เลขภาษี '+esc(tax||"-")+' · วันที่ '+esc(b.date||"-")+(b.due?' · ครบกำหนด '+esc(b.due):"")+'</span></div>'+
+  (addr?'<div class="mut">📍 '+esc(addr)+'</div>':"")+
+  '<div class="mut">ยอดรวม <b>'+money(b.total)+'</b>'+(+b.vat?' · VAT '+money(b.vat):"")+(+b.disc?' · ส่วนลด '+money(b.disc):"")+(+b.wht?' · หัก ณ ที่จ่าย '+money(b.wht):"")+' · '+(cleanLines(b).length||0)+' รายการ · ส่งโดยไลน์ '+esc(b.customer)+'</div>'+
+  (b.remark?'<div class="mut">📝 '+esc(b.remark)+'</div>':"")}
 
 /* บิลซื้อ */
 function buyHtml(b,i){var c=MAPC[b.exp_acc]||"oout";
-  return head(b,b.vendor,b.tax_id)+'<div class="lbg">'+
+  return head(b,b.vendor,b.tax_id,b.vendor_addr)+'<div class="lbg">'+
   '<div><label>หมวดค่าใช้จ่าย</label><select data-k="c">'+catOpts(c)+'</select></div>'+
   '<div><label>จ่ายจาก (ถ้าจ่ายแล้ว)</label><select data-k="ac">'+accOpts()+'</select></div></div>'+
   '<div class="btns"><button class="ok" data-paynow="'+i+'">✅ จ่ายแล้ว · ลงเงินจ่าย</button><button data-ap="'+i+'">📋 ยังไม่จ่าย · ตั้งเจ้าหนี้</button>'+skipBtn(i)+'</div>'}
 /* บิลขาย */
 function saleHtml(b,i){
-  return head(b,b.buyer||"(ไม่พบชื่อลูกค้าในบิล)",b.buyer_tax)+
+  return head(b,b.buyer||"(ไม่พบชื่อลูกค้าในบิล)",b.buyer_tax,b.buyer_addr)+
   '<div class="btns"><button class="ok" data-inv="'+i+'">📄 ยังไม่ได้รับเงิน · ใบแจ้งหนี้ (ลูกหนี้)</button><button data-cs="'+i+'">💵 รับเงินแล้ว · ขายสด</button>'+skipBtn(i)+'</div>'+
   '<p class="mut">ระบบจะเปิดหน้าเอกสารพร้อมข้อมูลให้ตรวจ แล้วกดบันทึกตามปกติ</p>'}
 /* สลิป */
@@ -2102,16 +2110,18 @@ function vals(i){var v={};box.querySelector('[data-i="'+i+'"]').querySelectorAll
 function dupGuard(b){if(usedIds()[b.bill_id]){toast("เอกสารนี้นำเข้าแล้ว");reconcile();list();return true}return false}
 // บิลซื้อที่จ่ายแล้ว → รายการเงินจ่ายตรง
 function impPaid(i,el){var b=BILLS[i],v=vals(i),a=rr(b.total);if(dupGuard(b))return;if(!(a>0)){toast("ยอดรวมต้องมากกว่า 0");return}
-  var dl=docLines(b,b.vendor||"ค่าใช้จ่ายตามบิล");el.disabled=true;
-  tx.push({id:uid(),d:iso(b.date),t:"out",a:a,g:a,c:v.c,ac:v.ac,p:b.vendor||"",n:"เอกสารจาก LINE · "+(b.customer||""),r:b.bill_no||"",
-    vt:dl.vt,tid:b.tax_id||"",lines:dl.lines,lk:"exp",line:b.bill_id,lineUrl:b.url});
+  var dl=docLines(b,b.vendor||"ค่าใช้จ่ายตามบิล",true),wr=whtRate(b);el.disabled=true;
+  var x={id:uid(),d:iso(b.date),t:"out",a:a,g:a,c:v.c,ac:v.ac,p:b.vendor||"",n:noteOf(b),r:b.bill_no||"",
+    vt:dl.vt,tid:b.tax_id||"",lines:dl.lines,lk:"exp",line:b.bill_id,lineUrl:b.url};
+  if(wr>0){x.wr=wr;x.wf=wfOf(b.vendor);x.a=rr(a-rr(b.wht))}
+  tx.push(x);
   saveAll();render();api("done&id="+encodeURIComponent(b.bill_id)).catch(function(){});drop(b.bill_id);toast("✅ ลงเงินจ่าย "+money(a)+" บาทแล้ว")}
 // เปิดหน้าเอกสารของระบบ (pi ตั้งเจ้าหนี้ / inv ใบแจ้งหนี้ / cs ขายสด) พร้อมข้อมูล
 function impDoc(i,type){var b=BILLS[i];if(dupGuard(b))return;var v=type==="pi"?vals(i):{};
-  var sale=type!=="pi",who=sale?{n:b.buyer||"",tax:b.buyer_tax||"",br:b.buyer_br||""}:{n:b.vendor||"",tax:b.tax_id||"",br:""};
-  var dl=docLines(b,sale?"ขายตามใบกำกับ "+(b.bill_no||""):(b.vendor||"ค่าใช้จ่ายตามบิล")),dt=iso(b.date);
-  var d={id:uid(),type:type,kind:type==="pi"?"s":(cfg.biz==="service"?"s":"g"),d:dt,due:type==="cs"?"":addDays(dt,30),cu:{n:who.n,tax:who.tax,br:who.br,addr:""},
-    lines:dl.lines,vt:dl.vt,wr:0,disc:0,note:"เอกสารจาก LINE",lang:lang,ac:cfg.accts[cfg.accts.length>1?1:0].id,line:b.bill_id,lineUrl:b.url};
+  var sale=type!=="pi",who=sale?{n:b.buyer||"",tax:b.buyer_tax||"",br:b.buyer_br||"",addr:b.buyer_addr||""}:{n:b.vendor||"",tax:b.tax_id||"",br:b.vendor_br||"",addr:b.vendor_addr||""};
+  var dl=docLines(b,sale?"ขายตามใบกำกับ "+(b.bill_no||""):(b.vendor||"ค่าใช้จ่ายตามบิล"),type==="pi"),dt=iso(b.date),du=b.due?iso(b.due):"";
+  var d={id:uid(),type:type,kind:type==="pi"?"s":(cfg.biz==="service"?"s":"g"),d:dt,due:type==="cs"?"":(du&&du>=dt?du:addDays(dt,30)),cu:{n:who.n,tax:who.tax,br:who.br,addr:who.addr},
+    lines:dl.lines,vt:dl.vt,wr:whtRate(b),disc:dl.disc||0,note:noteOf(b),lang:lang,ac:cfg.accts[cfg.accts.length>1?1:0].id,line:b.bill_id,lineUrl:b.url};
   if(type==="pi"){d.sref=b.bill_no||"";d.cat=v.c||"oout"}else if(b.bill_no)d.no=String(b.bill_no).trim();
   close();docDlg(d,type);
   afterDlg(function(){if(docs.some(function(z){return z.line===b.bill_id})){api("done&id="+encodeURIComponent(b.bill_id)).catch(function(){});ALL=ALL.filter(function(x){return x.bill_id!==b.bill_id});split();toast("✅ นำเข้าแล้ว · กด 📥 เพื่อทำใบถัดไป")}})}
