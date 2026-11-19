@@ -1559,14 +1559,50 @@ function renderSales() {
   }).catch(fail);
 }
 function revOpts(cur) { return S.slDef.revenue.map(function (a) { return '<option value="' + a.id + '"' + (a.id === cur ? ' selected' : '') + '>' + esc(a.label) + '</option>'; }).join(''); }
-function saleForm(kind, id, copy) {
+/* ===== ประวัติลูกค้า/สินค้าที่เคยขาย (ดึงจากเอกสารขายเดิม · แสดงเฉพาะที่เกี่ยวกับการขาย) ===== */
+function slHistLoad() {
+  if (S.slHist && S.slHist.cid === S.cid) return Promise.resolve(S.slHist);
+  return Promise.all(['CASH', 'CREDIT'].map(function (k) { return call('sales.list', { company_id: S.cid, kind: k }).catch(function () { return []; }); })).then(function (x) {
+    var rows = x[0].concat(x[1]).sort(function (a, b) { return String(b.doc_date).localeCompare(String(a.doc_date)); }), cu = {}, it = {};
+    rows.forEach(function (r) {
+      var n = String(r.customer_name || '').trim();
+      if (n && !cu[n]) cu[n] = { name: n, tax_id: r.customer_tax_id || '', branch: r.customer_branch || '', address: r.customer_address || '', n: 0 };
+      if (n) cu[n].n++;
+      (r.lines || []).forEach(function (l) {
+        var d = String(l.description || '').trim(), key = d.toLowerCase().replace(/\s+/g, ' ');
+        if (!d) return;
+        if (!it[key]) it[key] = { d: d, u: l.unit_price, a: l.account_id, n: 0 };
+        it[key].n++;
+      });
+    });
+    var byN = function (a, b) { return b.n - a.n; };
+    S.slHist = { cid: S.cid, custs: Object.keys(cu).map(function (k) { return cu[k]; }).sort(byN), items: Object.keys(it).map(function (k) { return it[k]; }).sort(byN) };
+    return S.slHist;
+  });
+}
+function slCustDl() {
+  var seen = {}, out = [];
+  ((S.slHist && S.slHist.custs) || []).concat(partiesOf('C')).forEach(function (p) { var n = String(p.name || '').trim(); if (n && !seen[n]) { seen[n] = 1; out.push(p); } });
+  return '<datalist id="partyList">' + out.map(function (p) { return '<option value="' + esc(p.name) + '">' + esc(p.tax_id || '') + '</option>'; }).join('') + '</datalist>' +
+    '<datalist id="slItemList">' + ((S.slHist && S.slHist.items) || []).map(function (i) { return '<option value="' + esc(i.d) + '">' + (i.u ? money(i.u) : '') + '</option>'; }).join('') + '</datalist>';
+}
+function slItemPick(i, val) {
+  var key = String(val || '').trim().toLowerCase().replace(/\s+/g, ' '), h = ((S.slHist && S.slHist.items) || []).filter(function (x) { return x.d.toLowerCase().replace(/\s+/g, ' ') === key; })[0], l = S.slEdit.lines[i];
+  if (!h || !l) return;
+  if (!l.unit_price && h.u) l.unit_price = money(h.u);
+  if (!l.qty) l.qty = '1';
+  if (h.a && S.slDef.revenue.some(function (a) { return a.id === h.a; })) l.account_id = h.a;
+  slRender();
+}
+function saleForm(kind, id, copy) { slHistLoad().then(function () { saleForm0(kind, id, copy); }).catch(function () { saleForm0(kind, id, copy); }); }
+function saleForm0(kind, id, copy) {
   var src = id ? S.slRows[id] : null, d = S.slDef, cr = kind === 'CREDIT';
   var x = src ? JSON.parse(JSON.stringify(src)) : { doc_date: today(), due_date: addDays(today(), 30), customer_name: '', customer_tax_id: '', customer_branch: '', customer_address: '', vat_mode: d.has_vat_out ? 'EXCL' : 'NONE', vat_rate: '7', cash_account_id: (d.cash[0] || {}).id, ar_account_id: d.ar_default, lines: [], note: '' };
   if (copy) { x.doc_date = today(); x.due_date = addDays(today(), 30); }
   S.slEdit = { id: id && !copy ? id : '', kind: kind, lines: (x.lines.length ? x.lines : [{}, {}, {}]).map(function (l) { return { description: l.description || '', qty: l.qty || '', unit_price: l.unit_price ? money(l.unit_price) : '', account_id: l.account_id || d.revenue_default }; }) };
   var vatR = ratesFor('VAT', x.doc_date).filter(function (r) { return Number(r.rate) > 0; });
   openM((S.slEdit.id ? 'แก้ไข' : copy ? 'สำเนา – ' : '') + (cr ? 'ขายเชื่อ (ใบแจ้งหนี้ / ใบกำกับภาษี)' : 'ขายสด (ใบกำกับภาษี / ใบเสร็จรับเงิน)'),
-    partyDl('C') +
+    slCustDl() +
     '<div class="f3"><div class="fr"><label class="f req">เลขที่เอกสาร</label><input class="in code" id="sl_no" value="' + (S.slEdit.id ? esc(x.doc_no) : '') + '" placeholder="รันอัตโนมัติ" style="font-weight:600"></div>' +
     '<div class="fr"><label class="f req">วันที่</label><input class="in" type="date" id="sl_date" value="' + x.doc_date + '"></div>' +
     (cr ? '<div class="fr"><label class="f req">ครบกำหนดชำระ</label><input class="in" type="date" id="sl_due" value="' + x.due_date + '"></div>' : '<div class="fr"><label class="f req">รับเงินเข้าบัญชี</label><select class="in" id="sl_cash">' + d.cash.map(function (a) { return '<option value="' + a.id + '"' + (a.id === x.cash_account_id ? ' selected' : '') + '>' + esc(a.label) + '</option>'; }).join('') + '</select></div>') + '</div>' +
@@ -1591,13 +1627,13 @@ function saleForm(kind, id, copy) {
   };
   if (!S.slEdit.id && !copy && !src) $('sl_type').value = 'GOODS';
   if (cr) $('sl_ar').onchange = slTot; else $('sl_cash').onchange = slTot;
-  $('sl_name').onchange = function () { var p = partiesOf('C').filter(function (q) { return q.name === v('sl_name'); })[0]; if (p) { $('sl_tid').value = p.tax_id; $('sl_br').value = p.branch; $('sl_addr').value = p.address; } };
+  $('sl_name').onchange = function () { var nm = v('sl_name').trim(), p = partiesOf('C').filter(function (q) { return q.name === nm; })[0] || ((S.slHist && S.slHist.custs) || []).filter(function (q) { return q.name === nm; })[0]; if (p) { $('sl_tid').value = p.tax_id; $('sl_br').value = p.branch; $('sl_addr').value = p.address; } };
   if (cr) $('sl_date').onchange = function () { $('sl_due').value = addDays(this.value, 30); };
   slRender();
 }
 function slRender() {
   $('slLines').innerHTML = S.slEdit.lines.map(function (l, i) {
-    return '<tr><td class="small">' + (i + 1) + '</td><td><input class="in" style="min-width:200px" value="' + esc(l.description) + '" oninput="slSet(' + i + ',\'description\',this.value)"></td>' +
+    return '<tr><td class="small">' + (i + 1) + '</td><td><input class="in" style="min-width:200px" list="slItemList" value="' + esc(l.description) + '" oninput="slSet(' + i + ',\'description\',this.value)" onchange="slItemPick(' + i + ',this.value)"></td>' +
       '<td><input class="in amt" style="min-width:70px" inputmode="decimal" value="' + esc(l.qty) + '" oninput="slSet(' + i + ',\'qty\',this.value)" placeholder="1"></td>' +
       '<td><input class="in amt" inputmode="decimal" value="' + esc(l.unit_price) + '" oninput="slSet(' + i + ',\'unit_price\',this.value)" onblur="jFmt(this)"></td>' +
       '<td class="num" id="sla' + i + '"></td><td><select class="in" style="min-width:170px" onchange="slSet(' + i + ',\'account_id\',this.value)">' + revOpts(l.account_id) + '</select></td>' +
@@ -1633,7 +1669,7 @@ function slSave(print) {
     vat_mode: v('sl_vm'), vat_rate: v('sl_rate'), cash_account_id: e.kind === 'CASH' ? v('sl_cash') : '', ar_account_id: e.kind === 'CREDIT' ? v('sl_ar') : '', note: v('sl_note'),
     lines: e.lines.filter(function (l) { return l.description || l.unit_price; }).map(function (l) { return { description: l.description, qty: l.qty || '1', unit_price: l.unit_price, account_id: l.account_id }; }) };
   call('sales.save', p).then(function (r) {
-    S.parties = null; closeM(); toast('บันทึก ' + r.doc_no + ' แล้ว · ลงบัญชีและภาษีขายให้อัตโนมัติ', 'ok'); S.parties = null; S.slRows[r.id] = r;
+    S.parties = null; S.slHist = null; closeM(); toast('บันทึก ' + r.doc_no + ' แล้ว · ลงบัญชีและภาษีขายให้อัตโนมัติ', 'ok'); S.parties = null; S.slRows[r.id] = r;
     if (pr) pr.show(r.doc_no, saleDocHtml(r), SALE_CSS);
     renderSales();
   }).catch(function (er) { if (pr) pr.close(); fail(er); });
