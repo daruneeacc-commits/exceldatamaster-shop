@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>ระบบบัญชี EDM (ทดลอง) | Excel Data Master</title>
+<link rel="icon" href="/assets/logo.jpg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&display=swap">
+<style>
+:root{--g:#1f7a4d;--line:#e3ece6}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#f6faf7;font-family:"IBM Plex Sans Thai",system-ui,sans-serif;color:#17352a}
+body{display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#fff;border-bottom:1px solid var(--line)}
+header img{width:30px;height:30px;border-radius:50%}
+header b{font-size:15px}
+.tag{background:#fff3cd;color:#8a5a00;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600}
+header .sp{flex:1}
+a.btn{background:var(--g);color:#fff;text-decoration:none;border-radius:10px;padding:7px 14px;font-weight:600;font-size:14px;white-space:nowrap}
+main{flex:1;position:relative}
+iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+.hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:#17352a;color:#fff;border-radius:12px;padding:8px 14px;font-size:13px;max-width:calc(100% - 32px);text-align:center;opacity:.92}
+.hint a{color:#9ff0c6}
+@media(max-width:520px){header b{font-size:13px}.tag{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <img src="/assets/logo.jpg" alt="">
+  <b>ระบบบัญชี EDM</b><span class="tag">ทดลองใช้เอง · ยังไม่เปิด</span>
+  <span class="sp"></span>
+  <a class="btn" id="open" target="_blank" rel="noopener">เปิดเต็มจอ ↗</a>
+</header>
+<main>
+  <iframe id="app" title="ระบบบัญชี EDM" allow="clipboard-write"></iframe>
+  <div class="hint" id="hint">ถ้าหน้าว่างหรือขึ้นไม่มีสิทธิ์ ให้กด <a href="#" id="open2">เปิดเต็มจอ ↗</a> (ล็อกอิน Google บัญชีเจ้าของ)</div>
+</main>
+<script>
+(function(){
+  var U="https://script.google.com/macros/s/AKfycbzrsvCMdAK8vHim2wklpHGG-hvLbEHRQJnEYIYvLkfRi2fyDhf5ztZ3uafTYrPjibpK/exec";
+  document.getElementById("app").src=U;
+  document.getElementById("open").href=U;
+  document.getElementById("open2").onclick=function(e){e.preventDefault();window.open(U,"_blank","noopener")};
+  setTimeout(function(){var h=document.getElementById("hint");if(h)h.style.display="none"},12000);
+})();
+</script>
+</body>
+</html>
