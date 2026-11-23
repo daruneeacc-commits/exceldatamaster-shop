@@ -36,7 +36,7 @@
   function allowed(u, k) { var L = sysList(u); return !k || !L || L.indexOf(k) >= 0; }
   var PRICE = 199, DAYS = 30, TRIAL = 7, KEY = "edm_member";
   // ราคาต่อ 30 วัน (ตรงกับ PLANS หน้าร้าน) · รายปี = ×10 · แสดงในแถบทดลองใช้/หน้าหมดอายุ
-  var PRM = { shop: 249, todo: 49, goals: 49, finance: 199, sales: 199, spend: 79, plan: 79, loan: 79, due: 79, att: 79, petbook: 49 };
+  var PRM = { shop: 249, edmacc: 499, todo: 49, goals: 49, finance: 199, sales: 199, spend: 79, plan: 79, loan: 79, due: 79, att: 79, petbook: 49 };
   function priceTxt() { var k = curSys(); if (!k) return ""; var m = PRM[k] || 149; return m.toLocaleString() + " บาท / 30 วัน หรือ " + (m * 10).toLocaleString() + " บาท / ปี"; }
   var BASE = (document.querySelector('script[src*="member.js"]') || {}).src || "";
   BASE = BASE.replace(/assets\/member\.js.*$/, "");

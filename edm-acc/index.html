@@ -167,6 +167,7 @@ h2.pt{color:var(--pri2)}
 }
 @media screen and (max-width:600px){.mbox{max-height:100vh;border-radius:0}.mb{padding:16px 14px 8px}.mb>.sec{margin-left:-14px;margin-right:-14px;padding-left:14px}.mh,.mf{padding-left:14px;padding-right:14px}.mf .btn{flex:1}}
 </style>
+<script>if(!/[?&]owner=1/.test(location.search)&&(function(){try{return sessionStorage.getItem('edm_acc_mode')!=='o'}catch(e){return true}})())document.write('<style>#verTag{display:none}</style>')</script>
 </head>
 <body>
 <div id="busy" class="hidden"><i></i></div>
@@ -238,13 +239,13 @@ var busyN = 0;
 function busy(d) { busyN = Math.max(0, busyN + d); $('busy').classList.toggle('hidden', !busyN); }
 /* ===== เชื่อมต่อหลังบ้านผ่านเว็บไซต์ (exceldatamaster.com) · คำสั่งที่ออกพร้อมกันรวมส่งรอบเดียว ===== */
 /* โหมด: สมาชิก (ลูกค้าสมัครผ่านเว็บ ข้อมูลแยกต่อคน) หรือ เจ้าของ (รหัสผ่านระบบ) · ?m=1 = สมาชิก · ?owner=1 = เจ้าของ */
-var MEMBER_DEFAULT = false;
+var MEMBER_DEFAULT = true;
 var OWNER = (function () {
   var q = location.search, k = 'edm_acc_mode';
   try { if (/[?&]owner=1/.test(q)) sessionStorage.setItem(k, 'o'); else if (/[?&]m=1/.test(q)) sessionStorage.setItem(k, 'm'); var v = sessionStorage.getItem(k); if (v) return v === 'o'; } catch (e) { }
   return !MEMBER_DEFAULT;
 })();
-if (!OWNER) { var _ms = document.createElement('script'); _ms.src = '/assets/member.js?v=113'; _ms.defer = true; document.head.appendChild(_ms); }
+if (!OWNER) { var _ms = document.createElement('script'); _ms.src = '/assets/member.js?v=114'; _ms.defer = true; document.head.appendChild(_ms); }
 function MEM() { var m = window.EDM_MEMBER && window.EDM_MEMBER.me; return m && m.token && m.email ? m : null; }
 function memAuth() {
   $('app').classList.add('hidden'); $('auth').classList.remove('hidden'); closeM();
@@ -481,7 +482,7 @@ function pDash() {
       h += '<div class="card empty">เริ่มต้นโดยสร้างบริษัททดลอง<br><br><button class="btn" onclick="go(\'companies\')">สร้างบริษัท</button></div>';
     }
     h += '<div class="grid g2"><div class="card"><h3>กิจกรรมล่าสุด</h3>' + auditTable(d.recent, true) + '</div>' +
-      '<div class="card"><h3>แผนการพัฒนา</h3>' + [[1, 'Login และจัดการบริษัท', 1], [2, 'ผังบัญชีแบบยืดหยุ่น', 1], [3, 'สมุดรายวันและบัญชีแยกประเภท', 1], [4, 'VAT และภาษีหัก ณ ที่จ่าย', 1], [5, 'ศูนย์ต้นทุน', 0], [6, 'งบทดลอง งบกำไรขาดทุน งบกระแสเงินสด', 1], [7, 'ปิดงวดและ Audit Log ฉบับเต็ม', 0]].map(function (p) {
+      '<div class="card"' + (OWNER ? '' : ' style="display:none"') + '><h3>แผนการพัฒนา</h3>' + [[1, 'Login และจัดการบริษัท', 1], [2, 'ผังบัญชีแบบยืดหยุ่น', 1], [3, 'สมุดรายวันและบัญชีแยกประเภท', 1], [4, 'VAT และภาษีหัก ณ ที่จ่าย', 1], [5, 'ศูนย์ต้นทุน', 0], [6, 'งบทดลอง งบกำไรขาดทุน งบกระแสเงินสด', 1], [7, 'ปิดงวดและ Audit Log ฉบับเต็ม', 0]].map(function (p) {
         return '<div class="phase"><span class="dot' + (p[2] ? ' on' : '') + '"></span><b>Phase ' + p[0] + '</b> ' + p[1] + '<span class="sp"></span><span class="small">' + (p[2] ? 'พร้อมทดสอบ' : 'รอพัฒนา') + '</span></div>';
       }).join('') + '</div></div>';
     $('main').innerHTML = h;
