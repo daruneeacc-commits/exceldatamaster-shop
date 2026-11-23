@@ -1,5 +1,5 @@
 /**
- * WebApi.gs — เปิดให้หน้าเว็บ exceldatamaster.com/edm-acc/ เรียกระบบได้
+ * WebApi.gs — เปิดให้หน้าเว็บ exceldatamaster.com/edm-acc/ เรียกระบบได้ (v0.9.37: รองรับหลายคำสั่งในรอบเดียว)
  * (เพิ่มไฟล์นี้ใหม่ ไม่ต้องแก้ไฟล์เดิม · doGet / api เดิมยังใช้ได้เหมือนเดิม)
  *
  * ความปลอดภัยเมื่อเรียกผ่านเว็บ:
@@ -23,11 +23,16 @@ function doPost(e) {
 }
 
 function webApi_(b) {
-  rcClear_(); CTX = { cid: '', ss: null }; SH_OK = {};
+  rcClear_(); CTX = { cid: '', ss: null }; SH_OK = {}; HDRGEN = null;
   try {
     var k = props_().getProperty('WEB_KEY');
     if (!k) return fail_('ยังไม่ได้เปิดใช้งานผ่านเว็บ (รันฟังก์ชัน setWebKey ใน Apps Script)', 'NOWEB');
     if (String(b.key || '') !== k) return fail_('รหัสเชื่อมต่อไม่ถูกต้อง', 'KEY');
+    if (b.batch) {
+      // หลายคำสั่งในรอบเดียว (หน้าเว็บโหลดเร็วขึ้น) — ตรวจ token ทุกคำสั่ง · ห้ามตั้งรหัสผ่านผ่านเว็บ
+      var calls = (b.batch || []).slice(0, 12).filter(function (q) { return q && q[0] !== 'auth.setPassword'; });
+      return { ok: true, batch: runBatch_(calls, b.token || '') };
+    }
     var action = String(b.action || ''), fn = ROUTES[action];
     if (!fn) return fail_('ไม่พบคำสั่ง: ' + action);
     if (action === 'auth.setPassword') return fail_('ตั้งรหัสผ่านครั้งแรกได้จากลิงก์ Apps Script เดิมเท่านั้น');
