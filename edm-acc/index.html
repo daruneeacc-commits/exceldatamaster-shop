@@ -241,7 +241,7 @@ function conn() { try { return JSON.parse(localStorage.getItem('edm_acc_conn') |
 var CQ = [], NOBATCH = false;
 function call(action, payload) {
   var c = conn();
-  if (!c || !c.url || !c.key) { showConn(); return Promise.reject(new Error('ยังไม่ได้ตั้งค่าการเชื่อมต่อ')); }
+  if (!c || !c.url) { showConn(); return Promise.reject(new Error('ยังไม่ได้ตั้งค่าการเชื่อมต่อ')); }
   busy(1);
   return new Promise(function (res, rej) {
     CQ.push({ a: action, p: payload || {}, res: res, rej: rej });
@@ -257,7 +257,7 @@ function callDone(q, r) {
 }
 function post(body) {
   var c = conn() || {};
-  if (!('token' in body)) body.token = S.token; body.key = c.key;
+  if (!('token' in body)) body.token = S.token; body.key = c.key || '';
   return fetch(c.url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
     .then(function (x) { return x.json(); }, function () { throw new Error('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ (ตรวจอินเทอร์เน็ต/ลิงก์ระบบ)'); });
 }
@@ -275,14 +275,14 @@ function flushCalls() {
 function showConn() {
   var c = conn() || {};
   $('app').classList.add('hidden'); $('auth').classList.remove('hidden'); closeM();
-  $('authBody').innerHTML = '<div class="note">ตั้งค่าครั้งแรกในเครื่องนี้: วางลิงก์ระบบ (Web App ที่ลงท้าย /exec ที่ตั้งสิทธิ์ "ทุกคน") และรหัสเชื่อมต่อ (WEB_KEY) · เก็บไว้ในเครื่องนี้เท่านั้น ไม่ส่งไปที่อื่น</div>' +
+  $('authBody').innerHTML = '<div class="note">ตั้งค่าครั้งแรกในเครื่องนี้: วางลิงก์ระบบ (Web App ที่ลงท้าย /exec ที่ตั้งสิทธิ์ "ทุกคน") (รหัสเชื่อมต่อไม่ต้องใส่ ถ้าเปิดแบบ setWebOpen) · เก็บไว้ในเครื่องนี้เท่านั้น ไม่ส่งไปที่อื่น</div>' +
     '<div class="fr"><label class="f req">ลิงก์ระบบ</label><input class="in" id="cU" placeholder="https://script.google.com/macros/s/.../exec" value="' + esc(c.url || '') + '"></div>' +
-    '<div class="fr"><label class="f req">รหัสเชื่อมต่อ</label><input class="in" type="password" id="cK" autocomplete="off" value="' + esc(c.key || '') + '"></div>' +
+    '<div class="fr"><label class="f">รหัสเชื่อมต่อ (ถ้ามี)</label><input class="in" type="password" id="cK" autocomplete="off" value="' + esc(c.key || '') + '"></div>' +
     '<button class="btn w" onclick="saveConn()">บันทึกและเชื่อมต่อ</button>';
 }
 function saveConn() {
   var u = $('cU').value.trim(), k = $('cK').value.trim();
-  if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(u) || k.length < 16) return toast('ใส่ลิงก์ที่ลงท้าย /exec และรหัสเชื่อมต่อให้ครบ', 'err');
+  if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(u) || (k && k.length < 16)) return toast('ใส่ลิงก์ที่ลงท้าย /exec ให้ถูกต้อง', 'err');
   try { localStorage.setItem('edm_acc_conn', JSON.stringify({ url: u, key: k })); } catch (e) {}
   NOBATCH = false; showAuth();
 }
@@ -334,7 +334,7 @@ function pad(n, d) { n = String(n); while (n.length < d) n = '0' + n; return n; 
 
 /* ================= auth ================= */
 function showAuth() {
-  var cc = conn(); if (!cc || !cc.url || !cc.key) return showConn();
+  var cc = conn(); if (!cc || !cc.url) return showConn();
   $('app').classList.add('hidden'); $('auth').classList.remove('hidden'); closeM();
   $('authBody').innerHTML = '<div class="small">กำลังตรวจสอบ...</div>';
   call('auth.status').then(function (s) {

@@ -27,7 +27,7 @@ function webApi_(b) {
   try {
     var k = props_().getProperty('WEB_KEY');
     if (!k) return fail_('ยังไม่ได้เปิดใช้งานผ่านเว็บ (รันฟังก์ชัน setWebKey ใน Apps Script)', 'NOWEB');
-    if (String(b.key || '') !== k) return fail_('รหัสเชื่อมต่อไม่ถูกต้อง', 'KEY');
+    if (k !== 'OPEN' && String(b.key || '') !== k) return fail_('รหัสเชื่อมต่อไม่ถูกต้อง', 'KEY');
     if (b.batch) {
       // หลายคำสั่งในรอบเดียว (หน้าเว็บโหลดเร็วขึ้น) — ตรวจ token ทุกคำสั่ง · ห้ามตั้งรหัสผ่านผ่านเว็บ
       var calls = (b.batch || []).slice(0, 12).filter(function (q) { return q && q[0] !== 'auth.setPassword'; });
@@ -53,6 +53,12 @@ function setWebKey() {
   props_().setProperty('WEB_KEY', k);
   Logger.log('รหัสเชื่อมต่อ (คัดลอกไปวางในหน้าเว็บ ห้ามส่งให้ใคร): ' + k);
   return k;
+}
+
+/** เปิดใช้ผ่านเว็บแบบไม่ต้องมีรหัสเชื่อมต่อ (ยังต้องเข้าสู่ระบบด้วยรหัสผ่าน · ผิด 5 ครั้งล็อก 15 นาที) */
+function setWebOpen() {
+  props_().setProperty('WEB_KEY', 'OPEN');
+  Logger.log('เปิดใช้ผ่านเว็บแล้ว ไม่ต้องใช้รหัสเชื่อมต่อ (ใช้แค่ลิงก์ /exec + รหัสผ่านเข้าระบบ)');
 }
 
 /** ปิดการใช้งานผ่านเว็บทันที */
