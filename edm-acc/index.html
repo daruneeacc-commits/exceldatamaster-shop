@@ -237,6 +237,38 @@ function v(id) { var e = $(id); return e ? e.value.trim() : ''; }
 var busyN = 0;
 function busy(d) { busyN = Math.max(0, busyN + d); $('busy').classList.toggle('hidden', !busyN); }
 /* ===== เชื่อมต่อหลังบ้านผ่านเว็บไซต์ (exceldatamaster.com) · คำสั่งที่ออกพร้อมกันรวมส่งรอบเดียว ===== */
+/* โหมด: สมาชิก (ลูกค้าสมัครผ่านเว็บ ข้อมูลแยกต่อคน) หรือ เจ้าของ (รหัสผ่านระบบ) · ?m=1 = สมาชิก · ?owner=1 = เจ้าของ */
+var MEMBER_DEFAULT = false;
+var OWNER = (function () {
+  var q = location.search, k = 'edm_acc_mode';
+  try { if (/[?&]owner=1/.test(q)) sessionStorage.setItem(k, 'o'); else if (/[?&]m=1/.test(q)) sessionStorage.setItem(k, 'm'); var v = sessionStorage.getItem(k); if (v) return v === 'o'; } catch (e) { }
+  return !MEMBER_DEFAULT;
+})();
+if (!OWNER) { var _ms = document.createElement('script'); _ms.src = '/assets/member.js?v=113'; _ms.defer = true; document.head.appendChild(_ms); }
+function MEM() { var m = window.EDM_MEMBER && window.EDM_MEMBER.me; return m && m.token && m.email ? m : null; }
+function memAuth() {
+  $('app').classList.add('hidden'); $('auth').classList.remove('hidden'); closeM();
+  var sb = document.querySelector('#auth .sub'); if (sb) sb.textContent = 'ระบบบัญชีออนไลน์ · Excel Data Master';
+  var m = MEM();
+  if (!m) {
+    $('authBody').innerHTML = '<div class="note">ระบบบัญชีออนไลน์ ใช้งานบนเว็บและมือถือ · ข้อมูลของคุณเก็บแยกเฉพาะบัญชีของคุณ</div>' +
+      '<button class="btn w" onclick="memGate(\'signup\')">ทดลองใช้ฟรี 7 วัน</button><div style="height:8px"></div><button class="btn ghost w" onclick="memGate(\'login\')">เข้าสู่ระบบสมาชิก</button>';
+    clearTimeout(memAuth.t); memAuth.t = setTimeout(function () { if (!S.token && !$('auth').classList.contains('hidden')) memAuth(); }, 1500);
+    return;
+  }
+  $('authBody').innerHTML = '<div class="small">กำลังเปิดระบบ...</div>';
+  S.token = 'M'; enter();
+}
+function memGate(w) { if (window.EDM_MEMBER && EDM_MEMBER.openGate) EDM_MEMBER.openGate(w); else toast('กำลังโหลด ลองอีกครั้ง', 'err'); }
+function memMsg(r) {
+  S.token = null; $('app').classList.add('hidden'); $('auth').classList.remove('hidden'); closeM();
+  var buy = window.EDM_MEMBER && EDM_MEMBER.buyUrl ? EDM_MEMBER.buyUrl('edmacc') : '/';
+  $('authBody').innerHTML = '<div class="note errbox">' + esc(r.error || '') + '</div>' +
+    '<a class="btn w" href="' + esc(buy) + '" target="_blank" rel="noopener">🛒 สั่งซื้อ / ต่ออายุ</a><div style="height:8px"></div>' +
+    '<a class="btn ghost w" href="https://line.me/R/ti/p/@856tvnxs" target="_blank" rel="noopener">💬 ติดต่อร้านทาง LINE</a>' +
+    '<p class="small" style="margin:14px 0 0"><a href="#" onclick="memOut();return false">ออกจากระบบ / ใช้บัญชีอื่น</a></p>';
+}
+function memOut() { try { sessionStorage.removeItem('edm_member'); } catch (e) { } location.reload(); }
 var DEF_URL = 'https://script.google.com/macros/s/AKfycbwF735voEbH11nGosTkSIjee_pgn3l2WiYaEbA8U9Th3PnjZYSB7rGXQoNVlLQkni8s6w/exec';
 function conn() { var c = null; try { c = JSON.parse(localStorage.getItem('edm_acc_conn') || 'null'); } catch (e) { } return (c && c.url) ? c : { url: DEF_URL, key: '' }; }
 var CQ = [], NOBATCH = false;
@@ -254,11 +286,14 @@ function callDone(q, r) {
   if (r && r.ok) return q.res(r.data);
   if (r && r.code === 'AUTH') { S.token = null; showAuth(); }
   if (r && (r.code === 'KEY' || r.code === 'NOWEB')) setTimeout(showConn, 50);
+  if (r && r.code === 'MEMBER') { S.token = null; memAuth(); memGate('login'); }
+  if (r && (r.code === 'MEMBERSYS' || r.code === 'MEMBEREXP')) memMsg(r);
   q.rej(new Error(r ? r.error : 'เกิดข้อผิดพลาด'));
 }
 function post(body) {
   var c = conn() || {};
   if (!('token' in body)) body.token = S.token; body.key = c.key || '';
+  if (!OWNER) { var m = MEM(); body.mem = m ? { email: m.email, token: m.token } : { email: '', token: '' }; delete body.token; }
   return fetch(c.url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
     .then(function (x) { return x.json(); }, function () { throw new Error('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ (ตรวจอินเทอร์เน็ต/ลิงก์ระบบ)'); });
 }
@@ -269,7 +304,7 @@ function flushCalls() {
   if (qs.length === 1 || NOBATCH) return qs.forEach(one);
   post({ batch: qs.map(function (q) { return [q.a, q.p]; }) }).then(function (r) {
     if (r && r.ok && r.batch) return qs.forEach(function (q, k) { callDone(q, r.batch[k]); });
-    if (r && (r.code === 'KEY' || r.code === 'NOWEB' || r.code === 'AUTH')) return qs.forEach(function (q) { callDone(q, r); });
+    if (r && /^(KEY|NOWEB|AUTH|MEMBER|MEMBERSYS|MEMBEREXP|MEMBERNET)$/.test(r.code)) return qs.forEach(function (q) { callDone(q, r); });
     NOBATCH = true; qs.forEach(one); // หลังบ้านยังไม่รองรับ batch → ส่งทีละคำสั่ง
   }, ff);
 }
@@ -335,6 +370,7 @@ function pad(n, d) { n = String(n); while (n.length < d) n = '0' + n; return n; 
 
 /* ================= auth ================= */
 function showAuth() {
+  if (!OWNER) return memAuth();
   var cc = conn(); if (!cc || !cc.url) return showConn();
   $('app').classList.add('hidden'); $('auth').classList.remove('hidden'); closeM();
   $('authBody').innerHTML = '<div class="small">กำลังตรวจสอบ...</div>';
@@ -364,6 +400,7 @@ function login() {
   call('auth.login', { password: $('pw').value }).then(function (r) { S.token = r.token; enter(); }).catch(function (e) { fail(e); $('pw').value = ''; });
 }
 function logout() {
+  if (!OWNER) return memOut();
   var tk = S.token; S.token = null;
   if (tk) post({ action: 'auth.logout', payload: {}, token: tk }).catch(function () {});
   showAuth();
@@ -372,6 +409,13 @@ var idleT;
 function resetIdle() { clearTimeout(idleT); idleT = setTimeout(function () { if (S.token) { toast('ไม่ได้ใช้งาน 30 นาที ออกจากระบบอัตโนมัติ'); logout(); } }, 30 * 60000); }
 ['click', 'keydown', 'touchstart'].forEach(function (e) { document.addEventListener(e, resetIdle, { passive: true }); });
 
+function pSetMem() {
+  var m = MEM() || {};
+  $('main').innerHTML = head(t('settings'), 'บัญชีสมาชิก') + '<div class="grid g2"><div class="card"><h3>บัญชี</h3><table class="t"><tbody>' +
+    '<tr><td class="small">อีเมล</td><td>' + esc(m.email || '') + '</td></tr>' +
+    '<tr><td class="small">ข้อมูล</td><td>เก็บแยกเฉพาะบัญชีนี้ใน Google Drive ของระบบ</td></tr></tbody></table>' +
+    '<p style="margin:14px 0 0"><button class="btn ghost" onclick="memOut()">' + t('logout') + '</button></p></div></div>';
+}
 function enter() {
   $('auth').classList.add('hidden'); $('app').classList.remove('hidden'); resetIdle();
   loadCos().then(function () { go(S.cos.length ? 'dashboard' : 'companies'); }).catch(fail);
@@ -737,6 +781,7 @@ function auView(i) {
 
 /* ================= Settings ================= */
 function pSet() {
+  if (!OWNER) return pSetMem();
   $('main').innerHTML = head(t('settings'), 'ความปลอดภัย การสำรองและกู้คืนข้อมูล') + '<div class="empty">กำลังโหลด...</div>';
   Promise.all([call('auth.status'), call('backup.list')]).then(function (x) {
     var a = x[0], b = x[1];
