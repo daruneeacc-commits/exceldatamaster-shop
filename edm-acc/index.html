@@ -237,7 +237,8 @@ function v(id) { var e = $(id); return e ? e.value.trim() : ''; }
 var busyN = 0;
 function busy(d) { busyN = Math.max(0, busyN + d); $('busy').classList.toggle('hidden', !busyN); }
 /* ===== เชื่อมต่อหลังบ้านผ่านเว็บไซต์ (exceldatamaster.com) · คำสั่งที่ออกพร้อมกันรวมส่งรอบเดียว ===== */
-function conn() { try { return JSON.parse(localStorage.getItem('edm_acc_conn') || 'null'); } catch (e) { return null; } }
+var DEF_URL = 'https://script.google.com/macros/s/AKfycbwF735voEbH11nGosTkSIjee_pgn3l2WiYaEbA8U9Th3PnjZYSB7rGXQoNVlLQkni8s6w/exec';
+function conn() { var c = null; try { c = JSON.parse(localStorage.getItem('edm_acc_conn') || 'null'); } catch (e) { } return (c && c.url) ? c : { url: DEF_URL, key: '' }; }
 var CQ = [], NOBATCH = false;
 function call(action, payload) {
   var c = conn();
