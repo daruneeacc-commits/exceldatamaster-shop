@@ -207,9 +207,9 @@ h2.pt{color:var(--pri2)}
 var S = { token: null, lang: 'th', cos: [], cid: '', page: 'dashboard', coa: null, f: { q: '', cat: '', type: '', status: '', level: '', pg: 1 }, au: { pg: 1, q: '' }, st: null, imp: null };
 try { S.lang = localStorage.getItem('edm_acc_lang') || 'th'; } catch (e) {}
 var L = {
-  th: { dashboard: 'แดชบอร์ด', companies: 'จัดการบริษัท', coa: 'ผังบัญชี', structure: 'โครงสร้างรหัสบัญชี', sales: 'ระบบขาย', purch: 'ระบบซื้อ', payroll: 'ระบบเงินเดือน', stock: 'สินค้า / สต็อก', cheque: 'เช็ครับ / เช็คจ่าย', bankrec: 'กระทบยอดธนาคาร', journal: 'สมุดรายวัน', posting: 'Post รายการ', petty: 'เงินสดย่อย', gl: 'บัญชีแยกประเภท', vat: 'ภาษีมูลค่าเพิ่ม', wht: 'ภาษีหัก ณ ที่จ่าย', cc: 'ศูนย์ต้นทุน', asset: 'สินทรัพย์ถาวร', tb: 'งบทดลอง', fs: 'งบการเงิน', closing: 'ปิดงวดบัญชี', audit: 'บันทึกการใช้งาน', settings: 'ตั้งค่าระบบ', office: 'สำนักงานบัญชี', users: 'ผู้ใช้และสิทธิ์',
+  th: { dashboard: 'แดชบอร์ด', companies: 'จัดการบริษัท', coa: 'ผังบัญชี', structure: 'โครงสร้างรหัสบัญชี', sales: 'ระบบขาย', purch: 'ระบบซื้อ', payroll: 'ระบบเงินเดือน', stock: 'สินค้า / สต็อก', cheque: 'เช็ครับ / เช็คจ่าย', bankrec: 'กระทบยอดธนาคาร', journal: 'สมุดรายวัน', posting: 'Post รายการ', petty: 'เงินสดย่อย', gl: 'บัญชีแยกประเภท', vat: 'ภาษีมูลค่าเพิ่ม', wht: 'ภาษีหัก ณ ที่จ่าย', cc: 'ศูนย์ต้นทุน', asset: 'สินทรัพย์ถาวร', work: 'ห้องทำงานสำนักงาน', tb: 'งบทดลอง', fs: 'งบการเงิน', closing: 'ปิดงวดบัญชี', audit: 'บันทึกการใช้งาน', settings: 'ตั้งค่าระบบ', office: 'สำนักงานบัญชี', users: 'ผู้ใช้และสิทธิ์',
     g1: 'ข้อมูลหลัก', g2: 'ขายและบันทึกบัญชี', g3: 'ภาษีและต้นทุน', g4: 'รายงาน', g5: 'ระบบ', logout: 'ออกจากระบบ', add: 'เพิ่ม', save: 'บันทึก', cancel: 'ยกเลิก', search: 'ค้นหา', all: 'ทั้งหมด', code: 'รหัสบัญชี', name: 'ชื่อบัญชี', type: 'ประเภท', control: 'รหัสควบคุม', status: 'สถานะ', level: 'ระดับ', category: 'หมวด', actions: '' },
-  en: { dashboard: 'Dashboard', companies: 'Company Management', coa: 'Chart of Accounts', structure: 'Account Structure', sales: 'Sales', purch: 'Purchases', payroll: 'Payroll', stock: 'Inventory', cheque: 'Cheques', bankrec: 'Bank Reconciliation', journal: 'Journal Entries', posting: 'Posting', petty: 'Petty Cash', gl: 'General Ledger', vat: 'VAT Management', wht: 'Withholding Tax', cc: 'Cost Center', asset: 'Fixed Assets', tb: 'Trial Balance', fs: 'Financial Statements', closing: 'Period Closing', audit: 'Audit Log', settings: 'System Settings', office: 'Accounting Office', users: 'Users & Roles',
+  en: { dashboard: 'Dashboard', companies: 'Company Management', coa: 'Chart of Accounts', structure: 'Account Structure', sales: 'Sales', purch: 'Purchases', payroll: 'Payroll', stock: 'Inventory', cheque: 'Cheques', bankrec: 'Bank Reconciliation', journal: 'Journal Entries', posting: 'Posting', petty: 'Petty Cash', gl: 'General Ledger', vat: 'VAT Management', wht: 'Withholding Tax', cc: 'Cost Center', asset: 'Fixed Assets', work: 'Office Workspace', tb: 'Trial Balance', fs: 'Financial Statements', closing: 'Period Closing', audit: 'Audit Log', settings: 'System Settings', office: 'Accounting Office', users: 'Users & Roles',
     g1: 'Master data', g2: 'Accounting', g3: 'Tax & cost', g4: 'Reports', g5: 'System', logout: 'Log out', add: 'Add', save: 'Save', cancel: 'Cancel', search: 'Search', all: 'All', code: 'Account code', name: 'Account name', type: 'Type', control: 'Control', status: 'Status', level: 'Level', category: 'Category', actions: '' }
 };
 function t(k) { return (L[S.lang] && L[S.lang][k]) || L.th[k] || k; }
@@ -218,7 +218,7 @@ var IC = {
   dashboard: 'M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z', companies: 'M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1',
   coa: 'M4 5h4M4 12h4M4 19h4M10 5h10M12 12h8M12 19h8M6 5v14', structure: 'M4 4h6v6H4zM14 14h6v6h-6zM7 10v4h7M14 4h6v6h-6z',
   journal: 'M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM9 8h6M9 12h6', gl: 'M4 19V5M4 19h16M8 15l3-4 3 2 5-6', vat: 'M6 18L18 6M7 7h.01M17 17h.01',
-  wht: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6', cc: 'M12 3a9 9 0 1 0 9 9h-9z', asset: 'M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6M9 11h.01M15 11h.01', tb: 'M12 3v18M5 7h14M5 7l-2 6h4zM19 7l-2 6h4z',
+  wht: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6', cc: 'M12 3a9 9 0 1 0 9 9h-9z', asset: 'M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6M9 11h.01M15 11h.01', work: 'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9', tb: 'M12 3v18M5 7h14M5 7l-2 6h4zM19 7l-2 6h4z',
   fs: 'M4 20V10M10 20V4M16 20v-7M22 20H2', closing: 'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4', audit: 'M12 8v4l3 2M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5',
   settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3.3 14H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 9 4.6V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z',
   purch: 'M3 3h2l2.4 12.2a2 2 0 0 0 2 1.8h8.2a2 2 0 0 0 2-1.6L21 8H6M9 21h.01M18 21h.01', cheque: 'M3 6h18v12H3zM7 14h6M7 10h10', stock: 'M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8', bankrec: 'M3 21h18M5 10v8M9 10v8M15 10v8M19 10v8M12 3l9 5H3z', payroll: 'M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0M4 21a8 8 0 0 1 16 0', sales: 'M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.2a2 2 0 0 0 2-1.6L20 8H6M9 21h.01M17 21h.01', petty: 'M3 7h18v12H3zM3 7l3-4h12l3 4M16 13h2', posting: 'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9', copy: 'M9 9h11v11H9zM5 15H4V4h11v1', print: 'M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z',
@@ -226,19 +226,19 @@ var IC = {
   off: 'M18.4 6.6A9 9 0 1 1 5.6 6.6M12 2v10', on: 'M5 12l5 5L20 7', del: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3'
 };
 /* ไอคอนเมนูแบบกล่องสี (สีประจำแต่ละเมนู) */
-var MIC = { dashboard: '#4f6bed', companies: '#3b6ea8', coa: '#0f9b8e', structure: '#0e8fb0', sales: '#16a34a', purch: '#ea7a12', stock: '#c98a06', asset: '#b7791f', payroll: '#db4f8f', journal: '#2f6fd6', posting: '#7c4ddb', petty: '#5f9e1c',
+var MIC = { dashboard: '#4f6bed', companies: '#3b6ea8', coa: '#0f9b8e', structure: '#0e8fb0', sales: '#16a34a', purch: '#ea7a12', stock: '#c98a06', asset: '#b7791f', work: '#0ea5e9', payroll: '#db4f8f', journal: '#2f6fd6', posting: '#7c4ddb', petty: '#5f9e1c',
   cheque: '#0b84c6', bankrec: '#0d9488', gl: '#4c5bd4', vat: '#dc4a3d', wht: '#e0507a', cc: '#9353d3', tb: '#a0662b', fs: '#0f9f6e', closing: '#5b6b82', office: '#2563eb', users: '#8b5cf6', audit: '#64748b', settings: '#6b7280' };
 function mic(n) { var c = MIC[n] || '#4f6bed'; return '<span class="mic" style="--mc:' + c + '">' + ic(n) + '</span>'; }
 function ic(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="' + IC[n] + '"/></svg>'; }
 var MENU = [
-  { g: 'g1', items: [['dashboard', 1], ['companies', 1], ['coa', 2], ['structure', 2]] },
+  { g: 'g1', items: [['dashboard', 1], ['work', 1], ['companies', 1], ['coa', 2], ['structure', 2]] },
   { g: 'g2', items: [['sales', 3], ['purch', 3], ['stock', 3], ['asset', 5], ['payroll', 3], ['journal', 3], ['posting', 3], ['petty', 3], ['cheque', 3], ['bankrec', 3], ['gl', 3]] },
   { g: 'g3', items: [['vat', 4], ['wht', 4], ['cc', 5]] },
   { g: 'g4', items: [['tb', 6], ['fs', 6]] },
   { g: 'g5', items: [['closing', 7], ['office', 1], ['users', 1], ['audit', 1], ['settings', 1]] }
 ];
-var READY = { office: 1, users: 1, purch: 1, dashboard: 1, companies: 1, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1, asset: 1, closing: 1, audit: 1, settings: 1 };
-var PAGE_MOD = { asset: 'journal', dashboard: 'dashboard', companies: 'company', coa: 'coa', structure: 'coa', sales: 'sales', purch: 'purchase', stock: 'inventory', payroll: 'payroll', journal: 'journal', posting: 'journal', petty: 'bank', cheque: 'bank', bankrec: 'bank', gl: 'report', vat: 'tax', wht: 'tax', cc: 'report', tb: 'report', fs: 'report', closing: 'journal', office: 'office', users: 'users', audit: 'audit' };
+var READY = { office: 1, users: 1, purch: 1, dashboard: 1, companies: 1, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1, asset: 1, work: 1, closing: 1, audit: 1, settings: 1 };
+var PAGE_MOD = { work: 'journal', asset: 'journal', dashboard: 'dashboard', companies: 'company', coa: 'coa', structure: 'coa', sales: 'sales', purch: 'purchase', stock: 'inventory', payroll: 'payroll', journal: 'journal', posting: 'journal', petty: 'bank', cheque: 'bank', bankrec: 'bank', gl: 'report', vat: 'tax', wht: 'tax', cc: 'report', tb: 'report', fs: 'report', closing: 'journal', office: 'office', users: 'users', audit: 'audit' };
 function can(k) { return !S.me || S.me.owner || (S.me.perms || []).indexOf(k) >= 0; }
 function canPage(p) { var m = PAGE_MOD[p]; if ((p === 'office' || p === 'users') && !S.me) return false; return !m || m === 'dashboard' || m === 'company' || can(m + '.view'); }
 var MONTHS = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
@@ -492,7 +492,7 @@ function go(p) {
   S.page = p; side(false); renderSide();
   var needCo = { purch: 1, dashboard: 0, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1 };
   if (needCo[p] && !S.cid) { $('main').innerHTML = head(t(p), '') + '<div class="card empty">กรุณาสร้างบริษัททดลองก่อน<br><br><button class="btn" onclick="go(\'companies\')">ไปที่จัดการบริษัท</button></div>'; return; }
-  ({ purch: pPurch, dashboard: pDash, companies: pCos, coa: pCoa, structure: pStruct, sales: pSales, payroll: pPayroll, stock: pStock, cheque: pCheque, bankrec: pBankRec, journal: pJournal, posting: pPosting, petty: pPetty, gl: pGL, vat: pVat, wht: pWht, tb: pTB, fs: pFS, asset: pAsset, closing: pClose, audit: pAudit, settings: pSet, office: pOffice, users: pUsers }[p] || pPlan)(p);
+  ({ purch: pPurch, dashboard: pDash, companies: pCos, coa: pCoa, structure: pStruct, sales: pSales, payroll: pPayroll, stock: pStock, cheque: pCheque, bankrec: pBankRec, journal: pJournal, posting: pPosting, petty: pPetty, gl: pGL, vat: pVat, wht: pWht, tb: pTB, fs: pFS, asset: pAsset, work: pWork, closing: pClose, audit: pAudit, settings: pSet, office: pOffice, users: pUsers }[p] || pPlan)(p);
   window.scrollTo(0, 0);
 }
 function head(title, desc, right) { return '<div class="bar" style="align-items:flex-start"><div style="flex:1;min-width:200px"><h2 class="pt">' + esc(title) + '</h2><p class="pd">' + desc + '</p></div>' + (right || '') + '</div>'; }
@@ -3643,6 +3643,87 @@ function faPrint() {
   printer().show('ทะเบียนสินทรัพย์', '<div class="bd"><h2 style="text-align:center">ทะเบียนสินทรัพย์ถาวร</h2><p style="text-align:center">' + esc(co().name_th) + ' · ณ วันที่ ' + thDate(today()) + '</p><table class="l"><thead><tr><th>รหัส</th><th>สินทรัพย์</th><th>วันที่ซื้อ</th><th>วิธี</th><th class="r">อายุ (ปี)</th><th class="r">ราคาทุน</th><th class="r">ค่าเสื่อมสะสม</th><th class="r">มูลค่าสุทธิ</th><th>สถานะ</th></tr></thead><tbody>' +
     rows.map(function (r) { return '<tr><td>' + esc(r.code) + '</td><td>' + esc(r.name) + '</td><td>' + esc(r.acquire_date) + '</td><td>' + (r.method === 'DB' ? 'ลดลง ' + esc(r.db_rate) + '%' : 'เส้นตรง') + '</td><td class="r">' + (Number(r.life_months) / 12) + '</td><td class="r">' + money(r.cost) + '</td><td class="r">' + money(r.accdep) + '</td><td class="r">' + money(r.nbv) + '</td><td>' + (r.status === 'DISPOSED' ? 'จำหน่าย ' + esc(r.dispose_date) : 'ใช้งาน') + '</td></tr>'; }).join('') + '</tbody></table></div>', BD_CSS);
 }
+/* ---------- ห้องทำงานสำนักงานบัญชี ---------- */
+S.ws = { tab: 'DASH', ym: '', who: '', f: 'open', dq: '', dk: '', dc: '', dm: '' };
+var WS_COL = { TODO: ['#64748b', '#f1f5f9'], DOING: ['#1d4ed8', '#dbeafe'], DONE: ['#15803d', '#dcfce7'], WAIT: ['#b45309', '#fef3c7'], PASS: ['#15803d', '#dcfce7'], FIX: ['#b91c1c', '#fee2e2'] };
+function wsChip(x, extra) { var c = x.auto_done ? WS_COL.DONE : (WS_COL[x.status] || WS_COL.TODO), lbl = x.auto_done && !x.done ? 'เสร็จ (ปิดงวดแล้ว)' : x.status_th; return '<span class="tag" style="background:' + c[1] + ';color:' + c[0] + ';padding:3px 9px;border-radius:10px;white-space:nowrap;cursor:pointer' + (x.overdue ? ';box-shadow:inset 0 0 0 1.5px #dc2626' : '') + '"' + (extra || '') + '>' + esc(lbl) + (x.overdue ? ' ⏰' : '') + '</span>'; }
+function pWork() {
+  if (!S.ws.ym) { var d = today(), y = Number(d.slice(0, 4)), m = Number(d.slice(5, 7)) - 1; if (m < 1) { m = 12; y--; } S.ws.ym = y + '-' + pad(m, 2); }
+  var tabs = [['DASH', '📋 ภาพรวมลูกค้า'], ['TASK', '✅ งาน'], ['DOC', '📁 ศูนย์เอกสาร']], tab = S.ws.tab;
+  $('main').innerHTML = head(t('work'), 'งานรายเดือนของลูกค้าทุกบริษัท · มอบหมายผู้รับผิดชอบ · เก็บเอกสารลูกค้า') +
+    '<div class="tabs">' + tabs.map(function (x) { return '<button class="' + (tab === x[0] ? 'on' : '') + '" onclick="S.ws.tab=\'' + x[0] + '\';pWork()">' + x[1] + '</button>'; }).join('') + '</div><div id="wsOut"><div class="empty">กำลังโหลด...</div></div>';
+  if (tab === 'TASK') return wsTaskPage();
+  if (tab === 'DOC') return wsDocPage();
+  call('ws.dashboard', { ym: S.ws.ym }).then(function (r) {
+    S.wsD = r; var ro = co() && co().status !== 'ACTIVE';
+    $('wsOut').innerHTML = '<div class="card"><div class="bar" style="margin:0"><label class="small">งานประจำเดือน</label><input class="in" type="month" value="' + r.ym + '" onchange="S.ws.ym=this.value;pWork()"><span class="small" style="flex:1">ลูกค้า ' + r.summary.companies + ' บริษัท · เสร็จครบ ' + r.summary.done + ' · งานเลยกำหนด <b style="color:var(--err)">' + r.summary.overdue + '</b> · แตะสถานะเพื่อแก้</span><button class="btn" onclick="wsGen()">สร้างงานเดือนนี้ให้ทุกบริษัท</button></div></div>' +
+      (!r.rows.length ? '<div class="card empty">ยังไม่มีบริษัทลูกค้า</div>' : '<div class="card tw"><table class="t"><thead><tr><th>ลูกค้า</th><th>ผู้รับผิดชอบ</th><th style="min-width:90px">ความคืบหน้า</th>' + r.tasks.map(function (x) { return '<th>' + esc(x.label) + '</th>'; }).join('') + '<th class="num">เอกสาร</th><th>งานอื่น</th></tr></thead><tbody>' +
+      r.rows.map(function (c, i) { return '<tr><td><b class="code">' + esc(c.code) + '</b> ' + esc(c.name) + '<div class="small">' + esc(c.tax_id || '') + ' · รอบบัญชีเริ่มเดือน ' + esc(c.fiscal_start_month || 1) + '</div></td><td>' + esc(c.accountant || '-') + '</td><td><div style="background:#eef2f7;border-radius:6px;height:8px;overflow:hidden"><div style="height:8px;width:' + c.progress + '%;background:' + (c.progress === 100 ? '#16a34a' : '#3b82f6') + '"></div></div><div class="small">' + c.progress + '%' + (c.overdue ? ' · <span style="color:var(--err)">เลย ' + c.overdue + '</span>' : '') + '</div></td>' +
+        r.tasks.map(function (x) { var k = c.tasks[x.key]; return '<td>' + wsChip(k, ' onclick="wsEdit(' + i + ',\'' + x.key + '\')"') + '<div class="small">' + (k.due_date ? thDate(k.due_date).replace(/ \d{4}$/, '') : '') + (k.assignee && k.assignee !== c.accountant ? ' · ' + esc(k.assignee) : '') + '</div></td>'; }).join('') +
+        '<td class="num"><span class="lk" onclick="S.ws.tab=\'DOC\';S.ws.dc=\'' + c.company_id + '\';S.ws.dm=\'' + r.ym + '\';pWork()">' + c.docs + '</span></td><td>' + c.other.map(function (o) { return '<div>' + wsChip(o, ' onclick="wsEditO(\'' + o.id + '\',' + i + ')"') + ' <span class="small">' + esc(o.title) + '</span></div>'; }).join('') + '<span class="lk small" onclick="wsEdit(' + i + ',\'\')">＋ งาน</span></td></tr>'; }).join('') + '</tbody></table></div>');
+  }).catch(failNew);
+}
+function wsGen() { call('ws.genMonth', { ym: S.ws.ym }).then(function (r) { toast('สร้างงาน ' + r.created + ' งาน', 'ok'); pWork(); }).catch(failNew); }
+function wsEditO(id, i) { var o = S.wsD.rows[i].other.filter(function (x) { return x.id === id; })[0]; wsForm(S.wsD.rows[i], o, null); }
+function wsEdit(i, key) { var c = S.wsD.rows[i]; wsForm(c, key ? c.tasks[key] : null, key); }
+function wsForm(c, x, key) {
+  var def = key ? S.wsD.tasks.filter(function (t) { return t.key === key; })[0] : null, states = def ? def.states : [{ key: 'TODO', label: 'ยังไม่เริ่ม' }, { key: 'DOING', label: 'กำลังทำ' }, { key: 'DONE', label: 'เสร็จ' }];
+  x = x || { status: 'TODO', assignee: c.accountant || '', due_date: '', note: '' };
+  openM((def ? def.label : x.title ? 'งาน: ' + x.title : 'เพิ่มงาน') + ' · ' + c.code + ' ' + c.name + ' · ' + thMonth(S.wsD.ym), (def ? '' : '<div class="fr"><label class="f req">ชื่องาน</label><input class="in" id="wk_t" value="' + esc(x.title || '') + '"></div>') +
+    '<div class="fr"><label class="f">สถานะ</label><div class="bar" style="margin:0">' + states.map(function (s) { return '<label style="display:inline-flex;gap:4px;align-items:center;margin-right:10px"><input type="radio" name="wk_s" value="' + s.key + '"' + (x.status === s.key ? ' checked' : '') + '>' + esc(s.label) + '</label>'; }).join('') + '</div></div>' +
+    '<div class="f2"><div class="fr"><label class="f">ผู้รับผิดชอบ</label><input class="in" id="wk_a" value="' + esc(x.assignee || '') + '"></div><div class="fr"><label class="f">ครบกำหนด</label><input class="in" type="date" id="wk_d" value="' + esc(x.due_date || '') + '"></div></div>' +
+    '<div class="fr"><label class="f">หมายเหตุ</label><textarea class="in" id="wk_n" rows="3">' + esc(x.note || '') + '</textarea></div>' + (x.done_at ? '<p class="small">เสร็จเมื่อ ' + esc(String(x.done_at).replace('T', ' ').slice(0, 16)) + ' โดย ' + esc(x.done_by || '') + '</p>' : ''),
+    (x.id && !def ? '<button class="btn ghost" onclick="wsDel(\'' + x.id + '\')">ลบงาน</button>' : '') + '<button class="btn ghost" onclick="closeM()">ปิด</button><button class="btn" onclick="wsSave(\'' + c.company_id + '\',\'' + (key || '') + '\',\'' + (x.id || '') + '\')">บันทึก</button>');
+}
+function wsSave(cid, key, id) {
+  var s = document.querySelector('input[name="wk_s"]:checked'), p = { company_id: cid, ym: S.wsD.ym, task: key, id: id, status: s ? s.value : '', assignee: v('wk_a'), due_date: v('wk_d'), note: v('wk_n') };
+  if ($('wk_t')) p.title = v('wk_t');
+  call('ws.taskSave', p).then(function () { closeM(); toast('บันทึกแล้ว', 'ok'); S.ws.tab === 'TASK' ? wsTaskPage() : pWork(); }).catch(failNew);
+}
+function wsDel(id) { call('ws.taskDelete', { id: id }).then(function () { closeM(); S.ws.tab === 'TASK' ? wsTaskPage() : pWork(); }).catch(failNew); }
+function wsTaskPage() {
+  var F = [['open', 'ยังไม่เสร็จ'], ['soon', 'ใกล้/เลยกำหนด'], ['overdue', 'เลยกำหนด'], ['done', 'เสร็จแล้ว'], ['all', 'ทั้งหมด']];
+  call('ws.tasks', { status: S.ws.f, assignee: S.ws.who, ym: S.ws.tym || '' }).then(function (r) {
+    S.wsT = {}; r.forEach(function (x) { S.wsT[x.id] = x; });
+    $('wsOut').innerHTML = '<div class="card"><div class="bar" style="margin:0"><select class="in" style="width:auto" onchange="S.ws.f=this.value;wsTaskPage()">' + F.map(function (f) { return '<option value="' + f[0] + '"' + (S.ws.f === f[0] ? ' selected' : '') + '>' + f[1] + '</option>'; }).join('') + '</select><input class="in" placeholder="ผู้รับผิดชอบ (เว้นว่าง = ทุกคน)" value="' + esc(S.ws.who) + '" onchange="S.ws.who=this.value;wsTaskPage()" style="max-width:240px"><input class="in" type="month" value="' + (S.ws.tym || '') + '" onchange="S.ws.tym=this.value;wsTaskPage()" title="เดือนงาน (เว้นว่าง = ทุกเดือน)"><span class="small">' + r.length + ' งาน</span></div></div>' +
+      (!r.length ? '<div class="card empty">✅ ไม่มีงานตามเงื่อนไข</div>' : '<div class="card tw"><table class="t"><thead><tr><th>ครบกำหนด</th><th>ลูกค้า</th><th>เดือนงาน</th><th>งาน</th><th>ผู้รับผิดชอบ</th><th>สถานะ</th><th>หมายเหตุ</th></tr></thead><tbody>' +
+      r.map(function (x) { return '<tr><td style="white-space:nowrap' + (x.overdue ? ';color:var(--err);font-weight:600' : x.soon ? ';color:#b45309' : '') + '">' + (x.due_date ? thDate(x.due_date) : '-') + '</td><td><span class="code">' + esc(x.company_code) + '</span> ' + esc(x.company_name) + '</td><td>' + esc(x.ym) + '</td><td>' + esc(x.title) + '</td><td>' + esc(x.assignee || '') + '</td><td>' + wsChip(x, ' onclick="wsTEdit(\'' + x.id + '\')"') + '</td><td class="small">' + esc(x.note || '') + '</td></tr>'; }).join('') + '</tbody></table></div>');
+  }).catch(failNew);
+}
+function wsTEdit(id) {
+  var x = S.wsT[id]; call('ws.dashboard', { ym: x.ym }).then(function (r) { S.wsD = r; var i = r.rows.map(function (c) { return c.company_id; }).indexOf(x.company_id); if (i < 0) return; var key = r.tasks.some(function (t) { return t.key === x.task; }) ? x.task : ''; wsForm(r.rows[i], x, key || null); }).catch(failNew);
+}
+var DOCK = [['SALE', 'เอกสารขาย'], ['PURCH', 'เอกสารซื้อ/ค่าใช้จ่าย'], ['BANK', 'สเตทเมนต์ธนาคาร'], ['TAX', 'ภาษี'], ['PAY', 'เงินเดือน/ประกันสังคม'], ['OTHER', 'อื่น ๆ']];
+function wsCoOpts(sel, all) { return (all ? '<option value="">ทุกบริษัท</option>' : '') + (S.cos || []).filter(function (c) { return c.status === 'ACTIVE'; }).map(function (c) { return '<option value="' + c.id + '"' + (c.id === sel ? ' selected' : '') + '>' + esc(c.code + ' ' + c.name_th) + '</option>'; }).join(''); }
+function wsDocPage() {
+  var w = S.ws;
+  call('doc.list', { company_id: w.dc, ym: w.dm, kind: w.dk, q: w.dq }).then(function (r) {
+    S.wsDocs = {}; r.forEach(function (d) { S.wsDocs[d.id] = d; });
+    $('wsOut').innerHTML = '<div class="card"><div class="bar" style="margin:0"><select class="in" style="width:auto" onchange="S.ws.dc=this.value;wsDocPage()">' + wsCoOpts(w.dc, 1) + '</select><input class="in" type="month" value="' + w.dm + '" onchange="S.ws.dm=this.value;wsDocPage()"><select class="in" style="width:auto" onchange="S.ws.dk=this.value;wsDocPage()"><option value="">ทุกประเภท</option>' + DOCK.map(function (k) { return '<option value="' + k[0] + '"' + (w.dk === k[0] ? ' selected' : '') + '>' + k[1] + '</option>'; }).join('') + '</select><input class="in q" placeholder="ค้นหาชื่อไฟล์ / หมายเหตุ / บริษัท" value="' + esc(w.dq) + '" onchange="S.ws.dq=this.value;wsDocPage()"><span style="flex:1"></span><button class="btn" onclick="wsUpForm()">⬆ แนบเอกสาร</button></div></div>' +
+      (!r.length ? '<div class="card empty">ยังไม่มีเอกสาร</div>' : '<div class="card tw"><table class="t"><thead><tr><th>อัปโหลด</th><th>ลูกค้า</th><th>เดือน</th><th>ประเภท</th><th>ไฟล์</th><th>หมายเหตุ</th><th>รายการบัญชี</th><th></th></tr></thead><tbody>' +
+      r.map(function (d) { return '<tr><td class="small" style="white-space:nowrap">' + esc(String(d.uploaded_at).replace('T', ' ').slice(0, 16)) + '<div>' + esc(d.uploaded_by || '') + '</div></td><td><span class="code">' + esc(d.company_code) + '</span> ' + esc(d.company_name) + '</td><td>' + esc(d.ym) + '</td><td>' + esc(d.kind_th) + '</td><td>' + (/pdf/.test(d.mime) ? '📄' : /image/.test(d.mime) ? '🖼' : '📊') + ' <a href="' + esc(d.url) + '" target="_blank" rel="noopener">' + esc(d.name) + '</a></td><td class="small">' + esc(d.note || '') + '</td><td>' + (d.journal_no ? esc(d.journal_no) : '') + ' <span class="lk small" onclick="wsLink(\'' + d.id + '\')">' + (d.journal_no ? 'เปลี่ยน' : '🔗 เชื่อม') + '</span></td><td><button class="btn ghost sm" onclick="wsDocDel(\'' + d.id + '\')">ลบ</button></td></tr>'; }).join('') + '</tbody></table></div>');
+  }).catch(failNew);
+}
+function wsUpForm() {
+  openM('แนบเอกสารลูกค้า', '<div class="f3"><div class="fr"><label class="f req">บริษัท</label><select class="in" id="du_c">' + wsCoOpts(S.ws.dc || S.cid) + '</select></div><div class="fr"><label class="f req">เดือน</label><input class="in" type="month" id="du_m" value="' + (S.ws.dm || S.ws.ym) + '"></div><div class="fr"><label class="f req">ประเภท</label><select class="in" id="du_k">' + DOCK.map(function (k) { return '<option value="' + k[0] + '">' + k[1] + '</option>'; }).join('') + '</select></div></div>' +
+    '<div class="fr"><label class="f req">ไฟล์ (PDF / JPG / PNG / Excel · ไม่เกิน 8 MB ต่อไฟล์ · เลือกหลายไฟล์ได้)</label><input class="in" type="file" id="du_f" multiple accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.csv"></div><div class="fr"><label class="f">หมายเหตุ</label><input class="in" id="du_n"></div><div id="du_s" class="small"></div>',
+    '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" id="du_go" onclick="wsUpload()">อัปโหลด</button>', true);
+}
+function wsUpload() {
+  var fs = Array.prototype.slice.call($('du_f').files || []); if (!fs.length) return toast('เลือกไฟล์ก่อน', 'warn');
+  var big = fs.filter(function (f) { return f.size > 8 * 1024 * 1024; }); if (big.length) return toast(big[0].name + ' ใหญ่เกิน 8 MB', 'err');
+  $('du_go').disabled = true; var ok = 0, i = 0, p0 = { company_id: v('du_c'), ym: v('du_m'), kind: v('du_k'), note: v('du_n') };
+  var next = function () {
+    if (i >= fs.length) { closeM(); toast('อัปโหลด ' + ok + ' ไฟล์แล้ว', 'ok'); return wsDocPage(); }
+    var f = fs[i++], rd = new FileReader(); $('du_s').textContent = 'กำลังอัปโหลด ' + i + '/' + fs.length + ': ' + f.name;
+    rd.onload = function () { var mime = f.type || (/\.xlsx$/i.test(f.name) ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : /\.xls$/i.test(f.name) ? 'application/vnd.ms-excel' : /\.csv$/i.test(f.name) ? 'text/csv' : '');
+      call('doc.upload', Object.assign({ name: f.name, mime: mime, data: String(rd.result).split(',')[1] }, p0)).then(function () { ok++; next(); }).catch(function (e) { $('du_go').disabled = false; failNew(e); }); };
+    rd.readAsDataURL(f);
+  };
+  next();
+}
+function wsLink(id) { var d = S.wsDocs[id], no = prompt('เลขที่รายการบัญชีของ ' + d.company_name + ' ที่จะเชื่อมกับเอกสารนี้ (เว้นว่าง = ยกเลิกการเชื่อม)', d.journal_no || ''); if (no == null) return; call('doc.update', { id: id, journal_no: no.trim() }).then(function () { toast('บันทึกแล้ว', 'ok'); wsDocPage(); }).catch(failNew); }
+function wsDocDel(id) { var d = S.wsDocs[id]; confirmM('ลบเอกสาร', 'ลบ ' + d.name + ' (ไฟล์ย้ายไปถังขยะ Drive · ประวัติยังเก็บไว้)', 'ลบ', function () { call('doc.delete', { id: id }).then(wsDocPage).catch(failNew); }, true); }
 function puPt() { var c = v('pu_pt') === 'CASH'; $('pu_duew').style.display = c ? 'none' : ''; $('pu_apw').style.display = c ? 'none' : ''; $('pu_payw').style.display = c ? '' : 'none'; $('pu_whtw').style.display = c ? '' : 'none'; }
 function puW() { $('pu_wbox').style.display = $('pu_hw').checked ? '' : 'none'; puWa(); }
 function puWc() { var L = ratesFor('WHT', v('pu_date') || today(), v('pu_pnd')).filter(function (r) { return r.code !== 'SALARY'; }); $('pu_wc').innerHTML = L.map(function (r) { return '<option value="' + r.code + '" data-r="' + r.rate + '"' + (r.code === S.puEdit.whc ? ' selected' : '') + '>' + esc(r.name) + ' (' + r.rate + '%)</option>'; }).join(''); if (!v('pu_wr')) puWr(); }
