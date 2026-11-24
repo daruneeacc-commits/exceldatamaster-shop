@@ -228,7 +228,7 @@ var MENU = [
   { g: 'g4', items: [['tb', 6], ['fs', 6]] },
   { g: 'g5', items: [['closing', 7], ['office', 1], ['users', 1], ['audit', 1], ['settings', 1]] }
 ];
-var READY = { office: 1, users: 1, purch: 1, dashboard: 1, companies: 1, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1, audit: 1, settings: 1 };
+var READY = { office: 1, users: 1, purch: 1, dashboard: 1, companies: 1, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1, closing: 1, audit: 1, settings: 1 };
 var PAGE_MOD = { dashboard: 'dashboard', companies: 'company', coa: 'coa', structure: 'coa', sales: 'sales', purch: 'purchase', stock: 'inventory', payroll: 'payroll', journal: 'journal', posting: 'journal', petty: 'bank', cheque: 'bank', bankrec: 'bank', gl: 'report', vat: 'tax', wht: 'tax', cc: 'report', tb: 'report', fs: 'report', closing: 'journal', office: 'office', users: 'users', audit: 'audit' };
 function can(k) { return !S.me || S.me.owner || (S.me.perms || []).indexOf(k) >= 0; }
 function canPage(p) { var m = PAGE_MOD[p]; if ((p === 'office' || p === 'users') && !S.me) return false; return !m || m === 'dashboard' || m === 'company' || can(m + '.view'); }
@@ -483,7 +483,7 @@ function go(p) {
   S.page = p; side(false); renderSide();
   var needCo = { purch: 1, dashboard: 0, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1 };
   if (needCo[p] && !S.cid) { $('main').innerHTML = head(t(p), '') + '<div class="card empty">กรุณาสร้างบริษัททดลองก่อน<br><br><button class="btn" onclick="go(\'companies\')">ไปที่จัดการบริษัท</button></div>'; return; }
-  ({ purch: pPurch, dashboard: pDash, companies: pCos, coa: pCoa, structure: pStruct, sales: pSales, payroll: pPayroll, stock: pStock, cheque: pCheque, bankrec: pBankRec, journal: pJournal, posting: pPosting, petty: pPetty, gl: pGL, vat: pVat, wht: pWht, tb: pTB, fs: pFS, audit: pAudit, settings: pSet, office: pOffice, users: pUsers }[p] || pPlan)(p);
+  ({ purch: pPurch, dashboard: pDash, companies: pCos, coa: pCoa, structure: pStruct, sales: pSales, payroll: pPayroll, stock: pStock, cheque: pCheque, bankrec: pBankRec, journal: pJournal, posting: pPosting, petty: pPetty, gl: pGL, vat: pVat, wht: pWht, tb: pTB, fs: pFS, closing: pClose, audit: pAudit, settings: pSet, office: pOffice, users: pUsers }[p] || pPlan)(p);
   window.scrollTo(0, 0);
 }
 function head(title, desc, right) { return '<div class="bar" style="align-items:flex-start"><div style="flex:1;min-width:200px"><h2 class="pt">' + esc(title) + '</h2><p class="pd">' + desc + '</p></div>' + (right || '') + '</div>'; }
@@ -805,7 +805,7 @@ function auditTable(rows, compact) {
 }
 function pAudit() {
   $('main').innerHTML = head(t('audit'), 'บันทึกทุกการเข้าสู่ระบบและการเปลี่ยนแปลงข้อมูล (ของบริษัทที่เลือก และของระบบ)') +
-    '<div class="bar"><input class="in q" id="aq" placeholder="ค้นหารายละเอียด / การกระทำ" value="' + esc(S.au.q) + '"><button class="btn ghost" onclick="S.au.q=v(\'aq\');auPg(1)">' + t('search') + '</button></div><div id="auT"></div>';
+    '<div class="bar"><input class="in q" id="aq" placeholder="ค้นหารายละเอียด / การกระทำ" value="' + esc(S.au.q) + '"><button class="btn ghost" onclick="S.au.q=v(\'aq\');auPg(1)">' + t('search') + '</button><button class="btn ghost" onclick="auRep()">📊 รายงานตรวจสอบ</button></div><div id="auT"></div>';
   $('aq').onkeydown = function (e) { if (e.key === 'Enter') { S.au.q = v('aq'); auPg(1); } };
   auPg(S.au.pg);
 }
@@ -1680,17 +1680,115 @@ function tbRun(mode) {
 function pFS() {
   ffInit();
   $('main').innerHTML = head(t('fs'), esc(co().code + ' · ' + co().name_th) + ' · จัดรูปแบบตามรายการย่อของกรมพัฒนาธุรกิจการค้า (TFRS for NPAEs)') +
-    '<div class="tabs"><button class="' + (S.ff.tab === 'pl' ? 'on' : '') + '" onclick="S.ff.tab=\'pl\';pFS()">งบกำไรขาดทุน</button><button class="' + (S.ff.tab === 'cf' ? 'on' : '') + '" onclick="S.ff.tab=\'cf\';pFS()">งบกระแสเงินสด</button></div>' + ffBar('fsRun');
+    '<div class="tabs">' + FS_TABS.map(function (x) { return '<button class="' + (S.ff.tab === x[0] ? 'on' : '') + '" onclick="S.ff.tab=\'' + x[0] + '\';pFS()">' + x[1] + '</button>'; }).join('') + '</div>' + ffBar('fsRun') + (S.ff.tab === 'cmp' ? '' : '');
+  if (S.ff.tab === 'cmp') $('ffOut').insertAdjacentHTML('beforebegin', '<div class="bar"><label class="small">เปรียบเทียบ</label><select class="in" id="ff_cm" onchange="S.ff.cm=this.value;fsRun()">' + [['mom', 'เดือนนี้ vs เดือนก่อน'], ['ym', 'เดือนนี้ vs เดือนก่อน vs เดือนเดียวกันปีก่อน'], ['yoy', 'ตั้งแต่ต้นปี vs ช่วงเดียวกันปีก่อน'], ['custom', 'กำหนดเอง (ช่วงที่ 2)']].map(function (o) { return '<option value="' + o[0] + '"' + ((S.ff.cm || 'mom') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select>' + ((S.ff.cm === 'custom') ? '<label class="small">ช่วงที่ 2 ตั้งแต่</label><input class="in" type="date" id="ff_f2" value="' + (S.ff.f2 || '') + '"><label class="small">ถึง</label><input class="in" type="date" id="ff_t2" value="' + (S.ff.t2 || '') + '">' : '') + '</div>');
   $('ffOut').insertAdjacentHTML('beforebegin', '<div class="bar"><label class="small" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" ' + (S.ff.detail ? 'checked' : '') + ' onchange="S.ff.detail=this.checked;fsRun()">แสดงรายละเอียดรายบัญชี</label>' + (S.ff.tab === 'cf' ? '<button class="btn ghost sm" onclick="cashSet()">กำหนดบัญชีเงินสด</button>' : '') + '</div>');
   fsRun();
 }
 function fsRun(mode) {
   var tab = S.ff.tab, p = ffP(tab); if (mode === 'export') return ffExport(p);
   var pr = mode === 'print' ? printer() : null;
+  if (tab !== 'pl' && tab !== 'cf') {
+    if (mode === 'export') return toast('ส่งออก Excel ได้ที่ งบกำไรขาดทุน/งบกระแสเงินสด/งบทดลอง · งบนี้ใช้ปุ่มพิมพ์ แล้วบันทึกเป็น PDF', 'warn');
+    if (tab === 'cmp') { p.mode = S.ff.cm || 'mom'; if (p.mode === 'custom') { S.ff.f2 = v('ff_f2'); S.ff.t2 = v('ff_t2'); p.from2 = S.ff.f2; p.to2 = S.ff.t2; } }
+    var ttl = { bs: 'งบแสดงฐานะการเงิน', eq: 'งบแสดงการเปลี่ยนแปลงส่วนของเจ้าของ', cmp: 'งบเปรียบเทียบ' }[tab];
+    return call({ bs: 'fin.bs', eq: 'fin.equity', cmp: 'fin.compare' }[tab], p).then(function (r) {
+      var html = tab === 'bs' ? bsHtml(r) : tab === 'eq' ? eqHtml(r) : cmpHtml(r);
+      if (pr) pr.show(ttl + ' ' + (r.to || p.to), '<div class="pv">' + html + '</div>', STMT_CSS); else $('ffOut').innerHTML = '<style>' + STMT_CSS + '</style><div class="card">' + html + '</div>';
+    }).catch(function (e) { if (pr) pr.close(); failNew(e); });
+  }
   call(tab === 'pl' ? 'fin.pl' : 'fin.cf', p).then(function (r) {
     var html = tab === 'pl' ? plHtml(r) : cfHtml(r);
     if (pr) pr.show((tab === 'pl' ? 'งบกำไรขาดทุน ' : 'งบกระแสเงินสด ') + r.to, '<div class="pv">' + html + '</div>', STMT_CSS); else $('ffOut').innerHTML = '<style>' + STMT_CSS + '</style><div class="card">' + html + '</div>';
   }).catch(function (e) { if (pr) pr.close(); fail(e); });
+}
+var FS_TABS = [['pl', 'งบกำไรขาดทุน'], ['bs', 'งบแสดงฐานะการเงิน'], ['eq', 'งบการเปลี่ยนแปลงส่วนของเจ้าของ'], ['cf', 'งบกระแสเงินสด'], ['cmp', 'เปรียบเทียบ']];
+function failNew(e) { var m = e && e.message || String(e); if (/ไม่พบคำสั่ง/.test(m)) toast('หลังบ้านยังไม่ได้อัปเดตเป็นรุ่นที่มีเมนูนี้ (v0.11)', 'err'); else fail(e); }
+function bsHtml(r) {
+  var grp = function (arr) { return arr.map(function (g) { return '<tr class="i"><td>' + esc(g.label) + '</td><td class="n">' + neg(g.total) + '</td></tr>' + (S.ff.detail ? g.accounts.map(function (a) { return '<tr class="d"><td>' + esc(a.code + ' ' + a.name_th) + '</td><td class="n">' + neg(a.amount) + '</td></tr>'; }).join('') : ''); }).join('') || '<tr class="i"><td class="small">ไม่มียอด</td><td></td></tr>'; };
+  var sum = function (l, v, c) { return '<tr class="' + (c || 's') + '"><td>' + l + '</td><td class="n">' + neg(v) + '</td></tr>'; };
+  return stmtHead('งบแสดงฐานะการเงิน', { to: r.to, drafts: r.drafts, include_draft: r.include_draft }) + '<table class="st"><tbody>' +
+    '<tr class="h"><td>สินทรัพย์</td><td></td></tr>' + grp(r.assets) + sum('รวมสินทรัพย์', r.total_assets, 'g') +
+    '<tr class="h"><td>หนี้สิน</td><td></td></tr>' + grp(r.liabilities) + sum('รวมหนี้สิน', r.total_liabilities) +
+    '<tr class="h"><td>ส่วนของเจ้าของ</td><td></td></tr>' + grp(r.equity) + (Number(r.unclosed_profit) ? '<tr class="i"><td>กำไร(ขาดทุน)ยังไม่ได้ปิดบัญชี</td><td class="n">' + neg(r.unclosed_profit) + '</td></tr>' : '') + sum('รวมส่วนของเจ้าของ', r.total_equity) +
+    sum('รวมหนี้สินและส่วนของเจ้าของ', r.total_le, 'g') + '</tbody></table>' + (r.balanced ? '' : '<p class="small" style="color:#c00">⚠ งบไม่สมดุล ตรวจงบทดลอง</p>');
+}
+function eqHtml(r) {
+  return stmtHead('งบแสดงการเปลี่ยนแปลงส่วนของเจ้าของ', r) + '<table class="st"><thead><tr><td><b>รายการ</b></td><td class="n"><b>ยอดต้นงวด</b></td><td class="n"><b>เพิ่มขึ้น</b></td><td class="n"><b>ลดลง</b></td><td class="n"><b>ยอดปลายงวด</b></td></tr></thead><tbody>' +
+    r.rows.map(function (x) { return '<tr class="i"><td>' + esc((x.code ? x.code + ' ' : '') + x.name_th) + '</td><td class="n">' + neg(x.opening) + '</td><td class="n">' + neg(x.increase) + '</td><td class="n">' + neg(x.decrease) + '</td><td class="n">' + neg(x.closing) + '</td></tr>'; }).join('') +
+    '<tr class="g"><td>รวมส่วนของเจ้าของ</td><td class="n">' + neg(r.opening) + '</td><td class="n">' + neg(r.increase) + '</td><td class="n">' + neg(r.decrease) + '</td><td class="n">' + neg(r.closing) + '</td></tr></tbody></table>' +
+    '<p class="small">กำไร(ขาดทุน)สุทธิสำหรับงวด ' + neg(r.net_profit) + ' บาท</p>';
+}
+function cmpHtml(r) {
+  var n = r.cols.length, hd = '<tr><td></td>' + r.cols.map(function (c) { return '<td class="n"><b>' + esc(c.label) + '</b><div class="small">' + thDate(c.from) + ' – ' + thDate(c.to) + '</div></td>'; }).join('') + '<td class="n"><b>เปลี่ยนแปลง</b></td><td class="n"><b>%</b></td></tr>';
+  var row = function (l, vals, cls) { var a = Number(vals[0]) || 0, b = Number(vals[1]) || 0, d = a - b; return '<tr class="' + (cls || 'i') + '"><td>' + l + '</td>' + vals.map(function (x) { return '<td class="n">' + neg(x) + '</td>'; }).join('') + '<td class="n">' + neg(d.toFixed(2)) + '</td><td class="n">' + (b ? (d / Math.abs(b) * 100).toFixed(1) + '%' : '–') + '</td></tr>'; };
+  var L = {}; r.pl.forEach(function (x) { L[x.code] = x; });
+  var ln = function (k) { return row(L[k].label, L[k].vals); };
+  return '<div style="text-align:center;margin-bottom:12px"><b style="font-size:16px">' + esc(co().name_th) + '</b><br><b>งบเปรียบเทียบ</b></div><div style="text-align:right" class="small">หน่วย: บาท</div><table class="st"><thead>' + hd + '</thead><tbody>' +
+    '<tr class="h"><td colspan="' + (n + 3) + '">กำไรขาดทุน</td></tr>' + ln('REV_SALES') + ln('REV_OTHER') + row('รวมรายได้', r.total_revenue, 's') + ln('COGS') + row('กำไรขั้นต้น', r.gross, 's') + ln('EXP_SELLING') + ln('EXP_ADMIN') + ln('EXP_OTHER') + row('กำไรก่อนต้นทุนทางการเงินและภาษี', r.ebit, 's') + ln('FIN_COST') + ln('TAX') + row('กำไร(ขาดทุน)สุทธิ', r.net, 'g') +
+    '<tr class="h"><td colspan="' + (n + 3) + '">ฐานะการเงิน ณ วันสิ้นงวด</td></tr>' + row('รวมสินทรัพย์', r.bs.assets) + row('รวมหนี้สิน', r.bs.liabilities) + row('รวมส่วนของเจ้าของ', r.bs.equity) + '</tbody></table>';
+}
+
+/* ---------- ปิดงวดบัญชี (Phase 6) ---------- */
+S.cl = { ym: '' };
+function pClose() {
+  if (!S.cl.ym) { var d = today(); var y = Number(d.slice(0, 4)), m = Number(d.slice(5, 7)) - 1; if (m < 1) { m = 12; y--; } S.cl.ym = y + '-' + pad(m, 2); }
+  $('main').innerHTML = head(t('closing'), esc(co().code + ' · ' + co().name_th) + ' · ตรวจรายการก่อนปิดงวด · ปิดแล้วบันทึก/แก้ไข/ลบรายการย้อนหลังไม่ได้ จนกว่าเจ้าของจะเปิดงวด') +
+    '<div class="card"><div class="bar" style="margin:0"><label class="small">เดือน</label><input class="in" type="month" id="cl_ym" value="' + S.cl.ym + '" onchange="S.cl.ym=this.value;clRun()"><button class="btn ghost" onclick="clRun()">ตรวจอีกครั้ง</button></div></div><div id="clOut"></div>' +
+    '<div class="card"><h3 style="margin-top:0">ปิดบัญชีสิ้นปี</h3><p class="small" style="margin-top:0">โอนยอดรายได้และค่าใช้จ่ายทั้งปีเข้าบัญชีกำไร(ขาดทุน)สะสม ด้วยใบสำคัญทั่วไป (JV) ณ วันสิ้นรอบบัญชี · ทำก่อนปิดงวดเดือนสุดท้ายของปี · งบกำไรขาดทุนยังแสดงตัวเลขเดิม</p><div class="bar" style="margin:0"><label class="small">วันสิ้นรอบบัญชี</label><input class="in" type="date" id="ye_to" value="' + yeDefault() + '"><button class="btn ghost" onclick="yeRun()">ดูตัวอย่างรายการ</button></div><div id="yeOut"></div></div>';
+  clRun();
+}
+function yeDefault() { var m = Number(co().fiscal_start_month) || 1, d = today(), y = Number(d.slice(0, 4)), em = m === 1 ? 12 : m - 1, ey = m === 1 ? y - 1 : (Number(d.slice(5, 7)) >= m ? y : y - 1); var last = new Date(Date.UTC(ey, em, 0)).getUTCDate(); return ey + '-' + pad(em, 2) + '-' + pad(last, 2); }
+function clRun() {
+  S.cl.ym = v('cl_ym') || S.cl.ym;
+  call('close.check', { company_id: S.cid, ym: S.cl.ym }).then(clShow).catch(failNew);
+}
+function clShow(r) {
+  var bad = r.checks.filter(function (x) { return !x.ok; }), warn = bad.filter(function (x) { return !x.block; });
+  var rows = r.checks.map(function (x) { return '<tr><td style="width:34px;text-align:center;font-size:18px">' + (x.ok ? '✅' : x.block ? '⛔' : '⚠️') + '</td><td>' + esc(x.label) + (x.detail ? '<div class="small">' + esc(x.detail) + '</div>' : '') + '</td><td style="text-align:right">' + (!x.ok && x.go && canPage(x.go) ? '<button class="btn ghost sm" onclick="go(\'' + x.go + '\')">ไปแก้</button>' : '') + '</td></tr>'; }).join('');
+  var st = r.closed ? '<span class="tag" style="background:#e7f6ec;color:#127a3a;padding:3px 10px;border-radius:12px">🔒 ปิดงวดแล้ว</span>' : '<span class="tag" style="background:#fff4e5;color:#9a5b00;padding:3px 10px;border-radius:12px">ยังไม่ปิดงวด</span>';
+  var act = r.closed ? (can('system.edit') ? '<button class="btn ghost" onclick="clReopen()">เปิดงวดเดือนนี้ (ต้องระบุเหตุผล)</button>' : '<span class="small">เปิดงวดได้เฉพาะเจ้าของ</span>') :
+    (can('journal.post') ? (warn.length ? '<label class="small" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="cl_cf">ตรวจข้อ ⚠️ แล้ว ยืนยันปิดงวด</label>' : '') + '<button class="btn"' + (r.ready ? '' : ' disabled') + ' onclick="clPost()">🔒 ปิดงวดถึง ' + thDate(r.to) + '</button>' : '<span class="small">ต้องมีสิทธิ์ Post รายการ</span>');
+  $('clOut').innerHTML = '<div class="card"><div class="bar" style="margin-top:0"><b style="flex:1">ตรวจก่อนปิดงวด ' + esc(r.ym) + '</b>' + st + '</div><p class="small" style="margin-top:0">ปิดงวดล่าสุดถึง: <b>' + (r.lock_date ? thDate(r.lock_date) : 'ยังไม่เคยปิด') + '</b></p>' +
+    '<div class="tw"><table class="t"><tbody>' + rows + '</tbody></table></div><div class="bar">' + act + '</div>' + (r.ready || r.closed ? '' : '<p class="small" style="color:#c00">ต้องแก้ข้อ ⛔ ให้ผ่านก่อนจึงปิดงวดได้</p>') + '</div>' +
+    (r.closes.length ? '<div class="card"><b>ประวัติการปิด/เปิดงวด</b><div class="tw"><table class="t"><thead><tr><th>เวลา</th><th>เดือน</th><th>การกระทำ</th><th>ผู้ทำ</th><th>หมายเหตุ</th></tr></thead><tbody>' + r.closes.map(function (h) { return '<tr><td>' + esc(String(h.at).replace('T', ' ').slice(0, 16)) + '</td><td>' + esc(h.ym) + '</td><td>' + (h.act === 'CLOSE' ? '🔒 ปิดงวด' : '🔓 เปิดงวด') + '</td><td>' + esc(h.by) + '</td><td>' + esc(h.note || '') + '</td></tr>'; }).join('') + '</tbody></table></div></div>' : '');
+}
+function clPost() {
+  if (!confirm('ปิดงวดถึงสิ้นเดือน ' + S.cl.ym + ' ?\nหลังปิดจะบันทึก/แก้ไข/ลบรายการในงวดนี้และก่อนหน้าไม่ได้')) return;
+  call('close.post', { company_id: S.cid, ym: S.cl.ym, confirm: !!($('cl_cf') && $('cl_cf').checked) }).then(function (r) { toast('ปิดงวดเรียบร้อย'); clShow(r); }).catch(failNew);
+}
+function clReopen() {
+  var reason = prompt('เหตุผลการเปิดงวด ' + S.cl.ym + ' (จะบันทึกในประวัติการตรวจสอบ)'); if (reason == null) return;
+  call('close.reopen', { company_id: S.cid, ym: S.cl.ym, reason: reason }).then(function (r) { toast('เปิดงวดแล้ว'); clShow(r); }).catch(failNew);
+}
+function yeRun(save) {
+  var p = { company_id: S.cid, to: v('ye_to'), re_account_id: $('ye_re') ? v('ye_re') : '' };
+  if (save) { if (!confirm('สร้างรายการปิดบัญชีสิ้นปีและ Post ทันที?')) return; p.save = true; p.post = true; }
+  call('close.year', p).then(function (r) {
+    if (r.journal) { toast('สร้างรายการปิดบัญชี ' + r.journal.doc_no + ' แล้ว'); }
+    var re = r.re ? r.re.id : '';
+    $('yeOut').innerHTML = '<p class="small">รอบบัญชี ' + thDate(r.from) + ' – ' + thDate(r.to) + ' · กำไร(ขาดทุน)สุทธิ <b>' + neg(r.net) + '</b>' + (r.exist ? ' · <b style="color:#127a3a">ปิดบัญชีแล้ว: ' + esc(r.exist) + '</b>' : '') + '</p>' +
+      '<div class="tw"><table class="t"><thead><tr><th>รหัส</th><th>บัญชี</th><th class="num">เดบิต</th><th class="num">เครดิต</th></tr></thead><tbody>' + r.lines.map(function (l) { return '<tr><td class="code">' + esc(l.code) + '</td><td>' + esc(l.name_th) + '</td><td class="num">' + (l.debit ? money(l.debit) : '') + '</td><td class="num">' + (l.credit ? money(l.credit) : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+      (r.exist || !r.lines.length ? '' : '<div class="bar"><label class="small">บัญชีกำไร(ขาดทุน)สะสม</label><select class="in" id="ye_re"><option value="">— เลือก —</option>' + r.candidates.map(function (a) { return '<option value="' + a.id + '"' + (a.id === re ? ' selected' : '') + '>' + esc(a.code + ' ' + a.name_th) + '</option>'; }).join('') + '</select>' + (can('journal.post') ? '<button class="btn" onclick="yeRun(1)">สร้างรายการปิดบัญชี + Post</button>' : '') + '</div>');
+  }).catch(failNew);
+}
+
+/* ---------- รายงานตรวจสอบ (Audit reports) ---------- */
+function auRep() {
+  var d = today();
+  openM('รายงานตรวจสอบ', '<div class="bar" style="margin-top:0"><label class="small">ตั้งแต่</label><input class="in" type="date" id="ar_f" value="' + d.slice(0, 8) + '01"><label class="small">ถึง</label><input class="in" type="date" id="ar_t" value="' + d + '"><button class="btn" onclick="auRepRun()">แสดง</button></div><div id="arOut"></div>', '<button class="btn ghost" onclick="closeM()">ปิด</button>', true);
+}
+function auRepRun() {
+  call('audit.report', { company_id: S.cid, from: v('ar_f'), to: v('ar_t') }).then(function (r) {
+    var tb = function (hd, rows) { return '<div class="tw"><table class="t"><thead><tr>' + hd.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + (rows.length ? rows.join('') : '<tr><td colspan="' + hd.length + '" class="small">ไม่มี</td></tr>') + '</tbody></table></div>'; };
+    var td = function (a) { return '<tr>' + a.map(function (x) { return '<td>' + esc(String(x == null ? '' : x)) + '</td>'; }).join('') + '</tr>'; };
+    $('arOut').innerHTML = '<p class="small">บันทึกทั้งหมด ' + r.total + ' รายการ · ร่างยังไม่ Post ในช่วงนี้ ' + r.drafts + ' รายการ</p>' +
+      '<b>ตามผู้ใช้</b>' + tb(['ผู้ใช้', 'จำนวน', 'ล่าสุด'], r.users.map(function (u) { return td([u.user, u.n, u.last.replace('T', ' ')]); })) +
+      '<b>รายการสำคัญ (ลบ/กลับรายการ/ปิด-เปิดงวด/กู้คืน)</b>' + tb(['เวลา', 'ผู้ใช้', 'การกระทำ', 'รายละเอียด'], r.sensitive.map(function (x) { return td([x.ts.replace('T', ' '), x.user, x.action, x.detail]); })) +
+      '<b>รายการกลับรายการ</b>' + tb(['เลขที่', 'วันที่', 'คำอธิบาย'], r.reversals.map(function (x) { return td([x.doc_no, x.doc_date, x.description]); })) +
+      '<b>Post ช้ากว่าวันที่เอกสารเกิน 30 วัน</b>' + tb(['เลขที่', 'วันที่เอกสาร', 'วันที่ Post', 'ผู้ Post'], r.late.map(function (x) { return td([x.doc_no, x.doc_date, x.posted_at, x.by]); })) +
+      '<b>สรุปตามการกระทำ</b>' + tb(['การกระทำ', 'จำนวน'], r.actions.map(function (x) { return td([x.action, x.n]); }));
+  }).catch(failNew);
 }
 function plHtml(r) {
   var L = {}; r.lines.forEach(function (l) { L[l.code] = l; });
