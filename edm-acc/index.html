@@ -981,6 +981,7 @@ function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getM
 function jtName(id) { var x = JT.filter(function (t) { return t[0] === id; })[0]; return x ? x[1] : id; }
 function money(v) { var n = Number(v) || 0; return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 function balTxt(v) { var n = Number(v) || 0; return n === 0 ? '0.00' : money(Math.abs(n)) + (n > 0 ? ' Dr' : ' Cr'); }
+function ssat(v) { var s = String(v || '').replace(/,/g, '').trim(); return s.charAt(0) === '-' ? -sat(s.slice(1)) : sat(s); }
 function sat(v) { var s = String(v || '').replace(/,/g, '').trim(); if (!s) return 0; if (!/^\d+(\.\d{1,2})?$/.test(s)) return NaN; return Math.round(Number(s) * 100); }
 function ensureCoa() {
   if (S.coa && S.coaCid === S.cid) return Promise.resolve(S.coa);
@@ -2036,12 +2037,16 @@ function pSales() {
   Promise.all([call('sales.defaults', { company_id: S.cid }), ensureTaxData(), ensureProds(), call('sales.items', { company_id: S.cid }), ensureWhs(), call('sales.people', { company_id: S.cid })]).then(function (x) { S.slDef = x[0]; S.slItems = x[3]; S.slPeople = x[5]; renderSales(); }).catch(fail);
 }
 function renderSales() {
-  var tab = S.sl.tab, ro = co().status !== 'ACTIVE', tabs = [['CASH', 'ขายสด'], ['CREDIT', 'ขายเชื่อ'], ['RECEIPT', 'รับชำระหนี้'], ['AR', 'ลูกหนี้คงค้าง'], ['REPORT', '📊 รายงานยอดขาย'], ['VAT', '🧾 ปิดภาษี ภ.พ.30']];
+  var tab = S.sl.tab, ro = co().status !== 'ACTIVE', tabs = [['QT', '📝 ใบเสนอราคา'], ['DO', '🚚 ใบส่งสินค้า'], ['CASH', 'ขายสด'], ['CREDIT', 'ขายเชื่อ'], ['ADJ', '↩️ ลด/เพิ่มหนี้'], ['RECEIPT', 'รับชำระหนี้'], ['AR', 'ลูกหนี้คงค้าง'], ['STMT', '📄 Statement'], ['CUST', '👥 ลูกค้า'], ['REPORT', '📊 รายงานยอดขาย'], ['VAT', '🧾 ปิดภาษี ภ.พ.30']];
   var btn = ro ? '' : tab === 'CASH' ? '<button class="btn ghost" onclick="impForm()">⬆ นำเข้าจาก Express</button> <button class="btn" onclick="saleForm(\'CASH\')">+ ขายสด</button>' : tab === 'CREDIT' ? '<button class="btn ghost" onclick="impForm()">⬆ นำเข้าจาก Express</button> <button class="btn" onclick="saleForm(\'CREDIT\')">+ ขายเชื่อ</button>' : tab === 'RECEIPT' ? '<button class="btn" onclick="rcForm()">+ รับชำระหนี้</button>' : '';
   $('main').innerHTML = head(t('sales'), esc(co().code + ' · ' + co().name_th) + ' · ออกเอกสารขายแล้วระบบลงบัญชีและภาษีขายให้อัตโนมัติ (ไป Post ที่เมนู Post รายการ)', btn) +
     '<div class="tabs">' + tabs.map(function (x) { return '<button class="' + (tab === x[0] ? 'on' : '') + '" onclick="S.sl.tab=\'' + x[0] + '\';renderSales()">' + x[1] + '</button>'; }).join('') + '</div>' +
     (!S.slDef.has_vat_out ? '<div class="note warn">ยังไม่มีบัญชีภาษีขาย – ขายแบบมี VAT ไม่ได้ ไปที่เมนูภาษีมูลค่าเพิ่ม → อัตราภาษี / ตั้งค่า → ตั้งค่าอัตโนมัติ</div>' : '') +
     '<div id="slOut"><div class="empty">กำลังโหลด...</div></div>';
+  if (tab === 'QT' || tab === 'DO') return bdList(tab);
+  if (tab === 'ADJ') return adjList('S');
+  if (tab === 'CUST') return ptList('C');
+  if (tab === 'STMT') return ensureTaxData().then(stmtPage);
   if (tab === 'REPORT') return slReport();
   if (tab === 'VAT') return vcPage();
   if (tab === 'RECEIPT') return rcList();
@@ -2213,11 +2218,13 @@ function slSave(print, force) {
   var p = { company_id: S.cid, id: e.id, kind: e.kind, sale_type: v('sl_type'), doc_no: v('sl_no'), doc_date: v('sl_date'), due_date: e.kind === 'CREDIT' ? v('sl_due') : '', customer_name: v('sl_name'), customer_tax_id: v('sl_tid'), customer_branch: v('sl_br'), customer_address: v('sl_addr'),
     vat_mode: v('sl_vm'), vat_rate: v('sl_rate'), bill_discount: v('sl_bd'), wht_amount: $('sl_hw') && $('sl_hw').checked ? String(v('sl_wa')).replace(/,/g, '') : '', wht_rate: $('sl_hw') && $('sl_hw').checked ? v('sl_wr') : '', wht_base: $('sl_hw') && $('sl_hw').checked ? (String(v('sl_wb')).replace(/,/g, '') || '') : '', wht_cert_no: $('sl_hw') && $('sl_hw').checked ? v('sl_wn') : '', warehouse_id: $('sl_wh') ? v('sl_wh') : (e.wh || 'MAIN'), salesperson_code: v('sl_spc'), salesperson_name: spName(), cash_account_id: e.kind === 'CASH' ? v('sl_cash') : '', ar_account_id: e.kind === 'CREDIT' ? v('sl_ar') : '', note: v('sl_note'),
     lines: e.lines.filter(function (l) { return l.description || l.unit_price; }).map(function (l) { return { description: l.description, qty: l.qty || '1', unit_price: l.unit_price, discount: l.discount || '', account_id: l.account_id, product_id: l.product_id || '' }; }) };
+  p.branch_id = $('sl_bch') ? v('sl_bch') : ''; if (S.fromDoc && !e.id) p.from_doc_id = S.fromDoc.id; if (S.slOver) p.over_limit = true;
   call('sales.save', p).then(function (r) {
+    S.slOver = 0; S.fromDoc = null; S.custs = null;
     S.parties = null; S.prodsCid = ''; ensureProds().catch(function () {}); call('sales.people', { company_id: S.cid }).then(function (h) { S.slPeople = h; }).catch(function () {}); call('sales.items', { company_id: S.cid }).then(function (h) { S.slItems = h; }).catch(function () {}); closeM(); if (r.stock_warning && r.stock_warning.length) toast('⚠ ขายเกินสต็อก สต็อกติดลบ: ' + r.stock_warning.join(', ') + ' — บันทึกรับสินค้าเข้าเพื่อให้ต้นทุนถูกต้อง', 'err'); toast('บันทึก ' + r.doc_no + ' แล้ว · ลงบัญชีและภาษีขายให้อัตโนมัติ', 'ok'); S.parties = null; S.slRows[r.id] = r;
     if (pr) pr.show(r.doc_no, saleDocHtml(r), SALE_CSS);
     renderSales();
-  }).catch(function (er) { if (pr) pr.close(); fail(er); });
+  }).catch(function (er) { if (pr) pr.close(); if (/เกินวงเงิน/.test(er.message || '') && can('sales.post')) { confirmM('เกินวงเงินเครดิต', er.message + '\n\nอนุมัติขายเกินวงเงิน? (บันทึกในประวัติการตรวจสอบ)', 'อนุมัติเกินวงเงิน', function () { S.slOver = 1; slSave(print, 1); }); return; } fail(er); });
 }
 function saleDel(id) {
   var r = S.slRows[id];
@@ -3190,11 +3197,15 @@ function pPurch() {
   Promise.all([call('purch.defaults', { company_id: S.cid }), ensureTaxData(), ensureProds(), ensureWhs()]).then(function (x) { S.puDef = x[0]; renderPurch(); }).catch(fail);
 }
 function renderPurch() {
-  var tab = S.pu.tab, ro = co().status !== 'ACTIVE', tabs = [['STOCK', 'ซื้อเข้าสต็อก'], ['EXPENSE', 'ซื้อ / ค่าใช้จ่าย'], ['PAY', 'จ่ายชำระเจ้าหนี้'], ['AP', 'เจ้าหนี้คงค้าง']];
+  var tab = S.pu.tab, ro = co().status !== 'ACTIVE', tabs = [['PR', '📝 ใบขอซื้อ'], ['PO', '📦 ใบสั่งซื้อ'], ['GR', '📥 ใบรับสินค้า'], ['STOCK', 'ซื้อเข้าสต็อก'], ['EXPENSE', 'ซื้อ / ค่าใช้จ่าย'], ['BR', '🗂 ใบรับวางบิล'], ['PADJ', '↩️ ลด/เพิ่มหนี้'], ['PAY', 'จ่ายชำระเจ้าหนี้'], ['AP', 'เจ้าหนี้คงค้าง'], ['AGE', '⏳ อายุเจ้าหนี้'], ['SUP', '👥 ผู้ขาย']];
   var btn = ro ? '' : tab === 'STOCK' ? '<button class="btn" onclick="puForm(\'STOCK\')">+ ซื้อสินค้าเข้าสต็อก</button>' : tab === 'EXPENSE' ? '<button class="btn" onclick="puForm(\'EXPENSE\')">+ บันทึกซื้อ / ค่าใช้จ่าย</button>' : tab === 'PAY' ? '<button class="btn" onclick="ppForm()">+ จ่ายชำระเจ้าหนี้</button>' : '';
   $('main').innerHTML = head(t('purch'), esc(co().code + ' · ' + co().name_th) + ' · บันทึกบิลซื้อแล้วระบบลงบัญชี ภาษีซื้อ หัก ณ ที่จ่าย และรับสินค้าเข้าสต็อกให้อัตโนมัติ', btn) +
     '<div class="tabs">' + tabs.map(function (x) { return '<button class="' + (tab === x[0] ? 'on' : '') + '" onclick="S.pu.tab=\'' + x[0] + '\';renderPurch()">' + x[1] + '</button>'; }).join('') + '</div>' +
     (!S.puDef.has_vat_in ? '<div class="note warn">ยังไม่มีบัญชีภาษีซื้อ – ไปที่เมนูภาษีมูลค่าเพิ่ม → ตั้งค่าอัตโนมัติ</div>' : '') + '<div id="puOut"><div class="empty">กำลังโหลด...</div></div>';
+  if (BDK[tab]) return bdList(tab);
+  if (tab === 'PADJ') return adjList('P');
+  if (tab === 'SUP') return ptList('V');
+  if (tab === 'AGE') return agingAp();
   if (tab === 'PAY') return ppList();
   if (tab === 'AP') return apList();
   call('purch.list', { company_id: S.cid, kind: tab }).then(function (rows) {
@@ -3263,11 +3274,217 @@ function puForm(kind, id, copy) {
     b.disabled = true;
     call('purch.save', { company_id: S.cid, id: S.puEdit.id, kind: kind, pay_type: pt, doc_date: v('pu_date'), due_date: v('pu_due'), ap_account_id: v('pu_ap'), pay_account_id: v('pu_pay'), warehouse_id: $('pu_wh') ? v('pu_wh') : 'MAIN',
       party_name: v('pu_name'), party_tax_id: v('pu_tid'), party_branch: v('pu_br'), party_address: v('pu_addr'), inv_no: v('pu_inv'), inv_date: v('pu_invd'), tax_month: v('pu_tm'), vat_mode: v('pu_vm'), vat_rate: v('pu_vr'), vat_claim: $('pu_nc').checked ? 'N' : 'Y', bill_discount: String(v('pu_bd')).replace(/,/g, '').trim(),
-      wht_pnd: hw ? v('pu_pnd') : '', wht_code: hw ? v('pu_wc') : '', wht_rate: hw ? v('pu_wr') : '', wht_amount: hw ? String(v('pu_wa')).replace(/,/g, '') : '', note: v('pu_note'), lines: lines })
+      branch_id: $('pu_bch') ? v('pu_bch') : '', from_doc_id: S.fromDoc && !S.puEdit.id ? S.fromDoc.id : '', wht_pnd: hw ? v('pu_pnd') : '', wht_code: hw ? v('pu_wc') : '', wht_rate: hw ? v('pu_wr') : '', wht_amount: hw ? String(v('pu_wa')).replace(/,/g, '') : '', note: v('pu_note'), lines: lines })
       .then(function (r) { closeM(); toast('บันทึก ' + r.doc_no + ' แล้ว · ลงบัญชีและภาษีซื้อให้อัตโนมัติ' + (kind === 'STOCK' ? ' · รับสินค้าเข้าสต็อกแล้ว' : ''), 'ok'); S.parties = null; S.prodsCid = ''; ensureProds().catch(function () {}); ensureTaxData().catch(function () {}); renderPurch(); })
       .catch(function (e) { b.disabled = false; fail(e); });
   };
 }
+/* ---------- Phase 3 ระบบขาย & ซื้อ: เอกสารไม่ลงบัญชี · ลด/เพิ่มหนี้ · ทะเบียนลูกค้า/ผู้ขาย · Statement · อายุเจ้าหนี้ · แยกสาขา ---------- */
+var BDK = { QT: ['S', 'ใบเสนอราคา', 'ยืนราคาถึง'], DO: ['S', 'ใบส่งสินค้า', 'วันที่ส่ง'], PR: ['P', 'ใบขอซื้อ', 'ต้องการภายใน'], PO: ['P', 'ใบสั่งซื้อ', 'กำหนดส่ง'], GR: ['P', 'ใบรับสินค้า', ''], BR: ['P', 'ใบรับวางบิล', 'นัดชำระ'] };
+var BD_NEXT = { QT: [['DO', '🚚 ทำใบส่งสินค้า'], ['SALE', '🧾 ออกใบกำกับ/ขาย']], DO: [['SALE', '🧾 ออกใบกำกับ/ขาย']], PR: [['PO', '📦 ทำใบสั่งซื้อ']], PO: [['GR', '📥 ทำใบรับสินค้า'], ['PURCH', '🧾 บันทึกบิลซื้อ']], GR: [['PURCH', '🧾 บันทึกบิลซื้อ']], BR: [] };
+var BD_ST = { OPEN: ['รอดำเนินการ', '#9a5b00', '#fff4e5'], APPROVED: ['อนุมัติแล้ว', '#1f5fa8', '#e8f1fb'], DONE: ['ดำเนินการต่อแล้ว', '#127a3a', '#e7f6ec'], CANCELLED: ['ยกเลิก', '#888', '#f1f1f1'] };
+function bdTag(s) { var x = BD_ST[s] || [s, '#555', '#eee']; return '<span class="tag" style="background:' + x[2] + ';color:' + x[1] + ';padding:2px 8px;border-radius:10px;white-space:nowrap">' + x[0] + '</span>'; }
+function bdApi(k) { return BDK[k][0] === 'S' ? 'sdoc' : 'pdoc'; }
+function bdOut() { return BDK[S.bdK][0] === 'S' ? 'slOut' : 'puOut'; }
+function bdList(k) {
+  S.bdK = k; var ro = co().status !== 'ACTIVE';
+  call(bdApi(k) + '.list', { company_id: S.cid, kind: k }).then(function (rows) {
+    S.bdRows = {}; rows.forEach(function (r) { S.bdRows[r.id] = r; });
+    $(bdOut()).innerHTML = '<div class="bar" style="margin-top:0"><span class="small" style="flex:1">' + BDK[k][1] + ' ไม่ลงบัญชี · ดึงไปทำเอกสารขั้นต่อไปได้ด้วยปุ่ม ▶</span>' + (ro ? '' : '<button class="btn" onclick="bdForm(\'' + k + '\')">+ ' + BDK[k][1] + '</button>') + '</div>' +
+      (!rows.length ? '<div class="card empty">ยังไม่มี' + BDK[k][1] + '</div>' : '<div class="card tw"><table class="t"><thead><tr><th>เลขที่</th><th>วันที่</th><th>' + (BDK[k][0] === 'S' ? 'ลูกค้า' : 'ผู้ขาย') + '</th><th class="num">ยอดรวม</th><th>สถานะ</th><th>อ้างอิง</th><th></th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        var op = r.status === 'OPEN' || r.status === 'APPROVED', nx = op && !ro ? (BD_NEXT[k] || []).filter(function (n) { return !(k === 'PO' && r.status !== 'APPROVED' && false); }).map(function (n) { return '<button class="btn sm" onclick="bdNext(\'' + r.id + '\',\'' + n[0] + '\')">▶ ' + n[1] + '</button>'; }).join(' ') : '';
+        return '<tr><td class="code">' + esc(r.doc_no) + '</td><td>' + esc(r.doc_date) + '</td><td>' + esc(r.party_name || '-') + '</td><td class="num">' + money(r.total) + '</td><td>' + bdTag(r.status) + '</td><td class="small">' + (r.ref_no ? '← ' + esc(r.ref_no) : '') + (r.conv_no ? ' → ' + esc(r.conv_no) : '') + '</td><td style="white-space:nowrap;text-align:right">' + nx +
+          ' <button class="btn ghost sm" onclick="bdPrint(\'' + r.id + '\')">🖨</button>' + (ro ? '' : (r.status === 'OPEN' ? ' <button class="btn ghost sm" onclick="bdForm(\'' + k + '\',\'' + r.id + '\')">แก้ไข</button>' : '') + (r.status === 'OPEN' && (k === 'PR' || k === 'PO') && can('purchase.post') ? ' <button class="btn ghost sm" onclick="bdSt(\'' + r.id + '\',\'APPROVED\')">✔ อนุมัติ</button>' : '') +
+          (op ? ' <button class="btn ghost sm" onclick="bdSt(\'' + r.id + '\',\'CANCELLED\')">ยกเลิก</button>' : '') + (r.status === 'OPEN' || r.status === 'CANCELLED' ? ' <button class="btn ghost sm" onclick="bdDel(\'' + r.id + '\')">ลบ</button>' : '')) + '</td></tr>';
+      }).join('') + '</tbody></table></div>');
+  }).catch(failNew);
+}
+function bdForm(k, id, from) {
+  var x = id ? S.bdRows[id] : from || { doc_date: today(), due_date: '', party_name: '', party_tax_id: '', party_branch: '', party_address: '', vat_mode: 'EXCL', vat_rate: '7', lines: [] }, sd = BDK[k][0] === 'S';
+  S.bdE = { k: k, id: id || '', ref: from ? from.ref_id : '', lines: (x.lines && x.lines.length ? x.lines : [{}, {}, {}]).map(function (l) { return { description: l.description || '', qty: l.qty || '', unit: l.unit || '', unit_price: l.unit_price ? money(l.unit_price) : '', discount: l.discount || '', product_id: l.product_id || '' }; }) };
+  var bs = S.bchs || [];
+  openM((id ? 'แก้ไข' : '') + BDK[k][1] + (from && from.ref_no ? ' (จาก ' + from.ref_no + ')' : ''), partyDl(sd ? 'C' : 'V') +
+    '<div class="f3"><div class="fr"><label class="f">เลขที่</label><input class="in code" id="bd_no" value="' + (id ? esc(x.doc_no) : '') + '" placeholder="รันอัตโนมัติ"></div><div class="fr"><label class="f req">วันที่</label><input class="in" type="date" id="bd_date" value="' + (id ? x.doc_date : today()) + '"></div>' +
+    (BDK[k][2] ? '<div class="fr"><label class="f">' + BDK[k][2] + '</label><input class="in" type="date" id="bd_due" value="' + (x.due_date || '') + '"></div>' : '<input type="hidden" id="bd_due" value="">') + '</div>' +
+    (bs.length > 1 ? '<div class="fr"><label class="f">สาขา</label><select class="in" id="bd_bch">' + bs.map(function (b) { return '<option value="' + b.id + '"' + (b.id === x.branch_id ? ' selected' : '') + '>' + esc(b.code + ' ' + b.name) + '</option>'; }).join('') + '</select></div>' : '') +
+    '<div class="sec">' + (sd ? 'ลูกค้า' : 'ผู้ขาย') + (k === 'PR' ? ' (ถ้ามี)' : '') + '</div><div class="f2"><div class="fr"><label class="f">ชื่อ</label><input class="in" id="bd_name" list="partyList" value="' + esc(x.party_name) + '" onchange="bdParty()"></div><div class="fr"><label class="f">เลขประจำตัวผู้เสียภาษี</label><input class="in" id="bd_tid" value="' + esc(x.party_tax_id || '') + '"></div></div>' +
+    '<div class="f2"><div class="fr"><label class="f">สาขา</label><input class="in" id="bd_br" value="' + esc(x.party_branch || '') + '" placeholder="สำนักงานใหญ่ / 00001"></div><div class="fr"><label class="f">ผู้ติดต่อ</label><input class="in" id="bd_ct" value="' + esc(x.contact || '') + '"></div></div>' +
+    '<div class="fr"><label class="f">ที่อยู่</label><input class="in" id="bd_addr" value="' + esc(x.party_address || '') + '"></div>' +
+    '<div class="sec">รายการ</div><div id="bdL"></div><button class="btn ghost sm" onclick="bdSync();S.bdE.lines.push({});bdLines()">+ เพิ่มบรรทัด</button>' +
+    '<div class="f3" style="margin-top:10px"><div class="fr"><label class="f">VAT</label><select class="in" id="bd_vm" onchange="bdTot()"><option value="EXCL">ราคาไม่รวม VAT</option><option value="INCL">ราคารวม VAT</option><option value="NONE">ไม่มี VAT</option></select></div><div class="fr"><label class="f">อัตรา %</label><input class="in" id="bd_vr" value="' + esc(x.vat_rate || '7') + '" oninput="bdTot()"></div><div class="fr"><label class="f">ส่วนลดท้ายบิล</label><input class="in" id="bd_bd" value="' + esc(x.bill_discount || '') + '" placeholder="100 หรือ 5%" oninput="bdTot()"></div></div>' +
+    '<div id="bdT" class="small" style="text-align:right;font-size:14px"></div><div class="fr"><label class="f">หมายเหตุ / เงื่อนไข</label><textarea class="in" id="bd_note" rows="2">' + esc(x.note || '') + '</textarea></div>',
+    '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" onclick="bdSave()">บันทึก</button>', true);
+  $('bd_vm').value = x.vat_mode || 'EXCL'; bdLines();
+}
+function bdParty() { var n = v('bd_name'), p = (S.parties || []).filter(function (q) { return q.name === n; })[0]; if (p) { $('bd_tid').value = p.tax_id || ''; $('bd_br').value = p.branch || ''; $('bd_addr').value = p.address || ''; } }
+function bdLines() {
+  $('bdL').innerHTML = '<div class="tw"><table class="t"><thead><tr><th>#</th><th style="min-width:200px">รายละเอียด</th><th>จำนวน</th><th>หน่วย</th><th>ราคา/หน่วย</th><th>ส่วนลด</th><th></th></tr></thead><tbody>' + S.bdE.lines.map(function (l, i) {
+    var f = function (k, w, ph) { return '<input class="in" style="width:' + w + '" data-bl="' + i + '" data-k="' + k + '" value="' + esc(l[k] || '') + '"' + (ph ? ' placeholder="' + ph + '"' : '') + ' oninput="bdSync();bdTot()">'; };
+    return '<tr><td>' + (i + 1) + '</td><td>' + f('description', '100%') + '</td><td>' + f('qty', '70px', '1') + '</td><td>' + f('unit', '60px') + '</td><td>' + f('unit_price', '100px') + '</td><td>' + f('discount', '70px') + '</td><td><button class="btn ghost sm" onclick="bdSync();S.bdE.lines.splice(' + i + ',1);bdLines()">✕</button></td></tr>';
+  }).join('') + '</tbody></table></div>'; bdTot();
+}
+function bdSync() { document.querySelectorAll('[data-bl]').forEach(function (el) { var l = S.bdE.lines[Number(el.getAttribute('data-bl'))]; if (l) l[el.getAttribute('data-k')] = el.value; }); }
+function bdTot() {
+  var s = 0; S.bdE.lines.forEach(function (l) { var q = Number(String(l.qty || (l.description ? 1 : 0)).replace(/,/g, '')) || 0, p = Number(String(l.unit_price || 0).replace(/,/g, '')) || 0, g = q * p, d = String(l.discount || '').trim(); g -= /%$/.test(d) ? g * (Number(d.slice(0, -1)) || 0) / 100 : Number(d.replace(/,/g, '')) || 0; s += g; });
+  var bd = String(v('bd_bd') || '').trim(); s -= /%$/.test(bd) ? s * (Number(bd.slice(0, -1)) || 0) / 100 : Number(bd.replace(/,/g, '')) || 0;
+  var vm = v('bd_vm'), r = vm === 'NONE' ? 0 : Number(v('bd_vr')) || 0, vat = vm === 'INCL' ? s * r / (100 + r) : s * r / 100, base = vm === 'INCL' ? s - vat : s;
+  $('bdT').innerHTML = 'มูลค่า ' + money(base) + (r ? ' · VAT ' + money(vat) : '') + ' · <b>รวม ' + money(base + vat) + '</b>';
+}
+function bdSave() {
+  bdSync(); var e = S.bdE;
+  call(bdApi(e.k) + '.save', { company_id: S.cid, id: e.id, kind: e.k, ref_id: e.ref, doc_no: v('bd_no'), doc_date: v('bd_date'), due_date: v('bd_due'), branch_id: $('bd_bch') ? v('bd_bch') : '', party_name: v('bd_name'), party_tax_id: v('bd_tid'), party_branch: v('bd_br'), party_address: v('bd_addr'), contact: v('bd_ct'),
+    vat_mode: v('bd_vm'), vat_rate: v('bd_vr'), bill_discount: v('bd_bd'), note: v('bd_note'), lines: e.lines.filter(function (l) { return l.description || l.unit_price; }).map(function (l) { return { description: l.description, qty: String(l.qty || '1').replace(/,/g, ''), unit: l.unit, unit_price: String(l.unit_price || '0').replace(/,/g, ''), discount: l.discount, product_id: l.product_id }; }) })
+    .then(function (r) { closeM(); toast('บันทึก ' + r.doc_no + ' แล้ว', 'ok'); S.parties = null; ensureTaxData().catch(function () {}); if (BDK[e.k][0] === 'S') { S.sl.tab = e.k; renderSales(); } else { S.pu.tab = e.k; renderPurch(); } }).catch(failNew);
+}
+function bdSt(id, st) {
+  var r = S.bdRows[id], reason = '';
+  if (st === 'CANCELLED') { reason = prompt('เหตุผลการยกเลิก ' + r.doc_no); if (!reason) return; } else if (!confirm('อนุมัติ ' + r.doc_no + ' ?')) return;
+  call(bdApi(r.kind) + '.status', { company_id: S.cid, id: id, status: st, reason: reason }).then(function () { toast('เรียบร้อย', 'ok'); bdList(r.kind); }).catch(failNew);
+}
+function bdDel(id) { var r = S.bdRows[id]; confirmM('ลบเอกสาร', 'ลบ ' + r.doc_no + ' ' + (r.party_name || ''), 'ลบ', function () { call(bdApi(r.kind) + '.delete', { company_id: S.cid, id: id }).then(function () { bdList(r.kind); }).catch(failNew); }, true); }
+function bdNext(id, to) {
+  var r = S.bdRows[id];
+  if (BDK[to]) return bdForm(to, null, { ref_id: r.id, ref_no: r.doc_no, doc_date: today(), due_date: '', party_name: r.party_name, party_tax_id: r.party_tax_id, party_branch: r.party_branch, party_address: r.party_address, contact: r.contact, branch_id: r.branch_id, vat_mode: r.vat_mode, vat_rate: r.vat_rate, bill_discount: r.bill_discount, lines: r.lines, note: '' });
+  S.fromDoc = { id: r.id, no: r.doc_no, branch_id: r.branch_id };
+  if (to === 'SALE') {
+    var d = S.slDef, fid = '_bd' + r.id; S.slRows = S.slRows || {};
+    S.slRows[fid] = { customer_name: r.party_name, customer_tax_id: r.party_tax_id, customer_branch: r.party_branch, customer_address: r.party_address, vat_mode: r.vat_mode, vat_rate: r.vat_rate, bill_discount: r.bill_discount, sale_type: 'GOODS', warehouse_id: 'MAIN', cash_account_id: (d.cash[0] || {}).id, ar_account_id: d.ar_default, note: 'อ้างอิง ' + r.doc_no,
+      lines: r.lines.map(function (l) { var pr = l.product_id && (S.prods || []).filter(function (q) { return q.id === l.product_id; })[0]; return { description: l.description, qty: l.qty, unit_price: l.unit_price, discount: l.discount, product_id: l.product_id, account_id: (pr && pr.sales_account_id) || d.revenue_default }; }) };
+    return saleForm('CREDIT', fid, true);
+  }
+  var pd = S.puDef, pid = '_bd' + r.id, st = r.lines.some(function (l) { return l.product_id; });
+  S.puRows = S.puRows || {};
+  S.puRows[pid] = { pay_type: 'CREDIT', party_name: r.party_name, party_tax_id: r.party_tax_id, party_branch: r.party_branch || 'สำนักงานใหญ่', party_address: r.party_address, vat_mode: r.vat_mode, vat_rate: r.vat_rate, vat_claim: 'Y', bill_discount: r.bill_discount, ap_account_id: pd.ap_default, note: 'อ้างอิง ' + r.doc_no,
+    lines: r.lines.map(function (l) { return { description: l.description, qty: l.qty, unit_price: l.unit_price, discount: l.discount, product_id: l.product_id, account_id: (pd.expense[0] || {}).id }; }) };
+  puForm(st ? 'STOCK' : 'EXPENSE', pid, true);
+}
+var BD_CSS = '.bd{font-size:12.5px}.bd h2{margin:0;font-size:20px}.bd table.l{width:100%;border-collapse:collapse;margin-top:10px}.bd table.l th,.bd table.l td{border:1px solid #bbb;padding:5px 6px}.bd table.l th{background:#f0f3f7}.bd .r{text-align:right}.bd .sg{display:flex;gap:30px;margin-top:40px}.bd .sg div{flex:1;text-align:center;border-top:1px solid #333;padding-top:6px}';
+function bdDocHtml(title, no, date, extra, party, lines, sums, note, signs) {
+  var c = co();
+  return '<div class="bd"><div style="display:flex;justify-content:space-between;gap:20px"><div><b style="font-size:15px">' + esc(c.name_th) + '</b><br>' + esc(c.address || '') + (c.tax_id ? '<br>เลขประจำตัวผู้เสียภาษี ' + esc(c.tax_id) + ' ' + esc(c.branch || '') : '') + '</div><div style="text-align:right"><h2>' + title + '</h2>เลขที่ <b>' + esc(no) + '</b><br>วันที่ ' + thDate(date) + extra + '</div></div>' +
+    '<div style="margin-top:10px;border:1px solid #bbb;padding:8px">' + party + '</div><table class="l"><thead><tr><th>#</th><th>รายละเอียด</th><th class="r">จำนวน</th><th class="r">ราคา/หน่วย</th><th class="r">ส่วนลด</th><th class="r">จำนวนเงิน</th></tr></thead><tbody>' + lines + '</tbody></table>' +
+    '<table style="margin-left:auto;margin-top:8px">' + sums + '</table>' + (note ? '<div style="margin-top:8px">หมายเหตุ: ' + esc(note) + '</div>' : '') + '<div class="sg">' + signs.map(function (s) { return '<div>' + s + '</div>'; }).join('') + '</div></div>';
+}
+function bdPrint(id) {
+  var r = S.bdRows[id], sd = BDK[r.kind][0] === 'S';
+  var lines = r.lines.map(function (l, i) { return '<tr><td>' + (i + 1) + '</td><td>' + esc(l.description) + '</td><td class="r">' + esc(l.qty) + ' ' + esc(l.unit || '') + '</td><td class="r">' + money(l.unit_price) + '</td><td class="r">' + esc(l.discount || '') + '</td><td class="r">' + money(l.amount) + '</td></tr>'; }).join('');
+  var sums = '<tr><td>มูลค่าก่อน VAT</td><td class="r">' + money(r.subtotal) + '</td></tr>' + (Number(r.vat_amount) ? '<tr><td>VAT ' + esc(r.vat_rate) + '%</td><td class="r">' + money(r.vat_amount) + '</td></tr>' : '') + '<tr><td><b>รวมทั้งสิ้น</b></td><td class="r"><b>' + money(r.total) + '</b></td></tr>';
+  var party = (sd ? 'ลูกค้า: ' : 'ผู้ขาย: ') + '<b>' + esc(r.party_name || '-') + '</b>' + (r.party_tax_id ? ' · เลขประจำตัวผู้เสียภาษี ' + esc(r.party_tax_id) + ' ' + esc(r.party_branch || '') : '') + (r.party_address ? '<br>' + esc(r.party_address) : '') + (r.contact ? '<br>ผู้ติดต่อ ' + esc(r.contact) : '');
+  var signs = { QT: ['ผู้เสนอราคา', 'ผู้อนุมัติสั่งซื้อ (ลูกค้า)'], DO: ['ผู้ส่งสินค้า', 'ผู้รับสินค้า'], PR: ['ผู้ขอซื้อ', 'ผู้อนุมัติ'], PO: ['ผู้สั่งซื้อ', 'ผู้อนุมัติ'], GR: ['ผู้ส่งสินค้า', 'ผู้ตรวจรับ'], BR: ['ผู้วางบิล', 'ผู้รับวางบิล'] }[r.kind];
+  printer().show(r.doc_no, bdDocHtml(BDK[r.kind][1], r.doc_no, r.doc_date, (r.due_date && BDK[r.kind][2] ? '<br>' + BDK[r.kind][2] + ' ' + thDate(r.due_date) : '') + (r.ref_no ? '<br>อ้างอิง ' + esc(r.ref_no) : '') + (r.approved_by ? '<br>อนุมัติโดย ' + esc(r.approved_by) : ''), party, lines, sums, r.note, signs), BD_CSS);
+}
+
+/* ใบลดหนี้ / ใบเพิ่มหนี้ */
+function adjList(side) {
+  var api = side === 'S' ? 'sadj' : 'padj', out = side === 'S' ? 'slOut' : 'puOut', ro = co().status !== 'ACTIVE';
+  call(api + '.list', { company_id: S.cid }).then(function (rows) {
+    S.adjRows = {}; rows.forEach(function (r) { S.adjRows[r.id] = r; });
+    $(out).innerHTML = '<div class="bar" style="margin-top:0"><span class="small" style="flex:1">' + (side === 'S' ? 'ออกให้ลูกค้า อ้างถึงเอกสารขายที่ Post แล้ว · ลงบัญชีและภาษีขายให้อัตโนมัติ (ลดหนี้ = ภาษีขายติดลบ)' : 'บันทึกใบลด/เพิ่มหนี้ที่ผู้ขายออกให้ อ้างถึงบิลซื้อที่ Post แล้ว') + '</span>' +
+      (ro ? '' : '<button class="btn ghost" onclick="adjForm(\'' + side + '\',\'DN\')">+ ใบเพิ่มหนี้</button> <button class="btn" onclick="adjForm(\'' + side + '\',\'CN\')">+ ใบลดหนี้</button>') + '</div>' +
+      (!rows.length ? '<div class="card empty">ยังไม่มีใบลดหนี้/เพิ่มหนี้</div>' : '<div class="card tw"><table class="t"><thead><tr><th>เลขที่</th><th>วันที่</th><th>ประเภท</th><th>' + (side === 'S' ? 'ลูกค้า' : 'ผู้ขาย') + '</th><th>อ้างถึง</th><th>เหตุผล</th><th class="num">ยอดรวม</th><th>สถานะ</th><th></th></tr></thead><tbody>' +
+      rows.map(function (r) { return '<tr><td class="code">' + esc(r.doc_no) + (r.inv_no ? '<div class="small">' + esc(r.inv_no) + '</div>' : '') + '</td><td>' + esc(r.doc_date) + '</td><td>' + (r.kind === 'CN' ? 'ลดหนี้' : 'เพิ่มหนี้') + '</td><td>' + esc(r.customer_name || r.party_name) + '</td><td>' + esc(r.sale_no || r.purch_inv_no || '') + '</td><td class="small">' + esc(r.reason) + '</td><td class="num">' + money(r.total) + '</td><td>' + (r.journal_status === 'POSTED' ? 'Post แล้ว' : r.journal_status === 'REVERSED' ? 'กลับรายการ' : 'ร่าง') + '</td><td style="white-space:nowrap">' +
+        (side === 'S' ? '<button class="btn ghost sm" onclick="adjPrint(\'' + r.id + '\')">🖨</button>' : '') + (!ro && r.journal_status === 'DRAFT' ? ' <button class="btn ghost sm" onclick="adjDel(\'' + side + '\',\'' + r.id + '\')">ลบ</button>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>');
+  }).catch(failNew);
+}
+function adjForm(side, k) {
+  var api = side === 'S' ? 'sales.list' : 'purch.list';
+  call(api, { company_id: S.cid }).then(function (rows) {
+    var docs = rows.filter(function (r) { return r.journal_status === 'POSTED'; }); S.adjSrc = {}; docs.forEach(function (r) { S.adjSrc[r.id] = r; });
+    if (!docs.length) return toast('ยังไม่มีเอกสาร' + (side === 'S' ? 'ขาย' : 'ซื้อ') + 'ที่ Post แล้ว', 'warn');
+    var accs = side === 'S' ? S.slDef.revenue : S.puDef.expense, T = (k === 'CN' ? 'ใบลดหนี้' : 'ใบเพิ่มหนี้') + (side === 'S' ? '' : 'ซื้อ (ผู้ขายออกให้)');
+    openM(T, '<div class="fr"><label class="f req">อ้างถึง' + (side === 'S' ? 'ใบกำกับภาษี/ใบแจ้งหนี้' : 'บิลซื้อ') + '</label><select class="in" id="aj_src" onchange="adjSrc()"><option value="">— เลือก —</option>' + docs.map(function (r) { return '<option value="' + r.id + '">' + esc((r.doc_no || '') + (r.inv_no ? ' (' + r.inv_no + ')' : '') + ' · ' + r.doc_date + ' · ' + (r.customer_name || r.party_name) + ' · ' + money(r.total) + (Number(r.balance) ? ' ค้าง ' + money(r.balance) : '')) + '</option>'; }).join('') + '</select></div><div id="aj_info" class="small"></div>' +
+      '<div class="f3"><div class="fr"><label class="f req">วันที่</label><input class="in" type="date" id="aj_date" value="' + today() + '"></div>' + (side === 'P' ? '<div class="fr"><label class="f">เลขที่ใบ' + (k === 'CN' ? 'ลด' : 'เพิ่ม') + 'หนี้ของผู้ขาย</label><input class="in" id="aj_inv"></div>' : '') + '<div class="fr"><label class="f req">บัญชี</label><select class="in" id="aj_acc"><option value="">ตามเอกสารเดิม</option>' + accs.map(function (a) { return '<option value="' + a.id + '">' + esc(a.label) + '</option>'; }).join('') + '</select></div></div>' +
+      '<div class="fr"><label class="f req">เหตุผล</label><input class="in" id="aj_rs" placeholder="' + (k === 'CN' ? 'เช่น รับคืนสินค้าชำรุด / ลดราคา / คิดราคาสูงเกิน' : 'เช่น คิดราคาต่ำไป / ส่งสินค้าเพิ่ม') + '"></div>' +
+      '<div class="sec">รายการ (จำนวนเงินตามรูปแบบ VAT ของเอกสารเดิม)</div>' + [0, 1, 2].map(function (i) { return '<div class="f2"><div class="fr"><input class="in" id="aj_d' + i + '" placeholder="รายละเอียด"></div><div class="fr"><input class="in" id="aj_a' + i + '" placeholder="จำนวนเงิน"></div></div>'; }).join('') +
+      ((side === 'S' ? can('sales.post') : can('purchase.post')) ? '<label class="small"><input type="checkbox" id="aj_post" checked> Post ทันที</label>' : '') +
+      (side === 'P' ? '<p class="small">คืนสินค้าที่ผูกสต็อก: ทำใบปรับปรุงสต็อกแยก (ระบบนี้ลดยอดเงินและภาษีซื้อเท่านั้น)</p>' : ''),
+      '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" onclick="adjSave(\'' + side + '\',\'' + k + '\')">บันทึก</button>', true);
+  }).catch(failNew);
+}
+function adjSrc() { var r = S.adjSrc[v('aj_src')]; $('aj_info').innerHTML = r ? 'VAT ' + esc(r.vat_mode) + ' ' + esc(r.vat_rate) + '% · ยอดเดิม ' + money(r.total) + (r.balance != null ? ' · ค้าง ' + money(r.balance) : '') : ''; }
+function adjSave(side, k) {
+  var lines = [0, 1, 2].map(function (i) { return { description: v('aj_d' + i), amount: String(v('aj_a' + i)).replace(/,/g, '') }; }).filter(function (l) { return l.description || l.amount; });
+  var p = { company_id: S.cid, kind: k, doc_date: v('aj_date'), reason: v('aj_rs'), account_id: v('aj_acc'), lines: lines, post: !!($('aj_post') && $('aj_post').checked) };
+  if (side === 'S') p.sale_id = v('aj_src'); else { p.purch_id = v('aj_src'); p.inv_no = v('aj_inv'); }
+  call(side === 'S' ? 'sadj.save' : 'padj.save', p).then(function (r) { closeM(); toast('บันทึก ' + r.doc_no + ' แล้ว', 'ok'); adjList(side); }).catch(failNew);
+}
+function adjDel(side, id) { var r = S.adjRows[id]; confirmM('ลบ', 'ลบ ' + r.doc_no + ' (รายการบัญชีที่ผูกไว้จะถูกลบด้วย)', 'ลบ', function () { call(side === 'S' ? 'sadj.delete' : 'padj.delete', { company_id: S.cid, id: id }).then(function () { adjList(side); }).catch(failNew); }, true); }
+function adjPrint(id) {
+  var r = S.adjRows[id], cn = r.kind === 'CN', o = Number(r.orig_amount) || 0, t = Number(r.total) || 0, sb = Number(r.subtotal) || 0;
+  var lines = r.lines.map(function (l, i) { return '<tr><td>' + (i + 1) + '</td><td>' + esc(l.description) + '</td><td></td><td></td><td></td><td class="r">' + money(l.amount) + '</td></tr>'; }).join('');
+  var sums = '<tr><td>มูลค่าสินค้า/บริการตามใบกำกับเดิม ' + esc(r.sale_no) + '</td><td class="r">' + money(o) + '</td></tr><tr><td>มูลค่าที่ถูกต้อง</td><td class="r">' + money(cn ? o - sb : o + sb) + '</td></tr><tr><td>ผลต่าง (มูลค่า)</td><td class="r">' + money(r.subtotal) + '</td></tr>' + (Number(r.vat_amount) ? '<tr><td>ภาษีมูลค่าเพิ่ม ' + esc(r.vat_rate) + '%</td><td class="r">' + money(r.vat_amount) + '</td></tr>' : '') + '<tr><td><b>รวม' + (cn ? 'ลดหนี้' : 'เพิ่มหนี้') + '</b></td><td class="r"><b>' + money(t) + '</b></td></tr>';
+  var party = 'ลูกค้า: <b>' + esc(r.customer_name) + '</b>' + (r.customer_tax_id ? ' · เลขประจำตัวผู้เสียภาษี ' + esc(r.customer_tax_id) + ' ' + esc(r.customer_branch || '') : '') + (r.customer_address ? '<br>' + esc(r.customer_address) : '') + '<br>เหตุผล: ' + esc(r.reason);
+  printer().show(r.doc_no, bdDocHtml((cn ? 'ใบลดหนี้' : 'ใบเพิ่มหนี้') + (Number(r.vat_amount) ? '/ใบกำกับภาษี' : ''), r.doc_no, r.doc_date, '<br>อ้างถึง ' + esc(r.sale_no), party, lines, sums, r.note, ['ผู้รับ', 'ผู้มีอำนาจลงนาม']), BD_CSS);
+}
+
+/* ทะเบียนลูกค้า / ผู้ขาย */
+function ptList(role) {
+  var api = role === 'C' ? 'cust' : 'sup', out = role === 'C' ? 'slOut' : 'puOut', ro = co().status !== 'ACTIVE';
+  call(api + '.list', { company_id: S.cid, q: S.ptQ || '' }).then(function (rows) {
+    S.ptRows = {}; rows.forEach(function (r) { S.ptRows[r.id] = r; });
+    $(out).innerHTML = '<div class="bar" style="margin-top:0"><input class="in q" id="ptq" placeholder="ค้นหา รหัส / ชื่อ / เลขภาษี / โทร" value="' + esc(S.ptQ || '') + '" onchange="S.ptQ=this.value;ptList(\'' + role + '\')"><span style="flex:1"></span>' + (ro ? '' : '<button class="btn" onclick="ptForm(\'' + role + '\')">+ เพิ่ม' + (role === 'C' ? 'ลูกค้า' : 'ผู้ขาย') + '</button>') + '</div>' +
+      (!rows.length ? '<div class="card empty">ยังไม่มีข้อมูล (ระบบเพิ่มให้อัตโนมัติเมื่อออกเอกสาร)</div>' : '<div class="card tw"><table class="t"><thead><tr><th>รหัส</th><th>ชื่อ</th><th>เลขภาษี / สาขา</th><th>โทร / ผู้ติดต่อ</th><th class="num">เครดิต (วัน)</th>' + (role === 'C' ? '<th class="num">วงเงิน</th>' : '') + '<th class="num">ยอดค้าง</th><th></th></tr></thead><tbody>' +
+      rows.map(function (r) { var over = role === 'C' && Number(r.credit_limit) && Number(r.balance) > Number(r.credit_limit); return '<tr' + (r.status === 'INACTIVE' ? ' style="opacity:.5"' : '') + '><td class="code">' + esc(r.code || '') + '</td><td>' + esc(r.name) + '</td><td class="small">' + esc(r.tax_id || '') + ' ' + esc(r.branch || '') + '</td><td class="small">' + esc(r.phone || '') + (r.contact ? '<br>' + esc(r.contact) : '') + '</td><td class="num">' + esc(r.credit_days || '') + '</td>' + (role === 'C' ? '<td class="num">' + (r.credit_limit ? money(r.credit_limit) : '') + '</td>' : '') + '<td class="num"' + (over ? ' style="color:#c00;font-weight:600"' : '') + '>' + (Number(r.balance) ? money(r.balance) : '') + '</td><td style="white-space:nowrap">' + (ro ? '' : '<button class="btn ghost sm" onclick="ptForm(\'' + role + '\',\'' + r.id + '\')">แก้ไข</button>') + (role === 'C' ? ' <button class="btn ghost sm" onclick="S.stP=S.ptRows[\'' + r.id + '\'];S.sl.tab=\'STMT\';renderSales()">Statement</button>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>');
+  }).catch(failNew);
+}
+function ptForm(role, id) {
+  var x = id ? S.ptRows[id] : { status: 'ACTIVE' }, f = function (k, l, ph) { return '<div class="fr"><label class="f">' + l + '</label><input class="in" id="pt_' + k + '" value="' + esc(x[k] || '') + '"' + (ph ? ' placeholder="' + ph + '"' : '') + '></div>'; };
+  openM((id ? 'แก้ไข' : 'เพิ่ม') + (role === 'C' ? 'ลูกค้า' : 'ผู้ขาย'), '<div class="f3">' + f('code', 'รหัส', 'อัตโนมัติ') + f('name', 'ชื่อ *') + f('tax_id', 'เลขประจำตัวผู้เสียภาษี') + '</div><div class="f3">' + f('branch', 'สาขา', 'สำนักงานใหญ่ / 00001') + f('phone', 'โทรศัพท์') + f('email', 'อีเมล') + '</div>' + f('address', 'ที่อยู่') +
+    '<div class="f3">' + f('contact', 'ผู้ติดต่อ') + f('credit_days', 'เครดิตเทอม (วัน)', '30') + (role === 'C' ? f('credit_limit', 'วงเงินเครดิต (บาท)', 'ว่าง = ไม่จำกัด') : '') + '</div>' + f('note', 'หมายเหตุ') +
+    '<label class="small"><input type="checkbox" id="pt_off"' + (x.status === 'INACTIVE' ? ' checked' : '') + '> เลิกใช้</label>', '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" onclick="ptSave(\'' + role + '\',\'' + (id || '') + '\')">บันทึก</button>', true);
+}
+function ptSave(role, id) {
+  var p = { company_id: S.cid, id: id, status: $('pt_off').checked ? 'INACTIVE' : 'ACTIVE' };
+  ['code', 'name', 'tax_id', 'branch', 'phone', 'email', 'address', 'contact', 'credit_days', 'credit_limit', 'note'].forEach(function (k) { if ($('pt_' + k)) p[k] = v('pt_' + k); });
+  call(role === 'C' ? 'cust.save' : 'sup.save', p).then(function (r) { closeM(); toast('บันทึก ' + r.code + ' แล้ว', 'ok'); S.parties = null; S.custs = null; ensureTaxData().catch(function () {}); ptList(role); }).catch(failNew);
+}
+function stmtPage() {
+  var p = S.stP || {}, d = today();
+  S.stF = S.stF || d.slice(0, 8) + '01'; S.stT = S.stT || d;
+  $('slOut').innerHTML = partyDl('C') + '<div class="card"><div class="bar" style="margin:0"><label class="small">ลูกค้า</label><input class="in" id="st_n" list="partyList" value="' + esc(p.name || '') + '" style="min-width:240px"><label class="small">ตั้งแต่</label><input class="in" type="date" id="st_f" value="' + S.stF + '"><label class="small">ถึง</label><input class="in" type="date" id="st_t" value="' + S.stT + '"><button class="btn" onclick="stmtRun()">แสดง</button><button class="btn ghost" onclick="stmtRun(1)">🖨 พิมพ์</button></div></div><div id="stOut"></div>' +
+    '<div class="card"><div class="bar" style="margin:0"><b style="flex:1">ยอดขายแยกสาขา</b><button class="btn ghost" onclick="bbRun()">แสดงตามช่วงวันที่ด้านบน</button></div><div id="bbOut"></div></div>';
+  if (p.name) stmtRun();
+}
+function stmtRun(pr) {
+  var n = v('st_n'), pt = (S.parties || []).filter(function (q) { return q.name === n; })[0] || S.stP || {}; S.stF = v('st_f'); S.stT = v('st_t');
+  if (!n) return toast('เลือกลูกค้า', 'warn');
+  var P = pr ? printer() : null;
+  call('sales.statement', { company_id: S.cid, name: n, tax_id: pt.name === n ? pt.tax_id || '' : '', branch: pt.name === n ? pt.branch || '' : '', from: S.stF, to: S.stT }).then(function (r) {
+    var body = '<div class="tw"><table class="t"><thead><tr><th>วันที่</th><th>เลขที่</th><th>รายการ</th><th>อ้างอิง</th><th class="num">เดบิต</th><th class="num">เครดิต</th><th class="num">คงเหลือ</th></tr></thead><tbody><tr><td colspan="6"><b>ยอดยกมา</b></td><td class="num"><b>' + money(r.opening) + '</b></td></tr>' +
+      r.rows.map(function (x) { return '<tr><td>' + esc(x.date) + '</td><td class="code">' + esc(x.doc_no) + '</td><td>' + esc(x.type) + '</td><td class="small">' + esc(x.ref) + '</td><td class="num">' + (x.debit ? money(x.debit) : '') + '</td><td class="num">' + (x.credit ? money(x.credit) : '') + '</td><td class="num">' + money(x.balance) + '</td></tr>'; }).join('') +
+      '<tr class="tot"><td colspan="6">ยอดค้างชำระ ณ ' + thDate(r.to) + '</td><td class="num">' + money(r.closing) + '</td></tr></tbody></table></div>';
+    var hd = '<b>' + esc(r.party.name) + '</b>' + (r.party.code ? ' (' + esc(r.party.code) + ')' : '') + (r.party.tax_id ? ' · ' + esc(r.party.tax_id) : '') + '<br>ช่วง ' + thDate(r.from) + ' – ' + thDate(r.to);
+    if (P) P.show('Statement ' + r.party.name, '<div class="bd"><div style="display:flex;justify-content:space-between"><div><b style="font-size:15px">' + esc(co().name_th) + '</b><br>' + esc(co().address || '') + '</div><h2>ใบแจ้งยอดลูกหนี้ (Statement)</h2></div><div style="margin:10px 0;border:1px solid #bbb;padding:8px">' + hd + '</div>' + body + '</div>', BD_CSS + 'table.t{width:100%;border-collapse:collapse}table.t td,table.t th{border:1px solid #ccc;padding:4px 6px}.num{text-align:right}');
+    else $('stOut').innerHTML = '<div class="card"><p style="margin-top:0">' + hd + '</p>' + body + '</div>';
+  }).catch(function (e) { if (P) P.close(); failNew(e); });
+}
+function bbRun() {
+  call('sales.byBranch', { company_id: S.cid, from: v('st_f'), to: v('st_t'), include_draft: S.incDraft }).then(function (r) {
+    $('bbOut').innerHTML = '<div class="tw"><table class="t"><thead><tr><th>สาขา</th><th class="num">จำนวนบิล</th><th class="num">ยอดขายก่อน VAT</th><th class="num">ลด/เพิ่มหนี้</th><th class="num">VAT</th><th class="num">รวม</th></tr></thead><tbody>' + r.rows.map(function (x) { return '<tr><td>' + esc(x.code + ' ' + x.name) + '</td><td class="num">' + x.count + '</td><td class="num">' + money(x.subtotal) + '</td><td class="num">' + neg(x.adjust) + '</td><td class="num">' + money(x.vat) + '</td><td class="num">' + money(x.total) + '</td></tr>'; }).join('') + '<tr class="tot"><td colspan="5">รวม</td><td class="num">' + money(r.total) + '</td></tr></tbody></table></div>';
+  }).catch(failNew);
+}
+function agingAp() {
+  call('purch.aging', { company_id: S.cid, as_of: today() }).then(function (r) {
+    var B = [['CURRENT', 'ยังไม่ถึงกำหนด'], ['D30', '1–30 วัน'], ['D60', '31–60 วัน'], ['D90', '61–90 วัน'], ['D90P', 'เกิน 90 วัน']];
+    $('puOut').innerHTML = '<div class="card"><b>อายุเจ้าหนี้ ณ ' + thDate(r.as_of) + '</b><div class="tw"><table class="t"><thead><tr>' + B.map(function (b) { return '<th class="num">' + b[1] + '</th>'; }).join('') + '<th class="num">รวม</th></tr></thead><tbody><tr>' + B.map(function (b) { return '<td class="num">' + money(r.totals[b[0]]) + '</td>'; }).join('') + '<td class="num"><b>' + money(r.totals.total) + '</b></td></tr></tbody></table></div></div>' +
+      '<div class="card tw"><table class="t"><thead><tr><th>ผู้ขาย</th><th>เลขที่</th><th>ใบกำกับ</th><th>วันที่</th><th>ครบกำหนด</th><th class="num">ยอดค้าง</th><th>อายุ</th></tr></thead><tbody>' + (r.rows.map(function (x) { return '<tr><td>' + esc(x.party_name) + '</td><td class="code">' + esc(x.doc_no) + '</td><td>' + esc(x.inv_no || '') + '</td><td>' + esc(x.doc_date) + '</td><td>' + esc(x.due_date || '') + '</td><td class="num">' + money(x.balance) + '</td><td>' + (B.filter(function (b) { return b[0] === x.bucket; })[0] || [0, x.bucket])[1] + '</td></tr>'; }).join('') || '<tr><td colspan="7" class="small">ไม่มีเจ้าหนี้ค้าง</td></tr>') + '</tbody></table></div>';
+  }).catch(failNew);
+}
+function ensureBchs() { if (S.bchs && S.bchsCid === S.cid) return Promise.resolve(S.bchs); return call('branch.list', { company_id: S.cid }).then(function (r) { S.bchs = r; S.bchsCid = S.cid; return r; }).catch(function () { S.bchs = []; return []; }); }
+function ensureCusts() { if (S.custs && S.custsCid === S.cid) return Promise.resolve(S.custs); return call('cust.list', { company_id: S.cid }).then(function (r) { S.custs = r; S.custsCid = S.cid; return r; }).catch(function () { S.custs = []; return []; }); }
+/* เพิ่มช่องสาขา + เครดิตเทอมในหน้าต่างขาย/ซื้อเดิม (ไม่แก้ฟอร์มเดิม) */
+function tradeExtra(pre) {
+  var host = $(pre + '_date'); if (!host) return;
+  var box = host.closest('.f3') || host.parentNode.parentNode, bs = S.bchs || [];
+  if (bs.length > 1 && !$(pre + '_bch')) box.insertAdjacentHTML('beforeend', '<div class="fr"><label class="f">สาขา</label><select class="in" id="' + pre + '_bch">' + bs.map(function (b) { return '<option value="' + b.id + '"' + (S.fromDoc && S.fromDoc.branch_id === b.id ? ' selected' : '') + '>' + esc(b.code + ' ' + b.name) + '</option>'; }).join('') + '</select></div>');
+  if (S.fromDoc && $('mT')) $('mT').textContent = $('mT').textContent.replace('สำเนา – ', '') + ' · จาก ' + S.fromDoc.no;
+  if (S.fromDoc && !$(pre + '_fromtag')) box.insertAdjacentHTML('afterend', '<div class="note" id="' + pre + '_fromtag">อ้างอิงเอกสาร ' + esc(S.fromDoc.no) + ' (บันทึกแล้วเอกสารนี้จะเปลี่ยนเป็น "ดำเนินการต่อแล้ว")</div>');
+  var nm = $(pre + '_name'), due = $(pre + '_due');
+  if (nm && due) nm.addEventListener('change', function () { var c = (pre === 'sl' ? S.custs : S.sups) || [], p = c.filter(function (q) { return q.name === nm.value; })[0]; if (p && p.credit_days) due.value = addDays(v(pre + '_date'), Number(p.credit_days)); });
+}
+var saleForm0 = saleForm; saleForm = function (kind, id, copy) { if (!(id && String(id).indexOf('_bd') === 0)) S.fromDoc = null; saleForm0(kind, id, copy); ensureBchs().then(function () { tradeExtra('sl'); }); ensureCusts(); };
+var puForm0 = puForm; puForm = function (kind, id, copy) { if (!(id && String(id).indexOf('_bd') === 0)) S.fromDoc = null; puForm0(kind, id, copy); ensureBchs().then(function () { tradeExtra('pu'); }); if (!S.sups) call('sup.list', { company_id: S.cid }).then(function (r) { S.sups = r; }).catch(function () {}); };
 function puPt() { var c = v('pu_pt') === 'CASH'; $('pu_duew').style.display = c ? 'none' : ''; $('pu_apw').style.display = c ? 'none' : ''; $('pu_payw').style.display = c ? '' : 'none'; $('pu_whtw').style.display = c ? '' : 'none'; }
 function puW() { $('pu_wbox').style.display = $('pu_hw').checked ? '' : 'none'; puWa(); }
 function puWc() { var L = ratesFor('WHT', v('pu_date') || today(), v('pu_pnd')).filter(function (r) { return r.code !== 'SALARY'; }); $('pu_wc').innerHTML = L.map(function (r) { return '<option value="' + r.code + '" data-r="' + r.rate + '"' + (r.code === S.puEdit.whc ? ' selected' : '') + '>' + esc(r.name) + ' (' + r.rate + '%)</option>'; }).join(''); if (!v('pu_wr')) puWr(); }
@@ -3393,7 +3610,7 @@ function vatReportHtml(r) {
   var cb = 0, ct = 0, out = [];
   for (var pg = 0; pg < n; pg++) {
     var part = rows.slice(pg * PER, pg * PER + PER), pb = 0, pt = 0, last = pg === n - 1, bf = cb, tf = ct;
-    part.forEach(function (d) { pb += sat(d.base_amount); pt += sat(d.tax_amount); });
+    part.forEach(function (d) { pb += ssat(d.base_amount); pt += ssat(d.tax_amount); });
     cb += pb; ct += pt;
     out.push('<div class="vpg">' + head + '<table>' + th + '<tbody>' +
       part.map(function (d, i) { return row(d, pg * PER + i); }).join('') +
