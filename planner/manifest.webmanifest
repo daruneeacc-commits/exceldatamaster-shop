@@ -1,6 +1,6 @@
 {
- "name": "EDM SME Planner 2027",
- "short_name": "EDM Planner",
+ "name": "แพลนเนอร์ครอบครัว AMK",
+ "short_name": "บ้าน AMK",
  "start_url": "/planner/",
  "scope": "/planner/",
  "display": "standalone",

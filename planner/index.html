@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="EDM Planner">
+<meta name="apple-mobile-web-app-title" content="บ้าน AMK">
 <meta name="theme-color" content="#1e7a46">
-<title>EDM SME Planner 2027</title>
+<title>แพลนเนอร์ครอบครัว AMK</title>
 <meta name="robots" content="noindex">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -104,7 +104,7 @@ th{font-size:12px;color:var(--mut);font-weight:600}td.c,th.c{text-align:center}t
 <div id="toast"></div>
 <script>
 /* ===== EDM SME Planner 2027 · © Excel Data Master ===== */
-const LICENSED_TO = 'ตัวอย่าง (Demo)'; // ← เปลี่ยนเป็นชื่อผู้ซื้อก่อนส่งไฟล์
+const LICENSED_TO = 'ครอบครัว AMK'; // ← เปลี่ยนเป็นชื่อผู้ซื้อก่อนส่งไฟล์
 const K = 'edm_sme_planner_2027_v1';
 const TH_M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 const TH_MF=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
@@ -568,7 +568,7 @@ window.confirm=function(msg){if(_cfOk===msg){_cfOk=null;return true}const el=_cf
 /* ===== ชุดครอบครัว (24 พ.ย.) · โหมดการใช้งาน · สมาชิก · งานบ้าน+แต้ม · กระดานข้อความ · มอบหมายงาน ===== */
 const FCOL=['#ffd6a5','#cfe6ff','#ffc6d6','#c8f0cf','#e2d3ff','#ffe27a','#c4efe6','#ffd3b8'],FEMO=['👩','👨','👧','👦','👶','👵','👴','🧑','🐶','🐱'];
 const BIZK=['sales','stock','tax','cust','staff'],FAMK=['fam','chores','study'],NAV_ALL=NAV.slice();
-const mode=()=>D.s.mode||'both';
+const mode=()=>D.s.mode||'family';
 const mem=id=>D.fam.find(f=>f.id===id);
 const av=(m,s=22)=>m?`<span class="who" title="${esc(m.name)}" style="width:${s}px;height:${s}px;font-size:${Math.round(s*.6)}px;background:${m.c}">${esc(m.e||m.name.slice(0,1))}</span>`:'';
 const whoSel=(id,v,all)=>D.fam.length?`<select id="${id}" title="ใครทำ">${all?'<option value="">ทุกคน / ไม่ระบุ</option>':''}${D.fam.map(f=>`<option value="${f.id}" ${f.id===v?'selected':''}>${esc((f.e||'')+' '+f.name)}</option>`).join('')}</select>`:'';
@@ -605,7 +605,7 @@ P.home1=P.home;
 P.home=function(){let h=P.home1();const m=mode(),i=h.indexOf('<h3 style="margin:22px 0 10px">');
  if(m==='family'&&i>0)h=h.slice(0,i);
  if(m!=='sme')h=(i>0&&m!=='family'?h.slice(0,i):h)+`<h3 style="margin:22px 0 10px">${ic('fam')} ครอบครัว</h3>`+famCard()+(i>0&&m!=='family'?h.slice(i):'');
- if(!D.s.mode)h=`<div class="card warn"><b>ใช้แพลนเนอร์นี้แบบไหนคะ?</b><div class="mut">เลือกแล้วเมนูจะแสดงเฉพาะที่ใช้ เปลี่ยนได้ตลอดในหน้าตั้งค่า</div><div class="row" style="margin-top:8px"><button class="btn" onclick="setS('mode','family')">👨‍👩‍👧 ครอบครัว</button><button class="btn o" onclick="setS('mode','sme')">🏪 ธุรกิจ</button><button class="btn o" onclick="setS('mode','both')">ทั้งสองอย่าง</button></div></div>`+h;
+ if(0)h=`<div class="card warn"><b>ใช้แพลนเนอร์นี้แบบไหนคะ?</b><div class="mut">เลือกแล้วเมนูจะแสดงเฉพาะที่ใช้ เปลี่ยนได้ตลอดในหน้าตั้งค่า</div><div class="row" style="margin-top:8px"><button class="btn" onclick="setS('mode','family')">👨‍👩‍👧 ครอบครัว</button><button class="btn o" onclick="setS('mode','sme')">🏪 ธุรกิจ</button><button class="btn o" onclick="setS('mode','both')">ทั้งสองอย่าง</button></div></div>`+h;
  return h};
 P.tasks1=P.tasks;
 P.tasks=function(){const o=D.tasks;if(ui.tw)D.tasks=o.filter(x=>x.who===ui.tw);let h;try{h=P.tasks1()}finally{D.tasks=o}
@@ -684,11 +684,13 @@ const save0=save;
 save=function(){save0();if(sCfg().url){clearTimeout(_syT);_syT=setTimeout(()=>sync(),2500)}};
 function syncSet(){const u=val('syU'),k=val('syK');if(!/^https:\/\/script\.google\.com\/.+\/exec$/.test(u))return toast('ลิงก์ต้องเป็น https://script.google.com/…/exec');if(!k)return toast('ใส่รหัสบ้าน');localStorage.setItem(SYK,J_({url:u,key:k}));localStorage.removeItem(SYB);sync(true)}
 function syncOff(){localStorage.removeItem(SYK);localStorage.removeItem(SYB);toast('เลิกเชื่อมต่อแล้ว (ข้อมูลในเครื่องยังอยู่)');render()}
+(function(){const m=location.hash.match(/^#join=(.+)$/);if(!m)return;try{const o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));if(/^https:\/\/script\.google\.com\/.+\/exec$/.test(o.u)&&o.k){localStorage.setItem(SYK,J_({url:o.u,key:o.k}));localStorage.removeItem(SYB);setTimeout(()=>{toast('เชื่อมต่อข้อมูลบ้าน AMK แล้ว');sync(true)},300)}}catch(e){}history.replaceState(null,'',location.pathname)})();
+function joinLink(){const c=sCfg(),l=location.origin+location.pathname+'#join='+btoa(unescape(encodeURIComponent(J_({u:c.url,k:c.key}))));(navigator.share?navigator.share({title:'แพลนเนอร์ครอบครัว AMK',text:'กดลิงก์นี้เพื่อใช้ข้อมูลชุดเดียวกันทั้งบ้าน (ห้ามส่งต่อคนนอก)',url:l}):navigator.clipboard.writeText(l).then(()=>toast('คัดลอกลิงก์แล้ว ส่งทาง LINE ให้คนในบ้าน'))).catch(()=>prompt('คัดลอกลิงก์นี้',l))}
 addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')sync()});
 setInterval(()=>{if(document.visibilityState==='visible')sync()},60000);
 setTimeout(()=>sync(),800);
 P.set2=P.set;
-P.set=function(){const c=sCfg(),on=c.url&&c.key;return P.set2().replace('<div class="card"><h3>ธีม</h3>',`<div class="card"><h3>☁️ ใช้ข้อมูลชุดเดียวกันทั้งบ้าน</h3>${on?`<p class="mut">เชื่อมต่อแล้ว · ซิงก์ล่าสุด ${c.last?new Date(c.last).toLocaleString('th-TH'):'-'}${c.err?` · <span class="red">ผิดพลาด: ${esc(c.err)}</span>`:''}<br>ทุกเครื่องที่ใส่ลิงก์และรหัสบ้านเดียวกัน จะเห็นข้อมูลชุดเดียวกัน (ธีมสีแยกตามเครื่อง)</p><div class="row"><button class="btn" onclick="sync(true)">ซิงก์ตอนนี้</button><button class="btn o" onclick="syncOff()">เลิกเชื่อมต่อเครื่องนี้</button></div>`:`<p class="mut">ใส่ลิงก์ระบบซิงก์ของบ้าน (Google Apps Script ของเจ้าของบ้าน) และรหัสบ้าน ในทุกเครื่องของสมาชิก</p><div class="row"><input id="syU" class="f" placeholder="https://script.google.com/macros/s/…/exec"><input id="syK" type="password" placeholder="รหัสบ้าน" style="width:140px"><button class="btn" onclick="syncSet()">เชื่อมต่อ</button></div>`}</div><div class="card"><h3>ธีม</h3>`)};
+P.set=function(){const c=sCfg(),on=c.url&&c.key;return P.set2().replace('<div class="card"><h3>ธีม</h3>',`<div class="card"><h3>☁️ ใช้ข้อมูลชุดเดียวกันทั้งบ้าน</h3>${on?`<p class="mut">เชื่อมต่อแล้ว · ซิงก์ล่าสุด ${c.last?new Date(c.last).toLocaleString('th-TH'):'-'}${c.err?` · <span class="red">ผิดพลาด: ${esc(c.err)}</span>`:''}<br>ทุกเครื่องที่ใส่ลิงก์และรหัสบ้านเดียวกัน จะเห็นข้อมูลชุดเดียวกัน (ธีมสีแยกตามเครื่อง)</p><div class="row"><button class="btn" onclick="sync(true)">ซิงก์ตอนนี้</button><button class="btn" onclick="joinLink()">📤 ส่งลิงก์ให้คนในบ้าน</button><button class="btn o" onclick="syncOff()">เลิกเชื่อมต่อเครื่องนี้</button></div>`:`<p class="mut">ใส่ลิงก์ระบบซิงก์ของบ้าน (Google Apps Script ของเจ้าของบ้าน) และรหัสบ้าน ในทุกเครื่องของสมาชิก</p><div class="row"><input id="syU" class="f" placeholder="https://script.google.com/macros/s/…/exec"><input id="syK" type="password" placeholder="รหัสบ้าน" style="width:140px"><button class="btn" onclick="syncSet()">เชื่อมต่อ</button></div>`}</div><div class="card"><h3>ธีม</h3>`)};
 const demo2=demo;
 demo=function(){const n=D.tasks.length;demo2();if(D.tasks.length===n||D.subj.length)return;const t=TODAY(),w=wkOf(t);
  const S=['คณิตศาสตร์','ภาษาไทย','วิทยาศาสตร์','ภาษาอังกฤษ','สังคมศึกษา'].map(n=>({id:uid(),name:n}));D.subj.push(...S);
@@ -698,7 +700,7 @@ demo=function(){const n=D.tasks.length;demo2();if(D.tasks.length===n||D.subj.len
  D.tasks.push({id:uid(),title:'📚 ภาษาอังกฤษ: ท่องศัพท์ 20 คำ',due:addD(t,1),prio:'สำคัญ',status:'todo',who:'fm3',hw:1});save();render()};
 
 const _render=render;
-render=function(){const m=mode(),hide=m==='family'?['ธุรกิจ',...BIZK]:m==='sme'?['ครอบครัว',...FAMK]:[];NAV.length=0;NAV_ALL.forEach(n=>{if(!hide.includes(n[0])&&!hide.includes(n[2]))NAV.push(n)});if(hide.includes(cur))cur='home';_render();const h1=document.querySelector('header h1');if(h1&&m==='family')h1.innerHTML='แพลนเนอร์ครอบครัว 2027<small>by Excel Data Master</small>';const b=document.body,t=THEMES.find(x=>x[0]===D.s.theme)||THEMES[0];b.style.setProperty('--p',t[1]);if(D.s.dark)b.style.removeProperty('--bg');else b.style.setProperty('--bg',BG[t[0]]||'#f6f5f1');
+render=function(){const m=mode(),hide=m==='family'?['ธุรกิจ',...BIZK]:m==='sme'?['ครอบครัว',...FAMK]:[];NAV.length=0;NAV_ALL.forEach(n=>{if(!hide.includes(n[0])&&!hide.includes(n[2]))NAV.push(n)});if(hide.includes(cur))cur='home';_render();const h1=document.querySelector('header h1');if(h1&&m==='family')h1.innerHTML='แพลนเนอร์ครอบครัว AMK<small>by Excel Data Master</small>';const b=document.body,t=THEMES.find(x=>x[0]===D.s.theme)||THEMES[0];b.style.setProperty('--p',t[1]);if(D.s.dark)b.style.removeProperty('--bg');else b.style.setProperty('--bg',BG[t[0]]||'#f6f5f1');
  const hd=document.querySelector('header');if(hd){const s=document.createElement('button');s.className='ib';s.title='ค้นหา (Ctrl K)';s.innerHTML=ic('search',22);s.onclick=openSearch;hd.insertBefore(s,hd.lastElementChild)}
  const A=document.getElementById('app'),tb=document.createElement('nav');tb.className='tabbar';tb.innerHTML=[['home','หน้าหลัก'],['myday','วันนี้'],['cal','ปฏิทิน'],['tasks','งาน'],['menu','เมนู']].map(([k,n])=>`<a class="${cur===k?'on':''}" onclick="${k==='menu'?"document.querySelector('aside').classList.add('open')":"go('"+k+"')"}">${k==='menu'?'<span style="font-size:21px;line-height:24px">☰</span>':ic(k,24)}${n}</a>`).join('');A.appendChild(tb);
  const f=document.createElement('button');f.className='fab';f.textContent='+';f.title='จดด่วน';f.onclick=capture;A.appendChild(f)};
