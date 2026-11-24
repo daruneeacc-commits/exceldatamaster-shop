@@ -168,7 +168,7 @@ const sum=(a,f)=>a.reduce((t,x)=>t+(+f(x)||0),0);
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),1800)}
 
 /* ---------- data ---------- */
-function blank(){return{s:{name:'',biz:'',theme:'excel',dark:false,vat:true,emp:true,wht:true,lastBackup:0,ssoRate:5,ssoMax:17500},tasks:[],events:[],goals:[],tx:[],budget:{},habits:[],hlog:{},journal:{},sales:[],cust:[],taxDone:{},products:[],moves:[],staff:[],pay:{},inbox:[],blocks:[],well:{},meals:{},grocery:[],dates:[],bills:[],billPaid:{},one:{},weekNote:{}}}
+function blank(){return{s:{name:'',biz:'',theme:'excel',dark:false,vat:false,emp:false,wht:false,lastBackup:0,ssoRate:5,ssoMax:17500},tasks:[],events:[],goals:[],tx:[],budget:{},habits:[],hlog:{},journal:{},sales:[],cust:[],taxDone:{},products:[],moves:[],staff:[],pay:{},inbox:[],blocks:[],well:{},meals:{},grocery:[],dates:[],bills:[],billPaid:{},one:{},weekNote:{}}}
 function load(){try{const r=JSON.parse(localStorage.getItem(K));if(r&&r.s){const b=blank();for(const k in b)if(r[k]===undefined)r[k]=b[k];r.s=Object.assign(b.s,r.s);return r}}catch(e){}return blank()}
 let D=load();
 function save(){try{localStorage.setItem(K,JSON.stringify(D))}catch(e){toast('⚠️ บันทึกไม่สำเร็จ กรุณาสำรองข้อมูล')}}
@@ -461,6 +461,7 @@ P.tasks=function(){const o={todo:[],doing:[],done:[]};D.tasks.forEach(x=>(o[x.st
  else view=`<div class="card">${srt(open).map(taskRow).join('')||'<div class="mut">ไม่มีงานค้าง</div>'}${o.done.length?`<details style="margin-top:8px"><summary class="mut">งานที่เสร็จแล้ว (${o.done.length})</summary>${o.done.map(taskRow).join('')}</details>`:''}</div>`;
  return`<h2>งาน & To-do</h2><p class="sub">ค้าง ${open.length} · เสร็จแล้ว ${o.done.length}</p>${form}<div class="row" style="margin-bottom:12px"><div class="seg">${[['list','รายการ'],['kb','กระดาน'],['mx','ตารางความสำคัญ']].map(([k,n])=>`<button class="${ui.tv===k?'on':''}" onclick="ui.tv='${k}';render()">${n}</button>`).join('')}</div><span class="f"></span><button class="btn o s" onclick="exTasks()">⬇ Excel</button></div>${view}`};
 
+P.tax0=P.tax;P.tax=function(){const h=P.tax0();if(D.s.vat||D.s.emp||D.s.wht)return h;return h.replace('</div>','</div><div class="card warn"><b>ยังไม่ได้เลือกภาษีที่ต้องยื่น</b><div class="mut">ติ๊กด้านบนให้ตรงกับธุรกิจของคุณ (จด VAT / มีลูกจ้าง / หัก ณ ที่จ่าย) ระบบจะสร้างวันยื่นและเตือนให้อัตโนมัติ · ที่เห็นด้านล่างคือแบบประจำปีที่ทุกคนต้องยื่น</div></div>')};
 P.cal0=P.cal;
 P.cal=function(){const v=ui.cv||'m',seg=`<div class="seg" style="margin-bottom:12px">${[['m','เดือน'],['w','สัปดาห์'],['y','ทั้งปี']].map(([k,n])=>`<button class="${v===k?'on':''}" onclick="ui.cv='${k}';render()">${n}</button>`).join('')}</div>`;
  if(v==='w')return calWeek(seg);if(v==='y')return calYear(seg);
