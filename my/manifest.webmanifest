@@ -1,0 +1,14 @@
+{
+ "name": "ระบบของฉัน · Excel Data Master",
+ "short_name": "ระบบของฉัน",
+ "start_url": "/my/",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#F5F7F6",
+ "theme_color": "#17784a",
+ "lang": "th",
+ "icons": [
+  {"src": "/app/icon-192.png", "sizes": "192x192", "type": "image/png"},
+  {"src": "/app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+ ]
+}

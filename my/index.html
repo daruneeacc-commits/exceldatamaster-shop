@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ระบบของฉัน · Excel Data Master</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#17784a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="/app/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ระบบของฉัน">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<script>/* หน้านี้สำหรับสมาชิกเท่านั้น: ยังไม่เข้าสู่ระบบ = เปิดหน้าเข้าสู่ระบบ (ไม่ใช่หน้าสมัคร) */try{if(!/[?&]start=/.test(location.search)&&!sessionStorage.getItem("edm_member"))history.replaceState(null,"",location.pathname+"?start=login"+location.hash)}catch(e){}</script>
+<style>
+:root{--g:#17784a;--g2:#0f5c38;--gl:#eaf5ef;--tx:#16201b;--mut:#5b6762;--bd:#e3e8e5;--bg:#f5f7f6;--red:#c0392b;--amb:#b7791f;--fh:"Anuphan","IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif;--fb:"IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.6 var(--fb);color:var(--tx);background:var(--bg);-webkit-text-size-adjust:100%}
+a{color:inherit;text-decoration:none}
+.w{max-width:960px;margin:0 auto;padding:0 18px}
+header.top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--bd);padding-top:env(safe-area-inset-top)}
+header.top .w{display:flex;align-items:center;gap:12px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font:700 17px var(--fh);flex:1;min-width:0}
+.brand i{width:32px;height:32px;border-radius:8px;background:var(--g);color:#fff;display:grid;place-items:center;font:700 12px var(--fh);font-style:normal;flex:none}
+.brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav{display:flex;align-items:center;gap:8px}
+main{padding:24px 0 48px}
+h1,h2,h3{font-family:var(--fh);line-height:1.3;margin:0}
+.hi{margin-bottom:22px}.hi h1{font-size:26px}.hi p{margin:4px 0 0;color:var(--mut);font-size:14.5px}
+.sec{font:600 15px var(--fh);color:var(--mut);margin:26px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.card .top{display:flex;gap:12px;align-items:flex-start}
+.card .ic{width:44px;height:44px;flex:none;display:grid;place-items:center}.card .ic svg{width:44px;height:44px}
+.card h3{font-size:16.5px}
+.st{font-size:13.5px;color:var(--mut);margin-top:2px}.st.warn{color:var(--amb)}.st.bad{color:var(--red)}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 9px;border-radius:99px;background:var(--gl);color:var(--g);margin-right:6px}
+.tag.tr{background:#fff4e0;color:var(--amb)}.tag.ex{background:#fdecea;color:var(--red)}
+.acts{display:flex;gap:8px;margin-top:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:44px;padding:0 18px;border-radius:10px;font:600 15px var(--fb);border:1px solid transparent;cursor:pointer;flex:1}
+.bp{background:var(--g);color:#fff}.bp:active{background:var(--g2)}
+.bs{background:#fff;color:var(--tx);border-color:var(--bd);flex:0 0 auto}
+.box{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px 18px}
+.box summary{font-weight:600;cursor:pointer}
+.box ol{margin:10px 0 0;padding-left:20px;color:var(--mut);font-size:14.5px}
+.help{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px}
+.help p{margin:0;flex:1;min-width:200px;color:var(--mut);font-size:14.5px}
+.help .btn{flex:0 0 auto;background:#06C755;color:#fff}
+.empty{color:var(--mut);font-size:14.5px}
+.wait{color:var(--mut);text-align:center;padding:60px 0}
+footer{text-align:center;color:var(--mut);font-size:13.5px;padding:10px 0 30px}footer a{color:var(--g);font-weight:600}
+/* หน้านี้เข้าสู่ระบบอย่างเดียว ไม่เปิดสมัครใหม่ (สมัครจากหน้าระบบแต่ละตัวตามเดิม) */
+.edm-tabs button[data-go="signup"]{display:none!important}.edm-gate .edm-badge,.edm-gate a[href*="buy=1"]{display:none!important}
+@media(max-width:560px){.hi h1{font-size:22px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="w"><a class="brand" href="/"><i>EDM</i><span>ระบบของฉัน</span></a><div class="nav"></div></div></header>
+<main><div class="w" id="root"><div class="wait">กำลังโหลด…</div></div></main>
+<footer><a href="/">← ไปหน้าร้าน Excel Data Master</a></footer>
+
+<script src="/assets/icons.js?v=10"></script>
+<script>
+/* หน้า "ระบบของฉัน" (24 พ.ย.) · แสดงเฉพาะระบบที่สมาชิกมีสิทธิ์ (อ่านจาก EDM_MEMBER เดิม ไม่แก้ member.js / หลังบ้าน) */
+(function(){
+  "use strict";
+  var SYS={bill:["เปิดบิลออนไลน์","/bill/"],stock:["สต๊อกสินค้า","/stock/"],account:["บัญชีร้านค้า","/account/"],shop:["ระบบร้านค้า (บิล · สต๊อก · บัญชี)","/app/"],cafe:["ร้านคาเฟ่ (POS)","/cafe/"],book:["จองห้อง / ให้เช่า","/booking/"],dorm:["ระบบหอพัก / อพาร์ตเมนต์","/app/?ed=dorm"],hotel:["ระบบโรงแรม / โฮมสเตย์","/app/?ed=hotel"],resort:["ระบบรีสอร์ท / บ้านพัก","/app/?ed=resort"],meet:["ระบบห้องประชุม / ให้เช่าอุปกรณ์","/app/?ed=meet"],salon:["ระบบนัดหมาย ร้านเสริมสวย / สปา","/app/?ed=salon"],tech:["ระบบจองช่าง / บริการถึงบ้าน","/app/?ed=tech"],payroll:["คำนวณเงินเดือน","/payroll/"],time:["ลงเวลา / ตอกบัตร","/time/"],todo:["To-Do งานที่ต้องทำ","/todo/"],finance:["การเงิน SME & ฟรีแลนซ์","/finance/"],orders:["จัดการออเดอร์ร้านออนไลน์","/orders/"],pos:["POS ร้านค้าปลีก / มินิมาร์ท","/pos/"],goals:["ตั้งเป้าหมาย Smart Goal","/goals/"],plan:["Project Planner วางแผนโปรเจกต์","/plan/"],pet:["ร้านสัตว์เลี้ยง / คลินิกสัตว์","/pet/"],loan:["ติดตามค่างวด / สัญญาเช่าซื้อ","/loan/"],due:["ติดตามวันครบกำหนด","/due/"],form:["แบบฟอร์มเอกสาร","/form/"],petbook:["สมุดสุขภาพสัตว์เลี้ยง","/petbook/"],hr:["แดชบอร์ดวิเคราะห์เงินเดือน HR","/hr/"],att:["เช็กชื่อพนักงาน มา ขาด ลา","/att/"],spend:["บันทึกรายรับ-รายจ่าย","/spend/"],sales:["ระบบดูแลทีมขาย","/sales/"],edmacc:["ระบบบัญชี EDM","/edm-acc/"]};
+  var GROUP={shop:["shop","bill","stock","account"],book:["book","dorm","hotel","resort","meet","salon","tech"],kitonline:["orders","stock","finance"],kitsalon:["salon","payroll","time"],all:["shop","bill","stock","account","cafe","book","dorm","hotel","resort","meet","salon","tech","payroll","todo"]};
+  // ข้อมูลในเครื่องที่บอกว่าเคยใช้ระบบนั้น (ใช้กับบัญชีรุ่นเก่าที่ใช้ได้ทุกระบบ)
+  var DATA={shop:["edm_bill_docs","edm_stock_items"],cafe:["edm_cafe_menu"],book:["edm_book_list","edm_book_res"],dorm:["edm_book_dorm_list"],hotel:["edm_book_hotel_list"],resort:["edm_book_resort_list"],meet:["edm_book_meet_list"],salon:["edm_book_salon_list"],tech:["edm_book_tech_list"],payroll:["edm_pay_emps"],time:["edm_time_log"],todo:["edm_tdsheet_items","edm_todo_items"],finance:["edm_fin_items"],orders:["edm_ord_items"],pos:["edm_pos_sales"],goals:["edm_goal_items"],plan:["edm_plan_tasks"],pet:["edm_pet_pets"],loan:["edm_loan_items"],due:["edm_due_items"],form:["edm_form_docs"],petbook:["edm_petbook_data"],hr:["edm_hr_emps"],att:["edm_att_emps"],spend:["edm_spend_items"]};
+  var ICO={shop:"app",book:"booking",dorm:"booking",hotel:"booking",resort:"booking",meet:"booking",salon:"booking",tech:"booking"};
+  var TM=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function thD(ms){var d=new Date(ms);return d.getDate()+" "+TM[d.getMonth()]+" "+(d.getFullYear()+543)}
+  function has(k){return (DATA[k]||[]).some(function(n){try{var v=localStorage.getItem(n);return v&&v!=="[]"&&v!=="{}"}catch(e){return false}})}
+  // ยุบรายการ: มีระบบร้านค้า = ไม่ต้องแยกบิล/สต๊อก/บัญชี · มีจองแบบเดิม (book) = ครอบทุกแบบ
+  function collapse(L){
+    var o=L.slice();
+    if(o.indexOf("shop")>=0)o=o.filter(function(k){return ["bill","stock","account"].indexOf(k)<0});
+    if(o.indexOf("book")>=0)o=o.filter(function(k){return GROUP.book.indexOf(k)<1});
+    return o.filter(function(k){return SYS[k]});
+  }
+  function expOf(me,k){
+    var X=me.sx,mx=0;
+    if(X&&typeof X==="object")Object.keys(X).forEach(function(c){if((GROUP[c]||[c]).indexOf(k)>=0)mx=Math.max(mx,Number(X[c])||0)});
+    return mx||Number(me.exp)||0;
+  }
+  function icon(k){try{return window.EDM_ICON_FOR?EDM_ICON_FOR(ICO[k]||k):""}catch(e){return ""}}
+  function card(me,k){
+    var e=expOf(me,k),left=e?Math.ceil((e-Date.now())/864e5):0,ex=!e||left<=0,tr=me.status==="ทดลองใช้"&&!me.paid;
+    var tag=ex?'<span class="tag ex">หมดอายุ</span>':tr?'<span class="tag tr">ทดลองใช้</span>':'<span class="tag">สมาชิก</span>';
+    var st=ex?(e?"หมดอายุเมื่อ "+thD(e):"ยังไม่เปิดสิทธิ์"):"ใช้ได้ถึง "+thD(e)+" · เหลือ "+left+" วัน";
+    var buy="";try{buy=EDM_MEMBER.buyUrl(k)}catch(x){}
+    var renew=(ex||tr||left<=7)&&buy?'<a class="btn bs" href="'+esc(buy)+'" target="_blank" rel="noopener">'+(tr?"ซื้อเลย":"ต่ออายุ")+'</a>':"";
+    return '<div class="card"><div class="top"><span class="ic">'+icon(k)+'</span><div><h3>'+esc(SYS[k][0])+'</h3><div class="st '+(ex?"bad":left<=3?"warn":"")+'">'+tag+esc(st)+'</div></div></div>'+
+      '<div class="acts"><a class="btn bp" href="'+SYS[k][1]+'">เปิดใช้งาน →</a>'+renew+'</div></div>';
+  }
+  var last="";
+  function render(){
+    var R=document.getElementById("root"),M=window.EDM_MEMBER,me=M&&M.me;
+    var sig=me?JSON.stringify([me.email,me.sys,me.exp,me.sx,me.status,me.paid,me.name]):"-";
+    if(sig===last)return;last=sig;
+    if(!me||!me.token){R.innerHTML='<div class="wait">กรุณาเข้าสู่ระบบด้วยอีเมลและรหัสผ่านที่สมัครไว้</div>';return}
+    var L=M.sysList(),h='<div class="hi"><h1>สวัสดีค่ะ'+(me.name?" คุณ"+esc(me.name):"")+'</h1><p>'+esc(me.email)+'</p></div>';
+    if(L){
+      var mine=collapse(L);
+      h+='<div class="sec">ระบบของคุณ ('+mine.length+')</div>'+(mine.length?'<div class="grid">'+mine.map(function(k){return card(me,k)}).join("")+'</div>':'<p class="empty">ยังไม่มีระบบในบัญชีนี้ ทัก LINE ร้านได้เลยค่ะ</p>');
+    }else{
+      // บัญชีรุ่นเดิม (ใช้ได้ทุกระบบ): ขึ้นระบบที่เคยใช้ในเครื่องนี้ก่อน
+      var all=Object.keys(SYS).filter(function(k){return ["bill","stock","account","edmacc"].indexOf(k)<0}),used=all.filter(has),rest=all.filter(function(k){return used.indexOf(k)<0});
+      h+='<div class="sec">ระบบที่คุณใช้อยู่</div>'+(used.length?'<div class="grid">'+used.map(function(k){return card(me,k)}).join("")+'</div>':'<p class="empty">ยังไม่พบข้อมูลในเครื่องนี้ เลือกระบบด้านล่างได้เลยค่ะ</p>')+
+        '<details class="box" style="margin-top:16px"'+(used.length?"":" open")+'><summary>ระบบอื่นที่บัญชีนี้ใช้ได้ ('+rest.length+')</summary><div class="grid" style="margin-top:14px">'+rest.map(function(k){return card(me,k)}).join("")+'</div></details>';
+    }
+    h+='<div class="sec">เคล็ดลับ</div><details class="box"><summary>📱 ใส่ไอคอน "ระบบของฉัน" ไว้บนหน้าจอมือถือ</summary><ol><li><b>iPhone:</b> เปิดหน้านี้ใน Safari → กดปุ่มแชร์ (สี่เหลี่ยมมีลูกศร) → "เพิ่มไปยังหน้าจอโฮม"</li><li><b>Android:</b> เปิดใน Chrome → เมนู ⋮ → "เพิ่มลงในหน้าจอหลัก" หรือ "ติดตั้งแอป"</li><li>ครั้งต่อไปแตะไอคอนเดียว เข้าระบบของคุณได้ทันที</li></ol></details>'+
+      '<div class="box help"><p>เข้าใช้งานไม่ได้ หรือสงสัยตรงไหน ทักร้านได้ทุกวัน 8:00–22:00</p><a class="btn" href="https://line.me/R/ti/p/%40856tvnxs" target="_blank" rel="noopener">ทัก LINE ร้าน</a></div>';
+    R.innerHTML=h;
+  }
+  // หัวหน้าต่างเข้าสู่ระบบ: ใช้ชื่อหน้านี้ (member.js ตั้งชื่อระบบตามหน้าที่เปิด)
+  function gateTitle(){var h=document.querySelector(".edm-gate .edm-card h2");if(h&&h.textContent!=="เข้าสู่ระบบของฉัน"&&document.querySelector('.edm-tabs'))h.textContent="เข้าสู่ระบบของฉัน"}
+  function boot(){render();gateTitle();setInterval(render,1000);new MutationObserver(gateTitle).observe(document.body,{childList:true,subtree:true})}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
+</script>
+<script src="/assets/track.js?v=6" defer></script>
+<script src="/assets/member.js?v=112" defer></script>
+</body>
+</html>
