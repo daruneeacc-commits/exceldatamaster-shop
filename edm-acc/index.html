@@ -1566,8 +1566,8 @@ function thDate(d) { if (!d) return ''; var p = d.split('-'); return Number(p[2]
 /* ---------- หน้ารายงานภาษี ---------- */
 S.tx2 = { month: '', vat: 'purchase', wht: 'pnd3' };
 var TAX_TABS = {
-  vat: [['purchase', 'รายงานภาษีซื้อ'], ['sales', 'รายงานภาษีขาย'], ['pp30', 'สรุป ภ.พ.30'], ['pending', 'ยังไม่ถึงกำหนด'], ['rates', 'อัตราภาษี / ตั้งค่า']],
-  wht: [['pnd3', 'ภ.ง.ด.3'], ['pnd53', 'ภ.ง.ด.53'], ['pnd1', 'ภ.ง.ด.1'], ['whtrec', 'ภาษีถูกหัก ณ ที่จ่าย'], ['rates', 'อัตราภาษี / ตั้งค่า']]
+  vat: [['purchase', 'รายงานภาษีซื้อ'], ['sales', 'รายงานภาษีขาย'], ['pp30', 'สรุป ภ.พ.30'], ['pp30f', '📋 เตรียมแบบ ภ.พ.30'], ['pending', 'ยังไม่ถึงกำหนด'], ['rates', 'อัตราภาษี / ตั้งค่า']],
+  wht: [['whts', '📋 สรุปประจำเดือน'], ['pnd3', 'ภ.ง.ด.3'], ['pnd53', 'ภ.ง.ด.53'], ['pnd1', 'ภ.ง.ด.1'], ['whtrec', 'ภาษีถูกหัก ณ ที่จ่าย'], ['rates', 'อัตราภาษี / ตั้งค่า']]
 };
 function pVat() { pTax('vat'); }
 function pWht() { pTax('wht'); }
@@ -1581,10 +1581,13 @@ function pTax(page) {
     '<div id="txOut"><div class="empty">กำลังโหลด...</div></div>';
   if (tab === 'rates') return taxSettings(page);
   $('txm').onchange = function () { S.tx2.month = this.value; taxRun(page); };
+  if (page === 'vat') ensureBchs().then(function (bs) { if (bs.length > 1 && $('txm') && !$('txbr')) $('txm').insertAdjacentHTML('afterend', '<label class="small">สาขา</label><select class="in" id="txbr" style="width:auto" onchange="S.tx2.br=this.value;taxRun(\'vat\')"><option value="">ทุกสาขา (รวม)</option>' + bs.map(function (b) { return '<option value="' + b.id + '"' + (S.tx2.br === b.id ? ' selected' : '') + '>' + esc(b.code + ' ' + b.name) + '</option>'; }).join('') + '</select>'); });
   taxRun(page);
 }
 function taxRun(page, mode) {
-  var p = { company_id: S.cid, report: S.tx2[page], month: S.tx2.month, include_draft: S.incDraft }, pr = mode === 'print' ? printer() : null;
+  if (S.tx2[page] === 'pp30f') return pp30Run(mode);
+  if (S.tx2[page] === 'whts') return whtsRun(mode);
+  var p = { company_id: S.cid, report: S.tx2[page], month: S.tx2.month, include_draft: S.incDraft, branch_id: page === 'vat' ? S.tx2.br || '' : '' }, pr = mode === 'print' ? printer() : null;
   if (mode === 'export') return call('tax.export', p).then(function (r) {
     openM('ส่งออกรายงานภาษี', '<p style="margin-top:0">สร้างไฟล์ <b>' + esc(r.name) + '</b> แล้ว</p><div class="bar"><a class="btn" href="' + r.xlsxUrl + '" target="_blank" rel="noopener">ดาวน์โหลด Excel (.xlsx)</a><a class="btn ghost" href="' + r.sheetUrl + '" target="_blank" rel="noopener">เปิดใน Google Sheets</a></div>', '<button class="btn ghost" onclick="closeM()">ปิด</button>');
   }).catch(fail);
@@ -1598,6 +1601,40 @@ function taxRun(page, mode) {
         '<div class="co">ชื่อผู้ประกอบการ <b>' + esc(c.name_th) + '</b> · เลขประจำตัวผู้เสียภาษี ' + esc(c.tax_id || '-') + ' · ' + esc(c.branch || '') + '<br>' + esc(c.address || '') + '</div>' + html + '</div>');
     } else $('txOut').innerHTML = html;
   }).catch(function (e) { if (pr) pr.close(); fail(e); });
+}
+/* ---------- Phase 4: เตรียมแบบ ภ.พ.30 · สรุปภาษีหัก ณ ที่จ่าย ---------- */
+function pp30Run(mode) {
+  if (mode === 'export') return toast('ใช้ปุ่มพิมพ์ แล้วบันทึกเป็น PDF · ส่งออก Excel ใช้แท็บรายงานภาษีซื้อ/ขาย', 'warn');
+  var pr = mode === 'print' ? printer() : null;
+  call('tax.pp30prep', { company_id: S.cid, month: S.tx2.month, include_draft: S.incDraft, branch_id: S.tx2.br || '', carry: S.tx2.carry == null ? '' : S.tx2.carry }).then(function (r) {
+    S.ppDocs = {}; r.lines.concat(r.purchase_info).forEach(function (l, i) { if (l.docs) S.ppDocs[i] = l; });
+    var big = { 5: 1, 7: 1, 8: 1, 9: 1, 11: 1, 12: 1 }, c = co();
+    var tb = '<table class="t"><tbody>' + r.lines.map(function (l, i) { return '<tr' + (big[l.no] ? ' class="tot"' : '') + '><td style="width:34px;text-align:center"><b>' + l.no + '</b></td><td>' + esc(l.label) + (l.no === 10 && !pr ? ' <button class="btn ghost sm" onclick="ppCarry()">แก้</button>' + (r.carry_auto !== l.amount ? ' <span class="small">(คำนวณได้ ' + money(r.carry_auto) + ')</span>' : '') : '') + '</td><td class="num" style="font-size:15px">' + money(l.amount) + '</td>' + (pr ? '' : '<td>' + (l.docs && l.docs.length ? '<span class="lk" onclick="ppDocs(' + i + ')">' + l.docs.length + ' เอกสาร</span>' : '') + '</td>') + '</tr>'; }).join('') + '</tbody></table>';
+    var pi = '<table class="t"><thead><tr><th>การซื้อในเดือนนี้ (ประกอบการตรวจ ไม่อยู่ในแบบ)</th><th class="num">มูลค่า</th><th class="num">ภาษี</th><th class="num">ใบ</th></tr></thead><tbody>' + r.purchase_info.map(function (l, i) { var k = r.lines.length + i; return '<tr><td>' + esc(l.label) + '</td><td class="num">' + money(l.amount) + '</td><td class="num">' + money(l.vat) + '</td><td class="num">' + (l.docs && l.docs.length && !pr ? '<span class="lk" onclick="ppDocs(' + k + ')">' + l.count + '</span>' : l.count) + '</td></tr>'; }).join('') + '</tbody></table>';
+    var hd = '<div style="text-align:center"><b style="font-size:16px">แบบแสดงรายการภาษีมูลค่าเพิ่ม (ภ.พ.30) – ข้อมูลเตรียมกรอก</b><br>เดือนภาษี ' + thMonth(r.month) + '</div><div class="small" style="margin:8px 0">' + esc(c.name_th) + ' · เลขประจำตัวผู้เสียภาษี ' + esc(c.tax_id || '-') + (r.branch_id ? ' · เฉพาะสาขาที่เลือก' : '') + '</div>';
+    var ft = '<p class="small">กำหนดยื่น: แบบกระดาษภายใน ' + thDate(r.due_paper) + ' · ยื่นออนไลน์ภายใน ' + thDate(r.due_online) + (r.drafts && !r.include_draft ? ' · ⚠ ยังมีรายการไม่ Post ' + r.drafts + ' รายการ' : '') + '</p>';
+    var html = hd + tb + '<div style="height:12px"></div>' + pi + ft;
+    if (pr) pr.show('ภ.พ.30 ' + thMonth(r.month), '<div class="pv">' + html + '</div>'); else $('txOut').innerHTML = '<div class="card">' + html + '</div>';
+  }).catch(function (e) { if (pr) pr.close(); failNew(e); });
+}
+function ppCarry() { var v2 = prompt('ภาษีที่ชำระเกินยกมา (เว้นว่าง = คำนวณจากระบบ)', S.tx2.carry || ''); if (v2 == null) return; S.tx2.carry = v2.trim() === '' ? null : v2.replace(/,/g, '').trim(); pp30Run(); }
+function ppDocs(i) {
+  var l = S.ppDocs[i]; if (!l) return;
+  openM((l.no ? 'ช่อง ' + l.no + ' – ' : '') + l.label, '<div class="tw"><table class="t"><thead><tr><th>วันที่</th><th>เลขที่</th><th>ใบกำกับ</th><th>คู่ค้า</th><th class="num">มูลค่า</th><th class="num">ภาษี</th></tr></thead><tbody>' + l.docs.map(function (d) { return '<tr><td>' + esc(d.date) + '</td><td><span class="lk" onclick="closeM();jView(\'' + d.journal_id + '\')">' + esc(d.doc_no) + '</span></td><td>' + esc(d.inv_no || '') + '</td><td>' + esc(d.party) + '</td><td class="num">' + money(d.amount) + '</td><td class="num">' + (d.vat != null ? money(d.vat) : '') + '</td></tr>'; }).join('') + '</tbody></table></div>', '<button class="btn ghost" onclick="closeM()">ปิด</button>', true);
+}
+function whtsRun(mode) {
+  if (mode === 'export') return toast('ส่งออก Excel ได้ที่แท็บ ภ.ง.ด.3 / 53 / 1', 'warn');
+  var pr = mode === 'print' ? printer() : null;
+  call('tax.whtSummary', { company_id: S.cid, month: S.tx2.month, include_draft: S.incDraft }).then(function (r) {
+    var sec = function (side, title) {
+      return '<h3 style="margin:14px 0 6px">' + title + '</h3><table class="t"><thead><tr><th>แบบ</th><th class="num">ราย</th><th class="num">ผู้รับเงิน</th><th class="num">จำนวนเงิน</th><th class="num">ภาษี</th><th>ตรวจ</th></tr></thead><tbody>' + r.rows.filter(function (x) { return x.side === side; }).map(function (x) {
+        return '<tr><td><b>' + esc(x.label) + '</b>' + x.by_income.map(function (b) { return '<div class="small">· ' + esc(b.income) + ' ' + b.count + ' ราย ' + money(b.base) + ' / ภาษี ' + money(b.tax) + '</div>'; }).join('') + '</td><td class="num">' + x.count + '</td><td class="num">' + x.payees + '</td><td class="num">' + money(x.base) + '</td><td class="num"><b>' + money(x.tax) + '</b></td><td class="small" style="color:#b45309">' + esc(x.warn) + '</td></tr>';
+      }).join('') + '</tbody></table>';
+    };
+    var html = '<div style="text-align:center"><b style="font-size:16px">สรุปภาษีหัก ณ ที่จ่าย</b><br>เดือนภาษี ' + thMonth(r.month) + '</div>' + sec('we', 'กิจการเป็นผู้หัก (ต้องนำส่ง)') + '<p style="text-align:right"><b>รวมต้องนำส่ง ' + money(r.total_we) + ' บาท</b></p>' + sec('them', 'กิจการถูกหัก (ใช้เป็นเครดิตภาษีเงินได้ ไม่ต้องนำส่ง)') +
+      '<p class="small">กำหนดยื่น ภ.ง.ด.1/3/53: แบบกระดาษภายใน ' + thDate(r.due_paper) + ' · ยื่นออนไลน์ภายใน ' + thDate(r.due_online) + '</p>';
+    if (pr) pr.show('สรุปภาษีหัก ณ ที่จ่าย ' + thMonth(r.month), '<div class="pv">' + html + '</div>'); else $('txOut').innerHTML = '<div class="card">' + html + '</div>';
+  }).catch(function (e) { if (pr) pr.close(); failNew(e); });
 }
 function taxTable(r, print) {
   if (r.report === 'pp30') {
