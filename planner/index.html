@@ -553,6 +553,13 @@ demo=function(){const n=D.tasks.length;demo0();if(D.tasks.length===n)return;cons
  D.one[t]=Object.assign({int:'ทำเรื่องสำคัญก่อน',one:'ปิดยอดขายประจำวัน'},D.one[t]||{});D.weekNote[w]=D.weekNote[w]||'เตรียมร้านรับปีใหม่';if(!D.s.word)D.s.word='เติบโต';
  D.inbox.push({id:uid(),text:'ไอเดีย: ทำแพ็กของขวัญปีใหม่',ts:Date.now()});save();render()};
 
+
+/* กล่องยืนยันของระบบเอง (24 พ.ย.) · เบราว์เซอร์ในแอป LINE/Facebook บางเครื่องไม่เด้ง confirm() → กดล้างข้อมูล/ลบแล้วไม่เกิดอะไร */
+let _cfOk=null,_cfEl=null;
+['click','change'].forEach(t=>document.addEventListener(t,e=>{if(!(e.target.closest&&e.target.closest('#mod')))_cfEl=e.target.closest?e.target.closest('button,input,select,a')||e.target:e.target},true));
+window.confirm=function(msg){if(_cfOk===msg){_cfOk=null;return true}const el=_cfEl;
+ modal(`<h3 style="margin:0 0 12px">ยืนยัน</h3><p style="margin:0 0 16px">${esc(msg)}</p><div class="row"><button class="btn" id="cfY" style="${/ลบ|ล้าง|แทนที่/.test(msg)?'background:var(--red)':''}">ตกลง</button><button class="btn o" onclick="closeMod()">ยกเลิก</button></div>`);
+ document.getElementById('cfY').onclick=()=>{closeMod();_cfOk=msg;if(!el)return;if(el.tagName==='INPUT'||el.tagName==='SELECT')el.dispatchEvent(new Event('change',{bubbles:true}));else el.click();_cfOk=null};return false};
 const _render=render;
 render=function(){_render();const b=document.body,t=THEMES.find(x=>x[0]===D.s.theme)||THEMES[0];b.style.setProperty('--p',t[1]);if(D.s.dark)b.style.removeProperty('--bg');else b.style.setProperty('--bg',BG[t[0]]||'#f6f5f1');
  const hd=document.querySelector('header');if(hd){const s=document.createElement('button');s.className='ib';s.title='ค้นหา (Ctrl K)';s.innerHTML=ic('search',22);s.onclick=openSearch;hd.insertBefore(s,hd.lastElementChild)}
