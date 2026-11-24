@@ -185,10 +185,10 @@ function taxList(y){const L=[],s=D.s;
   if(s.vat)add(15,'pp30','ภ.พ.30 ภาษีมูลค่าเพิ่ม',1)}
  const A=(date,code,name,per)=>L.push({id:y+'|'+code,date,name,per,on:1,an:1});
  if(s.emp)A(y+'-02-'+new Date(y,2,0).getDate(),'pnd1k','ภ.ง.ด.1ก สรุปเงินเดือนทั้งปี','ปี '+(y-1+543));
- A(y+'-03-31','pnd90','ภ.ง.ด.90/91 บุคคลธรรมดา','ปี '+(y-1+543));
- A(y+'-05-30','pnd50','ภ.ง.ด.50 นิติบุคคล (รอบบัญชีสิ้น ธ.ค.)','ปี '+(y-1+543));
- A(y+'-08-31','pnd51','ภ.ง.ด.51 นิติบุคคล ครึ่งปี','ครึ่งปี '+(y+543));
- A(y+'-09-30','pnd94','ภ.ง.ด.94 บุคคลธรรมดา ครึ่งปี','ครึ่งปี '+(y+543));
+ if(s.ind)A(y+'-03-31','pnd90','ภ.ง.ด.90/91 บุคคลธรรมดา','ปี '+(y-1+543));
+ if(s.corp)A(y+'-05-30','pnd50','ภ.ง.ด.50 นิติบุคคล (รอบบัญชีสิ้น ธ.ค.)','ปี '+(y-1+543));
+ if(s.corp)A(y+'-08-31','pnd51','ภ.ง.ด.51 นิติบุคคล ครึ่งปี','ครึ่งปี '+(y+543));
+ if(s.ind)A(y+'-09-30','pnd94','ภ.ง.ด.94 บุคคลธรรมดา ครึ่งปี','ครึ่งปี '+(y+543));
  return L.sort((a,b)=>a.date.localeCompare(b.date))}
 
 /* ---------- calcs ---------- */
@@ -323,7 +323,7 @@ sales(){const m=ui.mon,l=D.sales.filter(x=>x.date.startsWith(m)),tot=sum(l,x=>x.
 
 tax(){const y=ui.ty,t=TODAY(),L=taxList(y),g={};L.forEach(x=>(g[x.date.slice(0,7)]=g[x.date.slice(0,7)]||[]).push(x));const dn=L.filter(x=>D.taxDone[x.id]).length;
  return`<h2>ปฏิทินภาษี</h2><p class="sub">ยื่นแล้ว ${dn}/${L.length} รายการ · ติ๊กเมื่อยื่นเรียบร้อย</p>
- <div class="card row"><div class="seg">${[y-1,y,y+1].map(v=>`<button class="${v===y?'on':''}" onclick="ui.ty=${v};render()">${v+543}</button>`).join('')}</div><label class="row"><input type="checkbox" ${D.s.vat?'checked':''} onchange="setS('vat',this.checked)">จด VAT</label><label class="row"><input type="checkbox" ${D.s.emp?'checked':''} onchange="setS('emp',this.checked)">มีลูกจ้าง</label><label class="row"><input type="checkbox" ${D.s.wht?'checked':''} onchange="setS('wht',this.checked)">หัก ณ ที่จ่าย</label></div>
+ <div class="card row"><div class="seg">${[y-1,y,y+1].map(v=>`<button class="${v===y?'on':''}" onclick="ui.ty=${v};render()">${v+543}</button>`).join('')}</div><label class="row"><input type="checkbox" ${D.s.vat?'checked':''} onchange="setS('vat',this.checked)">จด VAT</label><label class="row"><input type="checkbox" ${D.s.emp?'checked':''} onchange="setS('emp',this.checked)">มีลูกจ้าง</label><label class="row"><input type="checkbox" ${D.s.wht?'checked':''} onchange="setS('wht',this.checked)">หัก ณ ที่จ่าย</label><label class="row"><input type="checkbox" ${D.s.ind?'checked':''} onchange="setS('ind',this.checked)">บุคคลธรรมดา (ภ.ง.ด.90/91, 94)</label><label class="row"><input type="checkbox" ${D.s.corp?'checked':''} onchange="setS('corp',this.checked)">นิติบุคคล (ภ.ง.ด.50, 51)</label></div>
  ${Object.keys(g).map(k=>`<div class="card"><h3>${thym(k)}</h3>${g[k].map(x=>{const n=Math.round((pd(x.date)-pd(t))/864e5),d=D.taxDone[x.id];return`<div class="li ${d?'done':''}"><input type="checkbox" ${d?'checked':''} onchange="togTax('${x.id}')"><div class="t">${esc(x.name)}<div class="mut">${x.per} · กระดาษ ${th(x.date)}${x.on?' · ออนไลน์ +8 วัน':''}</div></div>${d?'<span class="tag">ยื่นแล้ว</span>':n<0?'<span class="tag r">เลยกำหนด</span>':n<=7?`<span class="tag a">อีก ${n} วัน</span>`:''}</div>`}).join('')}</div>`).join('')}
  <p class="mut">* กำหนดการทั่วไป ใช้เพื่อเตือนความจำเท่านั้น หากตรงวันหยุดหรือมีประกาศขยายเวลา ให้ยึดตามประกาศกรมสรรพากร / สำนักงานประกันสังคม</p>`},
 
@@ -461,7 +461,7 @@ P.tasks=function(){const o={todo:[],doing:[],done:[]};D.tasks.forEach(x=>(o[x.st
  else view=`<div class="card">${srt(open).map(taskRow).join('')||'<div class="mut">ไม่มีงานค้าง</div>'}${o.done.length?`<details style="margin-top:8px"><summary class="mut">งานที่เสร็จแล้ว (${o.done.length})</summary>${o.done.map(taskRow).join('')}</details>`:''}</div>`;
  return`<h2>งาน & To-do</h2><p class="sub">ค้าง ${open.length} · เสร็จแล้ว ${o.done.length}</p>${form}<div class="row" style="margin-bottom:12px"><div class="seg">${[['list','รายการ'],['kb','กระดาน'],['mx','ตารางความสำคัญ']].map(([k,n])=>`<button class="${ui.tv===k?'on':''}" onclick="ui.tv='${k}';render()">${n}</button>`).join('')}</div><span class="f"></span><button class="btn o s" onclick="exTasks()">⬇ Excel</button></div>${view}`};
 
-P.tax0=P.tax;P.tax=function(){const h=P.tax0();if(D.s.vat||D.s.emp||D.s.wht)return h;return h.replace('</div>','</div><div class="card warn"><b>ยังไม่ได้เลือกภาษีที่ต้องยื่น</b><div class="mut">ติ๊กด้านบนให้ตรงกับธุรกิจของคุณ (จด VAT / มีลูกจ้าง / หัก ณ ที่จ่าย) ระบบจะสร้างวันยื่นและเตือนให้อัตโนมัติ · ที่เห็นด้านล่างคือแบบประจำปีที่ทุกคนต้องยื่น</div></div>')};
+P.tax0=P.tax;P.tax=function(){const h=P.tax0();if(D.s.vat||D.s.emp||D.s.wht||D.s.ind||D.s.corp)return h;return h.replace('</div>','</div><div class="card warn"><b>ยังไม่ได้เลือกภาษีที่ต้องยื่น</b><div class="mut">ติ๊กด้านบนให้ตรงกับธุรกิจของคุณ (จด VAT / มีลูกจ้าง / หัก ณ ที่จ่าย) ระบบจะสร้างวันยื่นและเตือนให้อัตโนมัติ</div></div>')};
 P.cal0=P.cal;
 P.cal=function(){const v=ui.cv||'m',seg=`<div class="seg" style="margin-bottom:12px">${[['m','เดือน'],['w','สัปดาห์'],['y','ทั้งปี']].map(([k,n])=>`<button class="${v===k?'on':''}" onclick="ui.cv='${k}';render()">${n}</button>`).join('')}</div>`;
  if(v==='w')return calWeek(seg);if(v==='y')return calYear(seg);
