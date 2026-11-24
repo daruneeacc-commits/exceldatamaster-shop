@@ -202,13 +202,14 @@ h2.pt{color:var(--pri2)}
 var S = { token: null, lang: 'th', cos: [], cid: '', page: 'dashboard', coa: null, f: { q: '', cat: '', type: '', status: '', level: '', pg: 1 }, au: { pg: 1, q: '' }, st: null, imp: null };
 try { S.lang = localStorage.getItem('edm_acc_lang') || 'th'; } catch (e) {}
 var L = {
-  th: { dashboard: 'แดชบอร์ด', companies: 'จัดการบริษัท', coa: 'ผังบัญชี', structure: 'โครงสร้างรหัสบัญชี', sales: 'ระบบขาย', purch: 'ระบบซื้อ', payroll: 'ระบบเงินเดือน', stock: 'สินค้า / สต็อก', cheque: 'เช็ครับ / เช็คจ่าย', bankrec: 'กระทบยอดธนาคาร', journal: 'สมุดรายวัน', posting: 'Post รายการ', petty: 'เงินสดย่อย', gl: 'บัญชีแยกประเภท', vat: 'ภาษีมูลค่าเพิ่ม', wht: 'ภาษีหัก ณ ที่จ่าย', cc: 'ศูนย์ต้นทุน', tb: 'งบทดลอง', fs: 'งบการเงิน', closing: 'ปิดงวดบัญชี', audit: 'บันทึกการใช้งาน', settings: 'ตั้งค่าระบบ',
+  th: { dashboard: 'แดชบอร์ด', companies: 'จัดการบริษัท', coa: 'ผังบัญชี', structure: 'โครงสร้างรหัสบัญชี', sales: 'ระบบขาย', purch: 'ระบบซื้อ', payroll: 'ระบบเงินเดือน', stock: 'สินค้า / สต็อก', cheque: 'เช็ครับ / เช็คจ่าย', bankrec: 'กระทบยอดธนาคาร', journal: 'สมุดรายวัน', posting: 'Post รายการ', petty: 'เงินสดย่อย', gl: 'บัญชีแยกประเภท', vat: 'ภาษีมูลค่าเพิ่ม', wht: 'ภาษีหัก ณ ที่จ่าย', cc: 'ศูนย์ต้นทุน', tb: 'งบทดลอง', fs: 'งบการเงิน', closing: 'ปิดงวดบัญชี', audit: 'บันทึกการใช้งาน', settings: 'ตั้งค่าระบบ', office: 'สำนักงานบัญชี', users: 'ผู้ใช้และสิทธิ์',
     g1: 'ข้อมูลหลัก', g2: 'ขายและบันทึกบัญชี', g3: 'ภาษีและต้นทุน', g4: 'รายงาน', g5: 'ระบบ', logout: 'ออกจากระบบ', add: 'เพิ่ม', save: 'บันทึก', cancel: 'ยกเลิก', search: 'ค้นหา', all: 'ทั้งหมด', code: 'รหัสบัญชี', name: 'ชื่อบัญชี', type: 'ประเภท', control: 'รหัสควบคุม', status: 'สถานะ', level: 'ระดับ', category: 'หมวด', actions: '' },
-  en: { dashboard: 'Dashboard', companies: 'Company Management', coa: 'Chart of Accounts', structure: 'Account Structure', sales: 'Sales', purch: 'Purchases', payroll: 'Payroll', stock: 'Inventory', cheque: 'Cheques', bankrec: 'Bank Reconciliation', journal: 'Journal Entries', posting: 'Posting', petty: 'Petty Cash', gl: 'General Ledger', vat: 'VAT Management', wht: 'Withholding Tax', cc: 'Cost Center', tb: 'Trial Balance', fs: 'Financial Statements', closing: 'Period Closing', audit: 'Audit Log', settings: 'System Settings',
+  en: { dashboard: 'Dashboard', companies: 'Company Management', coa: 'Chart of Accounts', structure: 'Account Structure', sales: 'Sales', purch: 'Purchases', payroll: 'Payroll', stock: 'Inventory', cheque: 'Cheques', bankrec: 'Bank Reconciliation', journal: 'Journal Entries', posting: 'Posting', petty: 'Petty Cash', gl: 'General Ledger', vat: 'VAT Management', wht: 'Withholding Tax', cc: 'Cost Center', tb: 'Trial Balance', fs: 'Financial Statements', closing: 'Period Closing', audit: 'Audit Log', settings: 'System Settings', office: 'Accounting Office', users: 'Users & Roles',
     g1: 'Master data', g2: 'Accounting', g3: 'Tax & cost', g4: 'Reports', g5: 'System', logout: 'Log out', add: 'Add', save: 'Save', cancel: 'Cancel', search: 'Search', all: 'All', code: 'Account code', name: 'Account name', type: 'Type', control: 'Control', status: 'Status', level: 'Level', category: 'Category', actions: '' }
 };
 function t(k) { return (L[S.lang] && L[S.lang][k]) || L.th[k] || k; }
 var IC = {
+  users: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8', office: 'M3 21h18M4 21V5l8-3 8 3v16M9 9h2M13 9h2M9 13h2M13 13h2M10 21v-4h4v4',
   dashboard: 'M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z', companies: 'M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1',
   coa: 'M4 5h4M4 12h4M4 19h4M10 5h10M12 12h8M12 19h8M6 5v14', structure: 'M4 4h6v6H4zM14 14h6v6h-6zM7 10v4h7M14 4h6v6h-6z',
   journal: 'M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM9 8h6M9 12h6', gl: 'M4 19V5M4 19h16M8 15l3-4 3 2 5-6', vat: 'M6 18L18 6M7 7h.01M17 17h.01',
@@ -225,9 +226,12 @@ var MENU = [
   { g: 'g2', items: [['sales', 3], ['purch', 3], ['stock', 3], ['payroll', 3], ['journal', 3], ['posting', 3], ['petty', 3], ['cheque', 3], ['bankrec', 3], ['gl', 3]] },
   { g: 'g3', items: [['vat', 4], ['wht', 4], ['cc', 5]] },
   { g: 'g4', items: [['tb', 6], ['fs', 6]] },
-  { g: 'g5', items: [['closing', 7], ['audit', 1], ['settings', 1]] }
+  { g: 'g5', items: [['closing', 7], ['office', 1], ['users', 1], ['audit', 1], ['settings', 1]] }
 ];
-var READY = { purch: 1, dashboard: 1, companies: 1, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1, audit: 1, settings: 1 };
+var READY = { office: 1, users: 1, purch: 1, dashboard: 1, companies: 1, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1, audit: 1, settings: 1 };
+var PAGE_MOD = { dashboard: 'dashboard', companies: 'company', coa: 'coa', structure: 'coa', sales: 'sales', purch: 'purchase', stock: 'inventory', payroll: 'payroll', journal: 'journal', posting: 'journal', petty: 'bank', cheque: 'bank', bankrec: 'bank', gl: 'report', vat: 'tax', wht: 'tax', cc: 'report', tb: 'report', fs: 'report', closing: 'journal', office: 'office', users: 'users', audit: 'audit' };
+function can(k) { return !S.me || S.me.owner || (S.me.perms || []).indexOf(k) >= 0; }
+function canPage(p) { var m = PAGE_MOD[p]; if ((p === 'office' || p === 'users') && !S.me) return false; return !m || m === 'dashboard' || m === 'company' || can(m + '.view'); }
 var MONTHS = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
 var CATS = [[1, 'สินทรัพย์', 'Assets'], [2, 'หนี้สิน', 'Liabilities'], [3, 'ส่วนของเจ้าของ', "Owner's Equity"], [4, 'รายได้', 'Revenue'], [5, 'ค่าใช้จ่าย', 'Expenses']];
 
@@ -250,15 +254,32 @@ function MEM() { var m = window.EDM_MEMBER && window.EDM_MEMBER.me; return m && 
 function memAuth() {
   $('app').classList.add('hidden'); $('auth').classList.remove('hidden'); closeM();
   var sb = document.querySelector('#auth .sub'); if (sb) sb.textContent = 'ระบบบัญชีออนไลน์ · Excel Data Master';
+  if (S.office) return offAuth();
   var m = MEM();
   if (!m) {
     $('authBody').innerHTML = '<div class="note">ระบบบัญชีออนไลน์ ใช้งานบนเว็บและมือถือ · ข้อมูลของคุณเก็บแยกเฉพาะบัญชีของคุณ</div>' +
-      '<button class="btn w" onclick="memGate(\'signup\')">ทดลองใช้ฟรี 7 วัน</button><div style="height:8px"></div><button class="btn ghost w" onclick="memGate(\'login\')">เข้าสู่ระบบสมาชิก</button>';
+      '<button class="btn w" onclick="memGate(\'signup\')">ทดลองใช้ฟรี 7 วัน</button><div style="height:8px"></div><button class="btn ghost w" onclick="memGate(\'login\')">เข้าสู่ระบบสมาชิก</button>' +
+      '<p class="small" style="margin:16px 0 0;text-align:center"><a href="#" onclick="offAuth();return false">พนักงานของสำนักงาน: เข้าด้วยรหัสสำนักงาน ›</a></p>';
     clearTimeout(memAuth.t); memAuth.t = setTimeout(function () { if (!S.token && !$('auth').classList.contains('hidden')) memAuth(); }, 1500);
     return;
   }
   $('authBody').innerHTML = '<div class="small">กำลังเปิดระบบ...</div>';
   S.token = 'M'; enter();
+}
+function offAuth() {
+  clearTimeout(memAuth.t); S.office = S.office || ' ';
+  $('app').classList.add('hidden'); $('auth').classList.remove('hidden'); closeM();
+  $('authBody').innerHTML = '<div class="fr"><label class="f req">รหัสสำนักงาน</label><input class="in" id="of" style="text-transform:uppercase" autocomplete="organization"></div>' +
+    '<div class="fr"><label class="f req">ชื่อผู้ใช้</label><input class="in" id="ou" autocomplete="username"></div>' +
+    '<div class="fr"><label class="f req">รหัสผ่าน</label><input class="in" type="password" id="op" autocomplete="current-password"></div>' +
+    '<button class="btn w" onclick="offLogin()">เข้าสู่ระบบ</button><p class="small" style="margin:14px 0 0"><a href="#" onclick="S.office=\'\';memAuth();return false">‹ กลับ</a> · ลืมรหัสผ่าน: ให้เจ้าของสำนักงานตั้งรหัสใหม่ที่เมนู ผู้ใช้และสิทธิ์</p>';
+  try { $('of').value = localStorage.getItem('edm_acc_office') || ''; } catch (e) { }
+  $('op').onkeydown = function (e) { if (e.key === 'Enter') offLogin(); };
+}
+function offLogin() {
+  S.office = v('of').toUpperCase();
+  try { localStorage.setItem('edm_acc_office', S.office); } catch (e) { }
+  call('auth.login', { username: v('ou'), password: $('op').value }).then(function (r) { S.token = r.token; enter(); }).catch(function (e) { fail(e); $('op').value = ''; });
 }
 function memGate(w) { if (window.EDM_MEMBER && EDM_MEMBER.openGate) EDM_MEMBER.openGate(w); else toast('กำลังโหลด ลองอีกครั้ง', 'err'); }
 function memMsg(r) {
@@ -294,7 +315,8 @@ function callDone(q, r) {
 function post(body) {
   var c = conn() || {};
   if (!('token' in body)) body.token = S.token; body.key = c.key || '';
-  if (!OWNER) { var m = MEM(); body.mem = m ? { email: m.email, token: m.token } : { email: '', token: '' }; delete body.token; }
+  if (!OWNER && S.office && S.office.trim()) body.office = S.office;
+  else if (!OWNER) { var m = MEM(); body.mem = m ? { email: m.email, token: m.token } : { email: '', token: '' }; delete body.token; }
   return fetch(c.url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
     .then(function (x) { return x.json(); }, function () { throw new Error('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ (ตรวจอินเทอร์เน็ต/ลิงก์ระบบ)'); });
 }
@@ -386,6 +408,7 @@ function showAuth() {
       $('p2').onkeydown = function (e) { if (e.key === 'Enter') setPw(); };
     } else {
       $('authBody').innerHTML = '<div class="fr"><label class="f">บัญชี Google</label><input class="in" value="' + esc(s.email || 'เข้าผ่านเว็บไซต์') + '" disabled></div>' +
+        '<div class="fr"><label class="f">ชื่อผู้ใช้</label><input class="in" id="un" autocomplete="username" placeholder="เว้นว่าง = เจ้าของสำนักงาน"></div>' +
         '<div class="fr"><label class="f">รหัสผ่าน</label><input class="in" type="password" id="pw" autocomplete="current-password" autofocus></div>' +
         '<button class="btn w" onclick="login()">เข้าสู่ระบบ</button><p class="small" style="margin:14px 0 0">ลืมรหัสผ่าน: เปิด Apps Script แล้วรันฟังก์ชัน resetPassword · <a href="#" onclick="showConn();return false">🔌 ตั้งค่าการเชื่อมต่อ</a></p>';
       $('pw').onkeydown = function (e) { if (e.key === 'Enter') login(); };
@@ -398,10 +421,12 @@ function setPw() {
   call('auth.setPassword', { password: $('p1').value }).then(function (r) { S.token = r.token; enter(); }).catch(fail);
 }
 function login() {
-  call('auth.login', { password: $('pw').value }).then(function (r) { S.token = r.token; enter(); }).catch(function (e) { fail(e); $('pw').value = ''; });
+  call('auth.login', { username: v('un'), password: $('pw').value }).then(function (r) { S.token = r.token; enter(); }).catch(function (e) { fail(e); $('pw').value = ''; });
 }
 function logout() {
+  if (!OWNER && S.office) { S.token = null; S.me = null; return offAuth(); }
   if (!OWNER) return memOut();
+  S.me = null;
   var tk = S.token; S.token = null;
   if (tk) post({ action: 'auth.logout', payload: {}, token: tk }).catch(function () {});
   showAuth();
@@ -419,6 +444,8 @@ function pSetMem() {
 }
 function enter() {
   $('auth').classList.add('hidden'); $('app').classList.remove('hidden'); resetIdle();
+  S.me = null;
+  call('auth.me').then(function (m) { S.me = m; renderSide(); }).catch(function () { });
   loadCos().then(function () { go(S.cos.length ? 'dashboard' : 'companies'); }).catch(fail);
 }
 function loadCos() {
@@ -443,7 +470,8 @@ function toggleLang() { S.lang = S.lang === 'th' ? 'en' : 'th'; try { localStora
 function side(open) { var o = open == null ? !$('side').classList.contains('open') : open; $('side').classList.toggle('open', o); $('scrim').classList.toggle('on', o); }
 function renderSide() {
   $('side').innerHTML = MENU.map(function (g) {
-    return '<div class="mgrp">' + t(g.g) + '</div>' + g.items.map(function (it) {
+    var its = g.items.filter(function (it) { return canPage(it[0]); }); if (!its.length) return '';
+    return '<div class="mgrp">' + t(g.g) + '</div>' + its.map(function (it) {
       return '<div class="mi' + (S.page === it[0] ? ' on' : '') + '" onclick="go(\'' + it[0] + '\')">' + ic(it[0]) + '<span>' + t(it[0]) + '</span>' + (READY[it[0]] ? '' : '<span class="ph">P' + it[1] + '</span>') + '</div>';
     }).join('');
   }).join('');
@@ -451,10 +479,11 @@ function renderSide() {
   $('outBtn').textContent = t('logout');
 }
 function go(p) {
+  if (!canPage(p)) p = 'dashboard';
   S.page = p; side(false); renderSide();
   var needCo = { purch: 1, dashboard: 0, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1 };
   if (needCo[p] && !S.cid) { $('main').innerHTML = head(t(p), '') + '<div class="card empty">กรุณาสร้างบริษัททดลองก่อน<br><br><button class="btn" onclick="go(\'companies\')">ไปที่จัดการบริษัท</button></div>'; return; }
-  ({ purch: pPurch, dashboard: pDash, companies: pCos, coa: pCoa, structure: pStruct, sales: pSales, payroll: pPayroll, stock: pStock, cheque: pCheque, bankrec: pBankRec, journal: pJournal, posting: pPosting, petty: pPetty, gl: pGL, vat: pVat, wht: pWht, tb: pTB, fs: pFS, audit: pAudit, settings: pSet }[p] || pPlan)(p);
+  ({ purch: pPurch, dashboard: pDash, companies: pCos, coa: pCoa, structure: pStruct, sales: pSales, payroll: pPayroll, stock: pStock, cheque: pCheque, bankrec: pBankRec, journal: pJournal, posting: pPosting, petty: pPetty, gl: pGL, vat: pVat, wht: pWht, tb: pTB, fs: pFS, audit: pAudit, settings: pSet, office: pOffice, users: pUsers }[p] || pPlan)(p);
   window.scrollTo(0, 0);
 }
 function head(title, desc, right) { return '<div class="bar" style="align-items:flex-start"><div style="flex:1;min-width:200px"><h2 class="pt">' + esc(title) + '</h2><p class="pd">' + desc + '</p></div>' + (right || '') + '</div>'; }
@@ -494,6 +523,7 @@ function pCos() {
   var rows = S.cos.map(function (c) {
     return '<tr><td class="code">' + esc(c.code) + '</td><td>' + esc(c.name_th) + '<span class="sub2">' + esc(c.name_en) + '</span></td><td>' + esc(c.tax_id || '-') + '</td><td>' + esc(c.branch || '-') + '</td><td>' + MONTHS[c.fiscal_start_month - 1] + '</td><td style="white-space:nowrap">' + (c.folder_url ? '<a href="' + c.folder_url + '" target="_blank" rel="noopener" class="small">📁 โฟลเดอร์</a> · <a href="' + c.file_url + '" target="_blank" rel="noopener" class="small">📊 ไฟล์</a>' : '<span class="small">สร้างเมื่อเปิดใช้</span>') + '</td><td>' + badge('s', c.status) + '</td><td class="act">' +
       (c.id === S.cid ? '<span class="small">กำลังใช้งาน</span> ' : (c.status === 'ACTIVE' ? '<button class="btn ghost sm" onclick="switchCo(\'' + c.id + '\');$(\'coSel\').value=\'' + c.id + '\'">ใช้งาน</button> ' : '')) +
+      '<button class="btn ghost sm" onclick="bchList(\'' + c.id + '\')">สาขา</button> ' +
       '<button class="ib" title="แก้ไข" onclick="coForm(\'' + c.id + '\')">' + ic('edit') + '</button>' +
       '<button class="ib" title="' + (c.status === 'ACTIVE' ? 'ปิดใช้งาน' : 'เปิดใช้งาน') + '" onclick="coStatus(\'' + c.id + '\',\'' + (c.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE') + '\')">' + ic(c.status === 'ACTIVE' ? 'off' : 'on') + '</button></td></tr>';
   }).join('');
@@ -513,13 +543,21 @@ function coForm(id) {
     '<div class="fr"><label class="f">ที่อยู่</label><textarea class="in" id="c_addr" rows="2">' + esc(c.address || '') + '</textarea></div>' +
     '<div class="f2"><div class="fr"><label class="f">โทรศัพท์</label><input class="in" id="c_ph" value="' + esc(c.phone || '') + '"></div>' +
     '<div class="fr"><label class="f">เดือนเริ่มรอบบัญชี</label><select class="in" id="c_fm">' + MONTHS.map(function (m, i) { return '<option value="' + (i + 1) + '"' + (c.fiscal_start_month == i + 1 ? ' selected' : '') + '>' + m + '</option>'; }).join('') + '</select></div></div>' +
+    '<div class="sec">ข้อมูลจดทะเบียน / VAT</div>' +
+    '<div class="f2"><div class="fr"><label class="f">เลขทะเบียนนิติบุคคล</label><input class="in" id="c_reg" maxlength="17" inputmode="numeric" value="' + esc(c.reg_no || '') + '"></div>' +
+    '<div class="fr"><label class="f">วันที่จดทะเบียน</label><input class="in" type="date" id="c_regd" value="' + esc(c.reg_date || '') + '"></div></div>' +
+    '<div class="f2"><div class="fr"><label class="f">ประเภทธุรกิจ</label><input class="in" id="c_biz" value="' + esc(c.business_type || '') + '"></div>' +
+    '<div class="fr"><label class="f">สถานะ VAT</label><select class="in" id="c_vat"><option value="0">ไม่ได้จด VAT</option><option value="1"' + (c.vat_registered === '1' ? ' selected' : '') + '>จด VAT แล้ว</option></select></div></div>' +
+    '<div class="f2"><div class="fr"><label class="f">วันที่จด VAT</label><input class="in" type="date" id="c_vatd" value="' + esc(c.vat_reg_date || '') + '"></div>' +
+    '<div class="fr"><label class="f">ผู้ทำบัญชี</label><input class="in" id="c_acc" value="' + esc(c.accountant || '') + '"></div></div>' +
+    '<div class="fr"><label class="f">ผู้สอบบัญชี</label><input class="in" id="c_aud" value="' + esc(c.auditor || '') + '"></div>' +
     '<div class="sec">ตั้งค่าสต็อกสินค้า</div><div class="fr"><label class="f">ขายสินค้าเกินจำนวนคงเหลือ</label><select class="in" id="c_neg"><option value="0">ไม่ได้ — ต้องรับสินค้าเข้าก่อนขาย (แนะนำ ต้นทุนถูกต้อง)</option><option value="1"' + (coNeg(c) ? ' selected' : '') + '>ได้ — สต็อกติดลบได้ (ใช้ต้นทุนเฉลี่ยล่าสุด แล้วค่อยรับเข้าภายหลัง)</option></select></div>' +
     (id ? '' : '<div class="note">ระบบจะสร้างหมวดบัญชีหลัก 5 หมวดให้อัตโนมัติ และใช้โครงสร้างรหัสเริ่มต้น 1101-01 (ปรับได้ที่เมนูโครงสร้างรหัสบัญชี)</div>'),
     '<button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button><button class="btn" onclick="coSave(\'' + (id || '') + '\')">' + t('save') + '</button>');
 }
 function coNeg(c) { try { return !!(JSON.parse(c.settings || '{}').stock || {}).allow_negative; } catch (e) { return false; } }
 function coSave(id) {
-  var p = { id: id || '', code: v('c_code'), currency: v('c_cur'), name_th: v('c_th'), name_en: v('c_en'), tax_id: v('c_tax'), branch: v('c_br'), address: v('c_addr'), phone: v('c_ph'), fiscal_start_month: Number(v('c_fm')), allow_negative_stock: v('c_neg') === '1' };
+  var p = { id: id || '', code: v('c_code'), currency: v('c_cur'), name_th: v('c_th'), name_en: v('c_en'), tax_id: v('c_tax'), branch: v('c_br'), address: v('c_addr'), phone: v('c_ph'), fiscal_start_month: Number(v('c_fm')), allow_negative_stock: v('c_neg') === '1', reg_no: v('c_reg'), reg_date: v('c_regd'), business_type: v('c_biz'), vat_registered: v('c_vat'), vat_reg_date: v('c_vatd'), accountant: v('c_acc'), auditor: v('c_aud') };
   call('company.save', p).then(function (c) { closeM(); toast('บันทึกบริษัทแล้ว', 'ok'); if (!id) S.cid = c.id; return loadCos(); }).then(function () { go('companies'); }).catch(fail);
 }
 function coStatus(id, st) {
@@ -782,15 +820,16 @@ function auView(i) {
 
 /* ================= Settings ================= */
 function pSet() {
-  if (!OWNER) return pSetMem();
+  if (!OWNER && !S.office) return pSetMem();
   $('main').innerHTML = head(t('settings'), 'ความปลอดภัย การสำรองและกู้คืนข้อมูล') + '<div class="empty">กำลังโหลด...</div>';
-  Promise.all([call('auth.status'), call('backup.list')]).then(function (x) {
+  Promise.all([call('auth.status'), S.me && !S.me.owner ? Promise.resolve({ files: [], hidden: 1 }) : call('backup.list')]).then(function (x) {
     var a = x[0], b = x[1];
     $('main').innerHTML = head(t('settings'), 'ความปลอดภัย การสำรองและกู้คืนข้อมูล') +
       '<div class="grid g2"><div class="card"><h3>ระบบ</h3><table class="t"><tbody><tr><td class="small">ชื่อระบบ</td><td>' + esc(a.app) + '</td></tr><tr><td class="small">เวอร์ชัน</td><td>' + esc(a.version) + '</td></tr><tr><td class="small">ผู้ดูแลระบบ</td><td>' + esc(a.email) + '</td></tr><tr><td class="small">สิทธิ์การเข้าถึง</td><td>Admin Only · Google Login + รหัสผ่านระบบ</td></tr></tbody></table></div>' +
       '<div class="card"><h3>รหัสผ่าน</h3><p class="small" style="margin-top:0">เปลี่ยนรหัสผ่านแล้วทุกอุปกรณ์จะถูกออกจากระบบ</p><button class="btn ghost" onclick="pwForm()">เปลี่ยนรหัสผ่าน</button> <button class="btn ghost" onclick="logout()">' + t('logout') + '</button></div></div>' +
       '<div class="card"><div class="bar"><h3 style="margin:0;flex:1">สำรองข้อมูล</h3><button class="btn" onclick="bkNow()">สำรองข้อมูลตอนนี้</button></div><p class="small">สำรองอัตโนมัติทุกวันเวลา 02:00 น. เก็บ ' + b.keep + ' ชุดล่าสุดในโฟลเดอร์ EDM-Accounting/_สำรองข้อมูล (1 ชุด = ไฟล์หลัก + ไฟล์ทุกบริษัท) · ล่าสุด: ' + fdate(b.last) + '</p>' +
       (b.files.length ? '<div class="tw"><table class="t"><thead><tr><th>วันที่</th><th>ไฟล์</th><th></th></tr></thead><tbody>' + b.files.map(function (f) { return '<tr><td style="white-space:nowrap">' + fdate(f.date) + '</td><td class="small">' + esc(f.name) + '</td><td class="act"><button class="btn ghost sm" onclick="bkRestore(\'' + f.id + '\',\'' + esc(f.name) + '\')">กู้คืน</button></td></tr>'; }).join('') + '</tbody></table></div>' : '<div class="empty">ยังไม่มีไฟล์สำรอง</div>') + '</div>';
+    if (b.hidden) [].forEach.call(document.querySelectorAll('#main .card h3'), function (h) { if (/สำรองข้อมูล/.test(h.textContent)) h.closest('.card').remove(); });
   }).catch(fail);
 }
 function pwForm() {
@@ -808,6 +847,129 @@ function bkRestore(id, name) {
   $('rgo').onclick = function () {
     call('backup.restore', { id: id, confirm: v('rcf') }).then(function (r) { closeM(); toast('กู้คืนจาก ' + r.restored + ' แล้ว', 'ok'); S.coa = null; return loadCos(); }).then(pSet).catch(fail);
   };
+}
+
+
+/* ================= Phase 1 Office Edition: สาขา · สำนักงาน · ผู้ใช้และสิทธิ์ ================= */
+function bchList(cid) {
+  var c = S.cos.filter(function (x) { return x.id === cid; })[0] || {};
+  call('branch.list', { company_id: cid }).then(function (list) {
+    S.brs = list;
+    openM('สาขา · ' + (c.code || '') + ' ' + (c.name_th || ''), '<div class="tw"><table class="t"><thead><tr><th>รหัสสาขา</th><th>ชื่อสาขา</th><th>ที่อยู่</th><th>เริ่มดำเนินงาน</th><th>' + t('status') + '</th><th></th></tr></thead><tbody>' +
+      list.map(function (b) { return '<tr><td class="code">' + esc(b.code) + '</td><td>' + esc(b.name) + '</td><td class="small">' + esc(b.address || '-') + '</td><td>' + esc(b.start_date || '-') + '</td><td>' + badge('st', b.status) + '</td><td><button class="ib" title="แก้ไข" onclick="bchForm(\'' + cid + '\',\'' + b.id + '\')">' + ic('edit') + '</button></td></tr>'; }).join('') +
+      '</tbody></table></div><p class="small">สำนักงานใหญ่ใช้รหัส 00000 · สาขาใช้เลข 5 หลักตามที่จดทะเบียนกับกรมสรรพากร</p>',
+      '<button class="btn ghost" onclick="closeM()">ปิด</button>' + (can('company.edit') ? '<button class="btn" onclick="bchForm(\'' + cid + '\')">+ เพิ่มสาขา</button>' : ''));
+  }).catch(fail);
+}
+function bchForm(cid, id) {
+  var b = id ? (S.brs || []).filter(function (x) { return x.id === id; })[0] : { status: 'ACTIVE' };
+  openM(id ? 'แก้ไขสาขา' : 'เพิ่มสาขา',
+    '<div class="f2"><div class="fr"><label class="f req">รหัสสาขา (5 หลัก)</label><input class="in" id="b_code" maxlength="5" inputmode="numeric" value="' + esc(b.code || '') + '"' + (b.code === '00000' ? ' disabled' : '') + '></div>' +
+    '<div class="fr"><label class="f req">ชื่อสาขา</label><input class="in" id="b_name" value="' + esc(b.name || '') + '"></div></div>' +
+    '<div class="fr"><label class="f">ที่อยู่</label><textarea class="in" id="b_addr" rows="2">' + esc(b.address || '') + '</textarea></div>' +
+    '<div class="f2"><div class="fr"><label class="f">วันที่เริ่มดำเนินงาน</label><input class="in" type="date" id="b_start" value="' + esc(b.start_date || '') + '"></div>' +
+    '<div class="fr"><label class="f">สถานะ</label><select class="in" id="b_st"><option value="ACTIVE">ใช้งาน</option><option value="INACTIVE"' + (b.status === 'INACTIVE' ? ' selected' : '') + '>ปิดใช้งาน</option></select></div></div>',
+    '<button class="btn ghost" onclick="bchList(\'' + cid + '\')">' + t('cancel') + '</button><button class="btn" onclick="bchSave(\'' + cid + '\',\'' + (id || '') + '\')">' + t('save') + '</button>');
+}
+function bchSave(cid, id) {
+  call('branch.save', { company_id: cid, id: id, code: v('b_code') || ((S.brs || []).filter(function (x) { return x.id === id; })[0] || {}).code, name: v('b_name'), address: v('b_addr'), start_date: v('b_start'), status: v('b_st') })
+    .then(function () { toast('บันทึกสาขาแล้ว', 'ok'); bchList(cid); }).catch(fail);
+}
+
+function pOffice() {
+  $('main').innerHTML = head(t('office'), 'ข้อมูลสำนักงานบัญชี') + '<div class="empty">กำลังโหลด...</div>';
+  call('office.get').then(function (o) {
+    var ro = !can('office.edit'), dis = ro ? ' disabled' : '';
+    $('main').innerHTML = head(t('office'), 'ข้อมูลสำนักงานบัญชีที่ดูแลบริษัทลูกค้า · บริษัททั้งหมด ' + S.cos.length + ' · ผู้ใช้ ' + o.users + ' คน') +
+      '<div class="grid g2"><div class="card"><h3>ข้อมูลสำนักงาน</h3>' +
+      '<div class="f2"><div class="fr"><label class="f">รหัสสำนักงาน</label><input class="in" id="o_code" maxlength="12" style="text-transform:uppercase" value="' + esc(o.code) + '"' + dis + '><div class="hint">A–Z 0–9 3–12 ตัว · ผู้ใช้ของสำนักงานใช้รหัสนี้เข้าสู่ระบบบนเว็บ</div></div>' +
+      '<div class="fr"><label class="f req">ชื่อสำนักงาน</label><input class="in" id="o_name" value="' + esc(o.name) + '"' + dis + '></div></div>' +
+      '<div class="f2"><div class="fr"><label class="f">ชื่อผู้ติดต่อ</label><input class="in" id="o_contact" value="' + esc(o.contact) + '"' + dis + '></div>' +
+      '<div class="fr"><label class="f">เลขประจำตัวผู้เสียภาษี</label><input class="in" id="o_tax" maxlength="13" inputmode="numeric" value="' + esc(o.tax_id) + '"' + dis + '></div></div>' +
+      '<div class="fr"><label class="f">ที่อยู่</label><textarea class="in" id="o_addr" rows="2"' + dis + '>' + esc(o.address) + '</textarea></div>' +
+      '<div class="f2"><div class="fr"><label class="f">โทรศัพท์</label><input class="in" id="o_ph" value="' + esc(o.phone) + '"' + dis + '></div>' +
+      '<div class="fr"><label class="f">อีเมล</label><input class="in" id="o_mail" value="' + esc(o.email) + '"' + dis + '></div></div>' +
+      '<div class="fr"><label class="f">โลโก้</label><div style="display:flex;gap:12px;align-items:center">' + (o.logo ? '<img id="o_logo_img" src="' + o.logo + '" style="height:48px;border:1px solid var(--line);border-radius:6px">' : '<span class="small" id="o_logo_img">ยังไม่มีโลโก้</span>') + (ro ? '' : '<input type="file" accept="image/png,image/jpeg,image/webp" onchange="ofLogo(this)">') + '</div></div>' +
+      (ro ? '' : '<div class="bar"><span class="sp"></span><button class="btn" onclick="ofSave()">' + t('save') + '</button></div>') + '</div>' +
+      '<div class="card"><h3>บริษัทลูกค้าที่ดูแล</h3><div class="tw"><table class="t"><thead><tr><th>รหัส</th><th>บริษัท</th><th>เลขผู้เสียภาษี</th><th>VAT</th><th>ผู้ทำบัญชี</th></tr></thead><tbody>' +
+      S.cos.map(function (c) { return '<tr><td class="code">' + esc(c.code) + '</td><td>' + esc(c.name_th) + '</td><td>' + esc(c.tax_id || '-') + '</td><td>' + (c.vat_registered === '1' ? 'จด' : '-') + '</td><td>' + esc(c.accountant || '-') + '</td></tr>'; }).join('') +
+      '</tbody></table></div></div></div>';
+    S.ofLogo = o.logo || '';
+  }).catch(fail);
+}
+function ofLogo(inp) {
+  var f = inp.files && inp.files[0]; if (!f) return;
+  var r = new FileReader(); r.onload = function () {
+    var img = new Image(); img.onload = function () {
+      var k = Math.min(1, 400 / Math.max(img.width, img.height)), cv = document.createElement('canvas');
+      cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k); cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      S.ofLogo = cv.toDataURL('image/png'); var el = $('o_logo_img'); if (el) el.outerHTML = '<img id="o_logo_img" src="' + S.ofLogo + '" style="height:48px;border:1px solid var(--line);border-radius:6px">';
+    }; img.src = r.result;
+  }; r.readAsDataURL(f);
+}
+function ofSave() {
+  call('office.save', { code: v('o_code'), name: v('o_name'), contact: v('o_contact'), tax_id: v('o_tax'), address: v('o_addr'), phone: v('o_ph'), email: v('o_mail'), logo: S.ofLogo || '' })
+    .then(function () { toast('บันทึกข้อมูลสำนักงานแล้ว', 'ok'); pOffice(); }).catch(fail);
+}
+
+S.ut = 'users';
+function pUsers() {
+  $('main').innerHTML = head(t('users'), 'ผู้ใช้ของสำนักงาน บทบาท และสิทธิ์') + '<div class="empty">กำลังโหลด...</div>';
+  Promise.all([call('user.list'), call('role.list')]).then(function (x) {
+    S.users = x[0]; S.roles = x[1];
+    var tabs = '<div class="tabs"><button class="tab' + (S.ut === 'users' ? ' on' : '') + '" onclick="S.ut=\'users\';pUsers()">ผู้ใช้ (' + S.users.length + ')</button><button class="tab' + (S.ut === 'roles' ? ' on' : '') + '" onclick="S.ut=\'roles\';pUsers()">บทบาทและสิทธิ์</button></div>';
+    var right = can('users.edit') && S.ut === 'users' ? '<button class="btn" onclick="usForm()">+ เพิ่มผู้ใช้</button>' : '';
+    $('main').innerHTML = head(t('users'), 'เจ้าของสำนักงานเข้าด้วยรหัสผ่านเดิม · ผู้ใช้อื่นเข้าด้วยชื่อผู้ใช้ของตัวเอง', right) + tabs + (S.ut === 'users' ? usTable() : rlTable());
+  }).catch(fail);
+}
+function roleName(code) { var r = (S.roles.roles || []).filter(function (x) { return x.code === code; })[0]; return r ? r.name : code; }
+function coNames(cs) { if (cs === '*') return 'ทุกบริษัท'; return String(cs).split(',').map(function (id) { var c = S.cos.filter(function (x) { return x.id === id; })[0]; return c ? c.code : ''; }).filter(Boolean).join(', ') || '-'; }
+function usTable() {
+  if (!S.users.length) return '<div class="card empty">ยังไม่มีผู้ใช้อื่น · เพิ่มผู้ใช้ให้พนักงานในสำนักงาน แล้วกำหนดบทบาทและบริษัทที่เข้าถึงได้</div>';
+  return '<div class="tw"><table class="t"><thead><tr><th>ชื่อผู้ใช้</th><th>ชื่อ</th><th>บทบาท</th><th>บริษัทที่เข้าถึงได้</th><th>เข้าระบบล่าสุด</th><th>' + t('status') + '</th><th></th></tr></thead><tbody>' +
+    S.users.map(function (u) {
+      return '<tr><td class="code">' + esc(u.username) + '</td><td>' + esc(u.name) + '<span class="sub2">' + esc(u.email || '') + '</span></td><td>' + esc(roleName(u.role)) + '</td><td class="small">' + esc(coNames(u.companies)) + '</td><td>' + (u.last_login ? fdate(u.last_login) : '-') + '</td><td>' + badge('st', u.status) + (u.locked ? ' <span class="bd b-l">ล็อก</span>' : '') + '</td><td style="white-space:nowrap">' +
+        (can('users.edit') ? '<button class="ib" title="แก้ไข" onclick="usForm(\'' + u.id + '\')">' + ic('edit') + '</button>' : '') +
+        (can('users.cancel') ? '<button class="ib" title="' + (u.status === 'ACTIVE' ? 'ปิดใช้งาน' : 'เปิดใช้งาน') + '" onclick="usStatus(\'' + u.id + '\',\'' + (u.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE') + '\')">' + ic(u.status === 'ACTIVE' ? 'off' : 'on') + '</button>' : '') + '</td></tr>';
+    }).join('') + '</tbody></table></div>';
+}
+function usForm(id) {
+  var u = id ? S.users.filter(function (x) { return x.id === id; })[0] : { role: 'ACCOUNTANT', companies: '*', status: 'ACTIVE' };
+  var all = u.companies === '*', mine = all ? [] : String(u.companies).split(',');
+  openM(id ? 'แก้ไขผู้ใช้' : 'เพิ่มผู้ใช้',
+    '<div class="f2"><div class="fr"><label class="f req">ชื่อผู้ใช้</label><input class="in" id="u_un" maxlength="30" value="' + esc(u.username || '') + '" autocomplete="off"><div class="hint">a–z 0–9 . _ - (3–30 ตัว)</div></div>' +
+    '<div class="fr"><label class="f">ชื่อ-นามสกุล</label><input class="in" id="u_name" value="' + esc(u.name || '') + '"></div></div>' +
+    '<div class="f2"><div class="fr"><label class="f">อีเมล</label><input class="in" id="u_mail" value="' + esc(u.email || '') + '"></div>' +
+    '<div class="fr"><label class="f req">บทบาท</label><select class="in" id="u_role">' + S.roles.roles.filter(function (r) { return r.code !== 'SYSADMIN'; }).map(function (r) { return '<option value="' + r.code + '"' + (r.code === u.role ? ' selected' : '') + '>' + esc(r.name) + '</option>'; }).join('') + '</select></div></div>' +
+    '<div class="fr"><label class="f' + (id ? '' : ' req') + '">' + (id ? 'ตั้งรหัสผ่านใหม่ (เว้นว่าง = ใช้รหัสเดิม)' : 'รหัสผ่าน') + '</label><input class="in" type="password" id="u_pw" autocomplete="new-password"><div class="hint">อย่างน้อย 8 ตัว มีตัวอักษรและตัวเลข</div></div>' +
+    '<div class="sec">บริษัทที่เข้าถึงได้</div><label class="ck"><input type="checkbox" id="u_all"' + (all ? ' checked' : '') + ' onchange="$(\'u_cos\').style.display=this.checked?\'none\':\'\'"> ทุกบริษัท (รวมบริษัทที่เพิ่มภายหลัง)</label>' +
+    '<div id="u_cos" style="' + (all ? 'display:none;' : '') + 'max-height:200px;overflow:auto;margin-top:8px">' + S.cos.map(function (c) { return '<label class="ck" style="display:block"><input type="checkbox" class="u_co" value="' + c.id + '"' + (mine.indexOf(c.id) >= 0 ? ' checked' : '') + '> ' + esc(c.code + ' · ' + c.name_th) + '</label>'; }).join('') + '</div>',
+    '<button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button><button class="btn" onclick="usSave(\'' + (id || '') + '\')">' + t('save') + '</button>');
+}
+function usSave(id) {
+  var cos = [].map.call(document.querySelectorAll('.u_co:checked'), function (e) { return e.value; });
+  call('user.save', { id: id, username: v('u_un'), name: v('u_name'), email: v('u_mail'), role: v('u_role'), password: $('u_pw').value, all_companies: $('u_all').checked, companies: cos, status: id ? (S.users.filter(function (x) { return x.id === id; })[0] || {}).status : 'ACTIVE' })
+    .then(function () { closeM(); toast('บันทึกผู้ใช้แล้ว', 'ok'); pUsers(); }).catch(fail);
+}
+function usStatus(id, st) {
+  confirmM(st === 'ACTIVE' ? 'เปิดใช้งานผู้ใช้' : 'ปิดใช้งานผู้ใช้', st === 'ACTIVE' ? 'ผู้ใช้จะเข้าสู่ระบบได้อีกครั้ง' : 'ผู้ใช้จะถูกออกจากระบบทันทีและเข้าใหม่ไม่ได้ (ประวัติการทำงานยังอยู่)', function () {
+    call('user.setStatus', { id: id, status: st }).then(function () { pUsers(); }).catch(fail);
+  });
+}
+function rlTable() {
+  var R = S.roles, ed = can('users.edit');
+  return '<div class="note">ติ๊กสิทธิ์แล้วกดบันทึกของแต่ละบทบาท · มีผลทันทีกับผู้ใช้ทุกคนในบทบาทนั้น · Office Owner มีสิทธิ์ทั้งหมดเสมอ</div>' +
+    R.roles.filter(function (r) { return r.code !== 'SYSADMIN'; }).map(function (r) {
+      var fixed = r.code === 'OWNER' || !ed, has = {}; (r.perms || []).forEach(function (k) { has[k] = 1; });
+      return '<div class="card" style="margin-bottom:12px"><div class="bar"><h3 style="margin:0;flex:1">' + esc(r.name) + ' <span class="small code">' + r.code + '</span></h3>' + (fixed ? '' : '<button class="btn sm" onclick="rlSave(\'' + r.code + '\')">' + t('save') + '</button>') + '</div>' +
+        '<div class="tw"><table class="t"><thead><tr><th>ส่วนงาน</th>' + R.verbs.map(function (vb) { return '<th style="text-align:center">' + vb[1] + '</th>'; }).join('') + '</tr></thead><tbody>' +
+        R.mods.map(function (m) { return '<tr><td>' + m[1] + '</td>' + R.verbs.map(function (vb) { var k = m[0] + '.' + vb[0]; return '<td style="text-align:center"><input type="checkbox" class="rp_' + r.code + '" value="' + k + '"' + (has['*'] || has[k] ? ' checked' : '') + (fixed ? ' disabled' : '') + '></td>'; }).join('') + '</tr>'; }).join('') +
+        '</tbody></table></div></div>';
+    }).join('');
+}
+function rlSave(code) {
+  var perms = [].map.call(document.querySelectorAll('.rp_' + code + ':checked'), function (e) { return e.value; });
+  call('role.save', { code: code, perms: perms }).then(function () { toast('บันทึกสิทธิ์ ' + code + ' แล้ว', 'ok'); }).catch(fail);
 }
 
 

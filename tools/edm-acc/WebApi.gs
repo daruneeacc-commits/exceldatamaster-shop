@@ -1,5 +1,5 @@
 /**
- * WebApi.gs — เปิดให้หน้าเว็บ exceldatamaster.com/edm-acc/ เรียกระบบได้ (v0.9.38: สมาชิกสมัครใช้ได้ ข้อมูลแยกต่อคน)
+ * WebApi.gs — เปิดให้หน้าเว็บ exceldatamaster.com/edm-acc/ เรียกระบบได้ (v0.10.0: + ผู้ใช้ของสำนักงาน เข้าด้วยรหัสสำนักงาน)
  * (เพิ่มไฟล์นี้ใหม่ ไม่ต้องแก้ไฟล์เดิม · doGet / api เดิมยังใช้ได้เหมือนเดิม)
  *
  * ความปลอดภัยเมื่อเรียกผ่านเว็บ:
@@ -23,11 +23,12 @@ function doPost(e) {
 }
 
 function webApi_(b) {
-  rcClear_(); CTX = { cid: '', ss: null }; SH_OK = {}; HDRGEN = null; TEN = null;
+  rcClear_(); CTX = { cid: '', ss: null }; SH_OK = {}; HDRGEN = null; TEN = null; SESS = null;
   try {
     var k = props_().getProperty('WEB_KEY');
     if (!k) return fail_('ยังไม่ได้เปิดใช้งานผ่านเว็บ (รันฟังก์ชัน setWebKey ใน Apps Script)', 'NOWEB');
     if (b.mem) return memberApi_(b); // ลูกค้าสมาชิก: ข้อมูลแยกต่อคน ไม่ใช้รหัสเชื่อมต่อ/รหัสผ่านเจ้าของ
+    if (b.office) return officeApi_(b); // ผู้ใช้ของสำนักงาน (สมาชิกสร้างให้) เข้าด้วย รหัสสำนักงาน + ชื่อผู้ใช้ + รหัสผ่าน
     if (k !== 'OPEN' && String(b.key || '') !== k) return fail_('รหัสเชื่อมต่อไม่ถูกต้อง', 'KEY');
     if (b.batch) {
       // หลายคำสั่งในรอบเดียว (หน้าเว็บโหลดเร็วขึ้น) — ตรวจ token ทุกคำสั่ง · ห้ามตั้งรหัสผ่านผ่านเว็บ
@@ -78,7 +79,7 @@ function disableWeb() {
  */
 var MEMBER_SYS = 'edmacc', TEN_ROOT = 'EDM Accounting ลูกค้า (ห้ามแชร์)';
 var MEMBER_API_DEF = 'https://script.google.com/macros/s/AKfycbylmvweKvqw7t8snmpWOFm3Gr6TlN4eKZYX5_CCM_MUvwcgROoNkzwBdVb0DPb2Sqi4/exec';
-function memberDenied_(a) { return /^(auth|backup)\./.test(a); }
+function memberDenied_(a) { return /^(auth|backup)\./.test(a) && a !== "auth.me"; }
 
 function memberApi_(b) {
   var m = memberAuth_(b.mem || {});
@@ -114,7 +115,34 @@ function memberAuth_(m) {
   var exp = Number((r.sx && r.sx[MEMBER_SYS]) || r.exp || 0);
   if (!exp || exp < Date.now()) return { ok: false, msg: 'หมดอายุการใช้งานระบบบัญชี EDM กรุณาต่ออายุ', code: 'MEMBEREXP' };
   TEN = tenantOpen_(email);
+  tenantSetExp_(email, exp);
   return { ok: true };
+}
+/** เก็บวันหมดอายุล่าสุดของสมาชิก ไว้ตรวจผู้ใช้ของสำนักงานที่เข้าด้วยรหัสสำนักงาน */
+function tenantSetExp_(email, exp) {
+  var P = props_(), k = 'T|' + email, t = JSON.parse(P.getProperty(k) || '{}');
+  if (Math.abs(Number(t.exp || 0) - exp) > 3600e3) { t.exp = exp; P.setProperty(k, JSON.stringify(t)); }
+}
+/** ผู้ใช้ของสำนักงาน (Phase 1): เปิดข้อมูลของสำนักงานจากรหัสสำนักงาน แล้วตรวจ token/สิทธิ์ตามปกติ */
+function officeApi_(b) {
+  var code = String(b.office || '').trim().toUpperCase(), email = code ? props_().getProperty('O|' + code) : '';
+  if (!email) return fail_('ไม่พบรหัสสำนักงาน ' + code, 'OFFICE');
+  var t = JSON.parse(props_().getProperty('T|' + email) || 'null');
+  if (!t || !(Number(t.exp || 0) > Date.now())) return fail_('สำนักงานนี้หมดอายุการใช้งาน กรุณาติดต่อเจ้าของสำนักงาน', 'MEMBEREXP');
+  TEN = tenantOpen_(email);
+  var deny = function (a) { return a === 'auth.setPassword' || /^backup\./.test(a); };
+  var calls = b.batch ? (b.batch || []).slice(0, 12) : [[String(b.action || ''), b.payload || {}]];
+  calls = calls.map(function (q) {
+    if (!q || deny(q[0])) return ['__deny'];
+    if (q[0] === 'auth.login' && !String((q[1] || {}).username || '').trim()) return ['__owner'];
+    return q;
+  });
+  var out = runBatch_(calls, b.token).map(function (r, i) {
+    if (calls[i][0] === '__deny') return fail_('คำสั่งนี้ใช้ได้เฉพาะเจ้าของสำนักงาน', 'FORBIDDEN');
+    if (calls[i][0] === '__owner') return fail_('กรุณาใส่ชื่อผู้ใช้ (เจ้าของสำนักงานเข้าทางบัญชีสมาชิก)', 'ERROR');
+    return r;
+  });
+  return b.batch ? { ok: true, batch: out } : out[0];
 }
 /** ต้องระบุระบบ edmacc ชัดเจน (ค่าว่าง = แพ็กเดิมทุกระบบ ไม่รวมระบบนี้) */
 function memberHas_(sys) { return String(sys || '').toLowerCase().split(/[\s,|]+/).indexOf(MEMBER_SYS) >= 0; }
