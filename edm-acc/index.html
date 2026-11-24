@@ -207,9 +207,9 @@ h2.pt{color:var(--pri2)}
 var S = { token: null, lang: 'th', cos: [], cid: '', page: 'dashboard', coa: null, f: { q: '', cat: '', type: '', status: '', level: '', pg: 1 }, au: { pg: 1, q: '' }, st: null, imp: null };
 try { S.lang = localStorage.getItem('edm_acc_lang') || 'th'; } catch (e) {}
 var L = {
-  th: { dashboard: 'แดชบอร์ด', companies: 'จัดการบริษัท', coa: 'ผังบัญชี', structure: 'โครงสร้างรหัสบัญชี', sales: 'ระบบขาย', purch: 'ระบบซื้อ', payroll: 'ระบบเงินเดือน', stock: 'สินค้า / สต็อก', cheque: 'เช็ครับ / เช็คจ่าย', bankrec: 'กระทบยอดธนาคาร', journal: 'สมุดรายวัน', posting: 'Post รายการ', petty: 'เงินสดย่อย', gl: 'บัญชีแยกประเภท', vat: 'ภาษีมูลค่าเพิ่ม', wht: 'ภาษีหัก ณ ที่จ่าย', cc: 'ศูนย์ต้นทุน', tb: 'งบทดลอง', fs: 'งบการเงิน', closing: 'ปิดงวดบัญชี', audit: 'บันทึกการใช้งาน', settings: 'ตั้งค่าระบบ', office: 'สำนักงานบัญชี', users: 'ผู้ใช้และสิทธิ์',
+  th: { dashboard: 'แดชบอร์ด', companies: 'จัดการบริษัท', coa: 'ผังบัญชี', structure: 'โครงสร้างรหัสบัญชี', sales: 'ระบบขาย', purch: 'ระบบซื้อ', payroll: 'ระบบเงินเดือน', stock: 'สินค้า / สต็อก', cheque: 'เช็ครับ / เช็คจ่าย', bankrec: 'กระทบยอดธนาคาร', journal: 'สมุดรายวัน', posting: 'Post รายการ', petty: 'เงินสดย่อย', gl: 'บัญชีแยกประเภท', vat: 'ภาษีมูลค่าเพิ่ม', wht: 'ภาษีหัก ณ ที่จ่าย', cc: 'ศูนย์ต้นทุน', asset: 'สินทรัพย์ถาวร', tb: 'งบทดลอง', fs: 'งบการเงิน', closing: 'ปิดงวดบัญชี', audit: 'บันทึกการใช้งาน', settings: 'ตั้งค่าระบบ', office: 'สำนักงานบัญชี', users: 'ผู้ใช้และสิทธิ์',
     g1: 'ข้อมูลหลัก', g2: 'ขายและบันทึกบัญชี', g3: 'ภาษีและต้นทุน', g4: 'รายงาน', g5: 'ระบบ', logout: 'ออกจากระบบ', add: 'เพิ่ม', save: 'บันทึก', cancel: 'ยกเลิก', search: 'ค้นหา', all: 'ทั้งหมด', code: 'รหัสบัญชี', name: 'ชื่อบัญชี', type: 'ประเภท', control: 'รหัสควบคุม', status: 'สถานะ', level: 'ระดับ', category: 'หมวด', actions: '' },
-  en: { dashboard: 'Dashboard', companies: 'Company Management', coa: 'Chart of Accounts', structure: 'Account Structure', sales: 'Sales', purch: 'Purchases', payroll: 'Payroll', stock: 'Inventory', cheque: 'Cheques', bankrec: 'Bank Reconciliation', journal: 'Journal Entries', posting: 'Posting', petty: 'Petty Cash', gl: 'General Ledger', vat: 'VAT Management', wht: 'Withholding Tax', cc: 'Cost Center', tb: 'Trial Balance', fs: 'Financial Statements', closing: 'Period Closing', audit: 'Audit Log', settings: 'System Settings', office: 'Accounting Office', users: 'Users & Roles',
+  en: { dashboard: 'Dashboard', companies: 'Company Management', coa: 'Chart of Accounts', structure: 'Account Structure', sales: 'Sales', purch: 'Purchases', payroll: 'Payroll', stock: 'Inventory', cheque: 'Cheques', bankrec: 'Bank Reconciliation', journal: 'Journal Entries', posting: 'Posting', petty: 'Petty Cash', gl: 'General Ledger', vat: 'VAT Management', wht: 'Withholding Tax', cc: 'Cost Center', asset: 'Fixed Assets', tb: 'Trial Balance', fs: 'Financial Statements', closing: 'Period Closing', audit: 'Audit Log', settings: 'System Settings', office: 'Accounting Office', users: 'Users & Roles',
     g1: 'Master data', g2: 'Accounting', g3: 'Tax & cost', g4: 'Reports', g5: 'System', logout: 'Log out', add: 'Add', save: 'Save', cancel: 'Cancel', search: 'Search', all: 'All', code: 'Account code', name: 'Account name', type: 'Type', control: 'Control', status: 'Status', level: 'Level', category: 'Category', actions: '' }
 };
 function t(k) { return (L[S.lang] && L[S.lang][k]) || L.th[k] || k; }
@@ -218,7 +218,7 @@ var IC = {
   dashboard: 'M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z', companies: 'M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1',
   coa: 'M4 5h4M4 12h4M4 19h4M10 5h10M12 12h8M12 19h8M6 5v14', structure: 'M4 4h6v6H4zM14 14h6v6h-6zM7 10v4h7M14 4h6v6h-6z',
   journal: 'M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM9 8h6M9 12h6', gl: 'M4 19V5M4 19h16M8 15l3-4 3 2 5-6', vat: 'M6 18L18 6M7 7h.01M17 17h.01',
-  wht: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6', cc: 'M12 3a9 9 0 1 0 9 9h-9z', tb: 'M12 3v18M5 7h14M5 7l-2 6h4zM19 7l-2 6h4z',
+  wht: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6', cc: 'M12 3a9 9 0 1 0 9 9h-9z', asset: 'M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6M9 11h.01M15 11h.01', tb: 'M12 3v18M5 7h14M5 7l-2 6h4zM19 7l-2 6h4z',
   fs: 'M4 20V10M10 20V4M16 20v-7M22 20H2', closing: 'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4', audit: 'M12 8v4l3 2M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5',
   settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3.3 14H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 9 4.6V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z',
   purch: 'M3 3h2l2.4 12.2a2 2 0 0 0 2 1.8h8.2a2 2 0 0 0 2-1.6L21 8H6M9 21h.01M18 21h.01', cheque: 'M3 6h18v12H3zM7 14h6M7 10h10', stock: 'M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8', bankrec: 'M3 21h18M5 10v8M9 10v8M15 10v8M19 10v8M12 3l9 5H3z', payroll: 'M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0M4 21a8 8 0 0 1 16 0', sales: 'M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.2a2 2 0 0 0 2-1.6L20 8H6M9 21h.01M17 21h.01', petty: 'M3 7h18v12H3zM3 7l3-4h12l3 4M16 13h2', posting: 'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9', copy: 'M9 9h11v11H9zM5 15H4V4h11v1', print: 'M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z',
@@ -226,19 +226,19 @@ var IC = {
   off: 'M18.4 6.6A9 9 0 1 1 5.6 6.6M12 2v10', on: 'M5 12l5 5L20 7', del: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3'
 };
 /* ไอคอนเมนูแบบกล่องสี (สีประจำแต่ละเมนู) */
-var MIC = { dashboard: '#4f6bed', companies: '#3b6ea8', coa: '#0f9b8e', structure: '#0e8fb0', sales: '#16a34a', purch: '#ea7a12', stock: '#c98a06', payroll: '#db4f8f', journal: '#2f6fd6', posting: '#7c4ddb', petty: '#5f9e1c',
+var MIC = { dashboard: '#4f6bed', companies: '#3b6ea8', coa: '#0f9b8e', structure: '#0e8fb0', sales: '#16a34a', purch: '#ea7a12', stock: '#c98a06', asset: '#b7791f', payroll: '#db4f8f', journal: '#2f6fd6', posting: '#7c4ddb', petty: '#5f9e1c',
   cheque: '#0b84c6', bankrec: '#0d9488', gl: '#4c5bd4', vat: '#dc4a3d', wht: '#e0507a', cc: '#9353d3', tb: '#a0662b', fs: '#0f9f6e', closing: '#5b6b82', office: '#2563eb', users: '#8b5cf6', audit: '#64748b', settings: '#6b7280' };
 function mic(n) { var c = MIC[n] || '#4f6bed'; return '<span class="mic" style="--mc:' + c + '">' + ic(n) + '</span>'; }
 function ic(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="' + IC[n] + '"/></svg>'; }
 var MENU = [
   { g: 'g1', items: [['dashboard', 1], ['companies', 1], ['coa', 2], ['structure', 2]] },
-  { g: 'g2', items: [['sales', 3], ['purch', 3], ['stock', 3], ['payroll', 3], ['journal', 3], ['posting', 3], ['petty', 3], ['cheque', 3], ['bankrec', 3], ['gl', 3]] },
+  { g: 'g2', items: [['sales', 3], ['purch', 3], ['stock', 3], ['asset', 5], ['payroll', 3], ['journal', 3], ['posting', 3], ['petty', 3], ['cheque', 3], ['bankrec', 3], ['gl', 3]] },
   { g: 'g3', items: [['vat', 4], ['wht', 4], ['cc', 5]] },
   { g: 'g4', items: [['tb', 6], ['fs', 6]] },
   { g: 'g5', items: [['closing', 7], ['office', 1], ['users', 1], ['audit', 1], ['settings', 1]] }
 ];
-var READY = { office: 1, users: 1, purch: 1, dashboard: 1, companies: 1, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1, closing: 1, audit: 1, settings: 1 };
-var PAGE_MOD = { dashboard: 'dashboard', companies: 'company', coa: 'coa', structure: 'coa', sales: 'sales', purch: 'purchase', stock: 'inventory', payroll: 'payroll', journal: 'journal', posting: 'journal', petty: 'bank', cheque: 'bank', bankrec: 'bank', gl: 'report', vat: 'tax', wht: 'tax', cc: 'report', tb: 'report', fs: 'report', closing: 'journal', office: 'office', users: 'users', audit: 'audit' };
+var READY = { office: 1, users: 1, purch: 1, dashboard: 1, companies: 1, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1, asset: 1, closing: 1, audit: 1, settings: 1 };
+var PAGE_MOD = { asset: 'journal', dashboard: 'dashboard', companies: 'company', coa: 'coa', structure: 'coa', sales: 'sales', purch: 'purchase', stock: 'inventory', payroll: 'payroll', journal: 'journal', posting: 'journal', petty: 'bank', cheque: 'bank', bankrec: 'bank', gl: 'report', vat: 'tax', wht: 'tax', cc: 'report', tb: 'report', fs: 'report', closing: 'journal', office: 'office', users: 'users', audit: 'audit' };
 function can(k) { return !S.me || S.me.owner || (S.me.perms || []).indexOf(k) >= 0; }
 function canPage(p) { var m = PAGE_MOD[p]; if ((p === 'office' || p === 'users') && !S.me) return false; return !m || m === 'dashboard' || m === 'company' || can(m + '.view'); }
 var MONTHS = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
@@ -492,7 +492,7 @@ function go(p) {
   S.page = p; side(false); renderSide();
   var needCo = { purch: 1, dashboard: 0, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1 };
   if (needCo[p] && !S.cid) { $('main').innerHTML = head(t(p), '') + '<div class="card empty">กรุณาสร้างบริษัททดลองก่อน<br><br><button class="btn" onclick="go(\'companies\')">ไปที่จัดการบริษัท</button></div>'; return; }
-  ({ purch: pPurch, dashboard: pDash, companies: pCos, coa: pCoa, structure: pStruct, sales: pSales, payroll: pPayroll, stock: pStock, cheque: pCheque, bankrec: pBankRec, journal: pJournal, posting: pPosting, petty: pPetty, gl: pGL, vat: pVat, wht: pWht, tb: pTB, fs: pFS, closing: pClose, audit: pAudit, settings: pSet, office: pOffice, users: pUsers }[p] || pPlan)(p);
+  ({ purch: pPurch, dashboard: pDash, companies: pCos, coa: pCoa, structure: pStruct, sales: pSales, payroll: pPayroll, stock: pStock, cheque: pCheque, bankrec: pBankRec, journal: pJournal, posting: pPosting, petty: pPetty, gl: pGL, vat: pVat, wht: pWht, tb: pTB, fs: pFS, asset: pAsset, closing: pClose, audit: pAudit, settings: pSet, office: pOffice, users: pUsers }[p] || pPlan)(p);
   window.scrollTo(0, 0);
 }
 function head(title, desc, right) { return '<div class="bar" style="align-items:flex-start"><div style="flex:1;min-width:200px"><h2 class="pt">' + esc(title) + '</h2><p class="pd">' + desc + '</p></div>' + (right || '') + '</div>'; }
@@ -2772,12 +2772,12 @@ function pStock() {
   Promise.all([ensureCoa(), ensureProds(), ensureTaxData(), ensureWhs()]).then(renderStock).catch(fail);
 }
 function renderStock() {
-  var ro = co().status !== 'ACTIVE', tab = S.sk.tab, tabs = [['PROD', 'สินค้า'], ['DOCS', 'รับเข้า / ปรับปรุง'], ['BAL', 'สินค้าคงเหลือ'], ['MOVE', 'เคลื่อนไหว รับ-จ่าย'], ['CARD', 'บัตรคุมสินค้า'], ['SALES', 'รายงานยอดขาย'], ['WH', 'คลังสินค้า']];
+  var ro = co().status !== 'ACTIVE', tab = S.sk.tab, tabs = [['PROD', 'สินค้า'], ['DOCS', 'รับเข้า / ปรับปรุง'], ['BAL', 'สินค้าคงเหลือ'], ['MOVE', 'เคลื่อนไหว รับ-จ่าย'], ['CARD', 'บัตรคุมสินค้า'], ['SALES', 'รายงานยอดขาย'], ['WH', 'คลังสินค้า'], ['COUNT', '📋 ตรวจนับ'], ['LOW', '⚠️ ใกล้หมด'], ['SET', '⚙️ วิธีคิดต้นทุน']];
   var btn = ro ? '' : tab === 'PROD' ? '<button class="btn ghost" onclick="piForm()">⬆ ดึงสินค้าจากบิล</button> <button class="btn" onclick="prodForm()">+ เพิ่มสินค้า</button>' : tab === 'DOCS' ? '<button class="btn" onclick="skForm(\'RECEIVE\')">+ รับสินค้าเข้า</button> <button class="btn ghost" onclick="skForm(\'ADJ\')">± ปรับปรุงสต็อก</button>' + (S.whs.length > 1 ? ' <button class="btn ghost" onclick="skForm(\'TRANSFER\')">⇄ โอนระหว่างคลัง</button>' : '') : tab === 'WH' ? '<button class="btn" onclick="whForm()">+ เพิ่มคลัง</button>' : '';
   $('main').innerHTML = head(t('stock'), esc(co().code + ' · ' + co().name_th) + ' · ต้นทุนถัวเฉลี่ยเคลื่อนที่ · ขายสินค้าจากระบบขายแล้วระบบตัดสต็อกและบันทึกต้นทุนขายให้อัตโนมัติ', btn) +
     '<div class="tabs">' + tabs.map(function (x) { return '<button class="' + (tab === x[0] ? 'on' : '') + '" onclick="S.sk.tab=\'' + x[0] + '\';renderStock()">' + x[1] + '</button>'; }).join('') + '</div><div id="skOut"></div>';
   if (['BAL', 'MOVE', 'CARD'].indexOf(tab) >= 0 && S.whs.length > 1) $('skOut').insertAdjacentHTML('beforebegin', '<div class="bar" style="margin-bottom:6px"><label class="small">คลัง</label><select class="in" style="width:auto" onchange="S.sk.wh=this.value;renderStock()">' + whOpts(S.sk.wh || '', true) + '</select></div>');
-  ({ PROD: skProds, DOCS: skDocs, BAL: skBal, MOVE: skMove, CARD: skCard, SALES: skSales, WH: skWh })[tab]();
+  ({ PROD: skProds, DOCS: skDocs, BAL: skBal, MOVE: skMove, CARD: skCard, SALES: skSales, WH: skWh, COUNT: skCount, LOW: skLow, SET: skSet })[tab]();
 }
 function accLbl(id) { var a = (S.coa.accounts || []).filter(function (q) { return q.id === id; })[0]; return a ? a.code + ' ' + a.name_th : ''; }
 function skProds() {
@@ -2800,7 +2800,7 @@ function prodForm(id, copy) {
     '<p class="small">บริษัทที่สร้างผังก่อนเวอร์ชันนี้ ให้เพิ่มบัญชี "ต้นทุนขายสินค้า" ในหมวดต้นทุนขายก่อน</p>',
     '<button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button><button class="btn" id="pd_ok">' + t('save') + '</button>', true);
   $('pd_ok').onclick = function () {
-    call('stk.productSave', { company_id: S.cid, id: id || '', code: v('pd_code'), name: v('pd_name'), unit: v('pd_unit'), barcode: v('pd_bc'), brand: v('pd_brand'), category: v('pd_cat'), sale_price: v('pd_price'), inv_account_id: v('pd_inv'), cogs_account_id: v('pd_cogs'), sales_account_id: v('pd_rev'), status: id ? v('pd_st') : 'ACTIVE' })
+    call('stk.productSave', { company_id: S.cid, id: id || '', min_qty: $('pd_min') ? v('pd_min') : undefined, code: v('pd_code'), name: v('pd_name'), unit: v('pd_unit'), barcode: v('pd_bc'), brand: v('pd_brand'), category: v('pd_cat'), sale_price: v('pd_price'), inv_account_id: v('pd_inv'), cogs_account_id: v('pd_cogs'), sales_account_id: v('pd_rev'), status: id ? v('pd_st') : 'ACTIVE' })
       .then(function () { closeM(); toast('บันทึกสินค้าแล้ว', 'ok'); S.prodsCid = ''; return ensureProds(); }).then(renderStock).catch(fail);
   };
 }
@@ -2973,7 +2973,7 @@ function whForm(id) {
   openM(id ? 'แก้ไขคลัง' : 'เพิ่มคลังสินค้า', '<div class="f2"><div class="fr"><label class="f req">รหัสคลัง</label><input class="in" id="wh_code" value="' + esc(w.code) + '"' + (id ? ' disabled' : '') + '></div><div class="fr"><label class="f req">ชื่อคลัง</label><input class="in" id="wh_name" value="' + esc(w.name) + '" placeholder="เช่น คลังสาขาบางรักน้อย"></div></div>' +
     (id && id !== 'MAIN' ? '<div class="fr"><label class="f">สถานะ</label><select class="in" id="wh_st"><option value="ACTIVE">ใช้งาน</option><option value="INACTIVE"' + (w.status === 'INACTIVE' ? ' selected' : '') + '>ปิดใช้งาน</option></select></div>' : ''),
     '<button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button><button class="btn" id="wh_ok">' + t('save') + '</button>');
-  $('wh_ok').onclick = function () { call('stk.warehouseSave', { company_id: S.cid, id: id || '', code: v('wh_code'), name: v('wh_name'), status: $('wh_st') ? v('wh_st') : 'ACTIVE' }).then(function () { closeM(); toast('บันทึกคลังแล้ว', 'ok'); S.whsCid = ''; if (id === 'MAIN') loadCos(); return ensureWhs(); }).then(renderStock).catch(fail); };
+  $('wh_ok').onclick = function () { call('stk.warehouseSave', { company_id: S.cid, id: id || '', branch_id: $('wh_bch') ? v('wh_bch') : undefined, code: v('wh_code'), name: v('wh_name'), status: $('wh_st') ? v('wh_st') : 'ACTIVE' }).then(function () { closeM(); toast('บันทึกคลังแล้ว', 'ok'); S.whsCid = ''; if (id === 'MAIN') loadCos(); return ensureWhs(); }).then(renderStock).catch(fail); };
 }
 
 
@@ -3531,6 +3531,118 @@ function tradeExtra(pre) {
 }
 var saleForm0 = saleForm; saleForm = function (kind, id, copy) { if (!(id && String(id).indexOf('_bd') === 0)) S.fromDoc = null; saleForm0(kind, id, copy); ensureBchs().then(function () { tradeExtra('sl'); }); ensureCusts(); };
 var puForm0 = puForm; puForm = function (kind, id, copy) { if (!(id && String(id).indexOf('_bd') === 0)) S.fromDoc = null; puForm0(kind, id, copy); ensureBchs().then(function () { tradeExtra('pu'); }); if (!S.sups) call('sup.list', { company_id: S.cid }).then(function (r) { S.sups = r; }).catch(function () {}); };
+/* ---------- Phase 5: สต็อก (ตรวจนับ · ใกล้หมด · วิธีคิดต้นทุน) + ทะเบียนสินทรัพย์ ---------- */
+function skCount() {
+  var d = S.sk.cd || today(), wh = S.sk.wh || 'MAIN';
+  call('stk.countSheet', { company_id: S.cid, date: d, warehouse_id: wh }).then(function (r) {
+    S.cntRows = r.rows; var acc = postAccs(5).concat(postAccs(4));
+    $('skOut').innerHTML = '<div class="card"><div class="bar" style="margin:0"><label class="small">วันที่นับ</label><input class="in" type="date" id="cn_d" value="' + d + '" onchange="S.sk.cd=this.value;skCount()"><span class="small" style="flex:1">กรอกเฉพาะรายการที่นับแล้ว · ส่วนต่างจะทำใบปรับปรุงสต็อกให้อัตโนมัติ</span><button class="btn ghost" onclick="cntPrint()">🖨 ใบตรวจนับ</button></div></div>' +
+      '<div class="card tw"><table class="t"><thead><tr><th>รหัส</th><th>สินค้า</th><th>หน่วย</th><th class="num">คงเหลือในระบบ</th><th class="num" style="width:130px">นับได้</th><th class="num">ส่วนต่าง</th></tr></thead><tbody>' +
+      r.rows.map(function (x, i) { return '<tr><td class="code">' + esc(x.code) + '</td><td>' + esc(x.name) + '</td><td>' + esc(x.unit || '') + '</td><td class="num">' + esc(x.qty) + '</td><td><input class="in num" data-cn="' + i + '" style="width:110px" oninput="cntDiff(' + i + ')"></td><td class="num" id="cnd' + i + '"></td></tr>'; }).join('') + '</tbody></table></div>' +
+      '<div class="card"><div class="bar" style="margin:0"><label class="small">ส่วนต่างลงบัญชี</label><select class="in" id="cn_acc" style="width:auto">' + acc.map(function (a) { return '<option value="' + a.id + '"' + (/สูญหาย|ขาดหาย|ปรับปรุง|ต้นทุนขาย/.test(a.name_th) ? ' selected' : '') + '>' + esc(a.code + ' ' + a.name_th) + '</option>'; }).join('') + '</select><input class="in" id="cn_note" placeholder="หมายเหตุ" style="flex:1"><button class="btn" onclick="cntSave()">บันทึกผลตรวจนับ</button></div></div>';
+  }).catch(failNew);
+}
+function cntDiff(i) { var el = document.querySelector('[data-cn="' + i + '"]'), r = S.cntRows[i], d = el.value === '' ? '' : Math.round((Number(el.value) - Number(r.qty)) * 10000) / 10000; $('cnd' + i).innerHTML = d === '' || isNaN(d) ? '' : '<b style="color:' + (d < 0 ? 'var(--err)' : d > 0 ? 'var(--ok)' : '#999') + '">' + (d > 0 ? '+' : '') + d + '</b>'; }
+function cntSave() {
+  var lines = []; document.querySelectorAll('[data-cn]').forEach(function (el) { if (el.value !== '') lines.push({ product_id: S.cntRows[Number(el.getAttribute('data-cn'))].product_id, counted: el.value }); });
+  if (!lines.length) return toast('กรอกจำนวนที่นับได้อย่างน้อย 1 รายการ', 'warn');
+  call('stk.count', { company_id: S.cid, date: S.sk.cd || today(), warehouse_id: S.sk.wh || 'MAIN', counter_account_id: v('cn_acc'), note: v('cn_note'), lines: lines }).then(function (r) {
+    toast(r.diffs.length ? 'ปรับปรุงสต็อก ' + r.diffs.length + ' รายการแล้ว (ไป Post ที่เมนู Post รายการ)' : r.message, 'ok'); S.prodsCid = ''; ensureProds().then(skCount);
+  }).catch(failNew);
+}
+function cntPrint() {
+  printer().show('ใบตรวจนับสต็อก', '<div class="bd"><h2 style="text-align:center">ใบตรวจนับสินค้าคงเหลือ</h2><p style="text-align:center">' + esc(co().name_th) + ' · วันที่ ' + thDate(S.sk.cd || today()) + '</p><table class="l"><thead><tr><th>#</th><th>รหัส</th><th>สินค้า</th><th>หน่วย</th><th class="r">ในระบบ</th><th class="r" style="width:90px">นับได้</th><th style="width:120px">หมายเหตุ</th></tr></thead><tbody>' +
+    S.cntRows.map(function (x, i) { return '<tr><td>' + (i + 1) + '</td><td>' + esc(x.code) + '</td><td>' + esc(x.name) + '</td><td>' + esc(x.unit || '') + '</td><td class="r">' + esc(x.qty) + '</td><td></td><td></td></tr>'; }).join('') + '</tbody></table><div class="sg"><div>ผู้ตรวจนับ</div><div>ผู้ตรวจสอบ</div></div></div>', BD_CSS);
+}
+function skLow() {
+  call('stk.lowStock', { company_id: S.cid }).then(function (r) {
+    $('skOut').innerHTML = '<p class="small">ตั้ง "จุดสั่งซื้อ" ได้ในหน้าแก้ไขสินค้า · แสดงสินค้าที่คงเหลือ ≤ จุดสั่งซื้อ</p>' + (r.length ? '<div class="card tw"><table class="t"><thead><tr><th>รหัส</th><th>สินค้า</th><th class="num">คงเหลือ</th><th class="num">จุดสั่งซื้อ</th><th class="num">ขาดอีก</th></tr></thead><tbody>' + r.map(function (x) { return '<tr><td class="code">' + esc(x.code) + '</td><td>' + esc(x.name) + '</td><td class="num" style="color:var(--err);font-weight:600">' + esc(x.qty) + ' ' + esc(x.unit || '') + '</td><td class="num">' + esc(x.min_qty) + '</td><td class="num">' + esc(x.short) + '</td></tr>'; }).join('') + '</tbody></table></div>' : '<div class="card empty">✅ ไม่มีสินค้าใกล้หมด</div>');
+  }).catch(failNew);
+}
+function skSet() {
+  call('stk.settings', { company_id: S.cid }).then(function (r) {
+    $('skOut').innerHTML = '<div class="card"><h3 style="margin-top:0">วิธีคิดต้นทุนสินค้า</h3><p>ปัจจุบัน: <b>' + (r.cost_method === 'FIFO' ? 'เข้าก่อน-ออกก่อน (FIFO)' : 'ถัวเฉลี่ยเคลื่อนที่ (Moving Average)') + '</b></p>' +
+      (r.can_change ? '<div class="bar"><select class="in" id="cm_m" style="width:auto"><option value="AVG">ถัวเฉลี่ยเคลื่อนที่</option><option value="FIFO"' + (r.cost_method === 'FIFO' ? ' selected' : '') + '>เข้าก่อน-ออกก่อน (FIFO)</option></select><button class="btn" onclick="cmSave()">บันทึก</button></div>' : '<p class="small">' + (r.moves ? 'บริษัทนี้มีความเคลื่อนไหวสินค้าแล้ว ' + r.moves + ' รายการ จึงเปลี่ยนวิธีคิดต้นทุนย้อนหลังไม่ได้ (ป้องกันต้นทุนเดิมเปลี่ยน)' : 'เปลี่ยนได้เฉพาะเจ้าของ') + '</p>') + '<p class="small">เลือกครั้งเดียวก่อนเริ่มบันทึกสินค้า · ใช้ทั้งบริษัท</p></div>';
+  }).catch(failNew);
+}
+function cmSave() { if (!confirm('เปลี่ยนวิธีคิดต้นทุน? (เปลี่ยนได้ครั้งเดียวก่อนมีความเคลื่อนไหวสินค้า)')) return; call('stk.settingsSave', { company_id: S.cid, cost_method: v('cm_m') }).then(function () { toast('บันทึกแล้ว', 'ok'); skSet(); }).catch(failNew); }
+var prodForm0 = prodForm; prodForm = function (id, copy) {
+  prodForm0(id, copy); var p = id ? (S.prods || []).filter(function (q) { return q.id === id; })[0] || {} : {};
+  var u = $('pd_unit'); if (u && !$('pd_min')) (u.closest('.fr') || u.parentNode).insertAdjacentHTML('afterend', '<div class="fr"><label class="f">จุดสั่งซื้อ (เตือนเมื่อเหลือ ≤)</label><input class="in" id="pd_min" value="' + esc(p.min_qty || '') + '" placeholder="เว้นว่าง = ไม่เตือน"></div>');
+};
+var whForm0 = whForm; whForm = function (id) {
+  whForm0(id); if (id === 'MAIN') return; var w = id ? (S.whs || []).filter(function (x) { return x.id === id; })[0] || {} : {};
+  ensureBchs().then(function (bs) { if (bs.length > 1 && $('wh_name') && !$('wh_bch')) ($('wh_name').closest('.f2') || $('wh_name').parentNode).insertAdjacentHTML('afterend', '<div class="fr"><label class="f">อยู่ที่สาขา (โอนระหว่างคลังต่างสาขา = โอนระหว่างสาขา)</label><select class="in" id="wh_bch"><option value="">— ไม่ระบุ —</option>' + bs.map(function (b) { return '<option value="' + b.id + '"' + (w.branch_id === b.id ? ' selected' : '') + '>' + esc(b.code + ' ' + b.name) + '</option>'; }).join('') + '</select></div>'); });
+};
+
+/* ทะเบียนสินทรัพย์ */
+S.fa = { tab: 'LIST', to: '' };
+function pAsset() {
+  $('main').innerHTML = head(t('asset'), '') + '<div class="empty">กำลังโหลด...</div>';
+  Promise.all([ensureCoa(), ensureBchs()]).then(renderAsset).catch(failNew);
+}
+function renderAsset() {
+  var ro = co().status !== 'ACTIVE', tab = S.fa.tab, tabs = [['LIST', '🏢 ทะเบียนสินทรัพย์'], ['DEP', '📉 ลงค่าเสื่อมราคา']];
+  $('main').innerHTML = head(t('asset'), esc(co().code + ' · ' + co().name_th) + ' · คิดค่าเสื่อมรายเดือน (เส้นตรง / ลดลงทวีคูณ) แล้วลงบัญชีอัตโนมัติ', ro ? '' : '<button class="btn" onclick="faForm()">+ เพิ่มสินทรัพย์</button>') +
+    '<div class="tabs">' + tabs.map(function (x) { return '<button class="' + (tab === x[0] ? 'on' : '') + '" onclick="S.fa.tab=\'' + x[0] + '\';renderAsset()">' + x[1] + '</button>'; }).join('') + '</div><div id="faOut"><div class="empty">กำลังโหลด...</div></div>';
+  if (tab === 'DEP') return faDepPage();
+  call('asset.list', { company_id: S.cid }).then(function (rows) {
+    S.faRows = {}; rows.forEach(function (r) { S.faRows[r.id] = r; });
+    var T = rows.reduce(function (o, r) { if (r.status === 'ACTIVE') { o.c += Number(r.cost); o.a += Number(r.accdep); o.n += Number(r.nbv); } return o; }, { c: 0, a: 0, n: 0 }), un = rows.reduce(function (t, r) { return t + (r.status === 'ACTIVE' ? r.unbooked : 0); }, 0);
+    $('faOut').innerHTML = (un ? '<div class="note warn">มีค่าเสื่อมราคาค้างลงบัญชี ' + un + ' เดือน-รายการ <button class="btn sm" onclick="S.fa.tab=\'DEP\';renderAsset()">ไปลงค่าเสื่อม</button></div>' : '') +
+      (!rows.length ? '<div class="card empty">ยังไม่มีสินทรัพย์</div>' : '<div class="card tw"><div class="bar" style="margin-top:0"><span style="flex:1" class="small">ใช้งานอยู่: ราคาทุน ' + money(T.c) + ' · ค่าเสื่อมสะสม ' + money(T.a) + ' · มูลค่าสุทธิ ' + money(T.n) + '</span><button class="btn ghost sm" onclick="faPrint()">🖨 พิมพ์ทะเบียน</button></div><table class="t"><thead><tr><th>รหัส</th><th>สินทรัพย์</th><th>วันที่ซื้อ</th><th>วิธี / อายุ</th><th class="num">ราคาทุน</th><th class="num">ค่าเสื่อมสะสม</th><th class="num">มูลค่าสุทธิ</th><th class="num">ค่าเสื่อม/เดือน</th><th>สถานะ</th><th></th></tr></thead><tbody>' +
+      rows.map(function (r) { return '<tr' + (r.status === 'DISPOSED' ? ' style="opacity:.55"' : '') + '><td class="code">' + esc(r.code) + '</td><td>' + esc(r.name) + (r.location ? '<div class="small">' + esc(r.location) + '</div>' : '') + '</td><td>' + esc(r.acquire_date) + '</td><td class="small">' + (r.method === 'DB' ? 'ลดลง ' + esc(r.db_rate) + '%' : 'เส้นตรง') + ' · ' + (Number(r.life_months) / 12) + ' ปี</td><td class="num">' + money(r.cost) + '</td><td class="num">' + money(r.accdep) + '</td><td class="num"><b>' + money(r.nbv) + '</b></td><td class="num">' + (r.status === 'ACTIVE' ? money(r.monthly) : '') + '</td><td>' + (r.status === 'DISPOSED' ? 'จำหน่ายแล้ว ' + esc(r.dispose_date) : r.unbooked ? '<span style="color:#b45309">ค้าง ' + r.unbooked + ' เดือน</span>' : 'ใช้งาน') + '</td><td style="white-space:nowrap"><button class="btn ghost sm" onclick="faSched(\'' + r.id + '\')">ตาราง</button>' +
+        (ro ? '' : ' <button class="btn ghost sm" onclick="faForm(\'' + r.id + '\')">แก้ไข</button>' + (r.status === 'ACTIVE' ? ' <button class="btn ghost sm" onclick="faDisp(\'' + r.id + '\')">จำหน่าย</button>' : '') + (!r.booked_count && r.status === 'ACTIVE' ? ' <button class="btn ghost sm" onclick="faDel(\'' + r.id + '\')">ลบ</button>' : '')) + '</td></tr>'; }).join('') + '</tbody></table></div>');
+  }).catch(failNew);
+}
+function faAccSel(id, val, cat, re) { var L = postAccs(cat); if (!val) { var h = L.filter(function (a) { return re.test(a.name_th); })[0]; val = h ? h.id : ''; } return '<select class="in" id="' + id + '"><option value="">— เลือก —</option>' + L.map(function (a) { return '<option value="' + a.id + '"' + (a.id === val ? ' selected' : '') + '>' + esc(a.code + ' ' + a.name_th) + '</option>'; }).join('') + '</select>'; }
+function faForm(id) {
+  var a = id ? S.faRows[id] : { acquire_date: today(), method: 'SL', life_months: '60' }, lk = id && (a.booked_count || a.status === 'DISPOSED'), f = function (k, l, v2, ex) { return '<div class="fr"><label class="f">' + l + '</label><input class="in" id="fa_' + k + '" value="' + esc(v2 == null ? '' : v2) + '"' + (lk && ex !== 'free' ? ' disabled' : '') + (ex && ex !== 'free' ? ' ' + ex : '') + '></div>'; };
+  var bs = S.bchs || [];
+  openM((id ? 'แก้ไข ' + a.code : 'เพิ่มสินทรัพย์'), (lk ? '<div class="note">ลงบัญชีค่าเสื่อมแล้ว แก้ได้เฉพาะชื่อ/ที่ตั้ง/หมายเหตุ (ราคาทุนและวิธีคิดล็อกไว้)</div>' : '') +
+    '<div class="f3">' + f('code', 'รหัส', a.code, 'free') + f('name', 'ชื่อสินทรัพย์ *', a.name, 'free') + f('category', 'หมวด', a.category, 'free') + '</div>' +
+    '<div class="f3">' + f('acquire_date', 'วันที่ซื้อ *', a.acquire_date, 'type="date"') + f('start_date', 'เริ่มคิดค่าเสื่อม', a.start_date || '', 'type="date"') + f('ref', 'อ้างอิง (เลขบิลซื้อ)', a.ref, 'free') + '</div>' +
+    '<div class="f3">' + f('cost', 'ราคาทุน *', a.cost) + f('salvage', 'มูลค่าซาก', a.salvage || '1') + f('life_years', 'อายุการใช้งาน (ปี) *', a.life_months ? Number(a.life_months) / 12 : '5') + '</div>' +
+    '<div class="f3"><div class="fr"><label class="f">วิธีคิดค่าเสื่อม</label><select class="in" id="fa_method"' + (lk ? ' disabled' : '') + '><option value="SL">เส้นตรง</option><option value="DB"' + (a.method === 'DB' ? ' selected' : '') + '>ลดลงทวีคูณ</option></select></div>' + f('db_rate', 'อัตราลดลง %/ปี (ลดลงทวีคูณ)', a.db_rate, 'placeholder="อัตโนมัติ = 2 ÷ อายุ"') + (bs.length > 1 ? '<div class="fr"><label class="f">สาขา</label><select class="in" id="fa_bch"><option value="">—</option>' + bs.map(function (b) { return '<option value="' + b.id + '"' + (a.branch_id === b.id ? ' selected' : '') + '>' + esc(b.code + ' ' + b.name) + '</option>'; }).join('') + '</select></div>' : '') + '</div>' +
+    '<div class="sec">ค่าเสื่อมสะสมยกมา (สินทรัพย์เดิมก่อนใช้ระบบ)</div><div class="f2">' + f('open_accdep', 'ค่าเสื่อมราคาสะสมยกมา', a.open_accdep) + f('open_date', 'ณ วันที่', a.open_date, 'type="date"') + '</div>' +
+    '<div class="sec">บัญชี</div><div class="f3"><div class="fr"><label class="f">บัญชีสินทรัพย์</label>' + faAccSel('fa_aa', a.asset_account_id, 1, /อุปกรณ์|เครื่อง|ยานพาหนะ|อาคาร/) + '</div><div class="fr"><label class="f">ค่าเสื่อมราคาสะสม</label>' + faAccSel('fa_ad', a.accdep_account_id, 1, /ค่าเสื่อมราคาสะสม/) + '</div><div class="fr"><label class="f">ค่าเสื่อมราคา (ค่าใช้จ่าย)</label>' + faAccSel('fa_de', a.dep_account_id, 5, /ค่าเสื่อมราคา/) + '</div></div>' +
+    f('location', 'ที่ตั้ง / ผู้ดูแล', a.location, 'free') + f('note', 'หมายเหตุ', a.note, 'free'),
+    '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" onclick="faSave(\'' + (id || '') + '\')">บันทึก</button>', true);
+}
+function faSave(id) {
+  var p = { company_id: S.cid, id: id, method: v('fa_method'), asset_account_id: v('fa_aa'), accdep_account_id: v('fa_ad'), dep_account_id: v('fa_de'), branch_id: $('fa_bch') ? v('fa_bch') : '' };
+  ['code', 'name', 'category', 'acquire_date', 'start_date', 'ref', 'cost', 'salvage', 'life_years', 'db_rate', 'open_accdep', 'open_date', 'location', 'note'].forEach(function (k) { p[k] = v('fa_' + k); });
+  call('asset.save', p).then(function (r) { closeM(); toast('บันทึก ' + r.code + ' แล้ว', 'ok'); renderAsset(); }).catch(failNew);
+}
+function faDel(id) { var r = S.faRows[id]; confirmM('ลบสินทรัพย์', 'ลบ ' + r.code + ' ' + r.name, 'ลบ', function () { call('asset.delete', { company_id: S.cid, id: id }).then(renderAsset).catch(failNew); }, true); }
+function faSched(id) {
+  call('asset.schedule', { company_id: S.cid, id: id }).then(function (r) {
+    openM('ตารางค่าเสื่อมราคา ' + r.asset.code + ' ' + r.asset.name, '<p class="small" style="margin-top:0">ราคาทุน ' + money(r.asset.cost) + ' · มูลค่าซาก ' + money(r.asset.salvage) + ' · ' + (r.asset.method === 'DB' ? 'ลดลงทวีคูณ ' + r.asset.db_rate + '%/ปี' : 'เส้นตรง') + (r.asset.open_accdep ? ' · ค่าเสื่อมยกมา ' + money(r.asset.open_accdep) + ' ณ ' + r.asset.open_date : '') + '</p><div class="tw" style="max-height:60vh"><table class="t"><thead><tr><th>เดือน</th><th class="num">ค่าเสื่อม</th><th class="num">ค่าเสื่อมสะสม</th><th class="num">มูลค่าสุทธิ</th><th>ลงบัญชี</th></tr></thead><tbody>' +
+      r.rows.map(function (x) { return '<tr><td>' + esc(x.ym) + '</td><td class="num">' + money(x.amount) + '</td><td class="num">' + money(x.accdep) + '</td><td class="num">' + money(x.nbv) + '</td><td>' + (x.booked ? '✅' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>', '<button class="btn ghost" onclick="closeM()">ปิด</button>', true);
+  }).catch(failNew);
+}
+function faDisp(id) {
+  var r = S.faRows[id], cash = postAccs(1).filter(function (a) { return /เงินสด|ธนาคาร|ลูกหนี้/.test(a.name_th); }), gl = postAccs(4).concat(postAccs(5));
+  openM('จำหน่ายสินทรัพย์ ' + r.code + ' ' + r.name, '<p class="small" style="margin-top:0">ราคาทุน ' + money(r.cost) + ' · ค่าเสื่อมสะสม ' + money(r.accdep) + ' · มูลค่าสุทธิ ' + money(r.nbv) + ' (ต้องลงค่าเสื่อมถึงเดือนที่จำหน่ายก่อน)</p><div class="f2"><div class="fr"><label class="f req">วันที่จำหน่าย</label><input class="in" type="date" id="fd_d" value="' + today() + '"></div><div class="fr"><label class="f">ราคาขาย (ก่อน VAT · ตัดชำรุด = 0)</label><input class="in" id="fd_p" value="0"></div></div>' +
+    '<div class="f2"><div class="fr"><label class="f">รับเงินเข้าบัญชี</label><select class="in" id="fd_c">' + cash.map(function (a) { return '<option value="' + a.id + '">' + esc(a.code + ' ' + a.name_th) + '</option>'; }).join('') + '</select></div><div class="fr"><label class="f req">กำไร/ขาดทุนจากการจำหน่าย</label><select class="in" id="fd_g">' + gl.map(function (a) { return '<option value="' + a.id + '"' + (/จำหน่าย/.test(a.name_th) ? ' selected' : '') + '>' + esc(a.code + ' ' + a.name_th) + '</option>'; }).join('') + '</select></div></div>' +
+    '<div class="fr"><label class="f">เหตุผล</label><input class="in" id="fd_r" placeholder="ขาย / ชำรุด / สูญหาย"></div>' + (can('journal.post') ? '<label class="small"><input type="checkbox" id="fd_post" checked> Post ทันที</label>' : '') + '<p class="small">ขายสินทรัพย์ที่ต้องออกใบกำกับภาษี ให้ออกใบกำกับจากระบบขายแยก (บัญชีรายได้ = บัญชีพัก) หรือบันทึก VAT ในสมุดรายวัน</p>',
+    '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" onclick="faDispSave(\'' + id + '\')">บันทึกจำหน่าย</button>', true);
+}
+function faDispSave(id) { call('asset.dispose', { company_id: S.cid, id: id, date: v('fd_d'), proceeds: v('fd_p'), cash_account_id: v('fd_c'), gl_account_id: v('fd_g'), reason: v('fd_r'), post: !!($('fd_post') && $('fd_post').checked) }).then(function (r) { closeM(); toast('จำหน่ายแล้ว ' + r.journal.doc_no + ' · ' + (Number(r.gain) >= 0 ? 'กำไร ' : 'ขาดทุน ') + money(Math.abs(Number(r.gain))), 'ok'); renderAsset(); }).catch(failNew); }
+function faDepPage() {
+  var to = S.fa.to || today().slice(0, 7);
+  call('asset.depPreview', { company_id: S.cid, to: to }).then(function (r) {
+    $('faOut').innerHTML = '<div class="card"><div class="bar" style="margin:0"><label class="small">ลงค่าเสื่อมถึงเดือน</label><input class="in" type="month" id="dp_to" value="' + to + '" onchange="S.fa.to=this.value;faDepPage()"><span style="flex:1" class="small">1 ใบสำคัญทั่วไป (JV) ต่อเดือน ลงวันสิ้นเดือน · Dr ค่าเสื่อมราคา / Cr ค่าเสื่อมราคาสะสม</span>' +
+      (r.months.length && co().status === 'ACTIVE' ? (can('journal.post') ? '<label class="small"><input type="checkbox" id="dp_post" checked> Post ทันที</label>' : '') + '<button class="btn" onclick="faDepPost()">ลงบัญชี ' + r.months.length + ' เดือน</button>' : '') + '</div></div>' +
+      (!r.months.length ? '<div class="card empty">✅ ลงค่าเสื่อมราคาครบถึงเดือน ' + esc(to) + ' แล้ว</div>' : r.months.map(function (m) { return '<div class="card"><div class="bar" style="margin-top:0"><b style="flex:1">เดือน ' + esc(m.ym) + '</b><b>' + money(m.total) + '</b></div><table class="t"><tbody>' + m.lines.map(function (l) { return '<tr><td class="code">' + esc(l.code) + '</td><td>' + esc(l.name) + '</td><td class="num">' + money(l.amount) + '</td></tr>'; }).join('') + '</tbody></table></div>'; }).join(''));
+  }).catch(failNew);
+}
+function faDepPost() { call('asset.depPost', { company_id: S.cid, to: S.fa.to || today().slice(0, 7), post: !!($('dp_post') && $('dp_post').checked) }).then(function (r) { toast('ลงค่าเสื่อม ' + r.done.length + ' เดือนแล้ว (' + r.done.map(function (d) { return d.doc_no; }).join(', ') + ')', 'ok'); faDepPage(); }).catch(failNew); }
+function faPrint() {
+  var rows = Object.keys(S.faRows).map(function (k) { return S.faRows[k]; });
+  printer().show('ทะเบียนสินทรัพย์', '<div class="bd"><h2 style="text-align:center">ทะเบียนสินทรัพย์ถาวร</h2><p style="text-align:center">' + esc(co().name_th) + ' · ณ วันที่ ' + thDate(today()) + '</p><table class="l"><thead><tr><th>รหัส</th><th>สินทรัพย์</th><th>วันที่ซื้อ</th><th>วิธี</th><th class="r">อายุ (ปี)</th><th class="r">ราคาทุน</th><th class="r">ค่าเสื่อมสะสม</th><th class="r">มูลค่าสุทธิ</th><th>สถานะ</th></tr></thead><tbody>' +
+    rows.map(function (r) { return '<tr><td>' + esc(r.code) + '</td><td>' + esc(r.name) + '</td><td>' + esc(r.acquire_date) + '</td><td>' + (r.method === 'DB' ? 'ลดลง ' + esc(r.db_rate) + '%' : 'เส้นตรง') + '</td><td class="r">' + (Number(r.life_months) / 12) + '</td><td class="r">' + money(r.cost) + '</td><td class="r">' + money(r.accdep) + '</td><td class="r">' + money(r.nbv) + '</td><td>' + (r.status === 'DISPOSED' ? 'จำหน่าย ' + esc(r.dispose_date) : 'ใช้งาน') + '</td></tr>'; }).join('') + '</tbody></table></div>', BD_CSS);
+}
 function puPt() { var c = v('pu_pt') === 'CASH'; $('pu_duew').style.display = c ? 'none' : ''; $('pu_apw').style.display = c ? 'none' : ''; $('pu_payw').style.display = c ? '' : 'none'; $('pu_whtw').style.display = c ? '' : 'none'; }
 function puW() { $('pu_wbox').style.display = $('pu_hw').checked ? '' : 'none'; puWa(); }
 function puWc() { var L = ratesFor('WHT', v('pu_date') || today(), v('pu_pnd')).filter(function (r) { return r.code !== 'SALARY'; }); $('pu_wc').innerHTML = L.map(function (r) { return '<option value="' + r.code + '" data-r="' + r.rate + '"' + (r.code === S.puEdit.whc ? ' selected' : '') + '>' + esc(r.name) + ' (' + r.rate + '%)</option>'; }).join(''); if (!v('pu_wr')) puWr(); }
