@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="EDM Planner">
+<meta name="theme-color" content="#1e7a46">
+<title>EDM SME Planner 2027</title>
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--p:#1e7a46;--bg:#f6f5f1;--card:#fff;--tx:#23262a;--mut:#6b7178;--bd:#e4e2dc;--red:#c0392b;--amb:#c58a00;--grn:#1e7a46}
+body.rose{--p:#a8435f}body.ocean{--p:#1f6f8b}body.lav{--p:#6b4fa0}body.cocoa{--p:#7a5240}
+body.dark{--bg:#17191b;--card:#222528;--tx:#e9e9e9;--mut:#9aa0a6;--bd:#34383c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 "Sarabun","Noto Sans Thai","Leelawadee UI",system-ui,-apple-system,sans-serif;-webkit-text-size-adjust:100%}
+:root{--pl:color-mix(in srgb,var(--p) 13%,var(--card))}
+body{--pl:color-mix(in srgb,var(--p) 13%,var(--card))}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top));background:var(--card);border-bottom:1px solid var(--bd)}
+.ic{vertical-align:-5px;flex:none;overflow:visible}h2 .ic{vertical-align:-6px}aside a{align-items:center}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--p);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+header h1{font-size:16px;margin:0;flex:1;line-height:1.2}header h1 small{display:block;color:var(--mut);font-weight:400;font-size:12px}
+.ib{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:9px;width:38px;height:38px;font-size:17px;cursor:pointer}
+aside{position:fixed;top:0;left:0;bottom:0;width:250px;background:var(--card);border-right:1px solid var(--bd);padding:14px 10px 30px;overflow:auto;z-index:30;transform:translateX(-100%);transition:.2s}
+aside.open{transform:none;box-shadow:0 0 0 100vmax rgba(0,0,0,.35)}
+aside .sec{font-size:11px;color:var(--mut);letter-spacing:.08em;margin:14px 10px 4px}
+aside a{display:flex;gap:10px;padding:9px 10px;border-radius:9px;color:var(--tx);text-decoration:none;cursor:pointer}
+aside a.on{background:var(--pl);color:var(--p);font-weight:700}
+main{padding:16px;max-width:1000px;margin:0 auto;padding-bottom:90px}
+@media(min-width:900px){aside{transform:none;top:59px}#mb{display:none}main{margin-left:250px;padding:24px 32px}}
+h2{font-size:22px;margin:4px 0 2px}.sub{color:var(--mut);margin:0 0 14px;font-size:13.5px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:14px}
+.card h3{margin:0 0 10px;font-size:15.5px}
+.grid{display:grid;gap:12px}.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px}
+.stat b{display:block;font-size:20px}.stat span{font-size:12px;color:var(--mut)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input,select,textarea{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:8px 10px;min-width:0}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--p)}
+textarea{width:100%;min-height:180px}
+.f{flex:1 1 140px}
+.btn{font:inherit;border:0;background:var(--p);color:#fff;border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:600}
+.btn.o{background:transparent;color:var(--p);border:1px solid var(--p)}.btn.s{padding:4px 9px;font-size:13px}
+.x{border:0;background:none;color:var(--mut);cursor:pointer;font-size:16px;padding:2px 6px}
+.li{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--bd)}.li:last-child{border:0}
+.li .t{flex:1;min-width:0}.done .t{text-decoration:line-through;color:var(--mut)}
+.tag{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:20px;background:var(--pl);color:var(--p);margin-left:4px;white-space:nowrap}
+.tag.r{background:color-mix(in srgb,var(--red) 14%,var(--card));color:var(--red)}
+.tag.a{background:color-mix(in srgb,var(--amb) 16%,var(--card));color:var(--amb)}
+.mut{color:var(--mut);font-size:13px}.red{color:var(--red)}.grn{color:var(--grn)}
+.bar{height:8px;background:var(--bd);border-radius:9px;overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;background:var(--p)}
+.bar i.over{background:var(--red)}
+.hero{background:var(--pl);border:0}.hero h2{font-size:26px}
+.warn{background:color-mix(in srgb,var(--amb) 14%,var(--card));border-color:color-mix(in srgb,var(--amb) 40%,var(--card))}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .h{text-align:center;font-size:12px;color:var(--mut)}
+.cal .d{min-height:64px;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:3px 4px;font-size:11px;cursor:pointer;overflow:hidden}
+.cal .d.o{opacity:.35}.cal .d.t{border:2px solid var(--p)}.cal .d.sel{background:var(--pl)}
+.cal .d .n{font-weight:700;font-size:13px}.cal .d.hol .n{color:var(--red)}
+.dot{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:4px;padding:0 3px;margin-top:2px;background:var(--pl);color:var(--p)}
+.dot.h{background:color-mix(in srgb,var(--red) 12%,var(--card));color:var(--red)}.dot.x{background:color-mix(in srgb,var(--amb) 15%,var(--card));color:var(--amb)}
+.kb{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.kc{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:8px}
+.kc h4{margin:2px 4px 8px;font-size:14px}
+.kcard{background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:8px;margin-bottom:6px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:7px 4px;border-bottom:1px solid var(--bd);text-align:left}
+th{font-size:12px;color:var(--mut);font-weight:600}td.c,th.c{text-align:center}td.r,th.r{text-align:right}
+.scroll{overflow-x:auto}
+.sw{display:inline-block;width:30px;height:30px;border-radius:50%;border:3px solid var(--card);box-shadow:0 0 0 1px var(--bd);cursor:pointer}
+.sw.on{box-shadow:0 0 0 2px var(--tx)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#222;color:#fff;padding:9px 16px;border-radius:20px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:50}
+#toast.on{opacity:1}
+.lic{font-size:12px;color:var(--mut);text-align:center;margin-top:24px}
+.seg{display:inline-flex;border:1px solid var(--bd);border-radius:9px;overflow:hidden}.seg button{font:inherit;border:0;background:var(--card);color:var(--tx);padding:6px 12px;cursor:pointer}.seg button.on{background:var(--p);color:#fff}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script>
+/* ===== EDM SME Planner 2027 · © Excel Data Master ===== */
+const LICENSED_TO = 'ตัวอย่าง (Demo)'; // ← เปลี่ยนเป็นชื่อผู้ซื้อก่อนส่งไฟล์
+const K = 'edm_sme_planner_2027_v1';
+const TH_M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const TH_MF=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const TH_D=['อา','จ','อ','พ','พฤ','ศ','ส'];
+const HOL={'01-01':'วันขึ้นปีใหม่','04-06':'วันจักรี','04-13':'วันสงกรานต์','04-14':'วันสงกรานต์','04-15':'วันสงกรานต์','05-01':'วันแรงงาน','05-04':'วันฉัตรมงคล','06-03':'วันเฉลิมฯ พระราชินี','07-28':'วันเฉลิมฯ ร.10','08-12':'วันแม่แห่งชาติ','10-13':'วันนวมินทรมหาราช','10-23':'วันปิยมหาราช','12-05':'วันพ่อแห่งชาติ','12-10':'วันรัฐธรรมนูญ','12-31':'วันสิ้นปี'};
+const CAT_IN=['ขายสินค้า','ค่าบริการ','รายได้อื่น'];
+const CAT_OUT=['ต้นทุนสินค้า','ค่าเช่า','เงินเดือน','ค่าน้ำ-ไฟ-เน็ต','ค่าขนส่ง','การตลาด','ภาษี/ค่าธรรมเนียม','ใช้จ่ายส่วนตัว','อื่นๆ'];
+const THEMES=[['excel','#1e7a46','Excel Green'],['rose','#a8435f','Rosé'],['ocean','#1f6f8b','Ocean'],['lav','#6b4fa0','Lavender'],['cocoa','#7a5240','Cocoa']];
+const NAV=[['home','🏠','หน้าแรก'],['cal','📅','ปฏิทิน'],['tasks','✅','งาน & To-do'],['goals','🎯','เป้าหมาย'],['money','💰','รายรับรายจ่าย'],['habits','🔁','นิสัยประจำวัน'],['journal','📝','บันทึกประจำวัน'],['-','','ธุรกิจ'],['sales','🧾','ยอดขายรายวัน'],['stock','','สต๊อกสินค้า'],['tax','🏛️','ปฏิทินภาษี'],['cust','👥','ลูกค้า / ลูกหนี้'],['staff','','พนักงาน & เงินเดือน'],['-','','ระบบ'],['set','⚙️','ตั้งค่า & สำรองข้อมูล']];
+
+/* ---------- cute icons ---------- */
+const SK='#4a3530';
+function face(x,y,s=1){return`<circle cx="${x-2.2*s}" cy="${y}" r="${.85*s}" fill="${SK}" stroke="none"/><circle cx="${x+2.2*s}" cy="${y}" r="${.85*s}" fill="${SK}" stroke="none"/><path d="M${x-1*s} ${y+1.3*s}q${s} ${s} ${2*s} 0" fill="none" stroke-width="1.2"/><ellipse cx="${x-3.6*s}" cy="${y+1.4*s}" rx="${1.1*s}" ry="${.7*s}" fill="#ff9fb5" stroke="none" opacity=".85"/><ellipse cx="${x+3.6*s}" cy="${y+1.4*s}" rx="${1.1*s}" ry="${.7*s}" fill="#ff9fb5" stroke="none" opacity=".85"/>`}
+const gear=()=>{let s='';for(let i=0;i<8;i++){const a=i*Math.PI/4;s+=`<circle cx="${(12+7.6*Math.cos(a)).toFixed(2)}" cy="${(12+7.6*Math.sin(a)).toFixed(2)}" r="2.1" fill="#d6dcf5"/>`}return s+`<circle cx="12" cy="12" r="7.6" fill="#d6dcf5"/>`+face(12,12,.75)};
+const ICO={
+stock:`<path d="M4 8.5 12 4.5l8 4V18l-8 4-8-4z" fill="#f3cf9b"/><path d="M4 8.5l8 4 8-4M12 12.5V22" fill="none"/><path d="M8 6.5l8 4" fill="none" stroke="#c99a5c"/>${face(8.2,15,.6)}`,
+staff:`<circle cx="12" cy="8.5" r="4.8" fill="#ffe0c2"/><path d="M4.5 21c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5z" fill="#bcd9ff"/><path d="M12 14.5l-1.3 2.2L12 21l1.3-4.3z" fill="#ff9fb5"/>${face(12,8.6,.62)}`,
+home:`<path d="M4 11.5 12 4.5l8 7V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" fill="#ffd6a5"/><path d="M2.8 12.2 12 4l9.2 8.2" fill="none" stroke="#e8846b" stroke-width="2.2"/>${face(12,15)}`,
+cal:`<rect x="3.5" y="5" width="17" height="15.5" rx="3.5" fill="#d6ebff"/><path d="M3.5 10V8.5A3.5 3.5 0 0 1 7 5h10a3.5 3.5 0 0 1 3.5 3.5V10z" fill="#8ec5ff"/><path d="M8 3.3v3.4M16 3.3v3.4" fill="none"/>${face(12,15,.9)}`,
+tasks:`<rect x="5" y="4.5" width="14" height="16.5" rx="3" fill="#c8f0cf"/><rect x="9" y="3" width="6" height="3.2" rx="1.2" fill="#fff"/>${face(12,11.5,.8)}<path d="M9.2 17.2l1.9 1.7 3.8-3.4" fill="none" stroke="#2e9e5b" stroke-width="1.8"/>`,
+goals:`<path d="M12 3.2l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.5l-5.2 2.7 1-5.8L3.6 9.3l5.8-.8z" fill="#ffe27a"/>${face(12,11.6,.72)}`,
+money:`<circle cx="12.5" cy="4.6" r="2.3" fill="#ffd85e"/><path d="M8.6 9 7.4 5.6l3.3 1.6" fill="#ffc6d6"/><ellipse cx="12" cy="13.5" rx="8" ry="6" fill="#ffc6d6"/><ellipse cx="19.6" cy="13.6" rx="1.6" ry="2" fill="#ff9fb8"/><path d="M8 19.2v1.8M15.5 19.2v1.8" fill="none"/>${face(11,12.6,.8)}`,
+habits:`<path d="M12 14V9.5" fill="none"/><path d="M12 10.5C8.5 10.5 6.5 8.5 6.5 5.5c3.5 0 5.5 2 5.5 5z" fill="#9be3a6"/><path d="M12 9.5c0-3 2-5 5.5-5 0 3-2 5-5.5 5z" fill="#7fd492"/><path d="M6.5 14h11l-1.3 6.4a1 1 0 0 1-1 .8H8.8a1 1 0 0 1-1-.8z" fill="#f4b993"/>${face(12,17,.65)}`,
+journal:`<rect x="5" y="3.5" width="14" height="17" rx="2.5" fill="#e2d3ff"/><path d="M8.5 3.5v17" fill="none"/><path d="M14.5 3.5v5l1.5-1.2 1.5 1.2v-5" fill="#ff9fb5"/>${face(13.6,13,.72)}`,
+sales:`<path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" fill="none"/><path d="M5 8.5h14l-1 11.6a1.5 1.5 0 0 1-1.5 1.4h-9A1.5 1.5 0 0 1 6 20.1z" fill="#ffd3b8"/>${face(12,14.4,.85)}`,
+tax:`<path d="M6 3.5h12V21l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4L6 21z" fill="#c4efe6"/>${face(12,9.6,.75)}<path d="M9 14.5h6M9 17h4" fill="none"/>`,
+cust:`<circle cx="16.3" cy="9.3" r="3.7" fill="#ffe0a3"/><path d="M12 20.5c0-3.4 2-5.3 4.3-5.3s4.3 1.9 4.3 5.3z" fill="#ffe0a3"/><circle cx="9.3" cy="10.4" r="4.6" fill="#ffc6d6"/><path d="M3.3 21c0-3.6 2.7-5.6 6-5.6s6 2 6 5.6z" fill="#ffc6d6"/>${face(9.3,10.4,.62)}`,
+set:gear(),
+cloud:`<path d="M7 18.5h10a4 4 0 0 0 .5-8 5.5 5.5 0 0 0-10.6 1.2A3.4 3.4 0 0 0 7 18.5z" fill="#d9ecff"/>${face(12,14,.72)}`,
+phone:`<rect x="6.5" y="2.8" width="11" height="18.6" rx="3" fill="#ffd6e7"/><path d="M10.5 5h3" fill="none"/>${face(12,12,.75)}`,
+pin:`<path d="M12 21s-6-5.6-6-10.5a6 6 0 0 1 12 0C18 15.4 12 21 12 21z" fill="#ffb3c7"/>${face(12,10.4,.7)}`,
+todo:`<circle cx="12" cy="12" r="8" fill="#ffe0a3"/>${face(12,11.5,.8)}`,
+doing:`<circle cx="12" cy="12" r="8" fill="#cfe6ff"/>${face(12,11.5,.8)}`,
+done:`<circle cx="12" cy="12" r="8" fill="#c8f0cf"/>${face(12,11.5,.8)}`
+};
+const ic=(n,s=22)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" stroke="${SK}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">${ICO[n]||''}</svg>`;
+/* น้องเซลล์ mascot */
+const cell=(s=34)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 40 40" stroke="${SK}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><rect x="4" y="6" width="32" height="28" rx="8" fill="#8edba6"/><path d="M4 15h32M15 6v9" fill="none" stroke="#5fbf80" stroke-width="1.4"/><rect x="31" y="29" width="6" height="6" rx="1.5" fill="#fff"/><circle cx="15" cy="22" r="1.5" fill="${SK}" stroke="none"/><circle cx="25" cy="22" r="1.5" fill="${SK}" stroke="none"/><path d="M18 25q2 2 4 0" fill="none"/><ellipse cx="11.5" cy="25" rx="2" ry="1.2" fill="#ff9fb5" stroke="none"/><ellipse cx="28.5" cy="25" rx="2" ry="1.2" fill="#ff9fb5" stroke="none"/></svg>`;
+
+/* ---------- helpers ---------- */
+const pad=n=>String(n).padStart(2,'0');
+const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const TODAY=()=>iso(new Date());
+const pd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c||1)};
+const th=s=>{if(!s)return'';const d=pd(s);return d.getDate()+' '+TH_M[d.getMonth()]+' '+(d.getFullYear()+543)};
+const thym=m=>{const[y,mm]=m.split('-').map(Number);return TH_MF[mm-1]+' '+(y+543)};
+const addD=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return iso(d)};
+const money=n=>(+n||0).toLocaleString('th-TH',{maximumFractionDigits:2});
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const val=id=>{const e=document.getElementById(id);return e?e.value.trim():''};
+const sum=(a,f)=>a.reduce((t,x)=>t+(+f(x)||0),0);
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),1800)}
+
+/* ---------- data ---------- */
+function blank(){return{s:{name:'',biz:'',theme:'excel',dark:false,vat:true,emp:true,wht:true,lastBackup:0,ssoRate:5,ssoMax:17500},tasks:[],events:[],goals:[],tx:[],budget:{},habits:[],hlog:{},journal:{},sales:[],cust:[],taxDone:{},products:[],moves:[],staff:[],pay:{}}}
+function load(){try{const r=JSON.parse(localStorage.getItem(K));if(r&&r.s){const b=blank();for(const k in b)if(r[k]===undefined)r[k]=b[k];r.s=Object.assign(b.s,r.s);return r}}catch(e){}return blank()}
+let D=load();
+function save(){try{localStorage.setItem(K,JSON.stringify(D))}catch(e){toast('⚠️ บันทึกไม่สำเร็จ กรุณาสำรองข้อมูล')}}
+let _st;function saveSoon(){clearTimeout(_st);_st=setTimeout(save,400)}
+const T0=TODAY();
+let cur=(location.hash||'#home').slice(1),ui={cy:+T0.slice(0,4),cm:+T0.slice(5,7),sel:T0,tv:'list',mon:T0.slice(0,7),jd:T0,ty:Math.max(2027,+T0.slice(0,4))};
+
+/* ---------- tax ---------- */
+function taxList(y){const L=[],s=D.s;
+ for(let m=1;m<=12;m++){const per=m===1?TH_MF[11]+' '+(y-1+543):TH_MF[m-2]+' '+(y+543);
+  const add=(day,code,name,on)=>L.push({id:y+'-'+pad(m)+'|'+code,date:y+'-'+pad(m)+'-'+pad(day),name,per:'งวด '+per,on});
+  if(s.emp){add(7,'pnd1','ภ.ง.ด.1 หัก ณ ที่จ่ายเงินเดือน',1);add(15,'sso','ประกันสังคม สปส.1-10',0)}
+  if(s.wht){add(7,'pnd3','ภ.ง.ด.3 หัก ณ ที่จ่าย (บุคคลธรรมดา)',1);add(7,'pnd53','ภ.ง.ด.53 หัก ณ ที่จ่าย (นิติบุคคล)',1)}
+  if(s.vat)add(15,'pp30','ภ.พ.30 ภาษีมูลค่าเพิ่ม',1)}
+ const A=(date,code,name,per)=>L.push({id:y+'|'+code,date,name,per,on:1,an:1});
+ if(s.emp)A(y+'-02-'+new Date(y,2,0).getDate(),'pnd1k','ภ.ง.ด.1ก สรุปเงินเดือนทั้งปี','ปี '+(y-1+543));
+ A(y+'-03-31','pnd90','ภ.ง.ด.90/91 บุคคลธรรมดา','ปี '+(y-1+543));
+ A(y+'-05-30','pnd50','ภ.ง.ด.50 นิติบุคคล (รอบบัญชีสิ้น ธ.ค.)','ปี '+(y-1+543));
+ A(y+'-08-31','pnd51','ภ.ง.ด.51 นิติบุคคล ครึ่งปี','ครึ่งปี '+(y+543));
+ A(y+'-09-30','pnd94','ภ.ง.ด.94 บุคคลธรรมดา ครึ่งปี','ครึ่งปี '+(y+543));
+ return L.sort((a,b)=>a.date.localeCompare(b.date))}
+
+/* ---------- calcs ---------- */
+function monthSum(m){const tin=D.tx.filter(x=>x.type==='in'&&x.date.startsWith(m)),tout=D.tx.filter(x=>x.type==='out'&&x.date.startsWith(m)),sl=D.sales.filter(x=>x.date.startsWith(m));
+ const inc=sum(tin,x=>x.amt)+sum(sl,x=>x.amt),out=sum(tout,x=>x.amt);return{inc,out,net:inc-out,sales:sum(sl,x=>x.amt),tout}}
+function hDone(id,d){return(D.hlog[d]||[]).includes(id)}
+function streak(id){let d=TODAY(),n=0;if(!hDone(id,d))d=addD(d,-1);while(hDone(id,d)){n++;d=addD(d,-1)}return n}
+
+/* ---------- actions ---------- */
+function go(p){cur=p;location.hash=p;document.querySelector('aside')?.classList.remove('open');render();scrollTo(0,0)}
+function del(c,id){D[c]=D[c].filter(x=>x.id!==id);save();render()}
+function addTask(){const t=val('tT');if(!t)return toast('ใส่ชื่องานก่อน');D.tasks.push({id:uid(),title:t,due:val('tD'),prio:val('tP'),status:'todo'});save();render();toast('เพิ่มงานแล้ว')}
+function setTask(id,st){const t=D.tasks.find(x=>x.id===id);if(t){t.status=st;save();render()}}
+function moveTask(id,dir){const o=['todo','doing','done'],t=D.tasks.find(x=>x.id===id);t.status=o[Math.min(2,Math.max(0,o.indexOf(t.status)+dir))];save();render()}
+function addEv(){const d=val('eD'),t=val('eT');if(!d||!t)return toast('ใส่วันที่และชื่อนัด');D.events.push({id:uid(),date:d,title:t,time:val('eH')});ui.sel=d;save();render();toast('เพิ่มนัดแล้ว')}
+function calNav(n){ui.cm+=n;if(ui.cm<1){ui.cm=12;ui.cy--}if(ui.cm>12){ui.cm=1;ui.cy++}render()}
+function addGoal(){const t=val('gT'),tg=+val('gG');if(!t||!tg)return toast('ใส่ชื่อเป้าหมายและตัวเลขเป้า');D.goals.push({id:uid(),title:t,target:tg,cur:0,unit:val('gU'),due:val('gD')});save();render()}
+function setGoal(id,v){const g=D.goals.find(x=>x.id===id);g.cur=+v||0;save();render();if(g.cur>=g.target)toast('🎉 ถึงเป้าแล้ว!')}
+function addTx(){const a=+val('xA');if(!a)return toast('ใส่จำนวนเงิน');D.tx.push({id:uid(),date:val('xD')||TODAY(),type:val('xY'),cat:val('xC'),amt:a,note:val('xN')});save();render();toast('บันทึกแล้ว')}
+function setBud(c,v){D.budget[c]=+v||0;save();render()}
+function addHabit(){const n=val('hN');if(!n)return;D.habits.push({id:uid(),name:n});save();render()}
+function togH(id,d){const a=D.hlog[d]=D.hlog[d]||[];const i=a.indexOf(id);i<0?a.push(id):a.splice(i,1);save();render()}
+function addSale(){const a=+val('sA');if(!a)return toast('ใส่ยอดขาย');D.sales.push({id:uid(),date:val('sD')||TODAY(),amt:a,ch:val('sC'),note:val('sN')});save();render();toast('บันทึกยอดขายแล้ว')}
+function addCust(){const n=val('cN');if(!n)return toast('ใส่ชื่อลูกค้า');D.cust.push({id:uid(),name:n,tel:val('cT'),owe:+val('cO')||0,due:val('cD'),note:val('cX')});save();render()}
+function setOwe(id,v){D.cust.find(x=>x.id===id).owe=+v||0;save();render()}
+function togTax(id){D.taxDone[id]=!D.taxDone[id];save();render()}
+function setS(k,v){D.s[k]=v;save();render()}
+function csv(name,head,rows){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const t='﻿'+[head,...rows].map(r=>r.map(q).join(',')).join('\r\n');dl(name,t,'text/csv;charset=utf-8')}
+function dl(name,text,type){const b=new Blob([text],{type}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function backup(){D.s.lastBackup=Date.now();save();dl('EDM-Planner-backup-'+TODAY()+'.json',JSON.stringify(D),'application/json');render();toast('ดาวน์โหลดไฟล์สำรองแล้ว')}
+function restore(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!x.s)throw 0;if(!confirm('กู้ข้อมูลจากไฟล์นี้? ข้อมูลปัจจุบันในเครื่องจะถูกแทนที่'))return;localStorage.setItem(K,JSON.stringify(x));D=load();render();toast('กู้ข้อมูลสำเร็จ')}catch(e){toast('ไฟล์ไม่ถูกต้อง')}};r.readAsText(f)}
+function resetAll(){if(confirm('ลบข้อมูลทั้งหมดในเครื่องนี้? (แนะนำให้สำรองข้อมูลก่อน)')){D=blank();save();render();toast('ล้างข้อมูลแล้ว')}}
+function exMoney(){const m=ui.mon;csv('รายรับรายจ่าย-'+m+'.csv',['วันที่','ประเภท','หมวด','จำนวนเงิน','หมายเหตุ'],[...D.tx.filter(x=>x.date.startsWith(m)).map(x=>[x.date,x.type==='in'?'รายรับ':'รายจ่าย',x.cat,x.amt,x.note]),...D.sales.filter(x=>x.date.startsWith(m)).map(x=>[x.date,'รายรับ','ยอดขาย ('+x.ch+')',x.amt,x.note])].sort((a,b)=>a[0].localeCompare(b[0])))}
+function exSales(){csv('ยอดขาย-'+ui.mon+'.csv',['วันที่','ช่องทาง','ยอดขาย','หมายเหตุ'],D.sales.filter(x=>x.date.startsWith(ui.mon)).sort((a,b)=>a.date.localeCompare(b.date)).map(x=>[x.date,x.ch,x.amt,x.note]))}
+function exCust(){csv('ลูกค้า-ลูกหนี้.csv',['ชื่อ','โทร','ยอดค้างชำระ','นัดชำระ','หมายเหตุ'],D.cust.map(x=>[x.name,x.tel,x.owe,x.due,x.note]))}
+function exTasks(){csv('งาน.csv',['งาน','กำหนดส่ง','ความสำคัญ','สถานะ'],D.tasks.map(x=>[x.title,x.due,x.prio,{todo:'ยังไม่เริ่ม',doing:'กำลังทำ',done:'เสร็จ'}[x.status]]))}
+function demo(){if((D.tasks.length||D.tx.length||D.sales.length)&&!confirm('เพิ่มข้อมูลตัวอย่างลงในข้อมูลเดิม?'))return;const t=TODAY(),m=t.slice(0,7);
+ D.tasks.push({id:uid(),title:'สั่งของเข้าร้านรอบใหม่',due:t,prio:'ด่วน',status:'todo'},{id:uid(),title:'ทำโปรโมชันปีใหม่',due:addD(t,3),prio:'สำคัญ',status:'doing'},{id:uid(),title:'ส่งเอกสารให้สำนักงานบัญชี',due:addD(t,-1),prio:'สำคัญ',status:'todo'});
+ D.events.push({id:uid(),date:addD(t,2),time:'10:00',title:'นัดซัพพลายเออร์'});
+ D.goals.push({id:uid(),title:'ยอดขายปี 2570',target:1000000,cur:185000,unit:'บาท',due:'2027-12-31'},{id:uid(),title:'ลูกค้าประจำ',target:200,cur:64,unit:'ราย',due:'2027-12-31'});
+ D.tx.push({id:uid(),date:m+'-01',type:'out',cat:'ค่าเช่า',amt:12000,note:'ค่าเช่าร้าน'},{id:uid(),date:m+'-03',type:'out',cat:'ต้นทุนสินค้า',amt:28500,note:''},{id:uid(),date:m+'-05',type:'out',cat:'ค่าน้ำ-ไฟ-เน็ต',amt:3200,note:''});
+ D.budget={'ค่าเช่า':12000,'ต้นทุนสินค้า':35000,'การตลาด':5000};
+ for(let i=0;i<5;i++)D.sales.push({id:uid(),date:addD(t,-i),amt:3000+Math.round(Math.random()*4000),ch:i%2?'ออนไลน์':'หน้าร้าน',note:''});
+ D.cust.push({id:uid(),name:'ร้านป้าแดง',tel:'081-xxx-xxxx',owe:4500,due:addD(t,7),note:'เครดิต 30 วัน'});
+ if(!D.products.length){D.products.push({id:uid(),name:'สินค้า A',unit:'ชิ้น',cost:80,price:150,qty:42,min:10},{id:uid(),name:'สินค้า B',unit:'กล่อง',cost:250,price:390,qty:6,min:8})}
+ if(!D.staff.length)D.staff.push({id:uid(),name:'น้องมิ้น',pos:'พนักงานขาย',sal:15000,start:'2025-06-01',tel:''},{id:uid(),name:'พี่โอ๊ต',pos:'ส่งของ',sal:13000,start:'2024-02-15',tel:''});
+ if(!D.habits.length)D.habits.push({id:uid(),name:'ปิดยอดขายประจำวัน'},{id:uid(),name:'ดื่มน้ำ 8 แก้ว'},{id:uid(),name:'ออกกำลังกาย'});
+ save();render();toast('เพิ่มข้อมูลตัวอย่างแล้ว')}
+
+
+/* ---------- stock & staff ---------- */
+function addProd(){const n=val('pN');if(!n)return toast('ใส่ชื่อสินค้า');D.products.push({id:uid(),name:n,unit:val('pU')||'ชิ้น',cost:+val('pC')||0,price:+val('pP')||0,qty:+val('pQ')||0,min:+val('pM')||0});save();render();toast('เพิ่มสินค้าแล้ว')}
+function addMove(){const pid=val('mP'),q=+val('mQ'),t=val('mT');if(!pid||!q)return toast('เลือกสินค้าและใส่จำนวน');const pr=D.products.find(x=>x.id===pid);if(t==='out'&&q>pr.qty&&!confirm('จำนวนเบิกมากกว่าคงเหลือ ยืนยัน?'))return;pr.qty+=t==='in'?q:-q;D.moves.push({id:uid(),date:val('mD')||TODAY(),pid,type:t,qty:q,note:val('mN')});save();render();toast(t==='in'?'รับเข้าแล้ว':'เบิกออกแล้ว')}
+function delMove(id){const m=D.moves.find(x=>x.id===id),pr=D.products.find(x=>x.id===m.pid);if(pr)pr.qty-=m.type==='in'?m.qty:-m.qty;del('moves',id)}
+function delProd(id){if(confirm('ลบสินค้านี้และประวัติเข้า-ออก?')){D.moves=D.moves.filter(x=>x.pid!==id);del('products',id)}}
+function setProd(id,k,v){D.products.find(x=>x.id===id)[k]=+v||0;save();render()}
+function exStock(){csv('สต๊อกสินค้า-'+TODAY()+'.csv',['สินค้า','หน่วย','ทุน/หน่วย','ราคาขาย','คงเหลือ','จุดสั่งซื้อ','มูลค่าทุน'],D.products.map(x=>[x.name,x.unit,x.cost,x.price,x.qty,x.min,x.qty*x.cost]))}
+function addStaff(){const n=val('fN');if(!n)return toast('ใส่ชื่อพนักงาน');D.staff.push({id:uid(),name:n,pos:val('fP'),sal:+val('fS')||0,start:val('fD'),tel:val('fT')});save();render();toast('เพิ่มพนักงานแล้ว')}
+function payOf(e,m){const r=(D.pay[m]||{})[e.id]||{},sal=r.sal??e.sal,ot=+r.ot||0,bo=+r.bo||0,de=+r.de||0,g=sal+ot+bo,sso=Math.round(Math.min(g,D.s.ssoMax)*D.s.ssoRate/100);return{sal,ot,bo,de,g,sso,net:g-sso-de}}
+function setPay(id,m,k,v){const P=D.pay[m]=D.pay[m]||{},r=P[id]=P[id]||{};r[k]=+v||0;save();render()}
+function payToExp(){const m=ui.mon,L=D.staff.map(e=>payOf(e,m)),g=sum(L,x=>x.g),er=sum(L,x=>x.sso);if(!g)return toast('ยังไม่มียอดเงินเดือน');if(D.tx.some(x=>x.pay===m)&&!confirm('เดือนนี้เคยบันทึกไปแล้ว บันทึกซ้ำ?'))return;D.tx.push({id:uid(),date:m+'-'+pad(new Date(+m.slice(0,4),+m.slice(5),0).getDate()),type:'out',cat:'เงินเดือน',amt:g+er,note:'เงินเดือน+ประกันสังคมส่วนนายจ้าง '+thym(m),pay:m});save();render();toast('บันทึกเป็นรายจ่ายแล้ว')}
+function exPay(){const m=ui.mon;csv('เงินเดือน-'+m+'.csv',['ชื่อ','ตำแหน่ง','เงินเดือน','OT','โบนัส/อื่นๆ','รวมรายได้','ประกันสังคม','หักอื่นๆ','รับสุทธิ'],D.staff.map(e=>{const p=payOf(e,m);return[e.name,e.pos,p.sal,p.ot,p.bo,p.g,p.sso,p.de,p.net]}))}
+
+/* ---------- pages ---------- */
+function taskRow(x){const t=TODAY(),od=x.due&&x.due<t&&x.status!=='done';return`<div class="li ${x.status==='done'?'done':''}"><input type="checkbox" ${x.status==='done'?'checked':''} onchange="setTask('${x.id}',this.checked?'done':'todo')"><div class="t">${esc(x.title)} ${x.prio&&x.prio!=='ปกติ'?`<span class="tag ${x.prio==='ด่วน'?'r':'a'}">${esc(x.prio)}</span>`:''}<div class="mut ${od?'red':''}">${x.due?(od?'เลยกำหนด · ':'')+th(x.due):'ไม่มีกำหนด'}</div></div><button class="x" onclick="del('tasks','${x.id}')">✕</button></div>`}
+
+const P={
+home(){const t=TODAY(),m=t.slice(0,7),y=+t.slice(0,4),h=new Date().getHours(),ms=monthSum(m);
+ const due=D.tasks.filter(x=>x.status!=='done'&&x.due&&x.due<=t);
+ const tax=[...taxList(y),...taxList(y+1)].filter(x=>x.date>=t&&!D.taxDone[x.id]).slice(0,3);
+ const ev=D.events.filter(x=>x.date>=t).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,4);
+ const st=sum(D.sales.filter(x=>x.date===t),x=>x.amt),owe=sum(D.cust,x=>x.owe);
+ const nb=!D.s.lastBackup||Date.now()-D.s.lastBackup>7*864e5;
+ return`<div class="card hero row"><div class="f"><div class="mut">${th(t)} · ${D.s.biz?esc(D.s.biz):'EDM SME Planner'}</div><h2>${h<12?'สวัสดีตอนเช้า':h<17?'สวัสดีตอนบ่าย':'สวัสดีตอนเย็น'}${D.s.name?' คุณ'+esc(D.s.name):''} 👋</h2><div class="mut">วันนี้มีงานค้าง ${due.length} รายการ · ยอดขายวันนี้ ${money(st)} บาท</div></div>${cell(78)}</div>
+ ${nb?`<div class="card warn row"><div class="f">${ic('cloud')} <b>${D.s.lastBackup?'ไม่ได้สำรองข้อมูลเกิน 7 วัน':'ยังไม่เคยสำรองข้อมูล'}</b><div class="mut">ข้อมูลเก็บอยู่ในเครื่องนี้เท่านั้น กดสำรองไว้เพื่อป้องกันข้อมูลหาย</div></div><button class="btn" onclick="backup()">สำรองเลย</button></div>`:''}
+ <div class="stats"><div class="stat"><span>รายรับเดือนนี้</span><b class="grn">${money(ms.inc)}</b></div><div class="stat"><span>รายจ่ายเดือนนี้</span><b class="red">${money(ms.out)}</b></div><div class="stat"><span>คงเหลือ</span><b>${money(ms.net)}</b></div><div class="stat"><span>ลูกหนี้ค้างรับ</span><b>${money(owe)}</b></div></div>
+ <div class="grid g2"><div class="card"><h3>${ic('tasks')} งานวันนี้ & ค้าง</h3>${due.length?due.map(taskRow).join(''):'<div class="mut">ไม่มีงานค้าง เยี่ยมมาก!</div>'}<div class="row" style="margin-top:8px"><input id="tT" class="f" placeholder="เพิ่มงานด่วน..."><input type="hidden" id="tD" value="${t}"><button class="btn" onclick="addTask()">+</button></div></div>
+ <div class="card"><h3>${ic('habits')} นิสัยวันนี้</h3>${D.habits.length?D.habits.map(x=>`<div class="li"><input type="checkbox" ${hDone(x.id,t)?'checked':''} onchange="togH('${x.id}','${t}')"><div class="t">${esc(x.name)}</div><span class="tag">🔥 ${streak(x.id)}</span></div>`).join(''):'<div class="mut">ยังไม่มีนิสัยที่ติดตาม <a href="#" onclick="go(\'habits\');return false">เพิ่มเลย</a></div>'}</div>
+ <div class="card"><h3>${ic('tax')} ภาษีที่ใกล้ครบกำหนด</h3>${tax.map(x=>{const n=Math.round((pd(x.date)-pd(t))/864e5);return`<div class="li"><div class="t">${esc(x.name)}<div class="mut">${x.per} · ${th(x.date)}</div></div><span class="tag ${n<=3?'r':n<=7?'a':''}">${n===0?'วันนี้':'อีก '+n+' วัน'}</span></div>`}).join('')||'<div class="mut">ไม่มีรายการ</div>'}</div>
+ ${D.products.some(x=>x.min&&x.qty<=x.min)?`<div class="card"><h3>${ic('stock')} สินค้าใกล้หมด</h3>${D.products.filter(x=>x.min&&x.qty<=x.min).map(x=>`<div class="li"><div class="t">${esc(x.name)}</div><span class="tag r">เหลือ ${money(x.qty)} ${esc(x.unit)}</span></div>`).join('')}</div>`:''}<div class="card"><h3>${ic('cal')} นัดหมายที่จะมาถึง</h3>${ev.map(x=>`<div class="li"><div class="t">${esc(x.title)}<div class="mut">${th(x.date)} ${esc(x.time||'')}</div></div></div>`).join('')||'<div class="mut">ยังไม่มีนัดหมาย</div>'}</div></div>
+ ${!D.tasks.length&&!D.sales.length?`<div class="card row"><div class="f">${ic('goals')} อยากลองดูตัวอย่างก่อนใช้จริง?</div><button class="btn o" onclick="demo()">ใส่ข้อมูลตัวอย่าง</button></div>`:''}`},
+
+cal(){const y=ui.cy,m=ui.cm,f=new Date(y,m-1,1),start=addD(iso(f),-f.getDay()),t=TODAY(),pre=y+'-'+pad(m);
+ const tx={};[...taxList(y)].forEach(x=>(tx[x.date]=tx[x.date]||[]).push(x));
+ let g=TH_D.map(d=>`<div class="h">${d}</div>`).join('');
+ for(let i=0;i<42;i++){const d=addD(start,i),hol=HOL[d.slice(5)],ev=D.events.filter(x=>x.date===d),tk=D.tasks.filter(x=>x.due===d&&x.status!=='done'),tt=tx[d]||[];
+  g+=`<div class="d ${d.startsWith(pre)?'':'o'} ${d===t?'t':''} ${d===ui.sel?'sel':''} ${hol?'hol':''}" onclick="ui.sel='${d}';render()"><div class="n">${+d.slice(8)}</div>${hol?`<span class="dot h">${hol}</span>`:''}${tt.length?`<span class="dot x">ภาษี ${tt.length}</span>`:''}${ev.map(x=>`<span class="dot">${esc(x.title)}</span>`).join('')}${tk.length?`<span class="dot">งาน ${tk.length}</span>`:''}</div>`}
+ const s=ui.sel,sh=HOL[s.slice(5)],sev=D.events.filter(x=>x.date===s).sort((a,b)=>(a.time||'').localeCompare(b.time||'')),stk=D.tasks.filter(x=>x.due===s),stx=taxList(+s.slice(0,4)).filter(x=>x.date===s);
+ return`<h2>ปฏิทิน</h2><p class="sub">วันหยุดราชการ งาน นัดหมาย และกำหนดยื่นภาษีในที่เดียว</p>
+ <div class="card"><div class="row" style="margin-bottom:10px"><button class="ib" onclick="calNav(-1)">‹</button><b class="f" style="text-align:center;font-size:17px">${TH_MF[m-1]} ${y+543}</b><button class="ib" onclick="calNav(1)">›</button></div><div class="cal">${g}</div></div>
+ <div class="card"><h3>${th(s)}${sh?` <span class="tag r">${sh}</span>`:''}</h3>${stx.map(x=>`<div class="li"><div class="t">${ic('tax',18)} ${esc(x.name)}<div class="mut">${x.per}</div></div></div>`).join('')}${sev.map(x=>`<div class="li"><div class="t">${ic('pin',18)} ${esc(x.time||'')} ${esc(x.title)}</div><button class="x" onclick="del('events','${x.id}')">✕</button></div>`).join('')}${stk.map(taskRow).join('')}${!stx.length&&!sev.length&&!stk.length?'<div class="mut">ไม่มีรายการ</div>':''}
+ <div class="row" style="margin-top:10px"><input type="date" id="eD" value="${s}"><input type="time" id="eH"><input id="eT" class="f" placeholder="ชื่อนัดหมาย / กิจกรรม"><button class="btn" onclick="addEv()">เพิ่มนัด</button></div></div>
+ <p class="mut">* วันหยุดทางพุทธศาสนา (มาฆบูชา วิสาขบูชา อาสาฬหบูชา เข้าพรรษา) และวันหยุดพิเศษ เปลี่ยนทุกปีตามประกาศ ครม. เพิ่มเองได้เป็นนัดหมาย</p>`},
+
+tasks(){const o={todo:[],doing:[],done:[]};D.tasks.forEach(x=>o[x.status].push(x));const srt=a=>a.sort((a,b)=>(a.due||'9').localeCompare(b.due||'9'));
+ const form=`<div class="card"><div class="row"><input id="tT" class="f" placeholder="งานที่ต้องทำ..."><input type="date" id="tD"><select id="tP"><option>ปกติ</option><option>สำคัญ</option><option>ด่วน</option></select><button class="btn" onclick="addTask()">เพิ่มงาน</button></div></div>`;
+ const view=ui.tv==='list'?`<div class="card">${[...srt(o.todo),...srt(o.doing)].map(taskRow).join('')||'<div class="mut">ไม่มีงานค้าง</div>'}${o.done.length?`<details style="margin-top:8px"><summary class="mut">งานที่เสร็จแล้ว (${o.done.length})</summary>${o.done.map(taskRow).join('')}</details>`:''}</div>`
+ :`<div class="kb">${[['todo','ยังไม่เริ่ม'],['doing','กำลังทำ'],['done','เสร็จแล้ว']].map(([k,n])=>`<div class="kc"><h4>${ic(k,20)} ${n} (${o[k].length})</h4>${srt(o[k]).map(x=>`<div class="kcard"><div>${esc(x.title)} ${x.prio&&x.prio!=='ปกติ'?`<span class="tag ${x.prio==='ด่วน'?'r':'a'}">${esc(x.prio)}</span>`:''}</div><div class="row" style="justify-content:space-between;margin-top:4px"><span class="mut">${x.due?th(x.due):''}</span><span>${k!=='todo'?`<button class="btn o s" onclick="moveTask('${x.id}',-1)">◀</button>`:''} ${k!=='done'?`<button class="btn s" onclick="moveTask('${x.id}',1)">▶</button>`:''}</span></div></div>`).join('')}</div>`).join('')}</div>`;
+ return`<h2>งาน & To-do</h2><p class="sub">ค้าง ${o.todo.length+o.doing.length} · เสร็จแล้ว ${o.done.length}</p>${form}<div class="row" style="margin-bottom:12px"><div class="seg"><button class="${ui.tv==='list'?'on':''}" onclick="ui.tv='list';render()">รายการ</button><button class="${ui.tv==='kb'?'on':''}" onclick="ui.tv='kb';render()">กระดาน</button></div><span class="f"></span><button class="btn o s" onclick="exTasks()">⬇ Excel</button></div>${view}`},
+
+goals(){return`<h2>เป้าหมาย</h2><p class="sub">ตั้งเป้าเป็นตัวเลข แล้วอัปเดตความคืบหน้าเรื่อยๆ</p>
+ <div class="card"><div class="row"><input id="gT" class="f" placeholder="เช่น ยอดขายปี 2570"><input id="gG" type="number" inputmode="decimal" placeholder="เป้า" style="width:110px"><input id="gU" placeholder="หน่วย" style="width:80px"><input id="gD" type="date"><button class="btn" onclick="addGoal()">เพิ่ม</button></div></div>
+ <div class="grid g2">${D.goals.map(x=>{const p=Math.min(100,Math.round(x.cur/x.target*100));return`<div class="card"><div class="row"><b class="f">${esc(x.title)}</b><button class="x" onclick="del('goals','${x.id}')">✕</button></div><div class="bar"><i style="width:${p}%"></i></div><div class="row"><span class="f mut">${money(x.cur)} / ${money(x.target)} ${esc(x.unit)} · <b>${p}%</b>${x.due?' · ถึง '+th(x.due):''}</span></div><div class="row" style="margin-top:6px"><input type="number" inputmode="decimal" value="${x.cur}" style="width:130px" onchange="setGoal('${x.id}',this.value)"><span class="mut">อัปเดตตัวเลขปัจจุบัน</span></div></div>`}).join('')||'<div class="mut">ยังไม่มีเป้าหมาย</div>'}</div>`},
+
+money(){const m=ui.mon,s=monthSum(m),list=D.tx.filter(x=>x.date.startsWith(m)).sort((a,b)=>b.date.localeCompare(a.date));
+ const by={};s.tout.forEach(x=>by[x.cat]=(by[x.cat]||0)+x.amt);
+ return`<h2>รายรับรายจ่าย</h2><p class="sub">ยอดขายจากหน้า "ยอดขายรายวัน" รวมเป็นรายรับให้อัตโนมัติ</p>
+ <div class="row" style="margin-bottom:12px"><input type="month" value="${m}" onchange="ui.mon=this.value||ui.mon;render()"><span class="f"></span><button class="btn o s" onclick="exMoney()">⬇ Excel</button></div>
+ <div class="stats"><div class="stat"><span>รายรับ (รวมยอดขาย)</span><b class="grn">${money(s.inc)}</b></div><div class="stat"><span>รายจ่าย</span><b class="red">${money(s.out)}</b></div><div class="stat"><span>คงเหลือ</span><b>${money(s.net)}</b></div><div class="stat"><span>อัตราเงินเหลือ</span><b>${s.inc?Math.round(s.net/s.inc*100):0}%</b></div></div>
+ <div class="card"><h3>บันทึกรายการ</h3><div class="row"><input type="date" id="xD" value="${TODAY().startsWith(m)?TODAY():m+'-01'}"><select id="xY" onchange="document.getElementById('xC').innerHTML=(this.value==='in'?CAT_IN:CAT_OUT).map(c=>'<option>'+c+'</option>').join('')"><option value="out">รายจ่าย</option><option value="in">รายรับ</option></select><select id="xC">${CAT_OUT.map(c=>`<option>${c}</option>`).join('')}</select><input id="xA" type="number" inputmode="decimal" placeholder="จำนวนเงิน" style="width:120px"><input id="xN" class="f" placeholder="หมายเหตุ"><button class="btn" onclick="addTx()">บันทึก</button></div></div>
+ <div class="card"><h3>งบประมาณรายจ่ายตามหมวด</h3>${CAT_OUT.map(c=>{const u=by[c]||0,b=D.budget[c]||0,p=b?Math.round(u/b*100):0;return`<div style="margin-bottom:8px"><div class="row"><span class="f">${c}</span><span class="mut">${money(u)} /</span><input type="number" inputmode="decimal" value="${b||''}" placeholder="ตั้งงบ" style="width:100px;padding:4px 8px" onchange="setBud('${c}',this.value)"></div>${b?`<div class="bar"><i class="${p>100?'over':''}" style="width:${Math.min(100,p)}%"></i></div>`:''}</div>`}).join('')}</div>
+ <div class="card"><h3>รายการเดือน${thym(m)}</h3>${list.map(x=>`<div class="li"><div class="t">${esc(x.cat)}${x.note?' · '+esc(x.note):''}<div class="mut">${th(x.date)}</div></div><b class="${x.type==='in'?'grn':'red'}">${x.type==='in'?'+':'-'}${money(x.amt)}</b><button class="x" onclick="del('tx','${x.id}')">✕</button></div>`).join('')||'<div class="mut">ยังไม่มีรายการ</div>'}${s.sales?`<div class="li"><div class="t">ยอดขายรวมทั้งเดือน<div class="mut">จากหน้ายอดขายรายวัน</div></div><b class="grn">+${money(s.sales)}</b></div>`:''}</div>`},
+
+habits(){const t=TODAY(),dw=(pd(t).getDay()+6)%7,mon=addD(t,-dw),days=[...Array(7)].map((_,i)=>addD(mon,i));
+ return`<h2>นิสัยประจำวัน</h2><p class="sub">ติ๊กทุกวัน แล้วดูสถิติต่อเนื่อง 🔥</p>
+ <div class="card"><div class="row"><input id="hN" class="f" placeholder="เช่น ปิดยอดขายทุกวัน, ออกกำลังกาย"><button class="btn" onclick="addHabit()">เพิ่ม</button></div></div>
+ <div class="card scroll"><table><tr><th>นิสัย</th>${days.map(d=>`<th class="c">${TH_D[pd(d).getDay()]}<br>${+d.slice(8)}</th>`).join('')}<th class="c">🔥</th><th></th></tr>${D.habits.map(x=>`<tr><td>${esc(x.name)}</td>${days.map(d=>`<td class="c"><input type="checkbox" ${hDone(x.id,d)?'checked':''} ${d>t?'disabled':''} onchange="togH('${x.id}','${d}')"></td>`).join('')}<td class="c">${streak(x.id)}</td><td><button class="x" onclick="del('habits','${x.id}')">✕</button></td></tr>`).join('')||'<tr><td colspan="10" class="mut">ยังไม่มีนิสัยที่ติดตาม</td></tr>'}</table></div>`},
+
+journal(){const d=ui.jd,keys=Object.keys(D.journal).filter(k=>D.journal[k]).sort().reverse().slice(0,30);
+ return`<h2>บันทึกประจำวัน</h2><p class="sub">บันทึกความคิด สิ่งที่ได้เรียนรู้ และสิ่งที่ขอบคุณในแต่ละวัน</p>
+ <div class="card"><div class="row" style="margin-bottom:8px"><input type="date" value="${d}" onchange="ui.jd=this.value||ui.jd;render()"><span class="mut">บันทึกอัตโนมัติ</span></div>
+ <textarea placeholder="วันนี้เป็นอย่างไรบ้าง...&#10;&#10;✨ 3 สิ่งที่ขอบคุณวันนี้:&#10;1.&#10;2.&#10;3.&#10;&#10;💡 สิ่งที่ได้เรียนรู้ / พรุ่งนี้จะทำให้ดีขึ้น:" oninput="D.journal[ui.jd]=this.value;saveSoon()">${esc(D.journal[d]||'')}</textarea></div>
+ <div class="card"><h3>บันทึกล่าสุด</h3>${keys.map(k=>`<div class="li" style="cursor:pointer" onclick="ui.jd='${k}';render()"><div class="t"><b>${th(k)}</b><div class="mut">${esc(D.journal[k].slice(0,80))}</div></div></div>`).join('')||'<div class="mut">ยังไม่มีบันทึก</div>'}</div>`},
+
+sales(){const m=ui.mon,l=D.sales.filter(x=>x.date.startsWith(m)),tot=sum(l,x=>x.amt),by={},ch={};l.forEach(x=>{by[x.date]=(by[x.date]||0)+x.amt;ch[x.ch]=(ch[x.ch]||0)+x.amt});const days=Object.keys(by).sort().reverse(),best=days.reduce((b,d)=>by[d]>(by[b]||0)?d:b,'');
+ return`<h2>ยอดขายรายวัน</h2><p class="sub">บันทึกยอดขายทุกวัน ระบบรวมเป็นรายรับให้อัตโนมัติ</p>
+ <div class="card"><div class="row"><input type="date" id="sD" value="${TODAY()}"><input id="sA" type="number" inputmode="decimal" placeholder="ยอดขาย (บาท)" style="width:140px"><select id="sC"><option>หน้าร้าน</option><option>ออนไลน์</option><option>LINE</option><option>Facebook</option><option>TikTok</option><option>Shopee/Lazada</option><option>ส่งร้านค้า</option></select><input id="sN" class="f" placeholder="หมายเหตุ"><button class="btn" onclick="addSale()">บันทึก</button></div></div>
+ <div class="row" style="margin-bottom:12px"><input type="month" value="${m}" onchange="ui.mon=this.value||ui.mon;render()"><span class="f"></span><button class="btn o s" onclick="exSales()">⬇ Excel</button></div>
+ <div class="stats"><div class="stat"><span>ยอดขายเดือนนี้</span><b class="grn">${money(tot)}</b></div><div class="stat"><span>เฉลี่ยต่อวันที่ขาย</span><b>${money(days.length?tot/days.length:0)}</b></div><div class="stat"><span>วันที่ขายดีสุด</span><b style="font-size:15px">${best?th(best):'-'}</b></div><div class="stat"><span>จำนวนรายการ</span><b>${l.length}</b></div></div>
+ ${Object.keys(ch).length?`<div class="card"><h3>แยกตามช่องทาง</h3>${Object.entries(ch).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div><div class="row"><span class="f">${esc(k)}</span><b>${money(v)}</b></div><div class="bar"><i style="width:${Math.round(v/tot*100)}%"></i></div></div>`).join('')}</div>`:''}
+ <div class="card"><h3>รายการ ${thym(m)}</h3>${l.sort((a,b)=>b.date.localeCompare(a.date)).map(x=>`<div class="li"><div class="t">${esc(x.ch)}${x.note?' · '+esc(x.note):''}<div class="mut">${th(x.date)}</div></div><b class="grn">${money(x.amt)}</b><button class="x" onclick="del('sales','${x.id}')">✕</button></div>`).join('')||'<div class="mut">ยังไม่มียอดขายเดือนนี้</div>'}</div>`},
+
+tax(){const y=ui.ty,t=TODAY(),L=taxList(y),g={};L.forEach(x=>(g[x.date.slice(0,7)]=g[x.date.slice(0,7)]||[]).push(x));const dn=L.filter(x=>D.taxDone[x.id]).length;
+ return`<h2>ปฏิทินภาษี</h2><p class="sub">ยื่นแล้ว ${dn}/${L.length} รายการ · ติ๊กเมื่อยื่นเรียบร้อย</p>
+ <div class="card row"><div class="seg">${[y-1,y,y+1].map(v=>`<button class="${v===y?'on':''}" onclick="ui.ty=${v};render()">${v+543}</button>`).join('')}</div><label class="row"><input type="checkbox" ${D.s.vat?'checked':''} onchange="setS('vat',this.checked)">จด VAT</label><label class="row"><input type="checkbox" ${D.s.emp?'checked':''} onchange="setS('emp',this.checked)">มีลูกจ้าง</label><label class="row"><input type="checkbox" ${D.s.wht?'checked':''} onchange="setS('wht',this.checked)">หัก ณ ที่จ่าย</label></div>
+ ${Object.keys(g).map(k=>`<div class="card"><h3>${thym(k)}</h3>${g[k].map(x=>{const n=Math.round((pd(x.date)-pd(t))/864e5),d=D.taxDone[x.id];return`<div class="li ${d?'done':''}"><input type="checkbox" ${d?'checked':''} onchange="togTax('${x.id}')"><div class="t">${esc(x.name)}<div class="mut">${x.per} · กระดาษ ${th(x.date)}${x.on?' · ออนไลน์ +8 วัน':''}</div></div>${d?'<span class="tag">ยื่นแล้ว</span>':n<0?'<span class="tag r">เลยกำหนด</span>':n<=7?`<span class="tag a">อีก ${n} วัน</span>`:''}</div>`}).join('')}</div>`).join('')}
+ <p class="mut">* กำหนดการทั่วไป ใช้เพื่อเตือนความจำเท่านั้น หากตรงวันหยุดหรือมีประกาศขยายเวลา ให้ยึดตามประกาศกรมสรรพากร / สำนักงานประกันสังคม</p>`},
+
+cust(){const tot=sum(D.cust,x=>x.owe),t=TODAY();
+ return`<h2>ลูกค้า / ลูกหนี้</h2><p class="sub">ลูกค้าทั้งหมด ${D.cust.length} ราย · ยอดค้างรับรวม <b>${money(tot)}</b> บาท</p>
+ <div class="card"><div class="row"><input id="cN" class="f" placeholder="ชื่อลูกค้า / ร้าน"><input id="cT" type="tel" placeholder="เบอร์โทร" style="width:130px"><input id="cO" type="number" inputmode="decimal" placeholder="ยอดค้าง" style="width:110px"><input id="cD" type="date" title="นัดชำระ"><input id="cX" class="f" placeholder="หมายเหตุ"><button class="btn" onclick="addCust()">เพิ่ม</button></div></div>
+ <div class="row" style="margin-bottom:12px"><span class="f"></span><button class="btn o s" onclick="exCust()">⬇ Excel</button></div>
+ <div class="card">${D.cust.slice().sort((a,b)=>b.owe-a.owe).map(x=>`<div class="li"><div class="t"><b>${esc(x.name)}</b> ${x.tel?`<a class="mut" href="tel:${esc(x.tel)}">${esc(x.tel)}</a>`:''}<div class="mut ${x.owe&&x.due&&x.due<t?'red':''}">${x.due&&x.owe?'นัดชำระ '+th(x.due)+(x.due<t?' (เลยกำหนด)':''):''}${x.note?' · '+esc(x.note):''}</div></div><input type="number" inputmode="decimal" value="${x.owe}" style="width:100px" onchange="setOwe('${x.id}',this.value)" title="ยอดค้างชำระ"><button class="x" onclick="del('cust','${x.id}')">✕</button></div>`).join('')||'<div class="mut">ยังไม่มีลูกค้า</div>'}</div>`},
+
+
+stock(){const low=D.products.filter(x=>x.min&&x.qty<=x.min),val$=sum(D.products,x=>x.qty*x.cost),mv=D.moves.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,20),pn=id=>(D.products.find(x=>x.id===id)||{}).name||'(ลบแล้ว)';
+ return`<h2>สต๊อกสินค้า</h2><p class="sub">สินค้า ${D.products.length} รายการ · มูลค่าทุนคงเหลือ <b>${money(val$)}</b> บาท</p>
+ ${low.length?`<div class="card warn"><b>ใกล้หมด / ต้องสั่งเพิ่ม ${low.length} รายการ</b><div class="mut">${low.map(x=>esc(x.name)+' (เหลือ '+x.qty+' '+esc(x.unit)+')').join(' · ')}</div></div>`:''}
+ <div class="card"><h3>${ic('stock')} รับเข้า / เบิกออก</h3>${D.products.length?`<div class="row"><input type="date" id="mD" value="${TODAY()}"><select id="mT"><option value="in">รับเข้า</option><option value="out">เบิกออก/ขาย</option></select><select id="mP" class="f">${D.products.map(x=>`<option value="${x.id}">${esc(x.name)} (${x.qty})</option>`).join('')}</select><input id="mQ" type="number" inputmode="decimal" placeholder="จำนวน" style="width:90px"><input id="mN" class="f" placeholder="หมายเหตุ"><button class="btn" onclick="addMove()">บันทึก</button></div>`:'<div class="mut">เพิ่มสินค้าก่อน แล้วค่อยบันทึกเข้า-ออก</div>'}</div>
+ <div class="card"><h3>เพิ่มสินค้าใหม่</h3><div class="row"><input id="pN" class="f" placeholder="ชื่อสินค้า"><input id="pU" placeholder="หน่วย" style="width:70px"><input id="pC" type="number" inputmode="decimal" placeholder="ทุน" style="width:85px"><input id="pP" type="number" inputmode="decimal" placeholder="ราคาขาย" style="width:105px"><input id="pQ" type="number" inputmode="decimal" placeholder="ยอดยกมา" style="width:105px"><input id="pM" type="number" inputmode="decimal" placeholder="จุดสั่งซื้อ" style="width:105px"><button class="btn" onclick="addProd()">เพิ่ม</button></div></div>
+ <div class="row" style="margin-bottom:12px"><span class="f"></span><button class="btn o s" onclick="exStock()">⬇ Excel</button></div>
+ <div class="card scroll"><table><tr><th>สินค้า</th><th class="r">ทุน</th><th class="r">ขาย</th><th class="r">กำไร/หน่วย</th><th class="r">คงเหลือ</th><th class="r">จุดสั่งซื้อ</th><th></th></tr>${D.products.map(x=>`<tr><td>${esc(x.name)}</td><td class="r">${money(x.cost)}</td><td class="r">${money(x.price)}</td><td class="r ${x.price-x.cost<0?'red':'grn'}">${money(x.price-x.cost)}</td><td class="r"><b class="${x.min&&x.qty<=x.min?'red':''}">${money(x.qty)}</b> ${esc(x.unit)}</td><td class="r"><input type="number" value="${x.min}" style="width:70px;padding:3px 6px" onchange="setProd('${x.id}','min',this.value)"></td><td><button class="x" onclick="delProd('${x.id}')">✕</button></td></tr>`).join('')||'<tr><td colspan="7" class="mut">ยังไม่มีสินค้า</td></tr>'}</table></div>
+ <div class="card"><h3>ประวัติเข้า-ออกล่าสุด</h3>${mv.map(x=>`<div class="li"><div class="t">${esc(pn(x.pid))}${x.note?' · '+esc(x.note):''}<div class="mut">${th(x.date)}</div></div><b class="${x.type==='in'?'grn':'red'}">${x.type==='in'?'+':'-'}${money(x.qty)}</b><button class="x" onclick="delMove('${x.id}')">✕</button></div>`).join('')||'<div class="mut">ยังไม่มีรายการ</div>'}</div>`},
+
+staff(){const m=ui.mon,L=D.staff.map(e=>[e,payOf(e,m)]),tg=sum(L,x=>x[1].g),ts=sum(L,x=>x[1].sso),tn=sum(L,x=>x[1].net),inp=(id,k,v)=>`<input type="number" inputmode="decimal" value="${v||''}" placeholder="0" style="width:80px;padding:3px 6px" onchange="setPay('${id}','${m}','${k}',this.value)">`;
+ return`<h2>พนักงาน & เงินเดือน</h2><p class="sub">คำนวณเงินเดือนแบบง่าย พร้อมหักประกันสังคมอัตโนมัติ</p>
+ <div class="card"><h3>เพิ่มพนักงาน</h3><div class="row"><input id="fN" class="f" placeholder="ชื่อ-นามสกุล"><input id="fP" placeholder="ตำแหน่ง" style="width:120px"><input id="fS" type="number" inputmode="decimal" placeholder="เงินเดือน" style="width:110px"><input id="fD" type="date" title="วันเริ่มงาน"><input id="fT" type="tel" placeholder="เบอร์โทร" style="width:120px"><button class="btn" onclick="addStaff()">เพิ่ม</button></div></div>
+ <div class="row" style="margin-bottom:12px"><input type="month" value="${m}" onchange="ui.mon=this.value||ui.mon;render()"><span class="f"></span><button class="btn o s" onclick="payToExp()">บันทึกเป็นรายจ่าย</button><button class="btn o s" onclick="exPay()">⬇ Excel</button></div>
+ <div class="stats"><div class="stat"><span>พนักงาน</span><b>${D.staff.length} คน</b></div><div class="stat"><span>รวมรายได้</span><b>${money(tg)}</b></div><div class="stat"><span>ประกันสังคม (ลูกจ้าง)</span><b>${money(ts)}</b></div><div class="stat"><span>จ่ายสุทธิ</span><b class="grn">${money(tn)}</b></div></div>
+ <div class="card scroll"><h3>เงินเดือน ${thym(m)}</h3><table><tr><th>พนักงาน</th><th class="r">เงินเดือน</th><th class="r">OT</th><th class="r">โบนัส/อื่นๆ</th><th class="r">ประกันสังคม</th><th class="r">หักอื่นๆ</th><th class="r">สุทธิ</th><th></th></tr>${L.map(([e,p])=>`<tr><td><b>${esc(e.name)}</b><div class="mut">${esc(e.pos||'')}${e.start?' · เริ่ม '+th(e.start):''}</div></td><td class="r">${inp(e.id,'sal',p.sal)}</td><td class="r">${inp(e.id,'ot',p.ot)}</td><td class="r">${inp(e.id,'bo',p.bo)}</td><td class="r">${money(p.sso)}</td><td class="r">${inp(e.id,'de',p.de)}</td><td class="r"><b>${money(p.net)}</b></td><td><button class="x" onclick="if(confirm('ลบพนักงานนี้?'))del('staff','${e.id}')">✕</button></td></tr>`).join('')||'<tr><td colspan="8" class="mut">ยังไม่มีพนักงาน</td></tr>'}</table></div>
+ <div class="card"><h3>ตั้งค่าประกันสังคม</h3><div class="row"><span>อัตรา</span><input type="number" value="${D.s.ssoRate}" style="width:70px" onchange="setS('ssoRate',+this.value||0)"><span>% ฐานค่าจ้างสูงสุด</span><input type="number" value="${D.s.ssoMax}" style="width:100px" onchange="setS('ssoMax',+this.value||0)"><span>บาท</span></div><p class="mut">* ตรวจสอบอัตราและเพดานค่าจ้างล่าสุดกับสำนักงานประกันสังคม · หน้านี้ยังไม่คำนวณภาษีหัก ณ ที่จ่าย สลิปเงินเดือน และ OT อัตโนมัติ หากต้องการระบบเต็ม ใช้ <b>Excel HR Pro</b> ที่ exceldatamaster.com</p></div>`},
+set(){const lb=D.s.lastBackup?new Date(D.s.lastBackup).toLocaleString('th-TH'):'ยังไม่เคย';
+ return`<h2>ตั้งค่า & สำรองข้อมูล</h2><p class="sub">ปรับให้เป็นของคุณ</p>
+ <div class="card"><h3>ข้อมูลของคุณ</h3><div class="row"><input class="f" placeholder="ชื่อของคุณ" value="${esc(D.s.name)}" onchange="setS('name',this.value.trim())"><input class="f" placeholder="ชื่อธุรกิจ / ร้าน" value="${esc(D.s.biz)}" onchange="setS('biz',this.value.trim())"></div></div>
+ <div class="card"><h3>ธีม</h3><div class="row">${THEMES.map(([k,c,n])=>`<span class="sw ${D.s.theme===k?'on':''}" style="background:${c}" title="${n}" onclick="setS('theme','${k}')"></span>`).join('')}<span class="f"></span><label class="row"><input type="checkbox" ${D.s.dark?'checked':''} onchange="setS('dark',this.checked)">โหมดมืด</label></div></div>
+ <div class="card"><h3>${ic('cloud')} สำรอง / กู้ข้อมูล</h3><p class="mut">ข้อมูลทั้งหมดเก็บในเครื่องนี้เท่านั้น ไม่ส่งขึ้นอินเทอร์เน็ต ไม่ sync ข้ามเครื่อง แนะนำให้สำรองทุกสัปดาห์ และใช้ไฟล์สำรองย้ายข้อมูลไปเครื่องอื่น<br>สำรองล่าสุด: <b>${lb}</b></p><div class="row"><button class="btn" onclick="backup()">⬇ ดาวน์โหลดไฟล์สำรอง</button><label class="btn o">⬆ กู้จากไฟล์<input type="file" accept=".json,application/json" hidden onchange="restore(this)"></label></div></div>
+ <div class="card"><h3>${ic('phone')} ใช้บนมือถือ</h3><p class="mut">iPhone: เปิดไฟล์ด้วย Safari → ปุ่มแชร์ → "เพิ่มไปยังหน้าจอโฮม" เพื่อใช้เหมือนแอป<br>Android: Chrome → เมนู ⋮ → "เพิ่มลงในหน้าจอหลัก"<br>⚠️ iPhone อาจล้างข้อมูลของเว็บที่ไม่ได้เปิดนาน กรุณาสำรองข้อมูลสม่ำเสมอ</p></div>
+ <div class="card"><h3>อื่นๆ</h3><div class="row"><button class="btn o" onclick="demo()">ใส่ข้อมูลตัวอย่าง</button><button class="btn o" style="color:var(--red);border-color:var(--red)" onclick="resetAll()">ล้างข้อมูลทั้งหมด</button></div></div>`}
+};
+
+/* ---------- render ---------- */
+function render(){if(!P[cur])cur='home';
+ document.body.className=D.s.theme+(D.s.dark?' dark':'');
+ const nav=NAV.map(([k,i,n])=>k==='-'?`<div class="sec">${n}</div>`:`<a class="${cur===k?'on':''}" onclick="go('${k}')">${ic(k,26)}${n}</a>`).join('');
+ document.getElementById('app').innerHTML=`<header><button class="ib" id="mb" onclick="document.querySelector('aside').classList.toggle('open')">☰</button>${cell(38)}<h1>EDM SME Planner 2027<small>${D.s.biz?esc(D.s.biz):'by Excel Data Master'}</small></h1><button class="ib" onclick="setS('dark',!D.s.dark)">${D.s.dark?'☀️':'🌙'}</button></header>
+ <aside onclick="if(event.target===this)this.classList.remove('open')">${nav}</aside>
+ <main>${cur==='home'?P[cur]():P[cur]().replace('<h2>','<h2>'+ic(cur,32)+' ')}<div class="lic">EDM SME Planner 2027 · © Excel Data Master · exceldatamaster.com<br>ลิขสิทธิ์ใช้งานโดย: <b>${esc(LICENSED_TO)}</b> · ห้ามแจกจ่ายหรือจำหน่ายต่อ</div></main>`}
+addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(h&&h!==cur&&P[h]){cur=h;render()}});
+render();
+</script>
+</body>
+</html>
