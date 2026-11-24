@@ -1302,7 +1302,7 @@ function psLoad() {
     if (f.tab === 'posted') {
       $('pT').innerHTML = rows.length ? '<div class="tw"><table class="t"><thead><tr><th>วันที่</th><th>เลขที่</th><th>คำอธิบาย</th><th class="num">ยอดเงิน</th><th></th></tr></thead><tbody>' + rows.map(function (j) {
         return '<tr><td style="white-space:nowrap">' + fdate(j.doc_date + 'T00:00').slice(0, 10) + '</td><td class="code"><span class="lk" onclick="jView(\'' + j.id + '\')">' + esc(j.doc_no) + '</span></td><td>' + esc(j.description) + '</td><td class="num">' + money(j.total_dr) + '</td><td class="act">' +
-          (ro || j.reversal_of ? '<span class="small">' + (j.reversal_of ? 'รายการกลับ' : '') + '</span>' : '<button class="btn ghost sm" onclick="pRev(\'' + j.id + '\')">กลับรายการ</button>') + '</td></tr>';
+          (ro || j.reversal_of ? '<span class="small">' + (j.reversal_of ? 'รายการกลับ' : '') + '</span>' : '<button class="btn ghost sm" onclick="pRev(\'' + j.id + '\')">กลับรายการ</button>' + (isTop() ? '<button class="btn ghost sm" style="color:#b45309" onclick="pUnpost(\'' + j.id + '\')">ยกเลิก Post</button>' : '')) + '</td></tr>';
       }).join('') + '</tbody></table></div>' + (r.total > 200 ? '<p class="small">แสดง 200 รายการล่าสุด ใช้ตัวกรองวันที่เพื่อดูเพิ่ม</p>' : '') : '<div class="card empty">ไม่มีรายการที่ Post แล้วตามเงื่อนไข</div>';
       return;
     }
@@ -1335,6 +1335,19 @@ function pPostSel() {
       psLoad();
     }).catch(function (e) { openM('ยังไม่ได้ Post', '<div class="note errbox" style="white-space:pre-line">' + esc(e.message) + '</div>', '<button class="btn" onclick="closeM()">ตกลง</button>'); });
   });
+}
+/* ยกเลิก Post (v0.17) · เฉพาะผู้มีอำนาจสูงสุด (เจ้าของ / Office Owner) */
+function isTop() { return !S.me || !!S.me.owner || S.me.role === 'OWNER'; }
+function pUnpost(id) {
+  var j = (S.pRows || []).filter(function (x) { return x.id === id; })[0] || { doc_no: '' };
+  openM('ยกเลิก Post ' + j.doc_no, '<div class="note warn">รายการจะกลับไปเป็น <b>รอ Post</b> แก้ไขหรือลบได้ (เลขที่เดิมคงไว้) · ระบบบันทึกประวัติผู้ยกเลิกและเหตุผลทุกครั้ง<br>ใช้ได้เฉพาะรายการที่บันทึกในสมุดรายวันเอง ในงวดที่ยังไม่ปิด · รายการจากระบบขาย/ซื้อ/เงินเดือน ฯลฯ ให้ยกเลิกที่ระบบนั้นหรือใช้กลับรายการ</div>' +
+    '<div class="fr" style="margin-top:12px"><label class="f req">เหตุผล</label><input class="in" id="u_reason" placeholder="เช่น บันทึกผิดบัญชี ต้องแก้ไข"></div>',
+    '<button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button><button class="btn danger" onclick="pUnpostGo(\'' + id + '\')">ยืนยันยกเลิก Post</button>', true);
+}
+function pUnpostGo(id) {
+  call('journal.unpost', { company_id: S.cid, id: id, reason: v('u_reason') }).then(function (r) {
+    closeM(); toast('ยกเลิก Post ' + r.doc_no + ' แล้ว · อยู่ในแท็บรอ Post', 'ok'); psLoad();
+  }).catch(failNew);
 }
 function pRev(id) { getJ(id).then(jRevForm).catch(fail); }
 function jRevForm() {
