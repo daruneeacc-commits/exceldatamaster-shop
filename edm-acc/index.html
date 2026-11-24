@@ -597,8 +597,8 @@ function renderCoa() {
   var opt = function (val, cur, label) { return '<option value="' + val + '"' + (String(cur) === String(val) ? ' selected' : '') + '>' + label + '</option>'; };
   var h = head(t('coa'), esc(co().code + ' · ' + co().name_th) + ' · ' + d.accounts.length + ' บัญชี · ' + s.levels.length + ' ระดับ',
     ro ? '<span class="bd b-i">อ่านอย่างเดียว</span>' :
-      '<div class="bar" style="margin:0"><button class="btn ghost sm" onclick="impOpen()">นำเข้า Excel</button><button class="btn ghost sm" onclick="exportCoa()">ส่งออก Excel</button><button class="btn" onclick="accForm()">+ เพิ่มบัญชี</button></div>');
-  if (onlySys && !ro) h += '<div class="note">ยังไม่มีบัญชีย่อย เลือกเริ่มได้ 3 วิธี: <b>+ เพิ่มบัญชี</b>, <b>นำเข้า Excel</b> หรือ <a href="#" onclick="seedStd();return false"><b>ใช้ผังบัญชีมาตรฐาน SME</b></a> (ประมาณ 80 บัญชี แก้ไขต่อได้)</div>';
+      '<div class="bar" style="margin:0"><button class="btn ghost sm" onclick="impOpen()">นำเข้า Excel</button><button class="btn ghost sm" onclick="exportCoa()">ส่งออก Excel</button><button class="btn ghost sm" onclick="chartTpl()">🏭 ผังตามประเภทธุรกิจ</button><button class="btn" onclick="accForm()">+ เพิ่มบัญชี</button></div>');
+  if (onlySys && !ro) h += '<div class="note">ยังไม่มีบัญชีย่อย เลือกเริ่มได้ 3 วิธี: <b>+ เพิ่มบัญชี</b>, <b>นำเข้า Excel</b> หรือ <a href="#" onclick="seedStd();return false"><b>ใช้ผังบัญชีมาตรฐาน SME</b></a> (ประมาณ 80 บัญชี แก้ไขต่อได้) · แนะนำ: <a href="#" onclick="chartTpl();return false"><b>🏭 ผังตามประเภทธุรกิจ</b></a> (เลือกรูปแบบกิจการ + ธุรกิจ)</div>';
   h += '<div class="bar"><input class="in q" id="fq" placeholder="' + t('search') + ' รหัส / ชื่อบัญชี" value="' + esc(f.q) + '">' +
     '<select class="in" id="fcat">' + opt('', f.cat, 'ทุกหมวด') + CATS.map(function (c) { return opt(c[0], f.cat, c[0] + ' ' + catName(c[0])); }).join('') + '</select>' +
     '<select class="in" id="ftype">' + opt('', f.type, 'ทุกประเภท') + opt('HEADER', f.type, 'หัวบัญชี (HEADER)') + opt('POSTING', f.type, 'บัญชีย่อย (POSTING)') + '</select>' +
@@ -703,6 +703,43 @@ function accDel(id) {
   confirmM('ลบบัญชี', 'ลบบัญชี ' + a.code + '  ' + a.name_th + ' ?\nการลบย้อนกลับไม่ได้ (ยกเว้นกู้คืนจากไฟล์สำรอง)', 'ลบบัญชี', function () {
     call('account.delete', { company_id: S.cid, id: id }).then(function () { return reloadCoa('ลบบัญชีแล้ว'); }).catch(fail);
   }, true);
+}
+/* ---------- ผังบัญชีตามรูปแบบกิจการ / ประเภทธุรกิจ (v0.16) ---------- */
+function chartTpl() {
+  call('account.chartOpts', { company_id: S.cid }).then(function (o) {
+    var cur = o.current || {}, fm = cur.form || 'company', bz = cur.biz || [];
+    var h = '<div class="note">บริษัทที่ยังไม่มีผัง = สร้างผังใหม่ครบชุด · บริษัทที่มีผังแล้ว = <b>เติมเฉพาะบัญชีที่ยังไม่มี</b> (บัญชีและรหัสเดิมไม่เปลี่ยน) · ดูตัวอย่างก่อนสร้างได้</div>' +
+      '<div class="small" style="margin:10px 0 4px"><b>1. รูปแบบกิจการ</b> (กำหนดหมวดส่วนของเจ้าของ)</div><div class="ctg">' +
+      o.forms.map(function (f) { return '<label class="chk"><input type="radio" name="ctF" value="' + f.id + '"' + (f.id === fm ? ' checked' : '') + '> ' + esc(f.th) + '</label>'; }).join('') + '</div>' +
+      '<div class="small" style="margin:12px 0 4px"><b>2. ประเภทธุรกิจ</b> (เลือกได้หลายแบบ · ไม่เลือก = ผังกลางทั่วไป)</div><div class="ctg">' +
+      o.biz.map(function (b) { return '<label class="chk"><input type="checkbox" name="ctB" value="' + b.id + '"' + (bz.indexOf(b.id) >= 0 ? ' checked' : '') + '> ' + esc(b.th) + '</label>'; }).join('') + '</div>' +
+      '<div id="ctOut" style="margin-top:12px"></div>' +
+      '<style>.ctg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:4px 12px}.ctg .chk{display:flex;gap:6px;align-items:center;font-size:13.5px;cursor:pointer}</style>';
+    openM('🏭 ผังบัญชีตามประเภทธุรกิจ', h, '<button class="btn ghost" onclick="closeM()">ปิด</button><button class="btn ghost" onclick="chartTplRun(false)">ดูตัวอย่าง</button><button class="btn" id="ctGo" onclick="chartTplRun(true)">สร้าง/เติมบัญชี</button>', true);
+  }).catch(failNew);
+}
+function chartTplSel() {
+  var f = document.querySelector('input[name=ctF]:checked');
+  return { company_id: S.cid, form: f ? f.value : '', biz: [].slice.call(document.querySelectorAll('input[name=ctB]:checked')).map(function (x) { return x.value; }) };
+}
+function chartTplRun(save) {
+  var p = chartTplSel(), out = $('ctOut');
+  call('account.bizPreview', p).then(function (r) {
+    if (!save) {
+      var cat = {}; r.rows.forEach(function (a) { cat[a.category] = (cat[a.category] || 0) + 1; });
+      out.innerHTML = '<div class="note">' + (r.mode === 'NEW' ? 'จะสร้างผังใหม่ ' : 'จะเติมบัญชีที่ยังไม่มี ') + '<b>' + r.count + '</b> บัญชี' + (r.exists ? ' · มีอยู่แล้ว ' + r.exists + ' บัญชี (ข้าม)' : '') +
+        ' · ' + Object.keys(cat).map(function (k) { return 'หมวด ' + k + ': ' + cat[k]; }).join(' · ') + '</div>' +
+        (r.skipped.length ? '<div class="note warn">ข้าม ' + r.skipped.length + ' รายการ: ' + r.skipped.slice(0, 8).map(esc).join(' · ') + (r.skipped.length > 8 ? ' …' : '') + '</div>' : '') +
+        '<div style="max-height:46vh;overflow:auto"><table class="t"><thead><tr><th>รหัส</th><th>ชื่อบัญชี</th><th>ประเภท</th><th>อยู่ใต้</th></tr></thead><tbody>' +
+        r.rows.map(function (a) { return '<tr><td class="code">' + esc(a.code) + '</td><td style="padding-left:' + (a.level * 10) + 'px">' + (a.acc_type === 'HEADER' ? '<b>' + esc(a.name_th) + '</b>' : esc(a.name_th)) + ' <span class="small">' + esc(a.name_en) + '</span></td><td>' + a.acc_type + '</td><td class="small">' + esc(a.parent) + '</td></tr>'; }).join('') +
+        '</tbody></table></div>';
+      return;
+    }
+    if (!r.count) { out.innerHTML = '<div class="note">ผังบัญชีมีครบแล้ว ไม่มีบัญชีที่ต้องเพิ่ม</div>'; return; }
+    confirmM(r.mode === 'NEW' ? 'สร้างผังบัญชี' : 'เติมบัญชีที่ยังไม่มี', (r.mode === 'NEW' ? 'สร้าง ' : 'เพิ่ม ') + r.count + ' บัญชี ตามรูปแบบที่เลือก บัญชีเดิมไม่เปลี่ยน ยืนยัน?', 'ยืนยัน', function () {
+      call('account.seedBiz', p).then(function (x) { closeM(); return reloadCoa((x.mode === 'NEW' ? 'สร้างผังบัญชี ' : 'เติมบัญชี ') + x.count + ' บัญชีแล้ว'); }).catch(fail);
+    });
+  }).catch(failNew);
 }
 function seedStd() {
   confirmM('ใช้ผังบัญชีมาตรฐาน SME', 'ระบบจะสร้างผังบัญชีตัวอย่างสำหรับธุรกิจ SME ไทย (ประมาณ 80 บัญชี) รวมบัญชีภาษีซื้อ ภาษีขาย ภาษีหัก ณ ที่จ่าย และบัญชีคุมลูกหนี้/เจ้าหนี้ แล้วแก้ไขต่อได้\nต้องใช้โครงสร้างรหัสอย่างน้อย 4 ระดับ', 'สร้างผังบัญชี', function () {
