@@ -56,7 +56,7 @@ header .ttl small{display:block;font-family:Sarabun;font-size:12px;color:var(--m
 .ch:disabled{cursor:default}
 .fb{margin-top:14px;border-radius:16px;padding:14px;font-size:16px}
 .fb.ok{background:#E9F8F0}.fb.bad{background:#FDECEF}
-.fb b{font-family:Mitr}
+.fb b{font-family:Mitr}.fb div,.wr div{white-space:pre-wrap}.why{background:#FFF4E5;border-radius:12px;padding:8px 10px;margin:8px 0}
 .next{display:block;width:100%;margin-top:14px;background:var(--pri);color:#fff;border-radius:16px;padding:14px;font-family:Mitr;font-size:19px}
 .res{text-align:center}
 .res .score{font-family:Mitr;font-size:56px;color:var(--pri);line-height:1.1}
@@ -91,7 +91,7 @@ footer{text-align:center;color:var(--mut);font-size:12px;margin-top:20px}
 <div class="wrap" id="v"></div>
 <footer class="wrap" style="padding-top:0">© Excel Data Master · exceldatamaster.com</footer>
 
-<script src="exams.js?v=1"></script>
+<script src="exams.js?v=2"></script>
 <script>
 (function(){
 var SUBJ=[
@@ -172,7 +172,7 @@ function quiz(){
   it.c.forEach(function(c,i){var cl="";if(ans){if(i===it.a)cl=" ok";else if(i===Q.pick)cl=" bad"}
     h+='<button class="ch'+cl+'" data-ch="'+i+'"'+(ans?' disabled':'')+'><b>'+"กขคงจฉ".charAt(i)+'</b>'+esc(c)+'</button>'});
   if(ans){var ok=Q.pick===it.a;
-    h+='<div class="fb '+(ok?'ok':'bad')+'"><b>'+(ok?'🎉 ถูกต้อง เก่งมาก!':'😊 ยังไม่ถูก ไม่เป็นไรนะ')+'</b>'+(ok?'':'<div>คำตอบที่ถูก: '+esc(it.c[it.a])+'</div>')+(it.ex?'<div>💡 '+esc(it.ex)+'</div>':'')+'</div>'+
+    h+='<div class="fb '+(ok?'ok':'bad')+'"><b>'+(ok?'🎉 ถูกต้อง เก่งมาก!':'😊 ยังไม่ถูก ไม่เป็นไรนะ')+'</b>'+(ok?'':(it.w&&it.w[Q.pick]?'<div class="why">❓ ทำไม “'+esc(it.c[Q.pick])+'” ผิด: '+esc(it.w[Q.pick])+'</div>':'')+'<div>✅ คำตอบที่ถูก: <b>'+esc(it.c[it.a])+'</b></div>')+(it.ex?'<div>💡 วิธีคิด:\n'+esc(it.ex)+'</div>':'')+'</div>'+
     '<button class="next" data-next>'+(Q.i+1<n?'ข้อต่อไป →':'ดูผลคะแนน 🏁')+'</button>'}
   h+='</div>';V.innerHTML=h;window.scrollTo(0,0);
 }
@@ -192,7 +192,7 @@ function finish(){
   var w=Q.ans.filter(function(a){return !a.ok});
   if(w.length){h+='<h3 style="margin-top:18px;text-align:left">ข้อที่ต้องทบทวน</h3>';
     w.forEach(function(a){var q=Q.list.filter(function(x){return x.id===a.id})[0].it;
-      h+='<div class="wr"><b>'+esc(q.q)+'</b><div class="y">✗ ตอบ: '+esc(q.c[a.p])+'</div><div class="a">✓ ที่ถูก: '+esc(q.c[q.a])+'</div>'+(q.ex?'<div class="mut">💡 '+esc(q.ex)+'</div>':'')+'</div>'})}
+      h+='<div class="wr"><b>'+esc(q.q)+'</b><div class="y">✗ ตอบ: '+esc(q.c[a.p])+'</div>'+(q.w&&q.w[a.p]?'<div class="why">❓ '+esc(q.w[a.p])+'</div>':'')+'<div class="a">✓ ที่ถูก: '+esc(q.c[q.a])+'</div>'+(q.ex?'<div class="mut">💡 '+esc(q.ex)+'</div>':'')+'</div>'})}
   h+='<button class="next" data-home>กลับหน้าแรก</button>'+(w.length?'<button class="next" style="background:#FFD45C;color:#3B3350" data-redo>ฝึกข้อที่ผิดอีกครั้ง</button>':'')+'</div>';
   Q.wrong=Q.list.filter(function(x){return w.some(function(a){return a.id===x.id})});
   V.innerHTML=h;window.scrollTo(0,0);
