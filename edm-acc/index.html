@@ -2379,6 +2379,48 @@ function rcList() {
       }).join('') + '</tbody></table></div>' : '<div class="card empty">ยังไม่มีการรับชำระหนี้</div>';
   }).catch(fail);
 }
+/* ---------- ช่องทางรับ/จ่ายชำระ: โอนเงิน · เงินสด · เช็ค (v0.18) ---------- */
+var PAYM = [['TRANSFER', '🏦 โอนเงิน'], ['CASH', '💵 เงินสด'], ['CHEQUE', '🧾 เช็ค']];
+function payBox(pf, accId, list, side) {
+  var cashL = list.filter(function (a) { return /เงินสด/.test(a.label); }), bankL = list.filter(function (a) { return !/เงินสด/.test(a.label); });
+  S['pm_' + pf] = { cash: cashL.length ? cashL : list, bank: bankL.length ? bankL : list, side: side, acc: accId };
+  var bo = function (l, none) { return (none ? '<option value="">' + none + '</option>' : '') + l.map(function (a) { return '<option value="' + a.id + '">' + esc(a.label) + '</option>'; }).join(''); };
+  return '<div class="fr"><label class="f req">' + (side === 'IN' ? 'รับชำระโดย' : 'จ่ายชำระโดย') + '</label><div class="bar" style="margin:0;gap:14px">' + PAYM.map(function (m) { return '<label style="display:inline-flex;gap:5px;align-items:center;cursor:pointer"><input type="radio" name="' + pf + '_m" value="' + m[0] + '" onchange="paySw(\'' + pf + '\')">' + m[1] + '</label>'; }).join('') + '</div></div>' +
+    '<div class="f3"><div class="fr" id="' + pf + '_aw"><label class="f req" id="' + pf + '_al"></label><select class="in" id="' + accId + '"></select></div></div>' +
+    '<div id="' + pf + '_cq" class="hidden"><div class="f3"><div class="fr"><label class="f req">เลขที่เช็ค</label><input class="in code" id="' + pf + '_cn"></div><div class="fr"><label class="f req">วันที่หน้าเช็ค</label><input class="in" type="date" id="' + pf + '_cd" value="' + today() + '"></div>' +
+    (side === 'IN' ? '<div class="fr"><label class="f req">ธนาคารของเช็ค</label><input class="in" id="' + pf + '_cb" placeholder="เช่น กสิกรไทย" list="bkList"></div></div><div class="f3"><div class="fr"><label class="f">สาขา</label><input class="in" id="' + pf + '_cbr"></div><div class="fr"><label class="f">นำฝากเข้าบัญชี</label><select class="in" id="' + pf + '_ca">' + bo(S['pm_' + pf].bank, 'เลือกตอนผ่านเช็ค') + '</select></div></div>'
+      : '<div class="fr"><label class="f req">ธนาคารที่สั่งจ่าย</label><select class="in" id="' + pf + '_ca">' + bo(S['pm_' + pf].bank) + '</select></div></div>') +
+    '<datalist id="bkList">' + ['กสิกรไทย', 'กรุงเทพ', 'ไทยพาณิชย์', 'กรุงไทย', 'กรุงศรีอยุธยา', 'ทหารไทยธนชาต', 'ออมสิน', 'ธ.ก.ส.', 'ยูโอบี', 'ซีไอเอ็มบี ไทย', 'แลนด์ แอนด์ เฮ้าส์', 'เกียรตินาคินภัทร', 'ทิสโก้', 'อาคารสงเคราะห์'].map(function (b) { return '<option value="' + b + '">'; }).join('') + '</datalist>' +
+    '<div class="small" style="margin:4px 0 12px">' + (side === 'IN' ? 'เช็คลงบัญชี "เช็ครับรอเรียกเก็บ" และเข้าทะเบียนเช็ครับ · เมื่อเช็คผ่าน กด "ผ่านเช็ค" ที่เมนูเช็ครับ/เช็คจ่าย ระบบลงบัญชีเงินเข้าธนาคารที่เลือก' : 'เช็คลงบัญชี "เช็คจ่ายรอตัดบัญชี" และเข้าทะเบียนเช็คจ่าย · เมื่อเช็คผ่าน กด "ผ่านเช็ค" ที่เมนูเช็ครับ/เช็คจ่าย ระบบตัดเงินจากธนาคารที่สั่งจ่าย') + '</div></div>';
+}
+function payChk(pf) { // หลังบ้านเก่าไม่รองรับเช็ค → ซ่อนตัวเลือกเช็ค
+  var r = document.querySelector('input[name="' + pf + '_m"][value="CHEQUE"]'); if (!r) return;
+  if (S.payChq === true) return; r.parentNode.style.display = 'none';
+  call(pf === 'pp' ? 'purch.payMethods' : 'sales.payMethods', {}).then(function () { S.payChq = true; var x = document.querySelector('input[name="' + pf + '_m"][value="CHEQUE"]'); if (x) x.parentNode.style.display = ''; }).catch(function () { S.payChq = false; });
+}
+function paySw(pf) {
+  var c = S['pm_' + pf], m = (document.querySelector('input[name="' + pf + '_m"]:checked') || {}).value || 'TRANSFER', sel = $(c.acc), keep = sel.value;
+  $(pf + '_cq').classList.toggle('hidden', m !== 'CHEQUE'); $(pf + '_aw').style.display = m === 'CHEQUE' ? 'none' : '';
+  $(pf + '_al').textContent = m === 'CASH' ? (c.side === 'IN' ? 'รับเงินสดเข้าบัญชี' : 'จ่ายจากบัญชีเงินสด') : (c.side === 'IN' ? 'โอนเข้าบัญชีธนาคาร' : 'โอนออกจากบัญชีธนาคาร');
+  var l = m === 'CASH' ? c.cash : c.bank;
+  sel.innerHTML = l.map(function (a) { return '<option value="' + a.id + '">' + esc(a.label) + '</option>'; }).join('');
+  if (l.some(function (a) { return a.id === keep; })) sel.value = keep;
+}
+function payFill(pf, accId, ed) {
+  var c = S['pm_' + pf], m = ed && ed.pay_method ? ed.pay_method : '';
+  if (!m && ed) m = c.cash.some(function (a) { return a.id === ed.bank_account_id; }) && !c.bank.some(function (a) { return a.id === ed.bank_account_id; }) ? 'CASH' : 'TRANSFER';
+  if (!m) m = c.bank.length ? 'TRANSFER' : 'CASH';
+  payChk(pf);
+  var r = document.querySelector('input[name="' + pf + '_m"][value="' + m + '"]'); if (r) r.checked = true;
+  paySw(pf);
+  if (ed && ed.pay_method && ed.pay_method !== 'CHEQUE') $(accId).value = ed.bank_account_id || ed.pay_account_id;
+  if (ed && ed.pay_method === 'CHEQUE') { $(pf + '_cn').value = ed.cheque_no || ''; $(pf + '_cd').value = ed.cheque_date || today(); if ($(pf + '_cb')) $(pf + '_cb').value = ed.cheque_bank || ''; if ($(pf + '_cbr')) $(pf + '_cbr').value = ed.cheque_branch || ''; $(pf + '_ca').value = ed.cheque_account_id || ''; }
+}
+function payVals(pf) {
+  var m = (document.querySelector('input[name="' + pf + '_m"]:checked') || {}).value || '';
+  if (m !== 'CHEQUE') return { pay_method: m };
+  return { pay_method: m, cheque_no: v(pf + '_cn').trim(), cheque_date: v(pf + '_cd'), cheque_bank: $(pf + '_cb') ? v(pf + '_cb').trim() : '', cheque_branch: $(pf + '_cbr') ? v(pf + '_cbr').trim() : '', cheque_account_id: v(pf + '_ca') };
+}
 function rcForm(cust, editId) {
   var ed = editId ? S.rcRows[editId] : null, am = {};
   if (ed) { cust = ed.customer_name; ed.allocations.forEach(function (a) { am[a.sale_id] = a.amount; }); }
@@ -2393,7 +2435,7 @@ function rcForm(cust, editId) {
     openM(ed ? 'แก้ไขใบเสร็จ ' + ed.doc_no : 'รับชำระหนี้ (ใบเสร็จรับเงิน)',
       '<div class="f3"><div class="fr"><label class="f req">ลูกค้า</label><select class="in" id="rc_cust">' + custs.map(function (c) { return '<option' + (c === cust ? ' selected' : '') + '>' + esc(c) + '</option>'; }).join('') + '</select></div>' +
       '<div class="fr"><label class="f req">วันที่รับเงิน</label><input class="in" type="date" id="rc_date" value="' + (ed ? ed.doc_date : today()) + '"></div>' +
-      '<div class="fr"><label class="f req">รับเงินเข้าบัญชี</label><select class="in" id="rc_bank">' + S.slDef.cash.map(function (a) { return '<option value="' + a.id + '">' + esc(a.label) + '</option>'; }).join('') + '</select></div></div>' +
+      '</div>' + payBox('rc', 'rc_bank', S.slDef.cash, 'IN') +
       '<div class="f3"><div class="fr"><label class="f">เลขที่ใบเสร็จ</label><input class="in code" id="rc_no" value="' + esc(ed ? ed.doc_no : '') + '" placeholder="เว้นว่าง = รันเลขให้อัตโนมัติ"><div class="hint">แก้เลขที่ได้ (ต้องไม่ซ้ำกับเอกสารอื่น)</div></div></div>' +
       '<div class="tw"><table class="t"><thead><tr><th></th><th>เลขที่</th><th>วันที่</th><th>ครบกำหนด</th><th class="num">ยอดค้าง</th><th class="num">รับชำระครั้งนี้</th></tr></thead><tbody id="rcRows"></tbody></table></div>' +
       '<label class="small" style="display:inline-flex;gap:6px;align-items:center;margin:12px 0 8px"><input type="checkbox" id="rc_hw"> ลูกค้าหักภาษี ณ ที่จ่าย (ได้รับหนังสือรับรอง 50 ทวิ)</label>' +
@@ -2403,8 +2445,9 @@ function rcForm(cust, editId) {
     $('rc_cust').onchange = rcRows; $('rc_hw').onchange = function () { $('rc_w').classList.toggle('hidden', !this.checked); rcWht(); };
     $('rc_wb').oninput = $('rc_wr').oninput = function () { var b = sat(v('rc_wb')), r = Number(v('rc_wr')); if (b && r) $('rc_wa').value = money(Math.round(b * r / 100) / 100); rcSum(); };
     $('rc_wa').oninput = rcSum;
+    payFill('rc', 'rc_bank', ed);
     if (ed) {
-      $('rc_bank').value = ed.bank_account_id;
+      if (!ed.pay_method) $('rc_bank').value = ed.bank_account_id;
       if (Number(ed.wht_amount)) { $('rc_hw').checked = true; $('rc_w').classList.remove('hidden'); }
     }
     rcRows();
@@ -2433,7 +2476,7 @@ function rcSum() {
 }
 function rcSave(print) {
   var hw = $('rc_hw').checked, pr = print ? printer() : null;
-  call('sales.receiptSave', { company_id: S.cid, id: S.rcEdit ? S.rcEdit.id : '', doc_no: v('rc_no').trim(), doc_date: v('rc_date'), bank_account_id: v('rc_bank'), allocations: rcAlloc().map(function (a) { return { sale_id: a.sale_id, amount: a.amount }; }), wht_base: hw ? v('rc_wb') : '', wht_rate: hw ? v('rc_wr') : '', wht_amount: hw ? v('rc_wa') : '', wht_cert_no: hw ? v('rc_wc') : '' })
+  call('sales.receiptSave', { company_id: S.cid, id: S.rcEdit ? S.rcEdit.id : '', doc_no: v('rc_no').trim(), doc_date: v('rc_date'), bank_account_id: v('rc_bank'), pay_method: payVals('rc').pay_method, cheque_no: payVals('rc').cheque_no, cheque_date: payVals('rc').cheque_date, cheque_bank: payVals('rc').cheque_bank, cheque_branch: payVals('rc').cheque_branch, cheque_account_id: payVals('rc').cheque_account_id, allocations: rcAlloc().map(function (a) { return { sale_id: a.sale_id, amount: a.amount }; }), wht_base: hw ? v('rc_wb') : '', wht_rate: hw ? v('rc_wr') : '', wht_amount: hw ? v('rc_wa') : '', wht_cert_no: hw ? v('rc_wc') : '' })
     .then(function (r) { closeM(); toast((S.rcEdit ? 'แก้ไขใบเสร็จ ' : 'บันทึกใบเสร็จ ') + r.doc_no + ' แล้ว', 'ok'); S.rcEdit = null; if (pr) pr.show(r.doc_no, rcHtml(r)); S.sl.tab = 'RECEIPT'; renderSales(); })
     .catch(function (e) { if (pr) pr.close(); fail(e); });
 }
@@ -2448,6 +2491,7 @@ function rcHtml(r) {
     (vt ? '<tr><td colspan="2" class="r">มูลค่าบริการ (ไม่รวมภาษี)</td><td class="r">' + money(base / 100) + '</td></tr><tr><td colspan="2" class="r">ภาษีมูลค่าเพิ่ม</td><td class="r">' + money(r.vat_total) + '</td></tr>' : '') +
     '<tr><th colspan="2" class="r">รวมชำระหนี้</th><th class="r">' + money(r.applied) + '</th></tr>' + (Number(r.wht_amount) ? '<tr><td colspan="2" class="r">หัก ภาษีเงินได้หัก ณ ที่จ่าย ' + (r.wht_rate ? r.wht_rate + '%' : '') + '</td><td class="r">' + money(r.wht_amount) + '</td></tr>' : '') +
     '<tr><th colspan="2" class="r">(' + bahtText(r.received) + ') รับเงินสุทธิ</th><th class="r">' + money(r.received) + '</th></tr></tbody></table>' +
+    (r.pay_method ? '<div style="margin-top:8px">ชำระโดย: ' + (r.pay_method === 'CHEQUE' ? '☑ เช็ค ธนาคาร ' + esc(r.cheque_bank || '') + (r.cheque_branch ? ' สาขา ' + esc(r.cheque_branch) : '') + ' เลขที่ ' + esc(r.cheque_no || '') + ' ลงวันที่ ' + thDate(r.cheque_date) + '<div class="small">(การชำระด้วยเช็คจะสมบูรณ์เมื่อเรียกเก็บเงินตามเช็คได้แล้ว)</div>' : r.pay_method === 'TRANSFER' ? '☑ โอนเงินเข้าบัญชีธนาคาร' : '☑ เงินสด') + '</div>' : '') +
     '<div class="sig" style="grid-template-columns:1fr 1fr"><div>ผู้รับเงิน</div><div>ผู้มีอำนาจลงนาม</div></div></div>';
 }
 function rcPrint(id) { printer().show(S.rcRows[id].doc_no, rcHtml(S.rcRows[id])); }
@@ -3837,16 +3881,16 @@ function ppForm(party) {
     if (!ap.length) return toast('ไม่มีเจ้าหนี้คงค้าง', 'err');
     S.ppAp = ap; var d = S.puDef;
     openM('จ่ายชำระเจ้าหนี้', '<div class="f2"><div class="fr"><label class="f req">เจ้าหนี้</label><select class="in" id="pp_party" onchange="ppDocs()">' + ap.map(function (r) { return '<option' + (r.party_name === party ? ' selected' : '') + '>' + esc(r.party_name) + '</option>'; }).join('') + '</select></div><div class="fr"><label class="f req">วันที่จ่าย</label><input class="in" type="date" id="pp_date" value="' + today() + '"></div></div>' +
-      '<div class="fr"><label class="f req">จ่ายจากบัญชี</label><select class="in" id="pp_pay">' + puOpts(d.cash, (d.cash[0] || {}).id) + '</select></div><div id="ppDocs"></div>' +
+      payBox('pp', 'pp_pay', d.cash, 'OUT') + '<div id="ppDocs"></div>' +
       '<div class="sec">หัก ณ ที่จ่าย</div><label style="display:flex;gap:6px;align-items:center;margin-bottom:6px"><input type="checkbox" id="pp_hw" onchange="$(\'pp_wbox\').style.display=this.checked?\'\':\'none\';ppCalc()"> มีหัก ณ ที่จ่าย</label>' +
       '<div id="pp_wbox" style="display:none"><div class="f3"><div class="fr"><label class="f">แบบ</label><select class="in" id="pp_pnd" onchange="ppWc()"><option value="53">ภ.ง.ด.53</option><option value="3">ภ.ง.ด.3</option></select></div><div class="fr"><label class="f">ประเภทเงินได้</label><select class="in" id="pp_wc" onchange="ppWr()"></select></div><div class="fr"><label class="f">อัตรา %</label><input class="in" id="pp_wr" oninput="ppCalc()"></div></div>' +
       '<div class="f2"><div class="fr"><label class="f">ยอดเงินได้ (ก่อน VAT)</label><input class="in num" id="pp_wb" oninput="ppCalc(1)"></div><div class="fr"><label class="f">ภาษีที่หัก</label><input class="in num" id="pp_wa"></div></div></div>' +
       '<div id="ppTot" style="margin-top:8px"></div><div class="fr"><label class="f">หมายเหตุ</label><input class="in" id="pp_note"></div>',
       '<button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button><button class="btn" id="pp_ok">บันทึกจ่ายชำระ</button>', true);
-    ppWc(); ppDocs();
+    ppWc(); ppDocs(); payFill('pp', 'pp_pay', null);
     $('pp_ok').onclick = function () {
       var b = this, hw = $('pp_hw').checked, al = ppAllocs(); b.disabled = true;
-      call('purch.paySave', { company_id: S.cid, pay_date: v('pp_date'), pay_account_id: v('pp_pay'), allocs: al, wht_pnd: hw ? v('pp_pnd') : '', wht_code: hw ? v('pp_wc') : '', wht_rate: hw ? v('pp_wr') : '', wht_base: hw ? String(v('pp_wb')).replace(/,/g, '') : '', wht_amount: hw ? String(v('pp_wa')).replace(/,/g, '') : '', note: v('pp_note') })
+      call('purch.paySave', { company_id: S.cid, pay_date: v('pp_date'), pay_account_id: v('pp_pay'), pay_method: payVals('pp').pay_method, cheque_no: payVals('pp').cheque_no, cheque_date: payVals('pp').cheque_date, cheque_account_id: payVals('pp').cheque_account_id, allocs: al, wht_pnd: hw ? v('pp_pnd') : '', wht_code: hw ? v('pp_wc') : '', wht_rate: hw ? v('pp_wr') : '', wht_base: hw ? String(v('pp_wb')).replace(/,/g, '') : '', wht_amount: hw ? String(v('pp_wa')).replace(/,/g, '') : '', note: v('pp_note') })
         .then(function (r) { closeM(); toast('บันทึกจ่ายชำระ ' + r.doc_no + ' แล้ว', 'ok'); S.pu.tab = 'PAY'; if (S.page !== 'purch') go('purch'); else renderPurch(); }).catch(function (e) { b.disabled = false; fail(e); });
     };
   }).catch(fail);
