@@ -2188,7 +2188,7 @@ function slDraw() {
           (cr && (r.status === 'OPEN' || r.status === 'PARTIAL') && !ro ? '<button class="btn ghost sm" onclick="rcForm(S.slRows[\'' + r.id + '\'].customer_name)">รับชำระ</button> ' : '') +
           '<button class="ib" title="ดูการบันทึกบัญชี" onclick="jView(\'' + r.journal_id + '\')">' + ic('journal') + '</button>' +
           '<button class="ib" title="สำเนา" ' + (ro ? 'disabled' : '') + ' onclick="saleForm(\'' + r.kind + '\',\'' + r.id + '\',1)">' + ic('copy') + '</button>' +
-          '<button class="ib" title="' + (edit ? 'แก้ไข' : 'แก้ไขไม่ได้ (Post แล้ว / รับชำระแล้ว)') + '" ' + (edit ? '' : 'disabled') + ' onclick="saleForm(\'' + r.kind + '\',\'' + r.id + '\')">' + ic('edit') + '</button>' +
+          (edit || ro ? '<button class="ib" title="' + (edit ? 'แก้ไข' : 'แก้ไขไม่ได้ (Post แล้ว / รับชำระแล้ว)') + '" ' + (edit ? '' : 'disabled') + ' onclick="saleForm(\'' + r.kind + '\',\'' + r.id + '\')">' + ic('edit') + '</button>' : fixBtn('SALE', r.id)) +
           '<button class="ib" title="พิมพ์" onclick="salePrint(\'' + r.id + '\')">' + ic('print') + '</button>' +
           '<button class="ib red" title="ลบ" ' + (edit ? '' : 'disabled') + ' onclick="saleDel(\'' + r.id + '\')">' + ic('del') + '</button></td></tr>';
       }).join('') + '</tbody></table></div>' + (all.length > rows.length ? '<div style="text-align:center;margin:10px"><button class="btn ghost" onclick="S.sl.lim+=200;slDraw()">แสดงเพิ่ม (เหลืออีก ' + (all.length - rows.length) + ' ใบ)</button></div>' : '');
@@ -2375,7 +2375,7 @@ function rcList() {
       rows.map(function (r) {
         var del = r.journal_status === 'DRAFT' && !ro;
         return '<tr><td style="white-space:nowrap">' + fdate(r.doc_date + 'T00:00').slice(0, 10) + '</td><td class="code"><span class="lk" onclick="jView(\'' + r.journal_id + '\')">' + esc(r.doc_no) + '</span>' + draftMark(r.journal_status === 'DRAFT') + (r.journal_status === 'REVERSED' ? ' ' + badge('s', 'VOID') : '') + '</td><td>' + esc(r.customer_name) + '</td><td class="hide-m small">' + r.allocations.map(function (a) { return esc(a.doc_no); }).join(', ') + '</td><td class="num">' + money(r.applied) + '</td><td class="num">' + (Number(r.wht_amount) ? money(r.wht_amount) : '') + '</td><td class="num"><b>' + money(r.received) + '</b></td>' +
-          '<td class="act"><button class="ib" title="' + (del ? 'แก้ไข' : 'แก้ไขไม่ได้ (Post แล้ว)') + '" ' + (del ? '' : 'disabled') + ' onclick="rcForm(null,\'' + r.id + '\')">' + ic('edit') + '</button><button class="ib" title="พิมพ์ใบเสร็จ" onclick="rcPrint(\'' + r.id + '\')">' + ic('print') + '</button><button class="ib red" title="' + (del ? 'ลบ' : 'ลบไม่ได้ (Post แล้ว)') + '" ' + (del ? '' : 'disabled') + ' onclick="rcDel(\'' + r.id + '\')">' + ic('del') + '</button></td></tr>';
+          '<td class="act">' + (del || ro ? '<button class="ib" title="' + (del ? 'แก้ไข' : 'แก้ไขไม่ได้ (Post แล้ว)') + '" ' + (del ? '' : 'disabled') + ' onclick="rcForm(null,\'' + r.id + '\')">' + ic('edit') + '</button>' : fixBtn('RECEIPT', r.id)) + '<button class="ib" title="พิมพ์ใบเสร็จ" onclick="rcPrint(\'' + r.id + '\')">' + ic('print') + '</button><button class="ib red" title="' + (del ? 'ลบ' : 'ลบไม่ได้ (Post แล้ว)') + '" ' + (del ? '' : 'disabled') + ' onclick="rcDel(\'' + r.id + '\')">' + ic('del') + '</button></td></tr>';
       }).join('') + '</tbody></table></div>' : '<div class="card empty">ยังไม่มีการรับชำระหนี้</div>';
   }).catch(fail);
 }
@@ -2420,6 +2420,34 @@ function payVals(pf) {
   var m = (document.querySelector('input[name="' + pf + '_m"]:checked') || {}).value || '';
   if (m !== 'CHEQUE') return { pay_method: m };
   return { pay_method: m, cheque_no: v(pf + '_cn').trim(), cheque_date: v(pf + '_cd'), cheque_bank: $(pf + '_cb') ? v(pf + '_cb').trim() : '', cheque_branch: $(pf + '_cbr') ? v(pf + '_cbr').trim() : '', cheque_account_id: v(pf + '_ca') };
+}
+/* ---------- แก้ข้อมูลเอกสารที่ถูกใช้ต่อแล้ว (v0.19) ---------- */
+var FIXF = {
+  SALE: [['doc_date', 'วันที่เอกสาร', 'date'], ['due_date', 'วันครบกำหนด', 'date'], ['customer_tax_id', 'เลขประจำตัวผู้เสียภาษี'], ['customer_branch', 'สาขา'], ['customer_address', 'ที่อยู่', 'ta'], ['note', 'หมายเหตุ', 'ta']],
+  PURCH: [['doc_date', 'วันที่บันทึก', 'date'], ['due_date', 'วันครบกำหนด', 'date'], ['inv_no', 'เลขที่ใบกำกับ/บิลผู้ขาย'], ['inv_date', 'วันที่ใบกำกับ', 'date'], ['tax_month', 'เดือนที่ใช้ภาษีซื้อ', 'month'], ['party_tax_id', 'เลขประจำตัวผู้เสียภาษี'], ['party_branch', 'สาขา'], ['party_address', 'ที่อยู่', 'ta'], ['note', 'หมายเหตุ', 'ta']],
+  BIZ: [['doc_date', 'วันที่เอกสาร', 'date'], ['due_date', 'วันครบกำหนด', 'date'], ['party_tax_id', 'เลขประจำตัวผู้เสียภาษี'], ['party_branch', 'สาขา'], ['party_address', 'ที่อยู่', 'ta'], ['contact', 'ผู้ติดต่อ'], ['note', 'หมายเหตุ', 'ta']],
+  RECEIPT: [['doc_date', 'วันที่รับเงิน', 'date'], ['note', 'หมายเหตุ', 'ta']],
+  PAY: [['pay_date', 'วันที่จ่าย', 'date'], ['note', 'หมายเหตุ', 'ta']]
+};
+function fixBtn(type, id) { return '<button class="ib" title="แก้วันที่/ข้อมูล (เอกสารที่ใช้ต่อแล้ว · ยอดเงินไม่เปลี่ยน)" onclick="fixForm(\'' + type + '\',\'' + id + '\')">' + ic('edit') + '</button>'; }
+function fixRow(type, id) { return ({ SALE: S.slRows, RECEIPT: S.rcRows, PURCH: S.puRows, PAY: S.ppRows, BIZ: S.bdRows }[type] || {})[id]; }
+function fixForm(type, id) {
+  var r = fixRow(type, id); if (!r) return toast('ไม่พบเอกสาร', 'err');
+  var posted = r.journal_status === 'POSTED', used = type === 'BIZ' ? r.status !== 'OPEN' : true, no = r.doc_no || r.inv_no || '';
+  var h = '<div class="note">' + (posted ? '<b>เอกสารนี้ Post แล้ว</b> แก้ได้เฉพาะเจ้าของสำนักงาน · ' : '') + 'แก้ได้เฉพาะวันที่และข้อมูลทั่วไป <b>ยอดเงิน/รายการ/ชื่อคู่ค้าไม่เปลี่ยน</b> · ระบบแก้ตามไปที่รายการบัญชี ใบกำกับภาษี และสต็อกให้ในครั้งเดียว</div><div class="f2" style="margin-top:10px">' +
+    FIXF[type].map(function (f) { var v0 = esc(r[f[0]] || ''); return '<div class="fr"' + (f[2] === 'ta' ? ' style="grid-column:1/-1"' : '') + '><label class="f">' + f[1] + '</label>' + (f[2] === 'ta' ? '<textarea class="in" rows="2" id="fx_' + f[0] + '">' + v0 + '</textarea>' : '<input class="in" id="fx_' + f[0] + '" type="' + (f[2] || 'text') + '" value="' + v0 + '">') + '</div>'; }).join('') +
+    '<div class="fr" style="grid-column:1/-1"><label class="f' + (posted || type === 'BIZ' && used ? ' req' : '') + '">เหตุผลที่แก้</label><input class="in" id="fx_reason" placeholder="เช่น ลงวันที่ผิด / เลขผู้เสียภาษีผิด"></div></div>';
+  openM('แก้ข้อมูล ' + no, h, '<button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button><button class="btn" id="fx_go" onclick="fixSave(\'' + type + '\',\'' + id + '\')">บันทึกการแก้ไข</button>', true);
+}
+function fixSave(type, id) {
+  var r = fixRow(type, id), p = { company_id: S.cid, type: type, id: id, reason: v('fx_reason').trim() };
+  FIXF[type].forEach(function (f) { var nv = v('fx_' + f[0]); if (String(nv) !== String(r[f[0]] || '')) p[f[0]] = nv; });
+  var act = type === 'SALE' || type === 'RECEIPT' ? 'sales.fixSave' : type === 'BIZ' ? ((BDK[r.kind] || ['S'])[0] === 'P' ? 'pdoc.fixSave' : 'sdoc.fixSave') : 'purch.fixSave';
+  $('fx_go').disabled = true;
+  call(act, p).then(function (x) {
+    closeM(); toast(x.changed.length ? 'แก้ไขแล้ว (' + x.changed.length + ' ช่อง)' : 'ไม่มีข้อมูลที่เปลี่ยน', 'ok');
+    if (type === 'BIZ') bdList(r.kind); else if (type === 'SALE' || type === 'RECEIPT') renderSales(); else renderPurch();
+  }).catch(function (e) { if ($('fx_go')) $('fx_go').disabled = false; failNew(e); });
 }
 function rcForm(cust, editId) {
   var ed = editId ? S.rcRows[editId] : null, am = {};
@@ -3373,7 +3401,7 @@ function puDraw() {
         '<td class="num hide-m">' + money(r.subtotal) + (Number(r.bill_discount_amount) ? '<span class="sub2">ส่วนลดท้ายบิล ' + money(r.bill_discount_amount) + '</span>' : '') + '</td><td class="num hide-m">' + money(r.vat_amount) + (r.vat_claim === 'N' && Number(r.vat_amount) ? '<span class="sub2">ขอคืนไม่ได้</span>' : '') + '</td><td class="num"><b>' + money(r.total) + '</b></td><td class="num">' + (Number(r.balance) ? money(r.balance) : '–') + '</td><td>' + badge('s', r.status) + '</td><td class="act">' +
         (r.pay_type === 'CREDIT' && Number(r.balance) > 0 && !ro ? '<button class="btn ghost sm" onclick="ppForm(S.puRows[\'' + r.id + '\'].party_name)">จ่ายชำระ</button> ' : '') +
         '<button class="ib" title="ดูการบันทึกบัญชี" onclick="jView(\'' + r.journal_id + '\')">' + ic('journal') + '</button><button class="ib" title="สำเนา" ' + (ro ? 'disabled' : '') + ' onclick="puForm(\'' + r.kind + '\',\'' + r.id + '\',1)">' + ic('copy') + '</button>' +
-        '<button class="ib" title="' + (ed ? 'แก้ไข' : 'แก้ไขไม่ได้ (Post แล้ว / จ่ายแล้ว)') + '" ' + (ed ? '' : 'disabled') + ' onclick="puForm(\'' + r.kind + '\',\'' + r.id + '\')">' + ic('edit') + '</button>' +
+        (ed || ro ? '<button class="ib" title="' + (ed ? 'แก้ไข' : 'แก้ไขไม่ได้ (Post แล้ว / จ่ายแล้ว)') + '" ' + (ed ? '' : 'disabled') + ' onclick="puForm(\'' + r.kind + '\',\'' + r.id + '\')">' + ic('edit') + '</button>' : fixBtn('PURCH', r.id)) +
         '<button class="ib red" title="ลบ" ' + (ed ? '' : 'disabled') + ' onclick="puDel(\'' + r.id + '\')">' + ic('del') + '</button></td></tr>';
     }).join('') + '</tbody></table></div>' + (all.length > rows.length ? '<div style="text-align:center;margin:10px"><button class="btn ghost" onclick="S.pu.lim+=200;puDraw()">แสดงเพิ่ม (เหลืออีก ' + (all.length - rows.length) + ' ใบ)</button></div>' : '');
 }
@@ -3435,7 +3463,7 @@ function bdList(k) {
       rows.map(function (r) {
         var op = r.status === 'OPEN' || r.status === 'APPROVED', nx = op && !ro ? (BD_NEXT[k] || []).filter(function (n) { return !(k === 'PO' && r.status !== 'APPROVED' && false); }).map(function (n) { return '<button class="btn sm" onclick="bdNext(\'' + r.id + '\',\'' + n[0] + '\')">▶ ' + n[1] + '</button>'; }).join(' ') : '';
         return '<tr><td class="code">' + esc(r.doc_no) + '</td><td>' + esc(r.doc_date) + '</td><td>' + esc(r.party_name || '-') + '</td><td class="num">' + money(r.total) + '</td><td>' + bdTag(r.status) + '</td><td class="small">' + (r.ref_no ? '← ' + esc(r.ref_no) : '') + (r.conv_no ? ' → ' + esc(r.conv_no) : '') + '</td><td style="white-space:nowrap;text-align:right">' + nx +
-          ' <button class="btn ghost sm" onclick="bdPrint(\'' + r.id + '\')">🖨</button>' + (ro ? '' : (r.status === 'OPEN' ? ' <button class="btn ghost sm" onclick="bdForm(\'' + k + '\',\'' + r.id + '\')">แก้ไข</button>' : '') + (r.status === 'OPEN' && (k === 'PR' || k === 'PO') && can('purchase.post') ? ' <button class="btn ghost sm" onclick="bdSt(\'' + r.id + '\',\'APPROVED\')">✔ อนุมัติ</button>' : '') +
+          ' <button class="btn ghost sm" onclick="bdPrint(\'' + r.id + '\')">🖨</button>' + (ro ? '' : (r.status === 'OPEN' ? ' <button class="btn ghost sm" onclick="bdForm(\'' + k + '\',\'' + r.id + '\')">แก้ไข</button>' : r.status !== 'CANCELLED' ? ' <button class="btn ghost sm" onclick="fixForm(\'BIZ\',\'' + r.id + '\')">✏️ แก้ข้อมูล</button>' : '') + (r.status === 'OPEN' && (k === 'PR' || k === 'PO') && can('purchase.post') ? ' <button class="btn ghost sm" onclick="bdSt(\'' + r.id + '\',\'APPROVED\')">✔ อนุมัติ</button>' : '') +
           (op ? ' <button class="btn ghost sm" onclick="bdSt(\'' + r.id + '\',\'CANCELLED\')">ยกเลิก</button>' : '') + (r.status === 'OPEN' || r.status === 'CANCELLED' ? ' <button class="btn ghost sm" onclick="bdDel(\'' + r.id + '\')">ลบ</button>' : '')) + '</td></tr>';
       }).join('') + '</tbody></table></div>');
   }).catch(failNew);
@@ -3865,7 +3893,7 @@ function ppList() {
   call('purch.pays', { company_id: S.cid }).then(function (rows) {
     S.ppRows = {}; rows.forEach(function (r) { S.ppRows[r.id] = r; });
     $('puOut').innerHTML = !rows.length ? '<div class="card empty">ยังไม่มีรายการจ่ายชำระ</div>' : '<div class="tw"><table class="t"><thead><tr><th>วันที่</th><th>เลขที่</th><th>เจ้าหนี้</th><th>บิลที่จ่าย</th><th class="num">ยอดจ่าย</th><th class="num">หัก ณ ที่จ่าย</th><th class="num">จ่ายสุทธิ</th><th class="act"></th></tr></thead><tbody>' +
-      rows.map(function (r) { var ed = r.journal_status === 'DRAFT' && !ro; return '<tr><td>' + fdate(r.pay_date + 'T00:00').slice(0, 10) + '</td><td class="code"><span class="lk" onclick="jView(\'' + r.journal_id + '\')">' + esc(r.doc_no) + '</span></td><td>' + esc(r.party_name) + '</td><td class="small">' + r.allocs.map(function (a) { return esc(a.inv_no || a.doc_no) + ' ' + money(a.amount); }).join('<br>') + '</td><td class="num">' + money(r.amount) + '</td><td class="num">' + (Number(r.wht_amount) ? money(r.wht_amount) : '–') + '</td><td class="num"><b>' + money(Number(r.amount) - Number(r.wht_amount || 0)) + '</b></td><td class="act"><button class="ib" title="ดูการบันทึกบัญชี" onclick="jView(\'' + r.journal_id + '\')">' + ic('journal') + '</button><button class="ib red" title="ลบ" ' + (ed ? '' : 'disabled') + ' onclick="ppDel(\'' + r.id + '\')">' + ic('del') + '</button></td></tr>'; }).join('') + '</tbody></table></div>';
+      rows.map(function (r) { var ed = r.journal_status === 'DRAFT' && !ro; return '<tr><td>' + fdate(r.pay_date + 'T00:00').slice(0, 10) + '</td><td class="code"><span class="lk" onclick="jView(\'' + r.journal_id + '\')">' + esc(r.doc_no) + '</span></td><td>' + esc(r.party_name) + '</td><td class="small">' + r.allocs.map(function (a) { return esc(a.inv_no || a.doc_no) + ' ' + money(a.amount); }).join('<br>') + '</td><td class="num">' + money(r.amount) + '</td><td class="num">' + (Number(r.wht_amount) ? money(r.wht_amount) : '–') + '</td><td class="num"><b>' + money(Number(r.amount) - Number(r.wht_amount || 0)) + '</b></td><td class="act"><button class="ib" title="ดูการบันทึกบัญชี" onclick="jView(\'' + r.journal_id + '\')">' + ic('journal') + '</button>' + (ed || ro ? '' : fixBtn('PAY', r.id)) + '<button class="ib red" title="ลบ" ' + (ed ? '' : 'disabled') + ' onclick="ppDel(\'' + r.id + '\')">' + ic('del') + '</button></td></tr>'; }).join('') + '</tbody></table></div>';
   }).catch(fail);
 }
 function ppDel(id) { var r = S.ppRows[id]; confirmM('ลบรายการจ่ายชำระ', 'ลบ ' + r.doc_no + ' ' + r.party_name + ' ' + money(r.amount), 'ลบ', function () { call('purch.payDelete', { company_id: S.cid, id: id }).then(function () { toast('ลบแล้ว', 'ok'); renderPurch(); }).catch(fail); }, true); }
