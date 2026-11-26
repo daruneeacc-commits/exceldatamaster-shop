@@ -3632,13 +3632,29 @@ function adjPrint(id) {
 function ptList(role) {
   var api = role === 'C' ? 'cust' : 'sup', out = role === 'C' ? 'slOut' : 'puOut', ro = co().status !== 'ACTIVE';
   call(api + '.list', { company_id: S.cid, q: S.ptQ || '' }).then(function (rows) {
-    S.ptRows = {}; rows.forEach(function (r) { S.ptRows[r.id] = r; });
+    S.ptRows = {}; var nmc = {}; rows.forEach(function (r) { S.ptRows[r.id] = r; var k = ptNz(r.name); nmc[k] = (nmc[k] || 0) + 1; });
     $(out).innerHTML = '<div class="bar" style="margin-top:0"><input class="in q" id="ptq" placeholder="ค้นหา รหัส / ชื่อ / เลขภาษี / โทร" value="' + esc(S.ptQ || '') + '" onchange="S.ptQ=this.value;ptList(\'' + role + '\')"><span style="flex:1"></span>' + (ro ? '' : '<button class="btn" onclick="ptForm(\'' + role + '\')">+ เพิ่ม' + (role === 'C' ? 'ลูกค้า' : 'ผู้ขาย') + '</button>') + '</div>' +
       (!rows.length ? '<div class="card empty">ยังไม่มีข้อมูล (ระบบเพิ่มให้อัตโนมัติเมื่อออกเอกสาร)</div>' : '<div class="card tw"><table class="t"><thead><tr><th>รหัส</th><th>ชื่อ</th><th>เลขภาษี / สาขา</th><th>โทร / ผู้ติดต่อ</th><th class="num">เครดิต (วัน)</th>' + (role === 'C' ? '<th class="num">วงเงิน</th>' : '') + '<th class="num">ยอดค้าง</th><th></th></tr></thead><tbody>' +
-      rows.map(function (r) { var over = role === 'C' && Number(r.credit_limit) && Number(r.balance) > Number(r.credit_limit); return '<tr' + (r.status === 'INACTIVE' ? ' style="opacity:.5"' : '') + '><td class="code">' + esc(r.code || '') + '</td><td>' + esc(r.name) + '</td><td class="small">' + esc(r.tax_id || '') + ' ' + esc(r.branch || '') + '</td><td class="small">' + esc(r.phone || '') + (r.contact ? '<br>' + esc(r.contact) : '') + '</td><td class="num">' + esc(r.credit_days || '') + '</td>' + (role === 'C' ? '<td class="num">' + (r.credit_limit ? money(r.credit_limit) : '') + '</td>' : '') + '<td class="num"' + (over ? ' style="color:#c00;font-weight:600"' : '') + '>' + (Number(r.balance) ? money(r.balance) : '') + '</td><td style="white-space:nowrap">' + (ro ? '' : '<button class="btn ghost sm" onclick="ptForm(\'' + role + '\',\'' + r.id + '\')">แก้ไข</button>') + (role === 'C' ? ' <button class="btn ghost sm" onclick="S.stP=S.ptRows[\'' + r.id + '\'];S.sl.tab=\'STMT\';renderSales()">Statement</button>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>');
+      rows.map(function (r) { var over = role === 'C' && Number(r.credit_limit) && Number(r.balance) > Number(r.credit_limit); return '<tr' + (r.status === 'INACTIVE' ? ' style="opacity:.5"' : '') + '><td class="code">' + esc(r.code || '') + '</td><td>' + esc(r.name) + (nmc[ptNz(r.name)] > 1 ? ' <span class="small" style="color:#b45309" title="มีชื่อนี้มากกว่า 1 รายการ">⚠️ ชื่อซ้ำ</span>' : '') + '</td><td class="small">' + esc(r.tax_id || '') + ' ' + esc(r.branch || '') + '</td><td class="small">' + esc(r.phone || '') + (r.contact ? '<br>' + esc(r.contact) : '') + '</td><td class="num">' + esc(r.credit_days || '') + '</td>' + (role === 'C' ? '<td class="num">' + (r.credit_limit ? money(r.credit_limit) : '') + '</td>' : '') + '<td class="num"' + (over ? ' style="color:#c00;font-weight:600"' : '') + '>' + (Number(r.balance) ? money(r.balance) : '') + '</td><td style="white-space:nowrap">' + (ro ? '' : '<button class="btn ghost sm" onclick="ptForm(\'' + role + '\',\'' + r.id + '\')">แก้ไข</button>') + (role === 'C' ? ' <button class="btn ghost sm" onclick="S.stP=S.ptRows[\'' + r.id + '\'];S.sl.tab=\'STMT\';renderSales()">Statement</button>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>');
   }).catch(failNew);
 }
+/** เตือนลูกค้า/ผู้ขายซ้ำ (v0.20.3): ชื่อ (ตัดคำ บริษัท/จำกัด/บจก./หจก./มหาชน และช่องว่าง) · ที่อยู่ · เลขภาษี เหมือนรายอื่น */
+function ptNz(t) { return String(t || '').toLowerCase().replace(/บริษัท|บจก\.?|ห้างหุ้นส่วนจำกัด|หจก\.?|จำกัด|\(มหาชน\)|มหาชน|co\.?,?|ltd\.?|limited|company|[\s.,()\-]/g, ''); }
+function ptDups(role, id, p) {
+  var seen = {}, L = [], cur = id && S.ptRows && S.ptRows[id], n = ptNz(p.name), ad = ptNz(p.address), tid = String(p.tax_id || '').replace(/\D/g, '');
+  Object.keys(S.ptRows || {}).map(function (k) { return S.ptRows[k]; }).concat(partiesOf(role)).forEach(function (r) {
+    if (!r || (id && r.id === id) || (cur && r.name === cur.name && (r.tax_id || '') === (cur.tax_id || ''))) return;
+    var k = r.id || r.name + '|' + r.tax_id; if (seen[k]) return; seen[k] = 1;
+    var why = [];
+    if (n && ptNz(r.name) === n) why.push('ชื่อซ้ำ');
+    if (ad.length >= 8 && ptNz(r.address) === ad) why.push('ที่อยู่ซ้ำ');
+    if (tid.length === 13 && String(r.tax_id || '') === tid) why.push('เลขภาษีซ้ำ' + ((r.branch || '') !== (p.branch || '') ? ' (คนละสาขา)' : ''));
+    if (why.length) L.push({ r: r, why: why });
+  });
+  return L.slice(0, 5);
+}
 function ptForm(role, id) {
+  S.ptDupKey = '';
   var x = id ? S.ptRows[id] : { status: 'ACTIVE' }, f = function (k, l, ph) { return '<div class="fr"><label class="f">' + l + '</label><input class="in" id="pt_' + k + '" value="' + esc(x[k] || '') + '"' + (ph ? ' placeholder="' + ph + '"' : '') + '></div>'; };
   openM((id ? 'แก้ไข' : 'เพิ่ม') + (role === 'C' ? 'ลูกค้า' : 'ผู้ขาย'), '<div class="f3">' + f('code', 'รหัส', 'อัตโนมัติ') + f('name', 'ชื่อ *') + f('tax_id', 'เลขประจำตัวผู้เสียภาษี') + '</div><div class="f3">' + f('branch', 'สาขา', 'สำนักงานใหญ่ / 00001') + f('phone', 'โทรศัพท์') + f('email', 'อีเมล') + '</div>' + f('address', 'ที่อยู่') +
     '<div class="f3">' + f('contact', 'ผู้ติดต่อ') + f('credit_days', 'เครดิตเทอม (วัน)', '30') + (role === 'C' ? f('credit_limit', 'วงเงินเครดิต (บาท)', 'ว่าง = ไม่จำกัด') : '') + '</div>' + f('note', 'หมายเหตุ') +
@@ -3647,6 +3663,14 @@ function ptForm(role, id) {
 function ptSave(role, id) {
   var p = { company_id: S.cid, id: id, status: $('pt_off').checked ? 'INACTIVE' : 'ACTIVE' };
   ['code', 'name', 'tax_id', 'branch', 'phone', 'email', 'address', 'contact', 'credit_days', 'credit_limit', 'note'].forEach(function (k) { if ($('pt_' + k)) p[k] = v('pt_' + k); });
+  var dup = ptDups(role, id, p);
+  if (dup.length && S.ptDupKey !== JSON.stringify([p.name, p.address, p.tax_id])) {
+    S.ptDupKey = JSON.stringify([p.name, p.address, p.tax_id]);
+    var box = $('pt_dup') || (function () { $('pt_name').closest('.f3').insertAdjacentHTML('beforebegin', '<div id="pt_dup" class="note" style="background:#fff7e0;border:1px solid #f0c36d;color:#7a4b00"></div>'); return $('pt_dup'); })();
+    box.innerHTML = '⚠️ <b>อาจซ้ำกับ' + (role === 'C' ? 'ลูกค้า' : 'ผู้ขาย') + 'ที่มีอยู่</b><br>' + dup.map(function (d) { return esc((d.r.code ? d.r.code + ' ' : '') + d.r.name) + ' <span class="small">(' + d.why.join(', ') + (d.r.address ? ' · ' + esc(d.r.address) : '') + ')</span>'; }).join('<br>') + '<br>ถ้าเป็นรายเดิม ให้กดยกเลิกแล้วใช้รายเดิม · ถ้าเป็นคนละราย กด "บันทึก" อีกครั้ง';
+    return;
+  }
+  S.ptDupKey = '';
   call(role === 'C' ? 'cust.save' : 'sup.save', p).then(function (r) { closeM(); toast('บันทึก ' + r.code + ' แล้ว', 'ok'); S.parties = null; S.custs = null; ensureTaxData().catch(function () {}); ptList(role); }).catch(failNew);
 }
 function stmtPage() {
