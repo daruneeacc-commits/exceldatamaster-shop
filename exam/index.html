@@ -82,6 +82,7 @@ th{color:var(--mut);font-weight:600}
 .btn2{background:#F3EFFF;color:var(--pri);border-radius:12px;padding:9px 14px;font-size:15px;margin:4px 4px 0 0}
 .btn2.red{background:#FDECEF;color:var(--bad)}
 input[type=text]{font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:12px;width:100%}
+.grs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 4px;margin:14px 0 4px}.grs button{flex:1;min-width:52px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px 6px;font-family:Mitr;font-size:16px;color:var(--ink)}.grs button.on{background:var(--pri);border-color:var(--pri);color:#fff}
 .kids{display:flex;gap:8px;flex-wrap:wrap}
 .kids button{background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 14px;font-family:Mitr}
 .kids button.on{border-color:var(--pri);color:var(--pri)}
@@ -111,7 +112,7 @@ var SUBJ=[
 var DAILY_N=10, KEY="edm_exam_data", MAXH=400;
 var EXALL=(window.EXAM_BANK||[]).filter(function(e){return e&&e.id&&e.items&&e.items.length});
 function EXG(){var k=K(),g=k&&+k.grade;return EXALL.filter(function(e){return !g||!e.g||e.g===g})}
-var GR=[1,2,3,4,5,6];function grSel(id,v){return '<select id="'+id+'" style="font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:12px;width:100%">'+GR.map(function(g){return '<option value="'+g+'"'+(+v===g?" selected":"")+'>ป.'+g+(g===6?" (รวมเตรียมสอบเข้า ม.1)":"")+'</option>'}).join("")+'</select>'}
+var GR=[1,2,3,4,5,6];var UG=(function(){var m=/[?&]g=([1-6])\b/.exec(location.search);return m?+m[1]:0})();function grSel(id,v){return '<select id="'+id+'" style="font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:12px;width:100%">'+GR.map(function(g){return '<option value="'+g+'"'+(+v===g?" selected":"")+'>ป.'+g+(g===6?" (รวมเตรียมสอบเข้า ม.1)":"")+'</option>'}).join("")+'</select>'}
 function sj(k){for(var i=0;i<SUBJ.length;i++)if(SUBJ[i].k===k)return SUBJ[i];return {k:k,s:k,ic:"📝",c:"var(--pri)"}}
 function load(){var d;try{d=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){}d=d&&typeof d==="object"?d:{};d.kids=Array.isArray(d.kids)?d.kids:[];d.kids.forEach(fixKid);return d}
 function fixKid(k){k.h=Array.isArray(k.h)?k.h:[];k.q=k.q&&typeof k.q==="object"?k.q:{};return k}
@@ -140,7 +141,7 @@ function allQ(){var L=[];EXG().forEach(function(e){e.items.forEach(function(it,i
 /* ===== เริ่มต้น: เพิ่มชื่อลูก ===== */
 function setup(){
   V.innerHTML='<div class="hello"><h1>ยินดีต้อนรับค่ะ 👋</h1><div>ฝึกทำข้อสอบ ป.1–ป.6 วันละ 10 ข้อ ครบ 5 วิชา · ข้อที่ผิดจะวนกลับมาให้ทบทวน · พ่อแม่ดูผลได้ทุกวัน</div></div>'+
-  '<div class="card" style="margin-top:14px"><h3>ใส่ชื่อเล่นของน้องที่จะฝึก</h3><div class="mut" style="margin:4px 0 10px">มีลูกหลายคน เพิ่มทีหลังได้ที่แท็บ 📊 ผลการเรียน</div><input type="text" id="nk" placeholder="เช่น น้องเอย" maxlength="30"><div class="mut" style="margin:10px 0 6px">เรียนชั้น</div>'+grSel("ng",6)+'<button class="next" data-addkid>เริ่มฝึกเลย</button></div>';
+  '<div class="card" style="margin-top:14px"><h3>ใส่ชื่อเล่นของน้องที่จะฝึก</h3><div class="mut" style="margin:4px 0 10px">มีลูกหลายคน เพิ่มทีหลังได้ที่แท็บ 📊 ผลการเรียน</div><input type="text" id="nk" placeholder="เช่น น้องเอย" maxlength="30"><div class="mut" style="margin:10px 0 6px">เรียนชั้น</div>'+grSel("ng",UG||6)+'<button class="next" data-addkid>เริ่มฝึกเลย</button></div>';
 }
 function addKid(n,g){n=(n||"").trim();if(!n)return toast("ใส่ชื่อก่อนนะคะ");var k=fixKid({id:uid(),name:n,grade:+g||6,goal:80,gd:6});D.kids.push(k);D.cur=k.id;save();render()}
 
@@ -152,7 +153,8 @@ function home(){
    '<div class="row"><div class="pill"><b>🔥 '+st+'</b>วันติดต่อกัน</div><div class="pill"><b>'+tq+'</b>ข้อที่ทำแล้ว</div><div class="pill"><b>'+pct(ta,tq)+'%</b>ตอบถูก</div></div></div>';
   h+='<button class="big'+(dt?' done':'')+'" data-daily>'+(dt?'✅ ทำแบบฝึกวันนี้แล้ว · ทำอีกรอบได้':'🌟 แบบฝึกประจำวัน ('+DAILY_N+' ข้อ)')+'<small>คละวิชา · ข้อที่เคยผิดจะกลับมาให้ฝึกอีก</small></button>';
   if(k.h.length)h+='<div style="margin-top:14px">'+assessHtml(k,false)+'</div>';
-  h+='<h2 style="margin:20px 0 10px;font-size:19px">เลือกวิชา</h2><div class="subs">';
+  h+='<h2 style="margin:20px 0 0;font-size:19px">เลือกชั้น</h2><div class="grs">'+GR.map(function(g){return '<button data-grade="'+g+'" class="'+(+k.grade===g?'on':'')+'">ป.'+g+'</button>'}).join("")+'</div>';
+  h+='<h2 style="margin:16px 0 10px;font-size:19px">เลือกวิชา · ป.'+(k.grade||"")+(+k.grade===6?' <span class="mut">(รวมเตรียมสอบเข้า ม.1)</span>':'')+'</h2><div class="subs">';
   h+='<button class="sb'+(fsub?'':' on')+'" style="--c:var(--pri)" data-sub=""><div class="ic">📚</div><div class="n">ทั้งหมด</div><div class="p">'+EXG().length+' ชุด</div></button>';
   SUBJ.forEach(function(s){var n=EXG().filter(function(e){return e.subj===s.k}).length,x=subjStat(k,s.k);
     h+='<button class="sb'+(fsub===s.k?' on':'')+'" style="--c:'+s.c+'" data-sub="'+s.k+'"><div class="ic">'+s.ic+'</div><div class="n">'+s.s+'</div><div class="p">'+(n?n+' ชุด':'เร็ว ๆ นี้')+(x.b?' · '+pct(x.a,x.b)+'%':'')+'</div></button>'});
@@ -301,11 +303,13 @@ document.addEventListener("click",function(ev){
   else if(d.home!==undefined)render();
   else if(d.redo!==undefined){start(shuffle(Q.wrong.slice()),"ทบทวนข้อที่ผิด","",false)}
   else if(d.addkid!==undefined)addKid(document.getElementById("nk").value,(document.getElementById("ng")||{}).value);
+  else if(d.grade){var kg=K();kg.grade=+d.grade;fsub="";save();chip();home()}
   else if(d.kid){D.cur=d.kid;save();render()}
   else if(d.savecfg!==undefined){var k=K(),nm=document.getElementById("nm").value.trim(),gp=parseInt(document.getElementById("gp").value,10),gd=parseInt(document.getElementById("gd").value,10);if(nm)k.name=nm;var gs=document.getElementById("gr");if(gs)k.grade=+gs.value;if(gp>=1&&gp<=100)k.goal=gp;if(gd>=1&&gd<=7)k.gd=gd;save();render();toast("บันทึกแล้ว")}
   else if(d.delkid!==undefined){var k2=K();var go=function(){D.kids=D.kids.filter(function(x){return x.id!==k2.id});D.cur=(D.kids[0]||{}).id||"";if(!D.kids.length)try{localStorage.setItem("edm_sync_wipe","1")}catch(e){}save();try{window.EDM_MEMBER&&EDM_MEMBER.push&&EDM_MEMBER.push(true)}catch(e){}render()};
     if(window.EDM_SAFEDEL)EDM_SAFEDEL({name:k2.name,lose:"ผลการเรียนและประวัติการทำข้อสอบทั้งหมดของ "+k2.name+" จะหายถาวร",del:go});else ask("ลบ "+k2.name+" และผลการเรียนทั้งหมด?",go)}
 });
+if(UG&&D.kids.length===1&&+D.kids[0].grade!==UG){D.kids[0].grade=UG;save()}
 render();
 })();
 </script>
