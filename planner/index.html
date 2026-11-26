@@ -699,6 +699,29 @@ demo=function(){const n=D.tasks.length;demo2();if(D.tasks.length===n||D.subj.len
  D.score.push({id:uid(),who:'fm3',subj:S[0].id,date:addD(t,6),type:'กลางภาค',got:null,full:40,note:'บทที่ 1–4'});
  D.tasks.push({id:uid(),title:'📚 ภาษาอังกฤษ: ท่องศัพท์ 20 คำ',due:addD(t,1),prio:'สำคัญ',status:'todo',who:'fm3',hw:1});save();render()};
 
+/* ===== แนบสลิปรายรับ-รายจ่าย (26 พ.ย.) · รูปเก็บใน IndexedDB ของเครื่องนี้ (ไม่ซิงก์ ไม่กิน localStorage ของระบบอื่น) · tx.slip=1 บอกว่ามีสลิป ===== */
+const SLDB=(()=>{let p;const db=()=>p||(p=new Promise((ok,no)=>{const r=indexedDB.open('edm_planner_slips',1);r.onupgradeneeded=()=>r.result.createObjectStore('s');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}));
+ const tx=(m,f)=>db().then(d=>new Promise((ok,no)=>{const t=d.transaction('s',m),q=f(t.objectStore('s'));t.oncomplete=()=>ok(q&&q.result);t.onerror=()=>no(t.error)}));
+ return{get:k=>tx('readonly',s=>s.get(k)),put:(k,v)=>tx('readwrite',s=>s.put(v,k)),del:k=>tx('readwrite',s=>s.delete(k))}})();
+function slipShrink(file){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const M=1100,k=Math.min(1,M/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.65))};im.onerror=()=>no('อ่านรูปไม่ได้');im.src=r.result};r.onerror=()=>no('อ่านไฟล์ไม่ได้');r.readAsDataURL(file)})}
+async function slipSave(id,file){try{const d=await slipShrink(file);await SLDB.put(id,d);const x=D.tx.find(t=>t.id===id);if(x){x.slip=1;save()}render();toast('แนบสลิปแล้ว 📎')}catch(e){toast('แนบสลิปไม่สำเร็จ: '+e)}}
+function slipPick(id){const i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=()=>i.files[0]&&slipSave(id,i.files[0]);i.click()}
+async function slipView(id){const x=D.tx.find(t=>t.id===id);let d=null;try{d=await SLDB.get(id)}catch(e){}
+ const o=document.createElement('div');o.id='slipV';o.style.cssText='position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:10px';
+ o.innerHTML=`<style>#slipV .btn.o{background:#fff}</style><div style="color:#fff;font-weight:700">${x?esc(x.cat)+' · '+th(x.date)+' · '+money(x.amt):''}</div>${d?`<img src="${d}" style="max-width:100%;max-height:72vh;border-radius:10px;background:#fff">`:`<div style="background:#fff;border-radius:12px;padding:18px;max-width:320px;text-align:center">สลิปนี้แนบจากอีกเครื่อง<br><span class="mut">รูปสลิปเก็บไว้ในเครื่องที่แนบเท่านั้น</span></div>`}
+ <div class="row" style="justify-content:center">${d?`<a class="btn" download="สลิป-${x?x.date:''}.jpg" href="${d}">⬇ บันทึกรูป</a>`:''}<button class="btn o" id="slipRe">📎 ${d?'เปลี่ยนรูป':'แนบในเครื่องนี้'}</button>${d?`<button class="btn o" id="slipDel">🗑 ลบสลิป</button>`:''}<button class="btn o" id="slipX">ปิด</button></div>`;
+ document.body.appendChild(o);const cl=()=>o.remove();o.onclick=e=>{if(e.target===o)cl()};o.querySelector('#slipX').onclick=cl;o.querySelector('#slipRe').onclick=()=>{cl();slipPick(id)};
+ const dl=o.querySelector('#slipDel');if(dl)dl.onclick=async()=>{if(!confirm('ลบรูปสลิปนี้?'))return;await SLDB.del(id).catch(()=>{});if(x){delete x.slip;save()}cl();render();toast('ลบสลิปแล้ว')}}
+const addTx0=addTx;
+addTx=function(){const f=(document.getElementById('xS')||{}).files,file=f&&f[0],n=D.tx.length;addTx0();if(file&&D.tx.length>n)slipSave(D.tx[D.tx.length-1].id,file)};
+const del0=del;
+del=function(k,id){if(k==='tx'){const x=D.tx.find(t=>t.id===id);if(x&&x.slip)SLDB.del(id).catch(()=>{})}return del0(k,id)};
+P.money0=P.money;
+P.money=function(){let h=P.money0();
+ h=h.replace('<button class="btn" onclick="addTx()">','<label class="btn o" style="cursor:pointer">📎 แนบสลิป<input type="file" id="xS" accept="image/*" hidden onchange="document.getElementById(\'xSn\').textContent=this.files[0]?\'✓ \'+this.files[0].name:\'\'"></label><span id="xSn" class="mut" style="font-size:12px"></span><button class="btn" onclick="addTx()">');
+ h=h.replace(/<b class="(grn|red)">([+-][^<]*)<\/b><button class="x" onclick="del\('tx','([^']+)'\)">✕<\/button>/g,(m,c,a,id)=>{const x=D.tx.find(t=>t.id===id);return`<button class="btn ${x&&x.slip?'':'o'} s" title="${x&&x.slip?'ดูสลิป':'แนบสลิป'}" onclick="${x&&x.slip?`slipView('${id}')`:`slipPick('${id}')`}">${x&&x.slip?'🧾':'📎'}</button><b class="${c}">${a}</b><button class="x" onclick="del('tx','${id}')">✕</button>`});
+ return h.replace('<h3>บันทึกรายการ</h3>','<h3>บันทึกรายการ</h3><p class="mut" style="margin:-4px 0 8px;font-size:12px">📎 แนบรูปสลิปได้ทั้งรายรับและรายจ่าย (ถ่ายรูปหรือเลือกจากอัลบั้ม) · กด 🧾 ในรายการเพื่อดูสลิป · รูปสลิปเก็บในเครื่องที่แนบ</p>')};
+
 const _render=render;
 render=function(){const m=mode(),hide=m==='family'?['ธุรกิจ',...BIZK]:m==='sme'?['ครอบครัว',...FAMK]:[];NAV.length=0;NAV_ALL.forEach(n=>{if(!hide.includes(n[0])&&!hide.includes(n[2]))NAV.push(n)});if(hide.includes(cur))cur='home';_render();const h1=document.querySelector('header h1');if(h1&&m==='family')h1.innerHTML='แพลนเนอร์ครอบครัว AMK<small>by Excel Data Master</small>';const b=document.body,t=THEMES.find(x=>x[0]===D.s.theme)||THEMES[0];b.style.setProperty('--p',t[1]);if(D.s.dark)b.style.removeProperty('--bg');else b.style.setProperty('--bg',BG[t[0]]||'#f6f5f1');
  const hd=document.querySelector('header');if(hd){const s=document.createElement('button');s.className='ib';s.title='ค้นหา (Ctrl K)';s.innerHTML=ic('search',22);s.onclick=openSearch;hd.insertBefore(s,hd.lastElementChild)}
