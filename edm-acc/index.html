@@ -1420,6 +1420,17 @@ function ensureTaxData() {
 /** รายชื่อคู่ค้าแยกตามบทบาท: C ลูกค้า/ลูกหนี้ · V ผู้ขาย/เจ้าหนี้ · P ผู้รับเงินเงินสดย่อย */
 function partiesOf(role) { return (S.parties || []).filter(function (p) { return !role || String(p.roles || '').indexOf(role) >= 0; }); }
 function partyDl(role) { return '<datalist id="partyList">' + partiesOf(role).map(function (p) { return '<option value="' + esc(p.name) + '">' + esc(p.tax_id || '') + '</option>'; }).join('') + '</datalist>'; }
+/** หาคู่ค้าจากชื่อ (v0.20.2): ชื่อซ้ำหลายแถว → เลือกบทบาทตรง + ข้อมูลครบที่สุด · ช่องที่ว่างเติมจากแถวชื่อเดียวกัน (รวมทะเบียนลูกค้า/ผู้ขาย) */
+function partyByName(n, role) {
+  var nz = function (t) { return String(t || '').replace(/\s+/g, ' ').trim().toLowerCase(); }, k = nz(n); if (!k) return null;
+  var L = (S.parties || []).concat(role === 'V' ? (S.sups || []) : role === 'C' ? (S.custs || []) : []).filter(function (q) { return nz(q.name) === k; });
+  if (!L.length) return null;
+  var sc = function (q) { return (role && String(q.roles || role).indexOf(role) >= 0 ? 8 : 0) + (q.address ? 4 : 0) + (q.tax_id ? 2 : 0) + (q.branch ? 1 : 0); };
+  L.sort(function (a, b) { return sc(b) - sc(a); });
+  var o = {}; ['tax_id', 'branch', 'address', 'contact', 'credit_days'].forEach(function (f) { o[f] = (L.filter(function (q) { return q[f]; })[0] || {})[f] || ''; });
+  o.name = L[0].name; return o;
+}
+function partyAuto(id, role, fill) { var el = $(id); if (!el) return; var last = ''; var go = function () { var p = partyByName(el.value, role); if (p && el.value !== last) { last = el.value; fill(p); } }; el.addEventListener('input', go); el.addEventListener('change', go); }
 function ratesFor(kind, date, pnd) {
   return (S.rates || []).filter(function (r) {
     return r.kind === kind && r.status === 'ACTIVE' && r.effective_from <= date && (!r.effective_to || r.effective_to >= date) && (!pnd || r.pnd.split(',').indexOf(pnd) >= 0);
@@ -2235,7 +2246,7 @@ function saleForm(kind, id, copy) {
   };
   if (!S.slEdit.id && !copy && !src) $('sl_type').value = 'GOODS';
   if (cr) $('sl_ar').onchange = slTot; else $('sl_cash').onchange = slTot;
-  $('sl_name').onchange = function () { var p = partiesOf('C').filter(function (q) { return q.name === v('sl_name'); })[0]; if (p) { $('sl_tid').value = p.tax_id; $('sl_br').value = p.branch; $('sl_addr').value = p.address; } };
+  partyAuto('sl_name', 'C', function (p) { $('sl_tid').value = p.tax_id; $('sl_br').value = p.branch; $('sl_addr').value = p.address; });
   if (cr) $('sl_date').onchange = function () { $('sl_due').value = addDays(this.value, 30); };
   slRender();
 }
@@ -3465,7 +3476,7 @@ function puForm(kind, id, copy) {
     '<div class="fr"><label class="f">หมายเหตุ</label><input class="in" id="pu_note" value="' + esc(x.note) + '"></div>',
     '<button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button><button class="btn" id="pu_ok">บันทึก</button>', true);
   S.puEdit.whc = x.wht_code;
-  $('pu_name').onchange = function () { var p = partiesOf('V').filter(function (q) { return q.name === v('pu_name'); })[0] || partiesOf().filter(function (q) { return q.name === v('pu_name'); })[0]; if (p) { $('pu_tid').value = p.tax_id || ''; $('pu_br').value = p.branch || 'สำนักงานใหญ่'; $('pu_addr').value = p.address || ''; } };
+  partyAuto('pu_name', 'V', function (p) { $('pu_tid').value = p.tax_id || ''; $('pu_br').value = p.branch || 'สำนักงานใหญ่'; $('pu_addr').value = p.address || ''; });
   puPt(); puWc(); puLinesR();
   $('pu_ok').onclick = function () {
     puSync(); var b = this, pt = v('pu_pt'), hw = pt === 'CASH' && $('pu_hw').checked;
@@ -3507,7 +3518,7 @@ function bdForm(k, id, from) {
     '<div class="f3"><div class="fr"><label class="f">เลขที่</label><input class="in code" id="bd_no" value="' + (id ? esc(x.doc_no) : '') + '" placeholder="รันอัตโนมัติ"></div><div class="fr"><label class="f req">วันที่</label><input class="in" type="date" id="bd_date" value="' + (id ? x.doc_date : today()) + '"></div>' +
     (BDK[k][2] ? '<div class="fr"><label class="f">' + BDK[k][2] + '</label><input class="in" type="date" id="bd_due" value="' + (x.due_date || '') + '"></div>' : '<input type="hidden" id="bd_due" value="">') + '</div>' +
     (bs.length > 1 ? '<div class="fr"><label class="f">สาขา</label><select class="in" id="bd_bch">' + bs.map(function (b) { return '<option value="' + b.id + '"' + (b.id === x.branch_id ? ' selected' : '') + '>' + esc(b.code + ' ' + b.name) + '</option>'; }).join('') + '</select></div>' : '') +
-    '<div class="sec">' + (sd ? 'ลูกค้า' : 'ผู้ขาย') + (k === 'PR' ? ' (ถ้ามี)' : '') + '</div><div class="f2"><div class="fr"><label class="f">ชื่อ</label><input class="in" id="bd_name" list="partyList" value="' + esc(x.party_name) + '" onchange="bdParty()"></div><div class="fr"><label class="f">เลขประจำตัวผู้เสียภาษี</label><input class="in" id="bd_tid" value="' + esc(x.party_tax_id || '') + '"></div></div>' +
+    '<div class="sec">' + (sd ? 'ลูกค้า' : 'ผู้ขาย') + (k === 'PR' ? ' (ถ้ามี)' : '') + '</div><div class="f2"><div class="fr"><label class="f">ชื่อ</label><input class="in" id="bd_name" list="partyList" value="' + esc(x.party_name) + '" oninput="bdParty()" onchange="bdParty()"></div><div class="fr"><label class="f">เลขประจำตัวผู้เสียภาษี</label><input class="in" id="bd_tid" value="' + esc(x.party_tax_id || '') + '"></div></div>' +
     '<div class="f2"><div class="fr"><label class="f">สาขา</label><input class="in" id="bd_br" value="' + esc(x.party_branch || '') + '" placeholder="สำนักงานใหญ่ / 00001"></div><div class="fr"><label class="f">ผู้ติดต่อ</label><input class="in" id="bd_ct" value="' + esc(x.contact || '') + '"></div></div>' +
     '<div class="fr"><label class="f">ที่อยู่</label><input class="in" id="bd_addr" value="' + esc(x.party_address || '') + '"></div>' +
     '<div class="sec">รายการ</div><div id="bdL"></div><button class="btn ghost sm" onclick="bdSync();S.bdE.lines.push({});bdLines()">+ เพิ่มบรรทัด</button>' +
@@ -3516,7 +3527,7 @@ function bdForm(k, id, from) {
     '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" onclick="bdSave()">บันทึก</button>', true);
   $('bd_vm').value = x.vat_mode || 'EXCL'; bdLines();
 }
-function bdParty() { var n = v('bd_name'), p = (S.parties || []).filter(function (q) { return q.name === n; })[0]; if (p) { $('bd_tid').value = p.tax_id || ''; $('bd_br').value = p.branch || ''; $('bd_addr').value = p.address || ''; } }
+function bdParty() { var p = partyByName(v('bd_name'), S.bdE && /^(PR|PO|GR)$/.test(S.bdE.k) ? 'V' : 'C'); if (p) { $('bd_tid').value = p.tax_id || ''; $('bd_br').value = p.branch || ''; $('bd_addr').value = p.address || ''; } }
 function bdLines() {
   $('bdL').innerHTML = '<div class="tw"><table class="t"><thead><tr><th>#</th><th style="min-width:200px">รายละเอียด</th><th>จำนวน</th><th>หน่วย</th><th>ราคา/หน่วย</th><th>ส่วนลด</th><th></th></tr></thead><tbody>' + S.bdE.lines.map(function (l, i) {
     var f = function (k, w, ph) { return '<input class="in" style="width:' + w + '" data-bl="' + i + '" data-k="' + k + '" value="' + esc(l[k] || '') + '"' + (ph ? ' placeholder="' + ph + '"' : '') + ' oninput="bdSync();bdTot()">'; };
