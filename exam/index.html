@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>ฝึกทำข้อสอบเข้า ม.1 ทุกวัน | Excel Data Master</title>
-<meta name="description" content="ฝึกทำข้อสอบ ป.6 เตรียมสอบเข้า ม.1 วันละ 10 ข้อ ครบ 5 วิชา ข้อที่ผิดวนกลับมาให้ทบทวน บอกเหตุผลเมื่อตอบผิด พร้อมรายงานให้พ่อแม่ดูว่าลูกต้องขยันขึ้นแค่ไหน">
+<title>ฝึกทำข้อสอบ ป.1–ป.6 ทุกวัน | Excel Data Master</title>
+<meta name="description" content="ฝึกทำข้อสอบประถม ป.1–ป.6 และเตรียมสอบเข้า ม.1 วันละ 10 ข้อ ครบ 5 วิชา ข้อที่ผิดวนกลับมาให้ทบทวน บอกเหตุผลเมื่อตอบผิด พร้อมรายงานให้พ่อแม่ดูว่าลูกต้องขยันขึ้นแค่ไหน">
 <link rel="icon" href="/assets/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
@@ -92,13 +92,13 @@ footer{text-align:center;color:var(--mut);font-size:12px}
 </style>
 </head>
 <body>
-<header class="top"><div class="in"><a class="brand" href="/">📝 Excel Data Master <small>· ฝึกข้อสอบเข้า ม.1</small></a><nav class="nav"></nav></div></header>
+<header class="top"><div class="in"><a class="brand" href="/">📝 Excel Data Master <small>· ฝึกข้อสอบ ป.1–ป.6</small></a><nav class="nav"></nav></div></header>
 <div class="bar2"><div class="in"><span class="kid" id="kidChip"></span><div class="tabs"><button data-tab="home" class="on">📚 ฝึก</button><button data-tab="rep">📊 ผลการเรียน</button></div></div></div>
 <div class="wrap" id="v"></div>
 <footer class="wrap" style="padding-top:0">© Excel Data Master · exceldatamaster.com · ข้อสอบแต่งขึ้นใหม่โดย Excel Data Master</footer>
 <dialog class="ask" id="ask"><div id="askT" style="margin-bottom:14px"></div><div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn2" id="askN">ยกเลิก</button><button class="btn2" style="background:var(--pri);color:#fff" id="askY">ตกลง</button></div></dialog>
 
-<script src="bank.js?v=1"></script>
+<script src="bank.js?v=2"></script><script src="bank-ma.js?v=1"></script><script src="bank-txt.js?v=1"></script>
 <script>
 (function(){
 var SUBJ=[
@@ -109,7 +109,9 @@ var SUBJ=[
  {k:"สังคมศึกษา",s:"สังคม",ic:"🌏",c:"var(--so)"}
 ];
 var DAILY_N=10, KEY="edm_exam_data", MAXH=400;
-var EX=(window.EXAM_BANK||[]).filter(function(e){return e&&e.id&&e.items&&e.items.length});
+var EXALL=(window.EXAM_BANK||[]).filter(function(e){return e&&e.id&&e.items&&e.items.length});
+function EXG(){var k=K(),g=k&&+k.grade;return EXALL.filter(function(e){return !g||!e.g||e.g===g})}
+var GR=[1,2,3,4,5,6];function grSel(id,v){return '<select id="'+id+'" style="font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:12px;width:100%">'+GR.map(function(g){return '<option value="'+g+'"'+(+v===g?" selected":"")+'>ป.'+g+(g===6?" (รวมเตรียมสอบเข้า ม.1)":"")+'</option>'}).join("")+'</select>'}
 function sj(k){for(var i=0;i<SUBJ.length;i++)if(SUBJ[i].k===k)return SUBJ[i];return {k:k,s:k,ic:"📝",c:"var(--pri)"}}
 function load(){var d;try{d=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){}d=d&&typeof d==="object"?d:{};d.kids=Array.isArray(d.kids)?d.kids:[];d.kids.forEach(fixKid);return d}
 function fixKid(k){k.h=Array.isArray(k.h)?k.h:[];k.q=k.q&&typeof k.q==="object"?k.q:{};return k}
@@ -133,14 +135,14 @@ function streak(k){var days={};k.h.forEach(function(r){days[r.date]=1});var n=0,
 function doneToday(k){return k.h.some(function(r){return r.date===today()&&r.daily})}
 function subjStat(k,s){var a=0,b=0;k.h.forEach(function(r){r.ans.forEach(function(x){if(x.s===s){b++;if(x.ok)a++}})});return{a:a,b:b}}
 function best(k,id){var m=-1;k.h.forEach(function(r){if(r.ex===id)m=Math.max(m,pct(r.score,r.total))});return m}
-function allQ(){var L=[];EX.forEach(function(e){e.items.forEach(function(it,i){L.push({id:e.id+"#"+i,e:e,it:it})})});return L}
+function allQ(){var L=[];EXG().forEach(function(e){e.items.forEach(function(it,i){L.push({id:e.id+"#"+i,e:e,it:it})})});return L}
 
 /* ===== เริ่มต้น: เพิ่มชื่อลูก ===== */
 function setup(){
-  V.innerHTML='<div class="hello"><h1>ยินดีต้อนรับค่ะ 👋</h1><div>ฝึกทำข้อสอบเข้า ม.1 วันละ 10 ข้อ ครบ 5 วิชา · ข้อที่ผิดจะวนกลับมาให้ทบทวน · พ่อแม่ดูผลได้ทุกวัน</div></div>'+
-  '<div class="card" style="margin-top:14px"><h3>ใส่ชื่อเล่นของน้องที่จะฝึก</h3><div class="mut" style="margin:4px 0 10px">มีลูกหลายคน เพิ่มทีหลังได้ที่แท็บ 📊 ผลการเรียน</div><input type="text" id="nk" placeholder="เช่น น้องเอย" maxlength="30"><button class="next" data-addkid>เริ่มฝึกเลย</button></div>';
+  V.innerHTML='<div class="hello"><h1>ยินดีต้อนรับค่ะ 👋</h1><div>ฝึกทำข้อสอบ ป.1–ป.6 วันละ 10 ข้อ ครบ 5 วิชา · ข้อที่ผิดจะวนกลับมาให้ทบทวน · พ่อแม่ดูผลได้ทุกวัน</div></div>'+
+  '<div class="card" style="margin-top:14px"><h3>ใส่ชื่อเล่นของน้องที่จะฝึก</h3><div class="mut" style="margin:4px 0 10px">มีลูกหลายคน เพิ่มทีหลังได้ที่แท็บ 📊 ผลการเรียน</div><input type="text" id="nk" placeholder="เช่น น้องเอย" maxlength="30"><div class="mut" style="margin:10px 0 6px">เรียนชั้น</div>'+grSel("ng",6)+'<button class="next" data-addkid>เริ่มฝึกเลย</button></div>';
 }
-function addKid(n){n=(n||"").trim();if(!n)return toast("ใส่ชื่อก่อนนะคะ");var k=fixKid({id:uid(),name:n,goal:80,gd:6});D.kids.push(k);D.cur=k.id;save();render()}
+function addKid(n,g){n=(n||"").trim();if(!n)return toast("ใส่ชื่อก่อนนะคะ");var k=fixKid({id:uid(),name:n,grade:+g||6,goal:80,gd:6});D.kids.push(k);D.cur=k.id;save();render()}
 
 /* ===== หน้าแรก ===== */
 function home(){
@@ -151,11 +153,11 @@ function home(){
   h+='<button class="big'+(dt?' done':'')+'" data-daily>'+(dt?'✅ ทำแบบฝึกวันนี้แล้ว · ทำอีกรอบได้':'🌟 แบบฝึกประจำวัน ('+DAILY_N+' ข้อ)')+'<small>คละวิชา · ข้อที่เคยผิดจะกลับมาให้ฝึกอีก</small></button>';
   if(k.h.length)h+='<div style="margin-top:14px">'+assessHtml(k,false)+'</div>';
   h+='<h2 style="margin:20px 0 10px;font-size:19px">เลือกวิชา</h2><div class="subs">';
-  h+='<button class="sb'+(fsub?'':' on')+'" style="--c:var(--pri)" data-sub=""><div class="ic">📚</div><div class="n">ทั้งหมด</div><div class="p">'+EX.length+' ชุด</div></button>';
-  SUBJ.forEach(function(s){var n=EX.filter(function(e){return e.subj===s.k}).length,x=subjStat(k,s.k);
+  h+='<button class="sb'+(fsub?'':' on')+'" style="--c:var(--pri)" data-sub=""><div class="ic">📚</div><div class="n">ทั้งหมด</div><div class="p">'+EXG().length+' ชุด</div></button>';
+  SUBJ.forEach(function(s){var n=EXG().filter(function(e){return e.subj===s.k}).length,x=subjStat(k,s.k);
     h+='<button class="sb'+(fsub===s.k?' on':'')+'" style="--c:'+s.c+'" data-sub="'+s.k+'"><div class="ic">'+s.ic+'</div><div class="n">'+s.s+'</div><div class="p">'+(n?n+' ชุด':'เร็ว ๆ นี้')+(x.b?' · '+pct(x.a,x.b)+'%':'')+'</div></button>'});
   h+='</div>';
-  var L=EX.filter(function(e){return !fsub||e.subj===fsub});
+  var L=EXG().filter(function(e){return !fsub||e.subj===fsub});
   if(fsub){var nq=allQ().filter(function(q){return q.e.subj===fsub}).length;
     if(nq)h+='<button class="ex" style="--c:'+sj(fsub).c+'" data-mix="'+esc(fsub)+'"><div class="dot">🎲</div><div class="t"><b>สุ่มฝึก '+esc(sj(fsub).s)+' '+Math.min(DAILY_N,nq)+' ข้อ</b><small>คละทุกชุดในวิชานี้</small></div></button>'}
   if(!L.length)h+='<div class="card mut" style="margin-top:10px">วิชานี้กำลังเพิ่มข้อสอบ เร็ว ๆ นี้ค่ะ</div>';
@@ -235,7 +237,7 @@ function assess(k){
   if(!okP)R.tips.push("ตอบถูก "+w.p+"% (เป้า "+G.p+"%) ยังขาดอีก "+(G.p-w.p)+"%");
   var low=SUBJ.filter(function(x){var t=w.sub[x.k];return t&&t.b>=3&&pct(t.a,t.b)<G.p}).sort(function(a,b){var A=w.sub[a.k],B=w.sub[b.k];return A.a/A.b-B.a/B.b});
   if(low.length)R.tips.push("วิชาที่ต้องเสริม: "+low.map(function(x){return x.s+" "+pct(w.sub[x.k].a,w.sub[x.k].b)+"%"}).join(" · ")+" → ทำแบบฝึกวิชานี้เพิ่มวันละ 1 ชุด");
-  var none=SUBJ.filter(function(x){return !w.sub[x.k]&&EX.some(function(e){return e.subj===x.k})});
+  var none=SUBJ.filter(function(x){return !w.sub[x.k]&&EXG().some(function(e){return e.subj===x.k})});
   if(none.length)R.tips.push("สัปดาห์นี้ยังไม่ได้ฝึก: "+none.map(function(x){return x.s}).join(", "));
   if(pw.b){var df=w.p-pw.p;R.trend=df>0?"📈 ดีขึ้น "+df+"% จากสัปดาห์ก่อน":df<0?"📉 ลดลง "+(-df)+"% จากสัปดาห์ก่อน":"➖ เท่ากับสัปดาห์ก่อน";if(w.b<pw.b)R.tips.push("สัปดาห์นี้ทำ "+w.b+" ข้อ น้อยกว่าสัปดาห์ก่อน ("+pw.b+" ข้อ)")}
   return R;
@@ -275,14 +277,14 @@ function rep(){
   else{h+='<div style="overflow:auto"><table><tr><th>วันที่</th><th>ชุด</th><th>คะแนน</th><th>เวลา</th></tr>';
     k.h.slice().reverse().slice(0,60).forEach(function(r){h+='<tr><td>'+thd(r.date)+'</td><td>'+esc(r.title)+'</td><td><b>'+r.score+'/'+r.total+'</b> ('+pct(r.score,r.total)+'%)</td><td>'+Math.round((r.secs||0)/60)+' น.</td></tr>'});
     h+='</table></div>'}
-  h+='</div><div class="card"><h3>ตั้งค่า · '+esc(k.name)+'</h3><div class="mut" style="margin:6px 0">ชื่อ</div><input type="text" id="nm" value="'+esc(k.name)+'" maxlength="30">'+
+  h+='</div><div class="card"><h3>ตั้งค่า · '+esc(k.name)+'</h3><div class="mut" style="margin:6px 0">ชื่อ</div><input type="text" id="nm" value="'+esc(k.name)+'" maxlength="30"><div class="mut" style="margin:10px 0 6px">เรียนชั้น</div>'+grSel("gr",k.grade||6)+''+
    '<div class="mut" style="margin:10px 0 6px">🎯 เป้าหมาย: ตอบถูกอย่างน้อย (%) / ฝึกกี่วันต่อสัปดาห์</div><div style="display:flex;gap:8px"><input type="text" inputmode="numeric" id="gp" value="'+goal(k).p+'"><input type="text" inputmode="numeric" id="gd" value="'+goal(k).d+'"></div>'+
    '<div style="margin-top:10px"><button class="btn2" data-savecfg>บันทึก</button><button class="btn2 red" data-delkid>ลบ '+esc(k.name)+'</button></div></div>';
-  h+='<div class="card"><h3>👨‍👩‍👧 เพิ่มลูกอีกคน</h3><div style="display:flex;gap:8px;margin-top:8px"><input type="text" id="nk" placeholder="ชื่อเล่น" maxlength="30"><button class="btn2" data-addkid style="margin:0;white-space:nowrap">＋ เพิ่ม</button></div>'+
+  h+='<div class="card"><h3>👨‍👩‍👧 เพิ่มลูกอีกคน</h3><div style="display:flex;gap:8px;margin-top:8px"><input type="text" id="nk" placeholder="ชื่อเล่น" maxlength="30"><button class="btn2" data-addkid style="margin:0;white-space:nowrap">＋ เพิ่ม</button></div><div style="margin-top:8px">'+grSel("ng",6)+'</div>'+
    '<div class="mut" style="margin-top:8px">ผลการเรียนสำรองเข้าบัญชีอัตโนมัติ เปลี่ยนเครื่องแล้วเข้าสู่ระบบด้วยอีเมลเดิมได้เลย</div></div>';
   V.innerHTML=h;
 }
-function chip(){var k=K(),c=document.getElementById("kidChip");c.textContent=k?"👧 "+k.name+(D.kids.length>1?" ▾":""):"";c.style.cursor=D.kids.length>1?"pointer":"";}
+function chip(){var k=K(),c=document.getElementById("kidChip");c.textContent=k?"👧 "+k.name+(k.grade?" · ป."+k.grade:"")+(D.kids.length>1?" ▾":""):"";c.style.cursor=D.kids.length>1?"pointer":"";}
 function render(){document.querySelectorAll("[data-tab]").forEach(function(b){b.classList.toggle("on",b.dataset.tab===tab)});Q=null;chip();if(!D.kids.length)return setup();(tab==="rep"?rep:home)();window.scrollTo(0,0)}
 
 document.getElementById("kidChip").onclick=function(){if(D.kids.length<2)return;var i=D.kids.indexOf(K());D.cur=D.kids[(i+1)%D.kids.length].id;save();render()};
@@ -291,16 +293,16 @@ document.addEventListener("click",function(ev){
   if(d.tab){tab=d.tab;render()}
   else if(d.sub!==undefined){fsub=d.sub;home()}
   else if(d.daily!==undefined)daily();
-  else if(d.ex){var e=EX.filter(function(x){return x.id===d.ex})[0];start(e.items.map(function(it,i){return{id:e.id+"#"+i,e:e,it:it}}),e.title,e.id,false)}
+  else if(d.ex){var e=EXALL.filter(function(x){return x.id===d.ex})[0];start(e.items.map(function(it,i){return{id:e.id+"#"+i,e:e,it:it}}),e.title,e.id,false)}
   else if(d.mix){start(pickSmart(allQ().filter(function(q){return q.e.subj===d.mix}),DAILY_N),"สุ่มฝึก "+sj(d.mix).s,"",false)}
   else if(d.ch!==undefined&&Q&&Q.pick<0)answer(+d.ch);
   else if(d.next!==undefined){if(Q.i+1<Q.list.length){Q.i++;Q.pick=-1;quiz()}else finish()}
   else if(d.quit!==undefined){if(!Q.ans.length){render()}else ask("ออกจากข้อสอบ? ข้อที่ทำไปแล้วจะไม่นับคะแนนชุดนี้",function(){save();render()})}
   else if(d.home!==undefined)render();
   else if(d.redo!==undefined){start(shuffle(Q.wrong.slice()),"ทบทวนข้อที่ผิด","",false)}
-  else if(d.addkid!==undefined)addKid(document.getElementById("nk").value);
+  else if(d.addkid!==undefined)addKid(document.getElementById("nk").value,(document.getElementById("ng")||{}).value);
   else if(d.kid){D.cur=d.kid;save();render()}
-  else if(d.savecfg!==undefined){var k=K(),nm=document.getElementById("nm").value.trim(),gp=parseInt(document.getElementById("gp").value,10),gd=parseInt(document.getElementById("gd").value,10);if(nm)k.name=nm;if(gp>=1&&gp<=100)k.goal=gp;if(gd>=1&&gd<=7)k.gd=gd;save();render();toast("บันทึกแล้ว")}
+  else if(d.savecfg!==undefined){var k=K(),nm=document.getElementById("nm").value.trim(),gp=parseInt(document.getElementById("gp").value,10),gd=parseInt(document.getElementById("gd").value,10);if(nm)k.name=nm;var gs=document.getElementById("gr");if(gs)k.grade=+gs.value;if(gp>=1&&gp<=100)k.goal=gp;if(gd>=1&&gd<=7)k.gd=gd;save();render();toast("บันทึกแล้ว")}
   else if(d.delkid!==undefined){var k2=K();var go=function(){D.kids=D.kids.filter(function(x){return x.id!==k2.id});D.cur=(D.kids[0]||{}).id||"";if(!D.kids.length)try{localStorage.setItem("edm_sync_wipe","1")}catch(e){}save();try{window.EDM_MEMBER&&EDM_MEMBER.push&&EDM_MEMBER.push(true)}catch(e){}render()};
     if(window.EDM_SAFEDEL)EDM_SAFEDEL({name:k2.name,lose:"ผลการเรียนและประวัติการทำข้อสอบทั้งหมดของ "+k2.name+" จะหายถาวร",del:go});else ask("ลบ "+k2.name+" และผลการเรียนทั้งหมด?",go)}
 });
