@@ -2144,7 +2144,7 @@ function pSales() {
   Promise.all([call('sales.defaults', { company_id: S.cid }), ensureTaxData(), ensureProds(), call('sales.items', { company_id: S.cid }), ensureWhs(), call('sales.people', { company_id: S.cid })]).then(function (x) { S.slDef = x[0]; S.slItems = x[3]; S.slPeople = x[5]; renderSales(); }).catch(fail);
 }
 function renderSales() {
-  var tab = S.sl.tab, ro = co().status !== 'ACTIVE', tabs = [['QT', '📝 ใบเสนอราคา'], ['DO', '🚚 ใบส่งสินค้า'], ['CASH', 'ขายสด'], ['CREDIT', 'ขายเชื่อ'], ['ADJ', '↩️ ลด/เพิ่มหนี้'], ['RECEIPT', 'รับชำระหนี้'], ['AR', 'ลูกหนี้คงค้าง'], ['STMT', '📄 Statement'], ['CUST', '👥 ลูกค้า'], ['REPORT', '📊 รายงานยอดขาย'], ['VAT', '🧾 ปิดภาษี ภ.พ.30']];
+  var tab = S.sl.tab, ro = co().status !== 'ACTIVE', tabs = [['QT', '📝 ใบเสนอราคา'], ['DO', '🚚 ใบส่งสินค้า'], ['CASH', 'ขายสด'], ['CREDIT', 'ขายเชื่อ'], ['ADJ', '↩️ ลด/เพิ่มหนี้'], ['RECEIPT', 'รับชำระหนี้'], ['AR', 'ลูกหนี้คงค้าง'], ['STMT', '📄 Statement'], ['CUST', '👥 ลูกค้า'], ['REP', '👤 พนักงานขาย'], ['REPORT', '📊 รายงานยอดขาย'], ['VAT', '🧾 ปิดภาษี ภ.พ.30']];
   var btn = ro ? '' : tab === 'CASH' ? '<button class="btn ghost" onclick="impForm()">⬆ นำเข้าจาก Express</button> <button class="btn" onclick="saleForm(\'CASH\')">+ ขายสด</button>' : tab === 'CREDIT' ? '<button class="btn ghost" onclick="impForm()">⬆ นำเข้าจาก Express</button> <button class="btn" onclick="saleForm(\'CREDIT\')">+ ขายเชื่อ</button>' : tab === 'RECEIPT' ? '<button class="btn" onclick="rcForm()">+ รับชำระหนี้</button>' : '';
   $('main').innerHTML = head(t('sales'), esc(co().code + ' · ' + co().name_th) + ' · ออกเอกสารขายแล้วระบบลงบัญชีและภาษีขายให้อัตโนมัติ (ไป Post ที่เมนู Post รายการ)', btn) +
     '<div class="tabs">' + tabs.map(function (x) { return '<button class="' + (tab === x[0] ? 'on' : '') + '" onclick="S.sl.tab=\'' + x[0] + '\';renderSales()">' + x[1] + '</button>'; }).join('') + '</div>' +
@@ -2153,6 +2153,7 @@ function renderSales() {
   if (tab === 'QT' || tab === 'DO') return bdList(tab);
   if (tab === 'ADJ') return adjList('S');
   if (tab === 'CUST') return ptList('C');
+  if (tab === 'REP') return repList();
   if (tab === 'STMT') return ensureTaxData().then(stmtPage);
   if (tab === 'REPORT') return slReport();
   if (tab === 'VAT') return vcPage();
@@ -2219,7 +2220,7 @@ function saleForm(kind, id, copy) {
     '<div class="fr"><label class="f req">วันที่</label><input class="in" type="date" id="sl_date" value="' + x.doc_date + '"></div>' +
     ((S.whs || []).length > 1 ? '<div class="fr"><label class="f req">ขายจากคลัง</label><select class="in" id="sl_wh" onchange="S.slEdit.wh=this.value;slRender()">' + whOpts(x.warehouse_id || 'MAIN') + '</select></div>' : '') +
     (cr ? '<div class="fr"><label class="f req">ครบกำหนดชำระ</label><input class="in" type="date" id="sl_due" value="' + x.due_date + '"></div>' : '<div class="fr"><label class="f req">รับเงินเข้าบัญชี</label><select class="in" id="sl_cash">' + d.cash.map(function (a) { return '<option value="' + a.id + '"' + (a.id === x.cash_account_id ? ' selected' : '') + '>' + esc(a.label) + '</option>'; }).join('') + '</select></div>') + '</div>' +
-    '<datalist id="spList">' + (S.slPeople || []).map(function (q) { return '<option value="' + esc(q.name) + '">' + (q.src === 'EMP' ? 'พนักงาน' : 'เคยใช้') + '</option>'; }).join('') + '</datalist>' +
+    '<datalist id="spList">' + (S.slPeople || []).map(function (q) { return '<option value="' + esc(q.name) + '">' + (q.src === 'REP' ? 'พนักงานขาย ' + (q.code || '') + (q.nick ? ' (' + q.nick + ')' : '') : q.src === 'EMP' ? 'พนักงาน' : 'เคยใช้') + '</option>'; }).join('') + '</datalist>' +
     '<div class="f2"><div class="fr"><label class="f">ผู้ขาย / พนักงานขาย</label><input class="in" id="sl_sp" list="spList" value="' + esc(x.salesperson_name || '') + '" placeholder="พิมพ์ชื่อพนักงาน แล้วเลือก" onchange="spPick(this)"></div><div class="fr"><label class="f">รหัสพนักงาน</label><input class="in" id="sl_spc" value="' + esc(x.salesperson_code || '') + '" placeholder="ขึ้นให้อัตโนมัติ" style="text-transform:uppercase"></div></div>' +
     '<div class="sec">ลูกค้า</div><div class="f2"><div class="fr"><label class="f' + (cr ? ' req' : '') + '">ชื่อลูกค้า</label><input class="in" id="sl_name" list="partyList" value="' + esc(x.customer_name) + '" placeholder="' + (cr ? '' : 'เว้นว่าง = ลูกค้าทั่วไป (เงินสด)') + '"></div>' +
     '<div class="f2"><div class="fr"><label class="f">เลขผู้เสียภาษี</label><input class="in" id="sl_tid" maxlength="13" inputmode="numeric" value="' + esc(x.customer_tax_id) + '"></div><div class="fr"><label class="f">สาขา</label><input class="in" id="sl_br" value="' + esc(x.customer_branch) + '" placeholder="สำนักงานใหญ่"></div></div></div>' +
@@ -2264,7 +2265,7 @@ function slRender() {
   slTot();
 }
 function spPick(el) {
-  var t2 = el.value.trim(), q = (S.slPeople || []).filter(function (x) { return ((x.code ? x.code + ' ' : '') + x.name) === t2 || (x.code && x.code.toUpperCase() === t2.toUpperCase()) || x.name === t2; })[0];
+  var t2 = el.value.trim(), q = (S.slPeople || []).filter(function (x) { return ((x.code ? x.code + ' ' : '') + x.name) === t2 || (x.code && x.code.toUpperCase() === t2.toUpperCase()) || x.name === t2 || (x.nick && x.nick === t2); })[0];
   if (q) { el.value = q.name; $('sl_spc').value = q.code || ''; }
 }
 function spName() { var t2 = v('sl_sp').trim(), c2 = v('sl_spc').trim(); if (c2 && t2.toUpperCase().indexOf(c2.toUpperCase() + ' ') === 0) t2 = t2.slice(c2.length + 1); return t2; }
@@ -3638,6 +3639,50 @@ function ptList(role) {
       rows.map(function (r) { var over = role === 'C' && Number(r.credit_limit) && Number(r.balance) > Number(r.credit_limit); return '<tr' + (r.status === 'INACTIVE' ? ' style="opacity:.5"' : '') + '><td class="code">' + esc(r.code || '') + '</td><td>' + esc(r.name) + (nmc[ptNz(r.name)] > 1 ? ' <span class="small" style="color:#b45309" title="มีชื่อนี้มากกว่า 1 รายการ">⚠️ ชื่อซ้ำ</span>' : '') + '</td><td class="small">' + esc(r.tax_id || '') + ' ' + esc(r.branch || '') + '</td><td class="small">' + esc(r.phone || '') + (r.contact ? '<br>' + esc(r.contact) : '') + '</td><td class="num">' + esc(r.credit_days || '') + '</td>' + (role === 'C' ? '<td class="num">' + (r.credit_limit ? money(r.credit_limit) : '') + '</td>' : '') + '<td class="num"' + (over ? ' style="color:#c00;font-weight:600"' : '') + '>' + (Number(r.balance) ? money(r.balance) : '') + '</td><td style="white-space:nowrap">' + (ro ? '' : '<button class="btn ghost sm" onclick="ptForm(\'' + role + '\',\'' + r.id + '\')">แก้ไข</button>') + (role === 'C' ? ' <button class="btn ghost sm" onclick="S.stP=S.ptRows[\'' + r.id + '\'];S.sl.tab=\'STMT\';renderSales()">Statement</button>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>');
   }).catch(failNew);
 }
+/* ===== ฐานข้อมูลพนักงานขาย / เซลล์ (v0.23) ===== */
+function repList() {
+  if (!S.rp) S.rp = { ym: today().slice(0, 7), q: '', all: 0 };
+  var ro = co().status !== 'ACTIVE';
+  call('sales.repList', { company_id: S.cid, ym: S.rp.ym }).then(function (r) {
+    S.rpRows = {}; r.rows.forEach(function (x) { S.rpRows[x.id] = x; });
+    var q = S.rp.q.toLowerCase(), L = r.rows.filter(function (x) { return (S.rp.all || x.status !== 'INACTIVE') && (!q || [x.code, x.name, x.nick, x.phone, x.team].join(' ').toLowerCase().indexOf(q) >= 0); });
+    var T = L.reduce(function (a, x) { a.m += Number(x.sales_month) || 0; a.c += Number(x.comm_month) || 0; a.y += Number(x.sales_year) || 0; return a; }, { m: 0, c: 0, y: 0 });
+    $('slOut').innerHTML = '<div class="bar" style="margin-top:0"><input class="in q" placeholder="ค้นหา รหัส / ชื่อ / ชื่อเล่น / ทีม / โทร" value="' + esc(S.rp.q) + '" onchange="S.rp.q=this.value;repList()">' +
+      '<label class="small">เดือน</label><input class="in" type="month" style="width:auto" value="' + esc(r.ym) + '" onchange="S.rp.ym=this.value;repList()">' +
+      '<label class="small" style="display:flex;gap:4px;align-items:center"><input type="checkbox"' + (S.rp.all ? ' checked' : '') + ' onchange="S.rp.all=this.checked?1:0;repList()">แสดงที่เลิกใช้</label><span style="flex:1"></span>' +
+      (ro ? '' : '<button class="btn ghost" onclick="repImport()">⬇ ดึงรายชื่อจากบิลเดิม</button> <button class="btn" onclick="repForm()">+ เพิ่มพนักงานขาย</button>') + '</div>' +
+      (!r.rows.length ? '<div class="card empty">ยังไม่มีพนักงานขาย · กด "+ เพิ่มพนักงานขาย" หรือ "⬇ ดึงรายชื่อจากบิลเดิม"</div>' :
+      '<div class="card tw"><table class="t"><thead><tr><th>รหัส</th><th>ชื่อ</th><th>ทีม</th><th>โทร / LINE</th><th class="num">ยอดขายเดือนนี้<br><span class="small">(ก่อน VAT)</span></th><th class="num">บิล</th><th class="num">% ของเป้า</th><th class="num">คอมมิชชัน</th><th class="num">ยอดขายทั้งปี</th><th>ขายล่าสุด</th><th></th></tr></thead><tbody>' +
+      L.map(function (x) {
+        var tp = x.target_pct === '' ? '' : '<span style="color:' + (x.target_pct >= 100 ? '#15803d' : x.target_pct >= 70 ? '#b45309' : '#b91c1c') + '">' + x.target_pct + '%</span>';
+        return '<tr' + (x.status === 'INACTIVE' ? ' style="opacity:.5"' : '') + '><td class="code">' + esc(x.code) + '</td><td>' + esc(x.name) + (x.nick ? ' <span class="small">(' + esc(x.nick) + ')</span>' : '') + (x.status === 'INACTIVE' ? ' <span class="small">· เลิกใช้</span>' : '') + '</td><td>' + esc(x.team || '') + '</td>' +
+          '<td class="small">' + esc(x.phone || '') + (x.line_id ? '<br>LINE ' + esc(x.line_id) : '') + '</td><td class="num">' + money(x.sales_month) + '</td><td class="num">' + (x.bills_month || '') + '</td><td class="num">' + tp + (Number(x.target) ? '<div class="small">เป้า ' + money(x.target) + '</div>' : '') + '</td>' +
+          '<td class="num">' + (Number(x.comm_pct) ? money(x.comm_month) + '<div class="small">' + esc(x.comm_pct) + '%</div>' : '') + '</td><td class="num">' + money(x.sales_year) + '</td><td class="small">' + (x.last_sale ? fdate(x.last_sale + 'T00:00').slice(0, 10) : '') + '</td>' +
+          '<td style="white-space:nowrap"><button class="ib" title="ดูบิลขาย" onclick="repBills(\'' + x.id + '\')">📄</button>' + (ro ? '' : '<button class="ib" title="แก้ไข" onclick="repForm(\'' + x.id + '\')">' + ic('edit') + '</button>') + '</td></tr>';
+      }).join('') + '</tbody><tfoot><tr><th colspan="4">รวม ' + L.length + ' คน</th><th class="num">' + money(T.m) + '</th><th></th><th></th><th class="num">' + money(T.c) + '</th><th class="num">' + money(T.y) + '</th><th colspan="2"></th></tr></tfoot></table></div>' +
+      '<div class="small">ยอดขาย = มูลค่าก่อน VAT ของบิลขายที่ใส่รหัสหรือชื่อพนักงานขายคนนี้ (ไม่รวมบิลที่กลับรายการ) · คอมมิชชัน = ยอดขายเดือนนี้ × %</div>');
+  }).catch(failNew);
+}
+function repForm(id) {
+  var x = id ? S.rpRows[id] : {}, F = function (k, l, ty, ph) { return '<div class="fr"><label class="f' + (k === 'name' ? ' req' : '') + '">' + l + '</label><input class="in' + (ty === 'n' ? ' amt' : '') + '" id="rp_' + k + '" value="' + esc(x[k] || '') + '"' + (ty === 'd' ? ' type="date"' : '') + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '></div>'; };
+  S.rpDup = 0;
+  openM(id ? 'แก้ไขพนักงานขาย' : 'เพิ่มพนักงานขาย',
+    '<div class="f3">' + F('code', 'รหัส', '', 'เว้นว่าง = รันให้ (SP001)') + F('name', 'ชื่อ-นามสกุล') + F('nick', 'ชื่อเล่น') + '</div>' +
+    '<div class="f3">' + F('phone', 'โทรศัพท์') + F('line_id', 'LINE ID') + F('email', 'อีเมล') + '</div>' +
+    '<div class="f3">' + F('team', 'ทีม / เขต / สาขา') + F('target', 'เป้ายอดขาย / เดือน (ก่อน VAT)', 'n') + F('comm_pct', 'คอมมิชชัน %', 'n', 'เช่น 3') + '</div>' +
+    '<div class="f3">' + F('start_date', 'วันที่เริ่มงาน', 'd') + '<div class="fr"><label class="f">สถานะ</label><select class="in" id="rp_status"><option value="ACTIVE">ใช้งาน</option><option value="INACTIVE"' + (x.status === 'INACTIVE' ? ' selected' : '') + '>เลิกใช้ (ลาออก)</option></select></div>' + F('note', 'หมายเหตุ') + '</div>' +
+    '<div class="small">บิลขายผูกกับพนักงานขายด้วยรหัส หรือชื่อ/ชื่อเล่นที่ตรงกัน · ลาออกแล้วให้เปลี่ยนเป็น "เลิกใช้" ประวัติยอดขายยังอยู่</div><div id="rp_dup"></div>',
+    (id ? '<button class="btn ghost red" onclick="repDel(\'' + id + '\')">ลบ</button><span style="flex:1"></span>' : '') + '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" onclick="repSave(\'' + (id || '') + '\')">💾 บันทึก</button>');
+}
+function repSave(id) {
+  var p = { company_id: S.cid, id: id, status: v('rp_status'), dup_ok: S.rpDup ? 1 : 0 };
+  ['code', 'name', 'nick', 'phone', 'line_id', 'email', 'team', 'target', 'comm_pct', 'start_date', 'note'].forEach(function (k) { p[k] = v('rp_' + k); });
+  call('sales.repSave', p).then(function (r) { closeM(); toast('บันทึกพนักงานขาย ' + r.code + ' แล้ว', 'ok'); S.slPeople = null; call('sales.people', { company_id: S.cid }).then(function (h) { S.slPeople = h; }).catch(function () {}); repList(); })
+    .catch(function (e) { var m = String(e && e.message || e); if (/มีชื่อ/.test(m) && !/รหัส/.test(m)) { S.rpDup = 1; $('rp_dup').innerHTML = '<div class="note warn">⚠️ ' + esc(m) + ' · ถ้าเป็นคนละคน กดบันทึกอีกครั้งเพื่อยืนยัน</div>'; return; } failNew(e); });
+}
+function repDel(id) { confirmM('ลบพนักงานขาย', 'ลบ ' + esc(S.rpRows[id].code + ' ' + S.rpRows[id].name) + ' ?', 'ลบ', function () { call('sales.repDelete', { company_id: S.cid, id: id }).then(function () { closeM(); toast('ลบแล้ว', 'ok'); repList(); }).catch(failNew); }, true); }
+function repImport() { call('sales.repImport', { company_id: S.cid }).then(function (r) { toast(r.added ? 'เพิ่มรายชื่อ ' + r.added + ' คน · ตรวจรหัส/ชื่ออีกครั้งได้' : 'ไม่มีรายชื่อใหม่', 'ok'); repList(); }).catch(failNew); }
+function repBills(id) { var x = S.rpRows[id]; S.sr = S.sr || {}; S.sl.tab = 'REPORT'; S.sr.g = 'salesperson'; renderSales(); toast('รายงานยอดขายตามผู้ขาย · ' + x.name, 'ok'); }
 /** เตือนลูกค้า/ผู้ขายซ้ำ (v0.20.3): ชื่อ (ตัดคำ บริษัท/จำกัด/บจก./หจก./มหาชน และช่องว่าง) · ที่อยู่ · เลขภาษี เหมือนรายอื่น */
 function ptNz(t) { return String(t || '').toLowerCase().replace(/บริษัท|บจก\.?|ห้างหุ้นส่วนจำกัด|หจก\.?|จำกัด|\(มหาชน\)|มหาชน|co\.?,?|ltd\.?|limited|company|[\s.,()\-]/g, ''); }
 function ptDups(role, id, p) {
