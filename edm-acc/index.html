@@ -3893,10 +3893,23 @@ function scForm(id) {
     '<div class="f3">' + F('doc_no', 'เลขที่บิล', d.doc_no) + F('doc_date', 'วันที่บิล', x.doc_date, 'd') + F('pname', 'ชื่อคู่ค้า', p0.name) + '</div>' +
     '<div class="f3">' + F('ptax', 'เลขผู้เสียภาษี', p0.tax_id) + F('pbr', 'สาขา', p0.branch) + F('paddr', 'ที่อยู่', p0.address) + '</div>' +
     '<div class="f3">' + F('base', 'มูลค่าก่อน VAT', base0.toFixed(2), 'n') + F('vat', 'VAT', Number(d.vat) || 0, 'n') + F('total', 'ยอดรวม', Number(d.total) || 0, 'n') + '</div>' +
-    '<div class="small">บันทึกแล้วยังไม่ Post · แก้ยอด = บันทึกเป็น 1 บรรทัดตามยอดใหม่ · บัญชีที่เลือกจะถูกจำไว้ใช้กับคู่ค้ารายนี้ครั้งต่อไป</div>',
+    '<div id="sf_lines"></div>' +
+    '<div class="small">บันทึกแล้วยังไม่ Post · แก้ยอด = บันทึกเป็น 1 บรรทัดตามยอดใหม่ (ไม่เข้าสต็อก) · บัญชีที่เลือกจะถูกจำไว้ใช้กับคู่ค้ารายนี้ครั้งต่อไป</div>',
     '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" onclick="scSave()">💾 บันทึก</button>', true);
   $('sf_side').value = side || 'PURCH'; if (/receipt/.test(String(d.doc_type || ''))) $('sf_pay').value = 'CASH';
-  S.sc.f.acc = x.account_id || ''; scSide(true);
+  S.sc.f.acc = x.account_id || ''; scSide(true); scLines();
+}
+function scLines() {
+  var x = S.sc.rows[S.sc.f.id], d = x.data || {}, ls = Array.isArray(d.lines) ? d.lines : [], id = S.sc.f.id; if (!ls.length) return;
+  ensureProds().then(function (P) {
+    var A = (P || []).filter(function (p) { return p.status === 'ACTIVE'; }), el = $('sf_lines'); if (!A.length || !el || !S.sc.f || S.sc.f.id !== id) return;
+    var m = x.match || [], opt = function (sel) { return '<option value="-">— ไม่ใช่สินค้าในสต็อก (ค่าใช้จ่าย/บริการ) —</option>' + A.map(function (p) { return '<option value="' + esc(p.id) + '"' + (p.id === sel ? ' selected' : '') + '>' + esc(p.code + ' ' + p.name) + '</option>'; }).join(''); };
+    el.innerHTML = '<div style="margin:10px 0;padding:8px;border:1px solid #cfe3ee;border-radius:8px;background:#f6fbfe"><b>📦 รายการในบิล → สินค้าในสต็อก</b>' +
+      '<div class="small">บิลซื้อ: เลือกสินค้าครบทุกบรรทัด = รับเข้าสต็อก · "ไม่ใช่สินค้า" ทุกบรรทัด = ค่าใช้จ่าย · บิลขาย: บรรทัดที่เลือกสินค้า = ตัดสต็อก · ระบบจำที่เลือกไว้ใช้ครั้งต่อไป</div>' +
+      '<div class="tw"><table class="t"><thead><tr><th>รายการในบิล</th><th class="num">จำนวน</th><th class="num">ราคา/หน่วย</th><th>สินค้า</th></tr></thead><tbody>' +
+      ls.map(function (l, i) { return '<tr><td>' + esc(l.description || '') + '</td><td class="num">' + esc(l.qty == null ? '' : l.qty) + '</td><td class="num">' + esc(l.unit_price == null ? '' : l.unit_price) + '</td><td><select class="in sf_pd" data-i="' + i + '" style="min-width:200px">' + opt(m[i] && m[i] !== '-' ? m[i] : '-') + '</select></td></tr>'; }).join('') + '</tbody></table></div></div>';
+    S.sc.f.lp = 1;
+  }).catch(function () {});
 }
 function scSide(first) {
   var sd = v('sf_side'), x = S.sc.rows[S.sc.f.id], d = x.data || {};
@@ -3908,7 +3921,9 @@ function scSide(first) {
 }
 function scSave() {
   var f = S.sc.f, o = f.orig, over = { side: v('sf_side'), pay_type: v('sf_pay'), account_id: v('sf_acc'), party_name: v('sf_pname'), party_tax_id: v('sf_ptax'), party_branch: v('sf_pbr'), party_address: v('sf_paddr') };
-  if (!over.account_id) return toast('เลือกบัญชีก่อน', 'warn');
+  if (f.lp) { over.prods = []; Array.prototype.forEach.call(document.querySelectorAll('.sf_pd'), function (el) { over.prods[Number(el.getAttribute('data-i'))] = el.value; }); }
+  var allP = over.prods && over.prods.length && over.prods.every(function (q) { return q && q !== '-'; });
+  if (!over.account_id && !(over.side === 'PURCH' && allP)) return toast('เลือกบัญชีก่อน', 'warn');
   if (v('sf_doc_no') !== o.doc_no) over.doc_no = v('sf_doc_no');
   if (v('sf_doc_date') !== o.doc_date) over.doc_date = v('sf_doc_date');
   var nb = String(v('sf_base')).replace(/,/g, ''), nv = String(v('sf_vat')).replace(/,/g, ''), nt = String(v('sf_total')).replace(/,/g, '');
