@@ -207,9 +207,9 @@ h2.pt{color:var(--pri2)}
 var S = { token: null, lang: 'th', cos: [], cid: '', page: 'dashboard', coa: null, f: { q: '', cat: '', type: '', status: '', level: '', pg: 1 }, au: { pg: 1, q: '' }, st: null, imp: null };
 try { S.lang = localStorage.getItem('edm_acc_lang') || 'th'; } catch (e) {}
 var L = {
-  th: { dashboard: 'แดชบอร์ด', companies: 'จัดการบริษัท', coa: 'ผังบัญชี', structure: 'โครงสร้างรหัสบัญชี', sales: 'ระบบขาย', purch: 'ระบบซื้อ', payroll: 'ระบบเงินเดือน', stock: 'สินค้า / สต็อก', cheque: 'เช็ครับ / เช็คจ่าย', bankrec: 'กระทบยอดธนาคาร', journal: 'สมุดรายวัน', posting: 'Post รายการ', petty: 'เงินสดย่อย', gl: 'บัญชีแยกประเภท', vat: 'ภาษีมูลค่าเพิ่ม', wht: 'ภาษีหัก ณ ที่จ่าย', cc: 'ศูนย์ต้นทุน', asset: 'สินทรัพย์ถาวร', work: 'ห้องทำงานสำนักงาน', tb: 'งบทดลอง', fs: 'งบการเงิน', closing: 'ปิดงวดบัญชี', audit: 'บันทึกการใช้งาน', settings: 'ตั้งค่าระบบ', office: 'สำนักงานบัญชี', users: 'ผู้ใช้และสิทธิ์',
+  th: { dashboard: 'แดชบอร์ด', companies: 'จัดการบริษัท', coa: 'ผังบัญชี', structure: 'โครงสร้างรหัสบัญชี', sales: 'ระบบขาย', purch: 'ระบบซื้อ', payroll: 'ระบบเงินเดือน', stock: 'สินค้า / สต็อก', cheque: 'เช็ครับ / เช็คจ่าย', bankrec: 'กระทบยอดธนาคาร', journal: 'สมุดรายวัน', posting: 'Post รายการ', petty: 'เงินสดย่อย', gl: 'บัญชีแยกประเภท', vat: 'ภาษีมูลค่าเพิ่ม', wht: 'ภาษีหัก ณ ที่จ่าย', cc: 'ศูนย์ต้นทุน', asset: 'สินทรัพย์ถาวร', work: 'ห้องทำงานสำนักงาน', scan: 'เอกสารจากสแกน', tb: 'งบทดลอง', fs: 'งบการเงิน', closing: 'ปิดงวดบัญชี', audit: 'บันทึกการใช้งาน', settings: 'ตั้งค่าระบบ', office: 'สำนักงานบัญชี', users: 'ผู้ใช้และสิทธิ์',
     g1: 'ข้อมูลหลัก', g2: 'ขายและบันทึกบัญชี', g3: 'ภาษีและต้นทุน', g4: 'รายงาน', g5: 'ระบบ', logout: 'ออกจากระบบ', add: 'เพิ่ม', save: 'บันทึก', cancel: 'ยกเลิก', search: 'ค้นหา', all: 'ทั้งหมด', code: 'รหัสบัญชี', name: 'ชื่อบัญชี', type: 'ประเภท', control: 'รหัสควบคุม', status: 'สถานะ', level: 'ระดับ', category: 'หมวด', actions: '' },
-  en: { dashboard: 'Dashboard', companies: 'Company Management', coa: 'Chart of Accounts', structure: 'Account Structure', sales: 'Sales', purch: 'Purchases', payroll: 'Payroll', stock: 'Inventory', cheque: 'Cheques', bankrec: 'Bank Reconciliation', journal: 'Journal Entries', posting: 'Posting', petty: 'Petty Cash', gl: 'General Ledger', vat: 'VAT Management', wht: 'Withholding Tax', cc: 'Cost Center', asset: 'Fixed Assets', work: 'Office Workspace', tb: 'Trial Balance', fs: 'Financial Statements', closing: 'Period Closing', audit: 'Audit Log', settings: 'System Settings', office: 'Accounting Office', users: 'Users & Roles',
+  en: { dashboard: 'Dashboard', companies: 'Company Management', coa: 'Chart of Accounts', structure: 'Account Structure', sales: 'Sales', purch: 'Purchases', payroll: 'Payroll', stock: 'Inventory', cheque: 'Cheques', bankrec: 'Bank Reconciliation', journal: 'Journal Entries', posting: 'Posting', petty: 'Petty Cash', gl: 'General Ledger', vat: 'VAT Management', wht: 'Withholding Tax', cc: 'Cost Center', asset: 'Fixed Assets', work: 'Office Workspace', scan: 'Scanned Documents', tb: 'Trial Balance', fs: 'Financial Statements', closing: 'Period Closing', audit: 'Audit Log', settings: 'System Settings', office: 'Accounting Office', users: 'Users & Roles',
     g1: 'Master data', g2: 'Accounting', g3: 'Tax & cost', g4: 'Reports', g5: 'System', logout: 'Log out', add: 'Add', save: 'Save', cancel: 'Cancel', search: 'Search', all: 'All', code: 'Account code', name: 'Account name', type: 'Type', control: 'Control', status: 'Status', level: 'Level', category: 'Category', actions: '' }
 };
 function t(k) { return (L[S.lang] && L[S.lang][k]) || L.th[k] || k; }
@@ -218,7 +218,7 @@ var IC = {
   dashboard: 'M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z', companies: 'M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1',
   coa: 'M4 5h4M4 12h4M4 19h4M10 5h10M12 12h8M12 19h8M6 5v14', structure: 'M4 4h6v6H4zM14 14h6v6h-6zM7 10v4h7M14 4h6v6h-6z',
   journal: 'M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM9 8h6M9 12h6', gl: 'M4 19V5M4 19h16M8 15l3-4 3 2 5-6', vat: 'M6 18L18 6M7 7h.01M17 17h.01',
-  wht: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6', cc: 'M12 3a9 9 0 1 0 9 9h-9z', asset: 'M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6M9 11h.01M15 11h.01', work: 'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9', tb: 'M12 3v18M5 7h14M5 7l-2 6h4zM19 7l-2 6h4z',
+  wht: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6', cc: 'M12 3a9 9 0 1 0 9 9h-9z', asset: 'M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6M9 11h.01M15 11h.01', work: 'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9', scan: 'M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2M4 12h16M8 8h8M8 16h5', tb: 'M12 3v18M5 7h14M5 7l-2 6h4zM19 7l-2 6h4z',
   fs: 'M4 20V10M10 20V4M16 20v-7M22 20H2', closing: 'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4', audit: 'M12 8v4l3 2M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5',
   settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3.3 14H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 9 4.6V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z',
   purch: 'M3 3h2l2.4 12.2a2 2 0 0 0 2 1.8h8.2a2 2 0 0 0 2-1.6L21 8H6M9 21h.01M18 21h.01', cheque: 'M3 6h18v12H3zM7 14h6M7 10h10', stock: 'M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8', bankrec: 'M3 21h18M5 10v8M9 10v8M15 10v8M19 10v8M12 3l9 5H3z', payroll: 'M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0M4 21a8 8 0 0 1 16 0', sales: 'M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.2a2 2 0 0 0 2-1.6L20 8H6M9 21h.01M17 21h.01', petty: 'M3 7h18v12H3zM3 7l3-4h12l3 4M16 13h2', posting: 'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9', copy: 'M9 9h11v11H9zM5 15H4V4h11v1', print: 'M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z',
@@ -226,21 +226,21 @@ var IC = {
   off: 'M18.4 6.6A9 9 0 1 1 5.6 6.6M12 2v10', on: 'M5 12l5 5L20 7', del: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3'
 };
 /* ไอคอนเมนูแบบกล่องสี (สีประจำแต่ละเมนู) */
-var MIC = { dashboard: '#4f6bed', companies: '#3b6ea8', coa: '#0f9b8e', structure: '#0e8fb0', sales: '#16a34a', purch: '#ea7a12', stock: '#c98a06', asset: '#b7791f', work: '#0ea5e9', payroll: '#db4f8f', journal: '#2f6fd6', posting: '#7c4ddb', petty: '#5f9e1c',
+var MIC = { dashboard: '#4f6bed', companies: '#3b6ea8', coa: '#0f9b8e', structure: '#0e8fb0', sales: '#16a34a', purch: '#ea7a12', stock: '#c98a06', asset: '#b7791f', work: '#0ea5e9', scan: '#0891b2', payroll: '#db4f8f', journal: '#2f6fd6', posting: '#7c4ddb', petty: '#5f9e1c',
   cheque: '#0b84c6', bankrec: '#0d9488', gl: '#4c5bd4', vat: '#dc4a3d', wht: '#e0507a', cc: '#9353d3', tb: '#a0662b', fs: '#0f9f6e', closing: '#5b6b82', office: '#2563eb', users: '#8b5cf6', audit: '#64748b', settings: '#6b7280' };
 function mic(n) { var c = MIC[n] || '#4f6bed'; return '<span class="mic" style="--mc:' + c + '">' + ic(n) + '</span>'; }
 function ic(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="' + IC[n] + '"/></svg>'; }
 var MENU = [
-  { g: 'g1', items: [['dashboard', 1], ['work', 1], ['companies', 1], ['coa', 2], ['structure', 2]] },
+  { g: 'g1', items: [['dashboard', 1], ['work', 1], ['scan', 1], ['companies', 1], ['coa', 2], ['structure', 2]] },
   { g: 'g2', items: [['sales', 3], ['purch', 3], ['stock', 3], ['asset', 5], ['payroll', 3], ['journal', 3], ['posting', 3], ['petty', 3], ['cheque', 3], ['bankrec', 3], ['gl', 3]] },
   { g: 'g3', items: [['vat', 4], ['wht', 4], ['cc', 5]] },
   { g: 'g4', items: [['tb', 6], ['fs', 6]] },
   { g: 'g5', items: [['closing', 7], ['office', 1], ['users', 1], ['audit', 1], ['settings', 1]] }
 ];
-var READY = { office: 1, users: 1, purch: 1, dashboard: 1, companies: 1, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1, asset: 1, work: 1, closing: 1, audit: 1, settings: 1 };
+var READY = { office: 1, users: 1, purch: 1, dashboard: 1, companies: 1, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1, asset: 1, work: 1, scan: 1, closing: 1, audit: 1, settings: 1 };
 var PAGE_MOD = { work: 'journal', asset: 'journal', dashboard: 'dashboard', companies: 'company', coa: 'coa', structure: 'coa', sales: 'sales', purch: 'purchase', stock: 'inventory', payroll: 'payroll', journal: 'journal', posting: 'journal', petty: 'bank', cheque: 'bank', bankrec: 'bank', gl: 'report', vat: 'tax', wht: 'tax', cc: 'report', tb: 'report', fs: 'report', closing: 'journal', office: 'office', users: 'users', audit: 'audit' };
 function can(k) { return !S.me || S.me.owner || (S.me.perms || []).indexOf(k) >= 0; }
-function canPage(p) { var m = PAGE_MOD[p]; if ((p === 'office' || p === 'users') && !S.me) return false; return !m || m === 'dashboard' || m === 'company' || can(m + '.view'); }
+function canPage(p) { var m = PAGE_MOD[p]; if (p === 'scan') return scanVis(); if ((p === 'office' || p === 'users') && !S.me) return false; return !m || m === 'dashboard' || m === 'company' || can(m + '.view'); }
 var MONTHS = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
 var CATS = [[1, 'สินทรัพย์', 'Assets'], [2, 'หนี้สิน', 'Liabilities'], [3, 'ส่วนของเจ้าของ', "Owner's Equity"], [4, 'รายได้', 'Revenue'], [5, 'ค่าใช้จ่าย', 'Expenses']];
 
@@ -492,7 +492,7 @@ function go(p) {
   S.page = p; side(false); renderSide();
   var needCo = { purch: 1, dashboard: 0, coa: 1, structure: 1, sales: 1, payroll: 1, stock: 1, journal: 1, posting: 1, petty: 1, cheque: 1, bankrec: 1, gl: 1, vat: 1, wht: 1, tb: 1, fs: 1 };
   if (needCo[p] && !S.cid) { $('main').innerHTML = head(t(p), '') + '<div class="card empty">กรุณาสร้างบริษัททดลองก่อน<br><br><button class="btn" onclick="go(\'companies\')">ไปที่จัดการบริษัท</button></div>'; return; }
-  ({ purch: pPurch, dashboard: pDash, companies: pCos, coa: pCoa, structure: pStruct, sales: pSales, payroll: pPayroll, stock: pStock, cheque: pCheque, bankrec: pBankRec, journal: pJournal, posting: pPosting, petty: pPetty, gl: pGL, vat: pVat, wht: pWht, tb: pTB, fs: pFS, asset: pAsset, work: pWork, closing: pClose, audit: pAudit, settings: pSet, office: pOffice, users: pUsers }[p] || pPlan)(p);
+  ({ purch: pPurch, dashboard: pDash, companies: pCos, coa: pCoa, structure: pStruct, sales: pSales, payroll: pPayroll, stock: pStock, cheque: pCheque, bankrec: pBankRec, journal: pJournal, posting: pPosting, petty: pPetty, gl: pGL, vat: pVat, wht: pWht, tb: pTB, fs: pFS, asset: pAsset, work: pWork, scan: pScan, closing: pClose, audit: pAudit, settings: pSet, office: pOffice, users: pUsers }[p] || pPlan)(p);
   window.scrollTo(0, 0);
 }
 function head(title, desc, right) { return '<div class="bar" style="align-items:flex-start"><div style="flex:1;min-width:200px"><h2 class="pt">' + esc(title) + '</h2><p class="pd">' + desc + '</p></div>' + (right || '') + '</div>'; }
@@ -3835,6 +3835,87 @@ function faPrint() {
 S.ws = { tab: 'DASH', ym: '', who: '', f: 'open', dq: '', dk: '', dc: '', dm: '' };
 var WS_COL = { TODO: ['#64748b', '#f1f5f9'], DOING: ['#1d4ed8', '#dbeafe'], DONE: ['#15803d', '#dcfce7'], WAIT: ['#b45309', '#fef3c7'], PASS: ['#15803d', '#dcfce7'], FIX: ['#b91c1c', '#fee2e2'] };
 function wsChip(x, extra) { var c = x.auto_done ? WS_COL.DONE : (WS_COL[x.status] || WS_COL.TODO), lbl = x.auto_done && !x.done ? 'เสร็จ (ปิดงวดแล้ว)' : x.status_th; return '<span class="tag" style="background:' + c[1] + ';color:' + c[0] + ';padding:3px 9px;border-radius:10px;white-space:nowrap;cursor:pointer' + (x.overdue ? ';box-shadow:inset 0 0 0 1.5px #dc2626' : '') + '"' + (extra || '') + '>' + esc(lbl) + (x.overdue ? ' ⏰' : '') + '</span>'; }
+/* ================= เอกสารจากสแกน (v0.21): บอทอ่านโฟลเดอร์ Drive → บันทึกบิลขาย/ซื้อเอง · ไม่แน่ใจ = รอตรวจ ================= */
+function scanVis() { try { if (typeof OWNER !== 'undefined' && !OWNER) return false; } catch (e) {} return !S.me || !!S.me.owner; }
+var SC_ST = { SAVED: ['✅ บันทึกแล้ว', '#16a34a'], REVIEW: ['🟡 รอตรวจ', '#b45309'], DUP: ['⚠️ ซ้ำ', '#b45309'], FAIL: ['❌ อ่านไม่ได้', '#dc2626'], SKIP: ['ข้าม', '#64748b'], DONE: ['บันทึกเองแล้ว', '#64748b'], RETRY: ['รออ่านใหม่', '#0891b2'] };
+function pScan() {
+  S.sc = S.sc || { tab: 'OPEN' };
+  var tabs = [['OPEN', '🟡 รอตรวจ'], ['SAVED', '✅ บันทึกแล้ว'], ['SKIP', 'ข้ามแล้ว']];
+  $('main').innerHTML = head(t('scan'), 'สแกนบิลลงโฟลเดอร์ Drive ของบริษัท → บอทอ่านทุก 15 นาที บันทึกบิลขาย/บิลซื้อเอง (ยังไม่ Post) · ใบที่ไม่แน่ใจรอให้ตรวจที่นี่') +
+    '<div class="card" id="scSt"><div class="empty">กำลังโหลด…</div></div><div class="tabs">' + tabs.map(function (x) { return '<button class="' + (S.sc.tab === x[0] ? 'on' : '') + '" onclick="S.sc.tab=\'' + x[0] + '\';pScan()">' + x[1] + '</button>'; }).join('') + '</div><div id="scOut"><div class="empty">กำลังโหลด…</div></div>';
+  call('scan.status', { company_id: S.cid }).then(function (st) {
+    S.sc.st = st; var c = st.counts || {}, open = (c.REVIEW || 0) + (c.DUP || 0) + (c.FAIL || 0);
+    $('scSt').innerHTML = '<div class="bar" style="margin:0;flex-wrap:wrap;gap:8px">' +
+      '<span>' + (st.has_key ? '✅ ตั้งคีย์ AI แล้ว <span class="small">(' + esc(st.model) + ')</span>' : '❌ ยังไม่ได้ตั้งคีย์ AI') + '</span> <button class="btn ghost sm" onclick="scKey()">🔑 ตั้งคีย์ AI</button>' +
+      '<span style="margin-left:8px">' + (st.trigger ? '🟢 บอททำงานอยู่ (ทุก 15 นาที)' : '⚪ บอทยังไม่ทำงาน') + '</span> ' + (st.trigger ? '<button class="btn ghost sm" onclick="scStop()">หยุดบอท</button>' : '<button class="btn sm" onclick="scSetup()">▶ เริ่มบอท (สร้างโฟลเดอร์ทุกบริษัท)</button>') +
+      '<span style="flex:1"></span>' + (st.inbox ? '<a class="btn ghost sm" href="' + st.inbox + '" target="_blank" rel="noopener">📂 โฟลเดอร์ "1 รออ่าน" ของบริษัทนี้</a> ' : '') +
+      '<button class="btn sm" onclick="scRun()"' + (st.has_key ? '' : ' disabled') + '>⚡ อ่านตอนนี้</button></div>' +
+      '<div class="small" style="margin-top:6px">บันทึกแล้ว ' + (c.SAVED || 0) + ' · รอตรวจ ' + open + ' · อ่านล่าสุด ' + (st.last ? esc(fdate(st.last)) : '-') + ' · ไฟล์ที่ใช้ได้: PDF / JPG / PNG (หลายหน้าใน PDF เดียว = บิลเดียว)</div>';
+  }).catch(failNew);
+  scList();
+}
+function scList() {
+  var tab = S.sc.tab;
+  call('scan.list', { company_id: S.cid, status: tab === 'SKIP' ? '' : tab }).then(function (rows) {
+    if (tab === 'SKIP') rows = rows.filter(function (x) { return x.status === 'SKIP' || x.status === 'DONE'; });
+    S.sc.rows = {}; rows.forEach(function (x) { S.sc.rows[x.id] = x; });
+    if (!rows.length) { $('scOut').innerHTML = '<div class="card empty">' + (tab === 'OPEN' ? 'ไม่มีเอกสารรอตรวจ 🎉' : 'ยังไม่มีรายการ') + '</div>'; return; }
+    $('scOut').innerHTML = '<div class="card tw"><table class="t"><thead><tr><th>สแกนเมื่อ</th><th>ไฟล์</th><th>ประเภท</th><th>เลขที่</th><th>วันที่บิล</th><th>คู่ค้า</th><th class="num">ยอดรวม</th><th>สถานะ</th><th></th></tr></thead><tbody>' +
+      rows.map(function (x) {
+        var s = SC_ST[x.status] || [x.status, '#64748b'];
+        return '<tr><td class="small">' + esc(fdate(x.created_at)) + '</td><td><a href="' + esc(x.url) + '" target="_blank" rel="noopener">📄 ' + esc(x.file_name) + '</a></td><td>' + (x.side === 'SALE' ? 'ขาย' : x.side === 'PURCH' ? 'ซื้อ' : '-') + '</td><td class="code">' + esc(x.ref_no || x.doc_no || '') + '</td><td>' + esc(x.doc_date || '') + '</td><td>' + esc(x.party || '') + '</td><td class="num">' + (Number(x.total) ? money(x.total) : '') + '</td>' +
+          '<td><span style="color:' + s[1] + ';font-weight:600">' + s[0] + '</span>' + (x.reason ? '<div class="small">' + esc(x.reason) + '</div>' : '') + '</td><td style="white-space:nowrap">' +
+          (/^(REVIEW|DUP|FAIL)$/.test(x.status) ? '<button class="btn sm" onclick="scForm(\'' + x.id + '\')">✏️ ตรวจ / บันทึก</button> <button class="btn ghost sm" onclick="scMark(\'' + x.id + '\',\'retry\')" title="ย้ายกลับไปอ่านใหม่">↻</button> <button class="btn ghost sm" onclick="scMark(\'' + x.id + '\',\'skip\')">ข้าม</button> <button class="btn ghost sm" onclick="scMark(\'' + x.id + '\',\'done\')" title="บันทึกเองในระบบแล้ว">บันทึกเองแล้ว</button>' : '') + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }).catch(failNew);
+}
+function scKey() {
+  openM('ตั้งคีย์ AI (Gemini)', '<div class="note">วางคีย์ Gemini API ตัวเดียวกับที่ใช้ใน LINE AI · คีย์เก็บในหลังบ้านเท่านั้น ไม่แสดงกลับบนหน้าเว็บ</div><div class="fr"><label class="f req">คีย์</label><input class="in" type="password" id="sc_k" autocomplete="off" placeholder="AIza…"></div>' +
+    '<div class="fr"><label class="f">รุ่น AI</label><select class="in" id="sc_m"><option value="gemini-2.5-flash">gemini-2.5-flash (แนะนำ)</option><option value="gemini-2.5-pro">gemini-2.5-pro (แม่นกว่า ช้ากว่า)</option><option value="gemini-2.0-flash">gemini-2.0-flash</option></select></div>',
+    '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" onclick="call(\'scan.setKey\',{key:v(\'sc_k\'),model:v(\'sc_m\')}).then(function(){closeM();toast(\'ตั้งคีย์แล้ว\',\'ok\');pScan();}).catch(failNew)">บันทึก</button>');
+  if (S.sc.st && S.sc.st.model) $('sc_m').value = S.sc.st.model;
+}
+function scSetup() { toast('กำลังสร้างโฟลเดอร์…'); call('scan.setup', {}).then(function (r) { toast('สร้างโฟลเดอร์ ' + r.companies + ' บริษัท + ตั้งเวลาอ่านทุก 15 นาทีแล้ว', 'ok'); pScan(); }).catch(failNew); }
+function scStop() { confirmM('หยุดบอท', 'หยุดอ่านเอกสารอัตโนมัติ? (ไฟล์ในโฟลเดอร์ไม่หาย เริ่มใหม่ได้ภายหลัง)', 'หยุดบอท', function () { call('scan.stop', {}).then(function () { toast('หยุดแล้ว', 'ok'); pScan(); }).catch(failNew); }); }
+function scRun() { toast('กำลังอ่านเอกสาร… (ใบละประมาณ 5–15 วินาที)'); call('scan.runNow', { company_id: S.cid }).then(function (r) { toast('บันทึกแล้ว ' + r.saved + ' · รอตรวจ ' + r.review + (r.fail ? ' · อ่านไม่ได้ ' + r.fail : ''), r.review || r.fail ? 'warn' : 'ok'); pScan(); }).catch(failNew); }
+function scMark(id, a) { call('scan.mark', { company_id: S.cid, id: id, action: a }).then(function () { toast(a === 'retry' ? 'ส่งกลับไปอ่านใหม่แล้ว' : 'เรียบร้อย', 'ok'); pScan(); }).catch(failNew); }
+function scForm(id) {
+  var x = S.sc.rows[id], d = x.data || {}, side = x.side || (d.seller && d.buyer ? '' : ''), pt = function (sd) { return (sd === 'SALE' ? d.buyer : d.seller) || {}; };
+  var base0 = d.subtotal != null && d.subtotal !== '' ? (Number(d.subtotal) || 0) - (Number(d.discount) || 0) : (Number(d.total) || 0) - (Number(d.vat) || 0);
+  S.sc.f = { id: id, orig: { doc_no: d.doc_no || '', doc_date: x.doc_date || '', base: base0.toFixed(2), vat: String(Number(d.vat) || 0), total: String(Number(d.total) || 0) } };
+  var F = function (k, l, val, ty) { return '<div class="fr"><label class="f">' + l + '</label><input class="in' + (ty === 'n' ? ' amt' : '') + '" id="sf_' + k + '" value="' + esc(val == null ? '' : val) + '"' + (ty === 'd' ? ' type="date"' : '') + '></div>'; };
+  var p0 = pt(side || 'PURCH');
+  openM('ตรวจเอกสารสแกน', '<div class="note" style="background:#fff7e0;border:1px solid #f0c36d;color:#7a4b00">' + esc(x.reason || '') + '</div>' +
+    '<p><a href="' + esc(x.url) + '" target="_blank" rel="noopener">📄 เปิดดูไฟล์ ' + esc(x.file_name) + '</a></p>' +
+    '<div class="f3"><div class="fr"><label class="f req">ประเภท</label><select class="in" id="sf_side" onchange="scSide()"><option value="PURCH">บิลซื้อ / ค่าใช้จ่าย</option><option value="SALE">บิลขาย</option></select></div>' +
+    '<div class="fr"><label class="f">การชำระ</label><select class="in" id="sf_pay"><option value="CREDIT">เชื่อ (ตั้งลูกหนี้/เจ้าหนี้)</option><option value="CASH">เงินสด/โอนแล้ว</option></select></div>' +
+    '<div class="fr"><label class="f req">บัญชี</label><select class="in" id="sf_acc"><option value="">กำลังโหลด…</option></select></div></div>' +
+    '<div class="f3">' + F('doc_no', 'เลขที่บิล', d.doc_no) + F('doc_date', 'วันที่บิล', x.doc_date, 'd') + F('pname', 'ชื่อคู่ค้า', p0.name) + '</div>' +
+    '<div class="f3">' + F('ptax', 'เลขผู้เสียภาษี', p0.tax_id) + F('pbr', 'สาขา', p0.branch) + F('paddr', 'ที่อยู่', p0.address) + '</div>' +
+    '<div class="f3">' + F('base', 'มูลค่าก่อน VAT', base0.toFixed(2), 'n') + F('vat', 'VAT', Number(d.vat) || 0, 'n') + F('total', 'ยอดรวม', Number(d.total) || 0, 'n') + '</div>' +
+    '<div class="small">บันทึกแล้วยังไม่ Post · แก้ยอด = บันทึกเป็น 1 บรรทัดตามยอดใหม่ · บัญชีที่เลือกจะถูกจำไว้ใช้กับคู่ค้ารายนี้ครั้งต่อไป</div>',
+    '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" onclick="scSave()">💾 บันทึก</button>', true);
+  $('sf_side').value = side || 'PURCH'; if (/receipt/.test(String(d.doc_type || ''))) $('sf_pay').value = 'CASH';
+  S.sc.f.acc = x.account_id || ''; scSide(true);
+}
+function scSide(first) {
+  var sd = v('sf_side'), x = S.sc.rows[S.sc.f.id], d = x.data || {};
+  if (!first) { var p = (sd === 'SALE' ? d.buyer : d.seller) || {}; $('sf_pname').value = p.name || ''; $('sf_ptax').value = p.tax_id || ''; $('sf_pbr').value = p.branch || ''; $('sf_paddr').value = p.address || ''; }
+  call(sd === 'SALE' ? 'sales.defaults' : 'purch.defaults', { company_id: S.cid }).then(function (df) {
+    var L = sd === 'SALE' ? df.revenue : df.expense, cur = S.sc.f.acc || (sd === 'SALE' ? df.revenue_default : '');
+    $('sf_acc').innerHTML = (sd === 'PURCH' ? '<option value="">— เลือกบัญชีค่าใช้จ่าย —</option>' : '') + (L || []).map(function (a) { return '<option value="' + a.id + '"' + (a.id === cur ? ' selected' : '') + '>' + esc(a.label) + '</option>'; }).join('');
+  }).catch(failNew);
+}
+function scSave() {
+  var f = S.sc.f, o = f.orig, over = { side: v('sf_side'), pay_type: v('sf_pay'), account_id: v('sf_acc'), party_name: v('sf_pname'), party_tax_id: v('sf_ptax'), party_branch: v('sf_pbr'), party_address: v('sf_paddr') };
+  if (!over.account_id) return toast('เลือกบัญชีก่อน', 'warn');
+  if (v('sf_doc_no') !== o.doc_no) over.doc_no = v('sf_doc_no');
+  if (v('sf_doc_date') !== o.doc_date) over.doc_date = v('sf_doc_date');
+  var nb = String(v('sf_base')).replace(/,/g, ''), nv = String(v('sf_vat')).replace(/,/g, ''), nt = String(v('sf_total')).replace(/,/g, '');
+  if (Number(nb) !== Number(o.base)) over.base = nb; if (Number(nv) !== Number(o.vat)) over.vat = nv; if (Number(nt) !== Number(o.total)) over.total = nt;
+  if (over.vat != null || over.total != null) { over.base = nb; over.vat = nv; over.total = nt; }
+  call('scan.save', { company_id: S.cid, id: f.id, over: over }).then(function (r) { closeM(); toast('บันทึก' + (r.side === 'SALE' ? 'บิลขาย ' : 'บิลซื้อ ') + (r.ref_no || '') + ' แล้ว', 'ok'); pScan(); }).catch(failNew);
+}
 function pWork() {
   if (!S.ws.ym) { var d = today(), y = Number(d.slice(0, 4)), m = Number(d.slice(5, 7)) - 1; if (m < 1) { m = 12; y--; } S.ws.ym = y + '-' + pad(m, 2); }
   var tabs = [['DASH', '📋 ภาพรวมลูกค้า'], ['TASK', '✅ งาน'], ['DOC', '📁 ศูนย์เอกสาร']], tab = S.ws.tab;
