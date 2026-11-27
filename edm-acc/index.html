@@ -1670,8 +1670,8 @@ function pp30Run(mode) {
   call('tax.pp30prep', { company_id: S.cid, month: S.tx2.month, include_draft: S.incDraft, branch_id: S.tx2.br || '', carry: S.tx2.carry == null ? '' : S.tx2.carry }).then(function (r) {
     S.ppDocs = {}; r.lines.concat(r.purchase_info).forEach(function (l, i) { if (l.docs) S.ppDocs[i] = l; });
     var big = { 5: 1, 7: 1, 8: 1, 9: 1, 11: 1, 12: 1 }, c = co();
-    var tb = '<table class="t"><tbody>' + r.lines.map(function (l, i) { return '<tr' + (big[l.no] ? ' class="tot"' : '') + '><td style="width:34px;text-align:center"><b>' + l.no + '</b></td><td>' + esc(l.label) + (l.no === 10 && !pr ? ' <button class="btn ghost sm" onclick="ppCarry()">แก้</button>' + (r.carry_auto !== l.amount ? ' <span class="small">(คำนวณได้ ' + money(r.carry_auto) + ')</span>' : '') : '') + '</td><td class="num" style="font-size:15px">' + money(l.amount) + '</td>' + (pr ? '' : '<td>' + (l.docs && l.docs.length ? '<span class="lk" onclick="ppDocs(' + i + ')">' + l.docs.length + ' เอกสาร</span>' : '') + '</td>') + '</tr>'; }).join('') + '</tbody></table>';
-    var pi = '<table class="t"><thead><tr><th>การซื้อในเดือนนี้ (ประกอบการตรวจ ไม่อยู่ในแบบ)</th><th class="num">มูลค่า</th><th class="num">ภาษี</th><th class="num">ใบ</th></tr></thead><tbody>' + r.purchase_info.map(function (l, i) { var k = r.lines.length + i; return '<tr><td>' + esc(l.label) + '</td><td class="num">' + money(l.amount) + '</td><td class="num">' + money(l.vat) + '</td><td class="num">' + (l.docs && l.docs.length && !pr ? '<span class="lk" onclick="ppDocs(' + k + ')">' + l.count + '</span>' : l.count) + '</td></tr>'; }).join('') + '</tbody></table>';
+    var tb = '<table class="t"><tbody>' + r.lines.map(function (l, i) { return '<tr' + (big[l.no] ? ' class="tot"' : '') + '><td style="width:34px;text-align:center"><b>' + l.no + '</b></td><td>' + esc(l.label) + (l.no === 10 && !pr ? ' <button class="btn ghost sm" onclick="ppCarry()">แก้</button>' + (r.carry_auto !== l.amount ? ' <span class="small">(คำนวณได้ ' + money(r.carry_auto) + ')</span>' : '') : '') + '</td><td class="num" style="font-size:15px">' + money(l.amount) + '</td>' + (pr ? '' : '<td>' + (l.docs && l.docs.length ? '<span class="lk" onclick="pp30Docs(' + i + ')">' + l.docs.length + ' เอกสาร</span>' : '') + '</td>') + '</tr>'; }).join('') + '</tbody></table>';
+    var pi = '<table class="t"><thead><tr><th>การซื้อในเดือนนี้ (ประกอบการตรวจ ไม่อยู่ในแบบ)</th><th class="num">มูลค่า</th><th class="num">ภาษี</th><th class="num">ใบ</th></tr></thead><tbody>' + r.purchase_info.map(function (l, i) { var k = r.lines.length + i; return '<tr><td>' + esc(l.label) + '</td><td class="num">' + money(l.amount) + '</td><td class="num">' + money(l.vat) + '</td><td class="num">' + (l.docs && l.docs.length && !pr ? '<span class="lk" onclick="pp30Docs(' + k + ')">' + l.count + '</span>' : l.count) + '</td></tr>'; }).join('') + '</tbody></table>';
     var hd = '<div style="text-align:center"><b style="font-size:16px">แบบแสดงรายการภาษีมูลค่าเพิ่ม (ภ.พ.30) – ข้อมูลเตรียมกรอก</b><br>เดือนภาษี ' + thMonth(r.month) + '</div><div class="small" style="margin:8px 0">' + esc(c.name_th) + ' · เลขประจำตัวผู้เสียภาษี ' + esc(c.tax_id || '-') + (r.branch_id ? ' · เฉพาะสาขาที่เลือก' : '') + '</div>';
     var ft = '<p class="small">กำหนดยื่น: แบบกระดาษภายใน ' + thDate(r.due_paper) + ' · ยื่นออนไลน์ภายใน ' + thDate(r.due_online) + (r.drafts && !r.include_draft ? ' · ⚠ ยังมีรายการไม่ Post ' + r.drafts + ' รายการ' : '') + '</p>';
     var html = hd + tb + '<div style="height:12px"></div>' + pi + ft;
@@ -1679,7 +1679,7 @@ function pp30Run(mode) {
   }).catch(function (e) { if (pr) pr.close(); failNew(e); });
 }
 function ppCarry() { var v2 = prompt('ภาษีที่ชำระเกินยกมา (เว้นว่าง = คำนวณจากระบบ)', S.tx2.carry || ''); if (v2 == null) return; S.tx2.carry = v2.trim() === '' ? null : v2.replace(/,/g, '').trim(); pp30Run(); }
-function ppDocs(i) {
+function pp30Docs(i) {
   var l = S.ppDocs[i]; if (!l) return;
   openM((l.no ? 'ช่อง ' + l.no + ' – ' : '') + l.label, '<div class="tw"><table class="t"><thead><tr><th>วันที่</th><th>เลขที่</th><th>ใบกำกับ</th><th>คู่ค้า</th><th class="num">มูลค่า</th><th class="num">ภาษี</th></tr></thead><tbody>' + l.docs.map(function (d) { return '<tr><td>' + esc(d.date) + '</td><td><span class="lk" onclick="closeM();jView(\'' + d.journal_id + '\')">' + esc(d.doc_no) + '</span></td><td>' + esc(d.inv_no || '') + '</td><td>' + esc(d.party) + '</td><td class="num">' + money(d.amount) + '</td><td class="num">' + (d.vat != null ? money(d.vat) : '') + '</td></tr>'; }).join('') + '</tbody></table></div>', '<button class="btn ghost" onclick="closeM()">ปิด</button>', true);
 }
@@ -2473,16 +2473,17 @@ function rcForm(cust, editId) {
     cust = cust && custs.indexOf(cust) >= 0 ? cust : custs[0];
     S.rcOpen = open;
     openM(ed ? 'แก้ไขใบเสร็จ ' + ed.doc_no : 'รับชำระหนี้ (ใบเสร็จรับเงิน)',
-      '<div class="f3"><div class="fr"><label class="f req">ลูกค้า</label><select class="in" id="rc_cust">' + custs.map(function (c) { return '<option' + (c === cust ? ' selected' : '') + '>' + esc(c) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="f3"><div class="fr"><label class="f req">ลูกค้า</label>' + (custs.length > 1 ? '<input class="in" id="rc_q" placeholder="🔍 พิมพ์ค้นหาชื่อลูกค้า" style="margin-bottom:4px" autocomplete="off">' : '') + '<select class="in" id="rc_cust">' + pickOpts(custs, cust, open, 'customer_name') + '</select></div>' +
       '<div class="fr"><label class="f req">วันที่รับเงิน</label><input class="in" type="date" id="rc_date" value="' + (ed ? ed.doc_date : today()) + '"></div>' +
       '</div>' + payBox('rc', 'rc_bank', S.slDef.cash, 'IN') +
       '<div class="f3"><div class="fr"><label class="f">เลขที่ใบเสร็จ</label><input class="in code" id="rc_no" value="' + esc(ed ? ed.doc_no : '') + '" placeholder="เว้นว่าง = รันเลขให้อัตโนมัติ"><div class="hint">แก้เลขที่ได้ (ต้องไม่ซ้ำกับเอกสารอื่น)</div></div></div>' +
-      '<div class="tw"><table class="t"><thead><tr><th></th><th>เลขที่</th><th>วันที่</th><th>ครบกำหนด</th><th class="num">ยอดค้าง</th><th class="num">รับชำระครั้งนี้</th></tr></thead><tbody id="rcRows"></tbody></table></div>' +
+      '<div class="bar" style="margin:6px 0"><input class="in" id="rc_bq" placeholder="🔍 ค้นหาเลขที่บิล" style="max-width:220px" oninput="billFilter(\'rcRows\', this.value)"><span class="small" id="rc_cnt"></span></div>' +
+      '<div class="tw"><table class="t"><thead><tr><th><input type="checkbox" id="rc_all" title="เลือก / ไม่เลือกทั้งหมด" onchange="billAll(\'rcRows\', \'rcck\', this.checked);rcSum();rcWht()"></th><th>เลขที่</th><th>วันที่</th><th>ครบกำหนด</th><th class="num">ยอดค้าง</th><th class="num">รับชำระครั้งนี้</th></tr></thead><tbody id="rcRows"></tbody></table></div>' +
       '<label class="small" style="display:inline-flex;gap:6px;align-items:center;margin:12px 0 8px"><input type="checkbox" id="rc_hw"> ลูกค้าหักภาษี ณ ที่จ่าย (ได้รับหนังสือรับรอง 50 ทวิ)</label>' +
       '<div id="rc_w" class="hidden"><div class="f3"><div class="fr"><label class="f">ฐานภาษี (ก่อน VAT)</label><input class="in amt" id="rc_wb" inputmode="decimal"></div><div class="fr"><label class="f">อัตรา %</label><input class="in" id="rc_wr" value="3"></div><div class="fr"><label class="f">ภาษีที่ถูกหัก</label><input class="in amt" id="rc_wa" inputmode="decimal"></div></div><div class="fr"><label class="f">เลขที่ 50 ทวิ ที่ได้รับ</label><input class="in" id="rc_wc"></div></div>' +
       '<div class="note" id="rc_sum"></div>',
       '<button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button><button class="btn ghost" onclick="rcSave(1)">บันทึกและพิมพ์</button><button class="btn" onclick="rcSave()">บันทึก</button>', true);
-    $('rc_cust').onchange = rcRows; $('rc_hw').onchange = function () { $('rc_w').classList.toggle('hidden', !this.checked); rcWht(); };
+    $('rc_cust').onchange = rcRows; if ($('rc_q')) $('rc_q').oninput = function () { pickFilter('rc_q', 'rc_cust', custs, open, 'customer_name'); rcRows(); }; $('rc_hw').onchange = function () { $('rc_w').classList.toggle('hidden', !this.checked); rcWht(); };
     $('rc_wb').oninput = $('rc_wr').oninput = function () { var b = sat(v('rc_wb')), r = Number(v('rc_wr')); if (b && r) $('rc_wa').value = money(Math.round(b * r / 100) / 100); rcSum(); };
     $('rc_wa').oninput = rcSum;
     payFill('rc', 'rc_bank', ed);
@@ -2498,9 +2499,10 @@ function rcRows() {
   var c = v('rc_cust');
   $('rcRows').innerHTML = S.rcOpen.filter(function (r) { return r.customer_name === c; }).map(function (r) {
     var E = S.rcEdit, on = !E || !!E.am[r.id];
-    return '<tr><td><input type="checkbox" class="rcck" data-id="' + r.id + '"' + (on ? ' checked' : '') + ' onchange="rcSum();rcWht()"></td><td class="code">' + esc(r.doc_no) + '</td><td>' + fdate(r.doc_date + 'T00:00').slice(0, 10) + '</td><td>' + fdate(r.due_date + 'T00:00').slice(0, 10) + '</td><td class="num">' + money(r.balance) + '</td>' +
-      '<td><input class="in amt rcamt" data-id="' + r.id + '" data-sub="' + r.subtotal + '" data-tot="' + r.total + '" value="' + money(E && E.am[r.id] ? E.am[r.id] : r.balance) + '" oninput="rcSum();rcWht()" onblur="jFmt(this)"></td></tr>';
+    return '<tr data-q="' + esc(String(r.doc_no || '').toLowerCase()) + '"><td><input type="checkbox" class="rcck" data-id="' + r.id + '"' + (on ? ' checked' : '') + ' onchange="rcSum();rcWht()"></td><td class="code">' + esc(r.doc_no) + '</td><td>' + fdate(r.doc_date + 'T00:00').slice(0, 10) + '</td><td>' + fdate(r.due_date + 'T00:00').slice(0, 10) + '</td><td class="num">' + money(r.balance) + '</td>' +
+      '<td><input class="in amt rcamt" data-id="' + r.id + '" data-sub="' + r.subtotal + '" data-tot="' + r.total + '" value="' + money(E && E.am[r.id] ? E.am[r.id] : r.balance) + '" oninput="var c=document.querySelector(\'.rcck[data-id=&quot;' + r.id + '&quot;]\');if(c&&sat(this.value))c.checked=true;rcSum();rcWht()" onblur="jFmt(this)"></td></tr>';
   }).join('');
+  if ($('rc_bq')) { $('rc_bq').value = ''; }
   rcWht();
 }
 function rcAlloc() { var out = []; [].forEach.call(document.querySelectorAll('.rcamt'), function (e) { var ck = document.querySelector('.rcck[data-id="' + e.getAttribute('data-id') + '"]'); if (ck && ck.checked && sat(e.value)) out.push({ sale_id: e.getAttribute('data-id'), amount: e.value, sub: e.getAttribute('data-sub'), tot: e.getAttribute('data-tot') }); }); return out; }
@@ -2510,6 +2512,8 @@ function rcWht() {
   $('rc_wb').value = money(base / 100); var r = Number(v('rc_wr')); $('rc_wa').value = money(Math.round(base * r / 100) / 100); rcSum();
 }
 function rcSum() {
+  var nAll = document.querySelectorAll('.rcck').length, nOn = document.querySelectorAll('.rcck:checked').length;
+  if ($('rc_cnt')) $('rc_cnt').textContent = 'เลือก ' + nOn + ' จาก ' + nAll + ' บิล'; if ($('rc_all')) { $('rc_all').checked = nAll > 0 && nOn === nAll; $('rc_all').indeterminate = nOn > 0 && nOn < nAll; }
   var ap = rcAlloc().reduce(function (t, a) { return t + sat(a.amount); }, 0), w = $('rc_hw').checked ? (sat(v('rc_wa')) || 0) : 0;
   var vt = rcAlloc().reduce(function (t, a) { var s = S.rcOpen.filter(function (q) { return q.id === a.sale_id; })[0]; return t + (s && s.sale_type === 'SERVICE' && Number(s.vat_amount) ? Math.round(sat(a.amount) * sat(s.vat_amount) / sat(s.total)) : 0); }, 0);
   $('rc_sum').innerHTML = (vt ? '<div>บริการ: โอนภาษีขายยังไม่ถึงกำหนด → ภาษีขาย ประมาณ <b>' + money(vt / 100) + '</b> และออกใบเสร็จรับเงิน/ใบกำกับภาษี</div>' : '') + 'ตัดหนี้ <b>' + money(ap / 100) + '</b>' + (w ? ' − ถูกหัก ณ ที่จ่าย <b>' + money(w / 100) + '</b>' : '') + ' = <b style="font-size:16px">รับเงินจริง ' + money((ap - w) / 100) + '</b> บาท · บันทึก Dr ธนาคาร' + (w ? ' + ภาษีถูกหัก ณ ที่จ่าย' : '') + ' / Cr ลูกหนี้';
@@ -4116,7 +4120,7 @@ function ppForm(party) {
   call('purch.ap', { company_id: S.cid }).then(function (ap) {
     if (!ap.length) return toast('ไม่มีเจ้าหนี้คงค้าง', 'err');
     S.ppAp = ap; var d = S.puDef;
-    openM('จ่ายชำระเจ้าหนี้', '<div class="f2"><div class="fr"><label class="f req">เจ้าหนี้</label><select class="in" id="pp_party" onchange="ppDocs()">' + ap.map(function (r) { return '<option' + (r.party_name === party ? ' selected' : '') + '>' + esc(r.party_name) + '</option>'; }).join('') + '</select></div><div class="fr"><label class="f req">วันที่จ่าย</label><input class="in" type="date" id="pp_date" value="' + today() + '"></div></div>' +
+    openM('จ่ายชำระเจ้าหนี้', '<div class="f2"><div class="fr"><label class="f req">เจ้าหนี้</label>' + (ap.length > 1 ? '<input class="in" id="pp_q" placeholder="🔍 พิมพ์ค้นหาชื่อเจ้าหนี้" style="margin-bottom:4px" autocomplete="off" oninput="ppPick()">' : '') + '<select class="in" id="pp_party" onchange="ppDocs()">' + ap.map(function (r) { return '<option value="' + esc(r.party_name) + '"' + (r.party_name === party ? ' selected' : '') + '>' + esc(r.party_name) + ' (' + r.docs.length + ' บิล · ' + money(r.docs.reduce(function (t, d) { return t + sat(d.balance); }, 0) / 100) + ')</option>'; }).join('') + '</select></div><div class="fr"><label class="f req">วันที่จ่าย</label><input class="in" type="date" id="pp_date" value="' + today() + '"></div></div>' +
       payBox('pp', 'pp_pay', d.cash, 'OUT') + '<div id="ppDocs"></div>' +
       '<div class="sec">หัก ณ ที่จ่าย</div><label style="display:flex;gap:6px;align-items:center;margin-bottom:6px"><input type="checkbox" id="pp_hw" onchange="$(\'pp_wbox\').style.display=this.checked?\'\':\'none\';ppCalc()"> มีหัก ณ ที่จ่าย</label>' +
       '<div id="pp_wbox" style="display:none"><div class="f3"><div class="fr"><label class="f">แบบ</label><select class="in" id="pp_pnd" onchange="ppWc()"><option value="53">ภ.ง.ด.53</option><option value="3">ภ.ง.ด.3</option></select></div><div class="fr"><label class="f">ประเภทเงินได้</label><select class="in" id="pp_wc" onchange="ppWr()"></select></div><div class="fr"><label class="f">อัตรา %</label><input class="in" id="pp_wr" oninput="ppCalc()"></div></div>' +
@@ -4133,14 +4137,35 @@ function ppForm(party) {
 }
 function ppDocs() {
   var r = S.ppAp.filter(function (q) { return q.party_name === v('pp_party'); })[0] || { docs: [] };
-  $('ppDocs').innerHTML = '<div class="tw"><table class="t"><thead><tr><th></th><th>บิล</th><th>ครบกำหนด</th><th class="num">ค้างจ่าย</th><th class="num" style="width:130px">จ่ายครั้งนี้</th></tr></thead><tbody>' +
-    r.docs.map(function (d, i) { return '<tr><td><input type="checkbox" id="pd_c' + i + '" checked onchange="$(\'pd_a' + i + '\').value=this.checked?\'' + money(d.balance) + '\':\'\';ppCalc()"></td><td class="code">' + esc(d.inv_no || d.doc_no) + '<span class="sub2">' + esc(d.doc_no) + '</span></td><td>' + fdate(d.due_date + 'T00:00').slice(0, 10) + '</td><td class="num">' + money(d.balance) + '</td><td><input class="in num" id="pd_a' + i + '" data-id="' + d.id + '" value="' + money(d.balance) + '" oninput="ppCalc()"></td></tr>'; }).join('') + '</tbody></table></div>';
+  $('ppDocs').innerHTML = '<div class="bar" style="margin:6px 0"><input class="in" placeholder="🔍 ค้นหาเลขที่บิล" style="max-width:220px" oninput="billFilter(\'ppBody\', this.value)"><span class="small" id="pp_cnt"></span></div><div class="tw"><table class="t"><thead><tr><th><input type="checkbox" id="pp_all" title="เลือก / ไม่เลือกทั้งหมด" onchange="ppAllSet(this.checked)"></th><th>บิล</th><th>ครบกำหนด</th><th class="num">ค้างจ่าย</th><th class="num" style="width:130px">จ่ายครั้งนี้</th></tr></thead>' +
+    '<tbody id="ppBody">' + r.docs.map(function (d, i) { return '<tr data-q="' + esc(String((d.inv_no || '') + ' ' + (d.doc_no || '')).toLowerCase()) + '"><td><input type="checkbox" class="ppck" id="pd_c' + i + '" data-bal="' + money(d.balance) + '" checked onchange="$(\'pd_a' + i + '\').value=this.checked?\'' + money(d.balance) + '\':\'\';ppCalc()"></td><td class="code">' + esc(d.inv_no || d.doc_no) + '<span class="sub2">' + esc(d.doc_no) + '</span></td><td>' + fdate(d.due_date + 'T00:00').slice(0, 10) + '</td><td class="num">' + money(d.balance) + '</td><td><input class="in num" id="pd_a' + i + '" data-id="' + d.id + '" value="' + money(d.balance) + '" oninput="$(\'pd_c' + i + '\').checked=Number(String(this.value).replace(/,/g,\'\'))>0;ppCalc()"></td></tr>'; }).join('') + '</tbody></table></div>';
   ppCalc();
 }
+/* เลือกบิลที่จะรับ/จ่ายชำระ (v0.23.1): ค้นหาชื่อคู่ค้า · ค้นหาเลขที่บิล · เลือก/ไม่เลือกทั้งหมด */
+function pickOpts(names, cur, rows, key) {
+  return names.map(function (c) { var L = rows.filter(function (r) { return r[key] === c; }); return '<option value="' + esc(c) + '"' + (c === cur ? ' selected' : '') + '>' + esc(c) + ' (' + L.length + ' บิล · ' + money(L.reduce(function (t, r) { return t + sat(r.balance); }, 0) / 100) + ')</option>'; }).join('');
+}
+function pickFilter(qId, selId, names, rows, key) {
+  var q = String(v(qId) || '').trim().toLowerCase(), cur = v(selId), L = names.filter(function (c) { return !q || String(c).toLowerCase().indexOf(q) >= 0; });
+  if (!L.length) L = names;
+  $(selId).innerHTML = pickOpts(L, L.indexOf(cur) >= 0 ? cur : L[0], rows, key);
+}
+function ppPick() {
+  var q = String(v('pp_q') || '').trim().toLowerCase(), cur = v('pp_party'), L = S.ppAp.filter(function (r) { return !q || String(r.party_name).toLowerCase().indexOf(q) >= 0; });
+  if (!L.length) L = S.ppAp;
+  var sel = L.some(function (r) { return r.party_name === cur; }) ? cur : L[0].party_name;
+  $('pp_party').innerHTML = L.map(function (r) { return '<option value="' + esc(r.party_name) + '"' + (r.party_name === sel ? ' selected' : '') + '>' + esc(r.party_name) + ' (' + r.docs.length + ' บิล · ' + money(r.docs.reduce(function (t, d) { return t + sat(d.balance); }, 0) / 100) + ')</option>'; }).join('');
+  if (sel !== cur) ppDocs();
+}
+function billFilter(bodyId, q) { q = String(q || '').trim().toLowerCase(); [].forEach.call(($(bodyId) || { children: [] }).children, function (tr) { tr.style.display = !q || String(tr.getAttribute('data-q') || '').indexOf(q) >= 0 ? '' : 'none'; }); }
+function billAll(bodyId, cls, on) { [].forEach.call(document.querySelectorAll('#' + bodyId + ' .' + cls), function (c) { if (c.closest('tr').style.display !== 'none') c.checked = on; }); }
+function ppAllSet(on) { [].forEach.call(document.querySelectorAll('#ppBody .ppck'), function (c) { if (c.closest('tr').style.display === 'none') return; c.checked = on; $('pd_a' + c.id.slice(4)).value = on ? c.getAttribute('data-bal') : ''; }); ppCalc(); }
 function ppAllocs() { var out = []; for (var i = 0; $('pd_a' + i); i++) { var a = String(v('pd_a' + i)).replace(/,/g, ''); if (Number(a) > 0) out.push({ purch_id: $('pd_a' + i).getAttribute('data-id'), amount: a }); } return out; }
 function ppWc() { var L = ratesFor('WHT', v('pp_date') || today(), v('pp_pnd')).filter(function (r) { return r.code !== 'SALARY'; }); $('pp_wc').innerHTML = L.map(function (r) { return '<option value="' + r.code + '" data-r="' + r.rate + '">' + esc(r.name) + ' (' + r.rate + '%)</option>'; }).join(''); ppWr(); }
 function ppWr() { var o = $('pp_wc').selectedOptions[0]; if (o) $('pp_wr').value = o.getAttribute('data-r'); ppCalc(); }
 function ppCalc(keepBase) {
+  var nAll = document.querySelectorAll('.ppck').length, nOn = document.querySelectorAll('.ppck:checked').length;
+  if ($('pp_cnt')) $('pp_cnt').textContent = 'เลือก ' + nOn + ' จาก ' + nAll + ' บิล'; if ($('pp_all')) { $('pp_all').checked = nAll > 0 && nOn === nAll; $('pp_all').indeterminate = nOn > 0 && nOn < nAll; }
   var tot = ppAllocs().reduce(function (a, x) { return a + sat(x.amount); }, 0), w = 0;
   if ($('pp_hw').checked) { if (!keepBase) $('pp_wb').value = money(Math.round(tot / 1.07) / 100); var base = sat(String(v('pp_wb') || '0').replace(/,/g, '')); w = Math.round(base * (Number(v('pp_wr')) || 0) / 100); $('pp_wa').value = money(w / 100); }
   $('ppTot').innerHTML = '<div class="grid g4"><div class="card"><div class="small">ยอดจ่าย</div><b>' + money(tot / 100) + '</b></div><div class="card"><div class="small">หัก ณ ที่จ่าย</div><b>' + money(w / 100) + '</b></div><div class="card"><div class="small">จ่ายสุทธิ</div><b style="font-size:18px">' + money((tot - w) / 100) + '</b></div></div>' + ($('pp_hw').checked ? '<p class="small">ยอดเงินได้ตั้งต้น = ยอดจ่าย ÷ 1.07 (กรณีบิลมี VAT 7%) แก้ได้</p>' : '');
