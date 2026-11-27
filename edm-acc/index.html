@@ -3863,7 +3863,7 @@ function scList() {
     $('scOut').innerHTML = '<div class="card tw"><table class="t"><thead><tr><th>สแกนเมื่อ</th><th>ไฟล์</th><th>ประเภท</th><th>เลขที่</th><th>วันที่บิล</th><th>คู่ค้า</th><th class="num">ยอดรวม</th><th>สถานะ</th><th></th></tr></thead><tbody>' +
       rows.map(function (x) {
         var s = SC_ST[x.status] || [x.status, '#64748b'];
-        return '<tr><td class="small">' + esc(fdate(x.created_at)) + '</td><td><a href="' + esc(x.url) + '" target="_blank" rel="noopener">📄 ' + esc(x.file_name) + '</a></td><td>' + (x.side === 'SALE' ? 'ขาย' : x.side === 'PURCH' ? 'ซื้อ' : '-') + '</td><td class="code">' + esc(x.ref_no || x.doc_no || '') + '</td><td>' + esc(x.doc_date || '') + '</td><td>' + esc(x.party || '') + '</td><td class="num">' + (Number(x.total) ? money(x.total) : '') + '</td>' +
+        return '<tr><td class="small">' + esc(fdate(x.created_at)) + '</td><td><a href="' + esc(x.url) + '" target="_blank" rel="noopener">📄 ' + esc(x.file_name) + '</a></td><td>' + (x.side === 'SALE' ? 'ขาย' : x.side === 'PURCH' ? 'ซื้อ' : '-') + '</td><td class="code">' + esc(x.ref_no || x.doc_no || '') + '</td><td>' + esc(x.doc_date || '') + '</td><td>' + esc(x.party || '') + (((x.data || {}).salesperson || {}).name ? '<div class="small">เซลล์ ' + esc(x.data.salesperson.name) + '</div>' : '') + '</td><td class="num">' + (Number(x.total) ? money(x.total) : '') + '</td>' +
           '<td><span style="color:' + s[1] + ';font-weight:600">' + s[0] + '</span>' + (x.reason ? '<div class="small">' + esc(x.reason) + '</div>' : '') + '</td><td style="white-space:nowrap">' +
           (/^(REVIEW|DUP|FAIL)$/.test(x.status) ? '<button class="btn sm" onclick="scForm(\'' + x.id + '\')">✏️ ตรวจ / บันทึก</button> <button class="btn ghost sm" onclick="scMark(\'' + x.id + '\',\'retry\')" title="ย้ายกลับไปอ่านใหม่">↻</button> <button class="btn ghost sm" onclick="scMark(\'' + x.id + '\',\'skip\')">ข้าม</button> <button class="btn ghost sm" onclick="scMark(\'' + x.id + '\',\'done\')" title="บันทึกเองในระบบแล้ว">บันทึกเองแล้ว</button>' : '') + '</td></tr>';
       }).join('') + '</tbody></table></div>';
@@ -3892,6 +3892,7 @@ function scForm(id) {
     '<div class="fr"><label class="f req">บัญชี</label><select class="in" id="sf_acc"><option value="">กำลังโหลด…</option></select></div></div>' +
     '<div class="f3">' + F('doc_no', 'เลขที่บิล', d.doc_no) + F('doc_date', 'วันที่บิล', x.doc_date, 'd') + F('pname', 'ชื่อคู่ค้า', p0.name) + '</div>' +
     '<div class="f3">' + F('ptax', 'เลขผู้เสียภาษี', p0.tax_id) + F('pbr', 'สาขา', p0.branch) + F('paddr', 'ที่อยู่', p0.address) + '</div>' +
+    '<div class="f3">' + F('spn', 'พนักงานขาย / เซลล์', (d.salesperson || {}).name || '') + F('spc', 'รหัสพนักงานขาย', (d.salesperson || {}).code || '') + '</div>' +
     '<div class="f3">' + F('base', 'มูลค่าก่อน VAT', base0.toFixed(2), 'n') + F('vat', 'VAT', Number(d.vat) || 0, 'n') + F('total', 'ยอดรวม', Number(d.total) || 0, 'n') + '</div>' +
     '<div id="sf_lines"></div>' +
     '<div class="small">บันทึกแล้วยังไม่ Post · แก้ยอด = บันทึกเป็น 1 บรรทัดตามยอดใหม่ (ไม่เข้าสต็อก) · บัญชีที่เลือกจะถูกจำไว้ใช้กับคู่ค้ารายนี้ครั้งต่อไป</div>',
@@ -3920,7 +3921,7 @@ function scSide(first) {
   }).catch(failNew);
 }
 function scSave() {
-  var f = S.sc.f, o = f.orig, over = { side: v('sf_side'), pay_type: v('sf_pay'), account_id: v('sf_acc'), party_name: v('sf_pname'), party_tax_id: v('sf_ptax'), party_branch: v('sf_pbr'), party_address: v('sf_paddr') };
+  var f = S.sc.f, o = f.orig, over = { side: v('sf_side'), pay_type: v('sf_pay'), account_id: v('sf_acc'), party_name: v('sf_pname'), party_tax_id: v('sf_ptax'), party_branch: v('sf_pbr'), party_address: v('sf_paddr'), sp_name: v('sf_spn'), sp_code: v('sf_spc') };
   if (f.lp) { over.prods = []; Array.prototype.forEach.call(document.querySelectorAll('.sf_pd'), function (el) { over.prods[Number(el.getAttribute('data-i'))] = el.value; }); }
   var allP = over.prods && over.prods.length && over.prods.every(function (q) { return q && q !== '-'; });
   if (!over.account_id && !(over.side === 'PURCH' && allP)) return toast('เลือกบัญชีก่อน', 'warn');
