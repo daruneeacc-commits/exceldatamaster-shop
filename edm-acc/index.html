@@ -3870,8 +3870,8 @@ function scList() {
   }).catch(failNew);
 }
 function scKey() {
-  openM('ตั้งคีย์ AI (Gemini)', '<div class="note">วางคีย์ Gemini API ตัวเดียวกับที่ใช้ใน LINE AI · คีย์เก็บในหลังบ้านเท่านั้น ไม่แสดงกลับบนหน้าเว็บ</div><div class="fr"><label class="f req">คีย์</label><input class="in" type="password" id="sc_k" autocomplete="off" placeholder="AIza…"></div>' +
-    '<div class="fr"><label class="f">รุ่น AI</label><select class="in" id="sc_m"><option value="gemini-2.5-flash">gemini-2.5-flash (แนะนำ)</option><option value="gemini-2.5-pro">gemini-2.5-pro (แม่นกว่า ช้ากว่า)</option><option value="gemini-2.0-flash">gemini-2.0-flash</option></select></div>',
+  openM('ตั้งคีย์ AI (Gemini)', '<div class="note">วางคีย์ Gemini API ตัวเดียวกับที่ใช้ใน LINE AI · คีย์เก็บในหลังบ้านเท่านั้น ไม่แสดงกลับบนหน้าเว็บ</div><div class="fr"><label class="f">คีย์ (GEMINI_API_KEY)</label><input class="in" type="password" id="sc_k" autocomplete="off" placeholder="AIza…"></div>' +
+    '<div class="fr"><label class="f">รุ่น AI (พิมพ์ชื่อรุ่นเดียวกับ GEMINI_MODEL ของ LINE AI)</label><input class="in" id="sc_m" list="sc_ml" placeholder="gemini-3.5-flash"><datalist id="sc_ml"><option value="gemini-3.5-flash"><option value="gemini-2.5-flash"><option value="gemini-2.5-pro"></datalist></div><div class="small">ตั้งแล้วอยากเปลี่ยนแค่รุ่น เว้นช่องคีย์ว่างได้</div>',
     '<button class="btn ghost" onclick="closeM()">ยกเลิก</button><button class="btn" onclick="call(\'scan.setKey\',{key:v(\'sc_k\'),model:v(\'sc_m\')}).then(function(){closeM();toast(\'ตั้งคีย์แล้ว\',\'ok\');pScan();}).catch(failNew)">บันทึก</button>');
   if (S.sc.st && S.sc.st.model) $('sc_m').value = S.sc.st.model;
 }
